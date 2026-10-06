@@ -25,6 +25,14 @@
   --shadow-dialog: 0 8px 24px rgba(15, 23, 42, 0.08);
   --text-on-accent: #ffffff;
 
+  /* Clickable buttons: black neumorphism (Chief 2026-10-06). Raised at rest, pressed in when selected. */
+  --neu-surface: linear-gradient(145deg, #2a2e35, #0f1115);
+  --neu-surface-hover: linear-gradient(145deg, #353a42, #16191e);
+  --neu-text: #f8fafc;
+  --neu-raised: 3px 3px 8px rgba(15, 23, 42, 0.28), -3px -3px 8px rgba(255, 255, 255, 0.9),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.08);
+  --neu-pressed: inset 3px 3px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+
   /* Old names kept as aliases while pages move to the names above (spec §3 "Token lama"). */
   --bg-canvas: var(--surface);
   --bg-canvas-v1: var(--surface);
@@ -5274,4 +5282,103 @@ a:hover > .home-link-icon { background: var(--text); }
 }
 @media (max-width: 640px) {
   .home-board__col + .home-board__col { border-left: 0; border-top: 1px solid var(--border); }
+}
+
+/* ─── Clickable buttons app-wide: black neumorphism (Chief 2026-10-06) ───
+   Kit buttons and chips get it in ui.css; these are the EMR's own button classes.
+   Raised at rest, pressed in (with a check) when selected. */
+.assessment-run-button,
+.assessment-reset-button,
+.assessment-readiness-cta,
+.cdss-selected-save-btn,
+.emr-assist-note-action,
+.emr-neu-nav-btn,
+.finalize-neu-btn,
+.finalize-pharmacology-selection-button,
+.finalize-pharmacology-selection-button.is-secondary,
+.finalize-pharmacology-manual-add,
+.finalize-pharmacology-manual-add:not(:disabled),
+.vitals-chip {
+  border-color: transparent;
+  background: var(--neu-surface);
+  color: var(--neu-text);
+  box-shadow: var(--neu-raised);
+  transition: box-shadow 150ms ease-out;
+}
+
+:is(
+    .assessment-run-button,
+    .assessment-reset-button,
+    .assessment-readiness-cta,
+    .cdss-selected-save-btn,
+    .emr-assist-note-action,
+    .emr-neu-nav-btn,
+    .finalize-neu-btn,
+    .finalize-pharmacology-selection-button,
+    .finalize-pharmacology-manual-add,
+    .vitals-chip
+  ):hover:not(:disabled) {
+  background: var(--neu-surface-hover);
+}
+
+:is(
+    .assessment-run-button,
+    .assessment-reset-button,
+    .assessment-readiness-cta,
+    .cdss-selected-save-btn,
+    .emr-assist-note-action,
+    .emr-neu-nav-btn,
+    .finalize-neu-btn,
+    .finalize-pharmacology-selection-button,
+    .finalize-pharmacology-manual-add,
+    .vitals-chip
+  ):active:not(:disabled) {
+  box-shadow: var(--neu-pressed);
+}
+
+:is(
+    .assessment-run-button,
+    .cdss-selected-save-btn,
+    .emr-neu-nav-btn,
+    .finalize-neu-btn,
+    .finalize-pharmacology-manual-add
+  ):disabled {
+  box-shadow: none;
+}
+
+.emr-neu-nav-btn-label,
+.finalize-neu-btn-label,
+.finalize-neu-btn.is-done .finalize-neu-btn-label {
+  color: inherit;
+}
+
+.vitals-chip.is-active,
+.finalize-pharmacology-selection-button.is-secondary.is-active,
+.finalize-neu-btn.is-done {
+  border-color: transparent;
+  background: var(--neu-surface);
+  color: var(--neu-text);
+  box-shadow: var(--neu-pressed);
+}
+
+.vitals-chip.is-active::before,
+.finalize-pharmacology-selection-button.is-active::before {
+  content: "✓";
+  margin-right: 6px;
+  font-size: var(--text-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assessment-run-button,
+  .assessment-reset-button,
+  .assessment-readiness-cta,
+  .cdss-selected-save-btn,
+  .emr-assist-note-action,
+  .emr-neu-nav-btn,
+  .finalize-neu-btn,
+  .finalize-pharmacology-selection-button,
+  .finalize-pharmacology-manual-add,
+  .vitals-chip {
+    transition: none;
+  }
 }

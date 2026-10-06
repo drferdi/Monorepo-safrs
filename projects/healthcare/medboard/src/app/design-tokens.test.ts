@@ -190,3 +190,71 @@ test('every literal text size on a page sits on the 2026 scale 12/14/16/18/20/24
   }
   assert.deepEqual(offScale, [])
 })
+
+// Split a selector list on its top-level commas only, so :is(a, b) stays one selector.
+function selectorList(list: string): string[] {
+  const parts: string[] = []
+  let depth = 0
+  let current = ''
+  for (const char of list) {
+    if (char === '(') depth++
+    if (char === ')') depth--
+    if (char === ',' && depth === 0) {
+      parts.push(current.trim())
+      current = ''
+    } else current += char
+  }
+  return [...parts, current.trim()]
+}
+
+// Every rule body whose selector list contains `selector` exactly, in file order.
+function rulesFor(css: string, selector: string): string[] {
+  const plain = css.replace(/\/\*[\s\S]*?\*\//g, '')
+  const bodies: string[] = []
+  for (const rule of plain.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    if (selectorList(rule[1]).includes(selector)) bodies.push(rule[2])
+  }
+  return bodies
+}
+
+function lastBackground(css: string, selector: string): string | undefined {
+  const withBackground = rulesFor(css, selector).filter((body) => /(^|[\s;])background\s*:/.test(body))
+  return withBackground.at(-1)?.match(/(?:^|[\s;])background\s*:\s*([^;]+);/)?.[1].trim()
+}
+
+const NEU_EMR_BUTTONS = [
+  '.assessment-run-button',
+  '.assessment-reset-button',
+  '.assessment-readiness-cta',
+  '.cdss-selected-save-btn',
+  '.emr-assist-note-action',
+  '.emr-neu-nav-btn',
+  '.finalize-neu-btn',
+  '.finalize-pharmacology-selection-button',
+  '.finalize-pharmacology-manual-add',
+  '.vitals-chip',
+]
+
+test('every clickable button is black neumorphism (Chief 2026-10-06): kit buttons, chips and EMR buttons', () => {
+  const globals = read('src/app/globals.css')
+  const ui = read('src/app/ui.css')
+  const tokens = rootTokens(globals)
+  for (const name of ['--neu-surface', '--neu-text', '--neu-raised', '--neu-pressed']) {
+    assert.ok(tokens.has(name), `${name} is defined`)
+  }
+  for (const selector of ['.ui-btn--primary', '.ui-btn--secondary', '.ui-btn--accent', '.ui-btn--ghost', '.ui-chip']) {
+    assert.equal(lastBackground(ui, selector), 'var(--neu-surface)', selector)
+    assert.ok(rulesFor(ui, selector).some((body) => /box-shadow:\s*var\(--neu-raised\)/.test(body)), `${selector} is raised`)
+  }
+  for (const selector of NEU_EMR_BUTTONS) {
+    assert.equal(lastBackground(globals, selector), 'var(--neu-surface)', selector)
+  }
+})
+
+test('a selected chip is pressed in and marked with a check, not only recoloured', () => {
+  const ui = read('src/app/ui.css')
+  const globals = read('src/app/globals.css')
+  assert.ok(rulesFor(ui, '.ui-chip[aria-pressed="true"]').some((body) => /box-shadow:\s*var\(--neu-pressed\)/.test(body)))
+  assert.ok(rulesFor(ui, '.ui-chip[aria-pressed="true"]::before').some((body) => /content:\s*"✓"/.test(body)))
+  assert.ok(rulesFor(globals, '.vitals-chip.is-active').some((body) => /box-shadow:\s*var\(--neu-pressed\)/.test(body)))
+})

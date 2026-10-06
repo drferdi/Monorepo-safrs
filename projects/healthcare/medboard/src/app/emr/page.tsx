@@ -4237,25 +4237,9 @@ export default function EMRPage() {
             type="button"
             onClick={() => void selectCdssSuggestion(s)}
             disabled={selectionSavingKey === suggestionKey || requiresEmergencyAck}
-            style={{
-              alignSelf: 'flex-start',
-              marginTop: 4,
-              height: 32,
-              borderRadius: 'var(--radius-sm)',
-              border: `1px solid ${isSelected ? accent : 'var(--border)'}`,
-              background: isSelected
-                ? `color-mix(in srgb, ${accent} 10%, var(--surface))`
-                : 'var(--surface)',
-              color: isSelected ? accent : 'var(--text)',
-              fontSize: 14,
-              fontWeight: 500,
-              padding: '0 12px',
-              cursor:
-                selectionSavingKey === suggestionKey || requiresEmergencyAck
-                  ? 'not-allowed'
-                  : 'pointer',
-              opacity: selectionSavingKey === suggestionKey || requiresEmergencyAck ? 0.6 : 1,
-            }}
+            aria-pressed={isSelected}
+            className="ui-chip"
+            style={{ alignSelf: 'flex-start', marginTop: 4 }}
           >
             {requiresEmergencyAck
               ? 'WAJIB ACK EMERGENCY'
@@ -6694,15 +6678,6 @@ export default function EMRPage() {
                           onClick={() => toggleAlergi(opt)}
                           aria-pressed={active}
                           className="ui-chip"
-                          style={
-                            active
-                              ? {
-                                  background: 'var(--critical-tint)',
-                                  borderColor: 'var(--critical)',
-                                  color: 'var(--critical)',
-                                }
-                              : undefined
-                          }
                         >
                           {opt}
                         </button>
