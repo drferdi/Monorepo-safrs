@@ -145,9 +145,11 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
     return (
       <div className={styles.roomCenter}>
         <h2 className={styles.cardTitle}>Appointment Tidak Ditemukan</h2>
-        <div className="ui-alert ui-alert--critical" role="alert">
-          {error}
-        </div>
+        {error && (
+          <div className="ui-alert ui-alert--critical" role="alert">
+            {error}
+          </div>
+        )}
         <div className={styles.roomCenterActions}>
           <button onClick={() => router.push('/telemedicine')} className="ui-btn ui-btn--primary">
             ← Kembali ke Telemedicine
@@ -227,32 +229,6 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
             participantRole={participantRole}
             onSessionComplete={(apptId) => void handleSessionComplete(apptId)}
           />
-        </div>
-
-        <div className={styles.roomSide}>
-          <h2 className={styles.cardTitle} style={{ marginBottom: 'var(--gap-md)' }}>
-            Detail konsultasi
-          </h2>
-          {[
-            ['Pasien', appointment.patientId],
-            ['Dokter', appointment.doctorId],
-            [
-              'Jadwal',
-              new Date(appointment.scheduledAt).toLocaleString('id-ID', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              }),
-            ],
-            ['Durasi', `${appointment.durationMinutes} menit`],
-            ['Tipe', appointment.consultationType],
-            ['Status', appointment.status],
-            ['Keluhan', appointment.keluhanUtama ?? '-'],
-          ].map(([label, value]) => (
-            <div key={label} className={styles.roomRow}>
-              <span className={styles.roomRowLabel}>{label}</span>
-              <span className={styles.roomRowValue}>{value}</span>
-            </div>
-          ))}
         </div>
       </div>
     </div>

@@ -587,36 +587,6 @@
   border-radius: var(--radius-lg);
 }
 
-.roomSide {
-  padding: var(--gap-xl);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-}
-
-.roomRow {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr);
-  gap: var(--gap-md);
-  padding: var(--gap-md) 0;
-  border-bottom: 1px solid var(--border);
-  font-size: var(--text-sm);
-}
-
-.roomRow:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.roomRowLabel {
-  color: var(--text-secondary);
-}
-
-.roomRowValue {
-  color: var(--text);
-  overflow-wrap: anywhere;
-}
-
 .roomCenter {
   display: flex;
   flex-direction: column;

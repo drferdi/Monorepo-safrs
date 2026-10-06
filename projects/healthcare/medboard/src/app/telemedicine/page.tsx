@@ -1267,7 +1267,7 @@ export default function TelemedicinePage(): React.JSX.Element {
               : 'Masuk sebagai staf non-dokter.'
           }
           toneVariant={isDoctor && isOnline ? 'green' : 'muted'}
-          statusWord={isDoctor && isOnline ? 'Aktif' : 'Tidak aktif'}
+          statusWord={!isDoctor ? 'Staf' : isOnline ? 'Aktif' : 'Tidak aktif'}
         />
         <OverviewMetric
           label="Queue"
@@ -1289,7 +1289,7 @@ export default function TelemedicinePage(): React.JSX.Element {
               : 'Belum ada sesi aktif.'
           }
           toneVariant={activeAppointments.length > 0 ? 'green' : 'muted'}
-          statusWord={activeAppointments.length > 0 ? 'Berjalan' : 'Kosong'}
+          statusWord={activeAppointments.length > 0 ? 'Terjadwal' : 'Kosong'}
         />
         <OverviewMetric
           label="Arsip"
