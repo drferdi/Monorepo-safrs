@@ -1,8 +1,8 @@
 # Normalise line endings to LF in the repository.
 * text=auto eol=lf
 
-# Binary files: never convert or diff as text.
-*.png binary
+# Binary files: never convert or diff as text. PNG images are stored in Git LFS.
+*.png filter=lfs diff=lfs merge=lfs -text
 *.jpg binary
 *.jpeg binary
 *.gif binary
