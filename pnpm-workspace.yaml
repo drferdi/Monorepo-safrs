@@ -50,10 +50,10 @@ catalog:
   dayjs: 1.11.13
   electron: 43.4.1
   fast-check: 4.9.0
-  hono: 4.13.5
+  hono: 4.13.7
   husky: 9.1.7
   lucide-react: 0.516.0
-  next: 16.3.3
+  next: 16.3.6
   pg: 8.16.3
   playwright: 1.62.1
   postcss: 8.5.26
@@ -83,7 +83,9 @@ minimumReleaseAgeExclude:
 overrides:
   next: "catalog:"
   postcss: "catalog:"
-  sharp: ">=0.35.4"
+  sharp: ">=0.35.5"
+  source-map-js: ">=1.2.2"
+  "@grpc/grpc-js": ">=1.14.5"
   fast-uri: ">=3.1.6"
   mysql2: ">=3.22.0"
   # GHSA-ggr8-5vv4-36mx / CVE-2026-40345: uncontrolled recursion in
