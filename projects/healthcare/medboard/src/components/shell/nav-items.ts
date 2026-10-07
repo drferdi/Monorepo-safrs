@@ -78,6 +78,11 @@ export function findNavSpot(pathname: string): NavSpot | null {
   return null
 }
 
+// Chief 2026-10-07: Klinis is the section open by default; a page in another section opens that one.
+export function openNavSection(pathname: string): number {
+  return findNavSpot(pathname)?.section ?? 0
+}
+
 export const NAV_COLLAPSED_KEY = 'puskesmas:nav-collapsed'
 
 export function readNavCollapsed(stored: string | null): boolean {

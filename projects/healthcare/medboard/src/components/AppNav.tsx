@@ -5,7 +5,7 @@ import { animate, AnimatePresence, motion, useMotionValue, useTransform } from '
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { findNavSpot, isNavActive, NAV_COLLAPSED_KEY, NAV_GROUPS, readNavCollapsed, type NavItem } from './shell/nav-items'
+import { findNavSpot, isNavActive, NAV_COLLAPSED_KEY, NAV_GROUPS, openNavSection, readNavCollapsed, type NavItem } from './shell/nav-items'
 import { useReducedMotion } from './shell/use-reduced-motion'
 
 // The open rail follows lab.xevrion.dev/lab/sidebar-submenu (after Pranav Patel): one
@@ -97,6 +97,7 @@ function IconRail({ pathname }: { pathname: string }) {
 function Submenu({ pathname }: { pathname: string }) {
   const reduceMotion = useReducedMotion()
   const spot = findNavSpot(pathname)
+  const openSection = openNavSection(pathname)
 
   return (
     <div className="app-submenu">
@@ -112,7 +113,7 @@ function Submenu({ pathname }: { pathname: string }) {
         />
       ) : null}
       {NAV_GROUPS.map((group, s) => {
-        const open = spot?.section === s
+        const open = openSection === s
         return (
           <div key={group.label} data-tone={group.tone}>
             <Link
@@ -124,7 +125,7 @@ function Submenu({ pathname }: { pathname: string }) {
               {group.label}
             </Link>
             <AnimatePresence initial={false}>
-              {open && spot ? (
+              {open ? (
                 <motion.div
                   key="items"
                   className="app-submenu__fold"
@@ -136,7 +137,11 @@ function Submenu({ pathname }: { pathname: string }) {
                       : { height: 0, opacity: 0, transition: FOLD }
                   }
                 >
-                  <Branches items={group.items} active={spot.item} reduceMotion={reduceMotion} />
+                  <Branches
+                    items={group.items}
+                    active={spot?.section === s ? spot.item : null}
+                    reduceMotion={reduceMotion}
+                  />
                 </motion.div>
               ) : null}
             </AnimatePresence>
@@ -147,16 +152,18 @@ function Submenu({ pathname }: { pathname: string }) {
   )
 }
 
-function Branches({ items, active, reduceMotion }: { items: NavItem[]; active: number; reduceMotion: boolean }) {
+function Branches({ items, active, reduceMotion }: { items: NavItem[]; active: number | null; reduceMotion: boolean }) {
   const last = items.length - 1
   // The grey tree: a trunk down to the last item, a curved branch to each.
   const tree = [`M${TRUNK} 0 V${rowMiddle(last) - BEND}`, ...items.map((_, i) => branch(rowMiddle(i)))].join(' ')
 
   // The lit branch runs from the top of the trunk to the active item and follows
-  // it, so moving down the list stretches it rather than redrawing it.
-  const y = useMotionValue(rowMiddle(active))
+  // it, so moving down the list stretches it rather than redrawing it. A section opened by
+  // default, with no current page in it, shows no lit branch.
+  const y = useMotionValue(rowMiddle(active ?? 0))
   const lit = useTransform(y, (v) => `M${TRUNK} 0 V${v - BEND} Q${TRUNK} ${v} ${TRUNK + BEND} ${v} H${REACH}`)
   useEffect(() => {
+    if (active === null) return
     const target = rowMiddle(active)
     if (reduceMotion) y.jump(target)
     else animate(y, target, SLIDE)
@@ -174,14 +181,16 @@ function Branches({ items, active, reduceMotion }: { items: NavItem[]; active: n
         strokeLinecap="round"
       >
         <path d={tree} className="app-submenu__tree-path" />
-        <motion.path
-          d={lit}
-          className="app-submenu__lit-path"
-          // Drawn down from the section title as the section opens.
-          initial={reduceMotion ? false : { pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.08 }}
-        />
+        {active === null ? null : (
+          <motion.path
+            d={lit}
+            className="app-submenu__lit-path"
+            // Drawn down from the section title as the section opens.
+            initial={reduceMotion ? false : { pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.08 }}
+          />
+        )}
       </svg>
       <ul className="app-submenu__list">
         {items.map(({ href, label, icon: Icon }, i) => {

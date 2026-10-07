@@ -6,7 +6,7 @@ import test from 'node:test'
 import sharp from 'sharp'
 
 import { initials } from './initials'
-import { findNavSpot, isNavActive, NAV_GROUPS, readNavCollapsed } from './nav-items'
+import { findNavSpot, isNavActive, NAV_GROUPS, openNavSection, readNavCollapsed } from './nav-items'
 
 const hrefs = NAV_GROUPS.flatMap((group) => group.items.map((item) => item.href))
 
@@ -53,6 +53,14 @@ test('the open rail section and its lit item follow the page, and pages outside 
   assert.equal(findNavSpot('/'), null)
   assert.equal(findNavSpot('/hubx'), null)
   assert.equal(findNavSpot('/report/clinical'), null)
+})
+
+test('the open rail shows Klinis unless the page belongs to another section (Chief 2026-10-07)', () => {
+  assert.equal(NAV_GROUPS[openNavSection('/')].label, 'Klinis')
+  assert.equal(NAV_GROUPS[openNavSection('/legal')].label, 'Klinis')
+  assert.equal(NAV_GROUPS[openNavSection('/atlas')].label, 'Klinis')
+  assert.equal(NAV_GROUPS[openNavSection('/hub/dr-ani')].label, 'Sentra HQ')
+  assert.equal(NAV_GROUPS[openNavSection('/admin')].label, 'Laporan')
 })
 
 test('a new user starts with the narrow rail; a returning user keeps their choice', () => {
