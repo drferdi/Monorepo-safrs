@@ -5,6 +5,7 @@ import 'lenis/dist/lenis.css'
 import './globals.css'
 import './ui.css'
 import './shell.css'
+import ActivityHeartbeat from '@/components/ActivityHeartbeat'
 import AppFooter from '@/components/AppFooter'
 import AppHeader from '@/components/AppHeader'
 import AppNav from '@/components/AppNav'
@@ -32,6 +33,7 @@ export default function RootLayout({
         <SmoothScroll />
         <TidyCaseOnBlur />
         <CrewAccessGate>
+          <ActivityHeartbeat />
           <div className="app-shell">
             <AppNav />
             <div className="app-main">
