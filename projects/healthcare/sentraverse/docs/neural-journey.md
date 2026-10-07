@@ -58,15 +58,17 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
 - On desktop without reduced motion the face turns up to ±0.22 rad toward the pointer and the
   points near it brighten: `tactile.ts` `faceLook` maps the pointer onto the face plane, and
   `NeuralJourney.tsx` eases `turn` and `hover` with `gsap.quickTo` on a plain look object.
-- Each chapter section is a `perspective: 1000px` container and its content block preserves 3D.
-  `tactile.ts` holds the pure maths (normalised pointer, speed gain, tilt, magnet pull, face
-  look), covered by `tactile.test.mjs`; `face.test.mjs` covers the analysis and `makeFace`.
-  `wake.ts` wires the pointer: the active chapter's `[data-marker-copy]` block leans up to 3°,
-  the CTA is pulled 18 % toward the pointer and grows 4 %, buttons lift 2 px. Tracking uses
-  `gsap.quickTo`; releases use `elastic.out(1, .3)`, after which trackers are rebuilt.
-- Only `x, y, z, rotationX, rotationY, scale, autoAlpha` are animated. The wake is desktop-only
-  (no touch, no phones, no reduced motion) and its detach kills its tweens and clears the inline
-  transforms, so reading mode starts from clean elements.
+- The chapter text never moves with the pointer (Chief 2026-10-08). `tactile.ts` holds the pure
+  maths (magnet pull, face placement, face look), covered by `tactile.test.mjs`; `face.test.mjs`
+  covers the analysis and `makeFace`. `wake.ts` wires the pointer to the controls only: the CTA
+  is pulled 18 % toward the pointer and grows 4 %, buttons lift 2 px. Tracking uses
+  `gsap.quickTo`; releases use `elastic.out(1, .3)`, after which the trackers are rebuilt.
+- From the network chapter on, the text sits over bright neurons, so a scrim (`[data-scrim]`,
+  the page background at 48 %) fades in over the canvas and under the text at phase 58 and lifts
+  again at phase 94 as the face returns.
+- Only `x, y, scale, autoAlpha` are animated. The wake is desktop-only (no touch, no phones, no
+  reduced motion) and its detach kills its tweens and clears the inline transforms, so reading
+  mode starts from clean elements.
 
 ## Verification
 

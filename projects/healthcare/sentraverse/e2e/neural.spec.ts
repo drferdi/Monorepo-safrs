@@ -18,6 +18,7 @@ test('scroll narrative reverses, discovers every division, and keeps sound opt-i
   await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
   await expect(page.locator('[data-stage] img, [data-stage] > svg')).toHaveCount(0)
+  await expect(page.locator('[data-scrim]')).toHaveCSS('opacity', '0')
   await page.getByRole('button', { name: 'Go to Across the synapse', exact: true }).click()
   await expect(page.locator('#synapse')).toHaveAttribute('aria-hidden', 'false')
   await page.getByRole('button', { name: 'Go to The beginning', exact: true }).click()
@@ -90,9 +91,11 @@ test('context loss recovers to Canvas and reading mode cleans up pins', async ({
     })
     await expect(page.locator('main')).toHaveAttribute('data-renderer', 'canvas')
   }
+  // The headline text never moves with the pointer (Chief 2026-10-08).
   await page.mouse.move(640, 300)
   await page.mouse.move(760, 420)
-  await expect.poll(() => page.locator('#origin [data-marker-copy]').evaluate(block => (block as HTMLElement).style.transform)).toMatch(/rotate/)
+  await page.waitForTimeout(600)
+  expect(await page.locator('#origin [data-marker-copy]').evaluate(block => (block as HTMLElement).style.transform)).toBe('')
   await page.getByRole('button', { name: 'READ THE STORY', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
   await expect(page.locator('.pin-spacer')).toHaveCount(0)
@@ -131,6 +134,7 @@ test('all five connected regions are actionable and network frame pacing is reco
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
   await page.getByRole('button', { name: 'Go to All systems connected', exact: true }).click()
   await expect(page.locator('[data-overview]')).toBeVisible()
+  await expect(page.locator('[data-scrim]')).toHaveCSS('opacity', '1')
   for (const name of divisionNames) await expect(page.locator('[data-overview]').getByRole('button', { name: new RegExp(name) })).toBeVisible()
   const timing = await page.evaluate(() => new Promise<{ meanMs: number; p95Ms: number }>(resolve => {
     const frames: number[] = []

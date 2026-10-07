@@ -1,34 +1,15 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { faceLook, facePlacement, magnetPull, normalise, tiltFromPointer } from './tactile.ts'
+import { faceLook, facePlacement, magnetPull } from './tactile.ts'
 
 const box = { left: 100, top: 200, width: 200, height: 100 }
 const close = (actual, expected, label = '') => assert.ok(Math.abs(actual - expected) < 1e-9, label + ' ' + actual + ' is not ' + expected)
-
-test('the centre of the box is flat', () => {
-  const tilt = tiltFromPointer({ x: 200, y: 250 }, box, 12)
-  close(tilt.rotationX, 0); close(tilt.rotationY, 0)
-})
-
-test('the right edge turns the block toward the pointer by the full tilt', () => {
-  const tilt = tiltFromPointer({ x: 300, y: 250 }, box, 12)
-  close(tilt.rotationY, 12); close(tilt.rotationX, 0)
-})
-
-test('above the box the block tips back, and a far pointer is clamped to the edge', () => {
-  close(tiltFromPointer({ x: 200, y: -500 }, box, 12).rotationX, 12)
-  close(tiltFromPointer({ x: 9000, y: 250 }, box, 3).rotationY, 3)
-})
 
 test('a control is pulled toward the pointer by a fraction of the offset', () => {
   const centre = magnetPull({ x: 200, y: 250 }, box, .18)
   close(centre.x, 0); close(centre.y, 0)
   const pulled = magnetPull({ x: 240, y: 270 }, box, .18)
   close(pulled.x, 7.2); close(pulled.y, 3.6)
-})
-
-test('a hidden element with no size normalises to its centre', () => {
-  assert.deepEqual(normalise({ x: 5, y: 5 }, { left: 5, top: 5, width: 0, height: 0 }), { x: 0, y: 0 })
 })
 
 test('the face sees the pointer as a turn across the viewport and a point on its own plane', () => {

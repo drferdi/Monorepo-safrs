@@ -1,28 +1,10 @@
 export type Point = { x: number; y: number }
 export type Box = { left: number; top: number; width: number; height: number }
-export type Tilt = { rotationX: number; rotationY: number }
 export type Viewport = { width: number; height: number }
 export type FaceView = { offset: Point; depth: number; scale: number }
 export type FaceLook = { turn: number; highlight: [number, number, number] }
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
-
-// Pointer position inside a box as [-1, 1] per axis; outside the box clamps to the edge. A hidden
-// element reports a zero-sized box, which reads as the centre rather than dividing by zero.
-export function normalise(pointer: Point, box: Box): Point {
-  const halfWidth = box.width / 2, halfHeight = box.height / 2
-  return {
-    x: halfWidth ? clamp((pointer.x - (box.left + halfWidth)) / halfWidth, -1, 1) : 0,
-    y: halfHeight ? clamp((pointer.y - (box.top + halfHeight)) / halfHeight, -1, 1) : 0,
-  }
-}
-
-// rotationY follows the pointer x, rotationX opposes its y: the near edge of the block dips
-// toward the pointer, up to maxTilt degrees.
-export function tiltFromPointer(pointer: Point, box: Box, maxTilt: number): Tilt {
-  const n = normalise(pointer, box)
-  return { rotationX: -n.y * maxTilt, rotationY: n.x * maxTilt }
-}
 
 // A control leans toward the pointer by a fraction of the pointer offset from its centre.
 export function magnetPull(pointer: Point, box: Box, strength: number): Point {

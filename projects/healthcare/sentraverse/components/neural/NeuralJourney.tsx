@@ -119,6 +119,10 @@ export default function NeuralJourney() {
           master.to(nav, { autoAlpha: 1, duration: 2 }, 11)
           master.fromTo('[data-overview]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.5 }, 91)
           master.to('[data-overview]', { autoAlpha: 0, duration: 1 }, 95)
+          // From the network on, the text sits over bright neurons: a scrim darkens the canvas
+          // under it (Chief 2026-10-08) and lifts again as the face returns at the end.
+          master.fromTo('[data-scrim]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 3 }, 58)
+          master.to('[data-scrim]', { autoAlpha: 0, duration: 3 }, 94)
           chapters.forEach((chapter, index) => {
             const panel = panels[index]
             // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
@@ -169,10 +173,8 @@ export default function NeuralJourney() {
         root.addEventListener('pointermove', move)
         root.addEventListener('pointerleave', leave)
         const detachWake = mobile || reduced ? () => undefined : attachPointerWake(gsap, {
-          root, panels,
           magnetic: root.querySelector<HTMLElement>('[data-magnetic]'),
           buttons: Array.from(root.querySelectorAll<HTMLElement>('[data-nav] > *, [data-jump]')),
-          activeIndex: () => lastChapter,
         })
         update(); engine.render(0, 0, reduced)
         document.fonts.ready.then(() => { if (!cancelled) ScrollTrigger.refresh() })
@@ -249,6 +251,7 @@ export default function NeuralJourney() {
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         <canvas ref={fallbackRef} className={styles.canvas} aria-hidden="true" />
         <div className={styles.vignette} aria-hidden="true" />
+        <div data-scrim className={styles.scrim} aria-hidden="true" />
         <header className={styles.header}>
           <a href="#top" className={styles.wordmark} onClick={event => { event.preventDefault(); navigateRef.current(0) }} aria-label="Sentraverse, return to origin"><span className={styles.mark} aria-hidden="true">✳</span> SENTRAVERSE<span className={styles.wordmarkDot}>®</span></a>
           <nav data-nav className={styles.nav} aria-label="Primary navigation">
