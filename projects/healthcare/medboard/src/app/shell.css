@@ -188,7 +188,8 @@
 
 /* Footer, after the Wine Diplomacy layout (Chief 2026-10-07): a fine grid band over six guide
    lines, the tagline with a round back-to-top link, three ruled columns, a light bar and a base
-   line. Navy ground; primary-tint stands in for the reference's cream. */
+   line. Navy ground; primary-tint stands in for the reference's cream. The ground starts white
+   where the page ends and is full navy before the tagline (Chief 2026-10-07). */
 .app-footer {
   --footer-ink: var(--text-on-accent);
   --footer-muted: color-mix(in srgb, var(--text-on-accent) 72%, var(--primary));
@@ -199,7 +200,7 @@
   container-type: inline-size;
   overflow: hidden;
   padding: 0 var(--footer-inset);
-  background: var(--primary);
+  background: linear-gradient(to bottom, var(--surface), var(--primary) calc(var(--footer-band) + var(--gap-lg)));
   color: var(--footer-ink);
   font-size: var(--text-sm);
   line-height: var(--lh-normal);
@@ -211,21 +212,22 @@
   right: var(--footer-inset);
   pointer-events: none;
 }
-/* Six columns of guide lines from top to bottom. */
+/* Six columns of guide lines from top to bottom, rising out of the white like the band. */
 .app-footer__guides {
   top: 0;
   bottom: 0;
   border-right: 1px solid var(--footer-line);
   background: linear-gradient(to right, var(--footer-line) 1px, transparent 1px) 0 0 / calc(100% / 6) 100% repeat-x;
+  mask-image: linear-gradient(to bottom, transparent, black calc(var(--footer-band) * 0.45));
 }
-/* The fine grid at the top: five cells to each guide column, fading out at its foot. */
+/* The fine grid at the top: five cells to each guide column, rising out of the white and fading at its foot. */
 .app-footer__band {
   top: 0;
   height: var(--footer-band);
   background:
     linear-gradient(var(--footer-line) 1px, transparent 1px) 0 0 / 100% 42px,
     linear-gradient(to right, var(--footer-line) 1px, transparent 1px) 0 0 / calc(100% / 30) 100%;
-  mask-image: linear-gradient(to bottom, black 78%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 45%, black 78%, transparent);
 }
 .app-footer__hero {
   position: relative;
