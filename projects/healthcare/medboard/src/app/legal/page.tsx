@@ -522,9 +522,9 @@ function SecurityTab() {
       <SectionHeading>Infrastruktur</SectionHeading>
       <BulletList
         items={[
-          'Platform deployment: Railway (cloud hosting dengan isolasi container)',
-          'Runtime: Node.js 20 LTS dengan TypeScript strict mode',
-          'Restart policy: otomatis saat kegagalan, maksimal 3 percobaan ulang',
+          'Platform deployment: VPS Biznet Gio (Ubuntu 24.04 LTS), HTTPS lewat Caddy',
+          'Runtime: Node.js 24 dengan TypeScript strict mode',
+          'Restart policy: otomatis saat kegagalan lewat systemd, jeda 5 detik',
           'Health check: monitoring aktif untuk semua modul inti',
         ]}
       />
