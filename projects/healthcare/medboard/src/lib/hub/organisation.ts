@@ -68,7 +68,7 @@ export const CORE_ROLES: CoreRole[] = [
       'Komersialisasi Sentra Academic/Tutor Smartboard; memimpin pilot institusi, customer discovery, kemitraan, adopsi, dan akuntabilitas pendapatan.',
     aiSupport: 'Academic & commercial intelligence: pipeline, konversi, retensi, dan umpan balik product-market.',
     decides:
-      'Go-to-market dan pilot Academic dalam domainnya; bukan Founder atau Founding Core, tanpa saham legal otomatis dan tanpa veto atas keputusan Founder.',
+      'Go-to-market dan pilot Academic dalam domainnya. Karel tidak termasuk Founder atau Founding Core, tidak otomatis memegang saham legal, dan tidak punya veto atas keputusan Founder.',
   },
   {
     id: 'farhan',
@@ -92,7 +92,7 @@ export const INDEPENDENT_PANEL: Advisor[] = [
   {
     name: 'Widya Puti Melinda, S.Psi., M.M.',
     mandate: 'Nasihat keuangan dan operasional.',
-    boundary: 'Penasihat; tanpa delegasi eksekutif.',
+    boundary: 'Memberi nasihat, tanpa wewenang eksekutif.',
   },
   {
     name: 'Kevin Susanto, B.Eng., MTech IS',
@@ -101,8 +101,8 @@ export const INDEPENDENT_PANEL: Advisor[] = [
   },
   {
     name: 'dr. Dibya Arfianda, Sp.OG.',
-    mandate: 'Validasi klinis lulus/gagal secara independen sebelum rilis klinis.',
-    boundary: 'Dapat memblokir rilis; tim pengembang tidak dapat membatalkan kegagalan keselamatan klinis.',
+    mandate: 'Menilai lulus atau gagal secara klinis, secara independen, sebelum fitur klinis dirilis.',
+    boundary: 'Boleh memblokir rilis. Tim pengembang tidak bisa membatalkan putusan gagal keselamatan klinis.',
   },
 ]
 
@@ -110,15 +110,15 @@ export const FOUNDING_COMPACT = [
   { label: 'Human first', desc: 'Integritas, akuntabilitas, dan kepedulian tidak bisa ditawar.' },
   {
     label: 'AI augments everyone',
-    desc: 'Satu lapisan kecerdasan yang diatur mendukung setiap fungsi dalam batas akses yang disetujui.',
+    desc: 'Satu lapisan AI yang diatur membantu setiap fungsi, sebatas akses yang sudah disetujui.',
   },
   {
     label: 'Human authority',
-    desc: 'Penilaian akhir, akuntabilitas, dan eskalasi tetap pada pemimpin manusia yang disebut namanya.',
+    desc: 'Keputusan akhir, tanggung jawab, dan eskalasi selalu dipegang pemimpin yang ditunjuk dengan nama.',
   },
   {
     label: 'Modular resources',
-    desc: 'Tim inti memegang kapabilitas bersama dan memakai spesialis eksternal untuk keahlian terbatas.',
+    desc: 'Tim inti mengerjakan kemampuan yang dipakai bersama. Untuk keahlian yang sempit, Sentra memakai spesialis dari luar.',
   },
 ]
 
@@ -152,7 +152,7 @@ export const OPERATING_RHYTHM = [
   },
   {
     label: 'Stand-up domain harian',
-    desc: 'Asinkron bila memungkinkan; hambatan dieskalasi dengan pemilik, dampak, dan keputusan yang diminta.',
+    desc: 'Asinkron bila bisa. Hambatan dieskalasi dengan menyebut pemiliknya, dampaknya, dan keputusan yang diminta.',
   },
   {
     label: 'Review operasional bulanan',
@@ -168,19 +168,19 @@ export const SCALE_PHASES = [
   {
     phase: 'Fase 0–1',
     team: '±6–11 orang',
-    model: 'Founder, Founding Core, Karel Sinatra Core Team, Founding Contributor, dan jaringan penasihat.',
-    trigger: 'Rentang kendali harian melebihi kapasitas koordinasi.',
+    model: 'Founder, Founding Core, Core Team (Karel Sinatra), Founding Contributor, dan jaringan penasihat.',
+    trigger: 'Jumlah orang yang dikoordinasi tiap hari sudah melampaui kapasitas.',
   },
   {
     phase: 'Fase 2',
     team: '±15–25 orang',
-    model: 'Tim Engineering, Clinical, Growth, dan Corporate Operations tersendiri.',
-    trigger: 'Satu product stream butuh pemilik akuntabel tersendiri.',
+    model: 'Engineering, Clinical, Growth, dan Corporate Operations masing-masing punya tim sendiri.',
+    trigger: 'Satu product stream butuh pemilik sendiri yang bertanggung jawab penuh.',
   },
   {
     phase: 'Fase 3',
     team: '50+ orang',
-    model: 'Struktur C-level formal dan birokrasi operasional yang didelegasikan.',
+    model: 'Struktur C-level formal, dengan urusan operasional didelegasikan.',
     trigger: 'Transisi PT, audit VC, atau investasi eksternal formal.',
   },
 ]
@@ -201,7 +201,7 @@ export const PRODUCTS = [
     name: 'Sentra/ui',
     pillar: 'Design Partner',
     model: 'Proyek dan retainer',
-    role: 'Mesin arus kas: monetisasi tercepat dan pembelajaran klien.',
+    role: 'Sumber arus kas. Paling cepat menghasilkan uang, sekaligus tempat belajar dari klien.',
     revenue: [0.74, 1.39, 2.21, 3.11],
     driver: 'Proyek selesai',
     gate: '≥30 draf proyek selesai; pendapatan campuran Rp18 juta.',
@@ -212,10 +212,10 @@ export const PRODUCTS = [
     name: 'Tutor Smartboard',
     pillar: 'Academic Solutions',
     model: 'SaaS institusi',
-    role: 'Mesin pertumbuhan: membuktikan adopsi sekolah berskala.',
+    role: 'Sumber pertumbuhan. Membuktikan bahwa sekolah mau memakainya dalam skala besar.',
     revenue: [0.36, 1.68, 5.28, 14.4],
     driver: 'Nilai kontrak tahunan Rp24 juta per sekolah',
-    gate: 'Perpanjangan berbayar membuktikan nilai di kelas.',
+    gate: 'Sekolah memperpanjang langganan berbayar, bukti alatnya berguna di kelas.',
     ifFails: 'Tunda percepatan akuisisi; fokus pada retensi dan hasil belajar.',
   },
   {
@@ -223,7 +223,7 @@ export const PRODUCTS = [
     name: 'Sentra Assist',
     pillar: 'Healthcare AI',
     model: 'SaaS fasilitas',
-    role: 'Mesin keunggulan jangka panjang: penerapan lebih lambat, daya tahan klinis tertinggi.',
+    role: 'Keunggulan jangka panjang. Penerapannya lebih lambat, tetapi daya tahannya di layanan klinis paling tinggi.',
     revenue: [0.18, 1.08, 4.5, 15.3],
     driver: 'Kemitraan puskesmas',
     gate: 'Validator independen tidak menemukan kegagalan keselamatan kritis.',
@@ -234,7 +234,7 @@ export const PRODUCTS = [
     name: 'Payroll Automation',
     pillar: 'Digital Finance',
     model: 'SaaS per karyawan per bulan',
-    role: 'Mesin pendapatan berulang: pendapatan bulanan yang awet.',
+    role: 'Pendapatan berulang yang masuk setiap bulan.',
     revenue: [0.25, 1.13, 3.78, 9.45],
     driver: 'Rp15 ribu per karyawan per bulan',
     gate: 'Harga Rp15 ribu diterima tanpa kesalahan hitung.',
@@ -249,7 +249,7 @@ export const EBITDA = [-2.2, -3.1, -2.4, 12.77]
 export const FINANCE_CADENCE = [
   { label: 'Bulanan', desc: 'P&L per produk, runway kas, review pajak dan kepatuhan.' },
   { label: 'Kuartalan', desc: 'Review Board/Founder atas gate, harga, dan alokasi modal.' },
-  { label: 'Tahunan', desc: 'Model disesuaikan ulang dengan laporan audit atau manajemen dan rencana operasional.' },
+  { label: 'Tahunan', desc: 'Model dicocokkan ulang dengan laporan audit atau laporan manajemen, serta rencana operasional.' },
 ]
 
 export const LEGAL_ENTITY = {
@@ -281,7 +281,7 @@ export const TRANSITION_STEPS = [
   { gate: 'G2', name: 'Design', phase: 'Design', timing: 'Minggu 3–8', purpose: 'Pilih struktur dan jalur migrasi.', decision: 'Select / redesign' },
   { gate: 'G3', name: 'Readiness', phase: 'Prepare', timing: 'Minggu 6–14', purpose: 'Pastikan siap closing.', decision: 'Sign / defer' },
   { gate: 'G4', name: 'Cutover', phase: 'Execute', timing: 'Tanggal target ±2 minggu', purpose: 'Aktifkan entitas target dengan aman.', decision: 'Go / no-go' },
-  { gate: 'G5', name: 'Stabilise', phase: 'Stabilise', timing: 'Hari 1–100', purpose: 'Tutup defect dan risiko residual.', decision: 'Close / extend' },
+  { gate: 'G5', name: 'Stabilise', phase: 'Stabilise', timing: 'Hari 1–100', purpose: 'Selesaikan defect dan risiko yang tersisa.', decision: 'Close / extend' },
 ]
 
 export const SOURCE_DOCUMENTS = [

@@ -48,8 +48,8 @@ export default function OrganisationTab() {
         <p className={styles.kicker}>Operating charter · revisi 1.3</p>
         <h2 className={styles.lead}>Organisation by design</h2>
         <p className={styles.body}>
-          Sistem operasi Sentra yang dipimpin manusia dan diperkuat AI. Teknologi memperluas penilaian dan empati
-          manusia, tidak menggantikan keputusan manusia yang akuntabel. Keberhasilan dibagi secara adil; kegagalan
+          Cara Sentra bekerja: manusia memimpin, AI membantu. Teknologi memperluas penilaian dan empati tim, sedangkan
+          keputusan tetap diambil orang yang bertanggung jawab atasnya. Keberhasilan dibagi secara adil, dan kegagalan
           dipelajari bersama tanpa mencari kambing hitam.
         </p>
       </div>
@@ -180,7 +180,7 @@ function StructureSection() {
           </svg>
 
           <div className={styles.aiLayer}>
-            Satu lapisan kecerdasan yang diatur mendukung setiap fungsi, dalam batas akses yang disetujui.
+            Satu lapisan AI yang diatur membantu setiap fungsi, sebatas akses yang sudah disetujui.
           </div>
         </div>
 
@@ -304,8 +304,8 @@ function FinanceSection() {
   return (
     <div className={styles.stack}>
       <p className={styles.caption}>
-        Financial Architecture 2027–2030: asumsi perencanaan, bukan proyeksi, hasil audit, nasihat investasi, atau
-        penawaran efek.
+        Angka Financial Architecture 2027–2030 adalah asumsi perencanaan. Angka ini bukan proyeksi, hasil audit,
+        nasihat investasi, atau penawaran efek.
       </p>
 
       <div className={styles.grid4}>
@@ -425,8 +425,8 @@ function FinanceSection() {
           </table>
         </div>
         <p className={styles.caption}>
-          EBITDA sengaja negatif selama tahun investasi dan menjadi positif pada 2030. Safe Distributable Profit yang
-          direncanakan:{' '}
+          EBITDA memang direncanakan negatif selama tahun investasi dan baru positif pada 2030. Rencana Safe
+          Distributable Profit:{' '}
           {SAFE_PROFIT_PLAN.map((year) => `${year.year} ${millions(year.millions)}`).join(', ')}.
         </p>
       </div>
@@ -510,7 +510,7 @@ function LegalSection() {
       <div className={styles.card}>
         <div className={styles.cardHead}>
           <h3 className={styles.cardTitle}>Transisi legal korporasi</h3>
-          <span className={styles.caption}>Enam gate; tanggal efektif tidak ditetapkan hanya dari kalender.</span>
+          <span className={styles.caption}>Enam gate. Tanggal efektif tidak ditentukan dari kalender saja.</span>
         </div>
         <ol className={styles.timeline}>
           {TRANSITION_STEPS.map((step) => (
