@@ -580,42 +580,30 @@ export default function LegalPage() {
 
       {/* ── Tab Navigation ── */}
       <div
+        role="group"
+        aria-label="Dokumen legal"
         style={{
           display: 'flex',
-          gap: 6,
+          flexWrap: 'wrap',
+          gap: 10,
           padding: '16px 0 24px',
           borderBottom: '1px solid var(--line-base, rgba(255,255,255,0.08))',
         }}
       >
-        {TABS.map(tab => {
-          const isActive = activeTab === tab.key
-          return (
-            <button
-              key={tab.key}
-              onClick={() => {
-                setActiveTab(tab.key)
-                window.history.replaceState(null, '', `#${tab.key}`)
-              }}
-              style={{
-                padding: '6px 16px',
-                borderRadius: 20,
-                border: isActive
-                  ? '1px solid color-mix(in srgb, var(--c-asesmen) 40%, transparent)'
-                  : '1px solid var(--line-base, rgba(255,255,255,0.08))',
-                background: isActive
-                  ? 'color-mix(in srgb, var(--c-asesmen) 8%, transparent)'
-                  : 'transparent',
-                color: isActive ? ACCENT : 'var(--text-muted)',
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-              }}
-            >
-              {tab.label}
-            </button>
-          )
-        })}
+        {TABS.map(tab => (
+          <button
+            key={tab.key}
+            type="button"
+            className="ui-chip"
+            aria-pressed={activeTab === tab.key}
+            onClick={() => {
+              setActiveTab(tab.key)
+              window.history.replaceState(null, '', `#${tab.key}`)
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* ── Tab Content ── */}
