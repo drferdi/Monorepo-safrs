@@ -186,63 +186,100 @@
 .app-content { flex: 1; padding: var(--gap-2xl); }
 .app-page-stack { width: 100%; max-width: var(--content-max-width); margin: 0 auto; }
 
-/* Footer: the MedBoard navy band. One accent mark only, on the clinical-responsibility notice. */
+/* Footer, after the Inversa layout (Chief 2026-10-07): a framed row of three columns with
+   cross ticks where the lines meet, the MedBoard wordmark across the full width, one base line.
+   Navy ground; the accent carries the wordmark and the arrows only. */
 .app-footer {
   --footer-ink: var(--text-on-accent);
   --footer-muted: color-mix(in srgb, var(--text-on-accent) 72%, var(--primary));
-  --footer-line: color-mix(in srgb, var(--text-on-accent) 14%, var(--primary));
+  --footer-line: color-mix(in srgb, var(--text-on-accent) 22%, var(--primary));
+  padding: var(--gap-2xl) var(--gap-lg) 0;
   background: var(--primary);
   color: var(--footer-muted);
   font-size: var(--text-sm);
   line-height: var(--lh-normal);
 }
-.app-footer__inner {
+.app-footer__frame {
+  container-type: inline-size;
+  border: 1px solid var(--footer-line);
+}
+.app-footer__grid {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--gap-2xl);
-  width: 100%;
-  max-width: var(--content-max-width);
-  margin: 0 auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--footer-line);
+}
+.app-footer__cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  min-height: 248px;
   padding: var(--gap-2xl) var(--gap-2xl) var(--gap-xl);
 }
-.app-footer__brand { display: flex; flex-direction: column; gap: var(--gap-sm); max-width: 440px; }
-.app-footer__name {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gap-sm);
-  color: var(--footer-ink);
-  font-size: var(--text-base);
-  font-weight: 600;
+.app-footer__cell + .app-footer__cell { border-left: 1px solid var(--footer-line); }
+/* A small cross where each vertical line meets the top and the bottom of the row. */
+.app-footer__cell::before,
+.app-footer__cell::after,
+.app-footer__grid::before,
+.app-footer__grid::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background:
+    linear-gradient(var(--footer-ink), var(--footer-ink)) center / 100% 1px no-repeat,
+    linear-gradient(var(--footer-ink), var(--footer-ink)) center / 1px 100% no-repeat;
 }
-/* The Sentra mark is dark; on the navy band it is drawn white. */
-.app-footer__name img { filter: brightness(0) invert(1); }
-.app-footer__lead { margin: 0; }
-.app-footer__notice {
-  margin: var(--gap-sm) 0 0;
-  padding-left: var(--gap-md);
-  border-left: 2px solid var(--accent);
-  color: var(--footer-ink);
-}
-.app-footer__heading { margin: 0 0 var(--gap-sm); color: var(--footer-ink); font-weight: 600; }
-.app-footer__col ul { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.app-footer__cell::before { top: -5px; left: -5px; }
+.app-footer__cell::after { bottom: -5px; left: -5px; }
+.app-footer__grid::before { top: -5px; right: -5px; }
+.app-footer__grid::after { bottom: -5px; right: -5px; }
+.app-footer__heading { margin: 0 0 var(--gap-xl); color: var(--footer-ink); font-size: var(--text-base); font-weight: 500; }
+.app-footer__lead { margin: 0; max-width: 34ch; color: var(--footer-ink); }
+.app-footer__end { display: flex; flex-direction: column; gap: var(--gap-sm); margin-top: auto; }
+.app-footer__small { margin: 0; max-width: 36ch; font-size: var(--text-xs); }
+.app-footer__links { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .app-footer a {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--footer-muted);
+  color: var(--footer-ink);
   text-decoration: none;
   transition: color 0.15s ease-out;
 }
-.app-footer a:hover { color: var(--footer-ink); }
+.app-footer a:hover { color: var(--footer-muted); }
 .app-footer a:focus-visible { outline: 2px solid var(--footer-ink); outline-offset: 2px; border-radius: var(--radius-sm); }
-.app-footer__base {
-  width: 100%;
-  max-width: var(--content-max-width);
-  margin: 0 auto;
-  padding: var(--gap-md) var(--gap-2xl);
-  border-top: 1px solid var(--footer-line);
-  font-size: var(--text-xs);
+.app-footer a svg { color: var(--accent); }
+.app-footer__more { align-self: flex-start; font-size: var(--text-xs); }
+/* The Sentra column's one action, drawn like the reference's underlined field. */
+.app-footer a.app-footer__field {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: var(--gap-sm);
+  border-bottom: 1px solid var(--footer-ink);
 }
+.app-footer__mark {
+  margin: 0;
+  padding: 4cqi 1.5cqi 3cqi;
+  color: var(--accent);
+  font-size: 22cqi;
+  font-weight: 600;
+  line-height: 0.8;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+  text-align: center;
+  user-select: none;
+}
+.app-footer__base {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--gap-lg);
+  padding: var(--gap-lg) 0;
+  color: var(--footer-ink);
+}
+.app-footer__base > :last-child { justify-self: end; }
 @media (prefers-reduced-motion: reduce) {
   .app-footer a { transition: none; }
 }
@@ -251,7 +288,13 @@
   .app-header { padding: 0 var(--gap-lg); }
   .app-header__date { display: none; }
   .app-content { padding: var(--gap-lg); }
-  .app-footer__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap-xl); padding: var(--gap-xl) var(--gap-lg); }
-  .app-footer__brand { grid-column: 1 / -1; }
-  .app-footer__base { padding: var(--gap-md) var(--gap-lg); }
+  .app-footer__grid { grid-template-columns: 1fr; }
+  .app-footer__cell { min-height: 0; padding: var(--gap-xl) var(--gap-lg); }
+  .app-footer__cell + .app-footer__cell { border-left: 0; border-top: 1px solid var(--footer-line); }
+  .app-footer__cell::before,
+  .app-footer__cell::after,
+  .app-footer__grid::before,
+  .app-footer__grid::after { display: none; }
+  .app-footer__base { grid-template-columns: 1fr; justify-items: start; gap: var(--gap-sm); }
+  .app-footer__base > :last-child { justify-self: start; }
 }

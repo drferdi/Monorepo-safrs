@@ -19,7 +19,19 @@ test('the footer states that clinical decisions stay with the treating health wo
 })
 
 test('the footer links Sentra Hub inside the app and sentrahai.com in a new tab', () => {
-  assert.match(html, /href="\/hub"/)
-  assert.match(html, /<a[^>]*href="https:\/\/sentrahai\.com\/"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/)
+  assert.match(html, /<a[^>]*href="\/hub"[^>]*>Buka Sentra Hub/)
+  assert.match(html, /<a[^>]*href="https:\/\/sentrahai\.com\/"[^>]*target="_blank"[^>]*rel="noopener noreferrer"[^>]*>Dikembangkan oleh Sentra/)
   assert.match(html, new RegExp(`© ${new Date().getFullYear()} Sentra Healthcare Solutions`))
+})
+
+// Chief 2026-10-07: the footer follows the Inversa layout: three framed columns, then the
+// MedBoard wordmark across the full width, then one line with copyright, privacy and credit.
+test('the footer has three framed columns, the full-width wordmark and the base line, in that order', () => {
+  const headings = [...html.matchAll(/<p class="app-footer__heading">([^<]+)<\/p>/g)].map((m) => m[1])
+  assert.deepEqual(headings, ['Tentang', 'Legal', 'Sentra'])
+  const grid = html.indexOf('app-footer__grid')
+  const mark = html.indexOf('app-footer__mark')
+  const base = html.indexOf('app-footer__base')
+  assert.ok(grid > -1 && grid < mark && mark < base)
+  assert.match(html, /<p class="app-footer__mark" aria-hidden="true">MedBoard<\/p>/)
 })
