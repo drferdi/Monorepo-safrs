@@ -1827,6 +1827,16 @@ export default function ProfilUserPage() {
           {logbookKlinisSection}
         </div>
 
+        {/* ── Rank & award ── */}
+        <div style={{ gridColumn: '1 / -1' }}>
+          <Panel>
+            <PanelSection>
+              <SectionLabel>Rank & award</SectionLabel>
+              <RankAwardCard rank={myRank} awards={myAwards} />
+            </PanelSection>
+          </Panel>
+        </div>
+
         {/* ── Aktivitas klinis ── */}
         <div style={{ gridColumn: '1 / -1' }}>
           <Panel>
@@ -1852,16 +1862,6 @@ export default function ProfilUserPage() {
                   <HeatmapLegend />
                 </div>
               </div>
-            </PanelSection>
-          </Panel>
-        </div>
-
-        {/* ── Rank & award ── */}
-        <div style={{ gridColumn: '1 / -1' }}>
-          <Panel>
-            <PanelSection>
-              <SectionLabel>Rank & award</SectionLabel>
-              <RankAwardCard rank={myRank} awards={myAwards} />
             </PanelSection>
           </Panel>
         </div>

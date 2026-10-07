@@ -8,3 +8,10 @@ test('the identity card names title and profession once, under the name (Chief 2
   assert.match(page, /\{sentraTitle\} · \{professionLabel\}/)
   assert.doesNotMatch(page, /profileHeroStats/)
 })
+
+test('rank and awards sit above the clinical activity heatmap (Chief 2026-10-07)', () => {
+  const rank = page.indexOf('<SectionLabel>Rank & award</SectionLabel>')
+  const activity = page.indexOf('<SectionLabel>Aktivitas klinis</SectionLabel>')
+  assert.ok(rank > 0 && activity > 0)
+  assert.ok(rank < activity)
+})
