@@ -1,65 +1,87 @@
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowUp, FileText, Info, Lock, ShieldCheck, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 
-import { LEGAL_TABS } from '@/lib/legal-tabs'
+import { LEGAL_TABS, type LegalTab } from '@/lib/legal-tabs'
 
-// Chief 2026-10-07: laid out after the Inversa footer: three framed columns, the MedBoard
-// wordmark across the full width, then one base line.
+const LEGAL_ICONS: Record<LegalTab, LucideIcon> = {
+  disclaimer: Info,
+  privacy: Lock,
+  terms: FileText,
+  security: ShieldCheck,
+}
+
+// Chief 2026-10-07: laid out after the Wine Diplomacy footer: a fine grid band over six guide
+// lines, the tagline with a round back-to-top link, three ruled columns, a light bar, a base line.
 // Legal links are plain anchors: a Next Link that only changes the hash fires no hashchange,
 // so on /legal itself the tab would not switch.
 export default function AppFooter() {
   const year = new Date().getFullYear()
-  const privacy = LEGAL_TABS.find((tab) => tab.key === 'privacy')
-  const legalLinks = LEGAL_TABS.filter((tab) => tab.key !== 'privacy')
 
   return (
     <footer className="app-footer" aria-label="Footer aplikasi">
-      <div className="app-footer__frame">
-        <div className="app-footer__grid">
-          <div className="app-footer__cell">
-            <p className="app-footer__heading">Tentang</p>
-            <p className="app-footer__lead">Sistem informasi klinis untuk puskesmas, dengan dukungan AI untuk tenaga kesehatan.</p>
-            <div className="app-footer__end">
-              <p className="app-footer__small">
-                Keputusan klinis tetap menjadi tanggung jawab tenaga kesehatan yang merawat pasien.
-              </p>
-              <a href="/legal#disclaimer" className="app-footer__more">
-                Baca disclaimer AI
-                <ArrowUpRight size={14} strokeWidth={2} aria-hidden />
-              </a>
-            </div>
-          </div>
+      <div className="app-footer__guides" aria-hidden="true" />
+      <div className="app-footer__band" aria-hidden="true" />
 
-          <nav className="app-footer__cell" aria-label="Dokumen legal">
-            <p className="app-footer__heading">Legal</p>
-            <ul className="app-footer__links">
-              {legalLinks.map((tab) => (
-                <li key={tab.key}>
-                  <a href={`/legal#${tab.key}`}>{tab.label}</a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+      <div className="app-footer__hero">
+        <p className="app-footer__tagline">Sistem informasi klinis untuk puskesmas</p>
+        <a href="#" className="app-footer__top" aria-label="Kembali ke atas">
+          <ArrowUp size={18} strokeWidth={1.75} aria-hidden />
+        </a>
+      </div>
 
-          <div className="app-footer__cell">
-            <p className="app-footer__heading">Sentra</p>
-            <Link href="/hub" className="app-footer__field">
-              Buka Sentra Hub
-              <ArrowRight size={16} strokeWidth={2} aria-hidden />
-            </Link>
+      <div className="app-footer__columns">
+        <div className="app-footer__column app-footer__identity">
+          <img src="/sentra-mark.png" alt="" width={44} height={44} />
+          <div>
+            <p className="app-footer__heading">MedBoard</p>
+            <p className="app-footer__text">
+              Dikembangkan oleh Sentra
+              <br />
+              Kota Kediri, Jawa Timur
+            </p>
           </div>
         </div>
 
-        <p className="app-footer__mark" aria-hidden="true">MedBoard</p>
+        <div className="app-footer__column">
+          <p className="app-footer__heading">Tanggung jawab klinis</p>
+          <p className="app-footer__text">
+            Rekomendasi AI membantu tenaga kesehatan. Keputusan klinis tetap menjadi tanggung jawab tenaga kesehatan
+            yang merawat pasien.
+          </p>
+          <a href="/legal#disclaimer" className="app-footer__underline">
+            Baca disclaimer AI
+          </a>
+        </div>
+
+        <nav className="app-footer__column" aria-label="Dokumen legal">
+          <p className="app-footer__heading">Legal</p>
+          <ul className="app-footer__legal">
+            {LEGAL_TABS.map((tab) => {
+              const Icon = LEGAL_ICONS[tab.key]
+              return (
+                <li key={tab.key}>
+                  <a href={`/legal#${tab.key}`}>
+                    <span className="app-footer__icon">
+                      <Icon size={14} strokeWidth={2} aria-hidden />
+                    </span>
+                    {tab.label}
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
       </div>
 
+      <div className="app-footer__bar" aria-hidden="true" />
+
       <div className="app-footer__base">
-        <span>© {year} Sentra Healthcare Solutions</span>
-        {privacy && <a href={`/legal#${privacy.key}`}>{privacy.label}</a>}
-        <a href="https://sentrahai.com/" target="_blank" rel="noopener noreferrer">
-          Dikembangkan oleh Sentra
-          <ArrowUpRight size={14} strokeWidth={2} aria-hidden />
-        </a>
+        <span className="app-footer__base-start">
+          <span>© {year} Sentra Healthcare Solutions</span>
+          <span className="app-footer__dot" aria-hidden="true" />
+          <Link href="/hub" className="app-footer__underline">Sentra Hub</Link>
+        </span>
+        <a href="https://sentrahai.com/" target="_blank" rel="noopener noreferrer" className="app-footer__underline">sentrahai.com</a>
       </div>
     </footer>
   )
