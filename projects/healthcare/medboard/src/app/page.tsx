@@ -719,12 +719,6 @@ export default function ProfilUserPage() {
   const chatUserAvatarSrc = profile.avatarUrl || '/avatar.png'
   const chatAssistantAvatarSrc = '/audrey.png'
   const visiblePositionBadges = isAdminDashboardUser ? positionSectionBadges : []
-  const profileHeroStats = isAdminDashboardUser
-    ? [
-        { label: 'Role Sentra', value: sentraTitle },
-        { label: 'Profesi', value: professionLabel },
-      ]
-    : [{ label: 'Profesi', value: professionLabel }]
   const officialWhatsappHref = normalizeWhatsappHref(profile.whatsappNumber)
   const officialEmailHref = sessionUser?.email ? `mailto:${sessionUser.email}` : ''
   const officialLinkLogos = [
@@ -1661,15 +1655,8 @@ export default function ProfilUserPage() {
                     </div>
                   </div>
                 </div>
-                <RankBadge rank={myRank} size={96} />
+                <RankBadge rank={myRank} size={72} />
               </div>
-            </PanelSection>
-
-            {/* Profesi */}
-            <PanelSection>
-              {profileHeroStats.map((item) => (
-                <Row key={item.label} label={item.label} val={item.value} />
-              ))}
             </PanelSection>
 
             {/* Link Resmi */}
