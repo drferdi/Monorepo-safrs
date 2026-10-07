@@ -100,7 +100,7 @@ export const INDEPENDENT_PANEL: Advisor[] = [
     boundary: 'Review dan rekomendasi.',
   },
   {
-    name: 'dr. Dibya Arfianda, Sp.OG. / dr. Boyong Baskoro, Sp.OG.',
+    name: 'dr. Dibya Arfianda, Sp.OG.',
     mandate: 'Validasi klinis lulus/gagal secara independen sebelum rilis klinis.',
     boundary: 'Dapat memblokir rilis; tim pengembang tidak dapat membatalkan kegagalan keselamatan klinis.',
   },

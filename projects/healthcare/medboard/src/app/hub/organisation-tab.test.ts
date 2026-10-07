@@ -22,8 +22,8 @@ test('the organisation map shows the founder and the five charter roles, each as
   assert.match(tab, /className="ui-chip"\s+aria-pressed=\{section === item\.key\}/)
 })
 
-test('people the charter no longer lists are gone from the hub (Chief 2026-10-07)', () => {
-  const removed = ['Auliya', 'Armando', 'Umul Farida', 'Nurmayatul', 'Oriza', 'Michael Subrata', 'Sentra Healthcare Solutions']
+test('people the charter no longer lists, or Chief removed, are gone from the hub (Chief 2026-10-07)', () => {
+  const removed = ['Auliya', 'Armando', 'Umul Farida', 'Nurmayatul', 'Oriza', 'Michael Subrata', 'Boyong', 'Sentra Healthcare Solutions']
   for (const file of SOURCES) {
     const text = read(file)
     assert.deepEqual(removed.filter((name) => text.includes(name)), [], file)
