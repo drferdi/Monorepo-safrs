@@ -46,3 +46,18 @@ export function tiltFromPointer(pointer: Point, box: Box, options: TiltOptions, 
 export function magnetPull(pointer: Point, box: Box, strength: number): Point {
   return { x: (pointer.x - (box.left + box.width / 2)) * strength, y: (pointer.y - (box.top + box.height / 2)) * strength }
 }
+
+export type Viewport = { width: number; height: number }
+export type FaceView = { offset: Point; depth: number; scale: number }
+export type Look = { turn: number; highlight: [number, number, number] }
+
+// The pointer as the face sees it: `turn` is where the pointer sits across the viewport in
+// [-1, 1]; `highlight` is the pointer on the face plane in model space, the renderer projection
+// run backwards (NDC x depth / 1.85 x aspect, minus the offset, over the scale). The turn is
+// small enough to ignore here.
+export function faceLook(pointer: Point, viewport: Viewport, view: FaceView): Look {
+  const nx = clamp(pointer.x / viewport.width * 2 - 1, -1, 1)
+  const ny = clamp(1 - pointer.y / viewport.height * 2, -1, 1)
+  const reach = view.depth / 1.85
+  return { turn: nx, highlight: [(nx * reach * viewport.width / viewport.height - view.offset.x) / view.scale, (ny * reach - view.offset.y) / view.scale, 0] }
+}

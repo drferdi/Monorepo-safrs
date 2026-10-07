@@ -18,7 +18,8 @@ const SPRING = { duration: 1.1, ease: 'elastic.out(1, .3)', overwrite: 'auto' as
 // pulled toward it, buttons lift on hover, and everything springs back when the pointer leaves.
 // Desktop only: the caller skips phones, touch and reduced motion.
 export function attachPointerWake(gsap: Gsap, targets: WakeTargets): () => void {
-  const faces = targets.panels.map(panel => panel.firstElementChild as HTMLElement)
+  // The content block, not the first child: division chapters start with their marker line.
+  const faces = targets.panels.map(panel => panel.querySelector<HTMLElement>('[data-marker-copy]') ?? panel.firstElementChild as HTMLElement)
   const tracked = targets.magnetic ? [...faces, targets.magnetic] : faces
   gsap.set(tracked, { force3D: true })
   const trackers = new Map<HTMLElement, Tracker>()

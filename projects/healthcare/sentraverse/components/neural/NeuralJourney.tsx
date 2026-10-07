@@ -2,7 +2,9 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import Portrait from './Portrait'
+import { loadPixels } from './face'
+import type { Look } from './renderer'
+import { faceLook } from './tactile'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions } from './story'
 import styles from './journey.module.css'
@@ -45,6 +47,17 @@ export default function NeuralJourney() {
         root.dataset.renderer = engine.mode
         root.dataset.loading = 'false'
         const state = { phase: 0 }
+        // The founder's face (Chief 2026-10-08) is drawn by the renderer from the portrait's
+        // pixels; `look` is what the pointer does to it. Without pixels the text ends the story.
+        const look: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
+        let live = true
+        loadPixels('/neural-face.webp').then(pixels => {
+          if (!live) return
+          if (!pixels) { root.dataset.face = 'unavailable'; return }
+          engine.setFace(pixels)
+          root.dataset.face = 'ready'
+          if (reduced) engine.render(state.phase, 0, true)
+        })
         let hover = -1, lastChapter = -1, lastFrame = 0, visible = true
         const progressSetter = gsap.quickSetter(progressLine, 'scaleX')
         const update = () => {
@@ -64,9 +77,9 @@ export default function NeuralJourney() {
           if (!visible || document.hidden) return
           if (mobile && time - lastFrame < 1 / 30) return
           lastFrame = time
-          engine.render(state.phase, reduced ? 0 : time, reduced, hover)
+          engine.render(state.phase, reduced ? 0 : time, reduced, hover, look)
         }
-        const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover) }
+        const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover, look) }
         const observer = new ResizeObserver(resize)
         observer.observe(stage)
         const visibility = () => { if (document.hidden) gsap.ticker.remove(draw); else if (!reduced) gsap.ticker.add(draw) }
@@ -119,9 +132,6 @@ export default function NeuralJourney() {
               scene.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
               scene.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)
             }
-            // The portrait arrives from the depth and settles with a small overshoot. Its tilt is
-            // pointer-driven (wake.ts) on other properties, so the two never fight.
-            if (chapter.id === 'human') scene.fromTo(panel.querySelector('[data-portrait-card]'), { z: -420, autoAlpha: 0, scale: .86 }, { z: 0, autoAlpha: 1, scale: 1, duration: 2.4, ease: 'back.out(1.4)', immediateRender: false }, 0)
             if (index < chapters.length - 1) scene.to(panel, { autoAlpha: 0, y: -10, duration: .8, ease: 'power2.in' }, duration - .8)
             master!.addLabel(chapter.id, chapter.phase).add(scene, chapter.phase)
           })
@@ -142,6 +152,8 @@ export default function NeuralJourney() {
         const cursor = root.querySelector<HTMLElement>('[data-cursor]')!
         const xTo = gsap.quickTo(cursor, 'x', { duration: .25, ease: 'power2.out' })
         const yTo = gsap.quickTo(cursor, 'y', { duration: .25, ease: 'power2.out' })
+        const turnTo = gsap.quickTo(look, 'turn', { duration: .6, ease: 'power3.out' })
+        const hoverTo = gsap.quickTo(look, 'hover', { duration: .4, ease: 'power2.out' })
         const move = (event: PointerEvent) => {
           if (mobile || reduced || event.pointerType === 'touch') return
           xTo(event.clientX); yTo(event.clientY)
@@ -149,8 +161,11 @@ export default function NeuralJourney() {
           const marker = (event.target as Element).closest<HTMLElement>('[data-division]')
           hover = marker ? Number(marker.dataset.division) : engine.hitTest(event.clientX, event.clientY, state.phase)
           cursor.dataset.active = String(hover >= 0)
+          const rect = stage.getBoundingClientRect()
+          const seen = faceLook({ x: event.clientX - rect.left, y: event.clientY - rect.top }, { width: rect.width, height: rect.height }, engine.faceView())
+          turnTo(seen.turn); hoverTo(1); look.highlight = seen.highlight
         }
-        const leave = () => { cursor.style.opacity = '0'; hover = -1 }
+        const leave = () => { cursor.style.opacity = '0'; hover = -1; turnTo(0); hoverTo(0) }
         root.addEventListener('pointermove', move)
         root.addEventListener('pointerleave', leave)
         const detachWake = mobile || reduced ? () => undefined : attachPointerWake(gsap, {
@@ -174,6 +189,7 @@ export default function NeuralJourney() {
           root.removeEventListener('pointermove', move); root.removeEventListener('pointerleave', leave)
           detachWake()
           handlers.forEach(remove => remove())
+          live = false
           engine.dispose()
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
           delete root.dataset.enhanced
@@ -248,10 +264,9 @@ export default function NeuralJourney() {
             const division = index >= 8 && index <= 12
             const final = chapter.id === 'human'
             return (
-              <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${final || chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''} ${final ? styles.portraitChapter : ''}`} tabIndex={-1} aria-label={chapter.label}>
+              <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''}`} tabIndex={-1} aria-label={chapter.label}>
                 {division && <div className={styles.marker} aria-hidden="true"><span data-marker-dot /><i data-marker-line /></div>}
                 <div data-marker-copy data-division={division ? index - 8 : undefined}>
-                  {final && <Portrait />}
                   <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
                   {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map(line => <span key={line}>{line}</span>)}</h2>}
                   <p className={styles.description}>{chapter.description}</p>

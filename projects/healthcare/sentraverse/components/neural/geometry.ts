@@ -1,3 +1,5 @@
+import type { FaceAnalysis } from './face'
+
 export type Vec3 = [number, number, number]
 export type Geometry = { points: Float32Array; lines: Float32Array }
 type Color = [number, number, number]
@@ -14,7 +16,8 @@ class Tissue {
   points: number[] = []
   lines: number[] = []
   rand: () => number
-  constructor(seed: number, readonly density: number) { this.rand = random(seed) }
+  readonly density: number
+  constructor(seed: number, density: number) { this.density = density; this.rand = random(seed) }
   vertex(p: Vec3, color = WHITE, size = 1.4, birth = 0, phase = 0) {
     return [...p, ...color, size, birth, phase]
   }
@@ -252,5 +255,22 @@ export function makeNetwork(density: number): Geometry {
 export function makeDust(density: number): Geometry {
   const tissue = new Tissue(781, density)
   for (let i = 0; i < 1500 * density; i++) tissue.point([(tissue.rand() - .5) * 22, (tissue.rand() - .5) * 14, (tissue.rand() - .5) * 12], [.23, .29, .36], .6 + tissue.rand() * 1.2)
+  return tissue.finish()
+}
+
+// Chief's face (2026-10-08) from the edge segments and luminance dots of the portrait analysis:
+// three units wide, centred, brighter pixels nearer the camera, grown outward from the centre.
+export function makeFace(face: FaceAnalysis): Geometry {
+  const tissue = new Tissue(5, 1)
+  const { width: w, height: h, segments, dots } = face
+  const unit = 3 / w
+  const place = (x: number, y: number, lum: number): Vec3 => [(x - w / 2) * unit, (h / 2 - y) * unit, (lum - .45) * .5]
+  const birth = (x: number, y: number) => Math.min(1, Math.hypot(x - w / 2, y - h * .45) / (w * .6))
+  for (let i = 0; i < segments.length; i += 6) {
+    tissue.line(place(segments[i], segments[i + 1], segments[i + 2]), place(segments[i + 3], segments[i + 4], segments[i + 5]), [.52, .64, .75], birth(segments[i], segments[i + 1]), (segments[i] + segments[i + 1]) / (w + h))
+  }
+  for (let i = 0; i < dots.length; i += 3) {
+    tissue.point(place(dots[i], dots[i + 1], dots[i + 2]), WHITE, 1 + dots[i + 2] * 1.6, birth(dots[i], dots[i + 1]), tissue.rand())
+  }
   return tissue.finish()
 }

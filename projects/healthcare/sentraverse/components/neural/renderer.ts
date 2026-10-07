@@ -1,10 +1,14 @@
-import { axonCenter, hubs, makeAxon, makeDust, makeEmbryo, makeNetwork, makeNeuron, makeSynapse, makeSystem } from './geometry'
+import { analyseFace } from './face'
+import type { FacePixels } from './face'
+import { axonCenter, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse, makeSystem } from './geometry'
 import type { Geometry, Vec3 } from './geometry'
 import { clamp, smooth } from './story'
 
 type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer }
 type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number }
+export type Look = { turn: number; highlight: Vec3; hover: number }
 const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0 })
+const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
 const envelope = (phase: number, start: number, end: number, fade = 2) => smooth((phase - start) / fade) * (1 - smooth((phase - end) / fade))
 
 const vertexSource = `
@@ -70,6 +74,7 @@ export class NeuralRenderer {
   private attributes: number[] = []
   private density: number
   private disposed = false
+  private face: Geometry | null = null
   readonly mode: 'webgl' | 'canvas' | 'svg'
 
   constructor(private canvas: HTMLCanvasElement, private fallback: HTMLCanvasElement, private mobile: boolean, private onLoss: () => void) {
@@ -208,7 +213,16 @@ export class NeuralRenderer {
     }
   }
 
-  render(phase: number, time: number, reduced = false, hover = -1) {
+  // Where the face sits (Chief 2026-10-08): right of the chapter text on desktop, above it on
+  // phones. NeuralJourney reads the same numbers to map the pointer onto the face plane.
+  faceView() { return { offset: this.mobile ? { x: 0, y: 1 } : { x: 1.9, y: 0 }, depth: 6, scale: this.mobile ? .55 : 1 } }
+
+  setFace(pixels: FacePixels) {
+    if (this.disposed) return
+    this.face = makeFace(analyseFace(pixels, { density: this.density }))
+  }
+
+  render(phase: number, time: number, reduced = false, hover = -1, look: Look = still) {
     if (this.disposed) return
     if (this.gl && !this.lost) this.gl.clear(this.gl.COLOR_BUFFER_BIT)
     if (this.ctx) { this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); this.ctx.clearRect(0, 0, this.width, this.height) }
@@ -249,6 +263,10 @@ export class NeuralRenderer {
       const focus = hubs[active]
       const focusAmount = phase >= 66 && phase < 91 ? .25 : 0
       draw('network', makeNetwork, { alpha: envelope(phase, 58, 94, 5), camera: [focus[0] * focusAmount, focus[1] * focusAmount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : -.08 + discovery * .16, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
+    }
+    if (phase > 93 && this.face) {
+      const face = this.face, view = this.faceView()
+      draw('face', () => face, { alpha: smooth((phase - 94) / 2.5), growth: smooth((phase - 94) / 4), offset: [view.offset.x, view.offset.y, 0], scale: view.scale, camera: [0, 0, view.depth], rotation: reduced ? 0 : look.turn * .22, pulse: .4, highlight: look.highlight, hover: look.hover })
     }
   }
 

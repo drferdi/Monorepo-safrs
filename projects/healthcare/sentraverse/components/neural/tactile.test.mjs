@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { magnetPull, normalise, pointerSpeed, tiltFromPointer, velocityGain } from './tactile.ts'
+import { faceLook, magnetPull, normalise, pointerSpeed, tiltFromPointer, velocityGain } from './tactile.ts'
 
 const box = { left: 100, top: 200, width: 200, height: 100 }
 const options = { maxTilt: 12, parallax: 8, halo: 18 }
@@ -50,4 +50,17 @@ test('a control is pulled toward the pointer by a fraction of the offset', () =>
 
 test('a hidden element with no size normalises to its centre', () => {
   assert.deepEqual(normalise({ x: 5, y: 5 }, { left: 5, top: 5, width: 0, height: 0 }), { x: 0, y: 0 })
+})
+
+test('the face sees the pointer as a turn across the viewport and a point on its own plane', () => {
+  const viewport = { width: 1000, height: 500 }, view = { offset: { x: 1, y: .5 }, depth: 1.85, scale: .5 }
+  const centre = faceLook({ x: 500, y: 250 }, viewport, view)
+  assert.equal(centre.turn, 0)
+  assert.deepEqual(centre.highlight, [-2, -1, 0])
+  const edge = faceLook({ x: 1000, y: 250 }, viewport, view)
+  assert.equal(edge.turn, 1)
+  assert.deepEqual(edge.highlight, [2, -1, 0])
+  const beyond = faceLook({ x: 2000, y: -100 }, viewport, view)
+  assert.equal(beyond.turn, 1)
+  assert.deepEqual(beyond.highlight, [2, 1, 0])
 })
