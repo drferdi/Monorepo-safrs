@@ -247,3 +247,9 @@ export function resolveCrewProfileAvatarUrl({
       return defaultClinicalAvatar
   }
 }
+
+// ACARS draws the avatar stored at registration (it carries the gender); only a user without a
+// stored profile falls back to the profession default (Chief 2026-10-07).
+export function acarsAvatarFor(stored: string | undefined, profession: string): string {
+  return stored?.trim() ? stored : resolveCrewProfileAvatarUrl({ profession })
+}

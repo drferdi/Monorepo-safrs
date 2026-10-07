@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
+import { acarsAvatarFor } from '@/lib/crew-profile'
 import styles from '../acars.module.css'
 
 type CrewInfo = {
@@ -14,6 +15,7 @@ type CrewInfo = {
   profession: string
   role: string
   institution: string
+  avatarUrl?: string
 }
 
 type SessionUser = {
@@ -31,15 +33,6 @@ type ChatMessage = {
   senderName: string
   text: string
   time: string
-}
-
-function getAvatarUrl(profession: string, role: string): string {
-  const p = profession.toLowerCase()
-  if (p.includes('dokter') || role === 'DOKTER') return '/avatar/doctor-m.png'
-  if (p.includes('perawat') || role === 'PERAWAT') return '/avatar/nurse-m.png'
-  if (p.includes('bidan') || role === 'BIDAN') return '/avatar/nurse-w.png'
-  if (p.includes('apoteker') || role === 'APOTEKER') return '/avatar/pharmacy-m.png'
-  return '/avatar/adm-m.png'
 }
 
 function getUserColor(role: string): string {
@@ -216,7 +209,7 @@ export default function AcarsRosterPage() {
   }
 
   const targetColor = getUserColor(targetCrew.role)
-  const targetAvatar = getAvatarUrl(targetCrew.profession, targetCrew.role)
+  const targetAvatar = acarsAvatarFor(targetCrew.avatarUrl, targetCrew.profession)
 
   return (
     <div className={styles.page}>

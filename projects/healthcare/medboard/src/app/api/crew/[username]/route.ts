@@ -40,6 +40,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ user
         profession: user.profession,
         role: user.role,
         institution: user.institution,
+        avatarUrl: profile?.avatarUrl ?? '',
       },
     })
   } catch {

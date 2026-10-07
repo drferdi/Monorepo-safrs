@@ -62,6 +62,7 @@ const suites: Suite[] = [
       'src/lib/report/clinical-report-author.test.ts',
       'src/app/api/activity/beat/route.test.ts',
       'src/app/api/crew-rank-route.test.ts',
+      'src/lib/crew-profile-avatar.test.ts',
     ],
   },
   {

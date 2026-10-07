@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 import { type OnlineSource, onlineSourceLabel } from '@/lib/crew-online'
+import { acarsAvatarFor } from '@/lib/crew-profile'
 import styles from './acars.module.css'
 
 const DEFAULT_CENTER: [number, number] = [-7.8166, 112.0116] // Puskesmas Balowerti
@@ -61,15 +62,6 @@ function formatJoinedAt(joinedAt?: number): string {
   })
 }
 
-function getAvatarUrl(profession: string, role: string): string {
-  const p = profession.toLowerCase()
-  if (p.includes('dokter') || role === 'DOKTER') return '/avatar/doctor-m.png'
-  if (p.includes('perawat') || role === 'PERAWAT') return '/avatar/nurse-m.png'
-  if (p.includes('bidan') || role === 'BIDAN') return '/avatar/nurse-w.png'
-  if (p.includes('apoteker') || role === 'APOTEKER') return '/avatar/pharmacy-m.png'
-  return '/avatar/adm-m.png'
-}
-
 function getUserColor(role: string): string {
   switch (role) {
     case 'DOKTER':
@@ -95,8 +87,22 @@ export default function AcarsPage() {
   const [input, setInput] = useState('')
   const [connected, setConnected] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  // Stored, gendered avatars by username, from the roster (Chief 2026-10-07)
+  const [avatars, setAvatars] = useState<Map<string, string>>(() => new Map())
 
   const socketRef = useRef<Socket | null>(null)
+
+  useEffect(() => {
+    fetch('/api/hub/roster', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then(
+        (d: { ok?: boolean; roster?: Array<{ username: string; profile: { avatarUrl?: string } | null }> } | null) => {
+          if (!d?.ok || !d.roster) return
+          setAvatars(new Map(d.roster.map((member) => [member.username, member.profile?.avatarUrl ?? ''])))
+        }
+      )
+      .catch(() => undefined)
+  }, [])
   const messagesListRef = useRef<HTMLDivElement>(null)
 
   // Fetch session + connect socket
@@ -213,7 +219,7 @@ export default function AcarsPage() {
       institution: user.institution || 'Puskesmas Balowerti',
       isOnline: true,
       gender: 'male' as const,
-      avatarUrl: getAvatarUrl(user.profession, user.role),
+      avatarUrl: acarsAvatarFor(avatars.get(user.userId), user.profession),
       location: {
         lat: DEFAULT_CENTER[0] + Math.sin(angle) * radius,
         lng: DEFAULT_CENTER[1] + Math.cos(angle) * radius,
@@ -224,7 +230,7 @@ export default function AcarsPage() {
   })
 
   const myAvatar = currentUser
-    ? getAvatarUrl(currentUser.profession, currentUser.role)
+    ? acarsAvatarFor(avatars.get(currentUser.username), currentUser.profession)
     : '/avatar/adm-m.png'
 
   return (
@@ -295,7 +301,7 @@ export default function AcarsPage() {
         {onlineUsers.length === 0 && <div className={styles.empty}>Belum ada crew online</div>}
         {onlineUsers.map(user => {
           const color = getUserColor(user.role)
-          const avatar = getAvatarUrl(user.profession, user.role)
+          const avatar = acarsAvatarFor(avatars.get(user.userId), user.profession)
           const isMe = currentUser?.username === user.userId
           const rowClass = `${styles.row} ${isMe ? styles.rowMe : styles.rowLink}`
           const rowContent = (
