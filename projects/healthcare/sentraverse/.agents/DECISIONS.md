@@ -24,9 +24,22 @@ has a dated heading, the decision, a short rationale, and its evidence.
   type stripping can import `geometry.ts` in tests; the wake targets `[data-marker-copy]`
   rather than the first child, because division chapters start with their marker line; float
   products in tests are compared with a tolerance.
-- Evidence: commits `0adef8a8`, `88705077` (card, superseded), `afcda086`, `4d0866ff` and the
-  e2e/docs commit after them; node:test 13/13; browser checks of the production build at
-  1280×800, 800×500 and 375×812 recorded in `HANDOFF.md` and `docs/neural-journey.md`.
+- Same day, after the review and a look in the browser, Chief added: chapter 03 "A human
+  architecture" drops the generic body drawing and shows the face too (it grows in, sways and
+  the camera closes in as the signal chapter starts); the chapter text must never move with the
+  pointer (the text-block tilt, `perspective` and `preserve-3d` were removed; the CTA pull and
+  button lift stay); from the network chapter on a scrim darkens the canvas under the text
+  (page background at 60 %, phase 58 → 94) and the division chapters give their text a soft
+  three-layer `text-shadow` halo (a radial backdrop was tried first and rejected as harsh).
+  The fresh-context review also led to `facePlacement`
+  (the face bends with the viewport: scaled to .7 and pulled in on portrait tablets, sized to
+  the band above the text on short phones, with a 90 px chapter padding under 701 px tall) and
+  to a touch guard on every wake handler.
+- Evidence: commits `0adef8a8`, `88705077` (card, superseded), `afcda086`, `4d0866ff`,
+  `9dc2c9a6`, `aa1a67ce`, `a8595851` and the contrast commit after them; node:test 10/10;
+  Playwright 12/12 through the installed Chrome against the production preview; browser checks
+  of the production build at 1280×800, 800×500 and 375×812 recorded in `HANDOFF.md` and
+  `docs/neural-journey.md`.
 
 ## 2026-09-26 — Migrated from abyss-monorepo into SAFRS
 

@@ -64,8 +64,9 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   is pulled 18 % toward the pointer and grows 4 %, buttons lift 2 px. Tracking uses
   `gsap.quickTo`; releases use `elastic.out(1, .3)`, after which the trackers are rebuilt.
 - From the network chapter on, the text sits over bright neurons, so a scrim (`[data-scrim]`,
-  the page background at 48 %) fades in over the canvas and under the text at phase 58 and lifts
-  again at phase 94 as the face returns.
+  the page background at 60 %) fades in over the canvas and under the text at phase 58 and lifts
+  again at phase 94 as the face returns; the division chapters also give their headline,
+  description and eyebrow a soft three-layer `text-shadow` halo (no backdrop shape).
 - Only `x, y, scale, autoAlpha` are animated. The wake is desktop-only (no touch, no phones, no
   reduced motion) and its detach kills its tweens and clears the inline transforms, so reading
   mode starts from clean elements.
