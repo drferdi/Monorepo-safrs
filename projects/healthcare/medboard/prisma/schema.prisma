@@ -239,12 +239,14 @@ model ClinicalReport {
   sourceAppointmentId String?   @map("source_appointment_id")
   sourceConsultId     String?   @map("source_consult_id")
   sourceOrigin        String?   @map("source_origin")
+  authorUsername      String?   @map("author_username")
 
   @@index([createdAt])
   @@index([doctorName])
   @@index([patientMrn])
   @@index([sourceAppointmentId])
   @@index([sourceConsultId])
+  @@index([authorUsername])
   @@map("clinical_reports")
 }
 
@@ -425,4 +427,14 @@ model Passkey {
 
   @@index([userId])
   @@map("crew_passkeys")
+}
+
+model CrewActivityDay {
+  username   String
+  day        String
+  seconds    Int      @default(0)
+  lastBeatAt DateTime @map("last_beat_at")
+
+  @@id([username, day])
+  @@map("crew_activity_days")
 }

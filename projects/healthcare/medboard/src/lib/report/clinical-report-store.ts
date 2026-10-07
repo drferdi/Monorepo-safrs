@@ -78,8 +78,15 @@ export async function listClinicalReportDates(dokter: string, since: Date): Prom
   return rows.map((row) => row.createdAt)
 }
 
+// A case counts for the signed-in user who saved it (Chief 2026-10-07), never for a name typed in
+// the form; automation-token saves carry no user and count for nobody.
+export function clinicalReportAuthor(session: { username: string } | null): string | null {
+  return session?.username ?? null
+}
+
 export async function saveClinicalReport(
-  input: ClinicalReportDraftInput
+  input: ClinicalReportDraftInput,
+  authorUsername: string | null
 ): Promise<ClinicalReport> {
   const nomor = await getNextReportNumber()
   const id = buildReportId(nomor)
@@ -102,6 +109,7 @@ export async function saveClinicalReport(
       sourceAppointmentId: input.sourceRefs?.appointmentId ?? null,
       sourceConsultId: input.sourceRefs?.consultId ?? null,
       sourceOrigin: input.sourceRefs?.origin ?? null,
+      authorUsername,
     },
   })
 

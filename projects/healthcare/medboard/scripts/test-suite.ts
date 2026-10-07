@@ -59,6 +59,8 @@ const suites: Suite[] = [
       'src/lib/crew-online.test.ts',
       'src/lib/crew-access.test.ts',
       'src/lib/access-level.test.ts',
+      'src/lib/report/clinical-report-author.test.ts',
+      'src/app/api/activity/beat/route.test.ts',
     ],
   },
   {

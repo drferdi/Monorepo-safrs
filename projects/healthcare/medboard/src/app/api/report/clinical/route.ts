@@ -5,11 +5,12 @@ import { NextResponse } from 'next/server'
 
 import { ClinicalReportDraftInputSchema } from '@/lib/report/clinical-report'
 import {
+  clinicalReportAuthor,
   deleteClinicalReport,
   listClinicalReports,
   saveClinicalReport,
 } from '@/lib/report/clinical-report-store'
-import { isCrewAuthorizedRequest } from '@/lib/server/crew-access-auth'
+import { getCrewSessionFromRequest, isCrewAuthorizedRequest } from '@/lib/server/crew-access-auth'
 
 export const runtime = 'nodejs'
 
@@ -46,7 +47,10 @@ export async function POST(request: Request) {
     )
   }
 
-  const report = await saveClinicalReport(parsed.data)
+  const report = await saveClinicalReport(
+    parsed.data,
+    clinicalReportAuthor(getCrewSessionFromRequest(request))
+  )
 
   return NextResponse.json({ ok: true, report })
 }
