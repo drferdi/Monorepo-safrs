@@ -18,10 +18,14 @@ const contentSecurityPolicy = [
     'https://puskesmasbalowerti.com',
     'https://www.puskesmasbalowerti.com',
     'https://medboard.sentrahai.com',
+    // OpenFreeMap: style, vector tiles, glyphs and sprites for the Sentra Network map (Chief 2026-10-07).
+    'https://tiles.openfreemap.org',
     'ws:',
     'wss:',
     ...(isProduction ? [] : ['http://localhost:*', 'ws://localhost:*']),
   ].join(' '),
+  // MapLibre starts its tile worker from a blob URL.
+  "worker-src 'self' blob:",
 ].join('; ')
 
 const nextConfig: NextConfig = {
