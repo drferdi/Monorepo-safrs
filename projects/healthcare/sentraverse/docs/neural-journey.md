@@ -55,6 +55,14 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   phones. `main[data-face]` reads `ready` or `unavailable`; the chapter text never depends on
   it. The body silhouette, the generic body drawing of chapter 03 and the final-scene
   nervous-system draw are gone.
+- At the very end the founder's photograph itself resolves over the drawn face (Chief
+  2026-10-08): `public/portrait-ferdi.webp` (1038×1062, not LFS) is rendered by `next/image`
+  inside the final chapter (`[data-photo]`), placed by `tactile.ts` `faceBox` in the same box
+  the renderer draws the face in (desktop, tablets and phones alike, re-placed on resize), and
+  fades in from phase 95.5 to 98.5 while the drawn face stops turning toward the pointer. A
+  radial mask and a slight desaturation blend it with the field. In reading mode and without
+  JavaScript the photo sits in the flow beside the text (above it on phones); the cinematic
+  placement is cleared when the mode changes.
 - On desktop without reduced motion the face turns up to ±0.22 rad toward the pointer and the
   points near it brighten: `tactile.ts` `faceLook` maps the pointer onto the face plane, and
   `NeuralJourney.tsx` eases `turn` and `hover` with `gsap.quickTo` on a plain look object.
@@ -65,8 +73,10 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   `gsap.quickTo`; releases use `elastic.out(1, .3)`, after which the trackers are rebuilt.
 - From the network chapter on, the text sits over bright neurons, so a scrim (`[data-scrim]`,
   the page background at 60 %) fades in over the canvas and under the text at phase 58 and lifts
-  again at phase 94 as the face returns; the division chapters also give their headline,
-  description and eyebrow a soft three-layer `text-shadow` halo (no backdrop shape).
+  again at phase 94 as the face returns; the division chapters and the centered chapters 07
+  and 14 also give their text a soft multi-layer `text-shadow` halo (no backdrop shape), and
+  the big centered titles sit at 92 % white with a faint light edge so the thin strokes blend
+  with the field instead of cutting it.
 - Only `x, y, scale, autoAlpha` are animated. The wake is desktop-only (no touch, no phones, no
   reduced motion) and its detach kills its tweens and clears the inline transforms, so reading
   mode starts from clean elements.
@@ -85,7 +95,8 @@ node scripts/pnpm.mjs run deploy:dry-run
 
 `node scripts/pnpm.mjs run test` runs the node:test files, including `components/neural/tactile.test.mjs`
 and `components/neural/face.test.mjs`. The Playwright suite in `e2e/neural.spec.ts` covers
-reverse navigation, all five divisions, the face at the final chapter, mobile overflow and the
+reverse navigation, all five divisions, the drawn face and the photograph at the final chapter
+(also in reading mode and without any canvas context), mobile overflow and the
 CTA in view, OS reduced-motion changes, context loss, clean reading-mode transforms, missing
 WebGL, no canvas context at all, JavaScript-disabled reading, pin cleanup, connected-region
 navigation, and frame timing. `e2e/smoke.spec.ts` keeps

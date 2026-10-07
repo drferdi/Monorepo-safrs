@@ -35,11 +35,24 @@ has a dated heading, the decision, a short rationale, and its evidence.
   (the face bends with the viewport: scaled to .7 and pulled in on portrait tablets, sized to
   the band above the text on short phones, with a 90 px chapter padding under 701 px tall) and
   to a touch guard on every wake handler.
+- Later that day, after the halo build: the centered titles "SENTRAVERSE" (chapter 07) and
+  "SENTRA" (chapter 14) were still harsh, so they get the same soft halo, 92 % white and a faint
+  light edge ("harus blend tapi jelas"); and Chief asked for his real face at the end ("di
+  akhir munculkan wajah image asli saya"). The photograph `public/portrait-ferdi.webp` (from
+  `88705077`, WebP so not LFS) is rendered by `next/image` in the final chapter and placed by
+  `tactile.ts` `faceBox` in the box the renderer draws the face in, resolving from phase 95.5
+  to 98.5 while the drawn face stops turning; a radial mask and a slight desaturation blend it
+  with the field. The drawn face stays in chapter 03 and under the photo. In reading mode and
+  without JavaScript the photo sits in the flow beside the text (above it on phones); the
+  cinematic placement is cleared on a mode change. Rulings: the photo is placed with a one-time
+  `gsap.set` of `left/top/width/height` on build and resize (not tweened), only `autoAlpha` is
+  animated; the drawn face is kept under the photo rather than removed so the end still reads
+  as the network becoming the person.
 - Evidence: commits `0adef8a8`, `88705077` (card, superseded), `afcda086`, `4d0866ff`,
-  `9dc2c9a6`, `aa1a67ce`, `a8595851` and the contrast commit after them; node:test 10/10;
-  Playwright 12/12 through the installed Chrome against the production preview; browser checks
-  of the production build at 1280×800, 800×500 and 375×812 recorded in `HANDOFF.md` and
-  `docs/neural-journey.md`.
+  `9dc2c9a6`, `aa1a67ce`, `a8595851`, `c455a20e`, `a2345850`, `eb64660a`, `fb71a429`;
+  node:test 11/11; Playwright 12/12 through the installed Chrome against the production
+  preview; browser checks of the production build at 1280×800, 800×500 and 375×812 recorded in
+  `HANDOFF.md` and `docs/neural-journey.md`.
 
 ## 2026-09-26 — Migrated from abyss-monorepo into SAFRS
 
