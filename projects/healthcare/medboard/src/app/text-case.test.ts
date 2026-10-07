@@ -9,7 +9,7 @@ import ts from 'typescript'
 const ACRONYMS = new Set([
   'AADI', 'ACARS', 'ACK', 'ACS', 'AI', 'ANC', 'API', 'AUDREY', 'AVPU', 'BB', 'BMI', 'BPJS', 'CDS',
   'CDSS', 'CEO', 'CISS', 'CLM', 'CMDC', 'CME', 'CRT', 'CSV', 'CT', 'DBP', 'DBS', 'DHF',
-  'DHAI', 'DKA', 'DM', 'DMF', 'DOI', 'DTB', 'DTI', 'FKTP', 'ECG', 'EEG', 'EKG', 'EMR', 'GCS', 'GDP', 'GDS',
+  'DHAI', 'DKA', 'DM', 'DMF', 'DOI', 'DTB', 'DTI', 'FKTP', 'EBITDA', 'ECG', 'EEG', 'EKG', 'EMR', 'GCS', 'GDP', 'GDS',
   'GERD', 'GPU', 'HHS', 'HIM', 'HIV', 'HMOD', 'HPHT', 'HT', 'HTML', 'HTN', 'ICD', 'ICDX',
   'ICU', 'ID', 'IGD', 'IMT', 'INA', 'ISPA', 'JPP', 'JSON', 'KB', 'KIA', 'KKI', 'KODEKI',
   'LB', 'LLM', 'MAP', 'MIRA', 'MIT', 'MKN', 'MRI', 'NEWS', 'NIK', 'NIP', 'NOTAM', 'NSAID', 'OK',

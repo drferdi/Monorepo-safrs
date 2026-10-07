@@ -98,6 +98,12 @@ const suites: Suite[] = [
       'src/lib/icd/who-blocks.test.ts'],
   },
   {
+    name: 'hub-organisation',
+    aliases: ['organisation', 'hub'],
+    command: process.execPath,
+    args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'src/lib/hub/organisation.test.ts', 'src/app/hub/organisation-tab.test.ts'],
+  },
+  {
     name: 'atlas',
     aliases: ['anatomy'],
     command: process.execPath,

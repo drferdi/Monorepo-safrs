@@ -1,0 +1,440 @@
+/* Sentra Organisation tab of /hub. Motion stays calm: the map's lines draw once and the
+   selected person's line lights in the accent; nothing slides, scales or springs. */
+
+.wrap { container-type: inline-size; }
+
+.wrap,
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  max-width: 760px;
+}
+.kicker {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+.lead {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  color: var(--text);
+}
+.body {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--text-secondary);
+}
+
+.sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--gap-xl);
+}
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap-sm) var(--gap-lg);
+}
+.cardTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text);
+}
+.itemTitle,
+.strong {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text);
+}
+.text {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--text);
+}
+.caption {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: var(--lh-normal);
+  color: var(--text-secondary);
+}
+
+.grid3,
+.grid4 {
+  display: grid;
+  gap: var(--gap-lg);
+}
+.grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+/* Cards in a row share their row lines, so every title, text and caption starts level
+   whether a neighbour's title wraps or not. */
+.grid3 > .card,
+.grid4 > .card {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  align-content: start;
+  row-gap: var(--gap-md);
+}
+.grid4 > .rows3 { grid-row: span 3; }
+@container (max-width: 860px) {
+  .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 560px) {
+  .grid3,
+  .grid4 { grid-template-columns: 1fr; }
+}
+
+/* ── Organisation map ── */
+
+.mapCard { container-type: inline-size; }
+
+.map {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.founderNode,
+.teamNode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  text-align: center;
+}
+.teamRow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--gap-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wires {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+.wiresTeam { height: 44px; margin: 6px 0; }
+.wiresAi { height: 28px; margin-top: 6px; }
+.wire,
+.wireLit,
+.wireAi {
+  fill: none;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.wire { stroke: var(--border); stroke-width: 1.5; }
+.wireLit { stroke: var(--accent); stroke-width: 1.5; }
+.wireAi { stroke: var(--text-secondary); stroke-dasharray: 2 4; opacity: 0.5; }
+
+.aiLayer {
+  padding: var(--gap-md) var(--gap-lg);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 3fr;
+  gap: var(--gap-lg) var(--gap-xl);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--border);
+}
+.detailName {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text);
+}
+.facts,
+.entity {
+  display: grid;
+  gap: var(--gap-md);
+  margin: 0;
+}
+.facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.entity { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.facts dt,
+.entity dt {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+.facts dd,
+.entity dd {
+  margin: 2px 0 0;
+  font-size: var(--text-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--text);
+}
+
+/* Narrow stage: the map becomes a list on one trunk line; the drawn wires are not used. */
+@container (max-width: 720px) {
+  .founderNode { align-items: flex-start; text-align: left; }
+  .wiresTeam,
+  .wiresAi { display: none; }
+  .teamRow {
+    grid-template-columns: 1fr;
+    gap: var(--gap-md);
+    margin: var(--gap-md) 0 var(--gap-md) 12px;
+    padding-left: var(--gap-lg);
+    border-left: 1.5px solid var(--border);
+  }
+  .teamNode { flex-direction: row; flex-wrap: wrap; align-items: center; gap: var(--gap-sm); text-align: left; }
+  .detail,
+  .facts { grid-template-columns: 1fr; }
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Three equal tiles; name, mandate and boundary sit on shared row lines. */
+.panelItem {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  align-content: start;
+  row-gap: var(--gap-sm);
+  padding: var(--gap-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+}
+@container (max-width: 760px) {
+  .panel { grid-template-columns: 1fr; }
+}
+
+/* ── Tables ── */
+
+.tableWrap { overflow-x: auto; }
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+.table th {
+  padding: var(--gap-sm) var(--gap-md);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: left;
+  white-space: nowrap;
+}
+.table td {
+  padding: var(--gap-sm) var(--gap-md);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: var(--lh-normal);
+}
+.table .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.totalRow td { font-weight: 600; }
+
+.steps,
+.timeline,
+.codes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gap-lg);
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: var(--gap-md);
+  border-top: 2px solid var(--primary);
+}
+.stepHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.codes li {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: var(--gap-md);
+  align-items: baseline;
+}
+.code {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: var(--gap-md);
+  align-items: start;
+}
+.gate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-tint);
+  color: var(--primary);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+/* ── Charts: categorical series validated for the white surface (dataviz validator, 2026-10-07) ── */
+
+.wrap {
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+}
+.series1 { background: var(--series-1); }
+.series2 { background: var(--series-2); }
+.series3 { background: var(--series-3); }
+.series4 { background: var(--series-4); }
+
+.readout {
+  margin: 0;
+  min-height: 20px;
+  font-size: var(--text-sm);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.block:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.dim { opacity: 0.35; }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm) var(--gap-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+.legend li { display: inline-flex; align-items: center; gap: 6px; }
+.legendHead { display: flex; align-items: center; gap: var(--gap-sm); }
+.swatch {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-sm);
+}
+
+.plot {
+  position: relative;
+  height: 220px;
+  margin: var(--gap-lg) 0 0 32px;
+}
+.gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--border);
+}
+.gridline span {
+  position: absolute;
+  left: -32px;
+  top: -8px;
+  width: 24px;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-align: right;
+}
+.columns {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.band {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+.column {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+  width: 24px;
+  height: 100%;
+}
+.block {
+  flex: none;
+  min-height: 2px;
+  transition: opacity 0.15s linear;
+}
+.column > .block:last-child { border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.total {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-bottom: 6px;
+  font-size: var(--text-xs);
+  color: var(--text);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.axis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-left: 32px;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .block { transition: none; }
+}

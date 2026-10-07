@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 import { isDoctorProfession } from '@/lib/crew-access'
 import { resolveCrewRankBadgeSrc, resolveCrewSentraTitle } from '@/lib/crew-profile'
+import OrganisationTab from './OrganisationTab'
 import styles from './hub.module.css'
 
 interface RosterMember {
@@ -86,133 +87,11 @@ function getProfessionMark(profession: string): string {
   }
 }
 
-function getOrgInitials(name: string): string {
-  return (
-    name
-      .replace(
-        /^(dr\.|apt\.|Sp\.\w+|A\.Md\.\w+|M\.\w+|SH|M\.Kn|CMDC|CLM|MIB|Farm|Amd\.Keb),?\s*/gi,
-        ''
-      )
-      .split(' ')
-      .filter(word => word.length > 1)
-      .map(word => word[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase() || '??'
-  )
-}
-
 type HubTab = 'roster' | 'organisation'
 
 const HUB_TABS: { key: HubTab; label: string }[] = [
   { key: 'roster', label: 'Roster' },
   { key: 'organisation', label: 'Sentra Organisation' },
-]
-
-// ─── Organisation Data ─────────────────────────────────────────────────────────
-interface OrgMember {
-  name: string
-  title: string
-  subtitle?: string
-}
-
-interface OrgDivision {
-  name: string
-  children: OrgMember[]
-}
-
-const ORG_DIVISIONS: OrgDivision[] = [
-  {
-    name: 'I. Executive & System Development',
-    children: [
-      {
-        name: 'dr. Ferdi Iskandar SH, M.Kn, CMDC, CLM',
-        title: 'Chief Executive Officer (CEO) & Lead Full-Stack Architect',
-        subtitle: 'Arah strategis, kebijakan eksekutif, dan arsitektur pengembangan teknologi',
-      },
-    ],
-  },
-  {
-    name: 'II. Clinical Audit & Quality Assurance',
-    children: [
-      {
-        name: 'dr. Dibya Arfianda, Sp.OG',
-        title: 'Lead Clinical Algorithm Strategist & Medical Auditor',
-        subtitle: 'Perancangan algoritma klinis dan standar audit medis',
-      },
-      {
-        name: 'dr. Boyong Baskoro, Sp.OG',
-        title: 'Senior Medical Auditor & Clinical Algorithm Specialist',
-        subtitle: 'Eksekusi audit tata laksana medis dan parameter algoritma',
-      },
-      {
-        name: 'Kevin Susanto, MIT',
-        title: 'Head of Quality Assurance & Control (QA/QC)',
-        subtitle: 'Pengendalian mutu layanan, sistem, dan kepatuhan SOP',
-      },
-    ],
-  },
-  {
-    name: 'III. Medical Operations & Data Management',
-    children: [
-      {
-        name: 'dr. Auliya',
-        title: 'Clinical Operations Medical Officer',
-        subtitle: 'Operasional medis harian dan implementasi program klinis',
-      },
-      {
-        name: 'dr. Armando Hadyono Joko Sasmito',
-        title: 'Chief of Diagnostic Audit',
-        subtitle: 'Validasi dan evaluasi akurasi diagnosis medis',
-      },
-      {
-        name: 'apt. Umul Farida M., Farm',
-        title: 'Chief of Pharmaceutical Audit & Medication Safety',
-        subtitle:
-          'Memvalidasi algoritma farmakoterapi, mengevaluasi risiko interaksi obat, dan mengaudit standar kepatuhan peresepan klinis',
-      },
-      {
-        name: 'Nurmayatul Handayani, A.Md.RMIK',
-        title: 'Health Information Management (HIM) Specialist & Document Evaluator',
-        subtitle: 'Audit dokumen rekam medis dan tata kelola informasi kesehatan',
-      },
-    ],
-  },
-  {
-    name: 'IV. Infrastructure & External Relations',
-    children: [
-      {
-        name: 'Oriza Rahmawati, Amd.Keb',
-        title: 'Clinical & Patient Liaison Officer',
-        subtitle: 'Komunikasi operasional klinis, faskes, dan pasien',
-      },
-      {
-        name: 'Joseph Arianto',
-        title: 'Corporate Liaison Officer',
-        subtitle: 'Hubungan strategis, kemitraan eksternal, dan komunikasi B2B',
-      },
-      {
-        name: 'Michael Subrata',
-        title: 'Head of IT Infrastructure',
-        subtitle: 'Keandalan, keamanan, dan pemeliharaan infrastruktur teknologi',
-      },
-    ],
-  },
-]
-
-const CORE_PRINCIPLES = [
-  {
-    label: 'Patient Safety Above All',
-    desc: 'Tidak ada fitur, deadline, atau business logic yang dapat mengabaikan keselamatan pasien.',
-  },
-  {
-    label: 'Humans Decide, AI Supports',
-    desc: 'AI bersifat assistive — dokter memegang akuntabilitas final atas semua keputusan klinis.',
-  },
-  {
-    label: 'Zero Fabrication',
-    desc: 'Jarak antara klaim dan realita = pelanggaran governance. Tidak boleh ada data yang dikarang.',
-  },
 ]
 
 export default function HubPage() {
@@ -329,11 +208,6 @@ export default function HubPage() {
     },
     { label: 'Peran Klinis', value: loading ? '...' : String(clinicalCount) },
   ]
-  const organisationMemberCount = ORG_DIVISIONS.reduce(
-    (count, division) => count + division.children.length,
-    0
-  )
-  const executiveLead = ORG_DIVISIONS[0]?.children[0]
 
   return (
     <div className={styles.page}>
@@ -514,128 +388,7 @@ export default function HubPage() {
       )}
 
       {/* ── Tab: Sentra Organisation ── */}
-      {activeTab === 'organisation' && (
-        <div className={styles.section}>
-          <div className={styles.heroGrid}>
-            <div className={`${styles.card} ${styles.heroCol}`}>
-              <div className={styles.eyebrow}>Governance Structure</div>
-              <h2 className={styles.heroLead}>
-                Struktur organisasi Sentra yang lebih rapi, formal, dan mudah dibaca lintas divisi.
-              </h2>
-              <p className={styles.heroBody}>
-                Organisasi dibingkai sebagai sistem kerja profesional: eksekutif, audit klinis,
-                operasi medis, dan relasi eksternal. Setiap divisi ditampilkan sebagai unit
-                tanggung jawab yang jelas, bukan sekadar daftar nama.
-              </p>
-
-              <div className={styles.orgStats}>
-                {[
-                  {
-                    label: 'Divisi',
-                    value: String(ORG_DIVISIONS.length),
-                    hint: 'cluster organisasi aktif',
-                  },
-                  {
-                    label: 'Profesional',
-                    value: String(organisationMemberCount),
-                    hint: 'jabatan inti tercatat',
-                  },
-                  {
-                    label: 'Executive Lead',
-                    value: executiveLead ? '1' : '0',
-                    hint: executiveLead?.name || 'belum diatur',
-                  },
-                ].map(item => (
-                  <div key={item.label} className={styles.orgStat}>
-                    <span className={styles.kpiLabel}>{item.label}</span>
-                    <span className={styles.orgStatValue}>{item.value}</span>
-                    <span className={styles.kpiHint}>{item.hint}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className={`${styles.card} ${styles.heroCol}`}>
-              <h2 className={styles.cardTitle}>Organisation Map</h2>
-              <p className={styles.muted} style={{ margin: 0 }}>
-                Peta struktur resmi untuk membaca jalur komando, ownership divisi, dan keterkaitan
-                antar fungsi.
-              </p>
-              <div className={styles.mapFrame}>
-                <img src="/org.png" alt="Sentra Healthcare Solutions — Struktur Organisasi" />
-              </div>
-            </div>
-          </div>
-
-          {/* Core Principles */}
-          <div className={styles.principles}>
-            {CORE_PRINCIPLES.map((p, i) => (
-              <div key={i} className={`${styles.card} ${styles.principle}`}>
-                <h3 className={styles.cardTitle}>{p.label}</h3>
-                <p>{p.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Division cards */}
-          <div className={styles.divisions}>
-            {ORG_DIVISIONS.map((division, di) => (
-              <div key={di} className={`${styles.card} ${styles.division}`}>
-                {/* Division header */}
-                <div className={styles.divisionHead}>
-                  <div>
-                    <div className={styles.eyebrow}>
-                      Division {String(di + 1).padStart(2, '0')}
-                    </div>
-                    <h3 className={styles.cardTitle}>{division.name.replace(/^[IVX]+\.\s*/, '')}</h3>
-                  </div>
-                  <span className="ui-badge ui-badge--neutral">
-                    {division.children.length} posisi inti
-                  </span>
-                </div>
-
-                {/* Members */}
-                <div className={styles.divisionMembers}>
-                  {division.children.map((member, mi) => {
-                    const initials = getOrgInitials(member.name)
-                    const isCEO = mi === 0 && di === 0
-
-                    return (
-                      <div key={mi} className={styles.orgMember}>
-                        <div className={styles.orgMemberTop}>
-                          <div className={styles.orgMemberMain}>
-                            <span
-                              className={`${styles.initials}${isCEO ? ` ${styles.initialsLead}` : ''}`}
-                            >
-                              {initials}
-                            </span>
-                            <div style={{ minWidth: 0, flex: 1 }}>
-                              <div className={styles.orgName}>{member.name}</div>
-                              <div className={styles.orgTitle}>{member.title}</div>
-                            </div>
-                          </div>
-                          {isCEO && <span className="ui-badge ui-badge--primary">Executive</span>}
-                        </div>
-                        {member.subtitle && (
-                          <div className={styles.focus}>
-                            <span className={styles.eyebrow}>Fokus Tugas</span>
-                            <div className={styles.muted}>{member.subtitle}</div>
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Footer */}
-          <div className={styles.footer}>
-            Sentra Healthcare Solutions — Struktur Organisasi & Nomenklatur Profesional
-          </div>
-        </div>
-      )}
+      {activeTab === 'organisation' && <OrganisationTab />}
     </div>
   )
 }
