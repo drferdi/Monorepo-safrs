@@ -5,6 +5,7 @@ import { io, type Socket } from 'socket.io-client'
 
 import { AsistenMedisFlow } from '@/components/home/AsistenMedisFlow'
 import { ContributionHeatmap, HeatmapLegend } from '@/components/home/ContributionHeatmap'
+import { LevelEdge, RankBadge } from '@/components/rank/RankBadge'
 import { CREW_ACCESS_GENDERS, type CrewAccessGender } from '@/lib/crew-access'
 import {
   CREW_PROFILE_BLOOD_TYPES,
@@ -17,11 +18,11 @@ import {
   type CrewProfileDegree,
   type CrewProfilePosition,
   createEmptyCrewProfile,
-  resolveCrewRankBadgeSrc,
   resolveCrewSentraTitle,
   resolveCrewSentraTitles,
 } from '@/lib/crew-profile'
 import { CRITICAL_MIND_LIBRARY, MY_MIND_MEMORY_URL } from '@/lib/critical-mind/library'
+import type { CrewRankSummary } from '@/lib/crew-rank'
 import type { DevUpdateRecord } from '@/lib/dev-updates'
 import { buildActivityDays, type ActivityDay } from '@/lib/report/clinical-activity'
 import { safeHref, safeUrl } from '@/lib/sanitize-url'
@@ -313,6 +314,19 @@ export default function ProfilUserPage() {
       alive = false
     }
   }, [])
+
+  // Clinical rank: reports written and active hours (Chief 2026-10-07)
+  const [myRank, setMyRank] = useState<CrewRankSummary | null>(null)
+  useEffect(() => {
+    const username = sessionUser?.username
+    if (!username) return
+    fetch(`/api/crew/${encodeURIComponent(username)}/rank`, { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { ok?: boolean; rank?: CrewRankSummary } | null) => {
+        if (d?.ok) setMyRank(d.rank ?? null)
+      })
+      .catch(() => undefined)
+  }, [sessionUser?.username])
 
   // Daily clinical-report counts for the activity heatmap
   useEffect(() => {
@@ -697,7 +711,6 @@ export default function ProfilUserPage() {
     sessionUser?.role === 'CEO' ||
     sessionUser?.role === 'CHIEF_EXECUTIVE_OFFICER' ||
     sessionUser?.role === 'ADMINISTRATOR'
-  const rankBadgeSrc = resolveCrewRankBadgeSrc(sessionUser?.role, profile.jobTitles)
   const sentraTitle = resolveCrewSentraTitle(profile.jobTitles, sessionUser?.role)
   const chatUserAvatarSrc = profile.avatarUrl || '/avatar.png'
   const chatAssistantAvatarSrc = '/audrey.png'
@@ -1588,6 +1601,7 @@ export default function ProfilUserPage() {
         <div className="home-stack">
           <Panel>
             <PanelSection>
+              <LevelEdge role={sessionUser?.role ?? ''} />
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, width: '100%' }}>
                 <div
                   style={{ display: 'flex', alignItems: 'center', gap: 16, minWidth: 0, flex: 1 }}
@@ -1643,33 +1657,7 @@ export default function ProfilUserPage() {
                     </div>
                   </div>
                 </div>
-                {rankBadgeSrc ? (
-                  <div
-                    style={{
-                      width: 'clamp(74px, 18vw, 116px)',
-                      minWidth: 74,
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      alignItems: 'center',
-                      alignSelf: 'stretch',
-                      flexShrink: 0,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <img
-                      src={rankBadgeSrc}
-                      alt={`Rank ${roleLabel}`}
-                      style={{
-                        display: 'block',
-                        maxWidth: '100%',
-                        maxHeight: 62,
-                        width: 'auto',
-                        height: 'auto',
-                        objectFit: 'contain',
-                      }}
-                    />
-                  </div>
-                ) : null}
+                <RankBadge rank={myRank} size={96} />
               </div>
             </PanelSection>
 

@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { isDoctorProfession } from '@/lib/crew-access'
-import { resolveCrewRankBadgeSrc, resolveCrewSentraTitle } from '@/lib/crew-profile'
+import { LevelEdge, RankBadge } from '@/components/rank/RankBadge'
+import { resolveCrewSentraTitle } from '@/lib/crew-profile'
+import type { CrewRankSummary } from '@/lib/crew-rank'
 import { safeHref, safeUrl } from '@/lib/sanitize-url'
 import styles from '../hub.module.css'
 import { ArrowLeft } from 'lucide-react'
@@ -16,6 +18,7 @@ interface RosterMemberDetail {
   institution: string
   profession: string
   role: string
+  rank?: CrewRankSummary
   profile: {
     fullName: string
     birthPlace: string
@@ -166,7 +169,6 @@ export default function HubProfileDetailPage() {
   const accessRoleLabel = formatRole(member?.role || '')
   const shiftLabel = getShiftLabel(member?.profession || '')
   const avatarUrl = member?.profile?.avatarUrl || '/avatar.png'
-  const rankBadgeSrc = resolveCrewRankBadgeSrc(member?.role || '', member?.profile?.jobTitles ?? [])
   const serviceAreas = member?.profile?.serviceAreas ?? []
   const serviceAreaLabel =
     serviceAreas.length > 0
@@ -270,7 +272,8 @@ export default function HubProfileDetailPage() {
           {error}
         </div>
       ) : (
-        <div className={styles.card}>
+        <div className={styles.card} style={{ position: 'relative' }}>
+          <LevelEdge role={member?.role ?? ''} />
           <div className={styles.profileHead}>
             <img
               src={safeUrl(avatarUrl, '/avatar.png')}
@@ -296,13 +299,7 @@ export default function HubProfileDetailPage() {
               </div>
             </div>
 
-            {rankBadgeSrc ? (
-              <img
-                src={rankBadgeSrc}
-                alt={`Rank ${member?.role}`}
-                style={{ width: 120, height: 'auto', maxHeight: 120, objectFit: 'contain' }}
-              />
-            ) : null}
+            <RankBadge rank={member?.rank} size={96} />
           </div>
 
           <hr className={styles.divider} />

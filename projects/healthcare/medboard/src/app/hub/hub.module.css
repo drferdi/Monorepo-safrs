@@ -95,6 +95,7 @@
   gap: var(--gap-xl);
 }
 .member {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--gap-lg);
@@ -154,12 +155,6 @@
   margin-top: 2px;
   font-size: var(--text-xs);
   color: var(--text-secondary);
-}
-.rank {
-  width: 48px;
-  height: 48px;
-  flex: none;
-  object-fit: contain;
 }
 .facts {
   display: grid;
@@ -383,9 +378,12 @@
   position: absolute;
   top: 124px;
   right: var(--gap-xl);
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
+}
+/* The lab card's top-right edge carries the vertical side code, so the level runs down the
+   bottom of that edge instead. */
+.labCard :global(.level-edge) {
+  top: auto;
+  bottom: var(--gap-xl);
 }
 .labName {
   font-size: var(--text-2xl);

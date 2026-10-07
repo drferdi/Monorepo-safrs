@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 import { isDoctorProfession } from '@/lib/crew-access'
-import { resolveCrewRankBadgeSrc, resolveCrewSentraTitle } from '@/lib/crew-profile'
+import { LevelEdge, RankBadge } from '@/components/rank/RankBadge'
+import { resolveCrewSentraTitle } from '@/lib/crew-profile'
+import type { CrewRankSummary } from '@/lib/crew-rank'
 import OrganisationTab from './OrganisationTab'
 import styles from './hub.module.css'
 
@@ -13,6 +15,7 @@ interface RosterMember {
   displayName: string
   profession: string
   role: string
+  rank?: CrewRankSummary
   profile: {
     fullName: string
     gender: string
@@ -281,7 +284,6 @@ export default function HubPage() {
                   const jobTitles = member.profile?.jobTitles || []
                   const hasCredentials = !!(member.profile?.strNumber || member.profile?.sipNumber)
                   const hasEmployeeId = !!member.profile?.employeeId
-                  const rankBadgeSrc = resolveCrewRankBadgeSrc(member.role, jobTitles)
                   const degreesLabel = degrees.length > 0 ? degrees.join(', ') : ''
                   const accessRoleLabel = formatRole(member.role)
                   const professionLabel = formatProfessionLabel(member.profession)
@@ -315,6 +317,7 @@ export default function HubPage() {
                       href={`/hub/${encodeURIComponent(member.username)}`}
                       className={`${styles.card} ${styles.member}`}
                     >
+                      <LevelEdge role={member.role} />
                       <div className={styles.memberTop}>
                         <div className={styles.avatarWrap}>
                           <img src={avatarUrl} alt={fullName} className={styles.avatar} />
@@ -328,13 +331,7 @@ export default function HubPage() {
                           {degreesLabel && <div className={styles.memberDegrees}>{degreesLabel}</div>}
                         </div>
 
-                        {rankBadgeSrc ? (
-                          <img
-                            src={rankBadgeSrc}
-                            alt={`Rank ${member.role}`}
-                            className={styles.rank}
-                          />
-                        ) : null}
+                        <RankBadge rank={member.rank} size={48} />
                       </div>
 
                       <div className={styles.facts}>

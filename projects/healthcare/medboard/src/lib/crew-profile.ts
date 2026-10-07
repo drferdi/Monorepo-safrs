@@ -158,8 +158,6 @@ export const CREW_PROFILE_ADMIN_RANK_POSITIONS = [
   'Corporate Liaison Officer',
 ] as const satisfies readonly CrewProfilePosition[]
 
-const ADMIN_RANK_POSITIONS = new Set<string>(CREW_PROFILE_ADMIN_RANK_POSITIONS)
-
 export function getCrewSentraLeadershipTitle(role?: string): string {
   if (!role) return ''
   return SENTRA_ROLE_TITLES[role] || ''
@@ -182,16 +180,6 @@ export function resolveCrewSentraTitles(jobTitles: readonly string[], role?: str
 
 export function resolveCrewSentraTitle(jobTitles: readonly string[], role?: string): string {
   return resolveCrewSentraTitles(jobTitles, role)[0] || 'Belum diatur'
-}
-
-export function resolveCrewRankBadgeSrc(
-  role: string | undefined,
-  jobTitles: readonly string[] = []
-): string | null {
-  if (role === 'CEO' || role === 'CHIEF_EXECUTIVE_OFFICER') return '/ceo.png'
-  if (role === 'ADMINISTRATOR') return '/admin.png'
-  if (jobTitles.some(jobTitle => ADMIN_RANK_POSITIONS.has(jobTitle))) return '/admin.png'
-  return null
 }
 
 export function isCrewProfileBloodType(value: string): value is CrewProfileBloodType {

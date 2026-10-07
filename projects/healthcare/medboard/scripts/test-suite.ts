@@ -84,7 +84,7 @@ const suites: Suite[] = [
     aliases: ['redesign', 'shell', 'tokens'],
     command: process.execPath,
     args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'src/app/design-tokens.test.ts',
-      'src/app/text-case.test.ts', 'src/app/icons.test.ts', 'src/app/legal/legal-page.test.ts', 'src/lib/text/sentence-case.test.ts', 'src/lib/text/tidy-case.test.ts', 'src/lib/text/tidy-field.test.ts', 'src/components/ui/ui.test.tsx', 'src/components/shell/shell.test.ts', 'src/components/app-footer.test.ts', 'src/lib/legal-tabs.test.ts', 'src/app/brand-assets.test.ts', 'src/components/map/staff-map-basemap.test.ts',
+      'src/app/text-case.test.ts', 'src/app/icons.test.ts', 'src/app/legal/legal-page.test.ts', 'src/lib/text/sentence-case.test.ts', 'src/lib/text/tidy-case.test.ts', 'src/lib/text/tidy-field.test.ts', 'src/components/ui/ui.test.tsx', 'src/components/shell/shell.test.ts', 'src/components/app-footer.test.ts', 'src/lib/legal-tabs.test.ts', 'src/app/brand-assets.test.ts', 'src/components/map/staff-map-basemap.test.ts', 'src/components/rank/rank-badge.test.tsx',
       'src/app/voice/audrey-page.test.ts', 'src/app/voice/visual/matrix-orb.test.ts', 'src/components/sign-in/intro.test.ts', 'src/components/sign-in/sentra-lockup.test.tsx'],
   },
   {

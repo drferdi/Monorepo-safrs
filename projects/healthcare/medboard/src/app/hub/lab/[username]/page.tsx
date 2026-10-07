@@ -3,7 +3,9 @@
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { LevelEdge, RankBadge } from '@/components/rank/RankBadge'
 import { isDoctorProfession } from '@/lib/crew-access'
+import type { CrewRankSummary } from '@/lib/crew-rank'
 import styles from '../../hub.module.css'
 import { ArrowLeft } from 'lucide-react'
 
@@ -14,6 +16,7 @@ interface RosterMemberDetail {
   institution: string
   profession: string
   role: string
+  rank?: CrewRankSummary
   profile: {
     fullName: string
     birthPlace: string
@@ -60,17 +63,6 @@ function formatProfessionLabel(profession: string): string {
 
 function getShiftLabel(profession: string): string {
   return isDoctorProfession(profession) ? '07:00 - 14:00 WIB' : '08:00 - 15:00 WIB'
-}
-
-function getRankBadgeSrc(role: string): string | null {
-  switch (role) {
-    case 'CEO':
-      return '/ceo.png'
-    case 'ADMINISTRATOR':
-      return '/admin.png'
-    default:
-      return null
-  }
 }
 
 function formatBirthDate(value: string): string {
@@ -172,7 +164,6 @@ export default function HubProfileLabPage() {
   const accessRoleLabel = formatRole(member?.role || '')
   const shiftLabel = getShiftLabel(member?.profession || '')
   const avatarUrl = member?.profile?.avatarUrl || '/avatar.png'
-  const rankBadgeSrc = getRankBadgeSrc(member?.role || '')
   const serviceAreas = member?.profile?.serviceAreas ?? []
   const credentialChips = [
     member?.profile?.employeeId ? 'NIP tersedia' : '',
@@ -252,9 +243,10 @@ export default function HubProfileLabPage() {
 
           <img src={avatarUrl} alt={fullName} className={styles.labAvatar} />
 
-          {rankBadgeSrc ? (
-            <img src={rankBadgeSrc} alt={`Rank ${member?.role}`} className={styles.labRank} />
-          ) : null}
+          <div className={styles.labRank}>
+            <RankBadge rank={member?.rank} size={52} />
+          </div>
+          <LevelEdge role={member?.role ?? ''} />
 
           <div className={styles.labName}>{fullName}</div>
           {degreesLabel && <div className={styles.small}>{degreesLabel}</div>}
