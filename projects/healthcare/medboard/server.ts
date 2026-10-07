@@ -67,7 +67,6 @@ function getAllowedSocketOrigins(): Array<string | RegExp> {
     'https://puskesmasbalowerti.com',
     'https://www.puskesmasbalowerti.com',
     'https://medboard.sentrahai.com',
-    'https://primary-healthcare-production.up.railway.app',
     ...parseEnvList('CORS_ALLOWED_ORIGINS'),
     ...parseEnvList('CORS_ALLOWED_EXTENSION_IDS').map(
       (extensionId) => `chrome-extension://${extensionId}`

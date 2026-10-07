@@ -110,6 +110,12 @@ const suites: Suite[] = [
     args: ['./node_modules/tsx/dist/cli.mjs', 'scripts/test-auth-hardening.ts'],
   },
   {
+    name: 'allowed-origins',
+    aliases: ['cors', 'csp'],
+    command: process.execPath,
+    args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'src/lib/server/allowed-origins.test.ts'],
+  },
+  {
     name: 'passkey-helpers',
     aliases: ['passkey', 'webauthn'],
     command: process.execPath,

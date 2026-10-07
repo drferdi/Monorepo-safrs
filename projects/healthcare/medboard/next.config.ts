@@ -18,7 +18,6 @@ const contentSecurityPolicy = [
     'https://puskesmasbalowerti.com',
     'https://www.puskesmasbalowerti.com',
     'https://medboard.sentrahai.com',
-    'https://primary-healthcare-production.up.railway.app',
     'ws:',
     'wss:',
     ...(isProduction ? [] : ['http://localhost:*', 'ws://localhost:*']),
