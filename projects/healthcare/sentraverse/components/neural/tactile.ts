@@ -45,3 +45,16 @@ export function faceLook(pointer: Point, viewport: Viewport, view: FaceView): Fa
   const reach = view.depth / PROJECTION
   return { turn: nx, highlight: [(nx * reach * viewport.width / viewport.height - view.offset.x) / view.scale, (ny * reach - view.offset.y) / view.scale, 0] }
 }
+
+// Source image aspect (240x246 for the drawn face, 1038x1062 for the photograph): the photograph
+// placed in this box covers the drawn face exactly.
+const FACE_ASPECT = 246 / 240
+
+// The screen box, in stage pixels, of the face drawn for a placement: the renderer projects one
+// world unit at the camera depth to (height / 2) * PROJECTION / depth pixels, world y points up,
+// and makeFace builds the face three units wide.
+export function faceBox(view: FaceView, viewport: Viewport): Box {
+  const unit = viewport.height / 2 * PROJECTION / view.depth
+  const width = 3 * view.scale * unit, height = width * FACE_ASPECT
+  return { left: viewport.width / 2 + view.offset.x * unit - width / 2, top: viewport.height / 2 - view.offset.y * unit - height / 2, width, height }
+}

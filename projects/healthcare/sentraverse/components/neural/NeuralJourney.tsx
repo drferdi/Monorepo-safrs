@@ -1,10 +1,11 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { loadPixels } from './face'
 import type { Look } from './renderer'
-import { faceLook } from './tactile'
+import { faceBox, faceLook } from './tactile'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions } from './story'
 import styles from './journey.module.css'
@@ -79,7 +80,15 @@ export default function NeuralJourney() {
           lastFrame = time
           engine.render(state.phase, reduced ? 0 : time, reduced, hover, look)
         }
-        const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover, look) }
+        // The real portrait resolves over the neural face at the very end (Chief 2026-10-08):
+        // the same placement maths puts the photo exactly where the renderer draws the face.
+        const photo = root.querySelector<HTMLElement>('[data-photo]')
+        const placePhoto = () => {
+          if (!photo || reduced) return
+          const viewport = { width: stage.clientWidth, height: stage.clientHeight }
+          gsap.set(photo, faceBox(engine.faceView(), viewport))
+        }
+        const resize = () => { engine.resize(); placePhoto(); engine.render(state.phase, 0, reduced, hover, look) }
         const observer = new ResizeObserver(resize)
         observer.observe(stage)
         const visibility = () => { if (document.hidden) gsap.ticker.remove(draw); else if (!reduced) gsap.ticker.add(draw) }
@@ -123,6 +132,7 @@ export default function NeuralJourney() {
           // under it (Chief 2026-10-08) and lifts again as the face returns at the end.
           master.fromTo('[data-scrim]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 3 }, 58)
           master.to('[data-scrim]', { autoAlpha: 0, duration: 3 }, 94)
+          if (photo) { placePhoto(); master.fromTo(photo, { autoAlpha: 0 }, { autoAlpha: 1, duration: 3 }, 95.5) }
           chapters.forEach((chapter, index) => {
             const panel = panels[index]
             // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
@@ -193,6 +203,7 @@ export default function NeuralJourney() {
           handlers.forEach(remove => remove())
           live = false
           engine.dispose()
+          if (photo) gsap.set(photo, { clearProps: 'all' })
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
           delete root.dataset.enhanced
           delete root.dataset.face
@@ -268,8 +279,9 @@ export default function NeuralJourney() {
             const division = index >= 8 && index <= 12
             const final = chapter.id === 'human'
             return (
-              <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''}`} tabIndex={-1} aria-label={chapter.label}>
+              <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${final ? styles.human : ''} ${chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''}`} tabIndex={-1} aria-label={chapter.label}>
                 {division && <div className={styles.marker} aria-hidden="true"><span data-marker-dot /><i data-marker-line /></div>}
+                {final && <div data-photo className={styles.photo}><Image src="/portrait-ferdi.webp" alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 60vw, 420px" /></div>}
                 <div data-marker-copy data-division={division ? index - 8 : undefined}>
                   <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
                   {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map(line => <span key={line}>{line}</span>)}</h2>}

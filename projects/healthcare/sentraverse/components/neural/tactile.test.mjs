@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { faceLook, facePlacement, magnetPull } from './tactile.ts'
+import { faceBox, faceLook, facePlacement, magnetPull } from './tactile.ts'
 
 const box = { left: 100, top: 200, width: 200, height: 100 }
 const close = (actual, expected, label = '') => assert.ok(Math.abs(actual - expected) < 1e-9, label + ' ' + actual + ' is not ' + expected)
@@ -43,4 +43,16 @@ test('on phones the face fills the band above the text and never reaches it', ()
   const short = facePlacement({ width: 375, height: 667 }, true)
   assert.ok(short.scale < .55 && short.scale > .4, 'short phone scale ' + short.scale)
   assert.ok(faceBottom(short, 667) <= 667 - 90 - 259, 'short phone bottom ' + faceBottom(short, 667))
+})
+
+test('the face box on screen follows the projection of the placement', () => {
+  const box = faceBox({ offset: { x: 1.9, y: 0 }, depth: 6, scale: 1 }, { width: 1280, height: 800 })
+  const unit = 400 * 1.85 / 6
+  close(box.width, 3 * unit, 'width')
+  close(box.height, 3 * unit * 246 / 240, 'height')
+  close(box.left + box.width / 2, 640 + 1.9 * unit, 'centre x')
+  close(box.top + box.height / 2, 400, 'centre y')
+  const phone = faceBox({ offset: { x: 0, y: 1 }, depth: 6, scale: .5 }, { width: 375, height: 812 })
+  close(phone.left + phone.width / 2, 187.5, 'phone centre x')
+  close(phone.top + phone.height / 2, 406 - 406 * 1.85 / 6, 'phone centre y')
 })

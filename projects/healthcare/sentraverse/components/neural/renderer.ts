@@ -267,7 +267,8 @@ export class NeuralRenderer {
       const focusAmount = phase >= 66 && phase < 91 ? .25 : 0
       draw('network', makeNetwork, { alpha: envelope(phase, 58, 94, 5), camera: [focus[0] * focusAmount, focus[1] * focusAmount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : -.08 + discovery * .16, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
     }
-    if (phase > 93) placeFace({ alpha: smooth((phase - 94) / 2.5), growth: smooth((phase - 94) / 4), rotation: reduced ? 0 : look.turn * .22, pulse: .4 })
+    // The turn fades out while the photograph resolves over the drawn face (phase 95.5 to 98.5).
+    if (phase > 93) placeFace({ alpha: smooth((phase - 94) / 2.5), growth: smooth((phase - 94) / 4), rotation: reduced ? 0 : look.turn * .22 * (1 - smooth((phase - 95.5) / 3)), pulse: .4 })
   }
 
   hitTest(x: number, y: number, phase: number) {
