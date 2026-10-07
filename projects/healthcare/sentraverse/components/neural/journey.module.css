@@ -81,7 +81,17 @@
 .progress span { display: block; height: 100%; background: var(--neural-blue); transform: scaleX(0); transform-origin: left; }
 .cursor { position: fixed; z-index: 10; top: -5px; left: -5px; width: 10px; height: 10px; border: 1px solid var(--neural-blue); border-radius: 50%; pointer-events: none; opacity: 0; }
 .cursor[data-active="true"] { box-shadow: 0 0 25px 5px rgb(155 185 215 / 20%); }
-.silhouette { color: var(--neural-blue); position: absolute; right: 15%; top: 8%; width: 40%; height: 85%; opacity: .12; pointer-events: none; }
+.portrait { position: relative; width: 200px; margin: 0 auto 22px; perspective: 1000px; }
+.portraitHalo { position: absolute; inset: 12% -10% -14%; border-radius: 40%; background: radial-gradient(closest-side, rgb(155 185 215 / 22%), transparent); filter: blur(24px); pointer-events: none; }
+.portraitCard { position: relative; padding: 8px; border: 1px solid rgb(155 185 215 / 45%); border-radius: 18px; background: rgb(185 208 231 / 6%); box-shadow: inset 0 1px 0 rgb(255 255 255 / 12%); transform-style: preserve-3d; backface-visibility: hidden; }
+.portraitImage { position: relative; aspect-ratio: 300 / 340; border-radius: 12px; overflow: hidden; }
+.portraitImage img { object-fit: cover; object-position: 50% 20%; }
+.portraitFrame { position: absolute; inset: 0; border-radius: 18px; background: linear-gradient(160deg, rgb(255 255 255 / 10%), transparent 45%); pointer-events: none; }
+.portrait figcaption { margin-top: 12px; font-family: var(--neural-mono); font-size: 8px; letter-spacing: .12em; color: var(--neural-muted); text-align: center; }
+.portraitChapter .eyebrow { margin-bottom: 18px; }
+.portraitChapter h2 { font-size: clamp(32px, 5vw, 72px); }
+.portraitChapter .annotation { margin-top: 16px; }
+.portraitChapter .cta { margin-top: 14px; }
 .loading { display: none; }
 .journey[data-loading="true"] .loading { display: flex; position: absolute; right: 15%; top: 49%; flex-direction: column; gap: 16px; font-size: 8px; letter-spacing: .1em; color: var(--neural-blue); }
 .loading i { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--neural-blue), transparent); }
@@ -106,13 +116,10 @@
 .journey[data-enhanced="cinematic"] .narrative { position: absolute; inset: 0; }
 .journey[data-enhanced="cinematic"] .chapter { position: absolute; inset: 0; min-height: 0; padding-top: 155px; padding-bottom: 125px; }
 .journey[data-enhanced="cinematic"] .chapter > div { pointer-events: auto; }
-.journey[data-renderer="webgl"] .silhouette, .journey[data-renderer="canvas"] .silhouette { opacity: 0; }
-.journey[data-human="true"] .silhouette { opacity: .38; right: auto; left: 50%; top: 13.3%; width: auto; height: 73.4%; transform: translateX(-50%); }
-.journey[data-renderer="webgl"] .fallbackNerves, .journey[data-renderer="canvas"] .fallbackNerves { display: none; }
 .journey[data-enhanced="reading"] .canvas, .journey[data-enhanced="reading"] .atmosphere, .journey[data-enhanced="reading"] .vignette { position: fixed; height: 100svh; opacity: .4; }
 .journey[data-enhanced="reading"] .header { position: fixed; background: rgb(6 9 14 / 94%); padding-block: 20px; }
 .journey[data-enhanced="reading"] .controls { position: fixed; bottom: 0; left: 0; right: 0; padding: 5px 4.2vw; background: rgb(6 9 14 / 95%); }
-.journey[data-enhanced="reading"] .specimen, .journey[data-enhanced="reading"] .coordinates, .journey[data-enhanced="reading"] .silhouette { display: none; }
+.journey[data-enhanced="reading"] .specimen, .journey[data-enhanced="reading"] .coordinates { display: none; }
 .journey[data-enhanced="reading"] .chapter { border-bottom: 1px solid var(--neural-line); }
 
 @media (max-width: 1000px) {
@@ -160,7 +167,7 @@
   .journey[data-enhanced="reading"] .header { padding-inline: 7vw; }
   .journey[data-enhanced="reading"] .controls { padding-inline: 7vw; }
   .journey[data-enhanced="reading"] .chapter { min-height: 95svh; padding-top: 190px; }
-  .silhouette { right: 10%; width: 80%; }
+  .portrait { width: min(36vw, 140px); margin-bottom: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .journey *, .journey *::before, .journey *::after { scroll-behavior: auto !important; transition: none !important; }
@@ -172,5 +179,6 @@
   .description { margin-top: 16px; }
   .annotation { margin-top: 18px; }
   .begin { margin-top: 20px; }
+  .portrait { width: 140px; margin-bottom: 12px; }
   .journey[data-enhanced="cinematic"] .chapter { padding-top: 110px; padding-bottom: 90px; }
 }

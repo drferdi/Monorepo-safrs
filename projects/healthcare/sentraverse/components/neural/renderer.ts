@@ -227,9 +227,9 @@ export class NeuralRenderer {
       const t = smooth((phase - 10) / 5)
       for (const side of [-1, 1]) draw('neuron', makeNeuron, { alpha: envelope(phase, 9, 17, 2), growth: 0, scale: .8, offset: [right[0] + side * t * .4, .1 - t * .4, 1.2], camera: [0, 0, 6.5] })
     }
-    if ((phase > 25 && phase < 40) || phase > 93) {
-      const final = phase > 93
-      draw('system', makeSystem, { alpha: final ? smooth((phase - 93) / 4) : envelope(phase, 25, 36, 4), scale: final ? .85 : 1, offset: [this.mobile ? 0 : final ? 0 : 1.6, this.mobile && !final ? .5 : 0, 0], camera: [0, 0, final ? 7.5 : 7.2 - smooth((phase - 34) / 6) * 5], rotation: reduced || final ? 0 : Math.sin(phase * .15) * .23, pulse: .55 })
+    // Chapter 03 only: the final chapter shows the founder's portrait instead (Chief 2026-10-07).
+    if (phase > 25 && phase < 40) {
+      draw('system', makeSystem, { alpha: envelope(phase, 25, 36, 4), offset: [this.mobile ? 0 : 1.6, this.mobile ? .5 : 0, 0], camera: [0, 0, 7.2 - smooth((phase - 34) / 6) * 5], rotation: reduced ? 0 : Math.sin(phase * .15) * .23, pulse: .55 })
     }
     if (phase > 35 && phase < 54) {
       const travel = reduced ? -8 : -smooth((phase - 36) / 18) * 26

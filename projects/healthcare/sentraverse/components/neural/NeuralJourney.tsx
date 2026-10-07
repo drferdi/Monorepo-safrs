@@ -2,33 +2,9 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import Portrait from './Portrait'
 import { activeChapter, chapters, divisions } from './story'
 import styles from './journey.module.css'
-
-function NeuralSilhouette() {
-  return (
-    <svg className={styles.silhouette} viewBox="0 0 400 700" fill="none" aria-hidden="true">
-      <defs>
-        <radialGradient id="human-tissue" cx="50%" cy="30%" r="75%">
-          <stop stopColor="currentColor" stopOpacity=".16" />
-          <stop offset="1" stopColor="currentColor" stopOpacity=".025" />
-        </radialGradient>
-      </defs>
-      <g transform="translate(200 350) scale(100 -100)" stroke="currentColor" strokeWidth=".009">
-        {[-1, 1].map(side => (
-          <g key={side} transform={`scale(${side} 1)`}>
-            <path fill="url(#human-tissue)" d="M0 2.97C.27 2.99 .45 2.81 .45 2.56C.45 2.36 .40 2.19 .26 2.10L.26 1.91C.40 1.80 .68 1.78 .85 1.66C1.00 1.55 1.05 1.31 1.11 1.04L1.23 .53C1.27 .36 1.28 .20 1.31 .03L1.39 -.34C1.42 -.44 1.43 -.55 1.40 -.62Q1.37 -.66 1.35 -.58L1.31 -.42L1.34 -.70Q1.32 -.77 1.29 -.70L1.25 -.45L1.25 -.74Q1.22 -.81 1.19 -.73L1.17 -.47L1.15 -.71Q1.12 -.76 1.10 -.68L1.10 -.38L1.05 -.49Q1.01 -.52 1.00 -.47L1.02 -.30L1.07 -.18L.96 .26C.89 .48 .85 .79 .77 1.08L.66 1.24C.67 .87 .59 .43 .52 .16C.50 -.10 .59 -.32 .63 -.55C.68 -.85 .61 -1.25 .55 -1.56L.50 -1.91C.49 -2.12 .57 -2.26 .55 -2.49L.46 -3.00C.48 -3.12 .58 -3.18 .57 -3.24Q.54 -3.32 .29 -3.29C.23 -3.24 .28 -3.12 .28 -3.01L.25 -2.51C.23 -2.24 .26 -2.08 .27 -1.91L.21 -1.48C.18 -1.22 .10 -.99 0 -.90" />
-            <path opacity=".45" d="M.06 1.77Q.38 1.68 .73 1.59M.76 1.52Q.88 1.30 .89 1.03M.12 1.42Q.42 1.49 .64 1.22M.51 .40Q.38 -.05 .48 -.45M.04 -.78Q.27 -.62 .52 -.66M.35 -1.75Q.46 -1.83 .45 -2.00M.37 -2.12Q.43 -2.48 .36 -2.85" />
-          </g>
-        ))}
-        <g className={styles.fallbackNerves} strokeWidth=".015">
-          <path d="M0 2.13V-.45M0 1.68L.7 1.46L.98 .53L1.14 -.2M0 1.68L-.7 1.46L-.98 .53L-1.14 -.2M0 -.35L.38 -.84L.4 -1.9L.4 -3.05M0 -.35L-.38 -.84L-.4 -1.9L-.4 -3.05" />
-          <path d="M0 2.14C-.48 2.08 -.55 2.49 -.36 2.71C-.25 2.86 -.08 2.88 0 2.79C.08 2.88 .25 2.86 .36 2.71C.55 2.49 .48 2.08 0 2.14ZM0 2.79V2.14M-.34 2.58Q-.09 2.75 -.15 2.48T-.3 2.26M.34 2.58Q.09 2.75 .15 2.48T.3 2.26" />
-        </g>
-      </g>
-    </svg>
-  )
-}
 
 export default function NeuralJourney() {
   const rootRef = useRef<HTMLElement>(null)
@@ -73,7 +49,6 @@ export default function NeuralJourney() {
         const update = () => {
           const index = activeChapter(state.phase)
           root.dataset.phase = state.phase.toFixed(2)
-          root.dataset.human = String(state.phase >= 96)
           progressSetter(state.phase / 100)
           if (lastChapter === index) return
           lastChapter = index
@@ -132,16 +107,21 @@ export default function NeuralJourney() {
           master.to('[data-overview]', { autoAlpha: 0, duration: 1 }, 95)
           chapters.forEach((chapter, index) => {
             const panel = panels[index]
-            const scene = gsap.timeline({ defaults: { ease: 'power2.inOut' } })
+            // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
+            // exits accelerate; the master stays linear because the scroll position drives it.
+            const scene = gsap.timeline({ defaults: { ease: 'power3.out' } })
             const duration = (chapters[index + 1]?.phase ?? 102) - chapter.phase
-            if (index > 0) scene.fromTo(panel, { autoAlpha: 0, y: reduced ? 0 : 18 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
+            if (index > 0) scene.fromTo(panel, { autoAlpha: 0, y: reduced ? 0 : 24 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
             const marker = panel.querySelector('[data-marker-line]')
             if (marker) {
-              scene.fromTo(marker, { scaleX: 0 }, { scaleX: 1, duration: .8, immediateRender: false }, 0)
-              scene.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, immediateRender: false }, .6)
+              scene.fromTo(marker, { scaleX: 0 }, { scaleX: 1, duration: .8, ease: 'power2.out', immediateRender: false }, 0)
+              scene.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
               scene.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)
             }
-            if (index < chapters.length - 1) scene.to(panel, { autoAlpha: 0, y: -10, duration: .8 }, duration - .8)
+            // The portrait arrives from the depth and settles with a small overshoot. Its tilt is
+            // pointer-driven (wake.ts) on other properties, so the two never fight.
+            if (chapter.id === 'human') scene.fromTo(panel.querySelector('[data-portrait-card]'), { z: -420, autoAlpha: 0, scale: .86 }, { z: 0, autoAlpha: 1, scale: 1, duration: 2.4, ease: 'back.out(1.4)', immediateRender: false }, 0)
+            if (index < chapters.length - 1) scene.to(panel, { autoAlpha: 0, y: -10, duration: .8, ease: 'power2.in' }, duration - .8)
             master!.addLabel(chapter.id, chapter.phase).add(scene, chapter.phase)
           })
           navigateRef.current = phase => {
@@ -256,7 +236,6 @@ export default function NeuralJourney() {
         <div className={styles.atmosphere} aria-hidden="true" />
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         <canvas ref={fallbackRef} className={styles.canvas} aria-hidden="true" />
-        <NeuralSilhouette />
         <div className={styles.vignette} aria-hidden="true" />
         <header className={styles.header}>
           <a href="#top" className={styles.wordmark} onClick={event => { event.preventDefault(); navigateRef.current(0) }} aria-label="Sentraverse, return to origin"><span className={styles.mark} aria-hidden="true">✳</span> SENTRAVERSE<span className={styles.wordmarkDot}>®</span></a>
@@ -274,9 +253,10 @@ export default function NeuralJourney() {
             const division = index >= 8 && index <= 12
             const final = chapter.id === 'human'
             return (
-              <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${final || chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''}`} tabIndex={-1} aria-label={chapter.label}>
+              <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${final || chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''} ${final ? styles.portraitChapter : ''}`} tabIndex={-1} aria-label={chapter.label}>
                 {division && <div className={styles.marker} aria-hidden="true"><span data-marker-dot /><i data-marker-line /></div>}
                 <div data-marker-copy data-division={division ? index - 8 : undefined}>
+                  {final && <Portrait />}
                   <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
                   {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map(line => <span key={line}>{line}</span>)}</h2>}
                   <p className={styles.description}>{chapter.description}</p>
