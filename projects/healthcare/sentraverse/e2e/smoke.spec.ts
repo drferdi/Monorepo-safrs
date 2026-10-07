@@ -14,9 +14,11 @@ test.describe('sentra-main marketing site', () => {
     }
   })
 
-  test('contact section renders waiting-list CTA', async ({ page }) => {
+  test('cinematic journey reaches the ecosystem CTA', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('#contact')).toBeVisible()
-    await expect(page.getByRole('link', { name: /join waiting list/i })).toBeVisible()
+    await expect(page.locator('main')).toHaveAttribute('data-loading', 'false')
+    await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+    await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toHaveAttribute('href', '/ekosistem')
   })
 })
