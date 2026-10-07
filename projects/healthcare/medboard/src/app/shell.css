@@ -186,21 +186,72 @@
 .app-content { flex: 1; padding: var(--gap-2xl); }
 .app-page-stack { width: 100%; max-width: var(--content-max-width); margin: 0 auto; }
 
+/* Footer: the MedBoard navy band. One accent mark only, on the clinical-responsibility notice. */
 .app-footer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--gap-sm);
-  padding: var(--gap-md) var(--gap-xl);
-  border-top: 1px solid var(--border);
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
+  --footer-ink: var(--text-on-accent);
+  --footer-muted: color-mix(in srgb, var(--text-on-accent) 72%, var(--primary));
+  --footer-line: color-mix(in srgb, var(--text-on-accent) 14%, var(--primary));
+  background: var(--primary);
+  color: var(--footer-muted);
+  font-size: var(--text-sm);
+  line-height: var(--lh-normal);
 }
-.app-footer__link { color: var(--text-secondary); text-decoration: none; }
-.app-footer__link:hover { color: var(--text); }
+.app-footer__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap-2xl);
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--gap-2xl) var(--gap-2xl) var(--gap-xl);
+}
+.app-footer__brand { display: flex; flex-direction: column; gap: var(--gap-sm); max-width: 440px; }
+.app-footer__name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  color: var(--footer-ink);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+/* The Sentra mark is dark; on the navy band it is drawn white. */
+.app-footer__name img { filter: brightness(0) invert(1); }
+.app-footer__lead { margin: 0; }
+.app-footer__notice {
+  margin: var(--gap-sm) 0 0;
+  padding-left: var(--gap-md);
+  border-left: 2px solid var(--accent);
+  color: var(--footer-ink);
+}
+.app-footer__heading { margin: 0 0 var(--gap-sm); color: var(--footer-ink); font-weight: 600; }
+.app-footer__col ul { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.app-footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--footer-muted);
+  text-decoration: none;
+  transition: color 0.15s ease-out;
+}
+.app-footer a:hover { color: var(--footer-ink); }
+.app-footer a:focus-visible { outline: 2px solid var(--footer-ink); outline-offset: 2px; border-radius: var(--radius-sm); }
+.app-footer__base {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--gap-md) var(--gap-2xl);
+  border-top: 1px solid var(--footer-line);
+  font-size: var(--text-xs);
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-footer a { transition: none; }
+}
 
 @media (max-width: 767px) {
   .app-header { padding: 0 var(--gap-lg); }
   .app-header__date { display: none; }
   .app-content { padding: var(--gap-lg); }
+  .app-footer__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap-xl); padding: var(--gap-xl) var(--gap-lg); }
+  .app-footer__brand { grid-column: 1 / -1; }
+  .app-footer__base { padding: var(--gap-md) var(--gap-lg); }
 }

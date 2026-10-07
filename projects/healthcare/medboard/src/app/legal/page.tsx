@@ -2,21 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-/* ── Types ── */
-
-type LegalTab = 'disclaimer' | 'privacy' | 'terms' | 'security'
-
-interface TabDef {
-  key: LegalTab
-  label: string
-}
-
-const TABS: TabDef[] = [
-  { key: 'disclaimer', label: 'Disclaimer AI' },
-  { key: 'privacy', label: 'Privasi data' },
-  { key: 'terms', label: 'Ketentuan' },
-  { key: 'security', label: 'Keamanan' },
-]
+import { LEGAL_TABS as TABS, tabFromHash, type LegalTab } from '@/lib/legal-tabs'
 
 const ACCENT = 'var(--c-asesmen)'
 const VERSION = '1.0'
@@ -537,10 +523,15 @@ function SecurityTab() {
 export default function LegalPage() {
   const [activeTab, setActiveTab] = useState<LegalTab>('disclaimer')
 
-  /* Support hash-based tab switching (e.g., /legal#privacy) */
+  /* A hash opens its tab (e.g., /legal#privacy), on arrival and when a footer link changes it here. */
   useEffect(() => {
-    const hash = window.location.hash.replace('#', '') as LegalTab
-    if (TABS.some(t => t.key === hash)) setActiveTab(hash)
+    function openFromHash() {
+      const tab = tabFromHash(window.location.hash)
+      if (tab) setActiveTab(tab)
+    }
+    openFromHash()
+    window.addEventListener('hashchange', openFromHash)
+    return () => window.removeEventListener('hashchange', openFromHash)
   }, [])
 
   return (
