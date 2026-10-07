@@ -48,9 +48,9 @@ export default function OrganisationTab() {
         <p className={styles.kicker}>Operating charter · revisi 1.3</p>
         <h2 className={styles.lead}>Organisation by design</h2>
         <p className={styles.body}>
-          Cara Sentra bekerja: manusia memimpin, AI membantu. Teknologi memperluas penilaian dan empati tim, sedangkan
-          keputusan tetap diambil orang yang bertanggung jawab atasnya. Keberhasilan dibagi secara adil, dan kegagalan
-          dipelajari bersama tanpa mencari kambing hitam.
+          Sentra dijalankan dengan kepemimpinan manusia dan dukungan AI. Teknologi memperluas kemampuan tim dalam menilai
+          dan berempati, sementara keputusan tetap berada pada pihak yang bertanggung jawab. Keberhasilan dibagi secara
+          adil, dan setiap kegagalan ditinjau bersama sebagai bahan perbaikan tanpa menyalahkan individu.
         </p>
       </div>
 
