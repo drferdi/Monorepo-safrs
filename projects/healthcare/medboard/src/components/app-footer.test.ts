@@ -18,6 +18,11 @@ test('the footer states that clinical decisions stay with the treating health wo
   assert.match(html, /AI di MedBoard memberi saran\. Keputusan klinis tetap menjadi tanggung jawab tenaga kesehatan yang merawat pasien\./)
 })
 
+// Chief 2026-10-07: the identity line names Sentra HAI and the primary care it serves.
+test('the MedBoard column says who builds it and for whom', () => {
+  assert.match(html, /<p class="app-footer__text">Dibangun oleh Sentra HAI untuk layanan kesehatan primer di Indonesia\.<\/p>/)
+})
+
 // Chief 2026-10-07: the footer tagline is Chief's own line.
 test('the tagline reads "See Earlier. Decide Better."', () => {
   assert.match(html, /<p class="app-footer__tagline">See Earlier\. Decide Better\.<\/p>/)

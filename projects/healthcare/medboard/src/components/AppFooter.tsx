@@ -30,16 +30,12 @@ export default function AppFooter() {
       </div>
 
       <div className="app-footer__columns">
-        <div className="app-footer__column app-footer__identity">
-          <img src="/sentra-mark.png" alt="" width={44} height={44} />
-          <div>
+        <div className="app-footer__column">
+          <div className="app-footer__brand">
+            <img src="/sentra-mark.png" alt="" width={24} height={24} />
             <p className="app-footer__heading">MedBoard</p>
-            <p className="app-footer__text">
-              Dibangun oleh Sentra untuk puskesmas
-              <br />
-              Kota Kediri, Jawa Timur
-            </p>
           </div>
+          <p className="app-footer__text">Dibangun oleh Sentra HAI untuk layanan kesehatan primer di Indonesia.</p>
         </div>
 
         <div className="app-footer__column">

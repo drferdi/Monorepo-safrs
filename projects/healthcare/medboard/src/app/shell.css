@@ -261,19 +261,23 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gap-2xl);
 }
+/* Each column spans two guide columns and carries the guide lines down as its side rules, so
+   every heading and text block starts the same distance from its rule (Chief 2026-10-07). */
 .app-footer__column {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--gap-sm);
-  padding: var(--gap-2xl) 0;
+  padding: var(--gap-2xl) var(--gap-xl);
   border-top: 1px solid var(--footer-line);
+  border-left: 1px solid var(--footer-line);
   background: var(--primary);
 }
-.app-footer__identity { flex-direction: row; gap: var(--gap-lg); }
-.app-footer__identity img { flex: none; filter: brightness(0) invert(1); }
+.app-footer__column:last-child { border-right: 1px solid var(--footer-line); }
+.app-footer__brand { display: flex; align-items: center; gap: var(--gap-sm); margin-bottom: var(--gap-xs); }
+.app-footer__brand .app-footer__heading { margin: 0; }
+.app-footer__brand img { flex: none; filter: brightness(0) invert(1); }
 .app-footer__heading { margin: 0 0 var(--gap-xs); font-size: var(--text-base); font-weight: 600; }
 .app-footer__text { margin: 0; max-width: 40ch; }
 .app-footer__legal {
@@ -319,7 +323,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--gap-sm) var(--gap-lg);
-  padding: var(--gap-lg) 0 var(--gap-xl);
+  padding: var(--gap-lg) var(--gap-xl) var(--gap-xl);
 }
 .app-footer__base-start { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--gap-sm) var(--gap-lg); }
 .app-footer__dot { width: 7px; height: 7px; background: var(--footer-line); }
@@ -333,6 +337,7 @@
   .app-content { padding: var(--gap-lg); }
   .app-footer { --footer-inset: var(--gap-lg); --footer-band: 112px; }
   .app-footer__hero { padding: calc(var(--footer-band) + var(--gap-xl)) 0 var(--gap-3xl); }
-  .app-footer__columns { grid-template-columns: 1fr; gap: 0; }
+  .app-footer__columns { grid-template-columns: 1fr; }
+  .app-footer__column { border-right: 1px solid var(--footer-line); }
   .app-footer__dot { display: none; }
 }
