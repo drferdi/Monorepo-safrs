@@ -22,6 +22,13 @@ test('the organisation map shows the founder and the five charter roles, each as
   assert.match(tab, /className="ui-chip"\s+aria-pressed=\{section === item\.key\}/)
 })
 
+test('the official documents section gives every document a card with a download chip (Chief 2026-10-07)', () => {
+  const tab = read('src/app/hub/OrganisationTab.tsx')
+  assert.match(tab, /\{ key: 'documents', label: 'Dokumen resmi' \}/)
+  assert.match(tab, /OFFICIAL_DOCUMENTS\.map\(\(doc\) =>[\s\S]*?className="ui-chip"\s+href=\{`\/api\/hub\/documents\/\$\{doc\.id\}`\}/)
+  assert.doesNotMatch(tab, /SOURCE_DOCUMENTS/, 'the old source list is replaced, not kept twice')
+})
+
 test('people the charter no longer lists, or Chief removed, are gone from the hub (Chief 2026-10-07)', () => {
   const removed = ['Auliya', 'Armando', 'Umul Farida', 'Nurmayatul', 'Oriza', 'Michael Subrata', 'Boyong', 'Sentra Healthcare Solutions']
   for (const file of SOURCES) {

@@ -102,6 +102,17 @@
   row-gap: var(--gap-md);
 }
 .grid4 > .rows3 { grid-row: span 3; }
+.grid3 > .rows4 { grid-row: span 4; }
+
+/* Document cards: the download chip sits on the last shared row, so every chip lines up. */
+.docFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-self: end;
+  gap: var(--gap-sm) var(--gap-md);
+}
+.docFoot a { text-decoration: none; }
 @container (max-width: 860px) {
   .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

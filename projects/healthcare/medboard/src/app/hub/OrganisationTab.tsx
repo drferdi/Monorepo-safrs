@@ -1,5 +1,6 @@
 'use client'
 
+import { Download } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 
@@ -13,24 +14,25 @@ import {
   INDEPENDENT_PANEL,
   KBLI,
   LEGAL_ENTITY,
+  OFFICIAL_DOCUMENTS,
   OPERATING_RHYTHM,
   PRODUCTS,
   REPORTED_TOTAL_REVENUE,
   SAFE_PROFIT_PLAN,
   SCALE_PHASES,
-  SOURCE_DOCUMENTS,
   TRANSITION_STEPS,
   YEARS,
 } from '@/lib/hub/organisation'
 import styles from './organisation.module.css'
 
-type Section = 'structure' | 'decisions' | 'finance' | 'legal'
+type Section = 'structure' | 'decisions' | 'finance' | 'legal' | 'documents'
 
 const SECTIONS: { key: Section; label: string }[] = [
   { key: 'structure', label: 'Struktur' },
   { key: 'decisions', label: 'Keputusan & ritme' },
   { key: 'finance', label: 'Keuangan' },
   { key: 'legal', label: 'Legal' },
+  { key: 'documents', label: 'Dokumen resmi' },
 ]
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const
@@ -72,6 +74,7 @@ export default function OrganisationTab() {
       {section === 'decisions' && <DecisionSection />}
       {section === 'finance' && <FinanceSection />}
       {section === 'legal' && <LegalSection />}
+      {section === 'documents' && <DocumentsSection />}
     </div>
   )
 }
@@ -529,20 +532,29 @@ function LegalSection() {
           ))}
         </ol>
       </div>
+    </div>
+  )
+}
 
-      <div className={styles.card}>
-        <h3 className={styles.cardTitle}>Dokumen sumber</h3>
-        <ul className={styles.codes}>
-          {SOURCE_DOCUMENTS.map((doc) => (
-            <li key={doc.code}>
-              <span className={styles.code}>{doc.code}</span>
-              <span className={styles.text}>
-                {doc.title} <span className={styles.caption}>· {doc.revision}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+/* ── Dokumen resmi ── */
+
+function DocumentsSection() {
+  return (
+    <div className={styles.grid3}>
+      {OFFICIAL_DOCUMENTS.map((doc) => (
+        <div key={doc.id} className={`${styles.card} ${styles.rows4}`}>
+          <p className={styles.caption}>{doc.meta}</p>
+          <h3 className={styles.cardTitle}>{doc.title}</h3>
+          <p className={styles.text}>{doc.summary}</p>
+          <div className={styles.docFoot}>
+            <a className="ui-chip" href={`/api/hub/documents/${doc.id}`} download={doc.file}>
+              <Download size={14} strokeWidth={2} aria-hidden />
+              Unduh PDF
+            </a>
+            {doc.personalData && <span className={styles.caption}>Memuat data pribadi pendiri</span>}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

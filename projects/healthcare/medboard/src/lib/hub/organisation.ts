@@ -284,10 +284,57 @@ export const TRANSITION_STEPS = [
   { gate: 'G5', name: 'Stabilise', phase: 'Stabilise', timing: 'Hari 1–100', purpose: 'Selesaikan defect dan risiko yang tersisa.', decision: 'Close / extend' },
 ]
 
-export const SOURCE_DOCUMENTS = [
-  { code: 'ORG-2026-01', title: 'Operating Charter — Organisation by Design', revision: 'Revisi 1.3 · 16 Agustus 2026' },
-  { code: 'FIN-2026-01', title: 'Financial Architecture 2027–2030', revision: 'Revisi 1.3 · 16 Agustus 2026' },
-  { code: 'Panduan', title: 'Transisi Legal Korporasi', revision: 'Revisi 1.3 · 16 Agustus 2026' },
-  { code: 'AHU', title: 'Keputusan Menteri Hukum, pengesahan pendirian', revision: '4 September 2026' },
-  { code: 'Pendirian', title: 'Surat Pernyataan Pendirian Perseroan Perorangan', revision: '4 September 2026' },
+// Official documents offered for download. The PDFs are kept out of git (Chief 2026-10-07: the
+// monorepo origin is public and the two AHU documents carry the founder's personal data); each
+// server holds them in runtime/organisation-documents/ under `file`, served only to signed-in crew.
+export interface OfficialDocument {
+  id: string
+  title: string
+  summary: string
+  meta: string
+  file: string
+  personalData: boolean
+}
+
+export const OFFICIAL_DOCUMENTS: OfficialDocument[] = [
+  {
+    id: 'charter',
+    title: 'Organisational Charter 2026',
+    summary: 'Struktur organisasi, peran tiap anggota inti, hak keputusan, panel independen, dan ritme kerja Sentra.',
+    meta: 'ORG-2026-01 · Revisi 1.3 · 16 Agustus 2026',
+    file: 'sentra-ai-organisational-charter-2026-rev1.3.pdf',
+    personalData: false,
+  },
+  {
+    id: 'financial-architecture',
+    title: 'Financial Architecture 2027-2030',
+    summary: 'Pendapatan per produk, EBITDA, rencana laba yang aman dibagikan, dan target 2027 untuk setiap unit usaha.',
+    meta: 'FIN-2026-01 · Revisi 1.3 · 16 Agustus 2026',
+    file: 'sentra-ai-financial-architecture-2027-2030-rev1.3.pdf',
+    personalData: false,
+  },
+  {
+    id: 'legal-transition-guide',
+    title: 'Corporate Legal Transition Guide 2026',
+    summary: 'Enam fase transisi badan hukum, masing-masing ditutup dengan gate keputusan.',
+    meta: 'Revisi 1.3 · 16 Agustus 2026',
+    file: 'sentra-ai-legal-transition-guide-2026-rev1.3.pdf',
+    personalData: false,
+  },
+  {
+    id: 'incorporation-decree',
+    title: 'Ministry of Law Decree on Incorporation',
+    summary: 'Keputusan Menteri Hukum yang mengesahkan Sentra Artificial Intelligence sebagai badan hukum Perseroan Perorangan.',
+    meta: 'AHU-A119231.AH.01.30.Tahun 2026 · 4 September 2026',
+    file: 'sentra-ai-incorporation-decree-2026-09-04.pdf',
+    personalData: true,
+  },
+  {
+    id: 'statement-of-incorporation',
+    title: 'Statement of Incorporation',
+    summary: 'Pernyataan pendiri berisi data perseroan, modal usaha, enam kegiatan usaha (KBLI), dan data pemilik usaha.',
+    meta: '4 September 2026',
+    file: 'sentra-ai-statement-of-incorporation-2026-09-04.pdf',
+    personalData: true,
+  },
 ]
