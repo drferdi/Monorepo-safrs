@@ -22,7 +22,7 @@
 .atmosphere { background: radial-gradient(ellipse at 67% 40%, rgb(40 59 80 / 20%), transparent 58%), radial-gradient(ellipse at 15% 75%, rgb(22 37 63 / 15%), transparent 50%); }
 .canvas { display: none; }
 .vignette { background: radial-gradient(ellipse at 60% 48%, transparent 30%, rgb(3 5 9 / 48%) 100%); }
-.scrim { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: rgb(6 9 14 / 48%); }
+.scrim { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: rgb(6 9 14 / 60%); }
 .header { position: absolute; z-index: 4; top: 0; left: 0; width: 100%; padding: 36px 4.2vw; display: flex; align-items: center; justify-content: space-between; gap: 25px; }
 .wordmark { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; letter-spacing: .21em; white-space: nowrap; }
 .mark { font-size: 30px; font-weight: 300; color: var(--neural-blue); line-height: 1; }
@@ -49,7 +49,8 @@
 .begin { display: flex; align-items: center; gap: 36px; font-size: 8px !important; letter-spacing: .15em; background: none; border: 0; color: var(--neural-white); padding: 0; margin-top: 46px; }
 .begin span { border: 1px solid var(--neural-line); border-radius: 50%; display: grid; place-items: center; width: 30px; height: 30px; font-size: 14px; }
 .division { padding-left: 56%; }
-.division > div { width: 440px; }
+.division > div { width: 440px; position: relative; }
+.division > div::before { content: ""; position: absolute; inset: -56px -80px; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at center, rgb(6 9 14 / 92%) 0%, rgb(6 9 14 / 70%) 42%, transparent 72%); }
 .division h2 { font-size: clamp(32px, 3.2vw, 54px); letter-spacing: -.045em; line-height: 1.2; }
 .division .eyebrow { color: var(--neural-blue); }
 .division .description { max-width: 260px; }
