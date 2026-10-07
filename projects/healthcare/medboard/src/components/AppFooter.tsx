@@ -23,7 +23,7 @@ export default function AppFooter() {
       <div className="app-footer__band" aria-hidden="true" />
 
       <div className="app-footer__hero">
-        <p className="app-footer__tagline">Sistem informasi klinis untuk puskesmas</p>
+        <p className="app-footer__tagline">Dari anamnesis sampai rujukan, di satu meja kerja</p>
         <a href="#" className="app-footer__top" aria-label="Kembali ke atas">
           <ArrowUp size={18} strokeWidth={1.75} aria-hidden />
         </a>
@@ -35,7 +35,7 @@ export default function AppFooter() {
           <div>
             <p className="app-footer__heading">MedBoard</p>
             <p className="app-footer__text">
-              Dikembangkan oleh Sentra
+              Dibangun oleh Sentra untuk puskesmas
               <br />
               Kota Kediri, Jawa Timur
             </p>
@@ -45,8 +45,8 @@ export default function AppFooter() {
         <div className="app-footer__column">
           <p className="app-footer__heading">Tanggung jawab klinis</p>
           <p className="app-footer__text">
-            Rekomendasi AI membantu tenaga kesehatan. Keputusan klinis tetap menjadi tanggung jawab tenaga kesehatan
-            yang merawat pasien.
+            AI di MedBoard memberi saran. Keputusan klinis tetap menjadi tanggung jawab tenaga kesehatan yang
+            merawat pasien.
           </p>
           <a href="/legal#disclaimer" className="app-footer__underline">
             Baca disclaimer AI

@@ -13,8 +13,8 @@ import SmoothScroll from '@/components/SmoothScroll'
 import TidyCaseOnBlur from '@/components/TidyCaseOnBlur'
 
 export const metadata: Metadata = {
-  title: 'Sentra — Puskesmas Dashboard',
-  description: 'Clinical Information System — Sentra Healthcare Solutions',
+  title: 'MedBoard — Sentra',
+  description: 'Meja kerja klinis untuk puskesmas, dari anamnesis sampai rujukan.',
   icons: { icon: '/sentra-mark.png' },
   robots: {
     index: false,
