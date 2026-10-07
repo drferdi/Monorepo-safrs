@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { canActOnUser } from '@/lib/access-level'
 import {
   deleteCrewAccessUser,
   getCrewSessionFromRequest,
@@ -28,13 +29,12 @@ export async function DELETE(
       )
     }
 
-    // Only CEO can delete CEO accounts
-    const isCeoRole = (r: string | null | undefined) => r === 'CEO' || r === 'CEO_SENTRA'
+    // Only the CEO deletes accounts (Chief 2026-10-07)
     const users = await listCrewAccessUsersAll()
     const target = users.find(u => u.username === username)
-    if (isCeoRole(target?.role) && !isCeoRole(session.role)) {
+    if (!canActOnUser({ actorRole: session.role, targetRole: target?.role ?? '', action: 'delete' })) {
       return NextResponse.json(
-        { ok: false, error: 'Tidak bisa menghapus akun CEO.' },
+        { ok: false, error: 'Hanya CEO yang bisa menghapus akun.' },
         { status: 403 }
       )
     }

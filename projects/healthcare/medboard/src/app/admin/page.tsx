@@ -220,7 +220,7 @@ export default function AdminPage() {
           {activeSection === 'command-center' && <AdminCommandCenter session={session} />}
           {activeSection === 'rpa' && <AdminRpaMonitoring />}
           {activeSection === 'sentrapedia' && <AdminSentrapediaReview />}
-          {activeSection === 'user-access' && <AdminUserAccess />}
+          {activeSection === 'user-access' && <AdminUserAccess viewerRole={session?.role ?? ''} />}
           {activeSection === 'dev-updates' && <AdminDevUpdates />}
           {activeSection === 'notam' && <AdminNotam />}
           {activeSection === 'institutions' && <AdminInstitutionsTab />}

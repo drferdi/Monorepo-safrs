@@ -5,6 +5,7 @@ import { io, type Socket } from 'socket.io-client'
 
 import styles from './AdminUserAccess.module.css'
 
+import { accessLevelFor, accessLevelLabel, assignableRoles } from '@/lib/access-level'
 import { CREW_ACCESS_PROFESSIONS, CREW_ACCESS_SERVICE_AREAS } from '@/lib/crew-access'
 import {
   CREW_PROFILE_BLOOD_TYPES,
@@ -234,7 +235,7 @@ function timeAgo(timestamp: string): string {
 
 /* ── Component ── */
 
-export default function AdminUserAccess() {
+export default function AdminUserAccess({ viewerRole }: { viewerRole: string }) {
   const [users, setUsers] = useState<UserRecord[]>([])
   const [institutions, setInstitutions] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
@@ -680,6 +681,7 @@ export default function AdminUserAccess() {
       {selectedUser && (
         <UserEditPanel
           user={selectedUser}
+          viewerRole={viewerRole}
           institutions={institutions}
           onSaved={() => {
             void fetchUsers()
@@ -750,11 +752,13 @@ function PendingCard({
 
 function UserEditPanel({
   user,
+  viewerRole,
   institutions,
   onSaved,
   onClose,
 }: {
   user: UserRecord
+  viewerRole: string
   institutions: string[]
   onSaved: () => void
   onClose: () => void
@@ -765,6 +769,10 @@ function UserEditPanel({
   const [institution, setInstitution] = useState(user.institution || '')
   const [profession, setProfession] = useState(user.profession || '')
   const [role, setRole] = useState(user.role || '')
+  // Only the CEO is offered the level roles or may edit a CEO or Administrator (Chief 2026-10-07).
+  const assignable = assignableRoles(viewerRole)
+  const roleOptions = assignable.includes(user.role) ? assignable : [user.role, ...assignable]
+  const canChangeRole = accessLevelFor(viewerRole) === 'CEO' || accessLevelFor(user.role) === 'USER'
 
   /* Profile fields */
   const profile = user.profile
@@ -1119,15 +1127,17 @@ function UserEditPanel({
               </select>
             </div>
             <div>
+              <p className={styles.fieldLabel}>Level akses: {accessLevelLabel(accessLevelFor(role))}</p>
               <label className={styles.fieldLabel}>Role</label>
               <select
                 className={styles.fieldSelect}
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
+                disabled={!canChangeRole}
                 title="Role user"
                 aria-label="Role user"
               >
-                {ROLES.map((r) => (
+                {roleOptions.map((r) => (
                   <option key={r} value={r}>
                     {formatRole(r)}
                   </option>

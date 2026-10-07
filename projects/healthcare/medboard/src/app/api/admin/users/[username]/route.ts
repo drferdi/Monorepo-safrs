@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { canActOnUser } from '@/lib/access-level'
 import {
   getCrewSessionFromRequest,
   listCrewAccessUsersAll,
@@ -49,8 +50,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ user
       role?: string
     }
 
-    // Role hierarchy: only CEO/CEO_SENTRA can assign CEO roles or modify CEO accounts
-    const isCeoRole = (r: string | null | undefined) => r === 'CEO' || r === 'CEO_SENTRA'
+    // Role hierarchy (Chief 2026-10-07): only the CEO changes access levels or touches CEO and
+    // Administrator accounts.
     const VALID_ROLES = new Set([
       'CEO',
       'CEO_SENTRA',
@@ -65,17 +66,21 @@ export async function PUT(request: Request, { params }: { params: Promise<{ user
     if (body.role && !VALID_ROLES.has(body.role)) {
       return NextResponse.json({ ok: false, error: 'Role tidak valid.' }, { status: 400 })
     }
-    if (isCeoRole(body.role) && !isCeoRole(session.role)) {
-      return NextResponse.json(
-        { ok: false, error: 'Hanya CEO yang bisa menetapkan role CEO.' },
-        { status: 403 }
-      )
-    }
     const users = await listCrewAccessUsersAll()
     const targetUser = users.find(u => u.username === username)
-    if (isCeoRole(targetUser?.role) && !isCeoRole(session.role)) {
+    if (!targetUser) {
+      return NextResponse.json({ ok: false, error: 'User tidak ditemukan.' }, { status: 404 })
+    }
+    if (
+      !canActOnUser({
+        actorRole: session.role,
+        targetRole: targetUser.role,
+        action: 'edit',
+        nextRole: body.role,
+      })
+    ) {
       return NextResponse.json(
-        { ok: false, error: 'Tidak bisa mengubah akun CEO.' },
+        { ok: false, error: 'Hanya CEO yang bisa mengubah level akses atau akun CEO dan Administrator.' },
         { status: 403 }
       )
     }

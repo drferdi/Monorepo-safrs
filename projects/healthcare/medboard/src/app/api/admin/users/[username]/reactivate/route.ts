@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { canActOnUser } from '@/lib/access-level'
 import {
   getCrewSessionFromRequest,
   listCrewAccessUsersAll,
@@ -21,13 +22,12 @@ export async function POST(
   try {
     const { username } = await params
 
-    // Only CEO can reactivate CEO accounts
-    const isCeoRole = (r: string | null | undefined) => r === 'CEO' || r === 'CEO_SENTRA'
+    // Only the CEO touches CEO or Administrator accounts (Chief 2026-10-07)
     const users = await listCrewAccessUsersAll()
     const target = users.find(u => u.username === username)
-    if (isCeoRole(target?.role) && !isCeoRole(session.role)) {
+    if (!canActOnUser({ actorRole: session.role, targetRole: target?.role ?? '', action: 'reactivate' })) {
       return NextResponse.json(
-        { ok: false, error: 'Hanya CEO yang bisa mengaktifkan kembali akun CEO.' },
+        { ok: false, error: 'Hanya CEO yang bisa mengaktifkan kembali akun CEO dan Administrator.' },
         { status: 403 }
       )
     }
