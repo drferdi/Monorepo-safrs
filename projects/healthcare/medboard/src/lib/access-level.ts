@@ -35,6 +35,14 @@ export function canActOnUser(args: {
   return args.nextRole === undefined || accessLevelFor(args.nextRole) === 'USER'
 }
 
+// Usernames are stored lowercase and the stores lowercase their argument, so the hierarchy check
+// must look the target up the same way: a raw `Direktur` in the URL would otherwise find nobody,
+// pass as a User, and still change the real account.
+export function findAdminTarget<T extends { username: string }>(users: readonly T[], username: string): T | undefined {
+  const key = username.trim().toLowerCase()
+  return users.find((u) => u.username === key)
+}
+
 export function assignableRoles(viewerRole: string | null | undefined): readonly string[] {
   return accessLevelFor(viewerRole) === 'CEO' ? [...LEVEL_ROLES, ...CLINICAL_ROLES] : CLINICAL_ROLES
 }

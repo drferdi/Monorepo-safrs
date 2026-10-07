@@ -1,6 +1,6 @@
 // Drferdi — vision, brought to life.
 import { NextResponse } from 'next/server'
-import { canActOnUser } from '@/lib/access-level'
+import { canActOnUser, findAdminTarget } from '@/lib/access-level'
 import {
   adminResetPassword,
   getCrewSessionFromRequest,
@@ -25,8 +25,11 @@ export async function POST(
 
     // Only the CEO touches CEO or Administrator accounts (Chief 2026-10-07)
     const users = await listCrewAccessUsersAll()
-    const target = users.find(u => u.username === username)
-    if (!canActOnUser({ actorRole: session.role, targetRole: target?.role ?? '', action: 'reset-password' })) {
+    const target = findAdminTarget(users, username)
+    if (!target) {
+      return NextResponse.json({ ok: false, error: 'User tidak ditemukan.' }, { status: 404 })
+    }
+    if (!canActOnUser({ actorRole: session.role, targetRole: target.role, action: 'reset-password' })) {
       return NextResponse.json(
         { ok: false, error: 'Hanya CEO yang bisa reset password CEO dan Administrator.' },
         { status: 403 }
@@ -42,7 +45,7 @@ export async function POST(
       )
     }
 
-    await adminResetPassword(username, body.newPassword)
+    await adminResetPassword(target.username, body.newPassword)
     return NextResponse.json({ ok: true })
   } catch (error) {
     const isKnownError =

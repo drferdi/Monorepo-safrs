@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { canActOnUser } from '@/lib/access-level'
+import { canActOnUser, findAdminTarget } from '@/lib/access-level'
 import {
   deleteCrewAccessUser,
   getCrewSessionFromRequest,
@@ -22,24 +22,26 @@ export async function DELETE(
   try {
     const { username } = await params
 
-    if (username === session.username) {
+    // Only the CEO deletes accounts (Chief 2026-10-07)
+    const users = await listCrewAccessUsersAll()
+    const target = findAdminTarget(users, username)
+    if (!target) {
+      return NextResponse.json({ ok: false, error: 'User tidak ditemukan.' }, { status: 404 })
+    }
+    if (target.username === session.username) {
       return NextResponse.json(
         { ok: false, error: 'Tidak dapat menghapus akun sendiri.' },
         { status: 400 }
       )
     }
-
-    // Only the CEO deletes accounts (Chief 2026-10-07)
-    const users = await listCrewAccessUsersAll()
-    const target = users.find(u => u.username === username)
-    if (!canActOnUser({ actorRole: session.role, targetRole: target?.role ?? '', action: 'delete' })) {
+    if (!canActOnUser({ actorRole: session.role, targetRole: target.role, action: 'delete' })) {
       return NextResponse.json(
         { ok: false, error: 'Hanya CEO yang bisa menghapus akun.' },
         { status: 403 }
       )
     }
 
-    await deleteCrewAccessUser(username)
+    await deleteCrewAccessUser(target.username)
     return NextResponse.json({ ok: true })
   } catch (error) {
     const isKnownError = error instanceof Error && error.message.includes('tidak ditemukan')

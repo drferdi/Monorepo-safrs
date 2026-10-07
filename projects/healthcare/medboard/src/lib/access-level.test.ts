@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { accessLevelFor, assignableRoles, canActOnUser } from './access-level'
+import { accessLevelFor, assignableRoles, canActOnUser, findAdminTarget } from './access-level'
 
 test('ten roles fold into three access levels', () => {
   for (const role of ['CEO', 'CEO_SENTRA', 'CHIEF_EXECUTIVE_OFFICER']) assert.equal(accessLevelFor(role), 'CEO')
@@ -33,4 +33,11 @@ test('a user acts on no one', () => {
 test('only a CEO is offered the level roles in the role list', () => {
   assert.deepEqual(assignableRoles('ADMINISTRATOR'), ['DOKTER', 'DOKTER_GIGI', 'PERAWAT', 'BIDAN', 'APOTEKER', 'TRIAGE_OFFICER'])
   assert.deepEqual(assignableRoles('CEO').slice(0, 3), ['CEO', 'CEO_SENTRA', 'ADMINISTRATOR'])
+})
+
+test('an admin route finds its target whatever the case of the name in the URL', () => {
+  const users = [{ username: 'direktur', role: 'CEO' }, { username: 'budi', role: 'DOKTER' }]
+  assert.equal(findAdminTarget(users, 'Direktur')?.role, 'CEO')
+  assert.equal(findAdminTarget(users, ' BUDI ')?.username, 'budi')
+  assert.equal(findAdminTarget(users, 'citra.lama'), undefined)
 })
