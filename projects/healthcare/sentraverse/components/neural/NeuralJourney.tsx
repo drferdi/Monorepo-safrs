@@ -193,6 +193,7 @@ export default function NeuralJourney() {
           engine.dispose()
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
           delete root.dataset.enhanced
+          delete root.dataset.face
         }
       }, root)
       cleanup = () => media.revert()

@@ -157,6 +157,9 @@
   .journey[data-enhanced="reading"] .controls { padding-inline: 7vw; }
   .journey[data-enhanced="reading"] .chapter { min-height: 95svh; padding-top: 190px; }
 }
+@media (max-width: 767px) and (max-height: 700px) {
+  .journey[data-enhanced="cinematic"] .chapter { padding-bottom: 90px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .journey *, .journey *::before, .journey *::after { scroll-behavior: auto !important; transition: none !important; }
   .cursor { display: none; }

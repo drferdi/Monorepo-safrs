@@ -1,8 +1,9 @@
 import { analyseFace } from './face'
 import type { FacePixels } from './face'
-import { axonCenter, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse, makeSystem } from './geometry'
+import { axonCenter, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse } from './geometry'
 import type { Geometry, Vec3 } from './geometry'
 import { clamp, smooth } from './story'
+import { facePlacement } from './tactile'
 
 type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer }
 type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number }
@@ -214,8 +215,9 @@ export class NeuralRenderer {
   }
 
   // Where the face sits (Chief 2026-10-08): right of the chapter text on desktop, above it on
-  // phones. NeuralJourney reads the same numbers to map the pointer onto the face plane.
-  faceView() { return { offset: this.mobile ? { x: 0, y: 1 } : { x: 1.9, y: 0 }, depth: 6, scale: this.mobile ? .55 : 1 } }
+  // phones, bent by the viewport so it stays on screen and clear of the text. NeuralJourney
+  // reads the same view to map the pointer onto the face plane.
+  faceView() { return facePlacement({ width: this.width, height: this.height }, this.mobile) }
 
   setFace(pixels: FacePixels) {
     if (this.disposed) return
@@ -229,6 +231,8 @@ export class NeuralRenderer {
     const right: Vec3 = [this.mobile ? 0 : 1.15, this.mobile ? .7 : 0, 0]
     const view = baseView()
     const draw = (name: string, factory: (density: number) => Geometry, options: Partial<View>) => this.draw(this.layer(name, factory), { ...view, ...options }, time)
+    const face = this.face, seat = this.faceView()
+    const placeFace = (options: Partial<View>) => { if (face) draw('face', () => face, { offset: [seat.offset.x, seat.offset.y, 0], scale: seat.scale, camera: [0, 0, seat.depth], highlight: look.highlight, hover: look.hover, ...options }) }
     draw('dust', makeDust, { alpha: .4, rotation: reduced ? 0 : time * .006 })
 
     if (phase < 30) {
@@ -241,10 +245,9 @@ export class NeuralRenderer {
       const t = smooth((phase - 10) / 5)
       for (const side of [-1, 1]) draw('neuron', makeNeuron, { alpha: envelope(phase, 9, 17, 2), growth: 0, scale: .8, offset: [right[0] + side * t * .4, .1 - t * .4, 1.2], camera: [0, 0, 6.5] })
     }
-    // Chapter 03 only: the final chapter shows the founder's portrait instead (Chief 2026-10-07).
-    if (phase > 25 && phase < 40) {
-      draw('system', makeSystem, { alpha: envelope(phase, 25, 36, 4), offset: [this.mobile ? 0 : 1.6, this.mobile ? .5 : 0, 0], camera: [0, 0, 7.2 - smooth((phase - 34) / 6) * 5], rotation: reduced ? 0 : Math.sin(phase * .15) * .23, pulse: .55 })
-    }
+    // Chapter 03 shows the founder's face in place of the generic body (Chief 2026-10-08): it
+    // grows in, sways, and the camera closes in as the signal chapter takes over.
+    if (phase > 25 && phase < 40) placeFace({ alpha: envelope(phase, 25, 36, 4), growth: smooth((phase - 26) / 5), camera: [0, 0, seat.depth - smooth((phase - 34) / 6) * 2.5], rotation: reduced ? 0 : Math.sin(phase * .15) * .23 + look.turn * .22, pulse: .55 })
     if (phase > 35 && phase < 54) {
       const travel = reduced ? -8 : -smooth((phase - 36) / 18) * 26
       const center = axonCenter(travel)
@@ -264,10 +267,7 @@ export class NeuralRenderer {
       const focusAmount = phase >= 66 && phase < 91 ? .25 : 0
       draw('network', makeNetwork, { alpha: envelope(phase, 58, 94, 5), camera: [focus[0] * focusAmount, focus[1] * focusAmount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : -.08 + discovery * .16, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
     }
-    if (phase > 93 && this.face) {
-      const face = this.face, view = this.faceView()
-      draw('face', () => face, { alpha: smooth((phase - 94) / 2.5), growth: smooth((phase - 94) / 4), offset: [view.offset.x, view.offset.y, 0], scale: view.scale, camera: [0, 0, view.depth], rotation: reduced ? 0 : look.turn * .22, pulse: .4, highlight: look.highlight, hover: look.hover })
-    }
+    if (phase > 93) placeFace({ alpha: smooth((phase - 94) / 2.5), growth: smooth((phase - 94) / 4), rotation: reduced ? 0 : look.turn * .22, pulse: .4 })
   }
 
   hitTest(x: number, y: number, phase: number) {

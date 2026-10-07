@@ -1,7 +1,9 @@
 export type Point = { x: number; y: number }
 export type Box = { left: number; top: number; width: number; height: number }
-export type TiltOptions = { maxTilt: number; parallax: number; halo: number }
-export type Tilt = { rotationX: number; rotationY: number; parallaxX: number; parallaxY: number; haloX: number; haloY: number; haloScale: number }
+export type Tilt = { rotationX: number; rotationY: number }
+export type Viewport = { width: number; height: number }
+export type FaceView = { offset: Point; depth: number; scale: number }
+export type FaceLook = { turn: number; highlight: [number, number, number] }
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
@@ -15,49 +17,49 @@ export function normalise(pointer: Point, box: Box): Point {
   }
 }
 
-// Pointer speed in px/ms; a zero or negative interval reads as no movement.
-export function pointerSpeed(previous: Point, next: Point, dtMs: number): number {
-  return dtMs > 0 ? Math.hypot(next.x - previous.x, next.y - previous.y) / dtMs : 0
-}
-
-// A fast pointer tilts harder: 1 at rest, 1.35 from 2 px/ms up.
-export function velocityGain(speed: number): number {
-  return 1 + clamp(speed / 2, 0, 1) * .35
-}
-
-// rotationY follows the pointer's x, rotationX opposes its y (the near edge dips toward the
-// pointer); the image and halo slide the other way so the card reads as a solid object.
-export function tiltFromPointer(pointer: Point, box: Box, options: TiltOptions, speed = 0): Tilt {
+// rotationY follows the pointer x, rotationX opposes its y: the near edge of the block dips
+// toward the pointer, up to maxTilt degrees.
+export function tiltFromPointer(pointer: Point, box: Box, maxTilt: number): Tilt {
   const n = normalise(pointer, box)
-  const gain = velocityGain(speed)
-  const reach = Math.max(Math.abs(n.x), Math.abs(n.y))
-  return {
-    rotationX: -n.y * options.maxTilt * gain,
-    rotationY: n.x * options.maxTilt * gain,
-    parallaxX: -n.x * options.parallax,
-    parallaxY: -n.y * options.parallax,
-    haloX: -n.x * options.halo,
-    haloY: -n.y * options.halo,
-    haloScale: 1 + .08 * reach,
-  }
+  return { rotationX: -n.y * maxTilt, rotationY: n.x * maxTilt }
 }
 
-// A control leans toward the pointer by a fraction of the pointer's offset from its centre.
+// A control leans toward the pointer by a fraction of the pointer offset from its centre.
 export function magnetPull(pointer: Point, box: Box, strength: number): Point {
   return { x: (pointer.x - (box.left + box.width / 2)) * strength, y: (pointer.y - (box.top + box.height / 2)) * strength }
 }
 
-export type Viewport = { width: number; height: number }
-export type FaceView = { offset: Point; depth: number; scale: number }
-export type Look = { turn: number; highlight: [number, number, number] }
+// The shader projects a world point at depth d to NDC y = y * 1.85 / d, so the visible half-height
+// at the face plane is depth / 1.85 world units (times the aspect ratio horizontally).
+const PROJECTION = 1.85
+// makeFace: three units wide for the 240x246 source, so about 1.53 units above and below centre.
+const FACE_HALF_HEIGHT = 1.53
 
-// The pointer as the face sees it: `turn` is where the pointer sits across the viewport in
-// [-1, 1]; `highlight` is the pointer on the face plane in model space, the renderer projection
-// run backwards (NDC x depth / 1.85 x aspect, minus the offset, over the scale). The turn is
-// small enough to ignore here.
-export function faceLook(pointer: Point, viewport: Viewport, view: FaceView): Look {
+// Where the face sits for a viewport (Chief 2026-10-08): on desktop 1.9 units right of centre at
+// full size, pulled in and reduced to .7 when the viewport is nearly square so the whole head stays
+// on screen (right edge at NDC .92 or less); on phones centred above the bottom-aligned text,
+// filling the band between the specimen line (150 px) and the text block (259 px over the chapter
+// padding, 145 px or 90 px on short screens) at up to .55 of full size.
+export function facePlacement(viewport: Viewport, mobile: boolean): FaceView {
+  const depth = 6, reach = depth / PROJECTION
+  if (mobile) {
+    const padding = viewport.height <= 700 ? 90 : 145
+    const band = Math.max(80, viewport.height - padding - 259 - 10 - 150)
+    const scale = Math.min(.55, band / (FACE_HALF_HEIGHT / reach * viewport.height))
+    const centre = 150 + band / 2
+    return { offset: { x: 0, y: (viewport.height / 2 - centre) / (viewport.height / 2) * reach }, depth, scale }
+  }
+  const aspect = viewport.width / viewport.height
+  const scale = aspect < 1.2 ? .7 : 1
+  return { offset: { x: Math.min(1.9, .92 * reach * aspect - 1.5 * scale), y: 0 }, depth, scale }
+}
+
+// The pointer as the face sees it: turn is where the pointer sits across the viewport in [-1, 1];
+// highlight is the pointer on the face plane in model space, the renderer projection run backwards
+// (NDC x reach x aspect, minus the offset, over the scale). The turn is small enough to ignore.
+export function faceLook(pointer: Point, viewport: Viewport, view: FaceView): FaceLook {
   const nx = clamp(pointer.x / viewport.width * 2 - 1, -1, 1)
   const ny = clamp(1 - pointer.y / viewport.height * 2, -1, 1)
-  const reach = view.depth / 1.85
+  const reach = view.depth / PROJECTION
   return { turn: nx, highlight: [(nx * reach * viewport.width / viewport.height - view.offset.x) / view.scale, (ny * reach - view.offset.y) / view.scale, 0] }
 }

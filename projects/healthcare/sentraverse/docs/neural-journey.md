@@ -47,10 +47,14 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   is read once through a 2D canvas (`face.ts` `loadPixels`), `analyseFace` turns its pixels
   into Sobel contour segments and brightness-weighted dots, `geometry.ts` `makeFace` builds
   them in the renderer's vertex format (three units wide, brighter pixels nearer the camera,
-  grown outward from the centre), and `renderer.ts` draws the `face` layer from phase 93 to
-  the right of the final chapter's text (above it on phones). `main[data-face]` reads `ready`
-  or `unavailable`; the chapter text never depends on it. The body silhouette and the
-  final-scene nervous-system draw are gone; chapter 03 keeps its anatomical drawing.
+  grown outward from the centre), and `renderer.ts` draws the `face` layer twice: in chapter 03
+  "A human architecture" (phase 25–40, growing in, swaying, the camera closing in as the signal
+  chapter starts) and from phase 93 at the end, each time to the right of the chapter text
+  (above it on phones). `tactile.ts` `facePlacement` bends the position and size with the
+  viewport so the head stays on screen on portrait tablets and clear of the text on short
+  phones. `main[data-face]` reads `ready` or `unavailable`; the chapter text never depends on
+  it. The body silhouette, the generic body drawing of chapter 03 and the final-scene
+  nervous-system draw are gone.
 - On desktop without reduced motion the face turns up to ±0.22 rad toward the pointer and the
   points near it brighten: `tactile.ts` `faceLook` maps the pointer onto the face plane, and
   `NeuralJourney.tsx` eases `turn` and `hover` with `gsap.quickTo` on a plain look object.

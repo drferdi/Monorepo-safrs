@@ -13,14 +13,17 @@ export type WakeTargets = {
 }
 
 const SPRING = { duration: 1.1, ease: 'elastic.out(1, .3)', overwrite: 'auto' as const }
+const touch = (event: PointerEvent) => event.pointerType === 'touch'
 
-// Pointer wake (Chief 2026-10-07): the active chapter panel leans toward the pointer, the CTA is
-// pulled toward it, buttons lift on hover, and everything springs back when the pointer leaves.
-// Desktop only: the caller skips phones, touch and reduced motion.
+// Pointer wake (Chief 2026-10-07): the active chapter's text block leans toward the pointer, the
+// CTA is pulled toward it, buttons lift on hover, and everything springs back when the pointer
+// leaves. Mouse and pen only: the caller skips phones and reduced motion, and a touch on a
+// desktop-sized tablet does nothing here.
 export function attachPointerWake(gsap: Gsap, targets: WakeTargets): () => void {
-  // The content block, not the first child: division chapters start with their marker line.
-  const faces = targets.panels.map(panel => panel.querySelector<HTMLElement>('[data-marker-copy]') ?? panel.firstElementChild as HTMLElement)
-  const tracked = targets.magnetic ? [...faces, targets.magnetic] : faces
+  // The text block, not the first child: division chapters start with their marker line.
+  const blocks = targets.panels.map(panel => panel.querySelector<HTMLElement>('[data-marker-copy]'))
+  const present = blocks.filter((block): block is HTMLElement => block !== null)
+  const tracked = targets.magnetic ? [...present, targets.magnetic] : present
   gsap.set(tracked, { force3D: true })
   const trackers = new Map<HTMLElement, Tracker>()
 
@@ -41,34 +44,33 @@ export function attachPointerWake(gsap: Gsap, targets: WakeTargets): () => void 
   }
 
   let tilted = -1
-  const settleFace = () => { if (tilted >= 0) spring(faces[tilted], { rotationX: 0, rotationY: 0 }); tilted = -1 }
+  const settle = () => { const block = blocks[tilted]; if (block) spring(block, { rotationX: 0, rotationY: 0 }); tilted = -1 }
   const move = (event: PointerEvent) => {
-    if (event.pointerType === 'touch') return
+    if (touch(event)) return
     const index = targets.activeIndex()
-    if (index !== tilted) { settleFace(); tilted = index }
-    const face = faces[index]
-    if (!face) return
-    const tilt = tiltFromPointer({ x: event.clientX, y: event.clientY }, face.getBoundingClientRect(), { maxTilt: 3, parallax: 0, halo: 0 })
-    track(face, .45, { rotationX: tilt.rotationX, rotationY: tilt.rotationY })
+    if (index !== tilted) { settle(); tilted = index }
+    const block = blocks[index]
+    if (!block) return
+    track(block, .45, tiltFromPointer({ x: event.clientX, y: event.clientY }, block.getBoundingClientRect(), 3))
   }
   targets.root.addEventListener('pointermove', move)
-  targets.root.addEventListener('pointerleave', settleFace)
+  targets.root.addEventListener('pointerleave', settle)
 
   const magnetic = targets.magnetic
-  const pull = (event: PointerEvent) => { if (magnetic) track(magnetic, .45, magnetPull({ x: event.clientX, y: event.clientY }, magnetic.getBoundingClientRect(), .18)) }
-  const grow = () => { if (magnetic) gsap.to(magnetic, { scale: 1.04, duration: .4, ease: 'back.out(2)', overwrite: 'auto' }) }
-  const release = () => { if (magnetic) spring(magnetic, { x: 0, y: 0, scale: 1 }) }
+  const pull = (event: PointerEvent) => { if (magnetic && !touch(event)) track(magnetic, .45, magnetPull({ x: event.clientX, y: event.clientY }, magnetic.getBoundingClientRect(), .18)) }
+  const grow = (event: PointerEvent) => { if (magnetic && !touch(event)) gsap.to(magnetic, { scale: 1.04, duration: .4, ease: 'back.out(2)', overwrite: 'auto' }) }
+  const release = (event: PointerEvent) => { if (magnetic && !touch(event)) spring(magnetic, { x: 0, y: 0, scale: 1 }) }
   magnetic?.addEventListener('pointermove', pull)
   magnetic?.addEventListener('pointerenter', grow)
   magnetic?.addEventListener('pointerleave', release)
 
-  const lift = (event: Event) => gsap.to(event.currentTarget as HTMLElement, { y: -2, duration: .35, ease: 'back.out(2)', overwrite: 'auto' })
-  const drop = (event: Event) => gsap.to(event.currentTarget as HTMLElement, { y: 0, duration: .3, ease: 'power2.out', overwrite: 'auto' })
+  const lift = (event: PointerEvent) => { if (!touch(event)) gsap.to(event.currentTarget as HTMLElement, { y: -2, duration: .35, ease: 'back.out(2)', overwrite: 'auto' }) }
+  const drop = (event: PointerEvent) => { if (!touch(event)) gsap.to(event.currentTarget as HTMLElement, { y: 0, duration: .3, ease: 'power2.out', overwrite: 'auto' }) }
   for (const button of targets.buttons) { button.addEventListener('pointerenter', lift); button.addEventListener('pointerleave', drop) }
 
   return () => {
     targets.root.removeEventListener('pointermove', move)
-    targets.root.removeEventListener('pointerleave', settleFace)
+    targets.root.removeEventListener('pointerleave', settle)
     magnetic?.removeEventListener('pointermove', pull)
     magnetic?.removeEventListener('pointerenter', grow)
     magnetic?.removeEventListener('pointerleave', release)
