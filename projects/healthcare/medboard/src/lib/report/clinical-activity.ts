@@ -10,7 +10,7 @@ const DAY_MS = 24 * 60 * 60 * 1000
 const WIB_OFFSET_MS = 7 * 60 * 60 * 1000
 
 // Asia/Jakarta has no daylight saving, so a fixed +7 h gives the WIB calendar day.
-function wibDayKey(instant: Date): string {
+export function wibDayKey(instant: Date): string {
   return new Date(instant.getTime() + WIB_OFFSET_MS).toISOString().slice(0, 10)
 }
 

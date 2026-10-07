@@ -89,7 +89,7 @@ const suites: Suite[] = [
     aliases: ['critical-mind', 'heatmap'],
     command: process.execPath,
     args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'src/lib/critical-mind/library.test.ts',
-      'src/lib/report/clinical-activity.test.ts', 'src/lib/crew-rank.test.ts'],
+      'src/lib/report/clinical-activity.test.ts', 'src/lib/crew-rank.test.ts', 'src/lib/crew-activity.test.ts'],
   },
   {
     name: 'icd-coding',
