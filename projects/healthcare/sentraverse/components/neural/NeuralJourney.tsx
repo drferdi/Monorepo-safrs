@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import Portrait from './Portrait'
+import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions } from './story'
 import styles from './journey.module.css'
 
@@ -152,18 +153,12 @@ export default function NeuralJourney() {
         const leave = () => { cursor.style.opacity = '0'; hover = -1 }
         root.addEventListener('pointermove', move)
         root.addEventListener('pointerleave', leave)
-        const magnetic = root.querySelector<HTMLElement>('[data-magnetic]')!
-        const mx = gsap.quickTo(magnetic, 'x', { duration: .4, ease: 'power2.out' })
-        const my = gsap.quickTo(magnetic, 'y', { duration: .4, ease: 'power2.out' })
-        const magnet = (event: PointerEvent) => {
-          if (mobile || reduced) return
-          const rect = magnetic.getBoundingClientRect()
-          mx((event.clientX - rect.left - rect.width / 2) * .12)
-          my((event.clientY - rect.top - rect.height / 2) * .12)
-        }
-        const resetMagnet = () => { mx(0); my(0) }
-        magnetic.addEventListener('pointermove', magnet)
-        magnetic.addEventListener('pointerleave', resetMagnet)
+        const detachWake = mobile || reduced ? () => undefined : attachPointerWake(gsap, {
+          root, panels,
+          magnetic: root.querySelector<HTMLElement>('[data-magnetic]'),
+          buttons: Array.from(root.querySelectorAll<HTMLElement>('[data-nav] > *, [data-jump]')),
+          activeIndex: () => lastChapter,
+        })
         update(); engine.render(0, 0, reduced)
         document.fonts.ready.then(() => { if (!cancelled) ScrollTrigger.refresh() })
         ScrollTrigger.refresh()
@@ -177,7 +172,7 @@ export default function NeuralJourney() {
           observer.disconnect(); intersection.disconnect(); narrativeObserver?.disconnect()
           document.removeEventListener('visibilitychange', visibility)
           root.removeEventListener('pointermove', move); root.removeEventListener('pointerleave', leave)
-          magnetic.removeEventListener('pointermove', magnet); magnetic.removeEventListener('pointerleave', resetMagnet)
+          detachWake()
           handlers.forEach(remove => remove())
           engine.dispose()
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))

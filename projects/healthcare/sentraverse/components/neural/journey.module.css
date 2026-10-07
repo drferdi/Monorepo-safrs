@@ -35,8 +35,8 @@
 .specimen { position: absolute; left: 4.2vw; top: 150px; display: flex; align-items: center; gap: 14px; font-size: 8px; letter-spacing: .12em; color: var(--neural-muted); }
 .specimen i { width: 44px; height: 1px; background: var(--neural-line); }
 .narrative { position: relative; z-index: 2; }
-.chapter { min-height: 90svh; padding: 210px 8vw 130px; position: relative; display: flex; align-items: center; outline: none; }
-.chapter > div { width: min(600px, 100%); }
+.chapter { min-height: 90svh; padding: 210px 8vw 130px; position: relative; display: flex; align-items: center; outline: none; perspective: 1000px; }
+.chapter > div { width: min(600px, 100%); transform-style: preserve-3d; }
 .eyebrow { font-size: 9px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: var(--neural-muted); display: flex; align-items: center; gap: 18px; margin: 0 0 30px; }
 .index { color: var(--neural-blue); font-size: 10px; padding-right: 15px; border-right: 1px solid var(--neural-line); }
 .chapter h1, .chapter h2 { font-family: var(--font-jakarta), sans-serif; font-size: clamp(42px, 5.1vw, 82px); font-weight: 400; line-height: 1.13; letter-spacing: -.045em; margin: 0; }
