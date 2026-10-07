@@ -71,3 +71,11 @@ Adaptations: terms the join misses are composed from a base term it found, addin
 Standard Arabic medical references, including the Unified Medical Dictionary (WHO EMRO and Librairie du Liban), were consulted to check individual terms. No term list was extracted from them: they carry no open licence, and only the individual factual equivalences were used, not the compilation. Structures the vocabulary does not cover are shown in English rather than guessed at.
 
 Interface text, system descriptions, and the per-structure descriptions in Arabic were written for this project and carry the same licence as the rest of the source.
+
+## MedBoard adaptation (2026-10-07)
+
+MedBoard ships this geometry in its Atlas Anatomi page with these changes, made under the same CC BY 4.0 terms:
+
+- Only the gzip chunks are kept, under `/atlas/models/`; the manifests point there.
+- The female reference additionally carries 309 muscles copied from the male reference (BodyParts3D 4.0), listed under their own system, "Otot dari referensi pria". Upstream Human Atlas deliberately borrows bones only; MedBoard adds muscle at its owner's request. Each muscle vertex follows its three nearest male bones (weights 1/d²): exact similarity fits to the 178 bones upstream already placed in the female body, and box fits to the spine, sternum and hip bones. Normals are recomputed. Muscles the female body already has (the Andreassen leg set, its own eye and knee muscles) are not copied. They are a man's muscles and stand in for shape and position only. Script: `scripts/atlas/borrow-muscles.mjs`.
+- Structure names are shown in Latin and Indonesian (`terms.json`); most Latin names are machine-translated and marked as unverified on screen.

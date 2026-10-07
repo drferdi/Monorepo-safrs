@@ -6,7 +6,7 @@ import prose from './prose-id.json'
 export type SystemId =
   | 'skeletal' | 'muscular' | 'arterial' | 'venous' | 'nervous' | 'digestive' | 'respiratory' | 'urinary'
   | 'reproductive' | 'lymphatic' | 'endocrine' | 'integumentary' | 'connective' | 'sensory' | 'cardiac'
-  | 'pregnancy' | 'brain' | 'borrowed' | 'donor-muscle'
+  | 'pregnancy' | 'brain' | 'borrowed' | 'borrowed-muscle' | 'donor-muscle'
 export type Sex = 'male' | 'female'
 export type View = 'three-quarter' | 'front' | 'side' | 'back'
 
@@ -52,11 +52,12 @@ const COLORS: Record<SystemId, string> = {
   skeletal: '#e2d9ba', muscular: '#a85b50', cardiac: '#b96760', sensory: '#b0c8ce', arterial: '#c05245',
   venous: '#527c9f', nervous: '#d8b565', brain: '#b3a8c6', respiratory: '#b98991', digestive: '#b8916b',
   urinary: '#b47961', lymphatic: '#879f7c', endocrine: '#c5a09a', reproductive: '#bda098', pregnancy: '#c8a6ae',
-  integumentary: '#ba9b7d', borrowed: '#9aa7b1', 'donor-muscle': '#a8776e', connective: '#aec3bb',
+  integumentary: '#ba9b7d', borrowed: '#9aa7b1', 'borrowed-muscle': '#a0645b', 'donor-muscle': '#a8776e',
+  connective: '#aec3bb',
 }
 const ORDER: SystemId[] = [
   'skeletal', 'muscular', 'cardiac', 'sensory', 'arterial', 'venous', 'nervous', 'brain', 'respiratory', 'digestive',
-  'urinary', 'lymphatic', 'endocrine', 'reproductive', 'pregnancy', 'integumentary', 'borrowed', 'donor-muscle', 'connective',
+  'urinary', 'lymphatic', 'endocrine', 'reproductive', 'pregnancy', 'integumentary', 'borrowed', 'borrowed-muscle', 'donor-muscle', 'connective',
 ]
 export const SYSTEMS = ORDER.map((id) => ({ id, color: COLORS[id], ...SYSTEM_PROSE[id] }))
 export const systemName = (id: SystemId) => SYSTEM_PROSE[id].name
@@ -114,10 +115,10 @@ export const EDITIONS: Edition[] = [
     publication: 'https://doi.org/10.1038/s41597-022-01905-2',
     suggestions: ['heart', 'brain', 'uterus', 'ovary', 'liver', 'kidney', 'tongue', 'mammary gland'],
     hidden: ['reproductive'],
-    // Chief 2026-10-07 ("kok jelek banget"): its own source has no skull, ribs, arms or feet and almost
-    // no muscle, so the body opens with the filler systems and the see-through skin already on.
-    // They stay listed under their own names, so the reader still sees what is borrowed.
-    shown: ['borrowed', 'donor-muscle', 'integumentary'],
+    // Chief 2026-10-07 ("kok jelek banget", "ototnya mana"): its own source has no skull, ribs, arms or
+    // feet and almost no muscle, so the body opens with the filler systems and the see-through skin
+    // on. They stay listed under their own names, so the reader still sees what is borrowed.
+    shown: ['borrowed', 'borrowed-muscle', 'donor-muscle', 'integumentary'],
   },
 ]
 export const edition = (sex: Sex) => EDITIONS.find((entry) => entry.sex === sex) ?? EDITIONS[0]

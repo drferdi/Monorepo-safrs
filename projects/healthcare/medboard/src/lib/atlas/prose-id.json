@@ -333,6 +333,10 @@
    "name": "Tulang dari referensi pria",
    "description": "Tulang-tulang ini bukan bagian dari tubuh referensi ini. Tulang tersebut disalin dari referensi pria untuk menggantikan struktur yang tidak dimodelkan oleh sumbernya, dan setiap regionya diskalakan dan diposisikan agar bertemu dengan tulang yang dimiliki kedua tubuh, lalu diputar pada sendinya hingga mengikuti permukaan tubuh ini sendiri. Tulang-tulang ini hendaknya diperlakukan sebagai penanda sementara untuk bentuk dan posisi, bukan sebagai anatomi tubuh ini sendiri."
   },
+  "borrowed-muscle": {
+   "name": "Otot dari referensi pria",
+   "description": "Otot-otot ini bukan bagian dari tubuh referensi ini. Otot kepala, leher, batang tubuh, lengan, dan kaki disalin dari referensi pria karena sumbernya sendiri hampir tidak memodelkan otot. Setiap otot mengikuti tulang tempatnya melekat, yang telah ditempatkan dan diskalakan pada tubuh ini, sehingga bentuknya tetap bentuk otot pria. Anggap sebagai pengganti untuk bentuk dan letak, bukan anatomi tubuh ini sendiri. Otot tungkai berasal dari referensi wanita kedua dan tercantum terpisah."
+  },
   "donor-muscle": {
    "name": "Otot tungkai (donor)",
    "description": "Otot-otot panggul, paha, dan tungkai bawah, berasal dari wanita kedua: Visible Human Female, yang disegmentasi oleh Andreassen dan rekan-rekan. Sumber tubuh referensi ini sendiri hampir tidak memodelkan otot, dan otot-otot ini mengisi kekosongan tersebut. Otot-otot ini disesuaikan dengan tulang panggul, femur, patela, tibia, dan fibula tubuh ini sendiri, tetapi tetap merupakan otot orang lain dan membawa perawakannya, bukan perawakan tubuh ini."

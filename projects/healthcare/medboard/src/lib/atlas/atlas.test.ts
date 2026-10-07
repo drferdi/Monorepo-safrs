@@ -25,10 +25,11 @@ const terms: TermTable = JSON.parse(readFileSync(path.join(publicDir, 'terms.jso
 const male = readAtlas('atlas.json')
 const female = readAtlas('atlas-female.json')
 
-// Each reference body ships a fixed inventory; a drift in either is an import fault.
+// Each reference body ships a fixed inventory; a drift means the import or the muscle borrow
+// (scripts/atlas) ran differently. Female: 1,220 upstream parts plus 309 borrowed muscles.
 const INVENTORY = [
   { atlas: male, parts: 2234, concepts: 3432 },
-  { atlas: female, parts: 1220, concepts: 1439 },
+  { atlas: female, parts: 1529, concepts: 1748 },
 ]
 
 test('both bodies keep their full inventory and every gzip chunk holds every mesh it indexes', () => {
@@ -114,11 +115,26 @@ test('explanations are Indonesian, and a sided or numbered name falls back to it
 
 test('the female body opens whole: borrowed bones, donor leg muscles and the see-through skin are on (Chief 2026-10-07)', () => {
   const female = defaultVisible('female')
-  for (const id of ['borrowed', 'donor-muscle', 'integumentary'] as const) assert.ok(female.includes(id), id)
+  for (const id of ['borrowed', 'borrowed-muscle', 'donor-muscle', 'integumentary'] as const) assert.ok(female.includes(id), id)
   assert.equal(female.includes('reproductive'), false)
   const male = defaultVisible('male')
   assert.equal(male.includes('borrowed'), false)
   assert.equal(male.includes('integumentary'), false)
+})
+
+test('borrowed muscles sit inside the female body surface and never double a muscle it already has', () => {
+  const borrowed = female.parts.filter((part) => part.system === 'borrowed-muscle')
+  assert.ok(borrowed.length > 250)
+  const skin = female.parts.filter((part) => part.name === 'Skin')
+  // 3 cm: upstream's borrowed finger bones already reach 28 mm past the skin, and muscles follow them.
+  const lo = [0, 1, 2].map((k) => Math.min(...skin.map((part) => part.bounds[0][k])) - 0.03)
+  const hi = [0, 1, 2].map((k) => Math.max(...skin.map((part) => part.bounds[1][k])) + 0.03)
+  const outside = borrowed.filter((part) => [0, 1, 2].some((k) => part.bounds[0][k] < lo[k] || part.bounds[1][k] > hi[k]))
+  assert.deepEqual(outside.map((part) => part.name), [])
+  const plain = (name: string) =>
+    name.toLowerCase().replace(/\((left|right)\)|\b(left|right)\b|\bhead\b/g, ' ').replace(/\s+/g, ' ').trim()
+  const own = new Set(female.parts.filter((part) => part.system === 'donor-muscle' || part.system === 'muscular').map((part) => plain(part.name)))
+  assert.deepEqual(borrowed.filter((part) => own.has(plain(part.name))).map((part) => part.name), [])
 })
 
 test('system names and edition captions are Indonesian sentence case', () => {
