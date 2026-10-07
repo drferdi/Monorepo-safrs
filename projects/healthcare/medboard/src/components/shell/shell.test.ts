@@ -77,9 +77,13 @@ test('every Sentra logo is the dark mark on a transparent background', async () 
   ]
   const offBrand = screens.filter((file) => {
     const source = readFileSync(path.join(process.cwd(), file), 'utf-8')
-    return !source.includes('/sentra-mark.png') || /sentradash\.png|sentralogo\.png|favicon\.svg/.test(source)
+    return /sentradash\.png|sentralogo\.png|favicon\.svg/.test(source)
   })
   assert.deepEqual(offBrand, [])
+  // Chief 2026-10-07: the header and the tab icon wear the MedBoard brand kit (brand-assets.test.ts);
+  // the Sentra mark stays where Sentra itself is shown.
+  const lab = readFileSync(path.join(process.cwd(), 'src/app/hub/lab/[username]/page.tsx'), 'utf-8')
+  assert.ok(lab.includes('/sentra-mark.png'))
 
   const { data, info } = await sharp(path.join(process.cwd(), 'public/sentra-mark.png'))
     .ensureAlpha()

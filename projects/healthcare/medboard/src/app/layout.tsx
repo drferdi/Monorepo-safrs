@@ -15,7 +15,6 @@ import TidyCaseOnBlur from '@/components/TidyCaseOnBlur'
 export const metadata: Metadata = {
   title: 'MedBoard — Sentra',
   description: 'Meja kerja klinis untuk puskesmas, dari anamnesis sampai rujukan.',
-  icons: { icon: '/sentra-mark.png' },
   robots: {
     index: false,
     follow: false,

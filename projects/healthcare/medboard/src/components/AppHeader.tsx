@@ -79,8 +79,8 @@ export default function AppHeader() {
     <header className="app-header">
       <span aria-hidden />
       <a className="app-header__brand" href="https://sentrahai.com/" target="_blank" rel="noopener noreferrer">
-        <img src="/sentra-mark.png" alt="" width={22} height={22} />
-        <span>MedBoard</span>
+        {/* The kit's lockup leaves 43% of its canvas empty on the right; the view box shows just the drawing. */}
+        <img src="/brand/medboard-logo-horizontal-black.svg#svgView(viewBox(23,40,600,100))" alt="MedBoard" width={120} height={20} />
       </a>
       <div className="app-header__end">
         <span className="app-header__date">{formatHeaderDate(today)}</span>

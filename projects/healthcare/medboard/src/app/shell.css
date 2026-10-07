@@ -123,15 +123,8 @@
   background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
-.app-header__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gap-sm);
-  color: var(--text);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  text-decoration: none;
-}
+/* The official MedBoard lockup (docs/brand) at 120 px wide, the kit's digital minimum. */
+.app-header__brand { display: inline-flex; align-items: center; }
 .app-header__end { display: flex; align-items: center; justify-content: flex-end; gap: var(--gap-lg); }
 .app-header__date { font-size: var(--text-sm); color: var(--text-secondary); }
 .app-header__account { position: relative; }
@@ -277,7 +270,7 @@
 .app-footer__column:last-child { border-right: 1px solid var(--footer-line); }
 .app-footer__brand { display: flex; align-items: center; gap: var(--gap-sm); margin-bottom: var(--gap-xs); }
 .app-footer__brand .app-footer__heading { margin: 0; }
-.app-footer__brand img { flex: none; filter: brightness(0) invert(1); }
+.app-footer__brand img { flex: none; }
 .app-footer__heading { margin: 0 0 var(--gap-xs); font-size: var(--text-base); font-weight: 600; }
 .app-footer__text { margin: 0; max-width: 40ch; }
 .app-footer__legal {

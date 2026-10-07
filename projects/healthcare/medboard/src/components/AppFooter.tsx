@@ -32,7 +32,7 @@ export default function AppFooter() {
       <div className="app-footer__columns">
         <div className="app-footer__column">
           <div className="app-footer__brand">
-            <img src="/sentra-mark.png" alt="" width={24} height={24} />
+            <img src="/brand/medboard-mark-white.svg#svgView(viewBox(42,83,416,334))" alt="" width={20} height={16} />
             <p className="app-footer__heading">MedBoard</p>
           </div>
           <p className="app-footer__text">Dibangun oleh Sentra HAI untuk layanan kesehatan primer di Indonesia.</p>
