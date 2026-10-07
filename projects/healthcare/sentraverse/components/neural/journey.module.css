@@ -49,8 +49,8 @@
 .begin { display: flex; align-items: center; gap: 36px; font-size: 8px !important; letter-spacing: .15em; background: none; border: 0; color: var(--neural-white); padding: 0; margin-top: 46px; }
 .begin span { border: 1px solid var(--neural-line); border-radius: 50%; display: grid; place-items: center; width: 30px; height: 30px; font-size: 14px; }
 .division { padding-left: 56%; }
-.division > div { width: 440px; position: relative; }
-.division > div::before { content: ""; position: absolute; inset: -56px -80px; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at center, rgb(6 9 14 / 92%) 0%, rgb(6 9 14 / 70%) 42%, transparent 72%); }
+.division > div { width: 440px; }
+.division h2, .division .description, .division .eyebrow { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
 .division h2 { font-size: clamp(32px, 3.2vw, 54px); letter-spacing: -.045em; line-height: 1.2; }
 .division .eyebrow { color: var(--neural-blue); }
 .division .description { max-width: 260px; }
