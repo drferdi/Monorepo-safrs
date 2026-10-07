@@ -7,6 +7,7 @@ import { gunzipSync } from 'node:zlib'
 import { atlasTools } from './agent-tools'
 import {
   EDITIONS,
+  defaultVisible,
   SYSTEMS,
   described,
   explanation,
@@ -109,6 +110,15 @@ test('explanations are Indonesian, and a sided or numbered name falls back to it
   assert.equal(described('vascular tree'), false)
   // Unexplained structures fall back to the note of their system.
   assert.equal(explanation('vascular tree', 'arterial', 'male'), SYSTEMS.find((system) => system.id === 'arterial')?.description)
+})
+
+test('the female body opens whole: borrowed bones, donor leg muscles and the see-through skin are on (Chief 2026-10-07)', () => {
+  const female = defaultVisible('female')
+  for (const id of ['borrowed', 'donor-muscle', 'integumentary'] as const) assert.ok(female.includes(id), id)
+  assert.equal(female.includes('reproductive'), false)
+  const male = defaultVisible('male')
+  assert.equal(male.includes('borrowed'), false)
+  assert.equal(male.includes('integumentary'), false)
 })
 
 test('system names and edition captions are Indonesian sentence case', () => {

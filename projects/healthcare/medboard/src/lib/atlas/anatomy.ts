@@ -83,6 +83,8 @@ export interface Edition {
   publication: string
   suggestions: string[]
   hidden: SystemId[]
+  /** Systems this body starts with on top of DEFAULT_VISIBLE. */
+  shown: SystemId[]
 }
 export const EDITIONS: Edition[] = [
   {
@@ -96,6 +98,7 @@ export const EDITIONS: Edition[] = [
     publication: 'https://academic.oup.com/nar/article/37/suppl_1/D782/1000752',
     suggestions: ['heart', 'brain', 'liver', 'stomach', 'spleen', 'pancreas', 'urinary bladder', 'trachea'],
     hidden: ['reproductive'],
+    shown: [],
   },
   {
     sex: 'female',
@@ -111,10 +114,17 @@ export const EDITIONS: Edition[] = [
     publication: 'https://doi.org/10.1038/s41597-022-01905-2',
     suggestions: ['heart', 'brain', 'uterus', 'ovary', 'liver', 'kidney', 'tongue', 'mammary gland'],
     hidden: ['reproductive'],
+    // Chief 2026-10-07 ("kok jelek banget"): its own source has no skull, ribs, arms or feet and almost
+    // no muscle, so the body opens with the filler systems and the see-through skin already on.
+    // They stay listed under their own names, so the reader still sees what is borrowed.
+    shown: ['borrowed', 'donor-muscle', 'integumentary'],
   },
 ]
 export const edition = (sex: Sex) => EDITIONS.find((entry) => entry.sex === sex) ?? EDITIONS[0]
-export const defaultVisible = (sex: Sex): SystemId[] => DEFAULT_VISIBLE.filter((id) => !edition(sex).hidden.includes(id))
+export const defaultVisible = (sex: Sex): SystemId[] => [
+  ...DEFAULT_VISIBLE.filter((id) => !edition(sex).hidden.includes(id)),
+  ...edition(sex).shown,
+]
 
 /* Names. The source names are English (FMA, HuBMAP). public/atlas/terms.json gives each one its
    Latin and Indonesian name; `verified` is false where the Latin was machine-translated and has
