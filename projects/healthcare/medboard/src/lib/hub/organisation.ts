@@ -197,15 +197,15 @@ export const YEARS = [2027, 2028, 2029, 2030]
 // Rp billion per year, 2027-2030 (Financial Architecture §02, §03, §06).
 export const PRODUCTS = [
   {
-    id: 'ui',
-    name: 'Sentra/ui',
-    pillar: 'Design Partner',
-    model: 'Proyek dan retainer',
-    role: 'Penopang arus kas. Jarak dari proyek ke pendapatan paling pendek, dan setiap proyek memberi masukan langsung dari klien.',
-    revenue: [0.74, 1.39, 2.21, 3.11],
-    driver: 'Proyek selesai',
-    gate: '≥30 draf proyek selesai; pendapatan campuran Rp18 juta.',
-    ifFails: 'Batasi kerja kustom, ubah harga, tunda rekrutmen.',
+    id: 'assist',
+    name: 'Asisten Medis dan MedBoard',
+    pillar: 'Healthcare AI',
+    model: 'SaaS fasilitas',
+    role: 'Keunggulan jangka panjang. Penerapannya lebih lambat, tetapi daya tahannya di layanan klinis paling tinggi.',
+    revenue: [0.18, 1.08, 4.5, 15.3],
+    driver: 'Kemitraan puskesmas',
+    gate: 'Validator independen tidak menemukan kegagalan keselamatan kritis.',
+    ifFails: 'Hentikan penerapan klinis dan pemasaran; kembali ke validasi.',
   },
   {
     id: 'tutor',
@@ -219,17 +219,6 @@ export const PRODUCTS = [
     ifFails: 'Tunda percepatan akuisisi; fokus pada retensi dan hasil belajar.',
   },
   {
-    id: 'assist',
-    name: 'Asisten Medis dan MedBoard',
-    pillar: 'Healthcare AI',
-    model: 'SaaS fasilitas',
-    role: 'Keunggulan jangka panjang. Penerapannya lebih lambat, tetapi daya tahannya di layanan klinis paling tinggi.',
-    revenue: [0.18, 1.08, 4.5, 15.3],
-    driver: 'Kemitraan puskesmas',
-    gate: 'Validator independen tidak menemukan kegagalan keselamatan kritis.',
-    ifFails: 'Hentikan penerapan klinis dan pemasaran; kembali ke validasi.',
-  },
-  {
     id: 'payroll',
     name: 'Payroll Automation',
     pillar: 'Digital Finance',
@@ -239,6 +228,17 @@ export const PRODUCTS = [
     driver: 'Rp15 ribu per karyawan per bulan',
     gate: 'Harga Rp15 ribu diterima tanpa kesalahan hitung.',
     ifFails: 'Persempit cakupan; perbaiki keandalan payroll sebelum menambah fitur.',
+  },
+  {
+    id: 'ui',
+    name: 'Sentra/ui',
+    pillar: 'Design Partner',
+    model: 'Proyek dan retainer',
+    role: 'Penopang arus kas. Jarak dari proyek ke pendapatan paling pendek, dan setiap proyek memberi masukan langsung dari klien.',
+    revenue: [0.74, 1.39, 2.21, 3.11],
+    driver: 'Proyek selesai',
+    gate: '≥30 draf proyek selesai; pendapatan campuran Rp18 juta.',
+    ifFails: 'Batasi kerja kustom, ubah harga, tunda rekrutmen.',
   },
 ]
 

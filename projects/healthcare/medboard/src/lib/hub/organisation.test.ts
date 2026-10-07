@@ -20,10 +20,10 @@ test('product revenue lines add up to the consolidated revenue of each year', ()
   assert.deepEqual(REPORTED_TOTAL_REVENUE, [1.53, 5.28, 15.77, 42.26])
 })
 
-test('the healthcare product is named Asisten Medis dan MedBoard (Chief 2026-10-07)', () => {
+test('products run healthcare, academic, finance, then Sentra/ui (Chief 2026-10-07)', () => {
   assert.deepEqual(
     PRODUCTS.map((product) => product.name),
-    ['Sentra/ui', 'Tutor Smartboard', 'Asisten Medis dan MedBoard', 'Payroll Automation']
+    ['Asisten Medis dan MedBoard', 'Tutor Smartboard', 'Payroll Automation', 'Sentra/ui']
   )
 })
 
