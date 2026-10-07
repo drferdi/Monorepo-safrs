@@ -8,11 +8,19 @@ import { summarizeRank, type CrewRankSummary } from '@/lib/crew-rank'
 export function RankBadge({ rank, size }: { rank: CrewRankSummary | null | undefined; size: number }) {
   const shown = rank ?? summarizeRank(0, 0)
   return (
+    // The figure is at most a little wider than the image: a long rank name wraps under it instead
+    // of widening the badge into the name column or past the card edge.
     <figure
       className={shown.level === 9 ? 'rank-badge rank-badge--legendary' : 'rank-badge'}
-      style={{ width: size }}
+      style={{ maxWidth: Math.max(size, 104) }}
     >
-      <Image src={shown.badgeSrc} alt={`Lencana ${shown.name}`} width={size} height={size} />
+      <Image
+        src={shown.badgeSrc}
+        alt={`Lencana ${shown.name}`}
+        width={size}
+        height={size}
+        style={{ width: size, height: size }}
+      />
       <figcaption className="rank-badge__caption">{`Lv.${shown.level} · ${shown.name}`}</figcaption>
     </figure>
   )
