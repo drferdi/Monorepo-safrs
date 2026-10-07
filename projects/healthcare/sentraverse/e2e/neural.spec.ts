@@ -15,6 +15,9 @@ test('scroll narrative reverses, discovers every division, and keeps sound opt-i
     await expect(page.getByRole('heading', { name: divisionNames[index], exact: true })).toBeVisible()
     await expect(page.locator('[data-phase-label]')).toHaveText(label)
   }
+  await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+  await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
+  await expect(page.locator('[data-stage] img, [data-stage] > svg')).toHaveCount(0)
   await page.getByRole('button', { name: 'Go to Across the synapse', exact: true }).click()
   await expect(page.locator('#synapse')).toHaveAttribute('aria-hidden', 'false')
   await page.getByRole('button', { name: 'Go to The beginning', exact: true }).click()
@@ -30,6 +33,7 @@ test('reduced motion uses unpinned readable chapters and reacts to preference ch
   await expect(page.locator('.pin-spacer')).toHaveCount(0)
   for (const name of divisionNames) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
   await expect(page.locator('[data-chapter][aria-hidden="true"]')).toHaveCount(0)
+  await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
   await expect(page.locator('.pin-spacer')).toHaveCount(1)
@@ -48,6 +52,7 @@ test('mobile retains the complete story without horizontal overflow', async ({ p
     expect(box).not.toBeNull()
     expect(box!.x).toBeGreaterThanOrEqual(0)
     expect(box!.x + box!.width).toBeLessThanOrEqual(390)
+    if (label === 'Back to the human') await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toBeInViewport()
   }
 })
 
@@ -65,6 +70,15 @@ test('WebGL unavailable preserves the Canvas journey and all division names', as
   await expect(page.getByRole('heading', { name: divisionNames[0], exact: true })).toBeVisible()
 })
 
+test('without any canvas context the story still ends on the human chapter text', async ({ page }) => {
+  await page.addInitScript(() => { HTMLCanvasElement.prototype.getContext = () => null })
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-renderer', 'svg')
+  await expect(page.locator('main')).toHaveAttribute('data-face', 'unavailable')
+  await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+  await expect(page.locator('#human h2')).toBeVisible()
+})
+
 test('context loss recovers to Canvas and reading mode cleans up pins', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('main')).toHaveAttribute('data-loading', 'false')
@@ -78,6 +92,7 @@ test('context loss recovers to Canvas and reading mode cleans up pins', async ({
   await page.getByRole('button', { name: 'READ THE STORY', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
   await expect(page.locator('.pin-spacer')).toHaveCount(0)
+  expect(await page.locator('[data-marker-copy]').evaluateAll(blocks => blocks.every(block => !(block as HTMLElement).style.transform))).toBe(true)
   await page.getByRole('button', { name: 'CINEMATIC VIEW', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
   await expect(page.locator('.pin-spacer')).toHaveCount(1)
