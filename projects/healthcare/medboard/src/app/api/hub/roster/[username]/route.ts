@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { isCrewAuthorizedRequest, listCrewAccessUsers } from '@/lib/server/crew-access-auth'
 import { listAllCrewProfiles } from '@/lib/server/crew-access-profile'
+import { loadCrewRankSummaries } from '@/lib/server/crew-rank-store'
 
 export const runtime = 'nodejs'
 
@@ -24,6 +25,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ user
     }
 
     const profile = profiles.get(user.username)
+    const ranks = await loadCrewRankSummaries([user.username])
 
     return NextResponse.json({
       ok: true,
@@ -34,6 +36,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ user
         institution: user.institution,
         profession: user.profession,
         role: user.role,
+        rank: ranks.get(user.username),
         profile: profile
           ? {
               fullName: profile.fullName,
