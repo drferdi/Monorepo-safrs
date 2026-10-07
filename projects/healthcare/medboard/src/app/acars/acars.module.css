@@ -77,6 +77,8 @@
   background: color-mix(in srgb, var(--surface) 70%, transparent);
   font-size: var(--text-sm);
   color: var(--text-secondary);
+  /* The notice covers the map; the wheel and drags still reach Leaflet underneath. */
+  pointer-events: none;
 }
 .mapLoading {
   display: flex;

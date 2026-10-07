@@ -21,6 +21,23 @@ test('Sentra Network opens the map centred on Kota Kediri at city zoom', () => {
   assert.match(source, /<StaffMap[^>]*center=\{KEDIRI_CENTER\}[^>]*zoom=\{13\}/)
 })
 
+// Chief 2026-10-07: "Cara mendekatkan dan menjauhkan map?" The map has zoom buttons, and the
+// mouse wheel over the map zooms it instead of Lenis scrolling the page.
+test('the staff map zooms with its own buttons and with the mouse wheel', () => {
+  const source = readFileSync(path.join(process.cwd(), 'src/components/map/StaffMap.tsx'), 'utf8')
+  assert.match(source, /aria-label="Perbesar peta"[^>]*onClick=\{\(\) => map\?\.zoomIn\(\)\}/)
+  assert.match(source, /aria-label="Perkecil peta"[^>]*onClick=\{\(\) => map\?\.zoomOut\(\)\}/)
+  assert.match(source, /<div[^>]*data-lenis-prevent[^>]*>\s*<style>/)
+  // The "no crew online" notice covers the whole map; wheel and drag must pass through it.
+  const css = readFileSync(path.join(process.cwd(), 'src/app/acars/acars.module.css'), 'utf8')
+  assert.match(css, /\.mapEmpty \{[^}]*pointer-events: none;/)
+})
+
+test('Sentra Network describes ACARS in Chief\'s words', () => {
+  const source = readFileSync(path.join(process.cwd(), 'src/app/acars/page.tsx'), 'utf8').replace(/\s+/g, ' ')
+  assert.match(source, /ACARS — Active Communication and Coordination Radar System, sebuah sistem yang dirancang untuk memfasilitasi kolaborasi klinis internal secara aktif\./)
+})
+
 test('the CSP lets the browser fetch OpenFreeMap tiles and start the MapLibre worker', async () => {
   const rules = await nextConfig.headers?.()
   const csp = rules?.flatMap((rule) => rule.headers).find((header) => header.key === 'Content-Security-Policy')?.value ?? ''

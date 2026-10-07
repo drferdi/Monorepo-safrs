@@ -234,8 +234,8 @@ export default function AcarsPage() {
         <div>
           <h1 className={styles.title}>Sentra Network</h1>
           <p className="ui-page-header__description">
-            ACARS — Active communication and coordination radar system untuk kolaborasi klinis
-            internal.
+            ACARS — Active Communication and Coordination Radar System, sebuah sistem yang dirancang
+            untuk memfasilitasi kolaborasi klinis internal secara aktif.
           </p>
         </div>
 
