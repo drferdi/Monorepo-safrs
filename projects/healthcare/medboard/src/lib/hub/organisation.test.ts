@@ -20,6 +20,13 @@ test('product revenue lines add up to the consolidated revenue of each year', ()
   assert.deepEqual(REPORTED_TOTAL_REVENUE, [1.53, 5.28, 15.77, 42.26])
 })
 
+test('the healthcare product is named Asisten Medis dan MedBoard (Chief 2026-10-07)', () => {
+  assert.deepEqual(
+    PRODUCTS.map((product) => product.name),
+    ['Sentra/ui', 'Tutor Smartboard', 'Asisten Medis dan MedBoard', 'Payroll Automation']
+  )
+})
+
 test('EBITDA stays negative until 2030 with a cumulative early loss of Rp7.7 billion', () => {
   assert.deepEqual(EBITDA.map((value) => value < 0), [true, true, true, false])
   assert.equal(round(EBITDA.slice(0, 3).reduce((sum, value) => sum + value, 0), 1), -7.7)

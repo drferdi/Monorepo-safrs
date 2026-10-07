@@ -220,7 +220,7 @@ export const PRODUCTS = [
   },
   {
     id: 'assist',
-    name: 'Sentra Assist',
+    name: 'Asisten Medis dan MedBoard',
     pillar: 'Healthcare AI',
     model: 'SaaS fasilitas',
     role: 'Keunggulan jangka panjang. Penerapannya lebih lambat, tetapi daya tahannya di layanan klinis paling tinggi.',
