@@ -5,6 +5,7 @@ import { io, type Socket } from 'socket.io-client'
 
 import { AsistenMedisFlow } from '@/components/home/AsistenMedisFlow'
 import { ContributionHeatmap, HeatmapLegend } from '@/components/home/ContributionHeatmap'
+import { RankAwardCard } from '@/components/rank/RankAwardCard'
 import { LevelEdge, RankBadge } from '@/components/rank/RankBadge'
 import { CREW_ACCESS_GENDERS, type CrewAccessGender } from '@/lib/crew-access'
 import {
@@ -22,7 +23,7 @@ import {
   resolveCrewSentraTitles,
 } from '@/lib/crew-profile'
 import { CRITICAL_MIND_LIBRARY, MY_MIND_MEMORY_URL } from '@/lib/critical-mind/library'
-import type { CrewRankSummary } from '@/lib/crew-rank'
+import type { CrewAward, CrewRankSummary } from '@/lib/crew-rank'
 import type { DevUpdateRecord } from '@/lib/dev-updates'
 import { buildActivityDays, type ActivityDay } from '@/lib/report/clinical-activity'
 import { safeHref, safeUrl } from '@/lib/sanitize-url'
@@ -317,13 +318,16 @@ export default function ProfilUserPage() {
 
   // Clinical rank: reports written and active hours (Chief 2026-10-07)
   const [myRank, setMyRank] = useState<CrewRankSummary | null>(null)
+  const [myAwards, setMyAwards] = useState<CrewAward[]>([])
   useEffect(() => {
     const username = sessionUser?.username
     if (!username) return
     fetch(`/api/crew/${encodeURIComponent(username)}/rank`, { cache: 'no-store' })
       .then((r) => (r.ok ? r.json() : null))
-      .then((d: { ok?: boolean; rank?: CrewRankSummary } | null) => {
-        if (d?.ok) setMyRank(d.rank ?? null)
+      .then((d: { ok?: boolean; rank?: CrewRankSummary; awards?: CrewAward[] } | null) => {
+        if (!d?.ok) return
+        setMyRank(d.rank ?? null)
+        setMyAwards(d.awards ?? [])
       })
       .catch(() => undefined)
   }, [sessionUser?.username])
@@ -1861,6 +1865,16 @@ export default function ProfilUserPage() {
                   <HeatmapLegend />
                 </div>
               </div>
+            </PanelSection>
+          </Panel>
+        </div>
+
+        {/* ── Rank & award ── */}
+        <div style={{ gridColumn: '1 / -1' }}>
+          <Panel>
+            <PanelSection>
+              <SectionLabel>Rank & award</SectionLabel>
+              <RankAwardCard rank={myRank} awards={myAwards} />
             </PanelSection>
           </Panel>
         </div>

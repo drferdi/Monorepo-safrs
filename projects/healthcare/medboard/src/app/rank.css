@@ -15,8 +15,8 @@
 }
 
 .rank-badge--legendary img {
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px var(--primary);
+  border-radius: var(--radius-full);
+  outline: 2px solid var(--primary);
 }
 
 .rank-badge__caption {
@@ -45,4 +45,46 @@
 
 .level-edge--ceo {
   color: var(--primary);
+}
+
+.rank-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-lg);
+}
+
+.rank-card__progress {
+  display: grid;
+  gap: var(--gap-xs);
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+
+.rank-card__muted {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.rank-card__awards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
+.rank-card__award {
+  display: grid;
+  justify-items: center;
+  gap: var(--gap-xs);
+  min-width: 72px;
+  font-size: var(--text-xs);
+  color: var(--text);
+}
+
+/* Unreached awards are muted by colour, not opacity, so the label keeps AA contrast (4.76:1). */
+.rank-card__award[data-reached='false'] {
+  color: var(--text-muted);
 }
