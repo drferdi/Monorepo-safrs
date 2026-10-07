@@ -23,7 +23,7 @@ export default function AppFooter() {
       <div className="app-footer__band" aria-hidden="true" />
 
       <div className="app-footer__hero">
-        <p className="app-footer__tagline">Dari anamnesis sampai rujukan, di satu meja kerja</p>
+        <p className="app-footer__tagline">See Earlier. Decide Better.</p>
         <a href="#" className="app-footer__top" aria-label="Kembali ke atas">
           <ArrowUp size={18} strokeWidth={1.75} aria-hidden />
         </a>

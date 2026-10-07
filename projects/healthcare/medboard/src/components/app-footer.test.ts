@@ -18,10 +18,10 @@ test('the footer states that clinical decisions stay with the treating health wo
   assert.match(html, /AI di MedBoard memberi saran\. Keputusan klinis tetap menjadi tanggung jawab tenaga kesehatan yang merawat pasien\./)
 })
 
-// Chief 2026-10-07 ("decide better"): the tagline names the work MedBoard carries, not a category.
-test('the tagline names the clinical flow from history taking to referral', () => {
-  assert.match(html, /<p class="app-footer__tagline">Dari anamnesis sampai rujukan, di satu meja kerja<\/p>/)
-  assert.doesNotMatch(html, /[Ss]istem informasi klinis/)
+// Chief 2026-10-07: the footer tagline is Chief's own line.
+test('the tagline reads "See Earlier. Decide Better."', () => {
+  assert.match(html, /<p class="app-footer__tagline">See Earlier\. Decide Better\.<\/p>/)
+  assert.doesNotMatch(html, /[Ss]istem informasi klinis|Dari anamnesis sampai rujukan/)
 })
 
 test('the footer links Sentra Hub inside the app and sentrahai.com in a new tab', () => {
