@@ -7,6 +7,7 @@ import { calloutPoints, callouts, labelStyle } from './callouts'
 import { loadPixels } from './face'
 import type { Look } from './renderer'
 import { faceBox, faceLook, portraitState } from './tactile'
+import { buildMaster, jumpLabel } from './timeline'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions } from './story'
 import styles from './journey.module.css'
@@ -129,63 +130,21 @@ export default function NeuralJourney() {
             panels[index].focus({ preventScroll: true })
           }
         } else {
-          gsap.set(panels, { autoAlpha: 0 })
-          gsap.set(panels[0], { autoAlpha: 1 })
-          gsap.set(nav, { autoAlpha: 0 })
-          master = gsap.timeline({
-            defaults: { ease: 'power2.inOut' },
+          if (photo) placePhoto()
+          // The whole scrubbed story lives in `timeline.ts`; the ScrollTrigger that drives it is
+          // created here because it pins this stage over the scroll travel.
+          master = buildMaster(gsap, chapters, {
+            state, panels, nav, photo, reveal: !!portrait,
+            overview: root.querySelector('[data-overview]'), scrim: root.querySelector('[data-scrim]'),
             scrollTrigger: { id: 'sentraverse-journey', trigger: root, pin: stage, start: 'top top', end: () => `+=${window.innerHeight * (mobile ? 8 : 9)}`, scrub: mobile ? .35 : .8, invalidateOnRefresh: true },
             onUpdate: update,
           })
-          master.to(state, { phase: 100, duration: 100, ease: 'none' }, 0)
-          master.to(nav, { autoAlpha: 1, duration: 2 }, 11)
-          master.fromTo('[data-overview]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.5 }, 91)
-          master.to('[data-overview]', { autoAlpha: 0, duration: 1 }, 95)
-          // From the network on, the text sits over bright neurons: a scrim darkens the canvas
-          // under it (Chief 2026-10-08) and lifts again as the face returns at the end.
-          master.fromTo('[data-scrim]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 3 }, 58)
-          master.to('[data-scrim]', { autoAlpha: 0, duration: 3 }, 94)
-          if (photo) {
-            placePhoto(); master.fromTo(photo, { autoAlpha: 0 }, { autoAlpha: 1, duration: portrait ? .5 : 3 }, 95.5)
-            // The HUD callouts start hidden and draw in from the final chapter's scene below.
-            gsap.set(photo.querySelectorAll('[data-callout-line]'), { attr: { 'stroke-dashoffset': 1 } })
-            gsap.set(photo.querySelectorAll('[data-callout-dot]'), { attr: { r: 0 } })
-            gsap.set(photo.querySelectorAll('[data-callout], [data-callout-glint]'), { autoAlpha: 0 })
-          }
-          chapters.forEach((chapter, index) => {
-            const panel = panels[index]
-            // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
-            // exits accelerate; the master stays linear because the scroll position drives it.
-            const scene = gsap.timeline({ defaults: { ease: 'power3.out' } })
-            const duration = (chapters[index + 1]?.phase ?? 102) - chapter.phase
-            if (index > 0) scene.fromTo(panel, { autoAlpha: 0, y: reduced || chapter.id === 'human' ? 0 : 24 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
-            const marker = panel.querySelector('[data-marker-line]')
-            if (marker) {
-              scene.fromTo(marker, { scaleX: 0 }, { scaleX: 1, duration: .8, ease: 'power2.out', immediateRender: false }, 0)
-              scene.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
-              scene.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)
-            }
-            // HUD callouts on the photograph (Chief 2026-10-08, "motion garis futuristic"): once the
-            // photo has resolved (phase 98.2 on) each line draws in along its own length (pathLength
-            // 1, so a resize never desyncs the scrubbed tween), its label follows, then its glint
-            // keeps moving on its own through CSS.
-            if (chapter.id === 'human' && photo) {
-              const dots = panel.querySelectorAll('[data-callout-dot]'), labels = panel.querySelectorAll('[data-callout]'), glints = panel.querySelectorAll('[data-callout-glint]')
-              panel.querySelectorAll('[data-callout-line]').forEach((line, k) => {
-                const at = 2.2 + k * .45
-                scene.fromTo(dots[k], { attr: { r: 0 } }, { attr: { r: .55 }, duration: .3, ease: 'back.out(2)', immediateRender: false }, at)
-                scene.fromTo(line, { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .6, ease: 'power2.out', immediateRender: false }, at)
-                scene.fromTo(labels[k], { autoAlpha: 0, x: 8 }, { autoAlpha: 1, x: 0, duration: .5, immediateRender: false }, at + .35)
-                scene.fromTo(glints[k], { autoAlpha: 0 }, { autoAlpha: 1, duration: .3, immediateRender: false }, at + .6)
-              })
-            }
-            if (index < chapters.length - 1) scene.to(panel, { autoAlpha: 0, y: -10, duration: .8, ease: 'power2.in' }, duration - .8)
-            master!.addLabel(chapter.id, chapter.phase).add(scene, chapter.phase)
-          })
+          // A jump scrolls to the chapter's entry label, so the phase→scroll maths lives in the
+          // ScrollTrigger and in the timeline's own tempo, not here.
           navigateRef.current = phase => {
             const trigger = master?.scrollTrigger
             if (!trigger) return
-            window.scrollTo({ top: trigger.start + (trigger.end - trigger.start) * Math.min(1, (phase + 1.5) / 100), behavior: 'instant' })
+            window.scrollTo({ top: trigger.labelToScroll(jumpLabel(chapters, phase)), behavior: 'instant' })
           }
           gsap.ticker.add(draw)
         }
