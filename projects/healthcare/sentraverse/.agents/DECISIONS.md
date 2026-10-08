@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-08 (sentrapedia) — The sentrapedia data stays at components/sentrapedia/data.ts
+
+- Decision: the Sentrapedia page imports its data from `components/sentrapedia/data.ts`
+  (with `diseases-data.ts`), the module migrated in `558d808e`; no `lib/data` module is
+  created. Codex's `2700f65e` had re-pointed the import to `@/lib/data`, which never existed
+  here, and the build failed. Data modules in this capsule live beside their feature
+  (`components/<feature>/data.ts`); `lib/` holds utilities.
+- Also ruled: the shared `Navbar` takes no `onOpenApiModal` prop (the sentrapedia API modal
+  opens from its own button), and the intro splash reads its session "seen" flag through
+  `useSyncExternalStore` with a "not seen" server snapshot, so the prerendered HTML carries
+  the splash and a return visit hides it after hydration, without `setState` in an effect.
+- Evidence: commit `13e00e54`; typecheck 0, lint 0 errors, node:test 38/38, build 0,
+  deploy:dry-run 0; production preview on 127.0.0.1:4341 checked in the Browser pane.
+
 ## 2026-10-08 (ending) — Scan → Develop → Lock-on, masked title reveals and the dwells
 
 - Decision (Chief, 2026-10-08, the task "Make the Sentraverse neural journey ending more
