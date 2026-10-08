@@ -1,45 +1,53 @@
 # HANDOFF
 
-Last updated: 2026-10-08 (seventh session of the day, the sentrapedia build repair)
+Last updated: 2026-10-09 (twelfth session, the film as a frame sequence)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Branch `feat/sidepanel-ui-batch` of the monorepo, not pushed, not published to
-`drferdi/Sentraverse`. After the dramatic-ending work, Codex landed four sentrapedia commits
-(`e55523ac`, `2700f65e`, `eab37de3`, `1d567c1f`: the agent node graph, the Multi-AI section
-and API modal, the video intro splash, the Audrey wording). `2700f65e` re-pointed the page's
-import to `@/lib/data`, a module this capsule never had, so `next build` failed with
-"Module not found: Can't resolve '@/lib/data'"; the typecheck also showed the page passing
-`onOpenApiModal` to the shared `Navbar` (no props), and lint failed on the splash's
-`setState` inside an effect.
+Branch `feat/sidepanel-ui-batch` of the monorepo, committed (the film-chapter commit on top of
+`99920ee3`, Chief's "git commit" of 2026-10-09), not pushed, not published to `drferdi/Sentraverse`. The final chapter (15/15, phases 94–100) is "THE LEGACY" as the film
+chapter ("2026-10-09 (film chapter)" + "2026-10-09 (frame sequence)" in `DECISIONS.md`): after
+the SENTRA chapter the neural field dissolves straight into Chief's film (no drawn face between),
+which stands large (near native, capped by the stage) over a void, shows exactly the scroll
+position's frame (GSAP image sequence: `film.ts` draws one of 120 WebP frames at 12 fps into a
+canvas from the master's clock tween), holds its last frame, and carries the legacy typography.
+The photograph, the 2.5D gate, the play-chase `<video>` and the drawn-face reveal are retired;
+the still poster is the film's last frame. See the ending bullet of `docs/neural-journey.md`.
 
-Fixed in `13e00e54`: the import points back at `components/sentrapedia/data.ts` (the real,
-tracked data: 14 categories, 144 SKDI 4A diseases, sources, methodology; no new module), the
-Navbar prop is dropped (the API modal keeps its own "Lihat Contoh Kode Integrasi" button), and
-the splash's seen flag is read through `useSyncExternalStore` (server snapshot "not seen").
-See "2026-10-08 (sentrapedia)" in `DECISIONS.md`.
+Changed since `99920ee3`: `components/neural/film.ts` + `film.test.mjs` (new),
+`LegacyScene.tsx`, `legacy.module.css` (new); `timeline.ts` + test (`MASTER_DURATION` 131.5, the
+`legacy` knobs, `MasterOptions.film`, `legacyScene` with the dissolve, film and legacy beats,
+`settleLegacy`), `story.ts`, `tactile.ts`, `renderer.ts` (no face after 93), `NeuralJourney.tsx`
+(creates the film player on the cinematic build), `journey.module.css`, `package.json` (test
+list), `e2e/neural.spec.ts`, `e2e/smoke.spec.ts`, `docs/neural-journey.md`; deleted
+`callouts.ts` + test; `legacy.ts`, `legacy.test.mjs` and `public/legacy-ferdi.mp4` created and
+removed inside this branch; `portrait-reveal.ts` and `portraitState` are committed code now
+unused (left in place); added `public/legacy-film/` (120 frames + poster, 5.5 MB). No new
+dependency.
 
-Gates on `13e00e54`: `typecheck` 0, `lint` 0 (two pre-existing `img` warnings in
-`app/insights/page.tsx`), node:test 38/38, `build` 0 (`/sentrapedia` prerendered static),
-`deploy:dry-run` 0. Browser check of the production build (`next start` on 127.0.0.1:4341,
-stopped afterwards): the splash plays, "Masuk ke Sentrapedia" sets the session flag and fades
-the overlay, the page lists 144 entries across 14 domains with the four methodology phases
-and the Kemenkes sources, a return visit hides the splash after hydration, no hydration
-error in the console (only the local `/_vercel/speed-insights` 404). Playwright `test:e2e`
-was not run this session.
+Gates on the working tree: `typecheck` 0, `eslint` 0 (2 pre-existing warnings in
+`app/insights/page.tsx`), node:test 38/38, `build` 0, Playwright `neural.spec.ts` +
+`smoke.spec.ts` against `next start` on 127.0.0.1:4341 15/15, Chrome frames (headless
+`channel: 'chrome'`, 1280×800 and 375×812, phases 93.5–100) with no console error but the known
+local `/_vercel/speed-insights` 404, and a Chrome scroll pass 95.5 → 99.3 → 96 with every sampled
+frame within 1 of the phase's. Local evidence only; `deploy:dry-run` not run.
 
 ## Work in flight
 
-- The `stats` import in `app/sentrapedia/page.tsx` is unused (the hero hardcodes 144 / 14 /
-  5 / < 20 ms); no gate flags it. Codex's litter, left in place.
-- A stale `next start` from an earlier session may still hold 127.0.0.1:4340; it serves an
-  older build. Chief's `next dev` on port 3000 was not touched (it was not answering).
-- The neural-journey taste knobs for Chief's eye (develop, scan, reticle, scramble, title
-  masks) are unchanged from the sixth session; the list lives in "2026-10-08 (ending)" in
-  `DECISIONS.md` and `docs/neural-journey.md`.
+- Chief's verdict on the frames (scratchpad `film3/`). The clip still carries the `clideo.com`
+  watermark, cropped by the box's 832/1016 aspect; a re-export without it goes through the
+  scratchpad `extract.mjs` (Chrome, `--allow-file-access-from-files`) into `public/legacy-film/`
+  with `FILM` in `film.ts` and `legacy.film.length` updated.
+- Taste knobs: `legacy` (`presence`, `void`, `covered`, `film.at/in/alpha/play/end/length`, the
+  text beats), `FILM` (`frames`, `fps`; the WebP quality is the extractor's argument, .72 now),
+  and in `legacy.module.css` `.film` (`--fx` 63 % / 50 %, `--film-h`, the mask, the grade
+  `brightness(.6) contrast(1.05) saturate(.55)`).
+- The `stats` import in `app/sentrapedia/page.tsx` is still unused (Codex's litter).
+- Scratchpad scripts: `capture.mjs` (frames, `VARIANT_CSS` hook), `filmscrub.mjs` (frame vs
+  phase over a scroll pass), `extract.mjs`.
 
 ## Blockers
 
@@ -47,24 +55,24 @@ None. The Jev router at `~/dev/jev/muse-jev-playbook` does not exist on this mac
 
 ## Known quirks
 
-- `next/image` caches optimized images in `.next/cache/images` by URL; after replacing a
-  `public/` image delete that folder before `next start`. The Browser pane keeps its own copy.
-- In Node the GSAP `attr` plugin and ScrambleText need `headless: true` copies (see
-  `timeline.test.mjs`); a nested scene at exactly its time 0 is not rendered, sample at +.01.
-- Never `clearProps: 'all'` on an element whose inline style React owns (the callout labels'
-  `left/top`). `settleEnding` names its props.
-- Titles are split once per matchMedia build; only the 768 px crossing re-splits.
-- In the Browser pane a manual `window.scrollTo` leaves `data-phase` at 0.00; use the chapter
-  buttons. While the pane is hidden, requestAnimationFrame ticks slowly, so framer-motion
-  exits (the splash fade) take seconds; judge timing in real Chrome.
-- The build log warns that the Edge Runtime is deprecated (the `/api/*` routes);
-  pre-existing.
+- The frames load from the build's start, six at a time; a frame asked for before it arrives is
+  stood in for by the nearest loaded one (`nearestLoaded`), so a slow connection shows a coarser
+  scrub, never a blank. Under reduced motion no frame is fetched.
+- Never put the clip back as a `<video>`: it has a single keyframe (a seek costs up to ~220 ms)
+  and Chief rejected a play-chase as not following the scroll.
+- A ScrollTrigger refresh with `invalidateOnRefresh` reverts the master and re-renders it with
+  events suppressed: repeat `onUpdate` work in `onRefresh` (done for the status line).
+- Node tests: `clearProps` needs the headless no-op plugin; a nested scene at exactly its time 0
+  is not rendered.
+- The Browser pane leaves `data-phase` at 0.00 on a manual `scrollTo`; judge frames in real
+  Chrome by the pin-spacer maths.
+- A stale `next start` may hold port 4341; stop it before a rebuild (TaskStop on this session's
+  own task works, `taskkill` is denied). Port 4340 is held by an older session's `next start`
+  (PID 24280); the preview config `sentraverse-legacy` in `medboard/.claude/launch.json`
+  attaches to 4341 instead.
 
 ## Next action
 
-1. Chief judges the sentrapedia page by eye (splash, node graph, Multi-AI cards, API modal)
-   and the neural-journey ending items carried over.
-2. Decide whether `/api/agent-query`, `/api/diseases` and `/api/categories` named in the API
-   modal should exist in this capsule (they do not; the modal documents them as live).
-3. Publish to `drferdi/Sentraverse` (subtree split) when Chief asks; the Vercel root re-point
-   and the README publish from 2026-09-27 are still pending.
+1. Chief's verdict on the frame-sequence chapter.
+2. Push and publish to `drferdi/Sentraverse` when Chief asks, then the sentrapedia items carried
+   over (`/api/*` named in the API modal do not exist here).

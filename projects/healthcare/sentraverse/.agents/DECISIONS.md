@@ -3,6 +3,233 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (frame sequence) — The film is a scroll-scrubbed frame sequence; nothing stands between SENTRA and the film
+
+- Decision (Chief, 2026-10-09, on the film chapter's frames: "ya ini gak nyambung dan pastikan
+  video saya berjalan sesuai timing scroll"): (1) the drawn face no longer returns before the
+  final chapter; the SENTRA network dissolves from 94 straight into the void and the film.
+  (2) The frame on screen is the scroll position's, exactly: GSAP's image-sequence pattern
+  replaces the play-chase of "2026-10-09 (film playback)", which is superseded.
+- How: `film.ts` (`FILM` 120 frames at 12 fps, 640×849; `filmFrameIndex`, `nearestLoaded`,
+  `createFilm(canvas)` loads the frames six at a time from the build's start and draws the
+  frame for the clock's time, standing in the nearest loaded one; `canvas.dataset.frame`
+  records what is on screen). `public/legacy-film/f000..f119.webp` + `poster.webp` (the last
+  frame at 832×1104, the still poster for reading mode and no JavaScript) are extracted from
+  Chief's `cladeo.mp4` in Chrome (quality .72, 5.5 MB in all; the script is in the session
+  scratchpad); `public/legacy-ferdi.mp4` is removed. `timeline.ts`: `MasterOptions.film?:
+  (time) => void`, called from the clock tween's `onUpdate`; `follow`, `followFilm`, `isFilm`
+  and `Film` are gone; `settleLegacy` pauses nothing. `LegacyScene.tsx`: `<canvas
+  data-film-canvas>` over the poster `next/image`. `renderer.ts`: the `phase > 93` `placeFace`
+  block is removed and the network fades by `1 - smooth((phase - 94) / 1.8)`.
+- Rulings (Claude Fable 5.1): 12 fps is enough for a clip scrubbed by hand (a scroll step
+  shows one frame either way) and keeps the sequence at 5.5 MB; the frames load from the
+  build's start rather than on approach, so a slow connection has most of them by chapter 15
+  and the nearest-loaded stand-in covers the rest; under reduced motion no frame is fetched.
+- Evidence: typecheck 0, lint 0, node:test 38/38, build 0, Playwright neural + smoke 15/15 on
+  127.0.0.1:4341 (the e2e asserts `data-frame` at 97, at 100 and after a reverse scroll to
+  96.2, within ±3 frames); a Chrome scroll pass 95.5 → 99.3 → 96 in 164 samples on 1280×800
+  and 375×812 has every frame within 1 of the phase's, settling on 119 at 99.3 and 8 at 96;
+  Chrome frames at 93.5/94.3/95/95.6/96.2/97/98/99/100 show the network alone at 94.3 and 95
+  (no drawn face), the film's first frame at 95.6 and frames 11/47/119 after, with no console
+  error but the known local `/_vercel/speed-insights` 404. Local evidence only.
+
+## 2026-10-09 (film chapter) — After SENTRA the page dissolves into the film; the gate is retired
+
+- Decision (Chief, 2026-10-09, after rejecting the film inside the gate: "ini arah yang salah",
+  then "habis phase Sentra ini -> masuk ke nuansa video namun buat agar transisi nya menjadi
+  blending. Video besar ukuran asli kecil sedikit"): the final chapter is the film. After the
+  SENTRA chapter the neural field dissolves into it; the film stands large, near its native
+  832×1104 and capped by the stage, is the chapter's environment, and carries the legacy
+  typography. It supersedes "2026-10-08 (legacy)" (the 2.5D gate, the dolly, the ground), the
+  figure of "2026-10-08 (blend)" and "2026-10-08 (video)" (the film at the figure's size inside
+  the gate); "2026-10-09 (film playback)" stays as the film's motion. The drawn-face photo
+  reveal ("2026-10-08, portrait realism") is retired with it: the drawn face still returns at
+  93 and sinks under the void; `portrait-reveal.ts` is committed code now unused, left in place.
+- How: `LegacyScene.tsx` is a void, the film box `[data-film]` (the `next/image` photograph as
+  the still poster under `<video data-film-video>`) and a vignette; `legacy.ts` and its test
+  (this branch's own) are deleted. `legacy.module.css`: the box is the clip's width to 92 % of
+  its height so `object-position: 50% 0` keeps the head room and crops the `clideo.com`
+  watermark; `--film-h: min(88cqh, 994px, 94cqw × 1016/832)` (container units size both axes),
+  92 cqw on phones; `--fx` 63 % across from 1024 px so the words have the left, 50 % below; the
+  edges dissolve under a top and bottom fade and a radial falloff; the grade is `brightness(.6)
+  contrast(1.05) saturate(.55)`, the clip's own cyan and green kept ("nuansa video"); the
+  photograph is hidden in cinematic mode and the film outside it. `timeline.ts`: the `legacy`
+  knobs are `presence`, `void` (94.6 → 96), `covered` 96, `film` (`at` 95, `in` 1.2, `alpha`
+  .85, `play` 95.8, `end` 99, `length` 10.1) and the text beats; `legacyScene` has three beats
+  (dissolve, film, legacy): the void closes while the film is already fading in, so nothing is
+  black between the field and the film; the clock tween and `followFilm` are unchanged;
+  `settleLegacy` pauses the film and clears the veil and the box. `NeuralJourney.tsx` no longer
+  places the scene from the drawn face, builds no reveal and passes no dolly.
+- Rulings (Claude Fable 5.1): the box, not the mask, removes the watermark; the size is capped
+  by the stage, so on Chief's ~890 px window the viewport, not the design, decides it; the
+  title may cross the film's dissolved left edge on 1024 and 768 px (the words carry their own
+  halo), so the e2e no longer requires the title and the figure apart.
+- Evidence: typecheck 0, lint 0, node:test 36/36, build 0, Playwright neural + smoke 15/15 on
+  127.0.0.1:4341; Chrome frames at 94.3/94.9/95.4/95.9/96.5/97.5/98.5/100 on 1280×800 and
+  375×812 with no console error but the known local `/_vercel/speed-insights` 404 (the dissolve shows the drawn face and the film's first frame
+  together at 95.4, the film alone from 95.9, no watermark at 97.5 or 100); a scroll pass
+  95.5 → 99.3 presented 240 video frames on desktop (worst gap 36 ms) and 229 on the phone
+  (worst gap 212 ms, once), the film paused at 10.176 s at the end.
+
+## 2026-10-09 (film playback) — The film follows the master's clock by playing, not by seeking
+
+- Decision (Chief, 2026-10-09, on the preview: "di final phase malah putus gak karuan ... kan
+  bisa jadi GSAP scroll? dia muter kalau di scroll?"): the film runs while the page scrolls. It
+  supersedes the scrubbed `currentTime` of "2026-10-08 (video)"; the cue, the fade, the window
+  (96.7 → 98.8) and the held last frame stay.
+- Why: measured in Chrome on the clip as supplied, a seek costs 36 ms at 1 s and 218 ms at
+  9.9 s, linear in the target time, so the clip has a single keyframe and every seek decodes
+  from its start; a `currentTime` tween on every scroll frame therefore stalls and stutters,
+  which the main-thread rAF pacing of the previous session could not see.
+- How (`timeline.ts`): the master tweens a plain clock `{ time }` from 0 to `legacy.video.length`
+  with `ease: 'none'` over the window, and its `onUpdate` calls `followFilm(video, clock.time)`:
+  behind the clock by more than `film.slack` (.04 s) the film plays forward at
+  `clamp(lead × 3, .25, 4)`; within the slack it pauses; `film.rewind` (.5 s) or more ahead of
+  the clock (a reverse scroll) it pauses and seeks once, never while a seek is pending.
+  `isFilm` narrows the element to the media surface (no cast); `settleLegacy` pauses the film.
+  The clock is a plain object, so the "only x, y, scale, autoAlpha, z and `--photo-*`" rule
+  for elements holds again.
+- Evidence: node:test 46/46 (`followFilm` unit test and the film scene test on a media
+  stand-in), typecheck 0, lint 0, build 0, Playwright neural + smoke 16/16 on 127.0.0.1:4341;
+  in real Chrome a scroll pass 96.5 → 99 in 150 steps over ~4.5 s presented 232 video frames
+  on 1280×800 (worst gap 158 ms, once) and 227 on 375×812 (worst gap 85 ms), the film within
+  ~.1 s of the clock throughout and paused at 10.176 s at the end (`filmplay.mjs` in the
+  session scratchpad). A re-export with a short keyframe interval would make reverse seeks
+  cheap too; it remains Chief's call.
+
+## 2026-10-08 (video) — The film takes over from the photograph after the reveal, scrubbed by the master
+
+- Decision (Chief, 2026-10-08, with the clip `cladeo.mp4`: "Ganti dengan konsep video ini somehow
+  agar bisa menjadi blend dengan design sebelumnya, visualisasi nya jangan terlalu terang, ingat
+  tetap harus blended dengan FULL GSAP"): the gate, the dolly and the reveal stay; the clip (10.2 s,
+  832×1104: the same pose as the photograph, then the architect turning to a universe of code and
+  formulae) replaces the figure once the reveal is complete, under the blended grade of
+  "2026-10-08 (blend)", driven by the one GSAP master and nothing else.
+- How: `public/legacy-ferdi.mp4` (the clip as supplied, 14.5 MB, watermarked at its foot);
+  `LegacyScene.tsx` adds `<video data-photo-video>` (muted, playsInline, `preload="metadata"`)
+  inside `[data-photo]` after the image and the reveal canvas; `legacy.module.css` gives it the
+  shared grade and its own mask (a top fade to 14 % and a bottom fade from 72 %, intersected
+  with a radial ellipse at the eye), `object-position: 50% 0` so the top of the source is kept
+  and the watermark at its foot is cropped off, and `transform: translate(-2.5%, -10.2%)
+  scale(.65)` about `45% 33.7%` so the clip's eye lands on the photograph's (measured from the
+  frames: the clip's face is 1.55× the photograph's and .1 box lower); it is `opacity: 0` by the
+  stylesheet, so reading mode, reduced motion and the no-JavaScript page show the photograph
+  alone. `timeline.ts` adds the `legacy.video` knobs (`at` 96.7, `in` .3, `scrubTo` 98.8,
+  `length` 10.1) and, in `legacyScene`, fades the film in with autoAlpha, fades the image out
+  under it (its `opacity`, so the reveal now hides the image by `visibility`, not opacity, and a
+  reverse scroll into the reveal stays clean), and tweens the film's `currentTime` 0 → `length`
+  with `ease: 'none'` over 96.7 → 98.8, holding the last frame to 100; `preload` becomes `auto`
+  on the cinematic build only. `settleLegacy` clears the image and the film too. `currentTime` is
+  the second approved tween exception beside `--photo-*`.
+- Rulings (Claude Fable 5.1): the scrub (reversible, deterministic, one master) over playback
+  with callbacks; the film registered to the photograph rather than the photograph to the film,
+  because the reveal is registered to the drawn face; per-element masks kept (the film's own
+  edge mask) instead of one mask on the container, so nothing new is composited inside the
+  dollied world; the scrub guarantees are node tests on stand-ins (`timeline.test.mjs`, "the
+  film") and the e2e asserts only the film's opacity, because the Playwright project runs the
+  bundled Chromium without H.264.
+- Open (Chief's call): the clip as supplied is 14.5 MB with a `clideo.com` watermark; the right
+  fix is a re-export (720p, short keyframe interval, no watermark), which cannot be done here
+  (no ffmpeg; installing one is an unreviewed dependency). On iOS, seeking without a gesture may
+  show nothing until the first play; the photograph stays underneath, so the degrade is the
+  photograph (inferred, not verified).
+- Evidence: typecheck 0, lint 0, node:test 45/45, build 0, Playwright `neural.spec.ts` +
+  `smoke.spec.ts` against `next start` on 127.0.0.1:4341 16/16; Chrome frames at 96.5/96.9/
+  97.2/97.6/98.2/100 on 1280×800 and 375×812 (headless `channel: 'chrome'`) with no console error
+  but the local `/_vercel/speed-insights` 404; frame pacing 97 → 100 in 60 scroll steps mean
+  7.2 ms (p95 12.1, 7 of 573 frames over 20 ms, one 176 ms spike) on 1280×800 and 6.5 ms (p95
+  11.8, 3 of 634 over 20 ms) on 375×812, local evidence only.
+
+## 2026-10-08 (blend) — The founder's photograph blends into the surrounding tones
+
+- Decision (Chief, 2026-10-08, on the eighth session's frames: the figure against the gate read
+  disproportionate and the thread had stalled on it; "buat saja sosok saya blend dengan latar
+  belakang / colour sekitar, tampak sedikit sudah cukup"): the photograph recedes into the
+  scene's own tones instead of standing out from them. It supersedes the low-key grade of
+  "2026-10-08 (grade)" (brightness .74, contrast 1.26, saturate .55, the cold rim light); the
+  geometry of the gate, the dolly and the layout are unchanged.
+- How: the `[data-photo]` container settles at opacity .5 (`legacy.photoAlpha` in
+  `timeline.ts`, the end value of the reveal's `autoAlpha` tween, and the stylesheet's own
+  `.photo` opacity for reading mode and the no-JavaScript poster; the cinematic start stays 0);
+  the image and the reveal canvas share `filter: sepia(1) hue-rotate(170deg) saturate(.3)
+  brightness(.58) contrast(1)`, a cold tint in the palette's blue, flat and dark, with both
+  ice `drop-shadow` rims removed; the radial mask now dissolves to 0 at its edge (was .12);
+  the halo behind him is halved (.16 → .08 silver, .06 → .03 ice). The develop still runs over
+  the reveal window, now from a photograph (`developFrom` .95 / 1.15 / .5) down to the blended
+  finals (`developTo` .58 / 1 / .3). The opacity is on the container, not the image, so the
+  reveal's `img` hide-and-show and the e2e's `img` opacity checks are untouched.
+- Rulings (Claude Fable 5.1): .5 rather than fainter, because at phase 100 the figure is 133 px
+  wide on desktop and 87 px on phones and a .35 variant was captured beside it for Chief to
+  compare; opacity and filter before any `mix-blend-mode` on the photo, which stacks a mask, a
+  filter and a 3D transform inside the dollied world where Chrome's compositing has already
+  misdrawn planes.
+- Evidence: typecheck 0, lint 0 (2 pre-existing warnings), node:test 44/44 (`timeline.test.mjs`
+  asserts the finals against the knobs, no literals), build 0, Playwright `neural.spec.ts` +
+  `smoke.spec.ts` against `next start` on 127.0.0.1:4341 16/16, Chrome frames at 96.5/97.6/
+  98.4/100 on 1280×800 and 375×812 with no console error but the local
+  `/_vercel/speed-insights` 404; the frames and the `.35` variant are in the session scratchpad.
+
+## 2026-10-08 (legacy) — THE LEGACY: the final chapter is a 2.5D gateway with a camera pullback
+
+- Decision (Chief, 2026-10-08, the brief "SENTRAVERSE — THE LEGACY, Cinematic Final Chapter
+  Redesign"): the final chapter (15/15, phases 94–100) is "THE LEGACY — THE ARCHITECT BEHIND
+  THE UNIVERSE": the Gaffer's unchanged half-body portrait standing before a monumental
+  gateway, in five scroll-driven phases (presence, revelation, pullback, universe, legacy),
+  built as a 2.5D CSS-perspective world driven by the one GSAP master (no Three.js, no new
+  dependency, no image but the portrait). It supersedes the Scan → Develop → Lock-on ending of
+  "2026-10-08 (ending)": the scan line, the reticle, the HUD callouts, the ScrambleText decode
+  and the flash are gone (`callouts.ts` and its test deleted; CustomEase, CustomWiggle and
+  ScrambleText are no longer registered); the feature-first photo reveal, the low-key grade and
+  its develop tween stay, inside the new scene.
+- How: `legacy.ts` (geometry in photo widths from the drawn face's box: `legacyLayout`,
+  `architecture`, `floor`, `layerStyle`; the camera maths `worldZ`/`projectScale`/`projectBox`),
+  `LegacyScene.tsx` (void, floor, world of planes with the photo, vignette; complete by the
+  stylesheet for reading mode and the no-JavaScript page), `legacy.module.css` (the brief's
+  palette as `--legacy-*`, one surface per plane kind, `--reach` per breakpoint), `timeline.ts`
+  (the `legacy` knobs, `legacyScene`, `settleLegacy`; `MASTER_DURATION` 100 → 131.5 so phases
+  94–100 get 40 master units at the earlier phases' unchanged tempo), `story.ts` (the chapter
+  copy and `legacyCopy`), `NeuralJourney.tsx` (`placeLegacy` sets `--ox/--oy/--axis/--gy/--wg`
+  from `faceBox`; the dolly end is `worldZ(pullback)` per breakpoint; the canvas draw stops once
+  the void has covered it; `onRefresh: update` so a resize at the story's end does not leave the
+  status line at "The beginning"). The world sits at identity during the reveal so the photo is
+  registered on the drawn face; the pullback is one `z` tween of the world (`power2.inOut`,
+  96.9–99.2) to `worldZ(.3)` = −2800 px on desktop and `worldZ(.42)` = −1657 px on phones, the
+  browser projecting every plane, so the parallax is real.
+- The ground belongs to the camera, not the world (ruled by experiment, see the quirks): the
+  floor is a sibling of the world at a fixed depth (`floorPlane.near` = 1050 px before the
+  perspective plane, a step in front of the lens; the phone's low camera sees the ground to
+  within ~980 px of it), `rotateX(-90deg)` about the floor line, 12 photo widths across and
+  reaching 13 past the Gaffer once the world has moved its whole `--reach`; what stands on it in
+  the world (the threshold glow, the Gaffer's shadow) rides `[data-legacy-ground]`, tweened `y`
+  0 → reach on the dolly's own curve, so it stays registered to the gate (≤ 2 px at four
+  samples); the five pathways are full-length 1.5 px divs drawn by `scaleY` from the lens toward
+  the gate, transparent over the plane's first 900 px and full from 2600 px. `--reach` lives in
+  the stylesheet per breakpoint (the world's and the ground's still state) and `legacy.test.mjs`
+  keeps it equal to `-worldZ(pullback)`.
+- Chrome quirks, recorded from this session's scratch experiments (frames in the session
+  scratchpad, not in the repo): a plane whose near edge lies behind the lens projects inverted
+  over the whole frame (it hid the brand line); a large tilted plane inside the dollied
+  `preserve-3d` world is drawn wrong or not at all (nothing at −90°, a mirrored band at −85°),
+  while the same plane as a sibling of the world under the scene's own perspective draws
+  correctly at exactly −90°; `getBoundingClientRect` of markers on the plane reports the right
+  geometry either way, so the fault is in compositing, not layout. Also: with
+  `invalidateOnRefresh`, a ScrollTrigger refresh reverts the master and re-renders it with
+  events suppressed, so `onUpdate` work has to be repeated in `onRefresh`.
+- Rulings (Claude Fable 5.1, for Chief's eye): the eye 54 % across and .15 photo widths above
+  the Gaffer's centre on desktop (centred and .1 below on phones, a lower camera so the gate
+  looms); the opening 3.4 × 3.1 photo widths (3.1 so the lintel and its strip stay in the
+  desktop frame at the end); frame edges .75/.55/.4/.28, the core .6, the haze .26; the
+  pathways ice at .42; the words left of the figure on desktop, bottom-aligned on phones; "The
+  human behind the system" leaves before the void closes; the words come in from 99 to 99.95,
+  after the camera settles; without a canvas the photograph itself is the presence from 94.2.
+- Evidence: typecheck 0, lint 0, node:test 44/44 (`legacy.test.mjs` 7, `timeline.test.mjs`
+  12), build 0, Chrome frames at 95.2/96.5/97.6/98.4/99.2/100 on 1280×800 and 375×812 with no
+  console error but the local `/_vercel/speed-insights` 404, Playwright `neural.spec.ts` +
+  `smoke.spec.ts` against the production build on 127.0.0.1:4341 16/16 (Chrome, after the figure, the
+  title measure and the refresh fixes); frame pacing through the pullback (97 → 100 in 60 scroll
+  steps, headless Chrome rAF deltas) mean 6.5 ms with 2 of ~650 frames over 20 ms on both
+  1280×800 and 375×812, local evidence rather than a GPU guarantee.
+
 ## 2026-10-08 (sentrapedia) — The sentrapedia data stays at components/sentrapedia/data.ts
 
 - Decision: the Sentrapedia page imports its data from `components/sentrapedia/data.ts`

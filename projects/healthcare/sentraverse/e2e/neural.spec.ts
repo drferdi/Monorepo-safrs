@@ -15,54 +15,46 @@ async function portraitPhase(page: Page, phase: number) {
   await expect.poll(async () => Math.abs(Number(await page.locator('main').getAttribute('data-phase')) - phase)).toBeLessThan(.06)
 }
 
-test('portrait contours reveal features first, reverse cleanly and finish on the original photo', async ({ page }) => {
+test('the film: it fades in through the closing void after the SENTRA chapter, runs while the page scrolls, fits a phone, and the still poster is the photograph in reading mode', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
-  await portraitPhase(page, 96.5)
-  const photo = page.locator('[data-photo]'), canvas = photo.locator('canvas')
-  await expect(photo).toHaveAttribute('data-reveal', 'active')
-  const sample = () => canvas.evaluate(element => {
-    const surface = element as HTMLCanvasElement, ctx = surface.getContext('2d')!
-    const alpha = (u: number, v: number) => ctx.getImageData(Math.floor(u * surface.width), Math.floor(v * surface.height), 1, 1).data[3]
-    // Nose tip, eye and a point beside the left elbow of the 2026-10-08 half-body portrait.
-    return [alpha(.486, .30), alpha(.425, .235), alpha(.1, .9)]
-  })
-  const first = await sample()
-  expect(first[0]).toBeGreaterThan(240)
-  expect(first[1]).toBeGreaterThan(240)
-  expect(first[2]).toBe(0)
-  await portraitPhase(page, 98.7)
-  await expect(photo).toHaveAttribute('data-reveal', 'complete')
-  await expect(photo.locator('img')).toHaveCSS('opacity', '1')
-  await portraitPhase(page, 96.5)
-  await expect(photo).toHaveAttribute('data-reveal', 'active')
-  expect(await sample()).toEqual(first)
-  expect(await page.locator('#human').evaluate(element => getComputedStyle(element).transform)).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/)
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  const film = page.locator('[data-film]'), veil = page.locator('[data-legacy-void]')
+  const opacity = (locator: typeof film) => locator.evaluate(element => Number(getComputedStyle(element).opacity))
+  await portraitPhase(page, 94.3)
+  await expect(veil).toHaveCSS('opacity', '0')
+  await expect(film).toHaveCSS('opacity', '0')
+  // Mid-dissolve: the void is still closing while the film is already coming in, so nothing is black between.
+  await portraitPhase(page, 95.4)
+  await expect.poll(() => opacity(veil)).toBeGreaterThan(.2)
+  await expect.poll(() => opacity(veil)).toBeLessThan(1)
+  await expect.poll(() => opacity(film)).toBeGreaterThan(.1)
+  await portraitPhase(page, 97)
+  await expect(veil).toHaveCSS('opacity', '1')
+  await expect(film).toHaveCSS('opacity', '0.85')
+  await expect(film.locator('canvas')).toBeVisible()
+  await expect(film.locator('img')).toBeHidden()
+  // The frame on screen is the scroll position's: a third of the way through the film window at
+  // 97 (once the frames have arrived), the last frame at 100, an early one again on the way back.
+  const frame = () => film.locator('canvas').evaluate(canvas => Number(canvas.getAttribute('data-frame') ?? -1))
+  const expected = (phase: number) => Math.round((phase - 95.8) / (99 - 95.8) * 10.1 * 12)
+  await expect.poll(frame, { timeout: 20000 }).toBeGreaterThanOrEqual(expected(97) - 3)
+  expect(await frame()).toBeLessThanOrEqual(expected(97) + 3)
+  await portraitPhase(page, 100)
+  await expect.poll(frame, { timeout: 20000 }).toBe(119)
+  await portraitPhase(page, 96.2)
+  await expect.poll(frame).toBeLessThanOrEqual(expected(96.2) + 3)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.getByRole('button', { name: 'Go to The legacy', exact: true }).click()
+  await portraitPhase(page, 100)
+  const box = (await film.boundingBox())!
+  expect(box.x).toBeGreaterThanOrEqual(0)
+  expect(box.x + box.width).toBeLessThanOrEqual(390)
+  expect(box.width).toBeGreaterThan(300)
+  await expect(page.locator('#human h2')).toBeVisible()
   await page.getByRole('button', { name: 'READ THE STORY', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
-  await expect(photo).not.toHaveAttribute('data-reveal', /.+/)
-  await expect(photo.locator('img')).toHaveCSS('opacity', '1')
-})
-
-test('a late portrait load resolves the current phase and survives a mobile resize', async ({ page }) => {
-  let release: () => void = () => undefined
-  const ready = new Promise<void>(resolve => { release = resolve })
-  await page.route(url => url.pathname === '/_next/image' && url.searchParams.get('url') === '/portrait-ferdi.webp', async route => { await ready; await route.continue() })
-  await page.goto('/', { waitUntil: 'domcontentloaded' })
-  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
-  await portraitPhase(page, 98.7)
-  release()
-  const photo = page.locator('[data-photo]')
-  await expect(photo).toHaveAttribute('data-reveal', 'complete')
-  await page.setViewportSize({ width: 390, height: 844 })
-  await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
-  await portraitPhase(page, 98.7)
-  await expect(photo).toHaveAttribute('data-reveal', 'complete')
-  const face = await photo.boundingBox(), text = await page.locator('#human h2').boundingBox()
-  expect(face).not.toBeNull(); expect(text).not.toBeNull()
-  expect(face!.y + face!.height).toBeLessThan(text!.y)
-  expect(face!.x).toBeGreaterThanOrEqual(0)
-  expect(face!.x + face!.width).toBeLessThanOrEqual(390)
+  await expect(film.locator('img')).toBeVisible()
+  await expect(film.locator('canvas')).toBeHidden()
 })
 
 test('the activity cycle runs through the network on WebGL and parks elsewhere and under reduced motion', async ({ page }) => {
@@ -73,7 +65,7 @@ test('the activity cycle runs through the network on WebGL and parks elsewhere a
   await expect(page.locator('main')).toHaveAttribute('data-signal', 'paused')
   await page.getByRole('button', { name: 'Go to Intelligence orchestration', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('data-signal', 'active')
-  await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+  await page.getByRole('button', { name: 'Go to The legacy', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('data-signal', 'paused')
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
@@ -93,10 +85,12 @@ test('scroll narrative reverses, discovers every division, and keeps sound opt-i
     await expect(page.getByRole('heading', { name: divisionNames[index], exact: true })).toBeVisible()
     await expect(page.locator('[data-phase-label]')).toHaveText(label)
   }
-  await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+  await page.getByRole('button', { name: 'Go to The legacy', exact: true }).click()
   await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
   await expect(page.locator('[data-stage] > svg')).toHaveCount(0)
-  await expect(page.locator('[data-photo] img')).toBeVisible()
+  // The jump lands on the drawn face; the photograph resolves over it on the way to the end.
+  await portraitPhase(page, 100)
+  await expect(page.locator('[data-film]')).toBeVisible()
   await expect(page.locator('[data-scrim]')).toHaveCSS('opacity', '0')
   await page.getByRole('button', { name: 'Go to Across the synapse', exact: true }).click()
   await expect(page.locator('#synapse')).toHaveAttribute('aria-hidden', 'false')
@@ -114,7 +108,7 @@ test('reduced motion uses unpinned readable chapters and reacts to preference ch
   for (const name of divisionNames) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
   await expect(page.locator('[data-chapter][aria-hidden="true"]')).toHaveCount(0)
   await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
-  await expect(page.locator('[data-photo] img')).toBeVisible()
+  await expect(page.locator('[data-film]')).toBeVisible()
   await page.emulateMedia({ reducedMotion: 'no-preference' })
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
   await expect(page.locator('.pin-spacer')).toHaveCount(1)
@@ -124,7 +118,7 @@ test('mobile retains the complete story without horizontal overflow', async ({ p
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
-  for (const label of ['Embryonic origin', 'A human architecture', 'Signal propagation', 'Human care', 'Back to the human']) {
+  for (const label of ['Embryonic origin', 'A human architecture', 'Signal propagation', 'Human care', 'The legacy']) {
     await page.getByRole('button', { name: `Go to ${label}`, exact: true }).click()
     await expect(page.locator('[data-phase-label]')).toHaveText(label)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
@@ -133,7 +127,11 @@ test('mobile retains the complete story without horizontal overflow', async ({ p
     expect(box).not.toBeNull()
     expect(box!.x).toBeGreaterThanOrEqual(0)
     expect(box!.x + box!.width).toBeLessThanOrEqual(390)
-    if (label === 'Back to the human') await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toBeInViewport()
+    if (label === 'The legacy') {
+      // The way on is the last beat of the legacy; it is in view once the camera has settled.
+      await portraitPhase(page, 100)
+      await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toBeInViewport()
+    }
   }
 })
 
@@ -157,9 +155,9 @@ test('without any canvas context the story still ends on the human chapter text'
   await page.goto('/')
   await expect(page.locator('main')).toHaveAttribute('data-renderer', 'svg')
   await expect(page.locator('main')).toHaveAttribute('data-face', 'unavailable')
-  await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+  await page.getByRole('button', { name: 'Go to The legacy', exact: true }).click()
   await expect(page.locator('#human h2')).toBeVisible()
-  await expect(page.locator('[data-photo] img')).toBeVisible()
+  await expect(page.locator('[data-film]')).toBeVisible()
 })
 
 test('context loss recovers to Canvas and reading mode cleans up pins', async ({ page }) => {
@@ -191,11 +189,11 @@ test('a touch on a desktop-sized tablet moves the story without lifting the butt
   const page = await context.newPage()
   await page.goto('/')
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
-  const button = page.getByRole('button', { name: 'Go to Back to the human', exact: true })
+  const button = page.getByRole('button', { name: 'Go to The legacy', exact: true })
   const box = await button.boundingBox()
   expect(box).not.toBeNull()
   await page.touchscreen.tap(box!.x + box!.width / 2, box!.y + box!.height / 2)
-  await expect(page.locator('[data-phase-label]')).toHaveText('Back to the human')
+  await expect(page.locator('[data-phase-label]')).toHaveText('The legacy')
   await page.waitForTimeout(400)
   expect(await button.evaluate(element => (element as HTMLElement).style.transform)).toBe('')
   await context.close()
@@ -236,61 +234,48 @@ test('all five connected regions are actionable and network frame pacing is reco
   await expect(page.getByRole('heading', { name: 'Sentra Academic Solutions', exact: true })).toBeVisible()
 })
 
-test('the callouts draw in after the photo resolves, keep their labels inside the viewport and show complete without motion', async ({ page }) => {
+test('the legacy: the field dissolves into the film, the film holds, and the final typography settles over it on every breakpoint', async ({ page }) => {
   await page.goto('/')
-  await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
-  await portraitPhase(page, 97)
-  const labels = page.locator('[data-callout]'), exact = ['dr Ferdi Iskandar', 'the Gaffer', 'Sentraone']
-  await expect(labels).toHaveText(exact)
-  await expect(labels.first()).toHaveCSS('opacity', '0')
-  // Scan → Develop (Chief 2026-10-08): mid-reveal the scan line is sweeping, the grade is still
-  // brighter than its final .74 and the reticle has not locked on yet.
-  await expect(page.locator('[data-scan]')).toHaveCSS('opacity', '1')
-  expect(Number(await page.locator('[data-photo]').evaluate(photo => getComputedStyle(photo).getPropertyValue('--photo-brightness')))).toBeGreaterThan(.74)
-  await expect(page.locator('[data-reticle-corner]').first()).toHaveCSS('opacity', '0')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  const film = page.locator('[data-film]'), scene = page.locator('[data-legacy]')
+  // The opening line alone over the field, the words still to come.
+  await portraitPhase(page, 95.2)
+  await expect(page.locator('[data-legacy-presence]')).toHaveCSS('opacity', '1')
+  await expect(page.locator('[data-legacy-tagline]')).toHaveCSS('opacity', '0')
+  // The film in, the line gone.
+  await portraitPhase(page, 98.5)
+  await expect(page.locator('[data-legacy-presence]')).toHaveCSS('opacity', '0')
+  await expect(film).toHaveCSS('opacity', '0.85')
+  // The end: the words settled, the film large and inside the frame on every breakpoint.
+  await portraitPhase(page, 100)
+  await expect(page.locator('[data-legacy-tagline]')).toHaveText('Every universe begins with a vision.')
+  await expect(page.locator('[data-legacy-signature]')).toContainText('dr Ferdi Iskandar')
+  await expect(page.locator('[data-legacy-brand]')).toContainText('Human intelligence. Artificial intelligence. One universe.')
+  await expect(page.getByRole('heading', { name: 'THE LEGACY', exact: true })).toBeVisible()
   for (const viewport of [{ width: 1280, height: 800 }, { width: 1024, height: 768 }, { width: 768, height: 1024 }, { width: 375, height: 812 }]) {
     await page.setViewportSize(viewport)
     // gsap.matchMedia rebuilds the pin on a breakpoint change; wait for the new spacer and the resize refresh.
     await page.waitForFunction(() => document.querySelector('.pin-spacer') !== null && document.querySelector('main')?.dataset.enhanced === 'cinematic')
     await page.waitForTimeout(400)
-    await portraitPhase(page, 99.6)
-    // data-phase lands before the .8 s scrub finishes catching up, so the drawn-in lines and brackets are read by polling.
-    await expect.poll(() => page.locator('[data-callout-line], [data-reticle-corner]').evaluateAll(lines => Math.max(...lines.map(line => Number(line.getAttribute('stroke-dashoffset')))))).toBeLessThan(.01)
-    const title = (await page.locator('#human h2').boundingBox())!, boxes: Array<{ x: number; y: number; width: number; height: number }> = []
-    for (const label of await labels.all()) {
-      await expect(label).toBeVisible()
-      const box = (await label.boundingBox())!
-      expect(box.x, `${viewport.width}: left edge`).toBeGreaterThanOrEqual(0)
-      expect(box.x + box.width, `${viewport.width}: right edge`).toBeLessThanOrEqual(viewport.width)
-      expect(box.y, `${viewport.width}: top edge`).toBeGreaterThanOrEqual(0)
-      expect(box.y + box.height, `${viewport.width}: bottom edge`).toBeLessThanOrEqual(viewport.height)
-      const apart = box.x >= title.x + title.width || box.x + box.width <= title.x || box.y >= title.y + title.height || box.y + box.height <= title.y
-      expect(apart, `${viewport.width}: ${await label.textContent()} overlaps the title`).toBe(true)
-      boxes.push(box)
-    }
-    // Each label keeps its own place after the rebuild (the 375 px viewport crosses the breakpoint):
-    // a teardown that stripped the positions would pile all three into the photo's top-left corner.
-    for (const [k, a] of boxes.entries()) for (const b of boxes.slice(k + 1)) {
-      const separate = a.x >= b.x + b.width || b.x >= a.x + a.width || a.y >= b.y + b.height || b.y >= a.y + a.height
-      expect(separate, `${viewport.width}: two labels overlap each other`).toBe(true)
-    }
+    await portraitPhase(page, 100)
+    await expect(page.locator('[data-legacy-brand]')).toHaveCSS('opacity', '1')
+    const box = (await film.boundingBox())!
+    expect(box.x, `${viewport.width}: film left`).toBeGreaterThanOrEqual(0)
+    expect(box.x + box.width, `${viewport.width}: film right`).toBeLessThanOrEqual(viewport.width)
+    expect(box.y, `${viewport.width}: film top`).toBeGreaterThanOrEqual(0)
+    expect(box.height, `${viewport.width}: film large`).toBeGreaterThan(viewport.height * .4)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${viewport.width}: no horizontal overflow`).toBe(true)
+    await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toBeInViewport()
   }
-  // Lock-on complete: every label has decoded into Chief's exact string, which assistive
-  // technology reads from the aria-label throughout; the scan and the flash are gone.
-  await portraitPhase(page, 100)
-  await expect(page.locator('[data-callout-text]')).toHaveText(exact)
-  for (const [k, text] of exact.entries()) await expect(labels.nth(k)).toHaveAttribute('aria-label', text)
-  await expect(page.locator('[data-scan]')).toHaveCSS('opacity', '0')
-  await expect(page.locator('[data-flash]')).toHaveCSS('opacity', '0')
+  // Reduced motion: the still poster, the photograph plain, the film hidden, the words in place.
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.reload()
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
   await page.locator('#human').scrollIntoViewIfNeeded()
-  for (const label of await labels.all()) await expect(label).toBeVisible()
-  await expect(page.locator('[data-callout-glint]').first()).toHaveCSS('animation-name', 'none')
-  // Static and complete without motion: the final grade, the brackets drawn, plain exact text, no scan.
-  await expect(page.locator('[data-photo] img')).toHaveCSS('filter', 'brightness(0.74) contrast(1.26) saturate(0.55)')
-  expect(await page.locator('[data-reticle-corner]').evaluateAll(corners => corners.every(corner => Number(corner.getAttribute('stroke-dashoffset') ?? 0) === 0 && getComputedStyle(corner).opacity === '1'))).toBe(true)
-  await expect(page.locator('[data-callout-text]')).toHaveText(exact)
-  await expect(page.locator('[data-scan]')).toHaveCSS('opacity', '0')
+  await expect(film.locator('img')).toBeVisible()
+  await expect(film.locator('canvas')).toBeHidden()
+  expect(await scene.evaluate(element => element.getAttribute('style') ?? '')).toBe('')
+  expect(await film.evaluate(element => element.getAttribute('style') ?? '')).toBe('')
+  await expect(page.locator('[data-legacy-tagline]')).toBeVisible()
+  await expect(page.locator('[data-legacy-signature]')).toBeVisible()
 })

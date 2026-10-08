@@ -12,7 +12,7 @@
     "lint": "eslint .",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
-    "test": "node --test app/api/medical-knowledge/route.test.mjs components/neural/tactile.test.mjs components/neural/face.test.mjs components/neural/morphology.test.mjs components/neural/signal.test.mjs components/neural/callouts.test.mjs components/neural/timeline.test.mjs",
+    "test": "node --test app/api/medical-knowledge/route.test.mjs components/neural/tactile.test.mjs components/neural/face.test.mjs components/neural/morphology.test.mjs components/neural/signal.test.mjs components/neural/film.test.mjs components/neural/timeline.test.mjs",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs"
   },
   "keywords": [],

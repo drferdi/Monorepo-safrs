@@ -1,15 +1,15 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { calloutPoints, callouts, labelStyle, reticleCorners } from './callouts'
 import { loadPixels } from './face'
+import LegacyScene from './LegacyScene'
 import type { Look } from './renderer'
-import { faceBox, faceLook, portraitState } from './tactile'
-import { buildMaster, jumpLabel, settleEnding } from './timeline'
+import { faceLook } from './tactile'
+import { createFilm } from './film'
+import { MASTER_DURATION, buildMaster, jumpLabel, legacy, settleLegacy } from './timeline'
 import { attachPointerWake } from './wake'
-import { activeChapter, chapters, divisions } from './story'
+import { activeChapter, chapters, divisions, legacyCopy } from './story'
 import styles from './journey.module.css'
 
 export default function NeuralJourney() {
@@ -30,14 +30,14 @@ export default function NeuralJourney() {
     root.dataset.loading = 'true'
 
     async function initialize() {
-      // Every plugin ships inside the gsap package (3.13+): the title splits, the ending's text
-      // decode and the reticle's wiggle settle load with ScrollTrigger and register in the same
-      // place. The fonts are awaited too, so the titles split once on their real metrics.
-      const [{ gsap }, { ScrollTrigger }, { SplitText }, { ScrambleTextPlugin }, { CustomEase }, { CustomWiggle }, { NeuralRenderer }, { createPortraitReveal }, { LANES, createSignalCycle }] = await Promise.all([
-        import('gsap'), import('gsap/ScrollTrigger'), import('gsap/SplitText'), import('gsap/ScrambleTextPlugin'), import('gsap/CustomEase'), import('gsap/CustomWiggle'), import('./renderer'), import('./portrait-reveal'), import('./signal'), document.fonts.ready,
+      // Every plugin ships inside the gsap package (3.13+): the title splits load with
+      // ScrollTrigger and register in the same place. The fonts are awaited too, so the titles
+      // split once on their real metrics.
+      const [{ gsap }, { ScrollTrigger }, { SplitText }, { NeuralRenderer }, { LANES, createSignalCycle }] = await Promise.all([
+        import('gsap'), import('gsap/ScrollTrigger'), import('gsap/SplitText'), import('./renderer'), import('./signal'), document.fonts.ready,
       ])
       if (cancelled || !root || !canvas || !fallback) return
-      gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin, CustomEase, CustomWiggle)
+      gsap.registerPlugin(ScrollTrigger, SplitText)
       const media = gsap.matchMedia()
       media.add({ desktop: '(min-width: 768px)', mobile: '(max-width: 767px)', reduced: '(prefers-reduced-motion: reduce)' }, context => {
         const reduced = !!context.conditions?.reduced || reading
@@ -74,7 +74,9 @@ export default function NeuralJourney() {
         const update = () => {
           const index = activeChapter(state.phase)
           root.dataset.phase = state.phase.toFixed(2)
-          progressSetter(state.phase / 100)
+          // The line follows the scroll travel (the master's progress), not the phase, which
+          // dwells on the legacy over the last third of the travel.
+          progressSetter(master ? master.progress() : state.phase / 100)
           activity.setPhase(state.phase)
           root.dataset.signal = activity.cycle.paused() ? 'paused' : 'active'
           if (lastChapter === index) return
@@ -90,22 +92,14 @@ export default function NeuralJourney() {
           if (!visible || document.hidden) return
           if (mobile && time - lastFrame < 1 / 30) return
           lastFrame = time
-          engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal)
-          portrait?.render(portraitState(state.phase).reveal)
+          // The legacy's void covers the canvases from `legacy.covered`; nothing under it is drawn.
+          if (state.phase < legacy.covered) engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal)
         }
-        // The real portrait resolves over the neural face at the very end (Chief 2026-10-08):
-        // the same placement maths puts the photo exactly where the renderer draws the face.
-        const photo = root.querySelector<HTMLElement>('[data-photo]')
-        const portrait = photo && !reduced ? createPortraitReveal(photo) : null
-        const placePhoto = () => {
-          if (!photo || reduced) return
-          const viewport = { width: stage.clientWidth, height: stage.clientHeight }
-          const box = faceBox(engine.faceView(), viewport)
-          gsap.set(photo, box)
-          portrait?.resize(box.width, box.height, window.devicePixelRatio || 1)
-          portrait?.render(portraitState(state.phase).reveal)
-        }
-        const resize = () => { engine.resize(); placePhoto(); engine.render(state.phase, 0, reduced, hover, look) }
+        const scene = root.querySelector<HTMLElement>('[data-legacy]')
+        // The film's frames start loading with the build, so they are there by the final chapter.
+        const filmCanvas = scene?.querySelector<HTMLCanvasElement>('canvas[data-film-canvas]') ?? null
+        const film = filmCanvas && !reduced ? createFilm(filmCanvas) : null
+        const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover, look) }
         const observer = new ResizeObserver(resize)
         observer.observe(stage)
         const visibility = () => { if (document.hidden) gsap.ticker.remove(draw); else if (!reduced) gsap.ticker.add(draw) }
@@ -134,11 +128,11 @@ export default function NeuralJourney() {
             panels[index].focus({ preventScroll: true })
           }
         } else {
-          if (photo) placePhoto()
           // The chapter titles are split once per build (no autoSplit inside the scrubbed
-          // timeline), lines behind masks and characters too on the centered titles; aria auto
-          // keeps the heading's name on the h2 and hides the pieces. Reverted on teardown.
-          const centered = (index: number) => chapters[index].id === 'network' || chapters[index].id === 'connected'
+          // timeline), lines behind masks and characters too on the centered titles and the
+          // legacy's; aria auto keeps the heading's name on the h2 and hides the pieces. Reverted
+          // on teardown.
+          const centered = (index: number) => chapters[index].id === 'network' || chapters[index].id === 'connected' || chapters[index].id === 'human'
           splits = panels.map((panel, index) => {
             const heading = panel.querySelector('h2')
             return heading ? SplitText.create(heading, { type: centered(index) ? 'lines,chars' : 'lines', mask: 'lines', aria: 'auto' }) : null
@@ -146,10 +140,14 @@ export default function NeuralJourney() {
           const titles = splits.map((split, index) => split && { lines: split.lines, chars: split.chars, centered: centered(index) })
           // The whole scrubbed story lives in `timeline.ts`; the ScrollTrigger that drives it is
           // created here because it pins this stage over the scroll travel.
+          // The travel keeps .09 viewport per master unit on desktop and .08 on phones (9 and 8
+          // viewports for the hundred units the story had before the legacy took its forty).
           master = buildMaster(gsap, chapters, {
-            state, panels, nav, photo, reveal: !!portrait, titles,
+            state, panels, nav, legacy: scene, titles, film: film ? time => film.render(time) : undefined,
             overview: root.querySelector('[data-overview]'), scrim: root.querySelector('[data-scrim]'),
-            scrollTrigger: { id: 'sentraverse-journey', trigger: root, pin: stage, start: 'top top', end: () => `+=${window.innerHeight * (mobile ? 8 : 9)}`, scrub: mobile ? .35 : .8, invalidateOnRefresh: true },
+            // A refresh (a resize) reverts and silently re-renders the master at its progress, so the
+            // status line and `data-phase` are brought up to date by hand once it is done.
+            scrollTrigger: { id: 'sentraverse-journey', trigger: root, pin: stage, start: 'top top', end: () => `+=${window.innerHeight * MASTER_DURATION * (mobile ? .08 : .09)}`, scrub: mobile ? .35 : .8, invalidateOnRefresh: true, onRefresh: update },
             onUpdate: update,
           })
           // A jump scrolls to the chapter's entry label, so the phase→scroll maths lives in the
@@ -195,7 +193,7 @@ export default function NeuralJourney() {
         document.fonts.ready.then(() => { if (!cancelled) ScrollTrigger.refresh() })
         ScrollTrigger.refresh()
         const hash = window.location.hash.slice(1)
-        const aliases: Record<string, number> = { about: 96, services: 66, contact: 96, ecosystem: 66, divisions: 66, top: 0 }
+        const aliases: Record<string, number> = { about: 94, services: 66, contact: 94, ecosystem: 66, divisions: 66, top: 0 }
         const target = chapters.find(chapter => chapter.id === hash)?.phase ?? aliases[hash]
         if (target !== undefined) navigateRef.current(target)
 
@@ -208,13 +206,10 @@ export default function NeuralJourney() {
           handlers.forEach(remove => remove())
           live = false
           engine.dispose()
-          portrait?.dispose()
+          film?.dispose()
           activity.dispose()
-          if (photo) {
-            gsap.set(photo, { clearProps: 'all' })
-            // Reading mode shows the ending complete and still, whatever the cinematic scene left behind.
-            settleEnding(gsap, photo)
-          }
+          // Reading mode shows the legacy still, whatever the cinematic scene left behind.
+          if (scene) settleLegacy(gsap, scene, panels[chapters.findIndex(chapter => chapter.id === 'human')])
           // The titles return to their plain markup (the context reverts them too; this is explicit).
           splits.forEach(split => split?.revert())
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
@@ -295,39 +290,29 @@ export default function NeuralJourney() {
             return (
               <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${final ? styles.human : ''} ${chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''}`} tabIndex={-1} aria-label={chapter.label}>
                 {division && <div className={styles.marker} aria-hidden="true"><span data-marker-dot /><i data-marker-line /></div>}
-                {final && (
-                  <div data-photo className={styles.photo}>
-                    <Image src="/portrait-ferdi.webp" alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 60vw, 480px" />
-                    <canvas data-photo-reveal aria-hidden="true" />
-                    <i data-scan className={styles.scan} aria-hidden="true" />
-                    <svg data-callout-lines className={styles.lines} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                      <g data-reticle className={styles.reticle}>
-                        {reticleCorners().map(corner => <path key={corner} data-reticle-corner d={corner} pathLength={1} strokeDasharray="1" />)}
-                      </g>
-                      {callouts.map(callout => (
-                        <g key={callout.label}>
-                          <polyline data-callout-line points={calloutPoints(callout)} pathLength={1} strokeDasharray="1" />
-                          <polyline data-callout-glint className={styles.glint} points={calloutPoints(callout)} pathLength={1} />
-                          <circle data-callout-dot cx={callout.anchor[0]} cy={callout.anchor[1]} r=".55" />
-                        </g>
-                      ))}
-                    </svg>
-                    <ul data-callouts className={styles.callouts} aria-label="Profile">
-                      {/* The visible text decodes in the cinematic scene; the exact label lives in the aria-label throughout. */}
-                      {callouts.map(callout => <li key={callout.label} data-callout aria-label={callout.label} style={labelStyle(callout)}><span data-callout-text aria-hidden="true">{callout.label}</span></li>)}
-                    </ul>
-                    <i data-flash className={styles.flash} aria-hidden="true" />
+                {final && <LegacyScene />}
+                {final ? (
+                  // The legacy's words (Chief 2026-10-08), each its own beat of the final scene: the
+                  // opening line while the figure alone is lit, then the title, the line, the
+                  // signature, the brand statement and the way on once the camera has settled.
+                  <div data-marker-copy className={styles.legacyCopy}>
+                    <p data-legacy-presence className={`${styles.eyebrow} ${styles.presence}`}><span className={styles.index}>{chapter.number}</span>{legacyCopy.presence}</p>
+                    <h2><span>{chapter.title}</span></h2>
+                    <p data-legacy-tagline className={styles.tagline}>{chapter.description}</p>
+                    <p data-legacy-signature className={styles.signature}><strong>{legacyCopy.name}</strong><span>{legacyCopy.role}</span></p>
+                    <p data-legacy-brand className={styles.brand}><strong>{legacyCopy.brand}</strong><span>{chapter.annotation}</span></p>
+                    <Link href="/ekosistem" data-magnetic className={styles.cta}>EXPLORE SENTRAVERSE <span aria-hidden="true">↗</span></Link>
+                  </div>
+                ) : (
+                  <div data-marker-copy data-division={division ? index - 8 : undefined}>
+                    <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
+                    {/* A space between the title lines keeps the heading's name readable once SplitText puts it in an aria-label. */}
+                    {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span>{line}</span></Fragment>)}</h2>}
+                    <p className={styles.description}>{chapter.description}</p>
+                    {!division && <p className={styles.annotation}><span />{chapter.annotation}</p>}
+                    {index === 0 && <button data-jump="8" className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}
                   </div>
                 )}
-                <div data-marker-copy data-division={division ? index - 8 : undefined}>
-                  <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
-                  {/* A space between the title lines keeps the heading's name readable once SplitText puts it in an aria-label. */}
-                  {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span>{line}</span></Fragment>)}</h2>}
-                  <p className={styles.description}>{chapter.description}</p>
-                  {!division && <p className={styles.annotation}><span />{chapter.annotation}</p>}
-                  {index === 0 && <button data-jump="8" className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}
-                  {final && <Link href="/ekosistem" data-magnetic className={styles.cta}>EXPLORE SENTRAVERSE <span aria-hidden="true">↗</span></Link>}
-                </div>
               </section>
             )
           })}

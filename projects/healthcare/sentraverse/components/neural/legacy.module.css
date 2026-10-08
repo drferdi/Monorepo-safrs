@@ -1,0 +1,41 @@
+/* THE LEGACY (Chief 2026-10-09): the final chapter is the founder's film. After the SENTRA chapter
+   the neural field dissolves into it: a void closes over the canvases while the film fades in
+   through it, large (near its native 832×1104, capped by the stage), its edges dissolved into the
+   dark and its grade kept low ("jangan terlalu terang"), the clip's own cold world of code and
+   formulae left as it is. The film is a canvas the master draws the scroll position's frame
+   into (`film.ts`). The settled state is the stylesheet's: reading mode and the no-JavaScript
+   page show the film's last frame as the still poster; the cinematic timeline starts from the
+   open void and brings the film in by phase. */
+.scene {
+  --legacy-obsidian: #05070b; --legacy-obsidian-rgb: 5 7 11;
+  /* Where the film stands across the stage: right of centre on wide screens, so the words at the
+     end have the left; centred below 1024 px, where the words sit over or under it. */
+  --fx: 63%;
+  position: relative; flex: 1 0 100%; height: min(64svh, 600px); container-type: size; overflow: clip; pointer-events: none;
+}
+/* The chapter gives its direct divs the text column's width; the scene is the whole chapter. */
+[data-chapter] > .scene { width: 100%; }
+main[data-enhanced="cinematic"] [data-chapter] > .scene { position: absolute; inset: 0; width: auto; height: auto; flex: none; }
+.void, .vignette { position: absolute; inset: 0; }
+.void { background: var(--legacy-obsidian); }
+.vignette { background: radial-gradient(ellipse 70% 80% at var(--fx) 48%, transparent 40%, rgb(var(--legacy-obsidian-rgb) / .55) 100%), linear-gradient(180deg, rgb(var(--legacy-obsidian-rgb) / .35) 0%, transparent 18%, transparent 78%, rgb(var(--legacy-obsidian-rgb) / .5) 100%); }
+/* The film's box: the clip's width to 92 % of its height, so `object-position: 50% 0` keeps the
+   head room and crops the watermark at the foot of the source; near native size (1104 × .9 px)
+   where the stage allows, else the stage's height or width caps it (container units, so one
+   value sizes both axes). The edges dissolve into the void under a top and bottom fade and a
+   radial falloff; the grade darkens and desaturates the clip without recolouring it. */
+.film { --film-h: min(88cqh, 994px, calc(94cqw * 1016 / 832)); position: absolute; left: var(--fx); top: 50%; height: var(--film-h); width: calc(var(--film-h) * 832 / 1016); transform: translate(-50%, -50%); }
+.film img, .film canvas { --film-mask: linear-gradient(180deg, transparent 0, #000 12%, #000 82%, transparent 100%), radial-gradient(ellipse 54% 58% at 50% 46%, #000 46%, rgb(0 0 0 / .5) 76%, transparent 100%); position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; -webkit-mask-image: var(--film-mask); mask-image: var(--film-mask); -webkit-mask-composite: source-in; mask-composite: intersect; filter: brightness(.6) contrast(1.05) saturate(.55); }
+/* The poster is the still state's and the canvas the cinematic build's: each hidden where the
+   other shows, so the shared mask never doubles at the edges. */
+.film canvas { visibility: hidden; }
+main[data-enhanced="cinematic"] .film canvas { visibility: visible; }
+main[data-enhanced="cinematic"] .film img { visibility: hidden; }
+main[data-enhanced="cinematic"] .film { opacity: 0; }
+@media (max-width: 1023px) {
+  .scene { --fx: 50%; }
+}
+@media (max-width: 767px) {
+  .scene { height: min(70svh, 560px); }
+  .film { --film-h: calc(92cqw * 1016 / 832); }
+}

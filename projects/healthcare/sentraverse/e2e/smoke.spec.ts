@@ -17,7 +17,9 @@ test.describe('sentra-main marketing site', () => {
   test('cinematic journey reaches the ecosystem CTA', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('main')).toHaveAttribute('data-loading', 'false')
-    await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+    await page.getByRole('button', { name: 'Go to The legacy', exact: true }).click()
+    // The jump lands at the chapter's start; the way on appears once the story has reached its end.
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
     await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toBeVisible()
     await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toHaveAttribute('href', '/ekosistem')
   })

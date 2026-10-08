@@ -17,8 +17,12 @@ export const chapters = [
   { id: 'network', phase: 60, number: '07', label: 'Network emergence', title: 'SENTRAVERSE', annotation: 'ONE INTELLIGENCE ECOSYSTEM', description: 'Individual connections become a shared architecture. Biology becomes a metaphor for the interconnected ecosystem of Sentra.' },
   ...divisions.map((division, index) => ({ id: `division-${index + 1}`, phase: division.phase, number: `0${index + 1}`, label: division.label, title: division.name, annotation: `SENTRAVERSE · 0${index + 1}`, description: division.detail })),
   { id: 'connected', phase: 91, number: '09', label: 'All systems connected', title: 'SENTRA', annotation: 'ARTIFICIAL INTELLIGENCE FOR HUMAN SYSTEMS', description: 'Five regions. A shared intelligence. Every connection serves the whole.' },
-  { id: 'human', phase: 96, number: '10', label: 'Back to the human', title: 'SENTRAVERSE', annotation: 'THE CONNECTION IS HUMAN', description: 'Where human intelligence, artificial intelligence, and real-world systems connect.' },
+  { id: 'human', phase: 94, number: '10', label: 'The legacy', title: 'THE LEGACY', annotation: 'Human intelligence. Artificial intelligence. One universe.', description: 'Every universe begins with a vision.' },
 ] as const
+
+// The final chapter's words beyond its title (Chief 2026-10-08, "THE LEGACY"): the line the chapter
+// opens on while the figure alone is lit, and the signature under the title at the end.
+export const legacyCopy = { presence: 'The human behind the system', name: 'dr Ferdi Iskandar', role: 'The Gaffer · Architect of Sentraverse', brand: 'Sentraverse' } as const
 
 export const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 export const smooth = (value: number) => { const t = clamp(value); return t * t * (3 - 2 * t) }

@@ -1,73 +1,51 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import * as gsapModule from 'gsap'
-import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
-import { CustomEase } from 'gsap/CustomEase'
-import { CustomWiggle } from 'gsap/CustomWiggle'
 import { chapters } from './story.ts'
-import { MASTER_DURATION, buildMaster, ending, endingParts, jumpLabel, phaseToTime, settleEnding } from './timeline.ts'
+import { MASTER_DURATION, buildMaster, jumpLabel, legacy, legacyParts, phaseToTime, settleLegacy } from './timeline.ts'
 
 const gsap = gsapModule.gsap ?? gsapModule.default
-// GSAP registers its core `attr` plugin only where a window exists; this is that plugin's own
-// definition marked headless, so the SVG attribute tweens run on the stand-ins below. The
-// ending's plugins are registered the way the browser does, minus the window check.
-gsap.registerPlugin({
-  name: 'attr', headless: true,
-  init(target, vars, tween, index, targets) {
-    for (const p in vars) {
-      const v = target.getAttribute(p) || ''
-      const pt = this.add(target, 'setAttribute', (v || 0) + '', vars[p], index, targets, 0, 0, p)
-      pt.op = p; pt.b = v
-      this._props.push(p)
-    }
-  },
-}, { ...ScrambleTextPlugin, headless: true }, { name: 'clearProps', headless: true, init() {} })
-CustomEase.register(gsap); CustomWiggle.register(gsap)
+// `clearProps` is a CSS-plugin feature with no meaning on the stand-ins below; a headless no-op
+// keeps `settleLegacy` from tweening a property of that name.
+gsap.registerPlugin({ name: 'clearProps', headless: true, init() {} })
 const close = (actual, expected, tolerance, label = '') => assert.ok(Math.abs(actual - expected) <= tolerance, `${label} ${actual} is not ${expected}`)
 const at = phaseToTime
 
-// Stand-ins for the DOM: GSAP tweens plain properties on them, the attr plugin goes through
-// get/setAttribute, the scramble writes textContent, and the scene builder finds its parts
-// through querySelector(All).
-const element = (children = {}, text = '', attributes = {}) => {
+// Stand-ins for the DOM: GSAP tweens plain properties on them, and the scene builder finds its
+// parts through querySelector(All) and reads their data attributes. A selector list resolves to
+// the union of its parts, as the DOM would.
+const element = (children = {}, attributes = {}) => {
   const map = new Map(Object.entries(attributes))
+  const find = selector => selector.split(',').map(part => part.trim()).flatMap(part => children[part] ?? [])
   return {
-    nodeType: 1, textContent: text, scale: 1,
+    nodeType: 1, scale: 1,
     getAttribute: name => map.has(name) ? String(map.get(name)) : null,
     setAttribute: (name, value) => map.set(name, value),
-    querySelector: selector => children[selector]?.[0] ?? null,
-    querySelectorAll: selector => children[selector] ?? [],
+    querySelector: selector => find(selector)[0] ?? null,
+    querySelectorAll: selector => find(selector),
   }
 }
-const many = (count, text) => Array.from({ length: count }, (_, i) => element({}, text?.[i]))
-const LABELS = ['dr Ferdi Iskandar', 'the Gaffer', 'Sentraone']
+const many = (count, attributes) => Array.from({ length: count }, () => element({}, attributes))
 
-function stage(titles) {
-  const dots = many(3), lines = many(3), glints = many(3), texts = many(3, LABELS)
-  const labels = LABELS.map((label, k) => element({ '[data-callout-text]': [texts[k]] }, label, { 'aria-label': label }))
-  const corners = many(4), reticle = element({ '[data-reticle-corner]': corners }), scan = element(), flash = element()
-  const parts = {
-    '[data-callout-line]': lines, '[data-callout-dot]': dots, '[data-callout]': labels, '[data-callout-glint]': glints, '[data-callout-text]': texts,
-    '[data-reticle]': [reticle], '[data-reticle-corner]': corners, '[data-scan]': [scan], '[data-flash]': [flash],
-    [endingParts.strokes]: [...lines, ...corners],
-    [endingParts.faded]: [...labels, ...glints, ...lines, ...corners, scan, flash],
-    [endingParts.all]: [...labels, ...glints, ...lines, ...texts, reticle, ...corners, scan, flash],
-  }
-  const photo = element(parts)
+function stage(titles, options = {}) {
+  const veil = many(2), film = element()
+  const scene = element({ '[data-legacy-void]': [veil[0]], '[data-legacy-vignette]': [veil[1]], '[data-film]': [film] })
+  const text = { presence: element(), tagline: element(), signature: element(), brand: element(), cta: element() }
+  const human = element({ '[data-legacy-presence]': [text.presence], '[data-legacy-tagline]': [text.tagline], '[data-legacy-signature]': [text.signature], '[data-legacy-brand]': [text.brand], '[data-magnetic]': [text.cta] })
   const panels = chapters.map(chapter => {
     if (chapter.id.startsWith('division')) return element({ '[data-marker-line]': many(1), '[data-marker-dot]': many(1), '[data-marker-copy]': many(1) })
-    if (chapter.id === 'human') return element(parts)
+    if (chapter.id === 'human') return human
     return element()
   })
   const state = { phase: 0 }
-  const master = buildMaster(gsap, chapters, { state, panels, nav: {}, overview: {}, scrim: {}, photo, reveal: true, titles })
+  const master = buildMaster(gsap, chapters, { state, panels, nav: {}, overview: {}, scrim: {}, legacy: scene, titles, ...options })
   master.pause()
-  return { master, state, panels, photo, dots, lines, labels, texts, glints, corners, reticle, scan, flash }
+  return { master, state, panels, scene, human, veil, film, text }
 }
 
-test('the master runs exactly the hundred units the scroll travel is mapped onto, and no scene pushes past it', () => {
+test('the master runs exactly the units the scroll travel is mapped onto, and no scene pushes past it', () => {
   const { master, state } = stage()
-  assert.equal(MASTER_DURATION, 100)
+  assert.equal(MASTER_DURATION, 131.5)
   close(master.duration(), MASTER_DURATION, 1e-9, 'master duration')
   master.progress(1)
   close(state.phase, 100, 1e-9, 'phase at the end')
@@ -84,15 +62,17 @@ test('every chapter has its label at its phase and an entry label 1.5 phase unit
   }
   assert.equal(jumpLabel(chapters, 0), 'origin-enter')
   assert.equal(jumpLabel(chapters, 66), 'division-1-enter')
+  assert.equal(jumpLabel(chapters, 94), 'human-enter')
   assert.equal(jumpLabel(chapters, 96), 'human-enter')
   // A phase between two chapters belongs to the chapter it is in.
   assert.equal(jumpLabel(chapters, 63), 'network-enter')
   master.kill()
 })
 
-test('the phase mapping is monotonic and its ends are pinned', () => {
+test('the phase mapping is monotonic, its ends are pinned and the first 94 phases keep the tempo they had before the legacy', () => {
   assert.equal(phaseToTime(0), 0)
   assert.equal(phaseToTime(100), MASTER_DURATION)
+  close(phaseToTime(94), 91.5, 1e-9, 'the legacy starts where the old ending did')
   let previous = 0
   for (let phase = 0; phase <= 100; phase += .5) {
     const time = phaseToTime(phase)
@@ -101,14 +81,14 @@ test('the phase mapping is monotonic and its ends are pinned', () => {
   }
 })
 
-test('the key moments dwell: the chapter 03 face, the network and the final reveal get at least a fifth more scroll than their phases', () => {
+test('the key moments dwell: the chapter 03 face, the network and the legacy get more scroll than their phases, the legacy one straight stretch', () => {
   const share = (from, to) => (phaseToTime(to) - phaseToTime(from)) / (to - from)
   assert.ok(share(25, 40) >= 1.2, 'face window ' + share(25, 40))
   assert.ok(share(58, 66) >= 1.2, 'network window ' + share(58, 66))
-  assert.ok(share(94, 100) >= 1.3, 'final reveal ' + share(94, 100))
-  // The reveal window stays one straight stretch, so the scan and the develop keep step with portraitState.
-  const mid = phaseToTime(97), expected = (phaseToTime(95.5) + phaseToTime(98.5)) / 2
-  close(mid, expected, 1e-9, 'reveal window linear')
+  assert.ok(share(94, 100) >= 6, 'legacy ' + share(94, 100))
+  // One linear stretch, so the dissolve, the film's clock and the words keep step with the scroll.
+  const k = legacy
+  for (const [a, b] of [[94, 96], [k.void.at, k.void.at + k.void.in], [k.film.play, k.film.end], [99, 100]]) close(phaseToTime((a + b) / 2), (phaseToTime(a) + phaseToTime(b)) / 2, 1e-9, `linear ${a}-${b}`)
 })
 
 test('chapter titles rise line by line behind their masks as the chapter enters, and the centered titles come in character by character from the middle', () => {
@@ -132,85 +112,86 @@ test('chapter titles rise line by line behind their masks as the chapter enters,
   master.kill()
 })
 
-test('the first chapter is visible at the start, the others hidden, and the human scene settles the callouts complete', () => {
-  const { master, panels, dots, lines, labels, glints } = stage()
+test('the first chapter is visible at the start, the others hidden, and the legacy starts with the void open and the film dark', () => {
+  const { master, panels, veil, film, text } = stage()
   // GSAP writes a string into a plain object whose property was undefined; the number is what matters.
   assert.equal(Number(panels[0].autoAlpha), 1)
   assert.equal(Number(panels[1].autoAlpha), 0)
-  // Hidden until the final scene draws them.
-  for (const line of lines) assert.equal(Number(line.getAttribute('stroke-dashoffset')), 1)
-  for (const dot of dots) assert.equal(Number(dot.getAttribute('r')), 0)
-  master.time(phaseToTime(97))
-  for (const label of labels) assert.equal(Number(label.autoAlpha), 0, 'labels still hidden at 97')
-  master.progress(1)
-  for (const line of lines) close(Number(line.getAttribute('stroke-dashoffset')), 0, 1e-9, 'line drawn')
-  for (const dot of dots) close(Number(dot.getAttribute('r')), .55, 1e-9, 'dot popped')
-  for (const label of labels) { close(label.autoAlpha, 1, 1e-9, 'label shown'); close(label.x, 0, 1e-9, 'label in place') }
-  for (const glint of glints) close(glint.autoAlpha, 1, 1e-9, 'glint on')
+  for (const part of veil) assert.equal(Number(part.autoAlpha), 0, 'void open')
+  assert.equal(Number(film.autoAlpha), 0, 'film dark')
+  for (const part of Object.values(text)) assert.equal(Number(part.autoAlpha), 0, 'text hidden')
   master.kill()
 })
 
-test('scan, develop and lock overlap in the final scene: the scan sweeps with the reveal, the grade develops to the low-key finals, the lock follows', () => {
-  const { master, photo, scan, reticle, corners, flash } = stage()
+test('the dissolve: the opening line shows over the field, then the void closes while the film is already fading in, so nothing is black between them', () => {
+  const { master, veil, film, text } = stage()
+  const k = legacy
   const scene = master.getById('scene-human')
-  assert.ok(scene, 'the human scene carries an id')
-  close(scene.labels.scan, 0, 1e-9, 'scan at the reveal start')
-  close(scene.labels.develop, scene.labels.scan, 1e-9, 'develop starts with the scan')
-  const span = (from, to) => at(to) - at(from)
-  close(scene.labels.lock, span(ending.revealStart, ending.revealEnd) - span(ending.revealStart, ending.revealStart + ending.lockLead), 1e-9, 'lock leads the develop end')
-  // Scan: transform only, in step with portraitState(phase).reveal. (A nested timeline that has
-  // never rendered treats its own time 0 as already rendered, so the samples start a hair in.)
-  master.time(at(ending.revealStart + .01)); close(Number(scan.yPercent), 0, .5, 'scan at the top')
-  master.time(at((ending.revealStart + ending.revealEnd) / 2)); close(Number(scan.yPercent), 50, 1e-6, 'scan half way'); close(Number(scan.autoAlpha), 1, 1e-9, 'scan visible')
-  master.time(at(ending.revealEnd)); close(Number(scan.yPercent), 100, 1e-9, 'scan at the bottom')
-  close(Number(scan.autoAlpha), 0, 1e-9, 'scan gone as its sweep ends, nothing lingers below the box')
-  master.time(at(99)); close(Number(scan.autoAlpha), 0, 1e-9, 'scan still gone')
-  // Develop: brighter, colder, flatter at the start; the approved grade at the end.
-  master.time(at(ending.revealStart + .01))
-  assert.ok(Number(photo['--photo-brightness']) > ending.developTo.brightness, 'starts brighter')
-  assert.ok(Number(photo['--photo-contrast']) < ending.developTo.contrast, 'starts flatter')
-  assert.ok(Number(photo['--photo-saturate']) < ending.developTo.saturate, 'starts colder')
-  master.progress(1)
-  close(Number(photo['--photo-brightness']), .74, 1e-9, 'final brightness'); close(Number(photo['--photo-contrast']), 1.26, 1e-9, 'final contrast'); close(Number(photo['--photo-saturate']), .55, 1e-9, 'final saturation')
-  // Lock: the brackets are hidden before the lock, draw in after it, and the reticle settles at scale 1.
-  master.time(at(97))
-  for (const corner of corners) { close(Number(corner.autoAlpha), 0, 1e-9, 'corner hidden before the lock'); assert.equal(Number(corner.getAttribute('stroke-dashoffset')), 1, 'corner undrawn') }
-  master.time(at(ending.revealEnd - ending.lockLead + ending.settleAt + ending.settle * .3)); assert.notEqual(Number(reticle.scale), 1, 'reticle wiggles while settling')
-  master.progress(1)
-  close(Number(reticle.scale), 1, 1e-9, 'reticle settled')
-  for (const corner of corners) { close(Number(corner.autoAlpha), 1, 1e-9, 'corner shown'); close(Number(corner.getAttribute('stroke-dashoffset')), 0, 1e-9, 'corner drawn') }
-  // The flash is the last thing: brief, and gone at the very end.
-  close(Number(flash.autoAlpha), 0, 1e-9, 'flash over at the end')
-  master.time(at(ending.revealEnd - ending.lockLead + ending.flashAt + ending.flashIn)); assert.ok(Number(flash.autoAlpha) > .3, 'flash peaks ' + flash.autoAlpha)
+  assert.ok(scene, 'the legacy scene carries the human id')
+  close(scene.labels.dissolve, 0, 1e-9, 'dissolve at the chapter start')
+  master.time(at(k.void.at - .01)); for (const part of veil) close(Number(part.autoAlpha ?? 0), 0, 1e-9, 'void still open before its cue'); close(Number(film.autoAlpha), 0, 1e-9, 'film still dark before its cue')
+  master.time(at(k.presence.at + k.presence.in)); close(Number(text.presence.autoAlpha), 1, 1e-6, 'opening line shown')
+  // The film's cue falls inside the void's closing, and the void is shut by `covered`.
+  assert.ok(k.film.at > k.void.at && k.film.at < k.void.at + k.void.in, 'the film starts while the void is closing')
+  assert.ok(k.void.at + k.void.in <= k.covered, 'the canvases are covered only once the void is shut')
+  master.time(at(k.film.at + k.film.in * .5))
+  const half = Number(veil[0].autoAlpha)
+  assert.ok(half > .3 && half < 1, 'void half closed ' + half)
+  assert.ok(Number(film.autoAlpha) > .2, 'film coming in through it ' + film.autoAlpha)
+  master.time(at(k.film.at + k.film.in)); close(Number(film.autoAlpha), k.film.alpha, 1e-6, 'film at its blended opacity')
+  master.time(at(k.void.at + k.void.in)); for (const part of veil) close(Number(part.autoAlpha), 1, 1e-6, 'void shut')
+  master.time(at(k.presence.out + k.presence.outOver)); close(Number(text.presence.autoAlpha), 0, 1e-9, 'opening line gone')
+  master.progress(1); close(Number(film.autoAlpha), k.film.alpha, 1e-6, 'film still there at the end')
   master.kill()
 })
 
-test('labels decode into the exact strings, read exact to assistive tech throughout, and the e2e sample points hold', () => {
-  const { master, lines, corners, labels, texts } = stage()
-  for (const [k, label] of labels.entries()) assert.equal(label.getAttribute('aria-label'), LABELS[k])
-  master.time(at(97))
-  assert.deepEqual(texts.map(text => text.textContent), LABELS, 'exact before the decode')
-  // Mid-decode the visible text is scrambled but keeps its length; the aria-label stays exact.
-  master.time(at(ending.revealEnd - ending.lockLead + ending.calloutsAt + ending.labelAt + ending.label * .5))
-  assert.equal(texts[0].textContent.length, LABELS[0].length, 'scramble keeps the length')
-  assert.notEqual(texts[0].textContent, LABELS[0], 'first label mid-decode')
-  // The e2e samples 99.6 and expects every line settled.
-  master.time(at(99.6))
-  for (const line of lines) close(Number(line.getAttribute('stroke-dashoffset')), 0, 1e-9, 'line settled by 99.6')
-  for (const corner of corners) close(Number(corner.getAttribute('stroke-dashoffset')), 0, 1e-9, 'corner settled by 99.6')
-  master.progress(1)
-  assert.deepEqual(texts.map(text => text.textContent), LABELS, 'exact at the end')
+test('the film: its clock is the scroll position, without easing, from the first frame at play to the last at end, held to the end of the story', () => {
+  const drawn = []
+  const { master, state } = stage(undefined, { film: time => drawn.push([state.phase, time]) })
+  const k = legacy.film
+  const scene = master.getById('scene-human')
+  close(scene.labels.film, at(k.play) - at(94), 1e-9, 'film label where the clock starts')
+  master.time(at(k.play - .01)); assert.equal(drawn.length, 0, 'no frame asked for before the clock starts')
+  const last = () => drawn[drawn.length - 1][1]
+  master.time(at(k.play + .01)); assert.ok(drawn.length > 0 && last() < .1, 'the first frame as the clock starts ' + last())
+  master.time(at((k.play + k.end) / 2)); close(last(), k.length / 2, 1e-6, 'half the clip half way through the window: no easing')
+  master.time(at(k.play + (k.end - k.play) * .25)); close(last(), k.length / 4, 1e-6, 'a quarter in, a quarter of the clip')
+  master.time(at(k.end)); close(last(), k.length, 1e-6, 'the last frame at the end of the window')
+  master.time(at(100)); close(last(), k.length, 1e-6, 'the last frame held to the end')
+  assert.ok(k.end <= legacy.title, 'the film settles before the words')
+  // Scrolling back asks for earlier frames again.
+  master.time(at(k.play + .01)); assert.ok(last() < .1, 'the first frame again after a reverse scroll ' + last())
   master.kill()
 })
 
-test('settling the ending restores the complete state whatever the scene left behind', () => {
-  const { master, photo, lines, corners, dots, texts, labels } = stage()
-  master.time(at(99.3))
-  settleEnding(gsap, photo)
-  for (const line of lines) assert.equal(Number(line.getAttribute('stroke-dashoffset')), 0)
-  for (const corner of corners) assert.equal(Number(corner.getAttribute('stroke-dashoffset')), 0)
-  for (const dot of dots) assert.equal(Number(dot.getAttribute('r')), .55)
-  assert.deepEqual(texts.map(text => text.textContent), LABELS)
-  assert.deepEqual(labels.map(label => label.getAttribute('aria-label')), LABELS)
+test('the legacy: the title then the line, the signature, the brand and the way on, each after the last, all settled by the end', () => {
+  const chars = many(6), lines = many(1)
+  const titles = chapters.map(chapter => chapter.id === 'human' ? { lines, chars, centered: true } : null)
+  const { master, text } = stage(titles)
+  const scene = master.getById('scene-human')
+  close(scene.labels.legacy, at(legacy.title) - at(94), 1e-9, 'legacy label at the title')
+  master.time(at(legacy.title - .05))
+  for (const char of chars) close(Number(char.autoAlpha), 0, 1e-9, 'title hidden before its beat')
+  for (const part of [text.tagline, text.signature, text.brand, text.cta]) close(Number(part.autoAlpha), 0, 1e-9, 'text hidden before its beat')
+  const order = [legacy.title, legacy.tagline, legacy.signature, legacy.brand, legacy.cta]
+  assert.ok(order.every((phase, i) => i === 0 || phase > order[i - 1]), 'beats in order')
+  assert.ok(legacy.cta + legacy.textIn <= 100, 'the last beat settles before the pin releases')
+  master.time(at(legacy.tagline + legacy.textIn * .4))
+  assert.ok(Number(text.tagline.autoAlpha) > 0 && Number(text.tagline.autoAlpha) < 1, 'tagline coming in ' + text.tagline.autoAlpha)
+  close(Number(text.signature.autoAlpha), 0, 1e-9, 'signature waits')
+  master.progress(1)
+  for (const char of chars) close(Number(char.autoAlpha), 1, 1e-6, 'title shown')
+  for (const part of [text.tagline, text.signature, text.brand, text.cta]) { close(Number(part.autoAlpha), 1, 1e-6, 'text shown'); close(Number(part.y), 0, 1e-6, 'text in place') }
+  master.kill()
+})
+
+test('settling the legacy restores the still state whatever the scene left behind', () => {
+  const { master, scene, human } = stage()
+  master.time(at(97.3))
+  settleLegacy(gsap, scene, human)
+  // The selector lists name every tweened part, so a part the scene animates is never left behind.
+  for (const part of ['[data-legacy-void]', '[data-legacy-vignette]']) assert.ok(legacyParts.scene.includes(part), part)
+  assert.equal(legacyParts.film, '[data-film]')
+  for (const part of ['[data-legacy-presence]', '[data-legacy-tagline]', '[data-legacy-signature]', '[data-legacy-brand]', '[data-magnetic]']) assert.ok(legacyParts.text.includes(part), part)
   master.kill()
 })

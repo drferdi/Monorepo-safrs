@@ -3,7 +3,7 @@ import type { FacePixels } from './face'
 import { axonCenter, faceDissolve, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse } from './geometry'
 import type { Geometry, Vec3 } from './geometry'
 import { clamp, smooth } from './story'
-import { facePlacement, portraitState } from './tactile'
+import { facePlacement } from './tactile'
 
 type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer; pointNormals?: WebGLBuffer; lineNormals?: WebGLBuffer }
 type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number; relief: number; reveal: number }
@@ -312,7 +312,8 @@ export class NeuralRenderer {
     const draw = (name: string, factory: (density: number) => Geometry, options: Partial<View>) => this.draw(this.layer(name, factory), { ...view, ...options }, time)
     const face = this.face, seat = this.faceView()
     const placeFace = (options: Partial<View>) => { if (face) draw('face', () => face, { offset: [seat.offset.x, seat.offset.y, 0], scale: seat.scale, camera: [0, 0, seat.depth], highlight: look.highlight, hover: look.hover, ...options }) }
-    draw('dust', makeDust, { alpha: .4, rotation: reduced ? 0 : time * .006 })
+    // The dust leaves with the network, so the legacy opens on black (Chief 2026-10-08).
+    draw('dust', makeDust, { alpha: .4 * (1 - smooth((phase - 94) / 1.5)), rotation: reduced ? 0 : time * .006 })
 
     if (phase < 30) {
       const alpha = phase < 7 ? 1 : phase < 17 ? 1 - envelope(phase, 7, 16, 2) * .85 : 1 - smooth((phase - 26) / 4)
@@ -344,12 +345,9 @@ export class NeuralRenderer {
       const active = Math.min(4, Math.max(0, Math.floor((phase - 66) / 5)))
       const focus = hubs[active]
       const focusAmount = phase >= 66 && phase < 91 ? .25 : 0
-      draw('network', makeNetwork, { alpha: envelope(phase, 58, 94, 5), camera: [focus[0] * focusAmount, focus[1] * focusAmount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : -.08 + discovery * .16, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
-    }
-    // Lock the contours to the photo plane before its feature-led reveal, so no double features drift.
-    if (phase > 93) {
-      const portrait = portraitState(phase)
-      placeFace({ alpha: smooth((phase - 93) / 2), growth: smooth((phase - 93) / 2.5), rotation: reduced ? 0 : look.turn * .085 * portrait.relief, pulse: .4 * (1 - portrait.reveal), ...portrait })
+      // The network dissolves from 94 into the final chapter's void and film (Chief 2026-10-09:
+      // nothing stands between SENTRA and the film).
+      draw('network', makeNetwork, { alpha: smooth((phase - 58) / 5) * (1 - smooth((phase - 94) / 1.8)), camera: [focus[0] * focusAmount, focus[1] * focusAmount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : -.08 + discovery * .16, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
     }
   }
 

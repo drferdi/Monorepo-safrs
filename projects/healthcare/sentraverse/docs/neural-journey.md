@@ -71,65 +71,37 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   on screen on portrait tablets and clear of the text on short phones. `main[data-face]` reads `ready` or `unavailable`; the chapter text never depends on
   it. The body silhouette, the generic body drawing of chapter 03 and the final-scene
   nervous-system draw are gone.
-- At the very end the founder's photograph itself resolves over the drawn face (Chief
-  2026-10-08): `public/portrait-ferdi.webp` (500×500 with a transparent background, the
-  2026-10-08 half-body attachment from Chief, not LFS) is rendered by `next/image`
-  inside the final chapter (`[data-photo]`), placed by `tactile.ts` `faceBox` in the same box
-  the renderer draws the face in (desktop, tablets and phones alike, re-placed on resize), and
-  resolves from phase 95.5 to 98.5 feature first (2026-10-08, "portrait realism"): `tactile.ts`
-  `portraitState(phase)` gives `relief` (the drawn face settles flat onto the photo plane from
-  phase 94.25 to 95.5, and its turn fades with it) and `reveal` (0 → 1 over 95.5 → 98.5);
-  `portrait-reveal.ts` `createPortraitReveal` paints the unchanged `next/image` through a
-  192×192 alpha mask computed from the same `faceContour`/`faceDissolve` field the geometry
-  grows along, onto a `<canvas data-photo-reveal>` inside `[data-photo]`, so nose, eyes and
-  lips appear before cheeks, hair, jaw and shoulders, and the drawn vertices fade (94 %) where
-  the skin has resolved. `[data-photo][data-reveal]` reads `active` (canvas shown, image
-  hidden) or `complete` (the image itself, full resolution); the attribute is removed when the
-  cinematic build is torn down. The final chapter enters without its 24 px slide so the photo
-  stays registered on the drawn face. The photograph is graded low-key (Chief 2026-10-08, "lebih
-  dramatis, tidak terlalu terang"): `brightness(.74) contrast(1.26) saturate(.55)` under a mask
-  that intersects the vertical fade from 70 % down, a radial vignette centred on the face and a
-  key-light falloff toward the left, so the suit and the far shoulder sink into the field (the
-  source itself is cut out; engines without `mask-composite` show the union of the layers). In
-  reading mode and without JavaScript the photo sits in the flow beside the text
-  (above it on phones); the cinematic placement and the reveal are cleared when the mode changes.
-- The ending runs as Scan → Develop → Lock-on (2026-10-08, "ending"): one nested scene in
-  `timeline.ts` (`humanScene`) starts at phase 95.5 with three overlapping labels. `scan`: a
-  hairline (`[data-scan]`, `.scan`, a 1 px gradient with a glow and a 9 % elliptical trail)
-  sweeps down the photo in step with `portraitState(phase).reveal` (`yPercent` 0 → 100 over
-  95.5–98.5, transform only) and fades out over the last .25. `develop` (same start): the photo
-  grade lives in the custom properties `--photo-brightness/--photo-contrast/--photo-saturate`
-  on `.human > .photo`, whose stylesheet values are the low-key finals (.74 / 1.26 / .55), and
-  the scene tweens them from a brighter, colder, flatter start (1.02 / .92 / .22) to those finals
-  over the same window, so the image develops like a print; reading mode and the no-JavaScript
-  page show the finals with no animation. `lock` (.2 before develop ends): four corner-bracket
-  reticle strokes (`callouts.ts` `reticleCorners`, a 2.5 % margin around the head, `pathLength`
-  1 with a `stroke-dashoffset` attr tween and a fade, .35 each, .05 apart) draw in and the group
-  settles with a CustomWiggle (`scale` 1.05, `wiggle(3)`, .45); then, from .25 after the lock in
-  .27 steps, each callout (`callouts.ts`: `dr Ferdi Iskandar` head, `the Gaffer` shoulder,
-  `Sentraone` folded arms, anchor → elbow → horizontal end in photo percent, label right of the
-  end; an SVG with `viewBox` 0 0 100 100 and non-scaling 1 px strokes plus a `<ul data-callouts>`
-  inside `[data-photo]`) pops its anchor dot (`back.out`), draws its polyline, slides its label
-  in and decodes it with ScrambleTextPlugin (hex characters, speed .4, reveal delay .12) into
-  the exact string, and fades in the CSS glint that runs along the line every 2.8 s (off under
-  reduced motion); a brief screen-blend flash (`[data-flash]`, peak .5) ends the chain at 1.4
-  after the lock. Every length is a knob on the `ending` object in `timeline.ts`. The exact
-  label sits in `aria-label` on the `<li>` and the animated `<span data-callout-text>` is
-  `aria-hidden`; `settleEnding` (reading mode, teardown) clears only what the scene tweened
-  (`clearProps: 'all'` would strip the labels' inline positions, which React does not re-apply
-  on the next build), restores the exact text, `stroke-dashoffset` 0 and dot `r` .55, so the
-  settled state is the one the page had before the sequence, also after a breakpoint crossing.
-  The label font follows the photo width (`clamp(7px, 2.3cqi, 10px)`, the photo is an
-  inline-size container) so the labels fit at 768×1024. `callouts.test.mjs` pins the labels,
-  their anchors inside the head, shoulder and torso ellipses, the rightward layout and the
-  reticle around the head; `timeline.test.mjs` pins the scan/develop/lock overlap, the exact
-  decoded strings and the settled state; the e2e checks the scan and the developing grade at
-  97, the draw-in, the exact text at 100, the fit and the separate places of the labels at four
-  viewports (the last one past the breakpoint) and the still reading mode.
+- The ending is THE LEGACY (Chief 2026-10-09, "film chapter"; see that entry in
+  `DECISIONS.md`): after the SENTRA chapter the neural field dissolves into the founder's film.
+  The final chapter, phases 94–100 over 40 of the master's 131.5 units, is `LegacyScene.tsx`
+  (`[data-legacy]`): a void, the film box `[data-film]` (the film's last frame as the
+  `next/image` still poster with a `<canvas data-film-canvas>` over it) and a vignette, complete
+  by `legacy.module.css` alone for reading mode and the no-JavaScript page. `timeline.ts`
+  `legacyScene` runs three labelled beats from the `legacy` knobs: `dissolve` ("The human
+  behind the system" over the last of the field at 94.5, then the void closes over the canvases
+  from 94.6 to 96 while the film fades in to .85 from 95 to 96.2, so the one blends into the
+  other with no black between; the canvases stop drawing at `covered` 96), `film` (a plain
+  clock `{ time }` tweened without easing from 0 to the clip's 10.1 s between 95.8 and 99, whose
+  `onUpdate` hands the clip time to `film.ts`, which draws that time's frame into the canvas:
+  GSAP's image-sequence pattern, 120 WebP frames at 12 fps extracted from the clip in Chrome,
+  because the clip has a single keyframe and a seeked `<video>` costs up to ~220 ms a frame; a
+  frame not yet loaded is stood in for by the nearest loaded one, and loading starts with the
+  cinematic build; the last frame holds to 100) and `legacy` (the title, "Every universe begins with a vision.", the signature, the brand
+  line and the way on, from 99). The film stands large: its box is the clip's width to 92 % of
+  its height (the watermark at the foot of the source is cropped by `object-position: 50% 0`),
+  `min(88cqh, 994px, 94cqw × 1016/832)` tall on wide screens (near native, capped by the stage),
+  92 cqw wide on phones, right of centre on screens from 1024 px so the words have the left,
+  centred below; its edges dissolve into the void under a top and bottom fade and a radial
+  falloff, and its grade is `brightness(.6) contrast(1.05) saturate(.55)` (the clip's own world
+  kept, darkened: "jangan terlalu terang"). The poster is hidden in cinematic mode and the
+  canvas outside it, so the shared mask never doubles; `settleLegacy` clears what the scene
+  tweened. The drawn face no longer returns before the final chapter (the network dissolves from
+  94 straight into the void and the film); `portrait-reveal.ts` (the feature-first photo reveal
+  of 2026-10-08) is no longer used.
 - Chapter titles reveal behind line masks (2026-10-08, "ending"): after `document.fonts.ready`,
   inside the cinematic matchMedia context, `SplitText.create` splits every chapter `h2` once
-  (`mask: 'lines'`, `aria: 'auto'`, no `autoSplit`; the two centered titles, chapters 07 and 14,
-  also into chars) and reverts it on teardown; `buildMaster` sets each line to `yPercent` 110
+  (`mask: 'lines'`, `aria: 'auto'`, no `autoSplit`; the centered titles, chapters 07, 14 and
+  the legacy, also into chars) and reverts it on teardown; `buildMaster` sets each line to `yPercent` 110
   and slides it up over 1 with a .12 stagger as the chapter enters, and the centered titles
   instead fade their chars in from the centre out (`stagger: { amount: .6, from: 'center' }`).
   The `h2` markup is one `<span>` per title line with a space between (the reading view and the
@@ -148,15 +120,14 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   `gsap.quickTo`; releases use `elastic.out(1, .3)`, after which the trackers are rebuilt.
 - From the network chapter on, the text sits over bright neurons, so a scrim (`[data-scrim]`,
   the page background at 60 %) fades in over the canvas and under the text at phase 58 and lifts
-  again at phase 94 as the face returns; the division chapters and the centered chapters 07
+  again at phase 93 as the face returns; the division chapters and the centered chapters 07
   and 14 also give their text a soft multi-layer `text-shadow` halo (no backdrop shape), and
   the big centered titles sit at 92 % white with a faint light edge so the thin strokes blend
   with the field instead of cutting it.
-- Only `x, y, scale, autoAlpha` are animated, with the approved exceptions of the ending: the
-  three `--photo-*` custom properties of the develop (a filter, inside the reveal window only),
-  the `stroke-dashoffset` and `r` attr tweens of the strokes and dots, and the scrambled label
-  text. The wake is desktop-only (no touch, no phones, no reduced motion) and its detach kills
-  its tweens and clears the inline transforms, so reading mode starts from clean elements.
+- Only `x, y, scale, autoAlpha` are animated on elements; the final chapter's film clock is a
+  plain object, not an element, and hands each clip time to `film.ts` to draw. The wake is
+  desktop-only (no touch, no phones, no reduced motion) and its detach kills its tweens and
+  clears the inline transforms, so reading mode starts from clean elements.
 
 ## Neuron morphology, lighting and the activity cycle
 
@@ -236,18 +207,21 @@ node scripts/pnpm.mjs run deploy:dry-run
 ```
 
 `node scripts/pnpm.mjs run test` runs the node:test files, including `components/neural/tactile.test.mjs`,
-`face.test.mjs`, `morphology.test.mjs`, `signal.test.mjs`, `callouts.test.mjs` and `timeline.test.mjs`
-(the master's hundred units, the phase mapping and its dwells, the labels, the title reveals and
-the Scan → Develop → Lock-on ending with its exact decoded strings). The Playwright suite in
+`face.test.mjs`, `morphology.test.mjs`, `signal.test.mjs`, `legacy.test.mjs` (the camera maths, the
+registration of the photo on the drawn face, the end-of-pullback framing, the architecture and
+the stylesheet's `--reach`) and `timeline.test.mjs` (the master's 131.5 units, the phase mapping
+and its dwells, the labels, the title reveals and the legacy's five phases, the ground riding the
+dolly, the settled state). The Playwright suite in
 `e2e/neural.spec.ts` covers the WebGL renderer staying active (a shader that fails to link
 would fall back to Canvas 2D silently), the activity cycle playing only in the network window
 and parking under reduced motion,
-reverse navigation, all five divisions, the drawn face and the photograph at the final chapter
+reverse navigation, all five divisions, the film at the final chapter
 (feature-first alpha of the reveal canvas, exact reversal, the full image at the end, a late
-image load, a phone resize, and reading mode and no canvas context), the ending (the scan and
-the developing grade at phase 97, the reticle and callout draw-in after the reveal, the exact
-labels at 100, labels inside the viewport and clear of the title at four viewports, still and
-settled under reduced motion), mobile overflow and the
+image load, a phone resize, and reading mode and no canvas context), the legacy (the presence
+line, the reveal, the closed void and the emerged gate half way through the pullback, the world
+and the ground at their end positions, the drawn pathways, the figure small but readable and
+clear of the title at four viewports, the exact words, the still complete poster under reduced
+motion), mobile overflow and the
 CTA in view, OS reduced-motion changes, context loss, clean reading-mode transforms, missing
 WebGL, no canvas context at all, JavaScript-disabled reading, pin cleanup, connected-region
 navigation, and frame timing. `e2e/smoke.spec.ts` keeps
