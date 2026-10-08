@@ -177,13 +177,28 @@
 /* The founder's photograph closes the journey (Chief 2026-10-08): in the flow beside the text when
    nothing is enhanced, placed over the drawn face by the script in cinematic mode. */
 .human { flex-wrap: wrap; column-gap: 24px; }
-.human > .photo { position: relative; order: 1; flex: 0 0 auto; margin-left: auto; width: min(28vw, 260px); aspect-ratio: 1038 / 1062; pointer-events: none; -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 46%, #000 58%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 46%, #000 58%, transparent 100%); }
+.human > .photo { position: relative; order: 1; flex: 0 0 auto; margin-left: auto; width: min(28vw, 260px); aspect-ratio: 1 / 1; pointer-events: none; container-type: inline-size; }
 .human > .photo img { object-fit: cover; }
-.human > .photo img, .human > .photo canvas { filter: saturate(.75) contrast(1.04); }
+/* The 2026-10-08 portrait is cut out (transparent sides) and cropped at the frame bottom, so only
+   the bottom fades; the mask sits on the image and the reveal canvas, not on the callouts. */
+.human > .photo img, .human > .photo canvas { filter: saturate(.75) contrast(1.04); -webkit-mask-image: linear-gradient(#000 70%, transparent 100%); mask-image: linear-gradient(#000 70%, transparent 100%); }
+/* HUD callouts on the photograph (Chief 2026-10-08, "motion garis futuristic"): lines in the photo's
+   own coordinates, labels in the mono face with a soft halo (no backdrop), a glint that keeps moving. */
+.lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #adc4d6; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgb(173 196 214 / 55%)); }
+.lines polyline { vector-effect: non-scaling-stroke; }
+.lines circle { fill: var(--neural-white); stroke: none; }
+.lines .glint { stroke: #fff; stroke-width: 1.6; stroke-dasharray: .08 .92; animation: glint 2.8s linear infinite; }
+@keyframes glint { to { stroke-dashoffset: -1; } }
+/* The label size follows the photo box (10 px at 440 px and up, 7 px at 200 px), so the longest
+   label stays inside the viewport beside a small figure (portrait tablets, phones). */
+.callouts { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; font-family: var(--neural-mono); font-size: clamp(7px, 2.3cqi, 10px); letter-spacing: .14em; color: var(--neural-white); }
+.callouts li { position: absolute; margin-top: -.5em; white-space: nowrap; text-shadow: 0 0 2px rgb(229 233 238 / 35%), 0 0 12px rgb(6 9 14 / 90%), 0 0 28px rgb(6 9 14 / 70%); }
+@media (prefers-reduced-motion: reduce) { .lines .glint { animation: none; opacity: 0; } }
 .human > .photo canvas { display: none; position: absolute; inset: 0; width: 100%; height: 100%; }
 .human > .photo[data-reveal="active"] img { opacity: 0; }
 .human > .photo[data-reveal="active"] canvas { display: block; }
 .journey[data-enhanced="cinematic"] .human > .photo { position: absolute; order: 0; margin: 0; opacity: 0; }
 @media (max-width: 767px) {
   .human > .photo { order: 0; margin: 0 0 24px; width: min(50vw, 200px); }
+  .callouts { letter-spacing: .1em; }
 }

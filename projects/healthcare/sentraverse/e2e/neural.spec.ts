@@ -21,7 +21,8 @@ test('portrait contours reveal features first, reverse cleanly and finish on the
   const sample = () => canvas.evaluate(element => {
     const surface = element as HTMLCanvasElement, ctx = surface.getContext('2d')!
     const alpha = (u: number, v: number) => ctx.getImageData(Math.floor(u * surface.width), Math.floor(v * surface.height), 1, 1).data[3]
-    return [alpha(.52, .475), alpha(.425, .38), alpha(.1, .9)]
+    // Nose tip, eye and a point beside the left elbow of the 2026-10-08 half-body portrait.
+    return [alpha(.486, .30), alpha(.425, .235), alpha(.1, .9)]
   })
   const first = await sample()
   expect(first[0]).toBeGreaterThan(240)
@@ -230,4 +231,39 @@ test('all five connected regions are actionable and network frame pacing is reco
   expect(timing.meanMs).toBeLessThan(100)
   await page.locator('[data-overview]').getByRole('button', { name: /Sentra Academic Solutions/ }).click()
   await expect(page.getByRole('heading', { name: 'Sentra Academic Solutions', exact: true })).toBeVisible()
+})
+
+test('the callouts draw in after the photo resolves, keep their labels inside the viewport and show complete without motion', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
+  await portraitPhase(page, 97)
+  const labels = page.locator('[data-callout]')
+  await expect(labels).toHaveText(['dr Ferdi Iskandar', 'the Gaffer', 'Sentraone'])
+  await expect(labels.first()).toHaveCSS('opacity', '0')
+  for (const viewport of [{ width: 1280, height: 800 }, { width: 1024, height: 768 }, { width: 768, height: 1024 }, { width: 375, height: 812 }]) {
+    await page.setViewportSize(viewport)
+    // gsap.matchMedia rebuilds the pin on a breakpoint change; wait for the new spacer and the resize refresh.
+    await page.waitForFunction(() => document.querySelector('.pin-spacer') !== null && document.querySelector('main')?.dataset.enhanced === 'cinematic')
+    await page.waitForTimeout(400)
+    await portraitPhase(page, 99.6)
+    // data-phase lands before the .8 s scrub finishes catching up, so the drawn-in lines are read by polling.
+    await expect.poll(() => page.locator('[data-callout-line]').evaluateAll(lines => Math.max(...lines.map(line => Number(line.getAttribute('stroke-dashoffset')))))).toBeLessThan(.01)
+    const title = (await page.locator('#human h2').boundingBox())!
+    for (const label of await labels.all()) {
+      await expect(label).toBeVisible()
+      const box = (await label.boundingBox())!
+      expect(box.x, `${viewport.width}: left edge`).toBeGreaterThanOrEqual(0)
+      expect(box.x + box.width, `${viewport.width}: right edge`).toBeLessThanOrEqual(viewport.width)
+      expect(box.y, `${viewport.width}: top edge`).toBeGreaterThanOrEqual(0)
+      expect(box.y + box.height, `${viewport.width}: bottom edge`).toBeLessThanOrEqual(viewport.height)
+      const apart = box.x >= title.x + title.width || box.x + box.width <= title.x || box.y >= title.y + title.height || box.y + box.height <= title.y
+      expect(apart, `${viewport.width}: ${await label.textContent()} overlaps the title`).toBe(true)
+    }
+  }
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.reload()
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
+  await page.locator('#human').scrollIntoViewIfNeeded()
+  for (const label of await labels.all()) await expect(label).toBeVisible()
+  await expect(page.locator('[data-callout-glint]').first()).toHaveCSS('animation-name', 'none')
 })

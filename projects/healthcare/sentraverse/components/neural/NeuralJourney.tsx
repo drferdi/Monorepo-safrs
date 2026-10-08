@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { calloutPoints, callouts, labelStyle } from './callouts'
 import { loadPixels } from './face'
 import type { Look } from './renderer'
 import { faceBox, faceLook, portraitState } from './tactile'
@@ -144,7 +145,13 @@ export default function NeuralJourney() {
           // under it (Chief 2026-10-08) and lifts again as the face returns at the end.
           master.fromTo('[data-scrim]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 3 }, 58)
           master.to('[data-scrim]', { autoAlpha: 0, duration: 3 }, 94)
-          if (photo) { placePhoto(); master.fromTo(photo, { autoAlpha: 0 }, { autoAlpha: 1, duration: portrait ? .5 : 3 }, 95.5) }
+          if (photo) {
+            placePhoto(); master.fromTo(photo, { autoAlpha: 0 }, { autoAlpha: 1, duration: portrait ? .5 : 3 }, 95.5)
+            // The HUD callouts start hidden and draw in from the final chapter's scene below.
+            gsap.set(photo.querySelectorAll('[data-callout-line]'), { attr: { 'stroke-dashoffset': 1 } })
+            gsap.set(photo.querySelectorAll('[data-callout-dot]'), { attr: { r: 0 } })
+            gsap.set(photo.querySelectorAll('[data-callout], [data-callout-glint]'), { autoAlpha: 0 })
+          }
           chapters.forEach((chapter, index) => {
             const panel = panels[index]
             // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
@@ -157,6 +164,20 @@ export default function NeuralJourney() {
               scene.fromTo(marker, { scaleX: 0 }, { scaleX: 1, duration: .8, ease: 'power2.out', immediateRender: false }, 0)
               scene.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
               scene.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)
+            }
+            // HUD callouts on the photograph (Chief 2026-10-08, "motion garis futuristic"): once the
+            // photo has resolved (phase 98.2 on) each line draws in along its own length (pathLength
+            // 1, so a resize never desyncs the scrubbed tween), its label follows, then its glint
+            // keeps moving on its own through CSS.
+            if (chapter.id === 'human' && photo) {
+              const dots = panel.querySelectorAll('[data-callout-dot]'), labels = panel.querySelectorAll('[data-callout]'), glints = panel.querySelectorAll('[data-callout-glint]')
+              panel.querySelectorAll('[data-callout-line]').forEach((line, k) => {
+                const at = 2.2 + k * .45
+                scene.fromTo(dots[k], { attr: { r: 0 } }, { attr: { r: .55 }, duration: .3, ease: 'back.out(2)', immediateRender: false }, at)
+                scene.fromTo(line, { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .6, ease: 'power2.out', immediateRender: false }, at)
+                scene.fromTo(labels[k], { autoAlpha: 0, x: 8 }, { autoAlpha: 1, x: 0, duration: .5, immediateRender: false }, at + .35)
+                scene.fromTo(glints[k], { autoAlpha: 0 }, { autoAlpha: 1, duration: .3, immediateRender: false }, at + .6)
+              })
             }
             if (index < chapters.length - 1) scene.to(panel, { autoAlpha: 0, y: -10, duration: .8, ease: 'power2.in' }, duration - .8)
             master!.addLabel(chapter.id, chapter.phase).add(scene, chapter.phase)
@@ -217,7 +238,13 @@ export default function NeuralJourney() {
           engine.dispose()
           portrait?.dispose()
           activity.dispose()
-          if (photo) gsap.set(photo, { clearProps: 'all' })
+          if (photo) {
+            gsap.set(photo, { clearProps: 'all' })
+            // Reading mode shows the callouts complete, whatever the cinematic scene left behind.
+            gsap.set(photo.querySelectorAll('[data-callout], [data-callout-glint]'), { clearProps: 'all' })
+            gsap.set(photo.querySelectorAll('[data-callout-line]'), { attr: { 'stroke-dashoffset': 0 } })
+            gsap.set(photo.querySelectorAll('[data-callout-dot]'), { attr: { r: .55 } })
+          }
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
           delete root.dataset.enhanced
           delete root.dataset.face
@@ -296,7 +323,24 @@ export default function NeuralJourney() {
             return (
               <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${final ? styles.human : ''} ${chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''}`} tabIndex={-1} aria-label={chapter.label}>
                 {division && <div className={styles.marker} aria-hidden="true"><span data-marker-dot /><i data-marker-line /></div>}
-                {final && <div data-photo className={styles.photo}><Image src="/portrait-ferdi.webp" alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 60vw, 420px" /><canvas data-photo-reveal aria-hidden="true" /></div>}
+                {final && (
+                  <div data-photo className={styles.photo}>
+                    <Image src="/portrait-ferdi.webp" alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 60vw, 480px" />
+                    <canvas data-photo-reveal aria-hidden="true" />
+                    <svg data-callout-lines className={styles.lines} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                      {callouts.map(callout => (
+                        <g key={callout.label}>
+                          <polyline data-callout-line points={calloutPoints(callout)} pathLength={1} strokeDasharray="1" />
+                          <polyline data-callout-glint className={styles.glint} points={calloutPoints(callout)} pathLength={1} />
+                          <circle data-callout-dot cx={callout.anchor[0]} cy={callout.anchor[1]} r=".55" />
+                        </g>
+                      ))}
+                    </svg>
+                    <ul data-callouts className={styles.callouts} aria-label="Profile">
+                      {callouts.map(callout => <li key={callout.label} data-callout style={labelStyle(callout)}>{callout.label}</li>)}
+                    </ul>
+                  </div>
+                )}
                 <div data-marker-copy data-division={division ? index - 8 : undefined}>
                   <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
                   {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map(line => <span key={line}>{line}</span>)}</h2>}
