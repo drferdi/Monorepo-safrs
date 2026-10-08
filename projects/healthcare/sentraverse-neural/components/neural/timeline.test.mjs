@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import * as gsapModule from 'gsap'
 import { chapters } from './story.ts'
-import { MASTER_DURATION, buildMaster, jumpLabel, legacy, legacyParts, phaseToTime, settleLegacy } from './timeline.ts'
+import { MASTER_DURATION, buildMaster, ease, jumpLabel, legacy, legacyParts, motionOf, phaseToTime, settleLegacy } from './timeline.ts'
 
 const gsap = gsapModule.gsap ?? gsapModule.default
 // `clearProps` is a CSS-plugin feature with no meaning on the stand-ins below; a headless no-op
@@ -210,5 +210,29 @@ test('settling the legacy restores the still state whatever the scene left behin
   for (const part of ['[data-legacy-void]', '[data-legacy-vignette]']) assert.ok(legacyParts.scene.includes(part), part)
   assert.equal(legacyParts.film, '[data-film]')
   for (const part of ['[data-legacy-presence]', '[data-legacy-tagline]', '[data-legacy-signature]', '[data-legacy-brand]', '[data-magnetic]']) assert.ok(legacyParts.text.includes(part), part)
+  master.kill()
+})
+
+test('each chapter enters with its narrative signature and every title reveals on the text curve', () => {
+  const lines = many(2), chars = many(3)
+  const titles = chapters.map(chapter => chapter.id === 'neuron' ? { lines, chars: [], centered: false } : chapter.id === 'connected' ? { lines: many(1), chars, centered: true } : null)
+  const { master, panels } = stage(titles)
+  for (const [index, chapter] of chapters.entries()) {
+    const motion = motionOf(chapter.id)
+    if (index === 0 || chapter.id === 'human') continue
+    const scene = master.getById(`scene-${chapter.id}`)
+    const entrance = scene.getChildren(false, true, false).find(tween => tween.targets()[0] === panels[index])
+    assert.equal(entrance.vars.ease, motion.enter, `${chapter.id} entrance curve`)
+    close(entrance.duration(), motion.duration, 1e-9, `${chapter.id} entrance duration`)
+  }
+  assert.equal(motionOf('origin').enter, ease.growth, 'cell growth')
+  assert.equal(motionOf('axon').enter, ease.signal, 'neural signal')
+  assert.equal(motionOf('synapse').enter, ease.pulse, 'synaptic pulse')
+  assert.ok(motionOf('origin').duration > motionOf('axon').duration, 'the origin is slow, the signal short')
+  for (const [id, target] of [['neuron', lines[0]], ['connected', chars[0]]]) {
+    const reveal = master.getById(`scene-${id}`).getChildren(false, true, false).find(tween => tween.targets().includes(target))
+    assert.equal(reveal.vars.ease, ease.text, `${id} title curve`)
+  }
+  assert.throws(() => motionOf('nowhere'), /No motion signature for chapter: nowhere/)
   master.kill()
 })

@@ -15,6 +15,33 @@ export const MASTER_DURATION = 131.5
 // A jump lands this far into a chapter, so the chapter is the active one and its entrance has run.
 export const JUMP_OFFSET = 1.5
 
+// The motion signature of each narrative phase (brief 2026-10-09 §3): one curve per meaning, never
+// one curve for everything. A chapter's panel enters on its signature's curve over its duration
+// (master units); every exit stays an accelerating .8.
+export const ease = { signal: 'power2.out', growth: 'expo.out', pulse: 'sine.inOut', camera: 'power3.inOut', text: 'expo.out', converge: 'power4.in' } as const
+export type Signature = 'origin' | 'growth' | 'signal' | 'synapse' | 'network' | 'division' | 'unified' | 'human'
+export const signatures: Record<Signature, { enter: string; duration: number }> = {
+  origin: { enter: ease.growth, duration: 1.8 },
+  growth: { enter: ease.growth, duration: 1.3 },
+  signal: { enter: ease.signal, duration: .8 },
+  synapse: { enter: ease.pulse, duration: .9 },
+  network: { enter: ease.camera, duration: 1.4 },
+  division: { enter: ease.signal, duration: 1 },
+  unified: { enter: ease.pulse, duration: 1.4 },
+  human: { enter: ease.pulse, duration: 1.2 },
+}
+export const chapterSignature: Record<string, Signature> = {
+  origin: 'origin', 'embryonic-origin': 'origin', neuron: 'growth', 'nervous-system': 'growth',
+  'enter-signal': 'signal', axon: 'signal', synapse: 'synapse', network: 'network',
+  'division-1': 'division', 'division-2': 'division', 'division-3': 'division', 'division-4': 'division', 'division-5': 'division',
+  connected: 'unified', human: 'human',
+}
+export function motionOf(id: string): { enter: string; duration: number } {
+  const signature = chapterSignature[id]
+  if (!signature) throw new Error(`No motion signature for chapter: ${id}`)
+  return signatures[signature]
+}
+
 // Tempo: [phase, time] breakpoints, piecewise linear between them. The key moments take more of
 // the travel for the same phases (the chapter 03 face 25–40 at 1.23×, the network 58–66 at 1.25×,
 // the legacy 94–100 at 6.67×) and the stretches between give it back. The final chapter is one
@@ -100,8 +127,8 @@ function prepareTitle(gsap: Gsap, title: Title) {
   else gsap.set(title.lines, { yPercent: 110 })
 }
 function revealTitle(scene: gsap.core.Timeline, title: Title, position: number | string) {
-  if (title.centered) scene.fromTo(title.chars, { autoAlpha: 0, yPercent: 40 }, { autoAlpha: 1, yPercent: 0, duration: .9, stagger: { amount: .6, from: 'center' }, immediateRender: false }, position)
-  else scene.fromTo(title.lines, { yPercent: 110 }, { yPercent: 0, duration: 1, stagger: .12, immediateRender: false }, position)
+  if (title.centered) scene.fromTo(title.chars, { autoAlpha: 0, yPercent: 40 }, { autoAlpha: 1, yPercent: 0, duration: .9, ease: ease.text, stagger: { amount: .6, from: 'center' }, immediateRender: false }, position)
+  else scene.fromTo(title.lines, { yPercent: 110 }, { yPercent: 0, duration: 1, ease: ease.text, stagger: .12, immediateRender: false }, position)
 }
 
 export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, options: MasterOptions): gsap.core.Timeline {
@@ -139,11 +166,13 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
       master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(legacyScene(gsap, panel, scene, title, at, options.film, options.morph), at(chapter.phase))
       return
     }
-    // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
-    // exits accelerate; the master stays linear because the scroll position drives it.
-    const entry = gsap.timeline({ id: `scene-${chapter.id}`, defaults: { ease: 'power3.out' } })
+    // Physical easing (Chief 2026-10-07): entrances follow their chapter's motion signature, the
+    // marker dot overshoots, exits accelerate; the master stays linear because the scroll position
+    // drives it.
+    const motion = motionOf(chapter.id)
+    const entry = gsap.timeline({ id: `scene-${chapter.id}`, defaults: { ease: motion.enter } })
     const duration = at(chapters[index + 1]?.phase ?? 102) - at(chapter.phase)
-    if (index > 0) entry.fromTo(panel, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
+    if (index > 0) entry.fromTo(panel, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: motion.duration, ease: motion.enter, immediateRender: false }, 0)
     if (title) revealTitle(entry, title, 0)
     const marker = panel.querySelector('[data-marker-line]')
     if (marker) {
