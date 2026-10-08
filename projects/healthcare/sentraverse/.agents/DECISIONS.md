@@ -3,6 +3,44 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-08 (portrait) — The half-body portrait, the registered drawn figure and the HUD callouts
+
+- Decision (Chief, 2026-10-08: "Foto saya di bagian akhir, ganti menjadi di lampiran. Lalu beri
+  motion garis futuristic: 1. dr Ferdi Iskandar 2. the Gaffer 3. Sentraone", with a 500×500 PNG
+  attached): the attachment is the end photograph, and three animated futuristic callout lines
+  with exactly those labels sit over it.
+- How (commits `93883c91`, `b99ca859`): `public/portrait-ferdi.webp` is the attachment (500×500,
+  alpha kept, q92); `public/neural-face.webp` is regenerated from the same source (480×480
+  grayscale, alpha composited on black with a luminance floor of 56) so the drawn figure and the
+  photograph share one registration; `faceDepth`/`faceContour` are recalibrated to the new
+  landmarks (nose .486/.30, eyes .425 and .545 at .235, lips .35, chin, shoulder bulges); the
+  face is square (`FACE_HALF_HEIGHT` 1.5, `FACE_ASPECT` 1), the reveal mask 192×192, the CSS
+  fade a vertical gradient from 70 %. `callouts.ts` holds the three callouts in photo percent
+  (anchor → elbow → horizontal end, label right of the end); the SVG polylines use `pathLength`
+  1 and draw in through a `stroke-dashoffset` attr tween (a CSS tween would append px), anchor
+  dots pop with `back.out`, labels slide in, a CSS glint runs along each line (off under reduced
+  motion), all from scene time 2.2 in .45 steps after the photo has resolved; the label font
+  follows the photo width (`clamp(7px, 2.3cqi, 10px)`, `container-type: inline-size`) so the
+  labels fit at 768×1024.
+- Rulings on the way (Claude Fable 5.1): overwriting the two existing `public/` assets is the
+  one exception to the rule that only files this session adds may be touched there, taken
+  because Chief asked for exactly this replacement; the chapter 03 drawn figure is now a
+  half-body bust (head, shoulders, folded arms) instead of a head, because one source drives
+  both the drawing and the photograph (a head-only crop for chapter 03 would need a second asset
+  and a second registration; not done); the desktop scale is 1.2 above aspect 1.45 (1 before) so
+  the smaller head reads at the same size; the label fit on the portrait tablet went through a
+  container-query font instead of moving the callouts; the `next/image` cache
+  (`.next/cache/images`) served the old photograph after the file changed and was deleted; the
+  callouts e2e failed twice in a row for two different reasons (a race before the first phase
+  jump, then the .8 s scrub leaving `stroke-dashoffset` at .005 under an exact-string assertion)
+  and was fixed a second time instead of stopping, because the second cause was a test tolerance
+  and not a product fault; a third failure would have stopped the work.
+- Evidence: `typecheck` 0, `lint` 0 (two pre-existing `img` warnings), node:test 28/28, `build`
+  0, `deploy:dry-run` 0, Playwright 16/16 through the installed Chrome against the production
+  preview (frame pacing mean 6.07 ms); Chrome frames at phase 30, 96.5, 98.7 and 99.6 (1280×800),
+  30 and 99.6 (375×812), 99.6 (1024×768 and 768×1024), all `data-renderer` webgl and the reveal
+  `complete` from 98.7; the Browser pane shows the final chapter mid-reveal.
+
 ## 2026-10-08 (redraw) — Neurons as glowing sheathed shafts on a bushy, tortuous SWC tree
 
 - Decision (Chief, 2026-10-08, on seeing chapter 02 after the spec build: "visual neuron nya kok

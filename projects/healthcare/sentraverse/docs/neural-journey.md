@@ -48,37 +48,54 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
 ## Tactile depth and the neural face
 
 - The journey ends on one human face, the founder's, drawn by the same renderer as every other
-  scene: `public/neural-face.webp` (a 240 px grayscale copy of the portrait, never displayed)
+  scene: `public/neural-face.webp` (a 480×480 grayscale copy of the 2026-10-08 half-body portrait,
+  alpha composited on black with a luminance floor, never displayed)
   is read once through a 2D canvas (`face.ts` `loadPixels`), `analyseFace` turns its pixels
   into Sobel contour segments and brightness-weighted dots, `geometry.ts` `makeFace` builds
-  them in the renderer's vertex format (three units wide; depth from `faceDepth`, a smooth
-  portrait-calibrated relief in source-image coordinates, so lighting, beard and clothing never
-  become bumps; grown from the facial features outward along `faceContour`), and `renderer.ts`
-  draws the `face` layer twice: in chapter 03
+  them in the renderer's vertex format (three units square; depth from `faceDepth`, a smooth
+  relief calibrated to the portrait landmarks (nose .486/.30, eyes .425 and .545 at .235, lips,
+  chin, shoulders) in source-image coordinates, so lighting, beard and clothing never become
+  bumps; grown from the facial features outward along `faceContour`), and `renderer.ts`
+  draws the `face` layer twice (since 2026-10-08 as a half-body bust: head, shoulders and
+  folded arms, because one source drives both the drawing and the photograph): in chapter 03
   "A human architecture" (phase 25–40, growing in, swaying, the camera closing in as the signal
   chapter starts) and from phase 93 at the end, each time to the right of the chapter text
   (above it on phones). `tactile.ts` `facePlacement` bends the position and size with the
-  viewport so the head stays on screen on portrait tablets and clear of the text on short
-  phones. `main[data-face]` reads `ready` or `unavailable`; the chapter text never depends on
+  viewport (scale .55 below aspect 1.2, 1 up to 1.45, 1.2 on wide desktops) so the head stays
+  on screen on portrait tablets and clear of the text on short phones. `main[data-face]` reads `ready` or `unavailable`; the chapter text never depends on
   it. The body silhouette, the generic body drawing of chapter 03 and the final-scene
   nervous-system draw are gone.
 - At the very end the founder's photograph itself resolves over the drawn face (Chief
-  2026-10-08): `public/portrait-ferdi.webp` (1038×1062, not LFS) is rendered by `next/image`
+  2026-10-08): `public/portrait-ferdi.webp` (500×500 with a transparent background, the
+  2026-10-08 half-body attachment from Chief, not LFS) is rendered by `next/image`
   inside the final chapter (`[data-photo]`), placed by `tactile.ts` `faceBox` in the same box
   the renderer draws the face in (desktop, tablets and phones alike, re-placed on resize), and
   resolves from phase 95.5 to 98.5 feature first (2026-10-08, "portrait realism"): `tactile.ts`
   `portraitState(phase)` gives `relief` (the drawn face settles flat onto the photo plane from
   phase 94.25 to 95.5, and its turn fades with it) and `reveal` (0 → 1 over 95.5 → 98.5);
   `portrait-reveal.ts` `createPortraitReveal` paints the unchanged `next/image` through a
-  192 px alpha mask computed from the same `faceContour`/`faceDissolve` field the geometry
+  192×192 alpha mask computed from the same `faceContour`/`faceDissolve` field the geometry
   grows along, onto a `<canvas data-photo-reveal>` inside `[data-photo]`, so nose, eyes and
   lips appear before cheeks, hair, jaw and shoulders, and the drawn vertices fade (94 %) where
   the skin has resolved. `[data-photo][data-reveal]` reads `active` (canvas shown, image
   hidden) or `complete` (the image itself, full resolution); the attribute is removed when the
   cinematic build is torn down. The final chapter enters without its 24 px slide so the photo
-  stays registered on the drawn face. A radial mask and a slight desaturation blend it with the
-  field. In reading mode and without JavaScript the photo sits in the flow beside the text
+  stays registered on the drawn face. A vertical fade from 70 % down and a slight desaturation
+  blend the figure with the field (the source itself is cut out). In reading mode and without JavaScript the photo sits in the flow beside the text
   (above it on phones); the cinematic placement and the reveal are cleared when the mode changes.
+- Over the resolved photograph three futuristic callouts draw in (Chief 2026-10-08: "beri motion
+  garis futuristic"): `callouts.ts` holds `dr Ferdi Iskandar` (head), `the Gaffer` (shoulder) and
+  `Sentraone` (folded arms) as anchor → elbow → horizontal end in photo percent, with the label
+  right of the end; `NeuralJourney.tsx` renders them as an SVG (`viewBox` 0 0 100 100,
+  non-scaling 1 px strokes) plus a `<ul data-callouts>` inside `[data-photo]` and, from scene
+  time 2.2 of the final chapter in .45 steps, pops the anchor dot (`back.out`), draws the
+  polyline through a `stroke-dashoffset` attr tween on `pathLength` 1 (a CSS tween would
+  append px), slides the label in and fades in a CSS glint that runs along the line every
+  2.8 s (off under reduced motion). The label font follows the photo width
+  (`clamp(7px, 2.3cqi, 10px)`, the photo is an inline-size container) so the labels fit at
+  768×1024. `callouts.test.mjs` pins the labels, their anchors inside the head, shoulder and
+  torso ellipses and the rightward layout; the e2e checks the draw-in, the fit at four
+  viewports and the still reading mode.
 - On desktop without reduced motion the face turns up to ±0.085 rad toward the pointer (chapter
   03 also sways ±0.045 rad; both were ±0.22 and ±0.23 before 2026-10-08) and the
   points near it brighten: `tactile.ts` `faceLook` maps the pointer onto the face plane, and
@@ -176,13 +193,15 @@ node scripts/pnpm.mjs run deploy:dry-run
 ```
 
 `node scripts/pnpm.mjs run test` runs the node:test files, including `components/neural/tactile.test.mjs`,
-`face.test.mjs`, `morphology.test.mjs` and `signal.test.mjs`. The Playwright suite in
+`face.test.mjs`, `morphology.test.mjs`, `signal.test.mjs` and `callouts.test.mjs`. The Playwright suite in
 `e2e/neural.spec.ts` covers the WebGL renderer staying active (a shader that fails to link
 would fall back to Canvas 2D silently), the activity cycle playing only in the network window
 and parking under reduced motion,
 reverse navigation, all five divisions, the drawn face and the photograph at the final chapter
 (feature-first alpha of the reveal canvas, exact reversal, the full image at the end, a late
-image load, a phone resize, and reading mode and no canvas context), mobile overflow and the
+image load, a phone resize, and reading mode and no canvas context), the callouts (draw-in
+after the reveal, labels inside the viewport and clear of the title at four viewports, still
+under reduced motion), mobile overflow and the
 CTA in view, OS reduced-motion changes, context loss, clean reading-mode transforms, missing
 WebGL, no canvas context at all, JavaScript-disabled reading, pin cleanup, connected-region
 navigation, and frame timing. `e2e/smoke.spec.ts` keeps
