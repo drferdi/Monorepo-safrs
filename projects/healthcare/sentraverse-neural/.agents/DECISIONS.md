@@ -3,6 +3,18 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (repository) — The capsule's own repository is drferdi/Sentraverse-N
+
+Decision: this capsule's own repository is https://github.com/drferdi/Sentraverse-N (private),
+branch `main`, starting from one snapshot commit of this folder. PNG files are stored in Git LFS
+(`.gitattributes`), as in the monorepo, so `app/icon.png` publishes as an image, not a pointer.
+
+Rationale: Chief named the repository on 2026-10-09; every capsule publishes to its own
+repository under `drferdi`.
+
+Evidence: the repository was empty and private before the first push; the published tree is the
+monorepo's `projects/healthcare/sentraverse-neural` at the snapshot commit.
+
 ## 2026-10-09 — Split out of `sentraverse` as its own site
 
 Decision: the neural journey leaves `projects/healthcare/sentraverse` and becomes this capsule,

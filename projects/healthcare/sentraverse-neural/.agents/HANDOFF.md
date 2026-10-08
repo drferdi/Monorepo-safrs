@@ -7,8 +7,9 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 
 ## Current state
 
-New capsule on branch `feat/sidepanel-ui-batch` of the monorepo, committed locally, not pushed,
-no repository of its own yet. The journey, the film (`public/legacy-film/v1/`, 120 frames) and
+Developed on branch `feat/sidepanel-ui-batch` of the monorepo. Its own repository is
+https://github.com/drferdi/Sentraverse-N (private; Chief named it on 2026-10-09), branch `main`.
+PNG files are in Git LFS, as in the monorepo. The journey, the film (`public/legacy-film/v1/`, 120 frames) and
 the morph came over unchanged; links to the rest of Sentra point at sentrahai.com. Registered
 in `projects/healthcare/AGENTS.md` and `README.md`.
 
@@ -23,8 +24,7 @@ frames, mean difference <= 0.14, <= 0.15% changed pixels (only the living animat
 
 ## Blockers
 
-Publishing waits for Chief: the GitHub repository name and the deploy target (Vercel project,
-domain).
+The deploy target (Vercel project, domain) waits for Chief.
 
 ## Known quirks
 
@@ -42,4 +42,5 @@ domain).
 
 ## Next action
 
-1. Chief: the repository name and deploy target, then push and publish on Chief's word.
+1. Chief: the deploy target (Vercel project, domain).
+2. After the first deploy, read the field Core Web Vitals (INP above all).
