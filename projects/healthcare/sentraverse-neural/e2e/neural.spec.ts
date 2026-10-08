@@ -443,6 +443,7 @@ test('progress is a neural trace: a signal head rides the line at the scroll pro
   await page.keyboard.press('Enter')
   await expect(page.locator('[data-phase-label]')).toHaveText('Signal propagation')
 })
+
 test('pointing at a division lights its nodes and names it in a micro-label; touch and phones get none', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/')
@@ -459,4 +460,20 @@ test('pointing at a division lights its nodes and names it in a micro-label; tou
   await expect(page.locator('[data-cursor]')).toHaveAttribute('data-active', 'false')
   await page.setViewportSize({ width: 390, height: 844 })
   await expect(page.locator('[data-cursor]')).toBeHidden()
+})
+
+test('controls inside a chapter that is not on screen cannot take focus, and the page hydrates without a mismatch', async ({ page }) => {
+  const errors: string[] = []
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()) })
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await page.getByRole('button', { name: 'Go to Intelligence orchestration', exact: true }).click()
+  await expect(page.locator('#division-1')).not.toHaveAttribute('inert', '')
+  await expect(page.locator('#human')).toHaveAttribute('inert', '')
+  await page.locator('#human [data-magnetic]').focus()
+  expect(await page.evaluate(() => !!document.activeElement?.closest('#human'))).toBe(false)
+  await expect(page.locator('main')).toContainText(`SENTRAVERSE © ${new Date().getFullYear()}`)
+  expect(errors.filter(text => /hydrat/i.test(text))).toEqual([])
+  await page.getByRole('button', { name: 'READ THE STORY', exact: true }).click()
+  await expect(page.locator('[data-chapter][inert]')).toHaveCount(0)
 })

@@ -13,7 +13,7 @@ import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra } from './story'
 import styles from './journey.module.css'
 
-export default function NeuralJourney() {
+export default function NeuralJourney({ year }: { year: number }) {
   const rootRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fallbackRef = useRef<HTMLCanvasElement>(null)
@@ -124,7 +124,8 @@ export default function NeuralJourney() {
           lastChapter = index
           phaseLabel.textContent = chapters[index].label
           phaseNumber.textContent = `${String(index + 1).padStart(2, '0')} / ${chapters.length}`
-          panels.forEach((panel, i) => { if (!reduced) panel.setAttribute('aria-hidden', String(i !== index)) })
+          // A chapter off screen is out of reach too (inert), not only out of the accessibility tree.
+          panels.forEach((panel, i) => { if (!reduced) { panel.setAttribute('aria-hidden', String(i !== index)); panel.toggleAttribute('inert', i !== index) } })
           root.querySelectorAll<HTMLButtonElement>('[data-jump]').forEach(button => {
             button.setAttribute('aria-current', Number(button.dataset.jump) === chapters[index].phase ? 'step' : 'false')
           })
@@ -151,7 +152,7 @@ export default function NeuralJourney() {
         let splits: Array<InstanceType<typeof SplitText> | null> = []
 
         if (reduced) {
-          panels.forEach(panel => panel.removeAttribute('aria-hidden'))
+          panels.forEach(panel => { panel.removeAttribute('aria-hidden'); panel.removeAttribute('inert') })
           gsap.set(nav, { autoAlpha: 1 })
           narrativeObserver = new IntersectionObserver(entries => {
             const entry = entries.find(item => item.isIntersecting)
@@ -265,7 +266,7 @@ export default function NeuralJourney() {
           if (scene) settleLegacy(gsap, scene, panels[chapters.findIndex(chapter => chapter.id === 'human')])
           // The titles return to their plain markup (the context reverts them too; this is explicit).
           splits.forEach(split => split?.revert())
-          panels.forEach(panel => panel.removeAttribute('aria-hidden'))
+          panels.forEach(panel => { panel.removeAttribute('aria-hidden'); panel.removeAttribute('inert') })
           delete root.dataset.enhanced
           delete root.dataset.face
           delete root.dataset.signal
@@ -396,7 +397,7 @@ export default function NeuralJourney() {
         <div className={styles.cursor} data-cursor aria-hidden="true"><span data-cursor-label /></div>
       </div>
       <div className={styles.colophon}>
-        <span>SENTRAVERSE © {new Date().getFullYear()}</span><span>INTELLIGENCE BEGINS AS CONNECTION.</span>
+        <span>SENTRAVERSE © {year}</span><span>INTELLIGENCE BEGINS AS CONNECTION.</span>
         <div><a href={sentra('/privacy')}>Privacy</a><a href={sentra('/terms')}>Terms</a></div>
       </div>
       <noscript><p className={styles.noScript}>The complete story is available below each illustration. Enable JavaScript for the cinematic journey.</p></noscript>
