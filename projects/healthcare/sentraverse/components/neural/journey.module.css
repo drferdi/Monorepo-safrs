@@ -179,9 +179,12 @@
 .human { flex-wrap: wrap; column-gap: 24px; }
 .human > .photo { position: relative; order: 1; flex: 0 0 auto; margin-left: auto; width: min(28vw, 260px); aspect-ratio: 1 / 1; pointer-events: none; container-type: inline-size; }
 .human > .photo img { object-fit: cover; }
-/* The 2026-10-08 portrait is cut out (transparent sides) and cropped at the frame bottom, so only
-   the bottom fades; the mask sits on the image and the reveal canvas, not on the callouts. */
-.human > .photo img, .human > .photo canvas { filter: saturate(.75) contrast(1.04); -webkit-mask-image: linear-gradient(#000 70%, transparent 100%); mask-image: linear-gradient(#000 70%, transparent 100%); }
+/* The 2026-10-08 portrait is cut out (transparent sides) and cropped at the frame bottom. Chief
+   (2026-10-08, "lebih dramatis, tidak terlalu terang"): a low-key grade, darker and harder with the
+   colour pulled back, under a vignette centred on the face and a key-light falloff toward the
+   left, so the suit and the far shoulder sink into the field. The masks sit on the image and the
+   reveal canvas, not on the callouts. */
+.human > .photo img, .human > .photo canvas { --photo-mask: linear-gradient(#000 70%, transparent 100%), radial-gradient(ellipse 64% 74% at 50% 33%, #000 40%, rgb(0 0 0 / .55) 70%, rgb(0 0 0 / .12) 100%), linear-gradient(95deg, rgb(0 0 0 / .4) 8%, #000 50%); filter: brightness(.74) contrast(1.26) saturate(.55); -webkit-mask-image: var(--photo-mask); mask-image: var(--photo-mask); -webkit-mask-composite: source-in; mask-composite: intersect; }
 /* HUD callouts on the photograph (Chief 2026-10-08, "motion garis futuristic"): lines in the photo's
    own coordinates, labels in the mono face with a soft halo (no backdrop), a glint that keeps moving. */
 .lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; stroke: #adc4d6; stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgb(173 196 214 / 55%)); }
