@@ -61,6 +61,21 @@ test('a late portrait load resolves the current phase and survives a mobile resi
   expect(face!.x + face!.width).toBeLessThanOrEqual(390)
 })
 
+test('the activity cycle runs through the network on WebGL and parks elsewhere and under reduced motion', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  // A shader that fails to compile falls back to Canvas 2D silently; the attribute makes it visible.
+  await expect(page.locator('main')).toHaveAttribute('data-renderer', 'webgl')
+  await expect(page.locator('main')).toHaveAttribute('data-signal', 'paused')
+  await page.getByRole('button', { name: 'Go to Intelligence orchestration', exact: true }).click()
+  await expect(page.locator('main')).toHaveAttribute('data-signal', 'active')
+  await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+  await expect(page.locator('main')).toHaveAttribute('data-signal', 'paused')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
+  await expect(page.locator('main')).toHaveAttribute('data-signal', 'paused')
+})
+
 test('scroll narrative reverses, discovers every division, and keeps sound opt-in', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))

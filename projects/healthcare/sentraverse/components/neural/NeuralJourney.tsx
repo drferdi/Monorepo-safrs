@@ -28,8 +28,8 @@ export default function NeuralJourney() {
     root.dataset.loading = 'true'
 
     async function initialize() {
-      const [{ gsap }, { ScrollTrigger }, { NeuralRenderer }, { createPortraitReveal }] = await Promise.all([
-        import('gsap'), import('gsap/ScrollTrigger'), import('./renderer'), import('./portrait-reveal'),
+      const [{ gsap }, { ScrollTrigger }, { NeuralRenderer }, { createPortraitReveal }, { LANES, createSignalCycle }] = await Promise.all([
+        import('gsap'), import('gsap/ScrollTrigger'), import('./renderer'), import('./portrait-reveal'), import('./signal'),
       ])
       if (cancelled || !root || !canvas || !fallback) return
       gsap.registerPlugin(ScrollTrigger)
@@ -51,13 +51,18 @@ export default function NeuralJourney() {
         // The founder's face (Chief 2026-10-08) is drawn by the renderer from the portrait's
         // pixels; `look` is what the pointer does to it. Without pixels the text ends the story.
         const look: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
+        // The network activity cycle (spec 2026-10-08): one GSAP timeline writes six lanes of
+        // (impulse, terminal, release, response) that the renderer uploads every frame; it plays
+        // only through the synapse and network chapters and stays parked under reduced motion.
+        const signal = new Float32Array(LANES * 4)
+        const activity = createSignalCycle(gsap, signal, { reduced })
         let live = true
         loadPixels('/neural-face.webp').then(pixels => {
           if (!live) return
           if (!pixels) { root.dataset.face = 'unavailable'; return }
           engine.setFace(pixels)
           root.dataset.face = 'ready'
-          if (reduced) engine.render(state.phase, 0, true)
+          if (reduced) engine.render(state.phase, 0, true, -1, undefined, signal)
         })
         let hover = -1, lastChapter = -1, lastFrame = 0, visible = true
         const progressSetter = gsap.quickSetter(progressLine, 'scaleX')
@@ -65,6 +70,8 @@ export default function NeuralJourney() {
           const index = activeChapter(state.phase)
           root.dataset.phase = state.phase.toFixed(2)
           progressSetter(state.phase / 100)
+          activity.setPhase(state.phase)
+          root.dataset.signal = activity.cycle.paused() ? 'paused' : 'active'
           if (lastChapter === index) return
           lastChapter = index
           phaseLabel.textContent = chapters[index].label
@@ -78,7 +85,7 @@ export default function NeuralJourney() {
           if (!visible || document.hidden) return
           if (mobile && time - lastFrame < 1 / 30) return
           lastFrame = time
-          engine.render(state.phase, reduced ? 0 : time, reduced, hover, look)
+          engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal)
           portrait?.render(portraitState(state.phase).reveal)
         }
         // The real portrait resolves over the neural face at the very end (Chief 2026-10-08):
@@ -112,7 +119,7 @@ export default function NeuralJourney() {
             const index = panels.indexOf(entry.target as HTMLElement)
             state.phase = chapters[index].phase + 2
             update()
-            engine.render(state.phase, 0, true)
+            engine.render(state.phase, 0, true, -1, undefined, signal)
           }, { rootMargin: '-35% 0px -35% 0px', threshold: 0 })
           panels.forEach(panel => narrativeObserver!.observe(panel))
           navigateRef.current = phase => {
@@ -191,7 +198,7 @@ export default function NeuralJourney() {
           magnetic: root.querySelector<HTMLElement>('[data-magnetic]'),
           buttons: Array.from(root.querySelectorAll<HTMLElement>('[data-nav] > *, [data-jump]')),
         })
-        update(); engine.render(0, 0, reduced)
+        update(); engine.render(0, 0, reduced, -1, undefined, signal)
         document.fonts.ready.then(() => { if (!cancelled) ScrollTrigger.refresh() })
         ScrollTrigger.refresh()
         const hash = window.location.hash.slice(1)
@@ -209,10 +216,12 @@ export default function NeuralJourney() {
           live = false
           engine.dispose()
           portrait?.dispose()
+          activity.dispose()
           if (photo) gsap.set(photo, { clearProps: 'all' })
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
           delete root.dataset.enhanced
           delete root.dataset.face
+          delete root.dataset.signal
         }
       }, root)
       cleanup = () => media.revert()

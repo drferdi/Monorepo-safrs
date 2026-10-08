@@ -10,6 +10,7 @@ type View = { alpha: number; growth: number; camera: Vec3; rotation: number; sca
 export type Look = { turn: number; highlight: Vec3; hover: number }
 const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0, relief: 1, reveal: 0 })
 const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
+const silence = new Float32Array(24)
 const envelope = (phase: number, start: number, end: number, fade = 2) => smooth((phase - start) / fade) * (1 - smooth((phase - end) / fade))
 
 const vertexSource = `
@@ -22,6 +23,7 @@ attribute vec4 a_normal;
 uniform float u_lit;
 uniform float u_focus;
 uniform mediump float u_points;
+uniform vec4 u_signal[6];
 uniform vec3 u_camera;
 uniform vec3 u_offset;
 uniform float u_aspect;
@@ -39,7 +41,15 @@ uniform float u_relief;
 uniform float u_reveal;
 varying vec4 v_color;
 void main() {
-  vec3 p = a_position * u_scale;
+  // Activity (spec 2026-10-08): the tag names the lane and the kind (0 soma or dendrite, 1 axon,
+  // 2 release particle); the lane state is (impulse, terminal, release, response).
+  float kind = floor((a_normal.w+1.0)/100.0);
+  float lane = a_normal.w-kind*100.0;
+  vec4 sig = vec4(0.0);
+  for (int i = 0; i < 6; i++) { if (float(i) == lane) sig = u_signal[i]; }
+  float particle = step(1.5, kind);
+  float axon = step(.5, kind)*(1.0-particle);
+  vec3 p = (a_position + a_normal.xyz*sig.z*.35*particle) * u_scale;
   p.z *= u_relief;
   float c = cos(u_rotation), s = sin(u_rotation);
   p = vec3(p.x*c+p.z*s, p.y, -p.x*s+p.z*c) + u_offset - u_camera;
@@ -52,10 +62,16 @@ void main() {
   gl_PointSize = clamp(a_size*u_dpr*6.0/max(depth, .2), .6, 22.0*u_dpr)*(1.0+coc);
   float born = 1.0-smoothstep(u_growth, u_growth+.07, a_birth);
   float fog = clamp(1.6-depth/28.0, .12, 1.0);
-  float pulse = pow(max(0.0, sin(a_phase*19.0-u_time*1.3)), 22.0)*u_pulse;
+  // The impulse front travels along the axon's path fraction, flashes at the terminal and the
+  // response brightens the next lane's soma and dendrites; particles live only while releasing.
+  float front = axon*step(.001, sig.x)*exp(-pow((a_phase-sig.x)*8.0, 2.0));
+  float flash = axon*sig.y*smoothstep(.85, 1.0, a_phase);
+  float activity = max(front, flash);
+  float pulse = max(pow(max(0.0, sin(a_phase*19.0-u_time*1.3)), 22.0)*u_pulse, activity);
   float nearby = exp(-distance(a_position, u_highlight)*1.4)*u_hover;
   // For lines a_size is a brightness weight (tapered strands); points keep it as their size.
-  vec3 color = (mix(a_color, vec3(1.0,.75,.43), pulse*.85) + vec3(.22,.3,.4)*nearby)*mix(a_size, 1.0, u_points);
+  vec3 color = (mix(a_color, vec3(1.0,.75,.43), max(pulse*.85, activity)) + vec3(.22,.3,.4)*nearby + a_color*sig.w*.9*(1.0-axon))*mix(a_size, 1.0, u_points);
+  float alive = mix(1.0, sig.z*(1.0-sig.z)*4.0, particle);
   // Emission-based lighting (spec 2026-10-08): a warm key, a cool rim, less glow on the far side
   // (additive blending cannot darken; the floor is .7, not the spec's .45, because one-pixel lines
   // have no area to carry shading and the far half of a neuron vanished) and a specular highlight
@@ -72,7 +88,7 @@ void main() {
   vec3 lit = color*(.6+.55*max(0.0, facing)*vec3(1.0,.94,.86))*occlusion + vec3(.62,.78,1.0)*.35*rim*luma + vec3(1.0,.95,.85)*specular;
   color = mix(color, lit, u_lit);
   float resolved = smoothstep(a_birth-.08, a_birth+.08, u_reveal*1.18-.09);
-  v_color = vec4(color, u_alpha*born*fog*(.6+pulse*.65)*(1.0-resolved*.94)*(1.0-.6*coc));
+  v_color = vec4(color, u_alpha*born*fog*(.6+pulse*.65)*(1.0-resolved*.94)*(1.0-.6*coc)*alive);
 }`
 const fragmentSource = `
 precision mediump float;
@@ -100,6 +116,7 @@ export class NeuralRenderer {
   private uniforms = new Map<string, WebGLUniformLocation | null>()
   private attributes: number[] = []
   private normalAttribute = -1
+  private signal: Float32Array = silence
   private density: number
   private disposed = false
   private face: Geometry | null = null
@@ -152,6 +169,7 @@ export class NeuralRenderer {
       this.attributes = ['a_position', 'a_color', 'a_size', 'a_birth', 'a_phase'].map(name => gl.getAttribLocation(program, name))
       this.normalAttribute = gl.getAttribLocation(program, 'a_normal')
       for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'relief', 'reveal', 'lit', 'focus']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
+      this.uniforms.set('signal', gl.getUniformLocation(program, 'u_signal[0]'))
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
       gl.clearColor(0, 0, 0, 0)
     } finally { shaders.forEach(shader => gl.deleteShader(shader)) }
@@ -195,6 +213,7 @@ export class NeuralRenderer {
       gl.uniform3fv(uniform('camera'), view.camera)
       gl.uniform3fv(uniform('offset'), view.offset)
       gl.uniform3fv(uniform('highlight'), view.highlight)
+      gl.uniform4fv(uniform('signal'), this.signal)
       // Lit layers are the ones that carry normals; their focus plane is the depth of the model origin.
       const lit = layer.geometry.lineNormals ? 1 : 0
       const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, relief: view.relief, reveal: view.reveal, lit, focus: view.camera[2] - view.offset[2] }
@@ -272,8 +291,10 @@ export class NeuralRenderer {
     this.face = makeFace(analyseFace(pixels, { density: this.density }))
   }
 
-  render(phase: number, time: number, reduced = false, hover = -1, look: Look = still) {
+  // `signal` is the activity cycle state, six lanes of (impulse, terminal, release, response).
+  render(phase: number, time: number, reduced = false, hover = -1, look: Look = still, signal: Float32Array = silence) {
     if (this.disposed) return
+    this.signal = signal
     if (this.gl && !this.lost) this.gl.clear(this.gl.COLOR_BUFFER_BIT)
     if (this.ctx) { this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); this.ctx.clearRect(0, 0, this.width, this.height) }
     const right: Vec3 = [this.mobile ? 0 : 1.15, this.mobile ? .7 : 0, 0]
