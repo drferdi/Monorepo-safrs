@@ -3,6 +3,68 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-08 (ending) — Scan → Develop → Lock-on, masked title reveals and the dwells
+
+- Decision (Chief, 2026-10-08, the task "Make the Sentraverse neural journey ending more
+  dramatic (GSAP)"): the master timeline moves out of the effect into `timeline.ts`; the final
+  chapter runs a Scan → Develop → Lock-on sequence over the portrait before the callouts, whose
+  labels decode into their exact strings; chapter titles reveal line by line behind masks, the
+  centered ones char by char from the centre; the story dwells longer on the face, the network
+  and the ending at the same scroll travel. Reduced motion and "Read the story" stay static and
+  complete; nothing is pushed or published.
+- How (commits `899705ae`, `bdd4cefb`, `ae21fe7b`): `buildMaster(gsap, chapters, options)`
+  builds the master from a `tempo` table (`phaseToTime`: 25–40 → 22.5–41, 58–66 → 57–67,
+  94–100 → 91.5–100, the rest linear, 100 units in all), labels every chapter at `<id>` and
+  `<id>-enter` (phase + 1.5), and the buttons and hash aliases scroll with
+  `trigger.labelToScroll(jumpLabel(...))`; `timeline.test.mjs` fails if a scene pushes the
+  master past 100. The human scene (`humanScene`) starts at phase 95.5 with the labels `scan`
+  (0), `develop` (`<`) and `lock` (`>-.2`): the scan hairline (`[data-scan]`) sweeps with
+  `portraitState(phase).reveal` (`yPercent` 0 → 100 over 95.5–98.5) and fades over the last
+  .25; the grade moved from the stylesheet filter to the custom properties
+  `--photo-brightness/--photo-contrast/--photo-saturate` (finals .74 / 1.26 / .55 in CSS)
+  tweened from 1.02 / .92 / .22 over the same window; four reticle corners (`callouts.ts`
+  `reticleCorners`, 2.5 % around the head ellipse) draw in at .35 each, .05 apart, and settle
+  with `wiggle(3)` to scale 1.05; the callouts follow from lock + .25 in .27 steps (dot .25
+  `back.out(2)`, line .4, label .45 with ScrambleTextPlugin, hex chars, speed .4, reveal delay
+  .12, glint .2) and a screen-blend flash (peak .5, .1 in, .18 out) at lock + 1.4; the chain
+  ends before 100 and the lines are settled by 99.49, so the e2e sample at 99.6 holds.
+  `settleEnding` restores the exact text, `stroke-dashoffset` 0 and `r` .55 on teardown and in
+  reading mode. SplitText splits every chapter `h2` once inside the matchMedia context
+  (`mask: 'lines'`, `aria: 'auto'`, chars too on chapters 07 and 14) after
+  `document.fonts.ready` and reverts on teardown; lines slide up from `yPercent` 110 over 1
+  with a .12 stagger, centered chars fade in from the centre (`amount: .6`). The plugins
+  (SplitText, ScrambleTextPlugin, CustomEase, CustomWiggle) load through the existing dynamic
+  `import()` in `initialize()`; no package was installed (GSAP 3.15.0 was already in the
+  lockfile).
+- Rulings on the way (Claude Fable 5.1): the develop tween on CSS custom properties is the one
+  approved exception to the "only `x, y, scale, autoAlpha`" rule (a filter, inside the reveal
+  window only, finals in the stylesheet so reading mode and the no-JavaScript page need no
+  script); the human scene starts at 95.5, half a phase before the chapter text, so the scan
+  and the reveal share one clock; `pathLength` 1 with a `stroke-dashoffset` attr tween stays
+  instead of DrawSVG (same result, already proven, one plugin fewer); lines and corners fade in
+  with their draw because at offset 1 the non-scaling stroke leaves a visible fragment; the
+  callout timing of the portrait entry (scene time 2.2, .45 steps) is superseded by the
+  lock-relative chain above, as the task's sequence requires; the tempo table keeps the scroll
+  travel (900vh / 800vh) and stretches the three dwells ×1.23, ×1.25 and ×1.42; the `h2` title
+  lines are first-level `<span>`s with a space between and the block rule is scoped to
+  `h1 > span, h2 > span`, because a descendant rule broke SplitText's wrappers one word per line
+  and stacked the centered chars (found in the Chrome frames, fixed before the gates); SplitText
+  keeps its default `div` wrappers (with `tag: 'span'` it sets no display and the lines
+  collapsed). Taste, compared in Chrome at 1280×800 through injected override styles: develop
+  start A 1.02 / .92 / .22 (B 1.1 / .85 / .12 read milky, C .95 / 1 / .35 barely moved); the scan
+  as a 1 px hairline with a 9 % elliptical trail (2 px with a 22 % trail read as a slab and
+  lingered under the photo); the reticle at a 2.5 % margin (.92× crowded the hair, 1.1× floated
+  and met the first callout line); the scramble as hex characters, speed .4, reveal delay .12,
+  chosen by reasoning, not compared. The Jev router does not exist on this machine (skipped).
+- Evidence (on `ae21fe7b`): `typecheck` 0, `lint` 0 (two pre-existing `img` warnings), node:test
+  38/38, `build` 0, `deploy:dry-run` 0, Playwright 16/16 through the installed Chrome
+  (session-only `playwright.chrome.config.ts`, deleted) against the production preview on
+  127.0.0.1:4340, frame pacing mean 6.07 ms (p95 6.10); Chrome frames at phase 28.6, 30, 60.4,
+  62, 66.6, 68, 96.5, 97.5, 98.7 and 99.6 (1280×800), 30 and 99.6 (375×812), 99.6 (1024×768 and
+  768×1024), all `data-renderer` webgl, reveal `complete` from 98.7, kept in the session
+  scratchpad because Playwright empties `test-results/` on every run; the same gates passed on
+  `899705ae` (node:test 32/32) and `bdd4cefb` (36/36, pacing 6.37 ms).
+
 ## 2026-10-08 (grade) — The end photograph is graded low-key
 
 - Decision (Chief, 2026-10-08, on seeing the end scene: "Foto saya terakhir buat lebih dramatis,

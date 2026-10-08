@@ -8,9 +8,15 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
 
 - `components/neural/NeuralJourney.tsx` owns the semantic narrative, navigation, optional audio,
   and client lifecycle. The server page supplies homepage metadata.
-- `story.ts` owns chapter boundaries and exact division names. A single GSAP ScrollTrigger pins
-  the viewport and scrubs a 100-unit master timeline; named child timelines reveal each chapter.
-  Desktop uses 900vh of scroll travel; mobile uses 800vh. The stage adds one viewport.
+- `story.ts` owns chapter boundaries and exact division names. `timeline.ts` builds the master
+  (`buildMaster`): a single GSAP ScrollTrigger pins the viewport and scrubs its 100 units; named
+  child timelines (`scene-<id>`) reveal each chapter; the chapter buttons and the hash aliases
+  jump with ScrollTrigger `labelToScroll` to the `<id>-enter` labels (phase + 1.5). The master
+  is authored in phases and mapped to time through the `tempo` table (`phaseToTime`), which
+  stretches the dwell on the face (phase 25–40 → 22.5–41), the network (58–66 → 57–67) and the
+  ending (94–100 → 91.5–100) and keeps the rest linear; the e2e helper and the capture scripts
+  scroll through the same mapping. `timeline.test.mjs` fails if any scene pushes the master past
+  100. Desktop uses 900vh of scroll travel; mobile uses 800vh. The stage adds one viewport.
 - `geometry.ts` builds seeded, irregular neuronal arbors, progenitor cells, anatomical nerve
   pathways, myelin, synaptic membranes, and a network with detailed foreground neurons and
   thousands of inexpensive distant neurons. Since 2026-10-08 every neuron grows from an
@@ -87,19 +93,47 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   source itself is cut out; engines without `mask-composite` show the union of the layers). In
   reading mode and without JavaScript the photo sits in the flow beside the text
   (above it on phones); the cinematic placement and the reveal are cleared when the mode changes.
-- Over the resolved photograph three futuristic callouts draw in (Chief 2026-10-08: "beri motion
-  garis futuristic"): `callouts.ts` holds `dr Ferdi Iskandar` (head), `the Gaffer` (shoulder) and
-  `Sentraone` (folded arms) as anchor → elbow → horizontal end in photo percent, with the label
-  right of the end; `NeuralJourney.tsx` renders them as an SVG (`viewBox` 0 0 100 100,
-  non-scaling 1 px strokes) plus a `<ul data-callouts>` inside `[data-photo]` and, from scene
-  time 2.2 of the final chapter in .45 steps, pops the anchor dot (`back.out`), draws the
-  polyline through a `stroke-dashoffset` attr tween on `pathLength` 1 (a CSS tween would
-  append px), slides the label in and fades in a CSS glint that runs along the line every
-  2.8 s (off under reduced motion). The label font follows the photo width
-  (`clamp(7px, 2.3cqi, 10px)`, the photo is an inline-size container) so the labels fit at
-  768×1024. `callouts.test.mjs` pins the labels, their anchors inside the head, shoulder and
-  torso ellipses and the rightward layout; the e2e checks the draw-in, the fit at four
-  viewports and the still reading mode.
+- The ending runs as Scan → Develop → Lock-on (2026-10-08, "ending"): one nested scene in
+  `timeline.ts` (`humanScene`) starts at phase 95.5 with three overlapping labels. `scan`: a
+  hairline (`[data-scan]`, `.scan`, a 1 px gradient with a glow and a 9 % elliptical trail)
+  sweeps down the photo in step with `portraitState(phase).reveal` (`yPercent` 0 → 100 over
+  95.5–98.5, transform only) and fades out over the last .25. `develop` (same start): the photo
+  grade lives in the custom properties `--photo-brightness/--photo-contrast/--photo-saturate`
+  on `.human > .photo`, whose stylesheet values are the low-key finals (.74 / 1.26 / .55), and
+  the scene tweens them from a brighter, colder, flatter start (1.02 / .92 / .22) to those finals
+  over the same window, so the image develops like a print; reading mode and the no-JavaScript
+  page show the finals with no animation. `lock` (.2 before develop ends): four corner-bracket
+  reticle strokes (`callouts.ts` `reticleCorners`, a 2.5 % margin around the head, `pathLength`
+  1 with a `stroke-dashoffset` attr tween and a fade, .35 each, .05 apart) draw in and the group
+  settles with a CustomWiggle (`scale` 1.05, `wiggle(3)`, .45); then, from .25 after the lock in
+  .27 steps, each callout (`callouts.ts`: `dr Ferdi Iskandar` head, `the Gaffer` shoulder,
+  `Sentraone` folded arms, anchor → elbow → horizontal end in photo percent, label right of the
+  end; an SVG with `viewBox` 0 0 100 100 and non-scaling 1 px strokes plus a `<ul data-callouts>`
+  inside `[data-photo]`) pops its anchor dot (`back.out`), draws its polyline, slides its label
+  in and decodes it with ScrambleTextPlugin (hex characters, speed .4, reveal delay .12) into
+  the exact string, and fades in the CSS glint that runs along the line every 2.8 s (off under
+  reduced motion); a brief screen-blend flash (`[data-flash]`, peak .5) ends the chain at 1.4
+  after the lock. Every length is a knob on the `ending` object in `timeline.ts`. The exact
+  label sits in `aria-label` on the `<li>` and the animated `<span data-callout-text>` is
+  `aria-hidden`; `settleEnding` (reading mode, teardown) restores the exact text,
+  `stroke-dashoffset` 0 and dot `r` .55, so the settled state is the one the page had before the
+  sequence. The label font follows the photo width (`clamp(7px, 2.3cqi, 10px)`, the photo is an
+  inline-size container) so the labels fit at 768×1024. `callouts.test.mjs` pins the labels,
+  their anchors inside the head, shoulder and torso ellipses, the rightward layout and the
+  reticle around the head; `timeline.test.mjs` pins the scan/develop/lock overlap, the exact
+  decoded strings and the settled state; the e2e checks the scan and the developing grade at
+  97, the draw-in, the exact text at 100, the fit at four viewports and the still reading mode.
+- Chapter titles reveal behind line masks (2026-10-08, "ending"): after `document.fonts.ready`,
+  inside the cinematic matchMedia context, `SplitText.create` splits every chapter `h2` once
+  (`mask: 'lines'`, `aria: 'auto'`, no `autoSplit`; the two centered titles, chapters 07 and 14,
+  also into chars) and reverts it on teardown; `buildMaster` sets each line to `yPercent` 110
+  and slides it up over 1 with a .12 stagger as the chapter enters, and the centered titles
+  instead fade their chars in from the centre out (`stagger: { amount: .6, from: 'center' }`).
+  The `h2` markup is one `<span>` per title line with a space between (the reading view and the
+  no-JavaScript page keep the line breaks); the block rule in `journey.module.css` applies only
+  to those first-level spans so SplitText's own wrappers keep their inline flow. Descenders are
+  clipped by the mask only while a line is still sliding up. The text never moves with the
+  pointer; reading mode and reduced motion get the plain headings.
 - On desktop without reduced motion the face turns up to ±0.085 rad toward the pointer (chapter
   03 also sways ±0.045 rad; both were ±0.22 and ±0.23 before 2026-10-08) and the
   points near it brighten: `tactile.ts` `faceLook` maps the pointer onto the face plane, and
@@ -115,9 +149,11 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   and 14 also give their text a soft multi-layer `text-shadow` halo (no backdrop shape), and
   the big centered titles sit at 92 % white with a faint light edge so the thin strokes blend
   with the field instead of cutting it.
-- Only `x, y, scale, autoAlpha` are animated. The wake is desktop-only (no touch, no phones, no
-  reduced motion) and its detach kills its tweens and clears the inline transforms, so reading
-  mode starts from clean elements.
+- Only `x, y, scale, autoAlpha` are animated, with the approved exceptions of the ending: the
+  three `--photo-*` custom properties of the develop (a filter, inside the reveal window only),
+  the `stroke-dashoffset` and `r` attr tweens of the strokes and dots, and the scrambled label
+  text. The wake is desktop-only (no touch, no phones, no reduced motion) and its detach kills
+  its tweens and clears the inline transforms, so reading mode starts from clean elements.
 
 ## Neuron morphology, lighting and the activity cycle
 
@@ -197,15 +233,18 @@ node scripts/pnpm.mjs run deploy:dry-run
 ```
 
 `node scripts/pnpm.mjs run test` runs the node:test files, including `components/neural/tactile.test.mjs`,
-`face.test.mjs`, `morphology.test.mjs`, `signal.test.mjs` and `callouts.test.mjs`. The Playwright suite in
+`face.test.mjs`, `morphology.test.mjs`, `signal.test.mjs`, `callouts.test.mjs` and `timeline.test.mjs`
+(the master's hundred units, the phase mapping and its dwells, the labels, the title reveals and
+the Scan → Develop → Lock-on ending with its exact decoded strings). The Playwright suite in
 `e2e/neural.spec.ts` covers the WebGL renderer staying active (a shader that fails to link
 would fall back to Canvas 2D silently), the activity cycle playing only in the network window
 and parking under reduced motion,
 reverse navigation, all five divisions, the drawn face and the photograph at the final chapter
 (feature-first alpha of the reveal canvas, exact reversal, the full image at the end, a late
-image load, a phone resize, and reading mode and no canvas context), the callouts (draw-in
-after the reveal, labels inside the viewport and clear of the title at four viewports, still
-under reduced motion), mobile overflow and the
+image load, a phone resize, and reading mode and no canvas context), the ending (the scan and
+the developing grade at phase 97, the reticle and callout draw-in after the reveal, the exact
+labels at 100, labels inside the viewport and clear of the title at four viewports, still and
+settled under reduced motion), mobile overflow and the
 CTA in view, OS reduced-motion changes, context loss, clean reading-mode transforms, missing
 WebGL, no canvas context at all, JavaScript-disabled reading, pin cleanup, connected-region
 navigation, and frame timing. `e2e/smoke.spec.ts` keeps
