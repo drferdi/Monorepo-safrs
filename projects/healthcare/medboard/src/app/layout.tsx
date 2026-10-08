@@ -6,6 +6,7 @@ import './globals.css'
 import './ui.css'
 import './shell.css'
 import './rank.css'
+import '@/components/motion/motion.css'
 import ActivityHeartbeat from '@/components/ActivityHeartbeat'
 import AppFooter from '@/components/AppFooter'
 import AppHeader from '@/components/AppHeader'
@@ -13,6 +14,7 @@ import AppNav from '@/components/AppNav'
 import CrewAccessGate from '@/components/CrewAccessGate'
 import SmoothScroll from '@/components/SmoothScroll'
 import TidyCaseOnBlur from '@/components/TidyCaseOnBlur'
+import MotionProvider, { MotionViewport } from '@/components/motion/MotionProvider'
 
 export const metadata: Metadata = {
   title: 'MedBoard — Sentra',
@@ -35,16 +37,18 @@ export default function RootLayout({
         <TidyCaseOnBlur />
         <CrewAccessGate>
           <ActivityHeartbeat />
+          <MotionProvider>
           <div className="app-shell">
             <AppNav />
             <div className="app-main">
               <AppHeader />
               <main className="app-content">
-                <div className="app-page-stack">{children}</div>
+                <MotionViewport>{children}</MotionViewport>
               </main>
               <AppFooter />
             </div>
           </div>
+          </MotionProvider>
         </CrewAccessGate>
       </body>
     </html>

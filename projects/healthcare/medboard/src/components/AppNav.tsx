@@ -2,7 +2,7 @@
 
 import { PanelLeft } from 'lucide-react'
 import { animate, AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react'
-import Link from 'next/link'
+import Link from './motion/MotionLink'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { findNavSpot, isNavActive, NAV_COLLAPSED_KEY, NAV_GROUPS, openNavSection, readNavCollapsed, type NavItem } from './shell/nav-items'

@@ -1,0 +1,34 @@
+.app-page-stack { transform-origin: 50% 12%; }
+.dashboard-motion-overlay {
+  position: fixed;
+  z-index: 45;
+  overflow: clip;
+  pointer-events: none;
+  contain: strict;
+}
+.dashboard-motion-overlay[hidden] { display: none; }
+.dashboard-motion-portal, .dashboard-motion-curtain { position: absolute; inset: 0; width: 100%; height: 100%; display: none; }
+.dashboard-motion-overlay[data-effect='portal'] .dashboard-motion-portal,
+.dashboard-motion-overlay[data-effect='curtain'] .dashboard-motion-curtain { display: block; }
+.dashboard-motion-curtain path { fill: var(--primary); }
+.motion-surface { position: relative; isolation: isolate; }
+.motion-surface[data-reduced-motion]::after { display: none; }
+.motion-surface[data-motion-preset='cinematic'] { --motion-light-strength: 60%; }
+.motion-surface::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at var(--motion-light-x, 50%) var(--motion-light-y, 50%), color-mix(in srgb, var(--primary-tint) var(--motion-light-strength, 42%), transparent), transparent 62%);
+  transition: opacity 180ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .motion-surface:hover::after { opacity: 1; }
+  .motion-surface:focus-within::after { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-motion-overlay { display: none; }
+  .motion-surface::after { display: none; }
+}

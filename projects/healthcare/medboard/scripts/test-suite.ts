@@ -10,6 +10,12 @@ type Suite = {
 
 const suites: Suite[] = [
   {
+    name: 'dashboard-motion',
+    aliases: ['motion'],
+    command: process.execPath,
+    args: ['--import', 'tsx', '--test', 'src/components/motion/motion-policy.test.ts', 'src/components/motion/effects.test.ts'],
+  },
+  {
     name: 'doctors-contacts-route',
     aliases: ['doctors-contacts', 'send-to-doctors'],
     command: process.execPath,

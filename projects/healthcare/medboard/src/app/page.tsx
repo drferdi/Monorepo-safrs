@@ -6,6 +6,7 @@ import { io, type Socket } from 'socket.io-client'
 import { AsistenMedisFlow } from '@/components/home/AsistenMedisFlow'
 import { ContributionHeatmap, HeatmapLegend } from '@/components/home/ContributionHeatmap'
 import { RankAwardCard } from '@/components/rank/RankAwardCard'
+import MotionSurface from '@/components/motion/MotionSurface'
 import { LevelEdge, RankBadge } from '@/components/rank/RankBadge'
 import { CREW_ACCESS_GENDERS, type CrewAccessGender } from '@/lib/crew-access'
 import {
@@ -95,7 +96,7 @@ const SectionLabel = ({ children }: { children: React.ReactNode }) => (
 )
 
 const Panel = ({ children }: { children: React.ReactNode }) => (
-  <div className="home-card">{children}</div>
+  <MotionSurface className="home-card">{children}</MotionSurface>
 )
 
 const PanelSection = ({ children }: { children: React.ReactNode }) => (

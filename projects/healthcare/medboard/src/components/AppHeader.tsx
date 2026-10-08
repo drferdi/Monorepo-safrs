@@ -1,7 +1,7 @@
 'use client'
 
 import { LogOut, User } from 'lucide-react'
-import Link from 'next/link'
+import Link from './motion/MotionLink'
 import { useEffect, useRef, useState } from 'react'
 import { initials } from './shell/initials'
 
