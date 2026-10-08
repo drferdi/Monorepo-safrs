@@ -416,3 +416,30 @@ test('the opening words arrive by meaning, keep their name, and are never left f
   expect(await faintest()).toBeGreaterThan(.99)
   await expect(h1).toHaveAccessibleName('Intelligence begins as connection.')
 })
+
+test('progress is a neural trace: a signal head rides the line at the scroll progress, one chapter tick lights, and a resize keeps them in step', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await expect(page.locator('[data-progress-tick]')).toHaveCount(15)
+  const offset = async (phase: number) => {
+    const line = await page.locator('[data-progress-line]').evaluate(element => element.parentElement!.getBoundingClientRect().toJSON() as { x: number; width: number })
+    const dot = (await page.locator('[data-progress-head] span').boundingBox())!
+    return Math.abs(dot.x + dot.width / 2 - (line.x + line.width * phaseToTime(phase) / MASTER_DURATION))
+  }
+  for (const [phase, chapter] of [[8.5, 8], [43, 43], [71.5, 71], [97, 94]]) {
+    await portraitPhase(page, phase)
+    await expect.poll(() => offset(phase)).toBeLessThan(4)
+    await expect(page.locator('[data-progress-tick][data-active="true"]')).toHaveCount(1)
+    await expect(page.locator('[data-progress-tick][data-active="true"]')).toHaveAttribute('data-progress-tick', String(chapter))
+  }
+  // A resize refreshes the pin (the scroll position then maps to a slightly different phase): the
+  // head follows whatever phase the story is now at.
+  await portraitPhase(page, 43)
+  await page.setViewportSize({ width: 1100, height: 760 })
+  await expect.poll(async () => offset(Number(await page.locator('main').getAttribute('data-phase'))), { timeout: 8000 }).toBeLessThan(6)
+  // The keyboard path to a chapter is the transport, as before.
+  await page.getByRole('button', { name: 'Go to Signal propagation', exact: true }).focus()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('[data-phase-label]')).toHaveText('Signal propagation')
+})
