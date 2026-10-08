@@ -30,8 +30,8 @@ const many = (count, attributes) => Array.from({ length: count }, () => element(
 function stage(titles, options = {}) {
   const veil = many(2), film = element()
   const scene = element({ '[data-legacy-void]': [veil[0]], '[data-legacy-vignette]': [veil[1]], '[data-film]': [film] })
-  const text = { presence: element(), tagline: element(), signature: element(), brand: element(), cta: element() }
-  const human = element({ '[data-legacy-presence]': [text.presence], '[data-legacy-tagline]': [text.tagline], '[data-legacy-signature]': [text.signature], '[data-legacy-brand]': [text.brand], '[data-magnetic]': [text.cta] })
+  const text = { presence: element(), tagline: element(), signature: element(), brand: element(), cta: element(), divisions: element() }
+  const human = element({ '[data-legacy-presence]': [text.presence], '[data-legacy-tagline]': [text.tagline], '[data-legacy-signature]': [text.signature], '[data-legacy-brand]': [text.brand], '[data-magnetic]': [text.cta], '[data-legacy-divisions]': [text.divisions] })
   const panels = chapters.map(chapter => {
     if (chapter.id.startsWith('division')) return element({ '[data-marker-line]': many(1), '[data-marker-dot]': many(1), '[data-marker-copy]': many(1) })
     if (chapter.id === 'human') return human
@@ -209,7 +209,7 @@ test('settling the legacy restores the still state whatever the scene left behin
   // The selector lists name every tweened part, so a part the scene animates is never left behind.
   for (const part of ['[data-legacy-void]', '[data-legacy-vignette]']) assert.ok(legacyParts.scene.includes(part), part)
   assert.equal(legacyParts.film, '[data-film]')
-  for (const part of ['[data-legacy-presence]', '[data-legacy-tagline]', '[data-legacy-signature]', '[data-legacy-brand]', '[data-magnetic]']) assert.ok(legacyParts.text.includes(part), part)
+  for (const part of ['[data-legacy-presence]', '[data-legacy-tagline]', '[data-legacy-signature]', '[data-legacy-brand]', '[data-magnetic]', '[data-legacy-divisions]']) assert.ok(legacyParts.text.includes(part), part)
   master.kill()
 })
 

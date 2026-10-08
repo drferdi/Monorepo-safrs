@@ -512,3 +512,21 @@ test('if the scripts never start, the opening words do not stay faint', async ({
   await expect(page.locator('main')).not.toHaveAttribute('data-loading', /.*/)
   await expect.poll(() => h1.evaluate(element => Math.min(...Array.from(element.children, child => Number(getComputedStyle(child).opacity)))), { timeout: 9000 }).toBeGreaterThan(.99)
 })
+
+test('the ecosystem stands to the right of the founder at the end, and follows the page on a phone', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await portraitPhase(page, 100)
+  const nav = page.locator('[data-legacy-divisions]')
+  await expect(nav).toHaveCSS('opacity', '1')
+  for (const name of divisionNames) await expect(nav.getByRole('link', { name, exact: true })).toBeVisible()
+  const list = (await nav.locator('a').first().boundingBox())!, film = (await page.locator('[data-film]').boundingBox())!, copy = (await page.locator('#human [data-marker-copy]').boundingBox())!
+  expect(list.x).toBeGreaterThan(film.x + film.width / 2)
+  expect(list.x).toBeGreaterThan(copy.x + copy.width)
+  expect(list.x + list.width).toBeLessThanOrEqual(1280)
+  await expect(page.locator('main > [aria-label="Ecosystem divisions"]')).toBeHidden()
+  await page.setViewportSize({ width: 390, height: 844 })
+  await expect(nav).toBeHidden()
+  await expect(page.locator('main > [aria-label="Ecosystem divisions"]').getByRole('link', { name: divisionNames[0], exact: true })).toBeVisible()
+})

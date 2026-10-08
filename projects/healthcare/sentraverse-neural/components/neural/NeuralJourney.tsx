@@ -354,14 +354,18 @@ export default function NeuralJourney({ year }: { year: number }) {
                   // The legacy's words (Chief 2026-10-08), each its own beat of the final scene: the
                   // opening line while the figure alone is lit, then the title, the line, the
                   // signature, the brand statement and the way on once the camera has settled.
-                  <div data-marker-copy className={styles.legacyCopy}>
-                    <p data-legacy-presence className={`${styles.eyebrow} ${styles.presence}`}><span className={styles.index}>{chapter.number}</span>{legacyCopy.presence}</p>
-                    <h2><span>{chapter.title}</span></h2>
-                    <p data-legacy-tagline className={styles.tagline}>{chapter.description}</p>
-                    <p data-legacy-signature className={styles.signature}><strong>{legacyCopy.name}</strong><span>{legacyCopy.role}</span></p>
-                    <p data-legacy-brand className={styles.brand}><strong>{legacyCopy.brand}</strong><span>{chapter.annotation}</span></p>
-                    <a href={sentra('/ekosistem')} data-magnetic className={styles.cta}>EXPLORE SENTRAVERSE <span aria-hidden="true">↗</span></a>
-                  </div>
+                  <>
+                    <div data-marker-copy className={styles.legacyCopy}>
+                      <p data-legacy-presence className={`${styles.eyebrow} ${styles.presence}`}><span className={styles.index}>{chapter.number}</span>{legacyCopy.presence}</p>
+                      <h2><span>{chapter.title}</span></h2>
+                      <p data-legacy-tagline className={styles.tagline}>{chapter.description}</p>
+                      <p data-legacy-signature className={styles.signature}><strong>{legacyCopy.name}</strong><span>{legacyCopy.role}</span></p>
+                      <p data-legacy-brand className={styles.brand}><strong>{legacyCopy.brand}</strong><span>{chapter.annotation}</span></p>
+                      <a href={sentra('/ekosistem')} data-magnetic className={styles.cta}>EXPLORE SENTRAVERSE <span aria-hidden="true">↗</span></a>
+                    </div>
+                    {/* The ecosystem stands to the right of the founder (Chief 2026-10-09), arriving with the way on. */}
+                    <nav data-legacy-divisions className={styles.legacyDivisions} aria-label="Ecosystem divisions"><span>Discover the ecosystem</span>{divisions.map(division => <a href={sentra('/ekosistem')} key={division.name}>{division.name}</a>)}</nav>
+                  </>
                 ) : (
                   <div data-marker-copy data-division={division ? divisionIndex : undefined}>
                     <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
@@ -405,6 +409,7 @@ export default function NeuralJourney({ year }: { year: number }) {
         <div><a href={sentra('/privacy')}>Privacy</a><a href={sentra('/terms')}>Terms</a></div>
       </div>
       <noscript><p className={styles.noScript}>The complete story is available below each illustration. Enable JavaScript for the cinematic journey.</p></noscript>
+      {/* Phones in the cinematic view have no room beside the figure: the ecosystem follows the page there. */}
       <div className={styles.accessibleDivisions} aria-label="Ecosystem divisions"><span>Discover the ecosystem</span>{divisions.map(division => <a href={sentra('/ekosistem')} key={division.name}>{division.name}</a>)}</div>
     </main>
   )

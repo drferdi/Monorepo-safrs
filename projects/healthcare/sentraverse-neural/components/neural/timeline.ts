@@ -130,7 +130,7 @@ export const legacyParts = {
   scene: '[data-legacy-void], [data-legacy-vignette]',
   film: '[data-film]',
   // The text beats inside the panel, in their order.
-  text: '[data-legacy-presence], [data-legacy-tagline], [data-legacy-signature], [data-legacy-brand], [data-magnetic]',
+  text: '[data-legacy-presence], [data-legacy-tagline], [data-legacy-signature], [data-legacy-brand], [data-magnetic], [data-legacy-divisions]',
 }
 
 type Target = object | Element | null | undefined
@@ -298,7 +298,7 @@ function legacyScene(gsap: Gsap, panel: Element, scene: Element, title: Title | 
   // Beat 04 — the legacy: the title, the line, the signature, the brand, the way on.
   tl.addLabel('legacy', pos(k.title))
   if (title) revealTitle(tl, title, 'legacy')
-  const beats: Array<[string, number]> = [['[data-legacy-tagline]', k.tagline], ['[data-legacy-signature]', k.signature], ['[data-legacy-brand]', k.brand], ['[data-magnetic]', k.cta]]
+  const beats: Array<[string, number]> = [['[data-legacy-tagline]', k.tagline], ['[data-legacy-signature]', k.signature], ['[data-legacy-brand]', k.brand], ['[data-magnetic]', k.cta], ['[data-legacy-divisions]', k.cta]]
   for (const [selector, phase] of beats) {
     const part = panel.querySelector(selector)
     if (part) tl.fromTo(part, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: dur(k.textIn), immediateRender: false }, pos(phase))

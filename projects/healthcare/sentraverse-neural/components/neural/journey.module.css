@@ -114,7 +114,7 @@
 .loading i { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--neural-blue), transparent); }
 .colophon { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 90px; padding: 30px 4.2vw; font-size: 8px; letter-spacing: .08em; color: var(--neural-muted); border-top: 1px solid var(--neural-line); }
 .colophon div { display: flex; gap: 20px; }
-.accessibleDivisions { display: flex; flex-wrap: wrap; gap: 20px; padding: 10px 4.2vw 30px; font-size: 10px; color: var(--neural-muted); }
+.accessibleDivisions { display: none; flex-wrap: wrap; gap: 20px; padding: 10px 4.2vw 30px; font-size: 10px; color: var(--neural-muted); }
 .accessibleDivisions > span { color: var(--neural-white); }
 .overview { display: none; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .overview button { position: absolute; pointer-events: auto; width: 195px; padding: 9px 0; border: 0; border-top: 1px solid var(--neural-line); background: transparent; color: var(--neural-white); font-family: var(--neural-mono); font-size: 9px; line-height: 1.8; text-align: left; }
@@ -181,6 +181,7 @@
   .cursor { display: none; }
   .colophon { align-items: flex-start; flex-direction: column; padding-inline: 7vw; }
   .accessibleDivisions { padding-inline: 7vw; flex-direction: column; }
+  .journey[data-enhanced="cinematic"] .accessibleDivisions { display: flex; }
   .journey[data-enhanced="reading"] .header { padding-inline: 7vw; }
   .journey[data-enhanced="reading"] .controls { padding-inline: 7vw; }
   .journey[data-enhanced="reading"] .chapter { min-height: 95svh; padding-top: 190px; }
@@ -217,6 +218,21 @@
 .brand { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--neural-line); gap: 8px; }
 .brand strong { font-size: 9px; font-weight: 400; letter-spacing: .36em; color: #91b9d1; }
 .legacyCopy .cta { margin-top: 30px; }
+/* The ecosystem beside the founder: in the flow it follows the words; on the cinematic stage it
+   stands at the right edge, centred on the figure. Positioned without a transform (the scene
+   tweens its y). */
+.legacyDivisions { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 13px; }
+.legacyDivisions > span { font-family: var(--neural-mono); font-size: 9px; letter-spacing: .36em; text-transform: uppercase; color: #91b9d1; padding-bottom: 16px; margin-bottom: 3px; border-bottom: 1px solid var(--neural-line); }
+.legacyDivisions a { font-family: var(--font-jakarta), sans-serif; font-size: 13px; font-weight: 300; letter-spacing: .06em; color: #c5cfda; text-decoration: none; transition: color .3s; }
+.legacyDivisions a:hover, .legacyDivisions a:focus-visible { color: var(--neural-white); }
+.legacyDivisions > * { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
+@media (min-width: 768px) {
+  .journey[data-enhanced="cinematic"] .legacyDivisions { position: absolute; top: 0; bottom: 0; right: 4.2vw; justify-content: center; align-items: flex-end; text-align: right; pointer-events: none; }
+  .journey[data-enhanced="cinematic"] .legacyDivisions > * { pointer-events: auto; }
+}
+@media (max-width: 767px) {
+  .journey[data-enhanced="cinematic"] .legacyDivisions { display: none; }
+}
 @media (max-width: 767px) {
   .presence { font-size: 8px; letter-spacing: .26em; margin-bottom: 22px; }
   .tagline { font-size: 11px; letter-spacing: .16em; margin-top: 18px; }
