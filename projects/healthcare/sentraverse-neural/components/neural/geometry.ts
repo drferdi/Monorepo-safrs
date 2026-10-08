@@ -244,8 +244,8 @@ class Tissue {
 
 export const hubs: Vec3[] = [[-3.2, 1.6, 0], [2.9, 1.4, -.5], [-2.5, -1.7, .4], [2.8, -1.8, .1], [.1, 2.9, -1]]
 // The distant field recedes this far into the fog as the constellation forms: 8, not the brief's 14.
-// At 14 the whole field sits on the shader's fog floor (.12) and point-size floor; at 8 its front
-// edge keeps a fog of about .6, so the field thins instead of vanishing.
+// With the network camera at z 12, the shader's fog reaches its .12 floor at depth 41.4: at 14 only
+// 37 % of the field stays above that floor (front edge .39), at 8 67 % does (front edge .6).
 export const RECEDE = 8
 const GOLDEN = Math.PI * (3 - Math.sqrt(5))
 export const nearestHub = (p: Vec3) => hubs.reduce((best, hub, i) => Math.hypot(p[0] - hub[0], p[1] - hub[1], p[2] - hub[2]) < Math.hypot(p[0] - hubs[best][0], p[1] - hubs[best][1], p[2] - hubs[best][2]) ? i : best, 0)
