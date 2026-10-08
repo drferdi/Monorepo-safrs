@@ -373,7 +373,7 @@ test('one carrier is handed from chapter to chapter: it travels, never cuts, sur
   await expect(carrier).toBeHidden()
 })
 
-test('the constellation forms on the Canvas 2D fallback too, without errors', async ({ page }) => {
+test('the Canvas 2D fallback keeps painting the field through the constellation, without errors', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
   await page.addInitScript(() => {
@@ -433,18 +433,24 @@ test('progress is a neural trace: a signal head rides the line at the scroll pro
     await expect(page.locator('[data-progress-tick][data-active="true"]')).toHaveCount(1)
     await expect(page.locator('[data-progress-tick][data-active="true"]')).toHaveAttribute('data-progress-tick', String(chapter))
   }
-  // A resize refreshes the pin (the scroll position then maps to a slightly different phase): the
-  // head follows whatever phase the story is now at.
+  // A resize refreshes the pin: the same scroll position is now a different share of a shorter
+  // travel, and the head moves to it (read from the pin's own geometry, not from the page's phase).
   await portraitPhase(page, 43)
-  await page.setViewportSize({ width: 1100, height: 760 })
-  await expect.poll(async () => offset(Number(await page.locator('main').getAttribute('data-phase'))), { timeout: 8000 }).toBeLessThan(6)
+  await page.setViewportSize({ width: 1100, height: 600 })
+  const travelled = () => page.evaluate(() => {
+    const spacer = document.querySelector('.pin-spacer')!.getBoundingClientRect(), stage = document.querySelector('[data-stage]')!
+    const line = document.querySelector('[data-progress-line]')!.parentElement!.getBoundingClientRect()
+    const dot = document.querySelector('[data-progress-head] span')!.getBoundingClientRect()
+    return Math.abs(dot.x + dot.width / 2 - (line.x + line.width * -spacer.top / (spacer.height - stage.clientHeight)))
+  })
+  await expect.poll(travelled, { timeout: 8000 }).toBeLessThan(6)
   // The keyboard path to a chapter is the transport, as before.
   await page.getByRole('button', { name: 'Go to Signal propagation', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page.locator('[data-phase-label]')).toHaveText('Signal propagation')
 })
 
-test('pointing at a division lights its nodes and names it in a micro-label; touch and phones get none', async ({ page }) => {
+test('pointing at a division names it in a micro-label and scrolling on forgets it; touch and phones get none', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/')
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
@@ -456,6 +462,9 @@ test('pointing at a division lights its nodes and names it in a micro-label; tou
   await page.mouse.move(box.x + 30, box.y + 24)
   await expect(page.locator('[data-cursor-label]')).toHaveText('Human care')
   await expect(page.locator('[data-cursor]')).toHaveAttribute('data-active', 'true')
+  // Scrolling on to the next division without moving the pointer does not keep naming this one.
+  await portraitPhase(page, 77.5)
+  await expect(page.locator('[data-cursor]')).toHaveAttribute('data-active', 'false')
   await page.mouse.move(5, 790)
   await expect(page.locator('[data-cursor]')).toHaveAttribute('data-active', 'false')
   await page.setViewportSize({ width: 390, height: 844 })
@@ -494,4 +503,12 @@ test('a division fades in empty and its words arrive once: no flash of the full 
   expect(entering.line).toBeLessThan(.9)
   await portraitPhase(page, 83)
   expect((await read()).copy).toBe(1)
+})
+
+test('if the scripts never start, the opening words do not stay faint', async ({ page }) => {
+  await page.route('**/_next/static/chunks/**', route => route.abort())
+  await page.goto('/')
+  const h1 = page.getByRole('heading', { level: 1 })
+  await expect(page.locator('main')).not.toHaveAttribute('data-loading', /.*/)
+  await expect.poll(() => h1.evaluate(element => Math.min(...Array.from(element.children, child => Number(getComputedStyle(child).opacity)))), { timeout: 9000 }).toBeGreaterThan(.99)
 })

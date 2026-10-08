@@ -91,6 +91,8 @@ export default function NeuralJourney({ year }: { year: number }) {
         }
         const preloadAt = phaseOf('network')
         let hover = -1, lastChapter = -1, lastFrame = 0, visible = true
+        // A new chapter forgets the pointed division until the pointer moves again (set with the cursor below).
+        let unpoint = () => {}
         const progressSetter = gsap.quickSetter(progressLine, 'scaleX')
         // The neural trace (brief 2026-10-09 §6): a signal head rides the line at the scroll progress
         // and the chapter's tick lights; ticks sit at each chapter's place in the scroll travel.
@@ -122,6 +124,7 @@ export default function NeuralJourney({ year }: { year: number }) {
           root.dataset.signal = activity.cycle.paused() ? 'paused' : 'active'
           if (lastChapter === index) return
           lastChapter = index
+          unpoint()
           phaseLabel.textContent = chapters[index].label
           phaseNumber.textContent = `${String(index + 1).padStart(2, '0')} / ${chapters.length}`
           // A chapter off screen is out of reach too (inert), not only out of the accessibility tree.
@@ -234,6 +237,7 @@ export default function NeuralJourney({ year }: { year: number }) {
           const seen = faceLook({ x: event.clientX - rect.left, y: event.clientY - rect.top }, { width: rect.width, height: rect.height }, engine.faceView())
           turnTo(seen.turn); hoverTo(1); look.highlight = seen.highlight
         }
+        unpoint = () => { if (hover < 0) return; hover = -1; nodeTo(0); cursor.dataset.active = 'false' }
         const leave = () => { cursor.style.opacity = '0'; hover = -1; turnTo(0); hoverTo(0); nodeTo(0); cursor.dataset.active = 'false' }
         root.addEventListener('pointermove', move)
         root.addEventListener('pointerleave', leave)
