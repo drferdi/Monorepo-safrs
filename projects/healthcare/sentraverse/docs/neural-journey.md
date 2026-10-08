@@ -97,7 +97,18 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   canvas outside it, so the shared mask never doubles; `settleLegacy` clears what the scene
   tweened. The drawn face no longer returns before the final chapter (the network dissolves from
   94 straight into the void and the film); `portrait-reveal.ts` (the feature-first photo reveal
-  of 2026-10-08) is no longer used.
+  of 2026-10-08) is no longer used. The last beat is the morph (Chief 2026-10-09, "sebagian wajah
+  saya berubah menjadi persyarafan neuron"; `morph.ts`): over the held last frame a front sweeps
+  in from the left side of the face as seen (`MORPH.cut.side`, Chief's call) between 99.05 and 99.9 (`legacy.morph`, a plain `{ value }`
+  tween without easing whose `onUpdate` hands the progress to the module); the flesh it passes
+  darkens to the void and, a few pixels behind, the face's own edges and light return as the
+  material of chapters 03 and 14 (`face.ts` on the frame's face crop, the glyphs above the
+  hairline flattened out), with somas on the densest features, links, axons growing out of the
+  face, a seam with motes drifting off it, and signals on a repeating GSAP timeline as in
+  `signal.ts`. It is drawn into `<canvas data-film-morph>` at twice the frame's resolution under
+  the film's mask but none of its grade; the journey's ticker drives the living layer past
+  `covered`, the still layer is redrawn only when the front moves, and `data-morph` records the
+  progress. Reduced motion never builds it.
 - Chapter titles reveal behind line masks (2026-10-08, "ending"): after `document.fonts.ready`,
   inside the cinematic matchMedia context, `SplitText.create` splits every chapter `h2` once
   (`mask: 'lines'`, `aria: 'auto'`, no `autoSplit`; the centered titles, chapters 07, 14 and

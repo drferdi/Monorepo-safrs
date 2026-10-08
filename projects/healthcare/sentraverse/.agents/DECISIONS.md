@@ -3,6 +3,42 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (morph) — At the end of THE LEGACY part of the face becomes neural tissue
+
+- Decision (Chief, 2026-10-09, on the film chapter at rest: "di bagian akhir ini buat efek state
+  of the art sebagian wajah saya berubah menjadi persyarafan neuron", then on the first build
+  "meleset itu, wajah kiri saja"): over the film's held last frame the left side of the face as
+  seen (the far cheek, the ear, the temple and the hair) transforms into neural tissue; the
+  transformation is the scroll position's (99.05 → 99.9) and alive at rest.
+- How: `morph.ts` (`MORPH` knobs: the face ellipse 315/232, radii 94×132, in frame px; the cut
+  `side` left (as seen), `from` 120 to `to` 7 px from the centre, `slope` .12, `width` 34, `lag` 14,
+  `deep` 30, `wave` 5; `hairline` 155, above which the glyphs over the hair are flattened; the
+  crop 200/70 240×330; 22 somas, 7 axons with a branch each, 4 signal lanes). The frame's face
+  crop runs through `face.ts`'s `analyseFace` (density .4 desktop, .25 phones); the cover is the
+  void colour over the ellipse past the front, the edges and dots return 14 px behind it in eight
+  bands of reveal, links and axons 30 px behind; somas breathe, a wavering seam fades at its
+  ends with motes drifting off it, and the signals are a repeating GSAP timeline
+  (`createPulseCycle`, paths re-rolled on repeat). Drawn into `<canvas data-film-morph>` at 2×
+  under the film's mask with none of its grade (`legacy.module.css`). `legacy.morph { at:
+  99.05, in: .85 }` is a `{ value }` tween without easing whose `onUpdate` hands the progress to
+  the module (`MasterOptions.morph`); the journey's ticker drives the living layer past
+  `covered`; `data-morph` records the progress. The analysis and the frame size are injected
+  from `NeuralJourney.tsx`, so the module is a leaf the node tests can load.
+- Rulings (Claude Fable 5.1): the first build at density .65 read as static noise over the
+  cheek, so the dots were thinned to .4 and the edges and somas strengthened (the face must read
+  as a wireframe of light, not sparkle); the seam wavers and fades rather than cutting the face
+  with a ruler; the first build transformed the near, camera-facing side and Chief flipped it to
+  the left as seen (one knob, `MORPH.cut.side`), so the axons now leave the temple into the code
+  on the left; the rest at `to` 7 px keeps the nose bridge and the near eye in the photograph.
+- Evidence: typecheck 0, lint 0, node:test 44/44 (5 in `morph.test.mjs`, 1 new in
+  `timeline.test.mjs`), build 0, Playwright neural + smoke 15/15 on 127.0.0.1:4341 (`data-morph`
+  1.00 at 100 and 0.00 at 98.5, the canvas hidden in reading mode and under reduced motion);
+  Chrome frames of the film box at 2× at 99.4 and 100 on 1280×800 and 375×812 (the left-side
+  build; the first build was judged at 99.2–100), the living layer changing at rest, a Chrome
+  scroll pass 99 → 100 → 99 at 2× with rAF gaps of mean 6.7 / p95 12.1 / worst 78.9 ms on
+  1280×800 and 6.5 / 6.2 / 30.2 ms on 375×812, no console error but the known local
+  `/_vercel/speed-insights` 404. Local evidence only.
+
 ## 2026-10-09 (frame sequence) — The film is a scroll-scrubbed frame sequence; nothing stands between SENTRA and the film
 
 - Decision (Chief, 2026-10-09, on the film chapter's frames: "ya ini gak nyambung dan pastikan

@@ -55,6 +55,9 @@ export const legacy = {
   // seconds) between `play` and `end`, so the frame on screen is the scroll position's, and the
   // last frame holds to the end of the story.
   film: { at: 95, in: 1.2, alpha: .85, play: 95.8, end: 99, length: 10.1 },
+  // The morph (`morph.ts`): once the film holds its last frame, part of the face becomes neural
+  // tissue; its progress runs without easing from 0 at `at` to 1 over `in`, held to the end.
+  morph: { at: 99.05, in: .85 },
   title: 99, tagline: 99.22, signature: 99.38, brand: 99.52, cta: 99.65, textIn: .3,
 }
 
@@ -81,6 +84,8 @@ export type MasterOptions = {
   legacy: Element | null
   // Draws the film's frame for a clip time in seconds (`film.ts`); absent, the film is still.
   film?: (time: number) => void
+  // Draws the face's transformation for a progress 0 → 1 (`morph.ts`); absent, the face stays flesh.
+  morph?: (value: number) => void
   // One entry per chapter, null where the title is not split (the h1 of the first chapter).
   titles?: ReadonlyArray<Title | null | undefined>
   scrollTrigger?: ScrollTrigger.Vars
@@ -131,7 +136,7 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
     const panel = panels[index], title = options.titles?.[index] ?? null
     if (chapter.id === 'human' && scene) {
       gsap.set(panel.querySelectorAll(legacyParts.text), { autoAlpha: 0 })
-      master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(legacyScene(gsap, panel, scene, title, at, options.film), at(chapter.phase))
+      master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(legacyScene(gsap, panel, scene, title, at, options.film, options.morph), at(chapter.phase))
       return
     }
     // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
@@ -154,8 +159,9 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
 
 // The final chapter as one scene from phase 94. Every position and duration is a phase span, so
 // a tempo change stretches the whole sequence. Only autoAlpha and y are animated; the film's
-// clock is a plain object whose tween hands each clip time to `film`, which draws the frame.
-function legacyScene(gsap: Gsap, panel: Element, scene: Element, title: Title | null, at: (phase: number) => number, film?: (time: number) => void): gsap.core.Timeline {
+// clock is a plain object whose tween hands each clip time to `film`, which draws the frame, and
+// the morph's progress likewise to `morph`.
+function legacyScene(gsap: Gsap, panel: Element, scene: Element, title: Title | null, at: (phase: number) => number, film?: (time: number) => void, morph?: (value: number) => void): gsap.core.Timeline {
   const k = legacy
   const pos = (phase: number) => at(phase) - at(k.chapter)
   const dur = (phases: number) => at(k.chapter + phases) - at(k.chapter)
@@ -183,7 +189,14 @@ function legacyScene(gsap: Gsap, panel: Element, scene: Element, title: Title | 
     tl.fromTo(clock, { time: 0 }, { time: k.film.length, duration: dur(k.film.end - k.film.play), ease: 'none', immediateRender: false, onUpdate: () => film(clock.time) }, 'film')
   }
 
-  // Beat 03 — the legacy: the title, the line, the signature, the brand, the way on.
+  // Beat 03 — the morph: the film holds its last frame and part of the face becomes neural tissue.
+  tl.addLabel('morph', pos(k.morph.at))
+  if (morph) {
+    const cut = { value: 0 }
+    tl.fromTo(cut, { value: 0 }, { value: 1, duration: dur(k.morph.in), ease: 'none', immediateRender: false, onUpdate: () => morph(cut.value) }, 'morph')
+  }
+
+  // Beat 04 — the legacy: the title, the line, the signature, the brand, the way on.
   tl.addLabel('legacy', pos(k.title))
   if (title) revealTitle(tl, title, 'legacy')
   const beats: Array<[string, number]> = [['[data-legacy-tagline]', k.tagline], ['[data-legacy-signature]', k.signature], ['[data-legacy-brand]', k.brand], ['[data-magnetic]', k.cta]]

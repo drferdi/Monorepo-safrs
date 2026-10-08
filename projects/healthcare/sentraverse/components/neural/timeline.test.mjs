@@ -164,6 +164,23 @@ test('the film: its clock is the scroll position, without easing, from the first
   master.kill()
 })
 
+test('the morph: its progress is the scroll position, without easing, from 0 once the film holds to 1 before the end, held there', () => {
+  const drawn = []
+  const { master, state } = stage(undefined, { morph: value => drawn.push([state.phase, value]) })
+  const k = legacy.morph
+  const scene = master.getById('scene-human')
+  close(scene.labels.morph, at(k.at) - at(94), 1e-9, 'morph label where the progress starts')
+  assert.ok(k.at >= legacy.film.end, 'the face is transformed on the held last frame, never on a moving one')
+  assert.ok(k.at + k.in < 100, 'the transformation is complete before the end of the story')
+  master.time(at(k.at - .01)); assert.equal(drawn.length, 0, 'nothing before the window')
+  const last = () => drawn[drawn.length - 1][1]
+  master.time(at(k.at + k.in / 2)); close(last(), .5, 1e-6, 'half way through the window, half the progress: no easing')
+  master.time(at(k.at + k.in)); close(last(), 1, 1e-6, 'complete at the end of the window')
+  master.time(at(100)); close(last(), 1, 1e-6, 'held to the end')
+  master.time(at(k.at + k.in / 4)); close(last(), .25, 1e-6, 'a quarter again after a reverse scroll')
+  master.kill()
+})
+
 test('the legacy: the title then the line, the signature, the brand and the way on, each after the last, all settled by the end', () => {
   const chars = many(6), lines = many(1)
   const titles = chapters.map(chapter => chapter.id === 'human' ? { lines, chars, centered: true } : null)

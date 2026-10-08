@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { loadPixels } from './face'
+import { analyseFace, loadPixels } from './face'
 import LegacyScene from './LegacyScene'
 import type { Look } from './renderer'
 import { faceLook } from './tactile'
-import { createFilm } from './film'
+import { FILM, createFilm, filmFrameUrl } from './film'
+import { createMorph, faceCrop } from './morph'
 import { MASTER_DURATION, buildMaster, jumpLabel, legacy, settleLegacy } from './timeline'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions, legacyCopy } from './story'
@@ -93,12 +94,17 @@ export default function NeuralJourney() {
           if (mobile && time - lastFrame < 1 / 30) return
           lastFrame = time
           // The legacy's void covers the canvases from `legacy.covered`; nothing under it is drawn.
+          // Past it the only living layer is the face's transformation.
           if (state.phase < legacy.covered) engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal)
+          else morph?.tick(time)
         }
         const scene = root.querySelector<HTMLElement>('[data-legacy]')
         // The film's frames start loading with the build, so they are there by the final chapter.
         const filmCanvas = scene?.querySelector<HTMLCanvasElement>('canvas[data-film-canvas]') ?? null
         const film = filmCanvas && !reduced ? createFilm(filmCanvas) : null
+        const morphCanvas = scene?.querySelector<HTMLCanvasElement>('canvas[data-film-morph]') ?? null
+        // The face's transformation reads the film's last frame (`face.ts` on its face crop).
+        const morph = morphCanvas && !reduced ? createMorph(gsap, morphCanvas, { frame: FILM, face: loadPixels(filmFrameUrl(FILM.frames - 1)).then(pixels => pixels && analyseFace(faceCrop(pixels), { density: mobile ? .25 : .4 })) }) : null
         const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover, look) }
         const observer = new ResizeObserver(resize)
         observer.observe(stage)
@@ -143,7 +149,7 @@ export default function NeuralJourney() {
           // The travel keeps .09 viewport per master unit on desktop and .08 on phones (9 and 8
           // viewports for the hundred units the story had before the legacy took its forty).
           master = buildMaster(gsap, chapters, {
-            state, panels, nav, legacy: scene, titles, film: film ? time => film.render(time) : undefined,
+            state, panels, nav, legacy: scene, titles, film: film ? time => film.render(time) : undefined, morph: morph ? value => morph.render(value) : undefined,
             overview: root.querySelector('[data-overview]'), scrim: root.querySelector('[data-scrim]'),
             // A refresh (a resize) reverts and silently re-renders the master at its progress, so the
             // status line and `data-phase` are brought up to date by hand once it is done.
@@ -207,6 +213,7 @@ export default function NeuralJourney() {
           live = false
           engine.dispose()
           film?.dispose()
+          morph?.dispose()
           activity.dispose()
           // Reading mode shows the legacy still, whatever the cinematic scene left behind.
           if (scene) settleLegacy(gsap, scene, panels[chapters.findIndex(chapter => chapter.id === 'human')])

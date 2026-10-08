@@ -3,7 +3,9 @@
    through it, large (near its native 832×1104, capped by the stage), its edges dissolved into the
    dark and its grade kept low ("jangan terlalu terang"), the clip's own cold world of code and
    formulae left as it is. The film is a canvas the master draws the scroll position's frame
-   into (`film.ts`). The settled state is the stylesheet's: reading mode and the no-JavaScript
+   into (`film.ts`); over it a second canvas carries the face's transformation into neural tissue
+   at the end (`morph.ts`), under the same mask but none of the grade, so the tissue glows. The
+   settled state is the stylesheet's: reading mode and the no-JavaScript
    page show the film's last frame as the still poster; the cinematic timeline starts from the
    open void and brings the film in by phase. */
 .scene {
@@ -26,7 +28,8 @@ main[data-enhanced="cinematic"] [data-chapter] > .scene { position: absolute; in
    radial falloff; the grade darkens and desaturates the clip without recolouring it. */
 .film { --film-h: min(88cqh, 994px, calc(94cqw * 1016 / 832)); position: absolute; left: var(--fx); top: 50%; height: var(--film-h); width: calc(var(--film-h) * 832 / 1016); transform: translate(-50%, -50%); }
 .film img, .film canvas { --film-mask: linear-gradient(180deg, transparent 0, #000 12%, #000 82%, transparent 100%), radial-gradient(ellipse 54% 58% at 50% 46%, #000 46%, rgb(0 0 0 / .5) 76%, transparent 100%); position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; -webkit-mask-image: var(--film-mask); mask-image: var(--film-mask); -webkit-mask-composite: source-in; mask-composite: intersect; filter: brightness(.6) contrast(1.05) saturate(.55); }
-/* The poster is the still state's and the canvas the cinematic build's: each hidden where the
+.film canvas[data-film-morph] { filter: none; }
+/* The poster is the still state's and the canvases the cinematic build's: each hidden where the
    other shows, so the shared mask never doubles at the edges. */
 .film canvas { visibility: hidden; }
 main[data-enhanced="cinematic"] .film canvas { visibility: visible; }
