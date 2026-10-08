@@ -96,8 +96,9 @@ class Tissue {
     this.points.push(...this.vertex(p, color, size, birth, phase))
     this.pointNormals.push(...normal)
   }
-  line(a: Vec3, b: Vec3, color = WHITE, birth = 0, phase = 0) {
-    this.lines.push(...this.vertex(a, color, 1, birth, phase), ...this.vertex(b, color, 1, birth, phase + .006))
+  // For lines the size slot is a brightness weight (1 for every line that is not a tapered strand).
+  line(a: Vec3, b: Vec3, color = WHITE, birth = 0, phase = 0, weight = 1) {
+    this.lines.push(...this.vertex(a, color, weight, birth, phase), ...this.vertex(b, color, weight, birth, phase + .006))
     this.lineNormals.push(...this.normalOf(a), ...this.normalOf(b))
   }
   path(points: Vec3[], color = WHITE, birth = 0) {
@@ -152,10 +153,12 @@ class Tissue {
       if (parent.type === 1 || parent.p === c.p) continue
       this.tag = tagOf(lane, c.type === 2 ? 1 : 0)
       const strands = strandCount(c.radius, this.density), shade = c.type === 2 ? BLUE : color
+      // Fewer strands add up to less light, so a thin twig is weighted up to twice as bright.
+      const weight = Math.min(2, Math.max(1, Math.sqrt(4 / strands)))
       const a = at(parent), b = at(c)
       for (let k = 0; k < strands; k++) {
         const offset = (k - (strands - 1) / 2) * .012
-        this.line([a[0] + offset, a[1] + offset, a[2]], [b[0] + offset, b[1] + offset, b[2]], shade, c.birth, c.phase)
+        this.line([a[0] + offset, a[1] + offset, a[2]], [b[0] + offset, b[1] + offset, b[2]], shade, c.birth, c.phase, weight)
       }
       if (i % 2 === 0) this.point(b, color, .9, c.birth, c.phase)
     }

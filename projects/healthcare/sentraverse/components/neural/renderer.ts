@@ -5,7 +5,7 @@ import type { Geometry, Vec3 } from './geometry'
 import { clamp, smooth } from './story'
 import { facePlacement, portraitState } from './tactile'
 
-type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer }
+type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer; pointNormals?: WebGLBuffer; lineNormals?: WebGLBuffer }
 type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number; relief: number; reveal: number }
 export type Look = { turn: number; highlight: Vec3; hover: number }
 const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0, relief: 1, reveal: 0 })
@@ -18,6 +18,10 @@ attribute vec3 a_color;
 attribute float a_size;
 attribute float a_birth;
 attribute float a_phase;
+attribute vec4 a_normal;
+uniform float u_lit;
+uniform float u_focus;
+uniform mediump float u_points;
 uniform vec3 u_camera;
 uniform vec3 u_offset;
 uniform float u_aspect;
@@ -43,14 +47,32 @@ void main() {
   float rc = cos(u_roll), rs = sin(u_roll);
   vec2 xy = vec2(p.x*rc-p.y*rs,p.x*rs+p.y*rc);
   gl_Position = vec4(xy.x*1.85/u_aspect, xy.y*1.85, depth*.99-.1, depth);
-  gl_PointSize = clamp(a_size*u_dpr*6.0/max(depth, .2), .6, 22.0*u_dpr);
+  // Focus (spec 2026-10-08): lit layers soften away from the focus plane, size up to x2, alpha to .4.
+  float coc = clamp(abs(depth-u_focus)/6.0, 0.0, 1.0)*u_lit;
+  gl_PointSize = clamp(a_size*u_dpr*6.0/max(depth, .2), .6, 22.0*u_dpr)*(1.0+coc);
   float born = 1.0-smoothstep(u_growth, u_growth+.07, a_birth);
   float fog = clamp(1.6-depth/28.0, .12, 1.0);
   float pulse = pow(max(0.0, sin(a_phase*19.0-u_time*1.3)), 22.0)*u_pulse;
   float nearby = exp(-distance(a_position, u_highlight)*1.4)*u_hover;
-  vec3 color = mix(a_color, vec3(1.0,.75,.43), pulse*.85) + vec3(.22,.3,.4)*nearby;
+  // For lines a_size is a brightness weight (tapered strands); points keep it as their size.
+  vec3 color = (mix(a_color, vec3(1.0,.75,.43), pulse*.85) + vec3(.22,.3,.4)*nearby)*mix(a_size, 1.0, u_points);
+  // Emission-based lighting (spec 2026-10-08): a warm key, a cool rim, less glow on the far side
+  // (additive blending cannot darken; the floor is .7, not the spec's .45, because one-pixel lines
+  // have no area to carry shading and the far half of a neuron vanished) and a specular highlight
+  // only while an impulse passes.
+  vec3 n = a_normal.xyz;
+  n = vec3(n.x*c+n.z*s, n.y, -n.x*s+n.z*c);
+  vec3 eye = normalize(-p);
+  vec3 key = normalize(vec3(-.4, .7, .6));
+  float facing = dot(n, key);
+  float rim = pow(1.0-abs(dot(n, eye)), 3.0);
+  float occlusion = .7+.3*smoothstep(-.6, .3, facing);
+  float specular = pulse*pow(max(0.0, dot(reflect(-key, n), eye)), 32.0)*.9;
+  float luma = (color.r+color.g+color.b)/3.0;
+  vec3 lit = color*(.6+.55*max(0.0, facing)*vec3(1.0,.94,.86))*occlusion + vec3(.62,.78,1.0)*.35*rim*luma + vec3(1.0,.95,.85)*specular;
+  color = mix(color, lit, u_lit);
   float resolved = smoothstep(a_birth-.08, a_birth+.08, u_reveal*1.18-.09);
-  v_color = vec4(color, u_alpha*born*fog*(.6+pulse*.65)*(1.0-resolved*.94));
+  v_color = vec4(color, u_alpha*born*fog*(.6+pulse*.65)*(1.0-resolved*.94)*(1.0-.6*coc));
 }`
 const fragmentSource = `
 precision mediump float;
@@ -77,6 +99,7 @@ export class NeuralRenderer {
   private lost = false
   private uniforms = new Map<string, WebGLUniformLocation | null>()
   private attributes: number[] = []
+  private normalAttribute = -1
   private density: number
   private disposed = false
   private face: Geometry | null = null
@@ -127,7 +150,8 @@ export class NeuralRenderer {
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('Shader linking failed')
       gl.useProgram(program)
       this.attributes = ['a_position', 'a_color', 'a_size', 'a_birth', 'a_phase'].map(name => gl.getAttribLocation(program, name))
-      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'relief', 'reveal']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
+      this.normalAttribute = gl.getAttribLocation(program, 'a_normal')
+      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'relief', 'reveal', 'lit', 'focus']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
       gl.clearColor(0, 0, 0, 0)
     } finally { shaders.forEach(shader => gl.deleteShader(shader)) }
@@ -148,11 +172,13 @@ export class NeuralRenderer {
     const geometry = factory(this.density)
     const layer: Layer = { geometry }
     if (this.gl && !this.lost) {
-      for (const key of ['points', 'lines'] as const) {
+      for (const key of ['points', 'lines', 'pointNormals', 'lineNormals'] as const) {
+        const data = geometry[key]
+        if (!data) continue
         const buffer = this.gl.createBuffer()
         if (!buffer) continue
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer)
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, geometry[key], this.gl.STATIC_DRAW)
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, data, this.gl.STATIC_DRAW)
         layer[key] = buffer
       }
     }
@@ -169,7 +195,9 @@ export class NeuralRenderer {
       gl.uniform3fv(uniform('camera'), view.camera)
       gl.uniform3fv(uniform('offset'), view.offset)
       gl.uniform3fv(uniform('highlight'), view.highlight)
-      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, relief: view.relief, reveal: view.reveal }
+      // Lit layers are the ones that carry normals; their focus plane is the depth of the model origin.
+      const lit = layer.geometry.lineNormals ? 1 : 0
+      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, relief: view.relief, reveal: view.reveal, lit, focus: view.camera[2] - view.offset[2] }
       for (const [key, value] of Object.entries(values)) gl.uniform1f(uniform(key), value)
       for (const key of ['lines', 'points'] as const) {
         if (!layer[key] || !layer.geometry[key].length) continue
@@ -180,6 +208,17 @@ export class NeuralRenderer {
           gl.enableVertexAttribArray(location)
           gl.vertexAttribPointer(location, sizes[i], gl.FLOAT, false, 36, offsets[i] * 4)
         })
+        const normals = layer[key === 'points' ? 'pointNormals' : 'lineNormals']
+        if (this.normalAttribute >= 0) {
+          if (normals) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, normals)
+            gl.enableVertexAttribArray(this.normalAttribute)
+            gl.vertexAttribPointer(this.normalAttribute, 4, gl.FLOAT, false, 16, 0)
+          } else {
+            gl.disableVertexAttribArray(this.normalAttribute)
+            gl.vertexAttrib4f(this.normalAttribute, 0, 0, 1, -1)
+          }
+        }
         gl.uniform1f(uniform('points'), key === 'points' ? 1 : 0)
         gl.drawArrays(key === 'points' ? gl.POINTS : gl.LINES, 0, layer.geometry[key].length / 9)
       }
@@ -213,6 +252,8 @@ export class NeuralRenderer {
     ctx.fillStyle = '#b5c8dc'
     for (let i = 0; i < geometry.points.length; i += 27) {
       if (geometry.points[i + 7] > view.growth) continue
+      // Release particles only move in the shader; the static fallback leaves them out.
+      if (geometry.pointNormals && geometry.pointNormals[i / 9 * 4 + 3] >= 199) continue
       const p = project(geometry.points, i)
       if (p.depth < .2) continue
       const size = clamp(geometry.points[i + 6] * p.scale * .008, .4, 3)
@@ -298,7 +339,7 @@ export class NeuralRenderer {
   private releaseGL() {
     const gl = this.gl
     if (!gl) return
-    for (const layer of this.layers.values()) { if (layer.points) gl.deleteBuffer(layer.points); if (layer.lines) gl.deleteBuffer(layer.lines) }
+    for (const layer of this.layers.values()) for (const key of ['points', 'lines', 'pointNormals', 'lineNormals'] as const) { if (layer[key]) gl.deleteBuffer(layer[key]!) }
     if (this.program) gl.deleteProgram(this.program)
   }
 
