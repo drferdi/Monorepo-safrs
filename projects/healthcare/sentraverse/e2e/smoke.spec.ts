@@ -14,13 +14,11 @@ test.describe('sentra-main marketing site', () => {
     }
   })
 
-  test('cinematic journey reaches the ecosystem CTA', async ({ page }) => {
+  test('contact section renders waiting-list CTA', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('main')).toHaveAttribute('data-loading', 'false')
-    await page.getByRole('button', { name: 'Go to The legacy', exact: true }).click()
-    // The jump lands at the chapter's start; the way on appears once the story has reached its end.
-    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
-    await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toBeVisible()
-    await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toHaveAttribute('href', '/ekosistem')
+    await expect(page.locator('#contact')).toBeVisible()
+    // The waiting list is a form: an email field and a submit button (components/Footer.tsx).
+    await expect(page.getByRole('textbox', { name: /waiting list/i })).toBeVisible()
+    await expect(page.getByRole('button', { name: /join waiting list/i })).toBeVisible()
   })
 })

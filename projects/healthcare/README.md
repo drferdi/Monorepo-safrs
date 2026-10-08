@@ -10,6 +10,7 @@ Healthcare systems that share compliance context and patient-data handling.
 | --- | --- |
 | [`avery`](./avery/README.md) | Configuration and deployment of Avery, Sentra's Hermes agent |
 | [`sentraverse`](./sentraverse/README.md) | Public Sentra marketing website and platform hub (Next.js) |
+| [`sentraverse-neural`](./sentraverse-neural/README.md) | Sentraverse neural journey: the cinematic GSAP story of Sentra as its own site (Next.js) |
 | [`assistverse`](./assistverse/README.md) | Public Sentra Assist website (Next.js) |
 | [`referralink`](./referralink/README.md) | MEDLINK sandbox for differential diagnosis, ICD-10 mapping, and referral (Vite) |
 | [`healthsphere`](./healthsphere/README.md) | Public website of UPTD Puskesmas PONED Balowerti Kediri (app in `website/`) |

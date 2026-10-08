@@ -1,0 +1,19 @@
+/* Architected and built by Drferdi. */
+/* Tailwind's preflight is the reset the journey was built on (in the Sentraverse site); no
+   utilities are used. The journey's own colours live in components/neural/journey.module.css. */
+@import "tailwindcss";
+
+:root { color-scheme: dark; }
+
+body {
+  margin: 0;
+  background: #06090e;
+  color: #e5e9ee;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+body > * { position: relative; z-index: 1; }

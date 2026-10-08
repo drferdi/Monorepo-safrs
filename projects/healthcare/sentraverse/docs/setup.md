@@ -75,10 +75,11 @@ The app will be available at **[http://localhost:3000](http://localhost:3000)**.
 
 ### What to expect on first load
 
-- The home page is the neural journey: a pinned stage scrubbed by the scroll
-  through fifteen chapters, ending on the founder's film
-- The film's frames load once the story reaches the network chapter, not with
-  the page
+- `SentraSim` starts in idle state — click the start button to run the
+  simulation
+- `Hero` animated Audrey chat runs automatically through 4 clinical phases
+- `Clients` logo marquee runs at 60s loop
+- `ClinicalTrajectory` renders with demo patient data on scroll-into-view
 
 ---
 

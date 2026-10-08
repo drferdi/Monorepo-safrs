@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { analyseFace, loadPixels } from './face'
 import type { FaceAnalysis } from './face'
@@ -11,7 +10,7 @@ import { FILM, createFilm, filmFrameUrl } from './film'
 import { createMorph, faceCrop } from './morph'
 import { MASTER_DURATION, buildMaster, jumpLabel, legacy, settleLegacy } from './timeline'
 import { attachPointerWake } from './wake'
-import { activeChapter, chapters, divisions, legacyCopy, phaseOf } from './story'
+import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra } from './story'
 import styles from './journey.module.css'
 
 export default function NeuralJourney() {
@@ -294,7 +293,7 @@ export default function NeuralJourney() {
         <header className={styles.header}>
           <a href="#top" className={styles.wordmark} onClick={event => { event.preventDefault(); navigateRef.current(0) }} aria-label="Sentraverse, return to origin"><span className={styles.mark} aria-hidden="true">✳</span> SENTRAVERSE<span className={styles.wordmarkDot}>®</span></a>
           <nav data-nav className={styles.nav} aria-label="Primary navigation">
-            <button data-jump={phaseOf('network')}>Sentraverse</button><button data-jump={phaseOf('division-1')}>Divisions</button><Link href="/story">About</Link><Link href="/ekosistem">Explore <span aria-hidden="true">↗</span></Link>
+            <button data-jump={phaseOf('network')}>Sentraverse</button><button data-jump={phaseOf('division-1')}>Divisions</button><a href={sentra('/story')}>About</a><a href={sentra('/ekosistem')}>Explore <span aria-hidden="true">↗</span></a>
           </nav>
           <span className={styles.edition}>SENTRA / LIVING SYSTEMS</span>
         </header>
@@ -320,7 +319,7 @@ export default function NeuralJourney() {
                     <p data-legacy-tagline className={styles.tagline}>{chapter.description}</p>
                     <p data-legacy-signature className={styles.signature}><strong>{legacyCopy.name}</strong><span>{legacyCopy.role}</span></p>
                     <p data-legacy-brand className={styles.brand}><strong>{legacyCopy.brand}</strong><span>{chapter.annotation}</span></p>
-                    <Link href="/ekosistem" data-magnetic className={styles.cta}>EXPLORE SENTRAVERSE <span aria-hidden="true">↗</span></Link>
+                    <a href={sentra('/ekosistem')} data-magnetic className={styles.cta}>EXPLORE SENTRAVERSE <span aria-hidden="true">↗</span></a>
                   </div>
                 ) : (
                   <div data-marker-copy data-division={division ? divisionIndex : undefined}>
@@ -358,10 +357,10 @@ export default function NeuralJourney() {
       </div>
       <div className={styles.colophon}>
         <span>SENTRAVERSE © {new Date().getFullYear()}</span><span>INTELLIGENCE BEGINS AS CONNECTION.</span>
-        <div><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div>
+        <div><a href={sentra('/privacy')}>Privacy</a><a href={sentra('/terms')}>Terms</a></div>
       </div>
       <noscript><p className={styles.noScript}>The complete story is available below each illustration. Enable JavaScript for the cinematic journey.</p></noscript>
-      <div className={styles.accessibleDivisions} aria-label="Ecosystem divisions"><span>Discover the ecosystem</span>{divisions.map(division => <Link href="/ekosistem" key={division.name}>{division.name}</Link>)}</div>
+      <div className={styles.accessibleDivisions} aria-label="Ecosystem divisions"><span>Discover the ecosystem</span>{divisions.map(division => <a href={sentra('/ekosistem')} key={division.name}>{division.name}</a>)}</div>
     </main>
   )
 }

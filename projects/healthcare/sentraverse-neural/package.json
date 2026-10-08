@@ -1,0 +1,41 @@
+{
+  "architect": "Architected and built by Drferdi.",
+  "name": "@the-abyss/sentraverse-neural",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sentraverse neural journey — the cinematic GSAP story of Sentra, as its own site",
+  "type": "module",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "next dev --webpack --hostname 127.0.0.1 --port 4346",
+    "build": "next build --webpack",
+    "start": "next start --hostname 127.0.0.1 --port 4346",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test \"components/**/*.test.mjs\"",
+    "test:e2e": "playwright test",
+    "deploy:dry-run": "node scripts/deploy-dry-run.mjs"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "gsap": "3.15.0",
+    "next": "16.3.6",
+    "postcss": "8.5.28",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tailwindcss": "4.3.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "25.9.8",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.6",
+    "typescript": "5.9.3"
+  }
+}

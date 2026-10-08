@@ -1,8 +1,10 @@
 # Sentraverse neural journey
 
-The homepage follows the approved biological-origin-to-ecosystem brief. Its fifteen narrative
-beats include the five division discoveries, in the exact requested order. Existing product,
-story, insights, legal, and proxy routes remain available. The final CTA opens `/ekosistem`.
+The journey is its own site (split out of `sentraverse` on 2026-10-09) and follows the approved
+biological-origin-to-ecosystem brief. Its fifteen narrative beats include the five division
+discoveries, in the exact requested order. The pages it points to (story, ecosystem, privacy,
+terms) live on sentrahai.com and are linked through `sentra(path)` in `story.ts`; the final CTA
+opens `https://sentrahai.com/ekosistem`.
 
 ## Ownership and animation
 
@@ -224,7 +226,7 @@ node scripts/pnpm.mjs run build
 node scripts/pnpm.mjs run deploy:dry-run
 ```
 
-`node scripts/pnpm.mjs run test` runs every `*.test.mjs` under `app/` and `components/` (a glob,
+`node scripts/pnpm.mjs run test` runs every `*.test.mjs` under `components/` (a glob,
 so a new test file runs without touching `package.json`; CI runs it on every push):
 `tactile.test.mjs` (magnet pull, face placement and look), `face.test.mjs` (the analysis,
 `makeFace`, the feature-first growth order), `morphology.test.mjs`, `signal.test.mjs`,
@@ -241,7 +243,8 @@ phone resize, reading mode), the film's loading (no frame before the network cha
 and 119 first, all 120 by the end, none missing, `Cache-Control` immutable), the legacy's words
 and layout on every breakpoint, mobile overflow, OS reduced-motion changes, context loss,
 missing WebGL, no canvas context, JavaScript-disabled reading, pin cleanup, connected-region
-navigation and frame timing. `e2e/smoke.spec.ts` keeps the public-route checks.
+navigation and frame timing. `e2e/smoke.spec.ts` checks the page loads with the journey as its main landmark and reaches the
+way on to sentrahai.com.
 
 Performance targets (Chief 2026-10-09, "sesuaikan best practice"): the Core Web Vitals "good"
 thresholds at the 75th percentile — LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1 — and no film bytes

@@ -1,0 +1,16 @@
+# Capsule standalone: workspace pnpm milik sentraverse-neural sendiri, lockfile di folder ini.
+packages: []
+
+# Kontrak standalone menolak symlink di pohon capsule; linker hoisted membuat
+# node_modules datar tanpa symlink.
+nodeLinker: hoisted
+
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
+
+# Advisori keamanan (pnpm audit 2026-09-26): postcss <= 8.5.22 dan sharp < 0.35.4
+# lewat dependensi transitif next.
+overrides:
+  postcss: ">=8.5.23"
+  sharp: ">=0.35.4"

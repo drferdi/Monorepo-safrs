@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "healthcare/sentraverse-neural",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R1",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": { "program": "node", "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"], "timeoutSeconds": 600 },
+    "lint": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "lint"], "timeoutSeconds": 300 },
+    "typecheck": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "typecheck"], "timeoutSeconds": 300 },
+    "test": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "test"], "timeoutSeconds": 300 },
+    "build": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "build"], "timeoutSeconds": 600 },
+    "run": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "start"] },
+    "deployDryRun": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "deploy:dry-run"] }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4346,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 120
+  },
+  "artifacts": [".next/BUILD_ID"],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true }
+  ],
+  "mutableStatePaths": ["node_modules", ".next", "next-env.d.ts", "tsconfig.tsbuildinfo", "test-results", "playwright-report"]
+}

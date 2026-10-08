@@ -254,7 +254,7 @@ test('without JavaScript the full narrative and destination remain available', a
   const page = await context.newPage()
   await page.goto('/')
   for (const name of divisionNames) await expect(page.getByRole('heading', { name, exact: true })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toHaveAttribute('href', '/ekosistem')
+  await expect(page.getByRole('link', { name: 'EXPLORE SENTRAVERSE', exact: true })).toHaveAttribute('href', 'https://sentrahai.com/ekosistem')
   await context.close()
 })
 

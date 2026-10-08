@@ -57,7 +57,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # node:test over every *.test.mjs (the journey's timeline, film, morph and geometry).
+      # node:test over every *.test.mjs under app/ and components/.
       # The Playwright e2e stays local for now (Chief 2026-10-09).
       - name: Run node:test
         run: pnpm test

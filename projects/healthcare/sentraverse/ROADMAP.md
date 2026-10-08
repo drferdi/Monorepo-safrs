@@ -7,11 +7,11 @@ _Architected and built by Drferdi — Sentra Healthcare Solutions © 2025–2026
 ## Active — Q1 2026
 
 ### Performance
-- [x] ~~Lazy-load `SentraSim` + `ClinicalTrajectory` + `ClinicalPrognosis`~~ — dropped 2026-10-09: the home page is the neural journey and none of them ships on it
+- [ ] Lazy-load `SentraSim` (57.1 KB) + `ClinicalTrajectory` (27.5 KB) + `ClinicalPrognosis` (28.5 KB) via `next/dynamic` — these three components account for ~113 KB of the initial client bundle
 - [ ] `@next/bundle-analyzer` integration for ongoing bundle regression monitoring
 
 ### Features
-- [x] ~~Wire `ClinicalPrognosis` into the landing page~~ — dropped 2026-10-09: the component was removed with the old landing page
+- [ ] Wire `ClinicalPrognosis` component into the landing page section sequence (component is complete — not yet added to `app/page.tsx`)
 - [ ] Per-page Open Graph metadata for `/story` and `/insights/[slug]` (currently inheriting root layout metadata)
 
 ### Content
@@ -23,7 +23,7 @@ _Architected and built by Drferdi — Sentra Healthcare Solutions © 2025–2026
 
 ### Testing
 - [ ] End-to-end test suite with Playwright — verify all 14 landing sections render, all anchor navigation works, and `/insights/[slug]` resolves correctly for all published articles
-- [ ] Visual regression testing for the neural journey (canvas frames per chapter)
+- [ ] Visual regression testing for animation-heavy components (`SentraSim`, `Hero` phases)
 
 ### Observability
 - [ ] OpenTelemetry SDK integration for Core Web Vitals (LCP, CLS, FID/INP) reporting

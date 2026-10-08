@@ -271,8 +271,8 @@ flowchart TB
     Root --> Wiki
     Root --> API
 
-    Landing --> L1["Neural Journey · 15 scroll-scrubbed chapters"]
-    Landing --> L2["Five Divisions · SENTRA · THE LEGACY film"]
+    Landing --> L1["Hero · Project Slider · About Sentra"]
+    Landing --> L2["Ecosystem · SentraSim · Clinical Suite · FAQ"]
     Story --> S1["Founder Journey · Product Timeline · Milestones · Roadmap"]
     Insights --> I1["Clinical AI Editorial · Article Index · Medium · Substack"]
     Pedia --> P1["144 Diseases · Search · Category Filter · Detail Panel"]
@@ -299,24 +299,59 @@ flowchart TB
 
 ## 08 / HOMEPAGE TOPOLOGY
 
-The home page (`app/page.tsx`) renders one component, `components/neural/NeuralJourney.tsx`: a
-pinned, scroll-scrubbed journey of fifteen chapters on a single GSAP master timeline. The full
-design record is `docs/neural-journey.md`.
+The landing page is rendered from `app/page.tsx` as a 15-section scroll-driven
+editorial experience.
 
 ```mermaid
 %%{init: {"flowchart": {"padding": 18}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
 flowchart TB
-    Page["app/page.tsx"] --> Journey["NeuralJourney<br/>matchMedia · pinned stage"]
-    Journey --> Master["timeline.ts<br/>one master · ScrollTrigger scrub"]
-    Master --> Scenes["chapter scenes<br/>titles · panels · markers"]
-    Master --> Legacy["THE LEGACY<br/>film frames · morph"]
-    Journey --> Renderer["renderer.ts<br/>WebGL · Canvas fallback"]
-    Journey --> Reading["reading mode<br/>reduced motion · no JS"]
+    Page["Landing Page<br/>app/page.tsx"]
+
+    Hero["Hero<br/>rotating keyword + Audrey card"]
+    Slider["ProjectSlider<br/>clinical footage"]
+    AboutSentra["AboutSentra<br/>platform introduction"]
+    About["About<br/>manifesto + Asclepius clock"]
+    Ecosystem["Ecosystem<br/>pinned product cards"]
+    Clients["Clients<br/>technology + institution marks"]
+    SentraSim["SentraSim<br/>clinical screen + terminal"]
+    Interlude["Interlude<br/>visual breather"]
+    Blueprint["BlueprintStory<br/>AADI + console + trajectory"]
+    Showcase["Showcase<br/>agents + thinking stack"]
+    Services["Services<br/>accordion"]
+    ClinicalSuite["ClinicalSuite<br/>triage + trajectory + prognosis"]
+    Gallery["ScrollGallery<br/>scroll-driven imagery"]
+    FAQ["FAQ<br/>JSON-LD FAQPage"]
+    Footer["Footer<br/>brand plate + disclaimer"]
+
+    Page --> Hero
+    Page --> Slider
+    Page --> AboutSentra
+    Page --> About
+    Page --> Ecosystem
+    Page --> Clients
+    Page --> SentraSim
+    Page --> Interlude
+    Page --> Blueprint
+    Page --> Showcase
+    Page --> Services
+    Page --> ClinicalSuite
+    Page --> Gallery
+    Page --> FAQ
+    Page --> Footer
 
     classDef page fill:#0D1117,stroke:#5B8CFF,color:#FFFFFF,stroke-width:4px;
-    classDef motion fill:#0D1117,stroke:#22D3EE,color:#FFFFFF,stroke-width:2px;
+    classDef hero fill:#0D1117,stroke:#22D3EE,color:#FFFFFF,stroke-width:3px;
+    classDef product fill:#0D1117,stroke:#5B8CFF,color:#FFFFFF,stroke-width:2px;
+    classDef clinical fill:#0D1117,stroke:#8B5CF6,color:#FFFFFF,stroke-width:2px;
+    classDef content fill:#0D1117,stroke:#22D3EE,color:#FFFFFF,stroke-width:2px;
+    classDef governance fill:#0D1117,stroke:#14B8A6,color:#FFFFFF,stroke-width:2px;
+
     class Page page;
-    class Journey,Master,Scenes,Legacy,Renderer,Reading motion;
+    class Hero,About,Footer hero;
+    class Ecosystem,Showcase,Services product;
+    class SentraSim,Blueprint,ClinicalSuite clinical;
+    class Slider,AboutSentra,Clients,Interlude,Gallery content;
+    class FAQ governance;
 ```
 
 ---
@@ -325,13 +360,23 @@ flowchart TB
 
 ## 09 / HOMEPAGE SECTIONS
 
-| <sub>File</sub> | <sub>Role</sub> |
-| --- | --- |
-| <sub>`components/neural/story.ts`</sub> | <sub>The fifteen chapters (id, phase, words); jump buttons and hash aliases read their phases from here</sub> |
-| <sub>`components/neural/timeline.ts`</sub> | <sub>The master timeline, the phase→time tempo and THE LEGACY's beats; built headless in `timeline.test.mjs`</sub> |
-| <sub>`components/neural/NeuralJourney.tsx`</sub> | <sub>Lifecycle (`gsap.matchMedia` + revert), the pinned ScrollTrigger, pointer, sound, reading mode</sub> |
-| <sub>`components/neural/renderer.ts` · `geometry.ts` · `signal.ts`</sub> | <sub>The neural field in WebGL (Canvas 2D fallback) and its GSAP activity cycle</sub> |
-| <sub>`components/neural/film.ts` · `morph.ts` · `LegacyScene.tsx`</sub> | <sub>The final chapter: the founder's film as a scrubbed frame sequence and the face that becomes neural tissue</sub> |
+| <sub>#</sub> | <sub>Section</sub> | <sub>Function</sub> |
+| <sub>--:</sub> | <sub>----------------</sub> | <sub>-----------------------------------------------------------------------------------------------------</sub> |
+| <sub>1</sub> | <sub>`Hero`</sub> | <sub>Rotating GSAP headline keyword, count-up metrics, 4-phase Audrey consultation card, ambient scan-line</sub> |
+| <sub>2</sub> | <sub>`ProjectSlider`</sub> | <sub>Full-bleed clinical footage and product atmosphere</sub> |
+| <sub>3</sub> | <sub>`AboutSentra`</sub> | <sub>Platform introduction and positioning</sub> |
+| <sub>4</sub> | <sub>`About`</sub> | <sub>Manifesto section with light plate, GSAP draw-in rules, and Asclepius clock mark</sub> |
+| <sub>5</sub> | <sub>`Ecosystem`</sub> | <sub>Horizontally pinned product cards with GSAP scrub and typing subtitle</sub> |
+| <sub>6</sub> | <sub>`Clients`</sub> | <sub>Technology and institution marks</sub> |
+| <sub>7</sub> | <sub>`SentraSim`</sub> | <sub>Embedded clinical screen simulation with live code terminal</sub> |
+| <sub>8</sub> | <sub>`Interlude`</sub> | <sub>Static visual breather between pinned sequences</sub> |
+| <sub>9</sub> | <sub>`BlueprintStory`</sub> | <sub>Pinned multi-scene blueprint narrative covering AADI, console, and trajectory</sub> |
+| <sub>10</sub> | <sub>`Showcase`</sub> | <sub>Orchestration agents and thinking-stack terminal</sub> |
+| <sub>11</sub> | <sub>`Services`</sub> | <sub>Service accordion</sub> |
+| <sub>12</sub> | <sub>`ClinicalSuite`</sub> | <sub>Tabbed clinical workspace for triage, trajectory, and prognosis</sub> |
+| <sub>13</sub> | <sub>`ScrollGallery`</sub> | <sub>Scroll-driven product and clinical imagery</sub> |
+| <sub>14</sub> | <sub>`FAQ`</sub> | <sub>12-question FAQ section with two-column cream plate and JSON-LD FAQPage</sub> |
+| <sub>15</sub> | <sub>`Footer`</sub> | <sub>Acid-yellow brand plate with contact, waiting list, stewardship, and medical disclaimer</sub> |
 
 ---
 
@@ -430,7 +475,7 @@ flowchart TD
 
 | <sub><b>Route</b></sub> | <sub><b>Rendering</b></sub> | <sub><b>Purpose</b></sub> |
 | -------------- | ----------- | ---------------------------------------------------------------------- |
-| <sub>`/`</sub> | <sub>Static</sub> | <sub>Neural journey: fifteen scroll-scrubbed chapters on one GSAP master</sub> |
+| <sub>`/`</sub> | <sub>Static</sub> | <sub>Landing page with 15-section scroll-driven product experience</sub> |
 | <sub>`/story`</sub> | <sub>Static</sub> | <sub>Founder story, product milestones, timeline, and roadmap</sub> |
 | <sub>`/insights`</sub> | <sub>Static</sub> | <sub>Clinical-AI editorial index</sub> |
 | <sub>`/sentrapedia`</sub> | <sub>Static</sub> | <sub>144-disease clinical reference for primary care</sub> |
@@ -588,25 +633,25 @@ Core design tokens are governed through:
 
 ## 16 / MOTION SYSTEM
 
-Sentraverse uses motion as a product explanation layer. On the home page all of it rides one GSAP
-master timeline scrubbed by one pinned ScrollTrigger (`components/neural/timeline.ts`); the other
-routes use Framer Motion entrances.
+Sentraverse uses motion as a product explanation layer.
 
 | <sub><b>Motion Pattern</b></sub> | <sub><b>Purpose</b></sub> |
 | ---------------------------- | ------------------------------------------------------ |
-| <sub>One master, story phases</sub> | <sub>Every chapter is a nested timeline placed by phase; the tempo gives the key moments more scroll</sub> |
-| <sub>ScrollTrigger scrub (.8 desktop, .35 phone)</sub> | <sub>Tie the story to the scroll with a short catch-up; at rest the frame is exactly the scroll's</sub> |
-| <sub>Frame-sequence film</sub> | <sub>The final chapter's clip drawn on a canvas from the master's clock, never a seeked `<video>`</sub> |
-| <sub>Framer Motion entrances</sub> | <sub>Orientation and section rhythm on the other routes</sub> |
-| <sub>Reduced-motion and reading mode</sub> | <sub>A complete, unpinned story for accessibility preferences</sub> |
+| <sub>GSAP pinned sections</sub> | <sub>Explain long-form product narrative</sub> |
+| <sub>ScrollTrigger scrub</sub> | <sub>Tie animation to user intent</sub> |
+| <sub>Rotating hero keyword</sub> | <sub>Communicate product scope quickly</sub> |
+| <sub>Count-up metrics</sub> | <sub>Create executive-level energy</sub> |
+| <sub>Clinical simulation sequence</sub> | <sub>Show workflow without claiming real patient management</sub> |
+| <sub>Framer Motion entrances</sub> | <sub>Improve orientation and section rhythm</sub> |
+| <sub>Reduced-motion support</sub> | <sub>Respect accessibility preferences</sub> |
 
 Implementation discipline:
 
-- one ScrollTrigger on the top-level master; nested scenes carry none
-- `gsap.matchMedia()` scoped to the journey, reverted on unmount; no global `gsap.defaults()`
-- `invalidateOnRefresh` for responsive recalculation
-- heavy media (the film frames) loads on the way to it, not with the page
-- avoid motion that hides information; keep animation subordinate to product meaning
+- use `anticipatePin` for stable pinned transitions
+- use `invalidateOnRefresh` for responsive recalculation
+- avoid motion that hides information
+- avoid autoplay clinical claims
+- keep animation subordinate to product meaning
 
 ---
 
@@ -773,14 +818,17 @@ Sentraverse includes structured SEO and AI-discoverability support.
 
 | <sub><b>File</b></sub> | <sub><b>Why It Matters</b></sub> |
 | ------------------------------ | ----------------------------------------------------- |
-| <sub>`app/page.tsx`</sub> | <sub>Home page: the neural journey</sub> |
+| <sub>`app/page.tsx`</sub> | <sub>Main landing page and 15-section composition</sub> |
 | <sub>`app/layout.tsx`</sub> | <sub>Root layout, fonts, JSON-LD, and SmoothScrollProvider</sub> |
 | <sub>`app/globals.css`</sub> | <sub>Design tokens, scoped themes, keyframes</sub> |
 | <sub>`lib/design-governance.ts`</sub> | <sub>Layout and typography governance</sub> |
 | <sub>`lib/use-smooth-scroll.ts`</sub> | <sub>Custom lerp wheel-smoothing hook</sub> |
 | <sub>`lib/site-links.ts`</sub> | <sub>Internal link single source of truth</sub> |
-| <sub>`components/neural/*`</sub> | <sub>The home page's GSAP journey (see `docs/neural-journey.md`)</sub> |
+| <sub>`components/Hero.tsx`</sub> | <sub>Main product thesis and first impression</sub> |
+| <sub>`components/Ecosystem.tsx`</sub> | <sub>Horizontally pinned product ecosystem</sub> |
 | <sub>`components/SentraSim.tsx`</sub> | <sub>Embedded clinical screen simulation</sub> |
+| <sub>`components/ClinicalSuite.tsx`</sub> | <sub>Triage, trajectory, and prognosis workspace</sub> |
+| <sub>`components/blueprint-story/*`</sub> | <sub>Pinned blueprint scenes</sub> |
 | <sub>`components/sentrapedia/*`</sub> | <sub>144-disease clinical reference</sub> |
 | <sub>`components/sentrawiki/*`</sub> | <sub>Knowledge base, engine cards, and document library</sub> |
 | <sub>`components/ekosistem/*`</sub> | <sub>Product and application catalog</sub> |

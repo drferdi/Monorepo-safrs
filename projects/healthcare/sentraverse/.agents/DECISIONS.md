@@ -3,6 +3,29 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (split) — The neural journey moved to sentraverse-neural; the old landing is restored
+
+Decision: the neural journey (`components/neural/*`, `docs/neural-journey.md`,
+`e2e/neural.spec.ts`, `public/legacy-film/`, `public/neural-face.webp`, `scripts/legacy-film/`)
+moved to its own capsule, `projects/healthcare/sentraverse-neural`. This capsule gets its old
+landing page back: `app/page.tsx`, `SmoothScrollProvider`, `e2e/smoke.spec.ts` and
+`next.config.mjs` from before `834f6d99`, and the components the "2026-10-09 (GSAP debt)" entry
+deleted as orphans (Hero, About, Ecosystem, Services, ClinicalSuite, BlueprintStory,
+ScrollGallery, Audrey, ClinicalTrajectory, ClinicalPrognosis and their parts) from before
+`41988b42`. That entry's deletion no longer applies to them: the landing reaches them again,
+and so do the non-GSAP files its HANDOFF listed as unreached (SentraSim, Showcase, AboutSentra,
+Clients, FAQ, Interlude, ProjectSlider). Kept from the later work: the CI test glob and the
+kinetic nav's local defaults. The immutable `/legacy-film` header left with the film.
+
+Rationale: Chief (2026-10-09): "seharusnya sentraverse baru ini folder sendiri"; Chief chose the
+folder name `sentraverse-neural`, restoring the old landing, and a local commit only.
+
+Evidence: typecheck 0, eslint 0 (2 pre-existing warnings in `app/insights`), node:test 2/2,
+build 0, Playwright `smoke.spec.ts` 3/3 against `next start` on 127.0.0.1:4341; a screenshot
+shows the Hero landing. The smoke test's waiting-list check failed before the split (it expected
+a link; a form has rendered since the 2026-09-26 migration) and now asserts the email field and
+the submit button.
+
 ## 2026-10-09 (GSAP debt) — Chief's rulings on the GSAP audit, and the debt worked off
 
 - Rulings (Chief, 2026-10-09, on the audit's open questions): (1) scrub "sesuaikan dengan best

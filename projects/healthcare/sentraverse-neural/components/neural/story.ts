@@ -24,6 +24,9 @@ export const chapters = [
 // opens on while the figure alone is lit, and the signature under the title at the end.
 export const legacyCopy = { presence: 'The human behind the system', name: 'dr Ferdi Iskandar', role: 'The Gaffer · Architect of Sentraverse', brand: 'Sentraverse' } as const
 
+// The journey is its own site (Chief 2026-10-09); the pages it points to live on sentrahai.com.
+export const sentra = (path: string) => `https://sentrahai.com${path}`
+
 export const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 export const smooth = (value: number) => { const t = clamp(value); return t * t * (3 - 2 * t) }
 // A chapter's phase by its id, so the jump buttons and the hash aliases follow the story.
