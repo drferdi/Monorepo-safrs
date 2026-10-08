@@ -38,7 +38,7 @@ All commands run from this capsule root as argv (`program` plus `args`); see
 - `install`: `node scripts/pnpm.mjs install --frozen-lockfile`
 - `lint`: `node scripts/pnpm.mjs run lint`
 - `typecheck`: `node scripts/pnpm.mjs run typecheck`
-- `test`: `node scripts/pnpm.mjs run test` (node:test suite under `app/`)
+- `test`: `node scripts/pnpm.mjs run test` (every `*.test.mjs` under `app/` and `components/`)
 - `build`: `node scripts/pnpm.mjs run build`
 - `run`: `node scripts/pnpm.mjs run start` (serves on 127.0.0.1:4340)
 - `deployDryRun`: `node scripts/pnpm.mjs run deploy:dry-run`

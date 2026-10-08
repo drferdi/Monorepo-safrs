@@ -37,10 +37,35 @@ jobs:
       - name: Run ESLint
         run: pnpm lint
 
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # node:test over every *.test.mjs (the journey's timeline, film, morph and geometry).
+      # The Playwright e2e stays local for now (Chief 2026-10-09).
+      - name: Run node:test
+        run: pnpm test
+
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, test]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
