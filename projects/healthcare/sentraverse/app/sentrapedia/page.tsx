@@ -16,6 +16,7 @@ import {
   stats,
 } from '@/lib/data'
 import SentraAgentNodeGraph from '@/components/sentra-agent-node-graph'
+import IntroMotionSplash from '@/components/intro-motion-splash'
 import { layoutGovernance, typeGovernance } from '@/lib/design-governance'
 import { cn } from '@/lib/utils'
 import {
@@ -91,6 +92,9 @@ export default function SentrapediaPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-accent selection:text-white">
+      {/* Cinematic Motion Intro Splash on Opening */}
+      <IntroMotionSplash />
+
       <Navbar onOpenApiModal={() => setShowApiModal(true)} />
 
       <main className="flex-1 bg-background text-foreground">
