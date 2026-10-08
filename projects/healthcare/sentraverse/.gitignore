@@ -55,5 +55,6 @@ GEMINI.md
 .qoder/
 .qoderignore
 .superpowers/
+docs/superpowers/
 .roomodes
 .playwright-mcp/
