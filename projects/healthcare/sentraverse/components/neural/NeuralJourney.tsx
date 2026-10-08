@@ -3,11 +3,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { calloutPoints, callouts, labelStyle } from './callouts'
+import { calloutPoints, callouts, labelStyle, reticleCorners } from './callouts'
 import { loadPixels } from './face'
 import type { Look } from './renderer'
 import { faceBox, faceLook, portraitState } from './tactile'
-import { buildMaster, jumpLabel } from './timeline'
+import { buildMaster, jumpLabel, settleEnding } from './timeline'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions } from './story'
 import styles from './journey.module.css'
@@ -30,11 +30,13 @@ export default function NeuralJourney() {
     root.dataset.loading = 'true'
 
     async function initialize() {
-      const [{ gsap }, { ScrollTrigger }, { NeuralRenderer }, { createPortraitReveal }, { LANES, createSignalCycle }] = await Promise.all([
-        import('gsap'), import('gsap/ScrollTrigger'), import('./renderer'), import('./portrait-reveal'), import('./signal'),
+      // Every plugin ships inside the gsap package (3.13+): the ending's text decode and the
+      // reticle's wiggle settle load with ScrollTrigger and register in the same place.
+      const [{ gsap }, { ScrollTrigger }, { ScrambleTextPlugin }, { CustomEase }, { CustomWiggle }, { NeuralRenderer }, { createPortraitReveal }, { LANES, createSignalCycle }] = await Promise.all([
+        import('gsap'), import('gsap/ScrollTrigger'), import('gsap/ScrambleTextPlugin'), import('gsap/CustomEase'), import('gsap/CustomWiggle'), import('./renderer'), import('./portrait-reveal'), import('./signal'),
       ])
       if (cancelled || !root || !canvas || !fallback) return
-      gsap.registerPlugin(ScrollTrigger)
+      gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin, CustomEase, CustomWiggle)
       const media = gsap.matchMedia()
       media.add({ desktop: '(min-width: 768px)', mobile: '(max-width: 767px)', reduced: '(prefers-reduced-motion: reduce)' }, context => {
         const reduced = !!context.conditions?.reduced || reading
@@ -199,10 +201,8 @@ export default function NeuralJourney() {
           activity.dispose()
           if (photo) {
             gsap.set(photo, { clearProps: 'all' })
-            // Reading mode shows the callouts complete, whatever the cinematic scene left behind.
-            gsap.set(photo.querySelectorAll('[data-callout], [data-callout-glint]'), { clearProps: 'all' })
-            gsap.set(photo.querySelectorAll('[data-callout-line]'), { attr: { 'stroke-dashoffset': 0 } })
-            gsap.set(photo.querySelectorAll('[data-callout-dot]'), { attr: { r: .55 } })
+            // Reading mode shows the ending complete and still, whatever the cinematic scene left behind.
+            settleEnding(gsap, photo)
           }
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
           delete root.dataset.enhanced
@@ -286,7 +286,11 @@ export default function NeuralJourney() {
                   <div data-photo className={styles.photo}>
                     <Image src="/portrait-ferdi.webp" alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 60vw, 480px" />
                     <canvas data-photo-reveal aria-hidden="true" />
+                    <i data-scan className={styles.scan} aria-hidden="true" />
                     <svg data-callout-lines className={styles.lines} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                      <g data-reticle className={styles.reticle}>
+                        {reticleCorners().map(corner => <path key={corner} data-reticle-corner d={corner} pathLength={1} strokeDasharray="1" />)}
+                      </g>
                       {callouts.map(callout => (
                         <g key={callout.label}>
                           <polyline data-callout-line points={calloutPoints(callout)} pathLength={1} strokeDasharray="1" />
@@ -296,8 +300,10 @@ export default function NeuralJourney() {
                       ))}
                     </svg>
                     <ul data-callouts className={styles.callouts} aria-label="Profile">
-                      {callouts.map(callout => <li key={callout.label} data-callout style={labelStyle(callout)}>{callout.label}</li>)}
+                      {/* The visible text decodes in the cinematic scene; the exact label lives in the aria-label throughout. */}
+                      {callouts.map(callout => <li key={callout.label} data-callout aria-label={callout.label} style={labelStyle(callout)}><span data-callout-text aria-hidden="true">{callout.label}</span></li>)}
                     </ul>
+                    <i data-flash className={styles.flash} aria-hidden="true" />
                   </div>
                 )}
                 <div data-marker-copy data-division={division ? index - 8 : undefined}>

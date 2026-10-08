@@ -30,6 +30,33 @@ export function jumpLabel(chapters: ReadonlyArray<Chapter>, phase: number): stri
   return `${chapter.id}-enter`
 }
 
+// The final sequence (Chief 2026-10-08, "Scan → Develop → Lock-on"), authored in story phases.
+// `revealStart`/`revealEnd` are the window of `tactile.ts` `portraitState(phase).reveal`; the
+// lock offsets count from the `lock` label. These are the taste knobs listed in HANDOFF.md.
+export const ending = {
+  revealStart: 95.5, revealEnd: 98.5,
+  // Scan: a hairline sweeps the photo box top → bottom with the reveal, fading at both ends.
+  scanFade: .25,
+  // Develop: the grade starts brighter, colder and flatter and reaches the approved low-key
+  // finals (DECISIONS 2026-10-08 (grade)) exactly when the reveal completes.
+  developFrom: { brightness: 1.02, contrast: .92, saturate: .22 },
+  developTo: { brightness: .74, contrast: 1.26, saturate: .55 },
+  // Lock-on: the reticle draws in while the last of the shoulders resolves, settles with a
+  // wiggle, then the callouts follow, each line, label and glint in turn, and a brief flash ends it.
+  lockLead: .2,
+  reticleDraw: .35, reticleStagger: .05, settleAt: .35, settle: .45, settleScale: 1.05, wiggles: 3,
+  calloutsAt: .25, calloutStep: .27, dotPop: .25, lineDraw: .4, labelAt: .2, label: .45, glintAt: .4, glintFade: .2,
+  scramble: { chars: '0123456789ABCDEF', speed: .4, revealDelay: .12 },
+  flashAt: 1.4, flashIn: .1, flashOut: .18, flashPeak: .5,
+}
+
+// The parts of the ending inside `[data-photo]`, as the scene and `settleEnding` query them.
+export const endingParts = {
+  strokes: '[data-callout-line], [data-reticle-corner]',
+  faded: '[data-callout], [data-callout-glint], [data-callout-line], [data-reticle-corner], [data-scan], [data-flash]',
+  all: '[data-callout], [data-callout-glint], [data-callout-line], [data-callout-text], [data-reticle], [data-reticle-corner], [data-scan], [data-flash]',
+}
+
 type Target = object | Element | null | undefined
 export type MasterOptions = {
   state: { phase: number }
@@ -67,41 +94,99 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
     master.to(scrim, { autoAlpha: 0, duration: 3 }, at(94))
   }
   if (photo) {
-    master.fromTo(photo, { autoAlpha: 0 }, { autoAlpha: 1, duration: options.reveal ? .5 : 3 }, at(95.5))
-    // The HUD callouts start hidden and draw in from the final chapter's scene below.
-    gsap.set(photo.querySelectorAll('[data-callout-line]'), { attr: { 'stroke-dashoffset': 1 } })
+    master.fromTo(photo, { autoAlpha: 0 }, { autoAlpha: 1, duration: options.reveal ? .5 : 3 }, at(ending.revealStart))
+    // The scan, the reticle and the HUD callouts start hidden and come in from the final scene.
+    gsap.set(photo.querySelectorAll(endingParts.strokes), { attr: { 'stroke-dashoffset': 1 } })
     gsap.set(photo.querySelectorAll('[data-callout-dot]'), { attr: { r: 0 } })
-    gsap.set(photo.querySelectorAll('[data-callout], [data-callout-glint]'), { autoAlpha: 0 })
+    gsap.set(photo.querySelectorAll(endingParts.faded), { autoAlpha: 0 })
   }
   chapters.forEach((chapter, index) => {
     const panel = panels[index]
+    if (chapter.id === 'human' && photo) {
+      master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(humanScene(gsap, panel, photo, at), at(ending.revealStart))
+      return
+    }
     // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
     // exits accelerate; the master stays linear because the scroll position drives it.
-    const scene = gsap.timeline({ defaults: { ease: 'power3.out' } })
+    const scene = gsap.timeline({ id: `scene-${chapter.id}`, defaults: { ease: 'power3.out' } })
     const duration = at(chapters[index + 1]?.phase ?? 102) - at(chapter.phase)
-    if (index > 0) scene.fromTo(panel, { autoAlpha: 0, y: chapter.id === 'human' ? 0 : 24 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
+    if (index > 0) scene.fromTo(panel, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
     const marker = panel.querySelector('[data-marker-line]')
     if (marker) {
       scene.fromTo(marker, { scaleX: 0 }, { scaleX: 1, duration: .8, ease: 'power2.out', immediateRender: false }, 0)
       scene.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
       scene.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)
     }
-    // HUD callouts on the photograph (Chief 2026-10-08, "motion garis futuristic"): once the
-    // photo has resolved (phase 98.2 on) each line draws in along its own length (pathLength
-    // 1, so a resize never desyncs the scrubbed tween), its label follows, then its glint
-    // keeps moving on its own through CSS.
-    if (chapter.id === 'human' && photo) {
-      const dots = panel.querySelectorAll('[data-callout-dot]'), labels = panel.querySelectorAll('[data-callout]'), glints = panel.querySelectorAll('[data-callout-glint]')
-      panel.querySelectorAll('[data-callout-line]').forEach((line, k) => {
-        const start = 2.2 + k * .45
-        scene.fromTo(dots[k], { attr: { r: 0 } }, { attr: { r: .55 }, duration: .3, ease: 'back.out(2)', immediateRender: false }, start)
-        scene.fromTo(line, { attr: { 'stroke-dashoffset': 1 } }, { attr: { 'stroke-dashoffset': 0 }, duration: .6, ease: 'power2.out', immediateRender: false }, start)
-        scene.fromTo(labels[k], { autoAlpha: 0, x: 8 }, { autoAlpha: 1, x: 0, duration: .5, immediateRender: false }, start + .35)
-        scene.fromTo(glints[k], { autoAlpha: 0 }, { autoAlpha: 1, duration: .3, immediateRender: false }, start + .6)
-      })
-    }
     if (index < chapters.length - 1) scene.to(panel, { autoAlpha: 0, y: -10, duration: .8, ease: 'power2.in' }, duration - .8)
     master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(scene, at(chapter.phase))
   })
   return master
+}
+
+// The final chapter as one scene that starts with the photo reveal (phase 95.5, half a phase
+// before the chapter text) and runs three overlapping labels: `scan` and `develop` share the
+// reveal window, `lock` leads the develop end. Every position and duration is a phase span, so
+// a tempo change stretches the whole sequence with the reveal.
+function humanScene(gsap: Gsap, panel: Element, photo: Element, at: (phase: number) => number): gsap.core.Timeline {
+  const { revealStart, revealEnd } = ending
+  const pos = (phase: number) => at(phase) - at(revealStart)
+  const dur = (phases: number) => at(revealStart + phases) - at(revealStart)
+  const lock = (offset: number) => `lock+=${dur(offset)}`
+  const scene = gsap.timeline({ id: 'scene-human', defaults: { ease: 'power3.out' } })
+  // The chapter text enters at its own phase without the 24 px slide, so the photo stays registered.
+  scene.fromTo(panel, { autoAlpha: 0, y: 0 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, pos(96))
+  const scan = photo.querySelector('[data-scan]'), flash = photo.querySelector('[data-flash]'), reticle = photo.querySelector('[data-reticle]')
+  const corners = photo.querySelectorAll('[data-reticle-corner]')
+  const dots = photo.querySelectorAll('[data-callout-dot]'), lines = photo.querySelectorAll('[data-callout-line]'), labels = photo.querySelectorAll('[data-callout]'), texts = photo.querySelectorAll('[data-callout-text]'), glints = photo.querySelectorAll('[data-callout-glint]')
+  // Scan: transform only (the line rides the wrapper's own height), in step with the reveal.
+  scene.addLabel('scan', 0)
+  if (scan) {
+    scene.fromTo(scan, { autoAlpha: 0 }, { autoAlpha: 1, duration: dur(ending.scanFade), immediateRender: false }, 'scan')
+    scene.fromTo(scan, { yPercent: 0 }, { yPercent: 100, duration: dur(revealEnd - revealStart), ease: 'none', immediateRender: false }, 'scan')
+  }
+  // Develop: the three custom properties the image and the reveal canvas read their grade from
+  // (the one approved exception to the x, y, scale, autoAlpha rule, DECISIONS 2026-10-08 (ending)).
+  scene.addLabel('develop', '<')
+  const from = ending.developFrom, to = ending.developTo
+  scene.fromTo(photo, { '--photo-brightness': from.brightness, '--photo-contrast': from.contrast, '--photo-saturate': from.saturate },
+    { '--photo-brightness': to.brightness, '--photo-contrast': to.contrast, '--photo-saturate': to.saturate, duration: dur(revealEnd - revealStart), ease: 'none', immediateRender: false }, 'develop')
+  scene.addLabel('lock', `>-${dur(ending.lockLead)}`)
+  // The scan fades over the last stretch of its sweep, so nothing lingers below the photo box.
+  if (scan) scene.to(scan, { autoAlpha: 0, duration: dur(ending.scanFade), ease: 'power2.in' }, pos(revealEnd - ending.scanFade))
+  // Lock-on: the corner brackets draw in around the face, then the reticle settles with a wiggle.
+  scene.fromTo(corners, { autoAlpha: 0, attr: { 'stroke-dashoffset': 1 } }, { autoAlpha: 1, attr: { 'stroke-dashoffset': 0 }, duration: dur(ending.reticleDraw), stagger: dur(ending.reticleStagger), ease: 'power2.out', immediateRender: false }, 'lock')
+  if (reticle) scene.to(reticle, { scale: ending.settleScale, transformOrigin: '50% 50%', duration: dur(ending.settle), ease: `wiggle(${ending.wiggles})` }, lock(ending.settleAt))
+  // The callouts (Chief 2026-10-08, "motion garis futuristic"): the anchor dot pops, the line
+  // draws along its own length (pathLength 1, so a resize never desyncs the scrubbed tween),
+  // the label slides in while its text decodes into Chief's exact string, then the CSS glint
+  // keeps moving on its own. The exact string also sits in the label's aria-label.
+  lines.forEach((line, k) => {
+    const start = ending.calloutsAt + k * ending.calloutStep
+    scene.fromTo(dots[k], { attr: { r: 0 } }, { attr: { r: .55 }, duration: dur(ending.dotPop), ease: 'back.out(2)', immediateRender: false }, lock(start))
+    scene.fromTo(line, { autoAlpha: 0, attr: { 'stroke-dashoffset': 1 } }, { autoAlpha: 1, attr: { 'stroke-dashoffset': 0 }, duration: dur(ending.lineDraw), ease: 'power2.out', immediateRender: false }, lock(start))
+    scene.fromTo(labels[k], { autoAlpha: 0, x: 8 }, { autoAlpha: 1, x: 0, duration: dur(ending.label), immediateRender: false }, lock(start + ending.labelAt))
+    const text = texts[k], exact = labels[k]?.getAttribute('aria-label') ?? text?.textContent ?? ''
+    if (text) scene.to(text, { scrambleText: { text: exact, chars: ending.scramble.chars, speed: ending.scramble.speed, revealDelay: dur(ending.scramble.revealDelay) }, duration: dur(ending.label), ease: 'none' }, lock(start + ending.labelAt))
+    scene.fromTo(glints[k], { autoAlpha: 0 }, { autoAlpha: 1, duration: dur(ending.glintFade), immediateRender: false }, lock(start + ending.glintAt))
+  })
+  // One brief, subtle flash closes the sequence.
+  if (flash) {
+    scene.fromTo(flash, { autoAlpha: 0 }, { autoAlpha: ending.flashPeak, duration: dur(ending.flashIn), ease: 'power2.out', immediateRender: false }, lock(ending.flashAt))
+    scene.to(flash, { autoAlpha: 0, duration: dur(ending.flashOut), ease: 'power2.in' }, '>')
+  }
+  return scene
+}
+
+// The complete, still ending for reading mode and the next rebuild, whatever the scene left
+// behind: every stroke drawn, every dot popped, every label exact, the scan and the flash off,
+// the reticle unscaled and the grade at its CSS finals (the photo's own inline style is cleared
+// by the caller).
+export function settleEnding(gsap: Gsap, photo: Element) {
+  gsap.set(photo.querySelectorAll(endingParts.all), { clearProps: 'all' })
+  gsap.set(photo.querySelectorAll(endingParts.strokes), { attr: { 'stroke-dashoffset': 0 } })
+  gsap.set(photo.querySelectorAll('[data-callout-dot]'), { attr: { r: .55 } })
+  photo.querySelectorAll('[data-callout]').forEach(label => {
+    const text = label.querySelector('[data-callout-text]'), exact = label.getAttribute('aria-label')
+    if (text && exact) text.textContent = exact
+  })
 }

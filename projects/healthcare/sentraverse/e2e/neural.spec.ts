@@ -237,17 +237,22 @@ test('the callouts draw in after the photo resolves, keep their labels inside th
   await page.goto('/')
   await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
   await portraitPhase(page, 97)
-  const labels = page.locator('[data-callout]')
-  await expect(labels).toHaveText(['dr Ferdi Iskandar', 'the Gaffer', 'Sentraone'])
+  const labels = page.locator('[data-callout]'), exact = ['dr Ferdi Iskandar', 'the Gaffer', 'Sentraone']
+  await expect(labels).toHaveText(exact)
   await expect(labels.first()).toHaveCSS('opacity', '0')
+  // Scan → Develop (Chief 2026-10-08): mid-reveal the scan line is sweeping, the grade is still
+  // brighter than its final .74 and the reticle has not locked on yet.
+  await expect(page.locator('[data-scan]')).toHaveCSS('opacity', '1')
+  expect(Number(await page.locator('[data-photo]').evaluate(photo => getComputedStyle(photo).getPropertyValue('--photo-brightness')))).toBeGreaterThan(.74)
+  await expect(page.locator('[data-reticle-corner]').first()).toHaveCSS('opacity', '0')
   for (const viewport of [{ width: 1280, height: 800 }, { width: 1024, height: 768 }, { width: 768, height: 1024 }, { width: 375, height: 812 }]) {
     await page.setViewportSize(viewport)
     // gsap.matchMedia rebuilds the pin on a breakpoint change; wait for the new spacer and the resize refresh.
     await page.waitForFunction(() => document.querySelector('.pin-spacer') !== null && document.querySelector('main')?.dataset.enhanced === 'cinematic')
     await page.waitForTimeout(400)
     await portraitPhase(page, 99.6)
-    // data-phase lands before the .8 s scrub finishes catching up, so the drawn-in lines are read by polling.
-    await expect.poll(() => page.locator('[data-callout-line]').evaluateAll(lines => Math.max(...lines.map(line => Number(line.getAttribute('stroke-dashoffset')))))).toBeLessThan(.01)
+    // data-phase lands before the .8 s scrub finishes catching up, so the drawn-in lines and brackets are read by polling.
+    await expect.poll(() => page.locator('[data-callout-line], [data-reticle-corner]').evaluateAll(lines => Math.max(...lines.map(line => Number(line.getAttribute('stroke-dashoffset')))))).toBeLessThan(.01)
     const title = (await page.locator('#human h2').boundingBox())!
     for (const label of await labels.all()) {
       await expect(label).toBeVisible()
@@ -260,10 +265,22 @@ test('the callouts draw in after the photo resolves, keep their labels inside th
       expect(apart, `${viewport.width}: ${await label.textContent()} overlaps the title`).toBe(true)
     }
   }
+  // Lock-on complete: every label has decoded into Chief's exact string, which assistive
+  // technology reads from the aria-label throughout; the scan and the flash are gone.
+  await portraitPhase(page, 100)
+  await expect(page.locator('[data-callout-text]')).toHaveText(exact)
+  for (const [k, text] of exact.entries()) await expect(labels.nth(k)).toHaveAttribute('aria-label', text)
+  await expect(page.locator('[data-scan]')).toHaveCSS('opacity', '0')
+  await expect(page.locator('[data-flash]')).toHaveCSS('opacity', '0')
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.reload()
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
   await page.locator('#human').scrollIntoViewIfNeeded()
   for (const label of await labels.all()) await expect(label).toBeVisible()
   await expect(page.locator('[data-callout-glint]').first()).toHaveCSS('animation-name', 'none')
+  // Static and complete without motion: the final grade, the brackets drawn, plain exact text, no scan.
+  await expect(page.locator('[data-photo] img')).toHaveCSS('filter', 'brightness(0.74) contrast(1.26) saturate(0.55)')
+  expect(await page.locator('[data-reticle-corner]').evaluateAll(corners => corners.every(corner => Number(corner.getAttribute('stroke-dashoffset') ?? 0) === 0 && getComputedStyle(corner).opacity === '1'))).toBe(true)
+  await expect(page.locator('[data-callout-text]')).toHaveText(exact)
+  await expect(page.locator('[data-scan]')).toHaveCSS('opacity', '0')
 })

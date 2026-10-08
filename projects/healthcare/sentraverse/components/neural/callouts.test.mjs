@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { calloutPoints, callouts, labelStyle } from './callouts.ts'
+import { calloutPoints, callouts, labelStyle, reticle, reticleCorners } from './callouts.ts'
 
 // Regions of the figure in photo coordinates (0–100): the head and the shoulders/torso, from the
 // landmark overlay of the 2026-10-08 portrait (arms crossed, half body).
@@ -28,4 +28,16 @@ test('the SVG points string and the label position follow the geometry', () => {
   const [first] = callouts
   assert.equal(calloutPoints(first), `${first.anchor[0]},${first.anchor[1]} ${first.elbow[0]},${first.elbow[1]} ${first.end[0]},${first.end[1]}`)
   assert.deepEqual(labelStyle(first), { left: `${first.end[0] + 1.5}%`, top: `${first.end[1]}%` })
+})
+
+test('the lock-on reticle frames the head with a small margin and short corner arms', () => {
+  const [cx, cy, rx, ry] = HEAD
+  assert.ok(reticle.left < cx - rx && reticle.right > cx + rx, 'reticle narrower than the head')
+  assert.ok(reticle.top < cy - ry && reticle.bottom > cy + ry, 'reticle shorter than the head')
+  for (const margin of [cx - rx - reticle.left, reticle.right - (cx + rx), cy - ry - reticle.top, reticle.bottom - (cy + ry)]) assert.ok(margin >= 1 && margin <= 6, `margin ${margin} off`)
+  assert.ok(reticle.arm > 0 && reticle.arm <= (reticle.right - reticle.left) / 3, 'arms too long for corners')
+  const corners = reticleCorners()
+  assert.equal(corners.length, 4)
+  assert.equal(corners[0], `M${reticle.left},${reticle.top + reticle.arm} L${reticle.left},${reticle.top} L${reticle.left + reticle.arm},${reticle.top}`)
+  assert.equal(corners[2], `M${reticle.right},${reticle.bottom - reticle.arm} L${reticle.right},${reticle.bottom} L${reticle.right - reticle.arm},${reticle.bottom}`)
 })
