@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-08 (second session of the day)
+Last updated: 2026-10-08 (third session of the day)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,57 +8,62 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch` of the monorepo, not yet published to `drferdi/Sentraverse`. The
-homepage is the GSAP neural journey (`components/neural/`, `docs/neural-journey.md`): Codex
-baseline `834f6d99`, the tactile/face/photo session up to `fb71a429` + docs `33a9ab9e` (see the
-first 2026-10-08 entry in `DECISIONS.md`), then Codex's "portrait realism" change of the same
-day, found uncommitted in the checkout and finished, gated and committed by this session as
-`cf742bb7` (code) plus the docs commit `b19cfa12`, then the portrait-tablet face scale fix
-(.55) as the commit after that. See the "2026-10-08 (later)" entry in `DECISIONS.md` for the
-decisions, the visible rulings and the evidence.
+homepage is the GSAP neural journey (`components/neural/`, `docs/neural-journey.md`). Today's
+chain: Codex's portrait realism finished and committed as `cf742bb7` + docs `b19cfa12`, the
+portrait-tablet face scale `79652787`, handoff `3040e7f5`, then points 2–4 of the neural-realism
+spec on Chief's approval: `9e7b0a6c` (SWC-shaped tapered neurons drawn as strands, with
+normals), `3d42f121` (key, rim, occlusion, impulse-only specular, focus plane), `8d91b089` (a
+GSAP-timed activity cycle through six network lanes, `main[data-signal]`), plus the docs commit
+after it. See the "2026-10-08 (realism)" entry in `DECISIONS.md` for the rulings.
 
-What the page does now, on top of the earlier state: the drawn face has a real relief
-(`geometry.ts` `faceDepth`, calibrated by hand, not brightness-as-depth) and grows from the
-facial features outward (`faceContour`); from phase 94.25 to 95.5 it settles flat onto the photo
-plane and its pointer turn fades (`tactile.ts` `portraitState`); from 95.5 to 98.5 the real
-photograph resolves nose, eyes and lips first through a canvas mask built from the same contour
-field (`portrait-reveal.ts`, `<canvas data-photo-reveal>` inside `[data-photo]`,
-`[data-reveal]` = `active` / `complete`), while the drawn vertices fade where the skin has
-resolved. Pointer turn is now ±0.085 rad (chapter-03 sway ±0.045). Reading mode, reduced motion
-and no-JavaScript keep the plain `next/image`.
+What the page does now, on top of the earlier state: every neuron grows from `makeMorphology`
+(soma, 6–9 basal trunks, one apical, one axon ending in vesicle particles; Rall 3/2 branching,
+taper to 35 %, parallel strands for thickness); the neuron and network layers are lit (ambient
+.6, key .55, rim .35, occlusion floor .7, specular only under pulse or activity, far tissue
+softened by a focus plane); in the synapse-to-network window (phase 49–94) `signal.ts` runs
+impulse → terminal flash → release → next-lane response through the five hubs and the centre,
+tempo and peaks re-rolled per repeat. Reduced motion parks the cycle at the first terminal;
+Canvas 2D draws no particles; unlit layers look as before.
 
-Gates on `cf742bb7`: `typecheck` 0, `lint` 0 (two pre-existing `img` warnings in
-`app/insights/page.tsx`), `test` 14/14 (node:test), `build` 0, `deploy:dry-run` 0. Playwright
-`e2e/neural.spec.ts` + `e2e/smoke.spec.ts`: 14/14 through the installed Google Chrome
+Gates on `8d91b089`: `typecheck` 0, `lint` 0 (two pre-existing `img` warnings in
+`app/insights/page.tsx`), `test` 24/24 (node:test), `build` 0, `deploy:dry-run` 0. Playwright
+`e2e/neural.spec.ts` + `e2e/smoke.spec.ts`: 15/15 through the installed Google Chrome
 (session-only `playwright.chrome.config.ts`, deleted) against the production preview on
-127.0.0.1:4340. Browser checks of the production build: 1280×800 (phase 96.5 mid-reveal, 98.7
-full photo, chapter 03), 375×812 (96.5, 98.7, reading mode), 768×1024 (97), 800×500 (98.7).
+127.0.0.1:4340; pacing mean 6.6 ms. Browser checks of the production build: pane 800×500 and
+375×812 (`data-renderer` webgl, `data-signal` active at phase 67.5), Chrome 1280×800 and
+375×812 frames at phase 22 (hero neuron) and 67.5 (activity), 2× clips around the top hub.
 `public/` unchanged. The production preview "sentraverse-tactile" (next start, port 4340) may
 still be running.
 
 ## Work in flight
 
-None. Taste knobs: `renderer.ts` (turn `.085`, sway `.045`, vertex fade `.94`), `tactile.ts`
-`portraitState` (relief lock 94.25 → 95.5, reveal 95.5 → 98.5), `geometry.ts` `faceDepth`
-bulges and `faceContour` reaches, `faceDissolve` window `.16`, `portrait-reveal.ts` mask size
-192 / 180 steps, `journey.module.css` (`.human > .photo` mask and filter, `.scrim`, halos).
+None. Taste knobs: `geometry.ts` (strand pitch .012, taper .65, soma colour .35, trunk counts
+and radii in `makeMorphology`), `renderer.ts` (ambient .6, key .55, rim .35, occlusion floor
+.7, specular .9, coc /6, activity mix .85, response .9, particle travel .35), `signal.ts`
+(`laneOffset` .45, `stageAt`, tempo .8–1.25, peak .6–1, window 49–94), scrim 60 %.
 
 ## Blockers
 
 None. The Jev router at `~/dev/jev/muse-jev-playbook` does not exist on this machine (skipped).
 
+## Known quirks
+
+- In the Browser pane a manual `window.scrollTo` into the pin leaves `main[data-phase]` at
+  0.00 and `data-signal` paused while the canvas shows the chapter; the chapter buttons
+  ("Go to …") update both. Use the buttons for checks.
+- The chapter-02 hero neuron has far fewer line vertices than before the spec (3,872 lines and
+  2,455 points at density .85, against 17,930 and 3,178 on `79652787`) and reads thinner and
+  dimmer; the strand weight and the occlusion floor recovered part of it. Chief judges by eye.
+- At full viewport the network activity is subtle under the 60 % scrim; the magnified clips
+  show it. Phones (density .35, half the strands) look dark in the network chapter.
+- Earlier: on phones past the pin end under the tall footer the stage scrolls up and the photo
+  leaves the top of the viewport; no-JavaScript on a phone was not checked in a browser.
+
 ## Next action
 
-1. Chief judges the new relief, the feature-first reveal and the smaller pointer turn by eye.
-2. The 768×1024 overlap is fixed (`facePlacement` scale .55 for aspect < 1.2, third commit of
-   this session); Chief judges the smaller tablet face by eye. Earlier known quirk still stands:
-   on phones past the pin end under the tall footer the stage scrolls up and the photo leaves
-   the top of the viewport.
-3. Not checked this session: no-JavaScript on a phone in the browser (Playwright covers it at
-   desktop size).
-4. Publish to `drferdi/Sentraverse` (subtree split) when Chief asks; the Vercel root re-point
+1. Chief judges by eye: the tapered neurons, the lighting, the activity cycle, the thinner hero
+   neuron and the dark phone network; knobs above.
+2. Spec points 1 (face parallax shear) and 5 (colour after detail, shoulder fade) wait for
+   Chief's word.
+3. Publish to `drferdi/Sentraverse` (subtree split) when Chief asks; the Vercel root re-point
    and the README publish from 2026-09-27 are still pending.
-5. A neural-realism spec (tapered SWC-shaped neurons, emission-based key/rim/specular
-   lighting, a GSAP-timed impulse → release → response cycle, pointer parallax shear, colour
-   after detail and a shoulder fade in the reveal) sits at the git-ignored
-   `docs/superpowers/specs/2026-10-08-sentraverse-neural-realism-spec.md`, awaiting Chief's
-   approval; no code changed for it.

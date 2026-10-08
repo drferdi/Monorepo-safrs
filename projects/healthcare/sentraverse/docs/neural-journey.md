@@ -13,14 +13,19 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   Desktop uses 900vh of scroll travel; mobile uses 800vh. The stage adds one viewport.
 - `geometry.ts` builds seeded, irregular neuronal arbors, progenitor cells, anatomical nerve
   pathways, myelin, synaptic membranes, and a network with detailed foreground neurons and
-  thousands of inexpensive distant neurons. These are artistic scientific representations,
-  not patient imaging, a validated anatomical atlas, or clinical decision logic.
+  thousands of inexpensive distant neurons. Since 2026-10-08 every neuron grows from an
+  SWC-shaped compartment tree (`makeMorphology`, see "Neuron morphology, lighting and the
+  activity cycle"). These are artistic scientific representations, not patient imaging, a
+  validated anatomical atlas, or clinical decision logic.
 - `renderer.ts` batches points and lines into capsule-owned WebGL buffers. A perspective shader
   controls camera translation, rotation, growth, fog, and asynchronous illumination. Native
   WebGL avoids adding Three.js solely for this small renderer. Geometry and buffers are created
-  only when their scene is first needed. There are no external models, textures, or CDN scripts.
-- GSAP's ticker is the only continuous visual scheduler. Rendering stops when the document is
-  hidden and skips drawing outside the journey. Buffer, shader, listener, observer, tween, and
+  only when their scene is first needed. The lit layers (the neuron and the network) carry a
+  parallel normals buffer and are shaded with a key light, a rim light, occlusion and an
+  impulse-only specular. There are no external models, textures, or CDN scripts.
+- GSAP's ticker drives every frame, and one paused, repeating GSAP timeline (`signal.ts`)
+  schedules the network activity inside it; there is no second animation loop. Rendering stops
+  when the document is hidden and skips drawing outside the journey. Buffer, shader, listener, observer, tween, and
   ScrollTrigger lifetimes are cleaned up. No new product dependencies were installed.
 
 ## Accessibility and failure behavior
@@ -93,6 +98,56 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   reduced motion) and its detach kills its tweens and clears the inline transforms, so reading
   mode starts from clean elements.
 
+## Neuron morphology, lighting and the activity cycle
+
+Points 2, 3 and 4 of the neural-realism spec (Chief 2026-10-08, "Setuju, implementasikan poin 2
+sampai 4 sesuai spec"; the spec itself is the git-ignored
+`docs/superpowers/specs/2026-10-08-sentraverse-neural-realism-spec.md`). Points 1 (pointer
+parallax on the face) and 5 (colour after detail and a shoulder fade in the reveal) are not built.
+
+- Morphology. `geometry.ts` `makeMorphology(seed, size, depth)` returns a compartment tree in the
+  Allen Institute SWC shape (type 1 soma, 2 axon, 3 basal dendrite, 4 apical dendrite; a radius
+  and a parent index per compartment) and `Tissue.neuron` emits it. The soma is an ellipsoid of
+  points at 35 % of the layer colour. Each trunk is a chain of 11 steps that bifurcates with the
+  Rall 3/2 rule (daughter radius = parent radius × share^(2/3), share .55–.75) at a random
+  .45–.8 of its remaining length and tapers to 35 % of its root radius (r(t) = r0 (1 − .65 t)).
+  6–9 basal trunks (root radius .05 × size) sweep 270° away from the apical trunk (.075 × size,
+  1.8× longer); one axon (.04 × size, 3.4× longer, one branching level shallower) ends in 25–40
+  vesicle particles. WebGL ignores `lineWidth`, so thickness is drawn as parallel strands:
+  `strandCount(radius, density)` gives one strand per .012 of radius at density .85 (4 at a
+  root, 1 at a tip; density .35 halves them), offset .012 apart, each carrying a brightness
+  weight of sqrt(4 / strands) clamped to 1–2 so a thin tip stays as bright as a thick base.
+  `morphology.test.mjs` pins the tree validity, the taper, the Rall ratios, the strand counts,
+  the normals and the vertex budget (at most 1.3× the pre-spec baseline at density .85, 1.1×
+  at .35).
+- Lighting. Lit layers (`makeNeuron`, `makeNetwork`) carry a parallel 4-float normals buffer (a
+  unit radial normal from the soma plus a tag); unlit layers receive a constant normal through
+  `vertexAttrib4f` and `u_lit = 0`, so their look is unchanged. The vertex shader puts the key
+  light at (−.4, .7, .6) with ambient .6 + .55 × facing in a warm (1, .94, .86) tint, a rim
+  of pow(1 − |n·eye|, 3) × .35 in cool (.62, .78, 1), occlusion that darkens the far side to
+  .7, and a specular pow(32) × .9 only where the pulse or the activity passes. A focus plane at
+  the camera distance (`u_focus`) widens and fades points by their distance from it (circle of
+  confusion clamped to 0–1, up to +100 % size and −60 % alpha), so distant tissue softens while
+  the primary neuron stays sharp.
+- Activity. `signal.ts` `createSignalCycle(gsap, signal, { reduced })` builds one paused,
+  repeating GSAP timeline that runs six lanes (the five hubs and the network centre), each
+  offset .45 s, through the causal chain: the impulse travels the axon 0 → 1 over 1.15 s
+  (`power1.in`); on arrival the terminal flashes to 1.6× over .15 s; vesicle release runs 0 → 1
+  over .38 s; .09 s later the next lane responds (rise .2 s to a peak re-rolled per repeat in
+  .6–1, decay .75 s). The tempo re-rolls in .8–1.25 on every repeat (`repeatRefresh`,
+  `onRepeat`). The timeline writes `u_signal[6]` as (impulse, terminal, release, response) per
+  lane and the shader keys each vertex by its tag (`lane + 100 × kind`): axon strands light
+  where the front passes and flash at the terminal, particles move .35 units along their normal
+  and fade in and out with the release, soma and dendrites brighten with the response.
+  `NeuralJourney.tsx` plays the cycle only in the synapse-to-network window (phase 49–94);
+  `main[data-signal]` reads `active` or `paused`; reduced motion parks it at the first
+  terminal; the Canvas 2D fallback draws no particles. `signal.test.mjs` pins the labels, the
+  causal chain values, the per-repeat variation and the window.
+- Cost (measured 2026-10-08 with the geometry builders): the normals buffer adds 16 bytes per
+  lit vertex, about 4.0 MB at density .85 (network 3.9 MB, neuron .1 MB, +29 % over the
+  14.0 MB of vertex data) and 1.1 MB at .35 (+21 %). The hero neuron has 2,455 point and 3,872
+  line vertices at density .85.
+
 ## Verification
 
 Run from this capsule:
@@ -105,8 +160,11 @@ node scripts/pnpm.mjs run build
 node scripts/pnpm.mjs run deploy:dry-run
 ```
 
-`node scripts/pnpm.mjs run test` runs the node:test files, including `components/neural/tactile.test.mjs`
-and `components/neural/face.test.mjs`. The Playwright suite in `e2e/neural.spec.ts` covers
+`node scripts/pnpm.mjs run test` runs the node:test files, including `components/neural/tactile.test.mjs`,
+`face.test.mjs`, `morphology.test.mjs` and `signal.test.mjs`. The Playwright suite in
+`e2e/neural.spec.ts` covers the WebGL renderer staying active (a shader that fails to link
+would fall back to Canvas 2D silently), the activity cycle playing only in the network window
+and parking under reduced motion,
 reverse navigation, all five divisions, the drawn face and the photograph at the final chapter
 (feature-first alpha of the reveal canvas, exact reversal, the full image at the end, a late
 image load, a phone resize, and reading mode and no canvas context), mobile overflow and the

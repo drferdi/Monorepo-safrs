@@ -3,6 +3,39 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-08 (realism) — SWC-shaped neurons, emission-based lighting, a GSAP activity cycle
+
+- Decision (Chief, 2026-10-08, "Setuju, implementasikan poin 2 sampai 4 sesuai spec"): points
+  2, 3 and 4 of the neural-realism spec (git-ignored
+  `docs/superpowers/specs/2026-10-08-sentraverse-neural-realism-spec.md`) are built; points 1
+  (pointer-parallax shear on the face) and 5 (colour after detail, shoulder fade in the reveal)
+  wait for Chief's word. This supersedes the "no shader changes" non-goal of the 2026-10-07
+  tactile spec: the shader now carries normals, lighting, a focus plane and the signal uniforms.
+  Everything from the entries below stays (one face, still text, scrim and halo, no new
+  dependency, source images unchanged).
+- How: see "Neuron morphology, lighting and the activity cycle" in `docs/neural-journey.md`.
+  Three commits, each with its red test first: `9e7b0a6c` (`makeMorphology`, strands, normals,
+  `morphology.test.mjs`), `3d42f121` (key, rim, occlusion, impulse specular, focus plane),
+  `8d91b089` (`signal.ts`, `signal.test.mjs`, `u_signal[6]`, `main[data-signal]`, the e2e
+  case). GSAP schedules the cycle; there is no second animation loop.
+- Rulings on the way (Claude Fable 5.1), for Chief to judge by eye: the occlusion floor is .7,
+  not the spec's .45, and each strand carries a brightness weight sqrt(4 / strands) clamped to
+  1–2, because the first build left the hero neuron too dark and its tips too thin; the circle
+  of confusion is clamped to 0–1 so far tissue never grows past 2× size; strand counts scale
+  with density so phones draw half the strands; the soma's translucency is a colour factor
+  (.35) rather than an alpha, because the vertex format has no alpha slot; `u_points` is
+  declared `mediump` in the vertex shader because a precision mismatch with the fragment
+  shader made the program fail to link and fall back to Canvas 2D silently, and
+  `e2e/neural.spec.ts` now asserts `data-renderer="webgl"` so a silent fallback fails the
+  suite; lane tags decode with floor((tag + 1) / 100) so the unlit tag −1 never reads as lane
+  99 of kind 1.
+- Evidence: `typecheck` 0, `lint` 0 (two pre-existing `img` warnings), `test` 24/24
+  (node:test), `build` 0, `deploy:dry-run` 0; Playwright 15/15 through the installed Chrome
+  against the production preview on 127.0.0.1:4340, frame pacing mean 6.6 ms; `data-renderer`
+  webgl and `data-signal` active at phase 67.5 in the Browser pane (800×500, 375×812) and in
+  Chrome (1280×800, 375×812); normals buffer cost +4.0 MB at density .85 (+29 %), +1.1 MB at
+  .35 (+21 %).
+
 ## 2026-10-08 (later) — Portrait realism: calibrated relief and a feature-first photo reveal
 
 - Decision (Chief, 2026-10-08, "Agreed ... Execute point 1 dan 5", recorded in the local plan
