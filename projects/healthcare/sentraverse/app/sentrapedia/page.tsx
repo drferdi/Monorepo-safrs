@@ -144,7 +144,7 @@ export default function SentrapediaPage() {
                     Permenkes No. 5/2014, dan KMK No. HK.01.07/MENKES/1186/2022. Basis data ini dirancang sebagai 
                     <strong> Universal Clinical Grounding Engine</strong> yang dapat diakses langsung oleh tenaga medis 
                     maupun dihubungkan via API/RAG ke berbagai model kecerdasan buatan terdepan seperti 
-                    <strong> Claude (Anthropic), Gemini (Google), ChatGPT (OpenAI), Audrey</strong>, serta sistem agen klinis kustom.
+                    <strong> Claude (Anthropic), Gemini (Google), ChatGPT (OpenAI), Audrey (Sentra HAI)</strong>, serta sistem agen klinis kustom.
                   </p>
                   <div className="pt-2 flex flex-wrap items-center gap-3 text-xs text-muted/70 font-mono">
                     <span className="inline-flex items-center gap-1.5 text-accent">
@@ -152,7 +152,7 @@ export default function SentrapediaPage() {
                       Kurasi Medis: dr. Ferdi Iskandar
                     </span>
                     <span>•</span>
-                    <span className="text-white/80 font-medium">Ready for: Claude · Gemini · ChatGPT · Audrey</span>
+                    <span className="text-white/80 font-medium">Ready for: Claude · Gemini · ChatGPT · Audrey (Sentra HAI)</span>
                   </div>
                 </div>
               </div>
@@ -587,10 +587,10 @@ export default function SentrapediaPage() {
             <div className="border border-accent/30 p-5 bg-accent/[0.03] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-xs font-bold text-accent">SENTRA CORE</span>
+                  <span className="font-mono text-xs font-bold text-accent">SENTRA HAI</span>
                   <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-accent/20 text-accent border border-accent/40 font-bold">Voice Native</span>
                 </div>
-                <h3 className="font-jakarta text-base font-bold text-white mb-1.5">Audrey & Voice Agents</h3>
+                <h3 className="font-jakarta text-base font-bold text-white mb-1.5">Audrey (Sentra HAI)</h3>
                 <p className="text-xs text-muted/80 leading-relaxed">
                   Agen suara klinis *real-time* yang melakukan verifikasi verbal kriteria rujukan medis di ruang pemeriksaan tanpa mengalihkan pandangan dokter.
                 </p>

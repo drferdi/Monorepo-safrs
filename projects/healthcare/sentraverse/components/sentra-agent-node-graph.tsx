@@ -338,9 +338,9 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
                   <span style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.4)' }}>LLM Runtime</span>
                 </div>
                 <span
-                  style={{ fontSize: 8.5, color: '#C4956A', fontWeight: 600 }}
+                  style={{ fontSize: 8, color: '#C4956A', fontWeight: 600 }}
                 >
-                  Claude · Gemini · GPT
+                  Claude · Gemini · GPT · Audrey
                 </span>
               </div>
               <div
