@@ -258,19 +258,48 @@ export function makeDust(density: number): Geometry {
   return tissue.finish()
 }
 
-// Chief's face (2026-10-08) from the edge segments and luminance dots of the portrait analysis:
-// three units wide, centred, brighter pixels nearer the camera, grown outward from the centre.
+// Portrait-guided relief in source-image coordinates. This is a gently sculpted 2.5D surface,
+// not a face scan: lighting, facial hair and clothing never become bumps in the geometry.
+export function faceDepth(u: number, v: number): number {
+  const bulge = (x: number, y: number, rx: number, ry: number) => Math.exp(-(((u - x) / rx) ** 2 + ((v - y) / ry) ** 2) * 2)
+  const head = Math.sqrt(Math.max(0, 1 - ((u - .52) / .255) ** 2 - ((v - .405) / .35) ** 2))
+  return -.16 + head * .43
+    + .16 * bulge(.518, .425, .033, .09) + .24 * bulge(.52, .475, .041, .036)
+    - .105 * bulge(.425, .38, .055, .033) - .105 * bulge(.613, .38, .055, .033)
+    + .07 * bulge(.395, .477, .074, .065) + .07 * bulge(.643, .477, .074, .065)
+    + .045 * bulge(.52, .565, .082, .025) + .08 * bulge(.52, .66, .10, .053)
+    + .055 * bulge(.52, .79, .12, .15)
+}
+
+// The same field grows neural features and reveals skin: nose, eyes and lips first, then the
+// cheeks, hair, jaw and shoulders. Coordinates refer to the unchanged source photograph.
+export function faceContour(u: number, v: number): number {
+  const reach = (x: number, y: number, rx: number, ry: number) => Math.hypot((u - x) / rx, (v - y) / ry)
+  return Math.min(.98, .08 + Math.min(
+    reach(.52, .475, .16, .21) * .34,
+    .04 + reach(.425, .38, .125, .15) * .36,
+    .04 + reach(.613, .38, .125, .15) * .36,
+    .08 + reach(.52, .565, .14, .16) * .34,
+  ))
+}
+
+export function faceDissolve(contour: number, progress: number): number {
+  const t = Math.min(1, Math.max(0, (progress * 1.18 - .09 - contour + .08) / .16))
+  return t * t * (3 - 2 * t)
+}
+
+// Chief's face: three units wide; luminance controls light, while the portrait profile controls depth.
 export function makeFace(face: FaceAnalysis): Geometry {
   const tissue = new Tissue(5, 1)
   const { width: w, height: h, segments, dots } = face
   const unit = 3 / w
-  const place = (x: number, y: number, lum: number): Vec3 => [(x - w / 2) * unit, (h / 2 - y) * unit, (lum - .45) * .5]
-  const birth = (x: number, y: number) => Math.min(1, Math.hypot(x - w / 2, y - h * .45) / (w * .6))
+  const place = (x: number, y: number): Vec3 => [(x - w / 2) * unit, (h / 2 - y) * unit, faceDepth(x / w, y / h)]
+  const birth = (x: number, y: number) => faceContour(x / w, y / h)
   for (let i = 0; i < segments.length; i += 6) {
-    tissue.line(place(segments[i], segments[i + 1], segments[i + 2]), place(segments[i + 3], segments[i + 4], segments[i + 5]), [.52, .64, .75], birth(segments[i], segments[i + 1]), (segments[i] + segments[i + 1]) / (w + h))
+    tissue.line(place(segments[i], segments[i + 1]), place(segments[i + 3], segments[i + 4]), [.52, .64, .75], birth(segments[i], segments[i + 1]), (segments[i] + segments[i + 1]) / (w + h))
   }
   for (let i = 0; i < dots.length; i += 3) {
-    tissue.point(place(dots[i], dots[i + 1], dots[i + 2]), WHITE, 1 + dots[i + 2] * 1.6, birth(dots[i], dots[i + 1]), tissue.rand())
+    tissue.point(place(dots[i], dots[i + 1]), WHITE, 1 + dots[i + 2] * 1.6, birth(dots[i], dots[i + 1]), tissue.rand())
   }
   return tissue.finish()
 }

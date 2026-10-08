@@ -1,14 +1,14 @@
 import { analyseFace } from './face'
 import type { FacePixels } from './face'
-import { axonCenter, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse } from './geometry'
+import { axonCenter, faceDissolve, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse } from './geometry'
 import type { Geometry, Vec3 } from './geometry'
 import { clamp, smooth } from './story'
-import { facePlacement } from './tactile'
+import { facePlacement, portraitState } from './tactile'
 
 type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer }
-type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number }
+type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number; relief: number; reveal: number }
 export type Look = { turn: number; highlight: Vec3; hover: number }
-const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0 })
+const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0, relief: 1, reveal: 0 })
 const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
 const envelope = (phase: number, start: number, end: number, fade = 2) => smooth((phase - start) / fade) * (1 - smooth((phase - end) / fade))
 
@@ -31,9 +31,12 @@ uniform float u_dpr;
 uniform float u_pulse;
 uniform vec3 u_highlight;
 uniform float u_hover;
+uniform float u_relief;
+uniform float u_reveal;
 varying vec4 v_color;
 void main() {
   vec3 p = a_position * u_scale;
+  p.z *= u_relief;
   float c = cos(u_rotation), s = sin(u_rotation);
   p = vec3(p.x*c+p.z*s, p.y, -p.x*s+p.z*c) + u_offset - u_camera;
   float depth = -p.z;
@@ -46,7 +49,8 @@ void main() {
   float pulse = pow(max(0.0, sin(a_phase*19.0-u_time*1.3)), 22.0)*u_pulse;
   float nearby = exp(-distance(a_position, u_highlight)*1.4)*u_hover;
   vec3 color = mix(a_color, vec3(1.0,.75,.43), pulse*.85) + vec3(.22,.3,.4)*nearby;
-  v_color = vec4(color, u_alpha*born*fog*(.6+pulse*.65));
+  float resolved = smoothstep(a_birth-.08, a_birth+.08, u_reveal*1.18-.09);
+  v_color = vec4(color, u_alpha*born*fog*(.6+pulse*.65)*(1.0-resolved*.94));
 }`
 const fragmentSource = `
 precision mediump float;
@@ -123,7 +127,7 @@ export class NeuralRenderer {
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('Shader linking failed')
       gl.useProgram(program)
       this.attributes = ['a_position', 'a_color', 'a_size', 'a_birth', 'a_phase'].map(name => gl.getAttribLocation(program, name))
-      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
+      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'relief', 'reveal']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
       gl.clearColor(0, 0, 0, 0)
     } finally { shaders.forEach(shader => gl.deleteShader(shader)) }
@@ -165,7 +169,7 @@ export class NeuralRenderer {
       gl.uniform3fv(uniform('camera'), view.camera)
       gl.uniform3fv(uniform('offset'), view.offset)
       gl.uniform3fv(uniform('highlight'), view.highlight)
-      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover }
+      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, relief: view.relief, reveal: view.reveal }
       for (const [key, value] of Object.entries(values)) gl.uniform1f(uniform(key), value)
       for (const key of ['lines', 'points'] as const) {
         if (!layer[key] || !layer.geometry[key].length) continue
@@ -185,7 +189,7 @@ export class NeuralRenderer {
   private drawCanvas(geometry: Geometry, view: View) {
     const ctx = this.ctx!
     const project = (array: Float32Array, i: number) => {
-      const x = array[i] * view.scale, y = array[i + 1] * view.scale, z = array[i + 2] * view.scale
+      const x = array[i] * view.scale, y = array[i + 1] * view.scale, z = array[i + 2] * view.scale * view.relief
       const c = Math.cos(view.rotation), s = Math.sin(view.rotation)
       const px = x * c + z * s + view.offset[0] - view.camera[0]
       const py = y + view.offset[1] - view.camera[1]
@@ -201,15 +205,18 @@ export class NeuralRenderer {
       if (geometry.lines[i + 7] > view.growth) continue
       const a = project(geometry.lines, i), b = project(geometry.lines, i + 9)
       if (a.depth < .2 || b.depth < .2) continue
+      if (view.reveal > 0) { ctx.beginPath(); ctx.globalAlpha = view.alpha * .5 * (1 - faceDissolve(geometry.lines[i + 7], view.reveal) * .94) }
       ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y)
+      if (view.reveal > 0) ctx.stroke()
     }
-    ctx.stroke()
+    if (view.reveal === 0) ctx.stroke()
     ctx.fillStyle = '#b5c8dc'
     for (let i = 0; i < geometry.points.length; i += 27) {
       if (geometry.points[i + 7] > view.growth) continue
       const p = project(geometry.points, i)
       if (p.depth < .2) continue
       const size = clamp(geometry.points[i + 6] * p.scale * .008, .4, 3)
+      if (view.reveal > 0) ctx.globalAlpha = view.alpha * .5 * (1 - faceDissolve(geometry.points[i + 7], view.reveal) * .94)
       ctx.fillRect(p.x, p.y, size, size)
     }
   }
@@ -247,7 +254,7 @@ export class NeuralRenderer {
     }
     // Chapter 03 shows the founder's face in place of the generic body (Chief 2026-10-08): it
     // grows in, sways, and the camera closes in as the signal chapter takes over.
-    if (phase > 25 && phase < 40) placeFace({ alpha: envelope(phase, 25, 36, 4), growth: smooth((phase - 26) / 5), camera: [0, 0, seat.depth - smooth((phase - 34) / 6) * 2.5], rotation: reduced ? 0 : Math.sin(phase * .15) * .23 + look.turn * .22, pulse: .55 })
+    if (phase > 25 && phase < 40) placeFace({ alpha: envelope(phase, 25, 36, 4), growth: smooth((phase - 26) / 5), camera: [0, 0, seat.depth - smooth((phase - 34) / 6) * 2.5], rotation: reduced ? 0 : Math.sin(phase * .15) * .045 + look.turn * .085, pulse: .55 })
     if (phase > 35 && phase < 54) {
       const travel = reduced ? -8 : -smooth((phase - 36) / 18) * 26
       const center = axonCenter(travel)
@@ -267,8 +274,11 @@ export class NeuralRenderer {
       const focusAmount = phase >= 66 && phase < 91 ? .25 : 0
       draw('network', makeNetwork, { alpha: envelope(phase, 58, 94, 5), camera: [focus[0] * focusAmount, focus[1] * focusAmount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : -.08 + discovery * .16, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
     }
-    // The turn fades out while the photograph resolves over the drawn face (phase 95.5 to 98.5).
-    if (phase > 93) placeFace({ alpha: smooth((phase - 94) / 2.5), growth: smooth((phase - 94) / 4), rotation: reduced ? 0 : look.turn * .22 * (1 - smooth((phase - 95.5) / 3)), pulse: .4 })
+    // Lock the contours to the photo plane before its feature-led reveal, so no double features drift.
+    if (phase > 93) {
+      const portrait = portraitState(phase)
+      placeFace({ alpha: smooth((phase - 93) / 2), growth: smooth((phase - 93) / 2.5), rotation: reduced ? 0 : look.turn * .085 * portrait.relief, pulse: .4 * (1 - portrait.reveal), ...portrait })
+    }
   }
 
   hitTest(x: number, y: number, phase: number) {

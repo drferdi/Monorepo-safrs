@@ -178,7 +178,11 @@
    nothing is enhanced, placed over the drawn face by the script in cinematic mode. */
 .human { flex-wrap: wrap; column-gap: 24px; }
 .human > .photo { position: relative; order: 1; flex: 0 0 auto; margin-left: auto; width: min(28vw, 260px); aspect-ratio: 1038 / 1062; pointer-events: none; -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 46%, #000 58%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 46%, #000 58%, transparent 100%); }
-.human > .photo img { object-fit: cover; filter: saturate(.75) contrast(1.04); }
+.human > .photo img { object-fit: cover; }
+.human > .photo img, .human > .photo canvas { filter: saturate(.75) contrast(1.04); }
+.human > .photo canvas { display: none; position: absolute; inset: 0; width: 100%; height: 100%; }
+.human > .photo[data-reveal="active"] img { opacity: 0; }
+.human > .photo[data-reveal="active"] canvas { display: block; }
 .journey[data-enhanced="cinematic"] .human > .photo { position: absolute; order: 0; margin: 0; opacity: 0; }
 @media (max-width: 767px) {
   .human > .photo { order: 0; margin: 0 0 24px; width: min(50vw, 200px); }

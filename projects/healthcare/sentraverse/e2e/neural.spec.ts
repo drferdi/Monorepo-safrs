@@ -1,6 +1,65 @@
 import { expect, test } from '@playwright/test'
+import type { Page } from '@playwright/test'
 
 const divisionNames = ['Sentra Artificial Intelligence', 'Sentra Healthcare Solutions', 'Sentra Academic Solutions', 'Sentra Digital & Finance', 'Sentra Mitra Design']
+
+async function portraitPhase(page: Page, phase: number) {
+  await page.evaluate(value => {
+    const spacer = document.querySelector('.pin-spacer')!, stage = document.querySelector('[data-stage]')!
+    const box = spacer.getBoundingClientRect()
+    window.scrollTo(0, window.scrollY + box.top + (box.height - stage.clientHeight) * value / 100)
+  }, phase)
+  await expect.poll(async () => Math.abs(Number(await page.locator('main').getAttribute('data-phase')) - phase)).toBeLessThan(.06)
+}
+
+test('portrait contours reveal features first, reverse cleanly and finish on the original photo', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-face', 'ready')
+  await portraitPhase(page, 96.5)
+  const photo = page.locator('[data-photo]'), canvas = photo.locator('canvas')
+  await expect(photo).toHaveAttribute('data-reveal', 'active')
+  const sample = () => canvas.evaluate(element => {
+    const surface = element as HTMLCanvasElement, ctx = surface.getContext('2d')!
+    const alpha = (u: number, v: number) => ctx.getImageData(Math.floor(u * surface.width), Math.floor(v * surface.height), 1, 1).data[3]
+    return [alpha(.52, .475), alpha(.425, .38), alpha(.1, .9)]
+  })
+  const first = await sample()
+  expect(first[0]).toBeGreaterThan(240)
+  expect(first[1]).toBeGreaterThan(240)
+  expect(first[2]).toBe(0)
+  await portraitPhase(page, 98.7)
+  await expect(photo).toHaveAttribute('data-reveal', 'complete')
+  await expect(photo.locator('img')).toHaveCSS('opacity', '1')
+  await portraitPhase(page, 96.5)
+  await expect(photo).toHaveAttribute('data-reveal', 'active')
+  expect(await sample()).toEqual(first)
+  expect(await page.locator('#human').evaluate(element => getComputedStyle(element).transform)).toMatch(/^(none|matrix\(1, 0, 0, 1, 0, 0\))$/)
+  await page.getByRole('button', { name: 'READ THE STORY', exact: true }).click()
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
+  await expect(photo).not.toHaveAttribute('data-reveal', /.+/)
+  await expect(photo.locator('img')).toHaveCSS('opacity', '1')
+})
+
+test('a late portrait load resolves the current phase and survives a mobile resize', async ({ page }) => {
+  let release: () => void = () => undefined
+  const ready = new Promise<void>(resolve => { release = resolve })
+  await page.route(url => url.pathname === '/_next/image' && url.searchParams.get('url') === '/portrait-ferdi.webp', async route => { await ready; await route.continue() })
+  await page.goto('/', { waitUntil: 'domcontentloaded' })
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await portraitPhase(page, 98.7)
+  release()
+  const photo = page.locator('[data-photo]')
+  await expect(photo).toHaveAttribute('data-reveal', 'complete')
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.getByRole('button', { name: 'Go to Back to the human', exact: true }).click()
+  await portraitPhase(page, 98.7)
+  await expect(photo).toHaveAttribute('data-reveal', 'complete')
+  const face = await photo.boundingBox(), text = await page.locator('#human h2').boundingBox()
+  expect(face).not.toBeNull(); expect(text).not.toBeNull()
+  expect(face!.y + face!.height).toBeLessThan(text!.y)
+  expect(face!.x).toBeGreaterThanOrEqual(0)
+  expect(face!.x + face!.width).toBeLessThanOrEqual(390)
+})
 
 test('scroll narrative reverses, discovers every division, and keeps sound opt-in', async ({ page }) => {
   const errors: string[] = []

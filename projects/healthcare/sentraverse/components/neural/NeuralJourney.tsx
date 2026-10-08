@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { loadPixels } from './face'
 import type { Look } from './renderer'
-import { faceBox, faceLook } from './tactile'
+import { faceBox, faceLook, portraitState } from './tactile'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions } from './story'
 import styles from './journey.module.css'
@@ -28,8 +28,8 @@ export default function NeuralJourney() {
     root.dataset.loading = 'true'
 
     async function initialize() {
-      const [{ gsap }, { ScrollTrigger }, { NeuralRenderer }] = await Promise.all([
-        import('gsap'), import('gsap/ScrollTrigger'), import('./renderer'),
+      const [{ gsap }, { ScrollTrigger }, { NeuralRenderer }, { createPortraitReveal }] = await Promise.all([
+        import('gsap'), import('gsap/ScrollTrigger'), import('./renderer'), import('./portrait-reveal'),
       ])
       if (cancelled || !root || !canvas || !fallback) return
       gsap.registerPlugin(ScrollTrigger)
@@ -79,14 +79,19 @@ export default function NeuralJourney() {
           if (mobile && time - lastFrame < 1 / 30) return
           lastFrame = time
           engine.render(state.phase, reduced ? 0 : time, reduced, hover, look)
+          portrait?.render(portraitState(state.phase).reveal)
         }
         // The real portrait resolves over the neural face at the very end (Chief 2026-10-08):
         // the same placement maths puts the photo exactly where the renderer draws the face.
         const photo = root.querySelector<HTMLElement>('[data-photo]')
+        const portrait = photo && !reduced ? createPortraitReveal(photo) : null
         const placePhoto = () => {
           if (!photo || reduced) return
           const viewport = { width: stage.clientWidth, height: stage.clientHeight }
-          gsap.set(photo, faceBox(engine.faceView(), viewport))
+          const box = faceBox(engine.faceView(), viewport)
+          gsap.set(photo, box)
+          portrait?.resize(box.width, box.height, window.devicePixelRatio || 1)
+          portrait?.render(portraitState(state.phase).reveal)
         }
         const resize = () => { engine.resize(); placePhoto(); engine.render(state.phase, 0, reduced, hover, look) }
         const observer = new ResizeObserver(resize)
@@ -132,14 +137,14 @@ export default function NeuralJourney() {
           // under it (Chief 2026-10-08) and lifts again as the face returns at the end.
           master.fromTo('[data-scrim]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 3 }, 58)
           master.to('[data-scrim]', { autoAlpha: 0, duration: 3 }, 94)
-          if (photo) { placePhoto(); master.fromTo(photo, { autoAlpha: 0 }, { autoAlpha: 1, duration: 3 }, 95.5) }
+          if (photo) { placePhoto(); master.fromTo(photo, { autoAlpha: 0 }, { autoAlpha: 1, duration: portrait ? .5 : 3 }, 95.5) }
           chapters.forEach((chapter, index) => {
             const panel = panels[index]
             // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
             // exits accelerate; the master stays linear because the scroll position drives it.
             const scene = gsap.timeline({ defaults: { ease: 'power3.out' } })
             const duration = (chapters[index + 1]?.phase ?? 102) - chapter.phase
-            if (index > 0) scene.fromTo(panel, { autoAlpha: 0, y: reduced ? 0 : 24 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
+            if (index > 0) scene.fromTo(panel, { autoAlpha: 0, y: reduced || chapter.id === 'human' ? 0 : 24 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
             const marker = panel.querySelector('[data-marker-line]')
             if (marker) {
               scene.fromTo(marker, { scaleX: 0 }, { scaleX: 1, duration: .8, ease: 'power2.out', immediateRender: false }, 0)
@@ -203,6 +208,7 @@ export default function NeuralJourney() {
           handlers.forEach(remove => remove())
           live = false
           engine.dispose()
+          portrait?.dispose()
           if (photo) gsap.set(photo, { clearProps: 'all' })
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
           delete root.dataset.enhanced
@@ -281,7 +287,7 @@ export default function NeuralJourney() {
             return (
               <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${final ? styles.human : ''} ${chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''}`} tabIndex={-1} aria-label={chapter.label}>
                 {division && <div className={styles.marker} aria-hidden="true"><span data-marker-dot /><i data-marker-line /></div>}
-                {final && <div data-photo className={styles.photo}><Image src="/portrait-ferdi.webp" alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 60vw, 420px" /></div>}
+                {final && <div data-photo className={styles.photo}><Image src="/portrait-ferdi.webp" alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 60vw, 420px" /><canvas data-photo-reveal aria-hidden="true" /></div>}
                 <div data-marker-copy data-division={division ? index - 8 : undefined}>
                   <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
                   {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map(line => <span key={line}>{line}</span>)}</h2>}
