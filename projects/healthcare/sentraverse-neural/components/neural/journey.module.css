@@ -93,7 +93,15 @@
 .settings button { padding: 12px 0; border: 0; background: transparent; color: inherit; font-size: 8px; letter-spacing: .08em; white-space: nowrap; }
 .soundIcon { font-size: 14px; color: var(--neural-blue); margin-right: 7px; }
 .progress { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--neural-line); z-index: 5; }
-.progress span { display: block; height: 100%; background: var(--neural-blue); transform: scaleX(0); transform-origin: left; }
+.progress > span { display: block; height: 100%; background: var(--neural-blue); transform: scaleX(0); transform-origin: left; }
+.progress i { position: absolute; bottom: 0; width: 1px; height: 5px; background: var(--neural-line); transform: translateX(-.5px); transition: height .3s, background .3s; }
+.progress i[data-active="true"] { height: 9px; background: var(--neural-blue); }
+/* The signal head: a full-width carrier GSAP translates by (progress - 1) * 100 % (no stylesheet
+   transform, which GSAP would read back as pixels), the dot on its right end, a short glow trailing
+   behind it; without the script there is no progress to ride, so no head. */
+.head { position: absolute; inset: 0; pointer-events: none; }
+.journey:not([data-enhanced]) .head { display: none; }
+.head span { position: absolute; right: -3px; top: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--neural-white); box-shadow: 0 0 10px 2px rgb(155 185 215 / 55%), -14px 0 12px -4px rgb(155 185 215 / 35%); }
 .cursor { position: fixed; z-index: 10; top: -5px; left: -5px; width: 10px; height: 10px; border: 1px solid var(--neural-blue); border-radius: 50%; pointer-events: none; opacity: 0; }
 .cursor[data-active="true"] { box-shadow: 0 0 25px 5px rgb(155 185 215 / 20%); }
 .loading { display: none; }

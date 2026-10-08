@@ -8,7 +8,7 @@ import type { Carrier, Look } from './renderer'
 import { faceLook } from './tactile'
 import { FILM, createFilm, filmFrameUrl } from './film'
 import { createMorph, faceCrop } from './morph'
-import { MASTER_DURATION, buildMaster, jumpLabel, legacy, revealHero, settleLegacy, stillCamera } from './timeline'
+import { MASTER_DURATION, buildMaster, jumpLabel, legacy, phaseToTime, revealHero, settleLegacy, stillCamera } from './timeline'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra } from './story'
 import styles from './journey.module.css'
@@ -92,6 +92,11 @@ export default function NeuralJourney() {
         const preloadAt = phaseOf('network')
         let hover = -1, lastChapter = -1, lastFrame = 0, visible = true
         const progressSetter = gsap.quickSetter(progressLine, 'scaleX')
+        // The neural trace (brief 2026-10-09 §6): a signal head rides the line at the scroll progress
+        // and the chapter's tick lights; ticks sit at each chapter's place in the scroll travel.
+        const head = root.querySelector<HTMLElement>('[data-progress-head]')!
+        const headSetter = gsap.quickSetter(head, 'xPercent')
+        const ticks = Array.from(root.querySelectorAll<HTMLElement>('[data-progress-tick]'))
         // The carrier (brief 2026-10-09 §2) follows the renderer's projection every frame.
         const carrierElement = root.querySelector<HTMLElement>('[data-carrier]')!
         const carrierX = gsap.quickSetter(carrierElement, 'x', 'px'), carrierY = gsap.quickSetter(carrierElement, 'y', 'px')
@@ -108,8 +113,10 @@ export default function NeuralJourney() {
           const index = activeChapter(state.phase)
           root.dataset.phase = state.phase.toFixed(2)
           // The line follows the scroll travel (the master's progress), not the phase, which
-          // dwells on the legacy over the last third of the travel.
-          progressSetter(master ? master.progress() : state.phase / 100)
+          // dwells on the legacy over the last third of the travel; reading mode maps the phase
+          // through the same tempo.
+          const progress = master ? master.progress() : phaseToTime(state.phase) / MASTER_DURATION
+          progressSetter(progress); headSetter((progress - 1) * 100)
           activity.setPhase(state.phase)
           if (state.phase >= preloadAt) preload()
           root.dataset.signal = activity.cycle.paused() ? 'paused' : 'active'
@@ -121,6 +128,7 @@ export default function NeuralJourney() {
           root.querySelectorAll<HTMLButtonElement>('[data-jump]').forEach(button => {
             button.setAttribute('aria-current', Number(button.dataset.jump) === chapters[index].phase ? 'step' : 'false')
           })
+          ticks.forEach((tick, i) => { tick.dataset.active = String(i === index) })
         }
         const draw = (time = 0) => {
           if (!visible || document.hidden) return
@@ -246,6 +254,7 @@ export default function NeuralJourney() {
           morph?.dispose()
           activity.dispose()
           gsap.set(carrierElement, { clearProps: 'all' }); carrierElement.style.removeProperty('--carrier')
+          gsap.set(head, { clearProps: 'transform' }); ticks.forEach(tick => { delete tick.dataset.active })
           // Reading mode shows the legacy still, whatever the cinematic scene left behind.
           if (scene) settleLegacy(gsap, scene, panels[chapters.findIndex(chapter => chapter.id === 'human')])
           // The titles return to their plain markup (the context reverts them too; this is explicit).
@@ -373,7 +382,11 @@ export default function NeuralJourney() {
           </div>
           {audioError && <span role="status" className={styles.audioError}>Audio unavailable in this browser.</span>}
         </footer>
-        <div className={styles.progress} aria-hidden="true"><span data-progress-line /></div>
+        <div className={styles.progress} aria-hidden="true">
+          <span data-progress-line />
+          {chapters.map(chapter => <i key={chapter.id} data-progress-tick={chapter.phase} style={{ left: `${(phaseToTime(chapter.phase) / MASTER_DURATION * 100).toFixed(3)}%` }} />)}
+          <b data-progress-head className={styles.head}><span /></b>
+        </div>
         <div className={styles.cursor} data-cursor aria-hidden="true" />
       </div>
       <div className={styles.colophon}>
