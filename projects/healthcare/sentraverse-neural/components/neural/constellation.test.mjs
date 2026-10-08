@@ -55,3 +55,17 @@ test('a share of the foreground stays where it grew, so the field keeps its dept
   }
   assert.ok(stayed > 1000, 'foreground vertices that stay in the field ' + stayed)
 })
+
+test('a link from a neuron that keeps its place to one that joins a ring folds into the one that stays, so no scratch crosses the frame', () => {
+  const network = makeNetwork(1)
+  const at = (array, i) => [array[i], array[i + 1], array[i + 2]]
+  let mixed = 0
+  for (let v = 0; v < network.lines.length / 9; v += 2) {
+    const a = at(network.lines, v * 9), b = at(network.lines, v * 9 + 9), ta = at(network.lineTargets, v * 3), tb = at(network.lineTargets, v * 3 + 3)
+    const stays = [distance(a, ta) < 1e-6, distance(b, tb) < 1e-6]
+    if (stays[0] === stays[1]) continue
+    mixed++
+    assert.ok(distance(ta, tb) < 1e-6, `link ${v / 2} ends ${distance(ta, tb).toFixed(2)} long`)
+  }
+  assert.ok(mixed > 20, 'links between a kept and a gathered neuron ' + mixed)
+})

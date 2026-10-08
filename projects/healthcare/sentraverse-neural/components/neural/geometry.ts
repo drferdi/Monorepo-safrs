@@ -412,7 +412,7 @@ export function makeNetwork(density: number): Geometry {
       tissue.line(end, [end[0] + Math.cos(angle + .6) * length * .4, end[1] + Math.sin(angle + .6) * length * .4, end[2]], [.16, .23, .32])
     }
   }
-  const shifts: Vec3[] = [], filled = hubs.map(() => 0)
+  const shifts: Vec3[] = [], kept: boolean[] = [], filled = hubs.map(() => 0)
   for (let i = 0; i < 100 * density; i++) {
     const center: Vec3 = [(tissue.rand() - .5) * 15, (tissue.rand() - .5) * 10, (tissue.rand() - .5) * 8]
     centers.push(center)
@@ -422,7 +422,7 @@ export function makeNetwork(density: number): Geometry {
     const hub = nearestHub(center), far = Math.hypot(center[0] - hubs[hub][0], center[1] - hubs[hub][1], center[2] - hubs[hub][2]) > GATHER
     const seat = far ? center : ringSeat(hub, filled[hub]++)
     const shift: Vec3 = [seat[0] - center[0], seat[1] - center[1], seat[2] - center[2]]
-    shifts.push(shift)
+    shifts.push(shift); kept.push(far)
     tissue.constellate(shift)
     tissue.neuron(center, .16 + tissue.rand() * .15, 1, i % 3 ? BLUE : WHITE)
   }
@@ -443,7 +443,10 @@ export function makeNetwork(density: number): Geometry {
       const a = centers[i], b = centers[j]
       if (Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) < 2.8) {
         const sa = shifts[i], sb = shifts[j]
-        tissue.line(a, b, [.18, .28, .41], 0, tissue.rand(), 1, [[a[0] + sa[0], a[1] + sa[1], a[2] + sa[2]], [b[0] + sb[0], b[1] + sb[1], b[2] + sb[2]]])
+        // A link from a neuron that keeps its place to one that joins a ring would stretch across
+        // the frame as the field orders; it folds into the neuron that stays instead.
+        const targets: [Vec3, Vec3] = kept[i] === kept[j] ? [[a[0] + sa[0], a[1] + sa[1], a[2] + sa[2]], [b[0] + sb[0], b[1] + sb[1], b[2] + sb[2]]] : kept[i] ? [a, a] : [b, b]
+        tissue.line(a, b, [.18, .28, .41], 0, tissue.rand(), 1, targets)
       }
     }
   }
