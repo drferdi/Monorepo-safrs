@@ -14,7 +14,7 @@ import {
   nationalSources,
   professionalSources,
   stats,
-} from '@/lib/data'
+} from '@/components/sentrapedia/data'
 import SentraAgentNodeGraph from '@/components/sentra-agent-node-graph'
 import IntroMotionSplash from '@/components/intro-motion-splash'
 import { layoutGovernance, typeGovernance } from '@/lib/design-governance'
@@ -95,7 +95,7 @@ export default function SentrapediaPage() {
       {/* Cinematic Motion Intro Splash on Opening */}
       <IntroMotionSplash />
 
-      <Navbar onOpenApiModal={() => setShowApiModal(true)} />
+      <Navbar />
 
       <main className="flex-1 bg-background text-foreground">
         {/* ═══ 1. Hero Section: Public Professional ═══ */}

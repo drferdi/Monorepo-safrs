@@ -2,24 +2,39 @@
 // Cinematic Motion Intro Splash for Sentrapedia
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Volume2, VolumeX, ArrowRight, Sparkles } from 'lucide-react'
 
+// The "seen" flag lives in sessionStorage; it is read as an external store so the
+// server render (never seen) and the first client render agree, and finishing the
+// intro notifies the store instead of setting state from an effect.
+const INTRO_SEEN_KEY = 'sentrapedia_intro_seen'
+const introSeenListeners = new Set<() => void>()
+
+function subscribeIntroSeen(listener: () => void) {
+  introSeenListeners.add(listener)
+  return () => {
+    introSeenListeners.delete(listener)
+  }
+}
+
+function getIntroSeenSnapshot() {
+  return sessionStorage.getItem(INTRO_SEEN_KEY) === 'true'
+}
+
+function markIntroSeen() {
+  sessionStorage.setItem(INTRO_SEEN_KEY, 'true')
+  introSeenListeners.forEach((listener) => listener())
+}
+
 export default function IntroMotionSplash() {
-  const [visible, setVisible] = useState(true)
+  const visible = !useSyncExternalStore(subscribeIntroSeen, getIntroSeenSnapshot, () => false)
   const [muted, setMuted] = useState(true)
   const [progress, setProgress] = useState(0)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    // Check if session has already viewed the intro
-    const hasSeen = sessionStorage.getItem('sentrapedia_intro_seen')
-    if (hasSeen === 'true') {
-      setVisible(false)
-      return
-    }
-
     const video = videoRef.current
     if (video) {
       video.play().catch(() => {
@@ -41,8 +56,7 @@ export default function IntroMotionSplash() {
   }
 
   const finishIntro = () => {
-    sessionStorage.setItem('sentrapedia_intro_seen', 'true')
-    setVisible(false)
+    markIntroSeen()
   }
 
   const toggleSound = () => {
