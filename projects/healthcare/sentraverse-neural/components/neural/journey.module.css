@@ -30,7 +30,8 @@
 .journey:not([data-enhanced="cinematic"]) .carrier { display: none; }
 .header { position: absolute; z-index: 4; top: 0; left: 0; width: 100%; padding: 36px 4.2vw; display: flex; align-items: center; justify-content: space-between; gap: 25px; }
 .wordmark { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; letter-spacing: .21em; white-space: nowrap; }
-.mark { font-size: 30px; font-weight: 300; color: var(--neural-blue); line-height: 1; }
+/* The official mark (Chief 2026-10-09): the neuron, white on transparent. */
+.mark { display: block; width: auto; height: 28px; }
 .wordmarkDot { font-size: 9px; align-self: flex-start; margin-left: -9px; margin-top: 6px; }
 .edition, .specimen, .coordinates, .eyebrow, .annotation, .begin, .controls, .cta, .colophon, .loading { font-family: var(--neural-mono); }
 .edition { font-size: 9px; color: var(--neural-muted); letter-spacing: .12em; }
@@ -158,7 +159,7 @@
   .vignette { background: linear-gradient(180deg, rgb(6 9 14 / 90%) 0%, transparent 27%, rgb(6 9 14 / 15%) 42%, rgb(6 9 14 / 85%) 72%, var(--neural-bg) 100%); }
   .header { padding: 24px 7vw; align-items: flex-start; flex-wrap: wrap; gap: 18px; }
   .wordmark { font-size: 11px; }
-  .mark { font-size: 25px; }
+  .mark { height: 24px; }
   .nav { width: 100%; justify-content: space-between; gap: 12px; font-size: 10px; }
   .specimen { top: 135px; left: 7vw; font-size: 7px; gap: 10px; }
   .specimen i { width: 25px; }

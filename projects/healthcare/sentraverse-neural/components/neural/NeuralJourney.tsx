@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { analyseFace, loadPixels } from './face'
 import type { FaceAnalysis } from './face'
@@ -332,7 +333,7 @@ export default function NeuralJourney({ year }: { year: number }) {
         <div data-scrim className={styles.scrim} aria-hidden="true" />
         <span data-carrier className={styles.carrier} aria-hidden="true" />
         <header className={styles.header}>
-          <a href="#top" className={styles.wordmark} onClick={event => { event.preventDefault(); navigateRef.current(0) }} aria-label="Sentraverse, return to origin"><span className={styles.mark} aria-hidden="true">✳</span> SENTRAVERSE<span className={styles.wordmarkDot}>®</span></a>
+          <a href="#top" className={styles.wordmark} onClick={event => { event.preventDefault(); navigateRef.current(0) }} aria-label="Sentraverse, return to origin"><Image src="/brand/sentraverse-logo.png" alt="" width={36} height={28} priority className={styles.mark} /> SENTRAVERSE<span className={styles.wordmarkDot}>®</span></a>
           <nav data-nav className={styles.nav} aria-label="Primary navigation">
             <button data-jump={phaseOf('network')}>Sentraverse</button><button data-jump={phaseOf('division-1')}>Divisions</button><a href={sentra('/story')}>About</a><a href={sentra('/ekosistem')}>Explore <span aria-hidden="true">↗</span></a>
           </nav>
