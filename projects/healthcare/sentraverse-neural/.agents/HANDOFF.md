@@ -10,7 +10,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 Developed on branch `feat/sidepanel-ui-batch` of the monorepo (not yet snapshotted to
 drferdi/Sentraverse-N). This session implemented the brief
 `docs/superpowers/plans/2026-10-09-one-living-visual-organism.md` from the plan `...-implementation.md`
-(local working notes) in 12 commits, `fe4162ae..HEAD`:
+(local working notes) in 16 commits, `893e0c0d..HEAD`:
 - motion signatures per phase;
 - a restrained stage camera;
 - one carrier handed from chapter to chapter (`handoff.ts`);
@@ -19,13 +19,17 @@ drferdi/Sentraverse-N). This session implemented the brief
 - the neural-trace progress line;
 - pointer node glow and micro-label;
 - `inert` off-screen chapters and the server-rendered year;
-- `robots.txt` and Organization JSON-LD.
+- `robots.txt` and Organization JSON-LD;
+- after Chief's "glitch" report and the final review: a division's marker and copy now start drawn
+  back (they flashed in full with the panel on the first pass down), links from kept outer neurons
+  fold instead of scratching across the frame, the micro-label forgets on scroll, and the h1 comes
+  up by itself if the scripts never start.
 
 The knobs are listed in `docs/neural-journey.md`, "One living organism".
 
 Gates (fresh build, `next start` on 127.0.0.1:4347):
-- typecheck 0, eslint 0, node:test 54/54, build 0, deploy dry-run 0;
-- Playwright 22/22;
+- typecheck 0, eslint 0, node:test 55/55, build 0, deploy dry-run 0;
+- Playwright 24/24;
 - network frame pacing 30–32 ms mean measured alone (50 ms when run in parallel with the suite).
 
 ## Work in flight
@@ -47,10 +51,12 @@ image wait for the domain.
   transform-free in CSS (`.head`).
 - `node scripts/pnpm.mjs exec playwright test -g "a b|c"` loses quoting through the shell; use
   `node node_modules/@playwright/test/cli.js test -g "..."`.
-- A stale `next start` from an earlier session held 127.0.0.1:4346 (PID 39072); this session
-  verified on 4347 and left 4346 alone.
+- A `next start` from an earlier session may hold 127.0.0.1:4346; verify on another port
+  (`PORT=4347` for Playwright) and leave it alone.
 - Phones: the outer constellation clusters sit partly outside the frame (as the network did
   before).
+- A `fromTo` with `immediateRender: false` does not render before its start: set the start state
+  at build, or the element shows in full until the playhead reaches it.
 - Earlier quirks still hold:
   - A re-export of the film needs a new `legacy-film/<version>/` folder.
   - Node-tested modules are leaves.
