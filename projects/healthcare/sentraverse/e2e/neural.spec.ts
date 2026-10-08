@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
+import { FILM, filmFrameUrl } from '../components/neural/film'
+import { MORPH } from '../components/neural/morph'
 import { MASTER_DURATION, phaseToTime } from '../components/neural/timeline'
 
 const divisionNames = ['Sentra Artificial Intelligence', 'Sentra Healthcare Solutions', 'Sentra Academic Solutions', 'Sentra Digital & Finance', 'Sentra Mitra Design']
@@ -42,11 +44,32 @@ test('the film: it fades in through the closing void after the SENTRA chapter, r
   await portraitPhase(page, 100)
   await expect.poll(frame, { timeout: 20000 }).toBe(119)
   // The face's transformation is the scroll position's too: complete at the end, not begun at 98.5.
+  // Read off the canvas itself: at the end the left side of the face as seen carries the light
+  // tissue (edges, dots, somas) and the right side stays the photograph, untouched by the canvas.
   const morph = film.locator('canvas[data-film-morph]')
   await expect(morph).toBeVisible()
   await expect.poll(() => morph.getAttribute('data-morph'), { timeout: 20000 }).toBe('1.00')
+  const face = MORPH.face, left = { x0: face.x - face.rx * .8, x1: face.x - 20 }, right = { x0: face.x + 20, x1: face.x + face.rx * .8 }
+  const tissue = (side: { x0: number; x1: number }) => morph.evaluate((canvas, [x0, x1, y0, y1, scale]) => {
+    if (!(canvas instanceof HTMLCanvasElement)) return null
+    const context = canvas.getContext('2d')
+    if (!context) return null
+    const { data } = context.getImageData(x0 * scale, y0 * scale, (x1 - x0) * scale, (y1 - y0) * scale)
+    let painted = 0, bright = 0
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i + 3] <= 8) continue
+      painted++
+      if ((data[i] + data[i + 1] + data[i + 2]) / 3 > 90) bright++
+    }
+    return { painted, bright, total: data.length / 4 }
+  }, [side.x0, side.x1, face.y - 60, face.y + 70, MORPH.scale])
+  await expect.poll(async () => (await tissue(left))?.bright ?? 0, { timeout: 20000 }).toBeGreaterThan(200)
+  const untouched = await tissue(right)
+  expect(untouched).not.toBeNull()
+  expect((untouched?.painted ?? 1) / (untouched?.total ?? 1)).toBeLessThan(.005)
   await portraitPhase(page, 98.5)
   await expect.poll(() => morph.getAttribute('data-morph')).toBe('0.00')
+  await expect.poll(async () => (await tissue(left))?.painted ?? -1).toBe(0)
   await portraitPhase(page, 96.2)
   await expect.poll(frame).toBeLessThanOrEqual(expected(96.2) + 3)
   await page.setViewportSize({ width: 390, height: 844 })
@@ -62,6 +85,26 @@ test('the film: it fades in through the closing void after the SENTRA chapter, r
   await expect(film.locator('img')).toBeVisible()
   await expect(film.locator('canvas[data-film-canvas]')).toBeHidden()
   await expect(film.locator('canvas[data-film-morph]')).toBeHidden()
+})
+
+test('the film is fetched only on the way to it, first and last frame first, served immutable, none missing', async ({ page }) => {
+  const frames: string[] = []
+  page.on('request', request => { const path = new URL(request.url()).pathname; if (/^\/legacy-film\/.+\/f\d{3}\.webp$/.test(path)) frames.push(path) })
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await page.waitForLoadState('networkidle')
+  await portraitPhase(page, 50)
+  expect(frames, 'no frame before the network chapter').toHaveLength(0)
+  await portraitPhase(page, 61)
+  await expect.poll(() => frames.length).toBeGreaterThanOrEqual(2)
+  expect(frames.slice(0, 2)).toEqual([filmFrameUrl(0), filmFrameUrl(FILM.frames - 1)])
+  await portraitPhase(page, 100)
+  const canvas = page.locator('canvas[data-film-canvas]')
+  await expect.poll(() => canvas.getAttribute('data-frame'), { timeout: 20000 }).toBe(String(FILM.frames - 1))
+  await expect.poll(() => new Set(frames).size, { timeout: 20000 }).toBe(FILM.frames)
+  expect(await canvas.getAttribute('data-missing')).toBeNull()
+  const response = await page.request.get(filmFrameUrl(0))
+  expect(response.headers()['cache-control']).toBe('public, max-age=31536000, immutable')
 })
 
 test('the activity cycle runs through the network on WebGL and parks elsewhere and under reduced motion', async ({ page }) => {

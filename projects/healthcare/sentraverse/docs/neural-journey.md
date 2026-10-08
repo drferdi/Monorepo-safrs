@@ -83,10 +83,15 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   other with no black between; the canvases stop drawing at `covered` 96), `film` (a plain
   clock `{ time }` tweened without easing from 0 to the clip's 10.1 s between 95.8 and 99, whose
   `onUpdate` hands the clip time to `film.ts`, which draws that time's frame into the canvas:
-  GSAP's image-sequence pattern, 120 WebP frames at 12 fps extracted from the clip in Chrome,
-  because the clip has a single keyframe and a seeked `<video>` costs up to ~220 ms a frame; a
-  frame not yet loaded is stood in for by the nearest loaded one, and loading starts with the
-  cinematic build; the last frame holds to 100) and `legacy` (the title, "Every universe begins with a vision.", the signature, the brand
+  GSAP's image-sequence pattern, 120 WebP frames at 12 fps in `public/legacy-film/v1/`, extracted
+  from the clip in Chrome by `scripts/legacy-film/extract.mjs`, because the clip has a single
+  keyframe and a seeked `<video>` costs up to ~220 ms a frame; nothing loads until the story
+  reaches the network chapter (phase 60, about five viewports before the film; Chief 2026-10-09:
+  pay for the film only on the way to it), then frame 0 and frame 119 first and the rest in
+  order, six at a time, one retry each, a failed frame recorded in `data-missing`; a frame not yet
+  loaded is stood in for by the nearest loaded one; the folder is versioned and served
+  `immutable` (`next.config.mjs`), so a re-export goes into a new folder with `FILM.version`; the
+  last frame holds to 100) and `legacy` (the title, "Every universe begins with a vision.", the signature, the brand
   line and the way on, from 99). The film stands large: its box is the clip's width to 92 % of
   its height (the watermark at the foot of the source is cropped by `object-position: 50% 0`),
   `min(88cqh, 994px, 94cqw × 1016/832)` tall on wide screens (near native, capped by the stage),
@@ -96,8 +101,8 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   kept, darkened: "jangan terlalu terang"). The poster is hidden in cinematic mode and the
   canvas outside it, so the shared mask never doubles; `settleLegacy` clears what the scene
   tweened. The drawn face no longer returns before the final chapter (the network dissolves from
-  94 straight into the void and the film); `portrait-reveal.ts` (the feature-first photo reveal
-  of 2026-10-08) is no longer used. The last beat is the morph (Chief 2026-10-09, "sebagian wajah
+  94 straight into the void and the film; the feature-first photo reveal of 2026-10-08 and its
+  shader relief were removed on 2026-10-09). The last beat is the morph (Chief 2026-10-09, "sebagian wajah
   saya berubah menjadi persyarafan neuron"; `morph.ts`): over the held last frame a front sweeps
   in from the left side of the face as seen (`MORPH.cut.side`, Chief's call) between 99.05 and 99.9 (`legacy.morph`, a plain `{ value }`
   tween without easing whose `onUpdate` hands the progress to the module); the flesh it passes
@@ -108,7 +113,9 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   `signal.ts`. It is drawn into `<canvas data-film-morph>` at twice the frame's resolution under
   the film's mask but none of its grade; the journey's ticker drives the living layer past
   `covered`, the still layer is redrawn only when the front moves, and `data-morph` records the
-  progress. Reduced motion never builds it.
+  progress. Its analysis starts with the film's preload. Reduced motion never builds it. After
+  a re-export, `scripts/legacy-film/measure.mjs` draws the new last frame with a grid, the
+  `MORPH.face` ellipse, the crop, the hairline and the analysis, so those knobs can be read off.
 - Chapter titles reveal behind line masks (2026-10-08, "ending"): after `document.fonts.ready`,
   inside the cinematic matchMedia context, `SplitText.create` splits every chapter `h2` once
   (`mask: 'lines'`, `aria: 'auto'`, no `autoSplit`; the centered titles, chapters 07, 14 and
@@ -217,26 +224,32 @@ node scripts/pnpm.mjs run build
 node scripts/pnpm.mjs run deploy:dry-run
 ```
 
-`node scripts/pnpm.mjs run test` runs the node:test files, including `components/neural/tactile.test.mjs`,
-`face.test.mjs`, `morphology.test.mjs`, `signal.test.mjs`, `legacy.test.mjs` (the camera maths, the
-registration of the photo on the drawn face, the end-of-pullback framing, the architecture and
-the stylesheet's `--reach`) and `timeline.test.mjs` (the master's 131.5 units, the phase mapping
-and its dwells, the labels, the title reveals and the legacy's five phases, the ground riding the
-dolly, the settled state). The Playwright suite in
-`e2e/neural.spec.ts` covers the WebGL renderer staying active (a shader that fails to link
-would fall back to Canvas 2D silently), the activity cycle playing only in the network window
-and parking under reduced motion,
-reverse navigation, all five divisions, the film at the final chapter
-(feature-first alpha of the reveal canvas, exact reversal, the full image at the end, a late
-image load, a phone resize, and reading mode and no canvas context), the legacy (the presence
-line, the reveal, the closed void and the emerged gate half way through the pullback, the world
-and the ground at their end positions, the drawn pathways, the figure small but readable and
-clear of the title at four viewports, the exact words, the still complete poster under reduced
-motion), mobile overflow and the
-CTA in view, OS reduced-motion changes, context loss, clean reading-mode transforms, missing
-WebGL, no canvas context at all, JavaScript-disabled reading, pin cleanup, connected-region
-navigation, and frame timing. `e2e/smoke.spec.ts` keeps
-the public-route checks and updates the old waiting-list assertion to the new ecosystem CTA.
+`node scripts/pnpm.mjs run test` runs every `*.test.mjs` under `app/` and `components/` (a glob,
+so a new test file runs without touching `package.json`; CI runs it on every push):
+`tactile.test.mjs` (magnet pull, face placement and look), `face.test.mjs` (the analysis,
+`makeFace`, the feature-first growth order), `morphology.test.mjs`, `signal.test.mjs`,
+`film.test.mjs` (frame mapping, the versioned files on disk, the load order), `morph.test.mjs`
+(the region, the front, the crop, the seeded neurons, the pulse lanes) and `timeline.test.mjs`
+(the master's 131.5 units, the phase mapping and its dwells, the labels, the title reveals, the
+legacy's dissolve, film, morph and text beats, the settled state). The Playwright suite in
+`e2e/neural.spec.ts` (local only for now, Chief 2026-10-09) covers the WebGL renderer staying
+active (a shader that fails to link would fall back to Canvas 2D silently), the activity cycle
+playing only in the network window and parking under reduced motion, reverse navigation, all
+five divisions, the film (the dissolve, the frame following the scroll, the morph read off the
+canvas pixels: tissue on the left of the face at 100, the right untouched, nothing at 98.5, a
+phone resize, reading mode), the film's loading (no frame before the network chapter, frame 0
+and 119 first, all 120 by the end, none missing, `Cache-Control` immutable), the legacy's words
+and layout on every breakpoint, mobile overflow, OS reduced-motion changes, context loss,
+missing WebGL, no canvas context, JavaScript-disabled reading, pin cleanup, connected-region
+navigation and frame timing. `e2e/smoke.spec.ts` keeps the public-route checks.
+
+Performance targets (Chief 2026-10-09, "sesuaikan best practice"): the Core Web Vitals "good"
+thresholds at the 75th percentile — LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1 — and no film bytes
+before the visitor heads for the film. Measured 2026-10-09 on `next start` locally in Chrome:
+375×812 with Fast 4G (9 Mbps, 60 ms) and 4× CPU throttling LCP 1,420 ms, CLS 0, 578 KB until
+network idle, 0 film frames; 1280×800 unthrottled LCP 304 ms, CLS 0. Field data (Vercel Speed
+Insights) is the release check; INP is not measured locally.
+
 Point `PLAYWRIGHT_BASE_URL` at a running local preview, then run:
 
 ```text

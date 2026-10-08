@@ -3,6 +3,51 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (GSAP debt) — Chief's rulings on the GSAP audit, and the debt worked off
+
+- Rulings (Chief, 2026-10-09, on the audit's open questions): (1) scrub "sesuaikan dengan best
+  practice /gsap": the official GSAP ScrollTrigger and performance guidance favours a numeric
+  scrub (a short catch-up) over `scrub: true` for scroll-linked work, so the master keeps `.8`
+  on desktop and `.35` on phones; at rest the frame is exactly the scroll position's (the e2e
+  holds it within ±3 frames at 97 and exactly 119 at 100), which keeps the 2026-10-09 rule that
+  the film follows the scroll and never plays on its own. (2) The `clideo.com` watermark stays
+  for now ("biarkan saja"); it is cropped by the film box. (3) The orphaned GSAP components are
+  deleted ("di hapus"). (4) Performance targets "sesuaikan best practice": the Core Web Vitals
+  good thresholds (LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1 at p75) and no film bytes before the
+  visitor heads for the film. (5) The film frames move to a versioned folder served immutable
+  ("surely"). (6) The Playwright e2e stays local; CI runs node:test. (7) The left-side morph is
+  approved ("morph go"; committed as `99ce16af`).
+- How: `.github/workflows/ci.yml` gains a `test` job and `build` needs it; the `test` script is
+  a glob over `app/` and `components/`. `film.ts` loads nothing until `load()`, which
+  `NeuralJourney.tsx` calls once the phase reaches `phaseOf('network')` (the morph's analysis of
+  the last frame starts with it); frames 0 and 119 come first; one retry, then `data-missing`.
+  Frames live in `public/legacy-film/v1/` (`FILM.version`), `next.config.mjs` serves
+  `/legacy-film/:version/:file*` with `public, max-age=31536000, immutable`. `story.ts`
+  `phaseOf(id)` feeds the jump buttons, the hash aliases and the division index; `renderer.ts`
+  `networkFocus` serves both `render` and `hitTest`. The retired photo reveal is gone:
+  `portrait-reveal.ts`, `portraitState`, `faceDissolve`, the `u_relief`/`u_reveal` uniforms and
+  the Canvas fallback's reveal branch, and the two tests that guarded them (a feature-first
+  growth test on the live `faceContour` replaces them). `sentra-kinetic-nav.tsx` no longer sets
+  `gsap.defaults()` globally (its own timeline defaults and eases keep its look). Deleted as
+  orphans: `Hero`, `About`, `Ecosystem`, `Services`, `ClinicalSuite`, `BlueprintStory`,
+  `ScrollGallery`, `ui/sentra-bento-cards`, `ui/scrolltrigger-sync`, and what only they imported
+  (`Audrey`, `ClinicalTrajectory`, `ClinicalPrognosis`, `blueprint-story/*`,
+  `clinical-prognosis/*`, `clinical-trajectory/*`). The film pipeline moved from a session
+  scratchpad into `scripts/legacy-film/` (`extract.mjs` refuses an existing version folder;
+  `measure.mjs` draws the last frame with the `MORPH` ellipse, crop, hairline and analysis).
+  The duplicate `ScrollTrigger.refresh()` after `document.fonts.ready` is gone (the fonts are
+  awaited before the build). README, ARCHITECTURE, CONTRIBUTING, ROADMAP, `docs/setup.md`,
+  `docs/testing.md`, `docs/troubleshooting.md` and `docs/neural-journey.md` describe the journey.
+- Not changed, with reason: `ScrollTrigger.config({ ignoreMobileResize })` is not set because
+  gsap 3.14 already defaults it to true on touch-only devices (`_ignoreMobileResize =
+  Observer.isTouch === 1` in `node_modules/gsap/ScrollTrigger.js`); the per-frame allocations in
+  `renderer.ts` and the per-soma gradient in `morph.ts` wait for a low-end device profile.
+- Evidence: typecheck 0, lint 0 (2 pre-existing warnings in `app/insights/page.tsx`), node:test
+  44/44, build 0, Playwright neural + smoke 16/16 on `next start` 127.0.0.1:4341 (new: the film
+  loading test and the morph pixel assertions), `curl -I` on a frame returns the immutable
+  header; Chrome at 375×812 Fast 4G + 4× CPU: LCP 1,420 ms, CLS 0, 578 KB to network idle, 0
+  film frames; 1280×800: LCP 304 ms, CLS 0. Local evidence only.
+
 ## 2026-10-09 (morph) — At the end of THE LEGACY part of the face becomes neural tissue
 
 - Decision (Chief, 2026-10-09, on the film chapter at rest: "di bagian akhir ini buat efek state

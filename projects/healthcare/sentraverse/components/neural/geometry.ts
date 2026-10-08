@@ -435,8 +435,8 @@ export function faceDepth(u: number, v: number): number {
     + .06 * bulge(.33, .78, .14, .07) + .06 * bulge(.67, .78, .14, .07)
 }
 
-// The same field grows neural features and reveals skin: nose, eyes and lips first, then the
-// cheeks, hair and jaw, and the shoulders and arms last (the .98 cap). Coordinates refer to the
+// The order the face grows its neural features in: nose, eyes and lips first, then the cheeks,
+// hair and jaw, and the shoulders and arms last (the .98 cap). Coordinates refer to the
 // unchanged source photograph.
 export function faceContour(u: number, v: number): number {
   const reach = (x: number, y: number, rx: number, ry: number) => Math.hypot((u - x) / rx, (v - y) / ry)
@@ -446,11 +446,6 @@ export function faceContour(u: number, v: number): number {
     .04 + reach(.545, .235, .085, .095) * .36,
     .08 + reach(.486, .35, .1, .1) * .34,
   ))
-}
-
-export function faceDissolve(contour: number, progress: number): number {
-  const t = Math.min(1, Math.max(0, (progress * 1.18 - .09 - contour + .08) / .16))
-  return t * t * (3 - 2 * t)
 }
 
 // Chief's face: three units wide; luminance controls light, while the portrait profile controls depth.

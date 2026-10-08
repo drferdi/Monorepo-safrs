@@ -2,8 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { analyseFace } from './face.ts'
 import { makeFace } from './geometry.ts'
-import * as facialGeometry from './geometry.ts'
-import * as tactile from './tactile.ts'
+import { faceContour } from './geometry.ts'
 
 const size = 48, radius = 14
 const distance = (x, y) => Math.hypot(x - size / 2, y - size / 2)
@@ -54,31 +53,15 @@ test('portrait depth follows facial features instead of lighting in the photogra
   assert.ok(dark[20] > dark[29] + .05, 'cheek projects in front of the temple')
 })
 
-test('the photo reveals facial landmarks before the temples and shoulders and reverses exactly', () => {
-  const { faceContour, faceDissolve } = facialGeometry
+test('the face grows from its features: nose, eyes and lips before the temples and the shoulders', () => {
   const landmarks = [[.486, .30], [.425, .235], [.545, .235], [.486, .35]]
-  for (const [u, v] of [...landmarks, [.28, .45], [.1, .9], [1, 1]]) {
-    const contour = faceContour(u, v)
-    assert.equal(faceDissolve(contour, 0), 0, 'nothing revealed at the start')
-    assert.equal(faceDissolve(contour, 1), 1, 'complete original photograph at the end')
-    const forward = Array.from({ length: 21 }, (_, i) => faceDissolve(contour, i / 20))
-    assert.ok(forward.every((alpha, i) => i === 0 || alpha >= forward[i - 1]), 'reveal has no flicker or regression')
-    const backward = Array.from({ length: 21 }, (_, i) => faceDissolve(contour, (20 - i) / 20))
-    assert.deepEqual(backward.reverse(), forward, 'reverse scroll retraces the same mask')
+  const temple = faceContour(.28, .45), shoulder = faceContour(.1, .9)
+  for (const [u, v] of landmarks) {
+    assert.ok(faceContour(u, v) < temple, `landmark ${u},${v} before the temple`)
+    assert.ok(faceContour(u, v) < .2, `landmark ${u},${v} early`)
   }
-  for (const [u, v] of landmarks) assert.ok(faceDissolve(faceContour(u, v), .3) > .9, `landmark ${u},${v} appears early`)
-  assert.equal(faceDissolve(faceContour(.1, .9), .3), 0, 'shoulder stays neural until later')
-})
-
-test('facial relief is registered to the photo plane before any photograph is revealed', () => {
-  for (let phase = 93; phase <= 100; phase += .05) {
-    const state = tactile.portraitState(phase)
-    if (state.reveal > 0) assert.equal(state.relief, 0, 'no parallax offset while skin resolves')
-    assert.ok(state.relief >= 0 && state.relief <= 1)
-    assert.ok(state.reveal >= 0 && state.reveal <= 1)
-  }
-  assert.equal(tactile.portraitState(93).relief, 1)
-  assert.equal(tactile.portraitState(100).reveal, 1)
+  assert.ok(temple < shoulder, 'temple before shoulder')
+  assert.equal(faceContour(1, 1), .98, 'the far corner is capped, so it still grows in')
 })
 
 test('the face is three units wide, centred, in relief, and grows from facial features', () => {

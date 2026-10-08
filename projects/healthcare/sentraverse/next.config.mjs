@@ -111,6 +111,17 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // THE LEGACY's film frames (components/neural/film.ts). The folder is versioned, so a
+        // re-export lands in a new folder and these files never change in place.
+        source: '/legacy-film/:version/:file*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ]
   },
 }

@@ -1,17 +1,23 @@
 import { analyseFace } from './face'
 import type { FacePixels } from './face'
-import { axonCenter, faceDissolve, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse } from './geometry'
+import { axonCenter, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse } from './geometry'
 import type { Geometry, Vec3 } from './geometry'
 import { clamp, smooth } from './story'
 import { facePlacement } from './tactile'
 
 type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer; pointNormals?: WebGLBuffer; lineNormals?: WebGLBuffer }
-type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number; relief: number; reveal: number }
+type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number }
 export type Look = { turn: number; highlight: Vec3; hover: number }
-const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0, relief: 1, reveal: 0 })
+const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0 })
 const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
 const silence = new Float32Array(24)
 const envelope = (phase: number, start: number, end: number, fade = 2) => smooth((phase - start) / fade) * (1 - smooth((phase - end) / fade))
+// The network's camera through the divisions: which hub it leans toward, by how much, and the
+// field's turn. `render` draws with it and `hitTest` maps the pointer with it, so they agree.
+function networkFocus(phase: number) {
+  const active = Math.min(4, Math.max(0, Math.floor((phase - 66) / 5)))
+  return { hub: hubs[active], amount: phase >= 66 && phase < 91 ? .25 : 0, rotation: -.08 + clamp((phase - 64) / 26) * .16 }
+}
 
 const vertexSource = `
 attribute vec3 a_position;
@@ -38,8 +44,6 @@ uniform float u_dpr;
 uniform float u_pulse;
 uniform vec3 u_highlight;
 uniform float u_hover;
-uniform float u_relief;
-uniform float u_reveal;
 varying vec4 v_color;
 void main() {
   // Activity (spec 2026-10-08): the tag names the lane and the kind (0 soma or dendrite, 1 axon,
@@ -54,7 +58,6 @@ void main() {
   float particle = step(1.5, kind);
   float axon = step(.5, kind)*(1.0-particle);
   vec3 p = (a_position + a_normal.xyz*sig.z*.35*particle) * u_scale;
-  p.z *= u_relief;
   float c = cos(u_rotation), s = sin(u_rotation);
   p = vec3(p.x*c+p.z*s, p.y, -p.x*s+p.z*c) + u_offset - u_camera;
   float depth = -p.z;
@@ -96,8 +99,7 @@ void main() {
   float luma = (color.r+color.g+color.b)/3.0;
   vec3 lit = color*(.6+.55*max(0.0, facing)*vec3(1.0,.94,.86))*occlusion + vec3(.62,.78,1.0)*.35*rim*luma + vec3(1.0,.95,.85)*specular;
   color = mix(color, lit, u_lit);
-  float resolved = smoothstep(a_birth-.08, a_birth+.08, u_reveal*1.18-.09);
-  v_color = vec4(color, u_alpha*born*fog*(.6+pulse*.65)*(1.0-resolved*.94)*(1.0-.6*coc)*alive);
+  v_color = vec4(color, u_alpha*born*fog*(.6+pulse*.65)*(1.0-.6*coc)*alive);
 }`
 const fragmentSource = `
 precision mediump float;
@@ -177,7 +179,7 @@ export class NeuralRenderer {
       gl.useProgram(program)
       this.attributes = ['a_position', 'a_color', 'a_size', 'a_birth', 'a_phase'].map(name => gl.getAttribLocation(program, name))
       this.normalAttribute = gl.getAttribLocation(program, 'a_normal')
-      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'relief', 'reveal', 'lit', 'focus', 'height']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
+      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'lit', 'focus', 'height']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
       this.uniforms.set('signal', gl.getUniformLocation(program, 'u_signal[0]'))
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
       gl.clearColor(0, 0, 0, 0)
@@ -225,7 +227,7 @@ export class NeuralRenderer {
       gl.uniform4fv(uniform('signal'), this.signal)
       // Lit layers are the ones that carry normals; their focus plane is the depth of the model origin.
       const lit = layer.geometry.lineNormals ? 1 : 0
-      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, relief: view.relief, reveal: view.reveal, lit, focus: view.camera[2] - view.offset[2], height: this.height * this.dpr }
+      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, lit, focus: view.camera[2] - view.offset[2], height: this.height * this.dpr }
       for (const [key, value] of Object.entries(values)) gl.uniform1f(uniform(key), value)
       for (const key of ['lines', 'points'] as const) {
         if (!layer[key] || !layer.geometry[key].length) continue
@@ -256,7 +258,7 @@ export class NeuralRenderer {
   private drawCanvas(geometry: Geometry, view: View) {
     const ctx = this.ctx!
     const project = (array: Float32Array, i: number) => {
-      const x = array[i] * view.scale, y = array[i + 1] * view.scale, z = array[i + 2] * view.scale * view.relief
+      const x = array[i] * view.scale, y = array[i + 1] * view.scale, z = array[i + 2] * view.scale
       const c = Math.cos(view.rotation), s = Math.sin(view.rotation)
       const px = x * c + z * s + view.offset[0] - view.camera[0]
       const py = y + view.offset[1] - view.camera[1]
@@ -272,11 +274,9 @@ export class NeuralRenderer {
       if (geometry.lines[i + 7] > view.growth) continue
       const a = project(geometry.lines, i), b = project(geometry.lines, i + 9)
       if (a.depth < .2 || b.depth < .2) continue
-      if (view.reveal > 0) { ctx.beginPath(); ctx.globalAlpha = view.alpha * .5 * (1 - faceDissolve(geometry.lines[i + 7], view.reveal) * .94) }
       ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y)
-      if (view.reveal > 0) ctx.stroke()
     }
-    if (view.reveal === 0) ctx.stroke()
+    ctx.stroke()
     ctx.fillStyle = '#b5c8dc'
     for (let i = 0; i < geometry.points.length; i += 27) {
       if (geometry.points[i + 7] > view.growth) continue
@@ -286,7 +286,6 @@ export class NeuralRenderer {
       const p = project(geometry.points, i)
       if (p.depth < .2) continue
       const size = clamp(geometry.points[i + 6] * p.scale * .008, .4, 3)
-      if (view.reveal > 0) ctx.globalAlpha = view.alpha * .5 * (1 - faceDissolve(geometry.points[i + 7], view.reveal) * .94)
       ctx.fillRect(p.x, p.y, size, size)
     }
   }
@@ -341,21 +340,16 @@ export class NeuralRenderer {
       for (let i = 0; i < 14; i++) draw('neuron', makeNeuron, { alpha: envelope(phase, 52 + i * .06, 58.5, 1.5), growth: 0, scale: .055, camera: [0, 0, this.mobile ? 6 : 4.4], offset: [right[0] - .45 + crossing * .92, (i % 5 - 2) * .16, Math.sin(i * 4) * .4], pulse: 1 })
     }
     if (phase > 58 && phase < 99) {
-      const discovery = clamp((phase - 64) / 26)
-      const active = Math.min(4, Math.max(0, Math.floor((phase - 66) / 5)))
-      const focus = hubs[active]
-      const focusAmount = phase >= 66 && phase < 91 ? .25 : 0
+      const { hub, amount, rotation } = networkFocus(phase)
       // The network dissolves from 94 into the final chapter's void and film (Chief 2026-10-09:
       // nothing stands between SENTRA and the film).
-      draw('network', makeNetwork, { alpha: smooth((phase - 58) / 5) * (1 - smooth((phase - 94) / 1.8)), camera: [focus[0] * focusAmount, focus[1] * focusAmount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : -.08 + discovery * .16, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
+      draw('network', makeNetwork, { alpha: smooth((phase - 58) / 5) * (1 - smooth((phase - 94) / 1.8)), camera: [hub[0] * amount, hub[1] * amount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : rotation, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
     }
   }
 
   hitTest(x: number, y: number, phase: number) {
     if (phase < 60 || phase > 94) return -1
-    const active = Math.min(4, Math.max(0, Math.floor((phase - 66) / 5)))
-    const focus = hubs[active], amount = phase >= 66 && phase < 91 ? .25 : 0
-    const rotation = -.08 + clamp((phase - 64) / 26) * .16
+    const { hub: focus, amount, rotation } = networkFocus(phase)
     return hubs.findIndex(hub => {
       const depth = 12 + hub[0] * Math.sin(rotation) - hub[2] * Math.cos(rotation)
       const scale = this.height * .925 / depth

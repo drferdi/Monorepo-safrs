@@ -26,4 +26,10 @@ export const legacyCopy = { presence: 'The human behind the system', name: 'dr F
 
 export const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 export const smooth = (value: number) => { const t = clamp(value); return t * t * (3 - 2 * t) }
+// A chapter's phase by its id, so the jump buttons and the hash aliases follow the story.
+export function phaseOf(id: string): number {
+  const chapter = chapters.find(item => item.id === id)
+  if (!chapter) throw new Error(`Unknown chapter: ${id}`)
+  return chapter.phase
+}
 export const activeChapter = (phase: number) => Math.max(0, chapters.findLastIndex(chapter => phase >= chapter.phase))

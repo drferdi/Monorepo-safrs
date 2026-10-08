@@ -18,7 +18,7 @@ export const JUMP_OFFSET = 1.5
 // Tempo: [phase, time] breakpoints, piecewise linear between them. The key moments take more of
 // the travel for the same phases (the chapter 03 face 25–40 at 1.23×, the network 58–66 at 1.25×,
 // the legacy 94–100 at 6.67×) and the stretches between give it back. The final chapter is one
-// straight stretch, so every beat of the legacy keeps step with `portraitState`.
+// straight stretch, so every beat of the legacy keeps the same tempo.
 export const tempo: ReadonlyArray<readonly [number, number]> = [[0, 0], [8, 7], [19, 17], [25, 22.5], [40, 41], [58, 57], [66, 67], [91, 89], [94, 91.5], [100, MASTER_DURATION]]
 
 export function phaseToTime(phase: number): number {

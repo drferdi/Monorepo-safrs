@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { analyseFace, loadPixels } from './face'
+import type { FaceAnalysis } from './face'
 import LegacyScene from './LegacyScene'
 import type { Look } from './renderer'
 import { faceLook } from './tactile'
@@ -10,7 +11,7 @@ import { FILM, createFilm, filmFrameUrl } from './film'
 import { createMorph, faceCrop } from './morph'
 import { MASTER_DURATION, buildMaster, jumpLabel, legacy, settleLegacy } from './timeline'
 import { attachPointerWake } from './wake'
-import { activeChapter, chapters, divisions, legacyCopy } from './story'
+import { activeChapter, chapters, divisions, legacyCopy, phaseOf } from './story'
 import styles from './journey.module.css'
 
 export default function NeuralJourney() {
@@ -70,6 +71,24 @@ export default function NeuralJourney() {
           root.dataset.face = 'ready'
           if (reduced) engine.render(state.phase, 0, true, -1, undefined, signal)
         })
+        const scene = root.querySelector<HTMLElement>('[data-legacy]')
+        const filmCanvas = scene?.querySelector<HTMLCanvasElement>('canvas[data-film-canvas]') ?? null
+        const film = filmCanvas && !reduced ? createFilm(filmCanvas) : null
+        const morphCanvas = scene?.querySelector<HTMLCanvasElement>('canvas[data-film-morph]') ?? null
+        // The face's transformation reads the film's last frame (`face.ts` on its face crop), once
+        // the preload below hands it over.
+        let morphFace: (face: Promise<FaceAnalysis | null>) => void = () => undefined
+        const morph = morphCanvas && !reduced ? createMorph(gsap, morphCanvas, { frame: FILM, face: new Promise(resolve => { morphFace = resolve }) }) : null
+        // The film is paid for only on the way to it (Chief 2026-10-09): its frames and the morph's
+        // analysis start when the story reaches the network, about five viewports before the film.
+        let preloaded = false
+        const preload = () => {
+          if (preloaded || (!film && !morph)) return
+          preloaded = true
+          film?.load()
+          morphFace(loadPixels(filmFrameUrl(FILM.frames - 1)).then(pixels => pixels && analyseFace(faceCrop(pixels), { density: mobile ? .25 : .4 })))
+        }
+        const preloadAt = phaseOf('network')
         let hover = -1, lastChapter = -1, lastFrame = 0, visible = true
         const progressSetter = gsap.quickSetter(progressLine, 'scaleX')
         const update = () => {
@@ -79,6 +98,7 @@ export default function NeuralJourney() {
           // dwells on the legacy over the last third of the travel.
           progressSetter(master ? master.progress() : state.phase / 100)
           activity.setPhase(state.phase)
+          if (state.phase >= preloadAt) preload()
           root.dataset.signal = activity.cycle.paused() ? 'paused' : 'active'
           if (lastChapter === index) return
           lastChapter = index
@@ -98,13 +118,6 @@ export default function NeuralJourney() {
           if (state.phase < legacy.covered) engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal)
           else morph?.tick(time)
         }
-        const scene = root.querySelector<HTMLElement>('[data-legacy]')
-        // The film's frames start loading with the build, so they are there by the final chapter.
-        const filmCanvas = scene?.querySelector<HTMLCanvasElement>('canvas[data-film-canvas]') ?? null
-        const film = filmCanvas && !reduced ? createFilm(filmCanvas) : null
-        const morphCanvas = scene?.querySelector<HTMLCanvasElement>('canvas[data-film-morph]') ?? null
-        // The face's transformation reads the film's last frame (`face.ts` on its face crop).
-        const morph = morphCanvas && !reduced ? createMorph(gsap, morphCanvas, { frame: FILM, face: loadPixels(filmFrameUrl(FILM.frames - 1)).then(pixels => pixels && analyseFace(faceCrop(pixels), { density: mobile ? .25 : .4 })) }) : null
         const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover, look) }
         const observer = new ResizeObserver(resize)
         observer.observe(stage)
@@ -196,10 +209,9 @@ export default function NeuralJourney() {
           buttons: Array.from(root.querySelectorAll<HTMLElement>('[data-nav] > *, [data-jump]')),
         })
         update(); engine.render(0, 0, reduced, -1, undefined, signal)
-        document.fonts.ready.then(() => { if (!cancelled) ScrollTrigger.refresh() })
         ScrollTrigger.refresh()
         const hash = window.location.hash.slice(1)
-        const aliases: Record<string, number> = { about: 94, services: 66, contact: 94, ecosystem: 66, divisions: 66, top: 0 }
+        const aliases: Record<string, number> = { about: phaseOf('human'), services: phaseOf('division-1'), contact: phaseOf('human'), ecosystem: phaseOf('division-1'), divisions: phaseOf('division-1'), top: phaseOf('origin') }
         const target = chapters.find(chapter => chapter.id === hash)?.phase ?? aliases[hash]
         if (target !== undefined) navigateRef.current(target)
 
@@ -282,7 +294,7 @@ export default function NeuralJourney() {
         <header className={styles.header}>
           <a href="#top" className={styles.wordmark} onClick={event => { event.preventDefault(); navigateRef.current(0) }} aria-label="Sentraverse, return to origin"><span className={styles.mark} aria-hidden="true">✳</span> SENTRAVERSE<span className={styles.wordmarkDot}>®</span></a>
           <nav data-nav className={styles.nav} aria-label="Primary navigation">
-            <button data-jump="60">Sentraverse</button><button data-jump="66">Divisions</button><Link href="/story">About</Link><Link href="/ekosistem">Explore <span aria-hidden="true">↗</span></Link>
+            <button data-jump={phaseOf('network')}>Sentraverse</button><button data-jump={phaseOf('division-1')}>Divisions</button><Link href="/story">About</Link><Link href="/ekosistem">Explore <span aria-hidden="true">↗</span></Link>
           </nav>
           <span className={styles.edition}>SENTRA / LIVING SYSTEMS</span>
         </header>
@@ -292,7 +304,7 @@ export default function NeuralJourney() {
 
         <div id="narrative" className={styles.narrative}>
           {chapters.map((chapter, index) => {
-            const division = index >= 8 && index <= 12
+            const divisionIndex = divisions.findIndex(item => item.phase === chapter.phase), division = divisionIndex >= 0
             const final = chapter.id === 'human'
             return (
               <section key={chapter.id} id={chapter.id} data-chapter className={`${styles.chapter} ${division ? styles.division : ''} ${final ? styles.human : ''} ${chapter.id === 'connected' || chapter.id === 'network' ? styles.centered : ''}`} tabIndex={-1} aria-label={chapter.label}>
@@ -311,13 +323,13 @@ export default function NeuralJourney() {
                     <Link href="/ekosistem" data-magnetic className={styles.cta}>EXPLORE SENTRAVERSE <span aria-hidden="true">↗</span></Link>
                   </div>
                 ) : (
-                  <div data-marker-copy data-division={division ? index - 8 : undefined}>
+                  <div data-marker-copy data-division={division ? divisionIndex : undefined}>
                     <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
                     {/* A space between the title lines keeps the heading's name readable once SplitText puts it in an aria-label. */}
                     {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span>{line}</span></Fragment>)}</h2>}
                     <p className={styles.description}>{chapter.description}</p>
                     {!division && <p className={styles.annotation}><span />{chapter.annotation}</p>}
-                    {index === 0 && <button data-jump="8" className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}
+                    {index === 0 && <button data-jump={phaseOf('embryonic-origin')} className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}
                   </div>
                 )}
               </section>

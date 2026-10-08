@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { filmPosterUrl } from './film'
 import styles from './legacy.module.css'
 
 // The final chapter's scene (Chief 2026-10-09, "THE LEGACY"): a black void that closes over the
@@ -13,7 +14,7 @@ export default function LegacyScene() {
     <div data-legacy className={styles.scene}>
       <div data-legacy-void className={styles.void} aria-hidden="true" />
       <div data-film className={styles.film}>
-        <Image src="/legacy-film/poster.webp" alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 92vw, 760px" />
+        <Image src={filmPosterUrl} alt="dr. Ferdi Iskandar" fill sizes="(max-width: 767px) 92vw, 760px" />
         <canvas data-film-canvas aria-hidden="true" />
         <canvas data-film-morph aria-hidden="true" />
       </div>

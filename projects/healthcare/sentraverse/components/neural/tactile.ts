@@ -6,15 +6,6 @@ export type FaceLook = { turn: number; highlight: [number, number, number] }
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
-// The relief settles onto the source-image plane before the first skin pixels appear. Both
-// renderers and the photo controller consume this state, including during reverse scrolling.
-// The reveal runs 95.5 → 96.7, under the legacy's closing void (`timeline.ts` `legacy.void`), so the
-// drawn vertices are already dissolving as the film takes the stage.
-export function portraitState(phase: number): { relief: number; reveal: number } {
-  const lock = clamp((phase - 94.25) / 1.25, 0, 1)
-  return { relief: 1 - lock * lock * (3 - 2 * lock), reveal: clamp((phase - 95.5) / 1.2, 0, 1) }
-}
-
 // A control leans toward the pointer by a fraction of the pointer offset from its centre.
 export function magnetPull(pointer: Point, box: Box, strength: number): Point {
   return { x: (pointer.x - (box.left + box.width / 2)) * strength, y: (pointer.y - (box.top + box.height / 2)) * strength }
