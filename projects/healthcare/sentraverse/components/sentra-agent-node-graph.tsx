@@ -1,10 +1,11 @@
 // Architected and built by Drferdi.
-// Sentrapedia Clinical Intelligence Architecture Node Graph (Puskesmas / SKDI 4A Knowledge Engine)
+// Sentrapedia Multi-Agent Clinical Intelligence Architecture Node Graph
+// Compatible with Claude, Gemini, ChatGPT, Audrey, & Custom Healthcare LLMs via RAG/Tool-Calling
 'use client'
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Database, Bot, Stethoscope, Search, Layers } from 'lucide-react'
+import { Database, Bot, Stethoscope, Search, Layers, Cpu } from 'lucide-react'
 
 export default function SentraAgentNodeGraph({ className = '' }: { className?: string }) {
   return (
@@ -39,7 +40,7 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
             strokeWidth="2"
             fill="none"
           />
-          {/* Sentrapedia Engine → AI Agent Audrey (right → left) */}
+          {/* Sentrapedia Oracle → AI Agent Runtime (Claude/Gemini/GPT/Audrey) (right → left) */}
           <path
             d="M400 130 C440 130, 440 210, 400 210"
             stroke="rgba(255,255,255,0.15)"
@@ -53,7 +54,7 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
             strokeWidth="2"
             fill="none"
           />
-          {/* AI Agent Audrey → Response Diagnostic (right → left) */}
+          {/* AI Agent Runtime → Response Diagnostic (right → left) */}
           <path
             d="M400 260 C450 260, 440 360, 390 360"
             stroke="rgba(196,149,106,0.25)"
@@ -219,7 +220,7 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
                   </span>
                 </div>
               </div>
-              {/* Engine Standard */}
+              {/* Standard */}
               <div
                 className="flex items-center justify-between rounded px-2 py-1"
                 style={{
@@ -242,7 +243,7 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
                   Permenkes 5/2014
                 </span>
               </div>
-              {/* Indexing */}
+              {/* Universal AI API / Integration */}
               <div
                 className="flex items-center justify-between rounded px-2 py-1"
                 style={{
@@ -255,10 +256,10 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
                     className="w-[6px] h-[6px] rounded-full"
                     style={{ background: '#b8ac99' }}
                   />
-                  <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>Indeks</span>
+                  <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>API Protocol</span>
                 </div>
-                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)' }}>
-                  14 Domain Organ
+                <span style={{ fontSize: 8.5, color: '#eb5939', fontWeight: 600 }}>
+                  Open RAG / Tool-Calling
                 </span>
               </div>
               {/* Response output */}
@@ -293,8 +294,8 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
           </div>
         </div>
 
-        {/* ══ Node 3: AI Clinical Agent (right) ══ */}
-        <div className="absolute" style={{ left: 300, top: 190, width: 190 }}>
+        {/* ══ Node 3: Multi-AI Agent Runtime (Claude, Gemini, ChatGPT, Audrey) ══ */}
+        <div className="absolute" style={{ left: 295, top: 185, width: 200 }}>
           <div
             className="rounded-lg transition-transform hover:-translate-y-0.5 duration-200"
             style={{
@@ -306,7 +307,7 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
             }}
           >
             <div
-              className="px-4 py-2.5 flex items-center gap-2.5"
+              className="px-3.5 py-2.5 flex items-center gap-2"
               style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
             >
               <div
@@ -316,12 +317,12 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
                 <Bot size={11} style={{ color: '#C4956A' }} />
               </div>
               <span
-                style={{ fontSize: 12, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}
+                style={{ fontSize: 11, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}
               >
-                Sentra Agent (Audrey)
+                Universal AI Agent
               </span>
             </div>
-            <div className="px-4 py-2 flex flex-col gap-2">
+            <div className="px-3.5 py-2 flex flex-col gap-2">
               <div
                 className="flex items-center justify-between rounded px-2 py-1"
                 style={{
@@ -334,12 +335,12 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
                     className="w-[6px] h-[6px] rounded-full"
                     style={{ background: '#C4956A' }}
                   />
-                  <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>Model</span>
+                  <span style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.4)' }}>LLM Runtime</span>
                 </div>
                 <span
-                  style={{ fontSize: 9, color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}
+                  style={{ fontSize: 8.5, color: '#C4956A', fontWeight: 600 }}
                 >
-                  Clinical Copilot
+                  Claude · Gemini · GPT
                 </span>
               </div>
               <div
@@ -354,18 +355,18 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
                     className="w-[6px] h-[6px] rounded-full"
                     style={{ background: '#C4956A' }}
                   />
-                  <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>Tugas</span>
+                  <span style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.4)' }}>Grounding</span>
                 </div>
-                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.5)' }}>
-                  Reasoning & Rujukan
+                <span style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.6)' }}>
+                  RAG / Tool Call
                 </span>
               </div>
               <div
                 className="flex items-center justify-end gap-1.5 pt-1"
                 style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
               >
-                <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)' }}>
-                  Advis Klinis
+                <span style={{ fontSize: 8.5, color: 'rgba(255,255,255,0.4)' }}>
+                  Clinical Inference
                 </span>
                 <div
                   className="w-[10px] h-[10px] rounded-full"
@@ -488,7 +489,7 @@ export default function SentraAgentNodeGraph({ className = '' }: { className?: s
             >
               <strong className="text-accent">Diagnosis 4A:</strong> Preeklamsia Berat (O14.9).
               <br />
-              <strong className="text-foreground/80">Protokol:</strong> MgSO4 loading dose, antihipertensi oral, rujuk terencana Sp.OG.
+              <strong className="text-foreground/80">Grounding AI:</strong> Claude, Gemini & GPT tersinkron dosis MgSO4 & kriteria rujukan FKTP.
             </span>
           </div>
           {/* Input handle left */}
