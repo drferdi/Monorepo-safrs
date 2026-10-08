@@ -256,7 +256,7 @@ test('the callouts draw in after the photo resolves, keep their labels inside th
     await portraitPhase(page, 99.6)
     // data-phase lands before the .8 s scrub finishes catching up, so the drawn-in lines and brackets are read by polling.
     await expect.poll(() => page.locator('[data-callout-line], [data-reticle-corner]').evaluateAll(lines => Math.max(...lines.map(line => Number(line.getAttribute('stroke-dashoffset')))))).toBeLessThan(.01)
-    const title = (await page.locator('#human h2').boundingBox())!
+    const title = (await page.locator('#human h2').boundingBox())!, boxes: Array<{ x: number; y: number; width: number; height: number }> = []
     for (const label of await labels.all()) {
       await expect(label).toBeVisible()
       const box = (await label.boundingBox())!
@@ -266,6 +266,13 @@ test('the callouts draw in after the photo resolves, keep their labels inside th
       expect(box.y + box.height, `${viewport.width}: bottom edge`).toBeLessThanOrEqual(viewport.height)
       const apart = box.x >= title.x + title.width || box.x + box.width <= title.x || box.y >= title.y + title.height || box.y + box.height <= title.y
       expect(apart, `${viewport.width}: ${await label.textContent()} overlaps the title`).toBe(true)
+      boxes.push(box)
+    }
+    // Each label keeps its own place after the rebuild (the 375 px viewport crosses the breakpoint):
+    // a teardown that stripped the positions would pile all three into the photo's top-left corner.
+    for (const [k, a] of boxes.entries()) for (const b of boxes.slice(k + 1)) {
+      const separate = a.x >= b.x + b.width || b.x >= a.x + a.width || a.y >= b.y + b.height || b.y >= a.y + a.height
+      expect(separate, `${viewport.width}: two labels overlap each other`).toBe(true)
     }
   }
   // Lock-on complete: every label has decoded into Chief's exact string, which assistive

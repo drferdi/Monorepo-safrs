@@ -205,7 +205,10 @@ function humanScene(gsap: Gsap, panel: Element, photo: Element, title: Title | n
 // the reticle unscaled and the grade at its CSS finals (the photo's own inline style is cleared
 // by the caller).
 export function settleEnding(gsap: Gsap, photo: Element) {
-  gsap.set(photo.querySelectorAll(endingParts.all), { clearProps: 'all' })
+  // Only what the scene tweened: `clearProps: 'all'` would also strip the inline label positions
+  // React set (`labelStyle`), which it does not re-apply on the next build, so after a breakpoint
+  // crossing the three labels piled into the photo's top-left corner.
+  gsap.set(photo.querySelectorAll(endingParts.all), { clearProps: 'opacity,visibility,transform,transformOrigin' })
   gsap.set(photo.querySelectorAll(endingParts.strokes), { attr: { 'stroke-dashoffset': 0 } })
   gsap.set(photo.querySelectorAll('[data-callout-dot]'), { attr: { r: .55 } })
   photo.querySelectorAll('[data-callout]').forEach(label => {
