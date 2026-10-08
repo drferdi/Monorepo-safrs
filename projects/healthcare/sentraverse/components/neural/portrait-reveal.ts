@@ -7,7 +7,8 @@ export function createPortraitReveal(photo: HTMLElement) {
   if (!image || !canvas) return null
   const context = canvas.getContext('2d')
   const mask = document.createElement('canvas')
-  mask.width = 192; mask.height = Math.round(192 * 246 / 240)
+  // The 2026-10-08 portrait is square, so the mask is too.
+  mask.width = 192; mask.height = 192
   const maskContext = mask.getContext('2d')
   if (!context || !maskContext) return null
   const pixels = maskContext.createImageData(mask.width, mask.height)

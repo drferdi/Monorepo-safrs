@@ -417,26 +417,34 @@ export function makeDust(density: number): Geometry {
 
 // Portrait-guided relief in source-image coordinates. This is a gently sculpted 2.5D surface,
 // not a face scan: lighting, facial hair and clothing never become bumps in the geometry.
+// The founder's relief, calibrated by hand in the source-image coordinates of the 2026-10-08
+// half-body portrait (500×500: head at u .36–.61 and v .03–.43, shoulders at v .46, crossed arms
+// around v .76): a head ellipsoid with nose, brow, eye sockets, cheeks, lips, chin and neck over a
+// low torso with the forearms raised a little, so the figure has volume while lighting, beard and
+// the black suit never become bumps.
 export function faceDepth(u: number, v: number): number {
   const bulge = (x: number, y: number, rx: number, ry: number) => Math.exp(-(((u - x) / rx) ** 2 + ((v - y) / ry) ** 2) * 2)
-  const head = Math.sqrt(Math.max(0, 1 - ((u - .52) / .255) ** 2 - ((v - .405) / .35) ** 2))
-  return -.16 + head * .43
-    + .16 * bulge(.518, .425, .033, .09) + .24 * bulge(.52, .475, .041, .036)
-    - .105 * bulge(.425, .38, .055, .033) - .105 * bulge(.613, .38, .055, .033)
-    + .07 * bulge(.395, .477, .074, .065) + .07 * bulge(.643, .477, .074, .065)
-    + .045 * bulge(.52, .565, .082, .025) + .08 * bulge(.52, .66, .10, .053)
-    + .055 * bulge(.52, .79, .12, .15)
+  const head = Math.sqrt(Math.max(0, 1 - ((u - .485) / .125) ** 2 - ((v - .235) / .21) ** 2))
+  const torso = Math.sqrt(Math.max(0, 1 - ((u - .5) / .4) ** 2 - ((v - .8) / .34) ** 2))
+  return -.1 + head * .43 + torso * .14
+    + .16 * bulge(.486, .265, .022, .05) + .22 * bulge(.486, .30, .03, .024)
+    - .1 * bulge(.425, .235, .042, .02) - .1 * bulge(.545, .235, .042, .02)
+    + .07 * bulge(.405, .30, .05, .045) + .07 * bulge(.567, .30, .05, .045)
+    + .045 * bulge(.486, .35, .055, .018) + .08 * bulge(.486, .415, .065, .035)
+    + .05 * bulge(.486, .49, .07, .06)
+    + .06 * bulge(.33, .78, .14, .07) + .06 * bulge(.67, .78, .14, .07)
 }
 
 // The same field grows neural features and reveals skin: nose, eyes and lips first, then the
-// cheeks, hair, jaw and shoulders. Coordinates refer to the unchanged source photograph.
+// cheeks, hair and jaw, and the shoulders and arms last (the .98 cap). Coordinates refer to the
+// unchanged source photograph.
 export function faceContour(u: number, v: number): number {
   const reach = (x: number, y: number, rx: number, ry: number) => Math.hypot((u - x) / rx, (v - y) / ry)
   return Math.min(.98, .08 + Math.min(
-    reach(.52, .475, .16, .21) * .34,
-    .04 + reach(.425, .38, .125, .15) * .36,
-    .04 + reach(.613, .38, .125, .15) * .36,
-    .08 + reach(.52, .565, .14, .16) * .34,
+    reach(.486, .30, .11, .13) * .34,
+    .04 + reach(.425, .235, .085, .095) * .36,
+    .04 + reach(.545, .235, .085, .095) * .36,
+    .08 + reach(.486, .35, .1, .1) * .34,
   ))
 }
 

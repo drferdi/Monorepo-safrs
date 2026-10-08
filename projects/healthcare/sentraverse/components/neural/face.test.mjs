@@ -45,7 +45,8 @@ test('a black image gives an empty face', () => {
 })
 
 test('portrait depth follows facial features instead of lighting in the photograph', () => {
-  const samples = [.52, .475, .425, .38, .39, .47, .29, .45]
+  // Nose tip, eye socket, cheek and temple of the 2026-10-08 half-body portrait (500×500, head at u .36–.61, v .03–.43).
+  const samples = [.486, .30, .425, .235, .41, .30, .37, .21]
   const face = luminance => makeFace({ width: 100, height: 100, segments: new Float32Array(), dots: new Float32Array(Array.from({ length: 4 }, (_, i) => [samples[i * 2] * 100, samples[i * 2 + 1] * 100, luminance]).flat()) })
   const dark = face(.15).points, bright = face(.9).points
   for (let i = 0; i < dark.length; i += 9) close(dark[i + 2], bright[i + 2], 'lighting must not change facial depth')
@@ -55,7 +56,7 @@ test('portrait depth follows facial features instead of lighting in the photogra
 
 test('the photo reveals facial landmarks before the temples and shoulders and reverses exactly', () => {
   const { faceContour, faceDissolve } = facialGeometry
-  const landmarks = [[.52, .475], [.425, .38], [.613, .38], [.52, .565]]
+  const landmarks = [[.486, .30], [.425, .235], [.545, .235], [.486, .35]]
   for (const [u, v] of [...landmarks, [.28, .45], [.1, .9], [1, 1]]) {
     const contour = faceContour(u, v)
     assert.equal(faceDissolve(contour, 0), 0, 'nothing revealed at the start')
@@ -81,13 +82,14 @@ test('facial relief is registered to the photo plane before any photograph is re
 })
 
 test('the face is three units wide, centred, in relief, and grows from facial features', () => {
-  const geometry = makeFace({ width: 100, height: 100, segments: new Float32Array([0, 0, .2, 100, 100, .8]), dots: new Float32Array([50, 45, .45, 100, 100, .95]) })
+  // The first dot sits on the nose tip of the 2026-10-08 portrait (u .486, v .30), the second in the far corner.
+  const geometry = makeFace({ width: 100, height: 100, segments: new Float32Array([0, 0, .2, 100, 100, .8]), dots: new Float32Array([48.6, 30, .45, 100, 100, .95]) })
   assert.equal(geometry.lines.length, 18)
   assert.equal(geometry.points.length, 18)
   const expect = (array, offset, values) => values.forEach((value, i) => close(array[offset + i], value, `index ${offset + i}`))
   expect(geometry.lines, 0, [-1.5, 1.5])
   expect(geometry.lines, 9, [1.5, -1.5])
-  expect(geometry.points, 0, [0, .15]); assert.ok(geometry.points[7] < .2, 'central facial features appear early')
+  expect(geometry.points, 0, [-.042, .6]); assert.ok(geometry.points[7] < .2, 'central facial features appear early')
   expect(geometry.points, 9, [1.5, -1.5]); close(geometry.points[15], 1 + .95 * 1.6, 'size'); assert.ok(geometry.points[16] > .9, 'outer corners appear last')
   assert.ok(geometry.points[2] > geometry.points[11], 'face sits in front of the outer portrait plane')
 })

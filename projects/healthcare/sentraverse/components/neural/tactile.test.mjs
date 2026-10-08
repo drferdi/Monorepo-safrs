@@ -26,7 +26,9 @@ test('the face sees the pointer as a turn across the viewport and a point on its
 })
 
 test('the face sits right at full size on a wide desktop and stays on screen on a portrait tablet', () => {
-  assert.deepEqual(facePlacement({ width: 1280, height: 800 }, false), { offset: { x: 1.9, y: 0 }, depth: 6, scale: 1 })
+  // The half-body portrait (2026-10-08) gets 1.2 on wide screens so the face keeps its size; 1 on a 4:3 screen.
+  assert.deepEqual(facePlacement({ width: 1280, height: 800 }, false), { offset: { x: 1.9, y: 0 }, depth: 6, scale: 1.2 })
+  assert.equal(facePlacement({ width: 1024, height: 768 }, false).scale, 1)
   const tall = facePlacement({ width: 768, height: 1024 }, false)
   assert.equal(tall.scale, .55)
   const rightEdge = (tall.offset.x + 1.5 * tall.scale) * 1.85 / (tall.depth * 768 / 1024)
@@ -39,7 +41,7 @@ test('the face sits right at full size on a wide desktop and stays on screen on 
 
 test('on phones the face fills the band above the text and never reaches it', () => {
   // Bottom of the face in CSS pixels, from the shader projection: y * 1.85 / depth of the viewport half-height.
-  const faceBottom = ({ offset, depth, scale }, height) => height / 2 - (offset.y - 1.53 * scale) * (height / 2) * 1.85 / depth
+  const faceBottom = ({ offset, depth, scale }, height) => height / 2 - (offset.y - 1.5 * scale) * (height / 2) * 1.85 / depth
   const phone = facePlacement({ width: 375, height: 812 }, true)
   assert.equal(phone.scale, .55)
   assert.ok(faceBottom(phone, 812) <= 812 - 145 - 259, 'tall phone bottom ' + faceBottom(phone, 812))
@@ -52,7 +54,7 @@ test('the face box on screen follows the projection of the placement', () => {
   const box = faceBox({ offset: { x: 1.9, y: 0 }, depth: 6, scale: 1 }, { width: 1280, height: 800 })
   const unit = 400 * 1.85 / 6
   close(box.width, 3 * unit, 'width')
-  close(box.height, 3 * unit * 246 / 240, 'height')
+  close(box.height, 3 * unit, 'height (square source)')
   close(box.left + box.width / 2, 640 + 1.9 * unit, 'centre x')
   close(box.top + box.height / 2, 400, 'centre y')
   const phone = faceBox({ offset: { x: 0, y: 1 }, depth: 6, scale: .5 }, { width: 375, height: 812 })
