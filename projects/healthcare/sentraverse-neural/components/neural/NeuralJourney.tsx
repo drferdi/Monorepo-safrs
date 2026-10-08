@@ -58,7 +58,7 @@ export default function NeuralJourney() {
         const camera = stillCamera()
         // The founder's face (Chief 2026-10-08) is drawn by the renderer from the portrait's
         // pixels; `look` is what the pointer does to it. Without pixels the text ends the story.
-        const look: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
+        const look: Look = { turn: 0, highlight: [0, 0, 0], hover: 0, node: 0 }
         // The network activity cycle (spec 2026-10-08): one GSAP timeline writes six lanes of
         // (impulse, terminal, release, response) that the renderer uploads every frame; it plays
         // only through the synapse and network chapters and stays parked under reduced motion.
@@ -216,6 +216,9 @@ export default function NeuralJourney() {
         const yTo = gsap.quickTo(cursor, 'y', { duration: .25, ease: 'power2.out' })
         const turnTo = gsap.quickTo(look, 'turn', { duration: .6, ease: 'power3.out' })
         const hoverTo = gsap.quickTo(look, 'hover', { duration: .4, ease: 'power2.out' })
+        // The pointed division's nodes glow in and out on one eased value; the cursor names it.
+        const nodeTo = gsap.quickTo(look, 'node', { duration: .4, ease: 'power2.out' })
+        const cursorLabel = cursor.querySelector<HTMLElement>('[data-cursor-label]')!
         const move = (event: PointerEvent) => {
           if (mobile || reduced || event.pointerType === 'touch') return
           xTo(event.clientX); yTo(event.clientY)
@@ -223,11 +226,14 @@ export default function NeuralJourney() {
           const marker = (event.target as Element).closest<HTMLElement>('[data-division]')
           hover = marker ? Number(marker.dataset.division) : engine.hitTest(event.clientX, event.clientY, state.phase)
           cursor.dataset.active = String(hover >= 0)
+          nodeTo(hover >= 0 ? 1 : 0)
+          const name = hover >= 0 ? divisions[hover].label : ''
+          if (cursorLabel.textContent !== name) cursorLabel.textContent = name
           const rect = stage.getBoundingClientRect()
           const seen = faceLook({ x: event.clientX - rect.left, y: event.clientY - rect.top }, { width: rect.width, height: rect.height }, engine.faceView())
           turnTo(seen.turn); hoverTo(1); look.highlight = seen.highlight
         }
-        const leave = () => { cursor.style.opacity = '0'; hover = -1; turnTo(0); hoverTo(0) }
+        const leave = () => { cursor.style.opacity = '0'; hover = -1; turnTo(0); hoverTo(0); nodeTo(0); cursor.dataset.active = 'false' }
         root.addEventListener('pointermove', move)
         root.addEventListener('pointerleave', leave)
         const detachWake = mobile || reduced ? () => undefined : attachPointerWake(gsap, {
@@ -387,7 +393,7 @@ export default function NeuralJourney() {
           {chapters.map(chapter => <i key={chapter.id} data-progress-tick={chapter.phase} style={{ left: `${(phaseToTime(chapter.phase) / MASTER_DURATION * 100).toFixed(3)}%` }} />)}
           <b data-progress-head className={styles.head}><span /></b>
         </div>
-        <div className={styles.cursor} data-cursor aria-hidden="true" />
+        <div className={styles.cursor} data-cursor aria-hidden="true"><span data-cursor-label /></div>
       </div>
       <div className={styles.colophon}>
         <span>SENTRAVERSE © {new Date().getFullYear()}</span><span>INTELLIGENCE BEGINS AS CONNECTION.</span>

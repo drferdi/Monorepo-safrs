@@ -10,10 +10,11 @@ import { reveal } from './timeline'
 import type { StageCamera } from './timeline'
 
 type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer; pointNormals?: WebGLBuffer; lineNormals?: WebGLBuffer; pointTargets?: WebGLBuffer; lineTargets?: WebGLBuffer }
-type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number; order: number; sync: number }
-export type Look = { turn: number; highlight: Vec3; hover: number }
-const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0, order: 0, sync: 0 })
-const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
+type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number; order: number; sync: number; attract: number }
+// `node` is the eased glow of the division the pointer is on (0 → 1), its hub the last one pointed at.
+export type Look = { turn: number; highlight: Vec3; hover: number; node: number }
+const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0, order: 0, sync: 0, attract: 0 })
+const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0, node: 0 }
 const silence = new Float32Array(24)
 const level: StageCamera = { scale: 1, x: 0, y: 0, roll: 0 }
 const envelope = (phase: number, start: number, end: number, fade = 2) => smooth((phase - start) / fade) * (1 - smooth((phase - end) / fade))
@@ -67,6 +68,7 @@ attribute vec3 a_target;
 uniform float u_lit;
 uniform float u_order;
 uniform float u_sync;
+uniform float u_attract;
 uniform float u_focus;
 uniform float u_height;
 uniform mediump float u_points;
@@ -101,6 +103,10 @@ void main() {
   float axon = step(.5, kind)*(1.0-particle);
   // The constellation (brief 2026-10-09 §7): each vertex moves toward its place as u_order rises.
   vec3 base = mix(a_position, a_target, u_order);
+  // Pointer instrumentation (brief 2026-10-09 §8): nodes near the pointed hub brighten and drift a
+  // little toward it; only the network attracts (u_attract), the face never deforms.
+  float nearby = exp(-distance(base, u_highlight)*1.4)*u_hover;
+  base += (u_highlight - base)*nearby*u_attract;
   vec3 p = (base + a_normal.xyz*sig.z*.35*particle) * u_scale;
   float c = cos(u_rotation), s = sin(u_rotation);
   p = vec3(p.x*c+p.z*s, p.y, -p.x*s+p.z*c) + u_offset - u_camera;
@@ -129,7 +135,6 @@ void main() {
   float flash = axon*sig.y*smoothstep(.85, 1.0, a_phase);
   float activity = max(front, flash);
   float pulse = max(pow(max(0.0, sin(a_phase*19.0-u_time*1.3)), 22.0)*u_pulse, activity);
-  float nearby = exp(-distance(base, u_highlight)*1.4)*u_hover;
   // For lines a_size is a brightness weight that follows the shaft radius; points keep it as a size.
   vec3 color = (mix(a_color, vec3(1.0,.75,.43), max(pulse*.85, activity)) + vec3(.22,.3,.4)*nearby + a_color*sig.w*.9*(1.0-axon))*mix(a_size, 1.0, u_points);
   float alive = mix(1.0, sig.z*(1.0-sig.z)*4.0, particle);
@@ -182,6 +187,7 @@ export class NeuralRenderer {
   private density: number
   private disposed = false
   private face: Geometry | null = null
+  private lastHub = 0
   readonly mode: 'webgl' | 'canvas' | 'svg'
 
   constructor(private canvas: HTMLCanvasElement, private fallback: HTMLCanvasElement, private mobile: boolean, private onLoss: () => void) {
@@ -231,7 +237,7 @@ export class NeuralRenderer {
       this.attributes = ['a_position', 'a_color', 'a_size', 'a_birth', 'a_phase'].map(name => gl.getAttribLocation(program, name))
       this.normalAttribute = gl.getAttribLocation(program, 'a_normal')
       this.targetAttribute = gl.getAttribLocation(program, 'a_target')
-      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'lit', 'focus', 'height', 'order', 'sync']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
+      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'lit', 'focus', 'height', 'order', 'sync', 'attract']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
       this.uniforms.set('signal', gl.getUniformLocation(program, 'u_signal[0]'))
       this.uniforms.set('stage', gl.getUniformLocation(program, 'u_stage'))
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
@@ -281,7 +287,7 @@ export class NeuralRenderer {
       gl.uniform4f(uniform('stage'), this.stage.scale, this.stage.x, this.stage.y, this.stage.roll)
       // Lit layers are the ones that carry normals; their focus plane is the depth of the model origin.
       const lit = layer.geometry.lineNormals ? 1 : 0
-      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, lit, focus: view.camera[2] - view.offset[2], height: this.height * this.dpr, order: layer.geometry.pointTargets ? view.order : 0, sync: view.sync }
+      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, lit, focus: view.camera[2] - view.offset[2], height: this.height * this.dpr, order: layer.geometry.pointTargets ? view.order : 0, sync: view.sync, attract: view.attract }
       for (const [key, value] of Object.entries(values)) gl.uniform1f(uniform(key), value)
       for (const key of ['lines', 'points'] as const) {
         if (!layer[key] || !layer.geometry[key].length) continue
@@ -406,7 +412,8 @@ export class NeuralRenderer {
     }
     // The network dissolves from 94 into the final chapter's void and film (Chief 2026-10-09:
     // nothing stands between SENTRA and the film).
-    if (phase > 58 && phase < 99) draw('network', makeNetwork, { ...s.network, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0 })
+    if (hover >= 0) this.lastHub = hover
+    if (phase > 58 && phase < 99) draw('network', makeNetwork, { ...s.network, highlight: hubs[this.lastHub], hover: look.node, attract: .05 })
     return this.mode === 'svg' ? null : this.carrier(phase, time, reduced, s)
   }
 

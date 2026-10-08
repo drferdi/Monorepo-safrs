@@ -104,6 +104,8 @@
 .head span { position: absolute; right: -3px; top: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--neural-white); box-shadow: 0 0 10px 2px rgb(155 185 215 / 55%), -14px 0 12px -4px rgb(155 185 215 / 35%); }
 .cursor { position: fixed; z-index: 10; top: -5px; left: -5px; width: 10px; height: 10px; border: 1px solid var(--neural-blue); border-radius: 50%; pointer-events: none; opacity: 0; }
 .cursor[data-active="true"] { box-shadow: 0 0 25px 5px rgb(155 185 215 / 20%); }
+.cursor span { position: absolute; left: 18px; top: -2px; white-space: nowrap; font-family: var(--neural-mono); font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: var(--neural-blue); opacity: 0; transition: opacity .25s; }
+.cursor[data-active="true"] span { opacity: 1; }
 .loading { display: none; }
 .journey[data-loading="true"] .loading { display: flex; position: absolute; right: 15%; top: 49%; flex-direction: column; gap: 16px; font-size: 8px; letter-spacing: .1em; color: var(--neural-blue); }
 .loading i { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--neural-blue), transparent); }
