@@ -11,14 +11,15 @@ opens `https://sentrahai.com/ekosistem`.
 - `components/neural/NeuralJourney.tsx` owns the semantic narrative, navigation, optional audio,
   and client lifecycle. The server page supplies homepage metadata.
 - `story.ts` owns chapter boundaries and exact division names. `timeline.ts` builds the master
-  (`buildMaster`): a single GSAP ScrollTrigger pins the viewport and scrubs its 100 units; named
+  (`buildMaster`): a single GSAP ScrollTrigger pins the viewport and scrubs its 131.5 units; named
   child timelines (`scene-<id>`) reveal each chapter; the chapter buttons and the hash aliases
   jump with ScrollTrigger `labelToScroll` to the `<id>-enter` labels (phase + 1.5). The master
   is authored in phases and mapped to time through the `tempo` table (`phaseToTime`), which
   stretches the dwell on the face (phase 25–40 → 22.5–41), the network (58–66 → 57–67) and the
   ending (94–100 → 91.5–100) and keeps the rest linear; the e2e helper and the capture scripts
   scroll through the same mapping. `timeline.test.mjs` fails if any scene pushes the master past
-  100. Desktop uses 900vh of scroll travel; mobile uses 800vh. The stage adds one viewport.
+  `MASTER_DURATION` (131.5). The travel is .09 viewport per unit on desktop (about 11.8
+  viewports) and .08 on phones (about 10.5). The stage adds one viewport.
 - `geometry.ts` builds seeded, irregular neuronal arbors, progenitor cells, anatomical nerve
   pathways, myelin, synaptic membranes, and a network with detailed foreground neurons and
   thousands of inexpensive distant neurons. Since 2026-10-08 every neuron grows from an
@@ -213,6 +214,60 @@ parallax on the face) and 5 (colour after detail and a shoulder fade in the reve
   at .35 (+22 %). At density .85 the hero neuron has 6,657 point and 4,892 line vertices (the
   original builder: 3,178 and 17,930) and the network 167,954 and 90,272 (original 149,968 and
   137,056).
+
+## One living organism (2026-10-09)
+
+The brief `docs/superpowers/plans/2026-10-09-one-living-visual-organism.md` (a local working
+note) asked for the journey to read as one organism evolving from cell to Sentraverse. Everything
+below rides the existing master timeline, renderer and ticker. There is no new ScrollTrigger,
+no new loop and no new dependency.
+
+- **Motion signatures** (`timeline.ts`: `ease`, `signatures`, `chapterSignature`, `motionOf`).
+  - Each chapter's panel enters on its phase's curve and duration: origin and growth on
+    `expo.out`, the signal on `power2.out`, the synapse and SENTRA on `sine.inOut`, the network
+    on `power3.inOut`.
+  - Titles reveal on `expo.out`. Exits stay an accelerating .8.
+- **Stage camera** (`timeline.ts`: `cameraKeys`, `cameraAt`; `renderer.ts`: `u_stage`, `toScreen`,
+  `project`).
+  - One virtual camera over every canvas layer, never over the text. The master tweens it to
+    each chapter's framing over the chapter's first four phases, on that chapter's curve.
+  - Framing per chapter: zoom 0.94–1.09, pan ≤ .03 viewport height, roll ≤ .005 rad.
+  - Phones take half of every move and no roll. Reduced motion keeps the identity.
+  - The WebGL shader, the Canvas 2D fallback and the hub hit test share one projection.
+- **The carrier** (`handoff.ts`: `hosts`, `HANDOFF`, `looks`, `hubBlend`; `renderer.ts`: `sceneAt`,
+  `carrier`, `host`; the `[data-carrier]` span).
+  - One soft point of light is handed from host to host: origin, progenitor, soma, mind (the
+    face's forehead), impulse, cleft, centre, hub, unified.
+  - It travels over the two phases before each host takes it. Its size, colour and breathing
+    follow the host, and each division's hub gives it that division's colour.
+  - It fades into the legacy's void from 94 to 95.5.
+  - The renderer projects it through the same `sceneAt` views it draws with, so it sits on what
+    is drawn. Reading mode, no JavaScript and the text-only fallback show no carrier.
+- **The flagship reveal, network to constellation** (`geometry.ts`: `ringSeat`, `nearestHub`,
+  `RECEDE` = 4, `GATHER` = 3.5; `timeline.ts`: `reveal`; shader `a_target`, `u_order`, `u_sync`).
+  - Every network vertex carries a constellation target. Foreground neurons that grew within
+    `GATHER` of a hub move onto a ring around it, the n-th a golden angle on from the last.
+  - The outer neurons keep their place, and the distant field recedes `RECEDE` into the fog. The
+    frame keeps its depth while five structured clusters form.
+  - `u_order` rises from 60.5 to 65. `u_sync` puts the six lanes on the centre's beat from 60 to
+    65.5 and again into SENTRA (90–92). The dust thins with `u_order`.
+  - SENTRAVERSE keeps its reveal at the chapter start (DECISIONS).
+- **The opening words** (`timeline.ts`: `revealHero`, `HERO_FAINT`).
+  - The words arrive in this order: "Intelligence", then "begins", then "as connection." as one
+    softer phrase, then the full stop takes a brief glow. It plays once per load.
+  - Until the experience is ready the words wait at .08 opacity, never hidden. Reduced motion and
+    no-JS read at once.
+- **Neural trace** (`[data-progress-tick]`, `[data-progress-head]`). A signal head rides the line
+  at the master's progress, and each chapter's tick sits at its place in the travel, the active
+  one lit. The transport buttons stay the keyboard path.
+- **Pointer** (`Look.node`, `u_attract`, `[data-cursor-label]`). Pointing at a division eases its
+  hub's nodes brighter and draws them 5 % toward the hub; the cursor names the division. Only the
+  network attracts. Touch, phones and reduced motion are unchanged.
+- **Hygiene**:
+  - Off-screen chapters are `inert` beside `aria-hidden`.
+  - The colophon year comes from the server.
+  - `app/robots.ts` and the Organization JSON-LD ship now. Canonical, sitemap and the Open Graph
+    image wait for the domain.
 
 ## Verification
 

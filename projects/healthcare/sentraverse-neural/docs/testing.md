@@ -11,7 +11,7 @@ node scripts/pnpm.mjs run deploy:dry-run
 ```
 
 - Unit: node:test over every `components/**/*.test.mjs` (timeline, film, morph, face,
-  morphology, signal, tactile). Tested modules are leaves with no runtime relative imports.
+  morphology, signal, tactile, handoff, constellation). Tested modules are leaves with no runtime relative imports.
 - End-to-end: Playwright on the installed Chrome, `e2e/neural.spec.ts` and `e2e/smoke.spec.ts`,
   against a running build (`PLAYWRIGHT_BASE_URL`, default `http://127.0.0.1:4346`). Local only
   for now (Chief 2026-10-09); CI runs lint, unit tests and build.

@@ -1,46 +1,63 @@
 # HANDOFF
 
-Last updated: 2026-10-09 (first session, the split out of `sentraverse`)
+Last updated: 2026-10-09 (the "one living organism" motion system)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Developed on branch `feat/sidepanel-ui-batch` of the monorepo. Its own repository is
-https://github.com/drferdi/Sentraverse-N (private; Chief named it on 2026-10-09), branch `main`.
-PNG is a plain blob, not Git LFS (Vercel clones without LFS). The journey, the film (`public/legacy-film/v1/`, 120 frames) and
-the morph came over unchanged; links to the rest of Sentra point at sentrahai.com. Registered
-in `projects/healthcare/AGENTS.md` and `README.md`.
+Developed on branch `feat/sidepanel-ui-batch` of the monorepo (not yet snapshotted to
+drferdi/Sentraverse-N). This session implemented the brief
+`docs/superpowers/plans/2026-10-09-one-living-visual-organism.md` from the plan `...-implementation.md`
+(local working notes) in 12 commits, `fe4162ae..HEAD`:
+- motion signatures per phase;
+- a restrained stage camera;
+- one carrier handed from chapter to chapter (`handoff.ts`);
+- the network-to-constellation reveal (`ringSeat`, `GATHER`, `RECEDE`, `reveal`);
+- the opening words by meaning (`revealHero`);
+- the neural-trace progress line;
+- pointer node glow and micro-label;
+- `inert` off-screen chapters and the server-rendered year;
+- `robots.txt` and Organization JSON-LD.
 
-Gates: typecheck 0, eslint 0, node:test 42/42, build 0, deploy dry-run passed, Playwright 15/15
-against `next start` on 127.0.0.1:4346. Visual parity with the journey before the split: 18
-frames, mean difference <= 0.14, <= 0.15% changed pixels (only the living animation).
+The knobs are listed in `docs/neural-journey.md`, "One living organism".
+
+Gates (fresh build, `next start` on 127.0.0.1:4347):
+- typecheck 0, eslint 0, node:test 54/54, build 0, deploy dry-run 0;
+- Playwright 22/22;
+- network frame pacing 30–32 ms mean measured alone (50 ms when run in parallel with the suite).
 
 ## Work in flight
 
-- INP is not measured locally; read the field Core Web Vitals after the first deploy.
-- `docs/superpowers/` holds the ignored working notes that came over from `sentraverse`.
+- Chief reviews the look in the Browser pane: the flagship (phase 60–66), the carrier, and the
+  opening words.
+- INP and LCP from field data after the first deploy (the opening words wait at .08 opacity until
+  ready).
 
 ## Blockers
 
-The deploy target (Vercel project, domain) waits for Chief.
+The deploy target (Vercel project, domain) waits for Chief. Canonical, sitemap and the Open Graph
+image wait for the domain.
 
 ## Known quirks
 
-- Node-tested modules are leaves: no runtime relative imports, so `morph.ts` and `signal.ts`
-  take what they need from the journey.
-- A re-export of the film goes into a NEW `public/legacy-film/<version>/` (`extract.mjs` refuses
-  an existing one) because the frames are cached immutable; then move `FILM.version`, check
-  `legacy.film.length`, re-measure `MORPH.face`/`crop`/`hairline` with `measure.mjs`.
-- The film loads at `phaseOf('network')`; a jump or hash straight to the legacy passes that
-  phase while the scrub catches up, so it loads then.
-- A ScrollTrigger refresh with `invalidateOnRefresh` re-renders the master with events
-  suppressed: repeat `onUpdate` work in `onRefresh` (done for the status line).
-- Node tests: `clearProps` needs the headless no-op plugin; a `fromTo` on a plain object needs
-  `immediateRender: false`.
+- `quickSetter(el, 'scale')` is a silent no-op in GSAP (alias); use scaleX/scaleY setters.
+- A stylesheet transform on an element GSAP translates is read back as pixels; keep such elements
+  transform-free in CSS (`.head`).
+- `node scripts/pnpm.mjs exec playwright test -g "a b|c"` loses quoting through the shell; use
+  `node node_modules/@playwright/test/cli.js test -g "..."`.
+- A stale `next start` from an earlier session held 127.0.0.1:4346 (PID 39072); this session
+  verified on 4347 and left 4346 alone.
+- Phones: the outer constellation clusters sit partly outside the frame (as the network did
+  before).
+- Earlier quirks still hold:
+  - A re-export of the film needs a new `legacy-film/<version>/` folder.
+  - Node-tested modules are leaves.
+  - Under a ScrollTrigger refresh, repeat the `onUpdate` work in `onRefresh`.
 
 ## Next action
 
-1. Chief: the deploy target (Vercel project, domain).
-2. After the first deploy, read the field Core Web Vitals (INP above all).
+1. Chief: judge the flagship and the carrier by eye. Rule on the SENTRAVERSE timing (DECISIONS).
+2. Chief: the deploy target and domain, then canonical, sitemap and the OG image.
+3. Snapshot the capsule to drferdi/Sentraverse-N when Chief says so.

@@ -3,6 +3,42 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (motion) — One living organism
+
+Decision: the journey reads as one organism. It has:
+- per-phase motion signatures;
+- a stage camera over the canvases only;
+- one carrier handed from host to host;
+- a network that reorganises into a five-hub constellation;
+- opening words that arrive by meaning;
+- a neural-trace progress line;
+- subtle pointer instrumentation.
+
+All of it rides the existing master, renderer and ticker, with no new dependency.
+
+Rulings taken on Chief's behalf (defaults, open to his call):
+- **SENTRAVERSE keeps its reveal at the network chapter's start.** The brief asked for the wordmark
+  last. The "Sentraverse" nav button and the `#network` jump land at phase 61.5, which the label
+  tests pin. A late title would be invisible there and readable for only about .2 viewport.
+  The constellation forms under it (60.5 → 65).
+- **The constellation keeps depth.** Neurons that grew within `GATHER` 3.5 of a hub join its ring
+  and the outer ones keep their place. The distant field recedes `RECEDE` 4, not the planned 14.
+  - At 14 the outer frame went near-black from phase 64: periphery lit share fell from .61–.70 %
+    to .25 %.
+  - With these values it is .46–.48 % at p65.5/p71, and the five clusters still read.
+- **SEO** ships only what holds on any domain (`robots.txt`, Organization JSON-LD). Canonical,
+  sitemap and the OG image wait for the domain.
+- **Unchanged:**
+  - mobile pinned travel (the tempo is protected);
+  - chapter 14, THE LEGACY (the 2026-10-09 film ruling).
+- **Execution.** Chief found subagent-per-task execution too slow. Tasks 6–10 ran inline, with one
+  whole-branch review at the end.
+
+Evidence:
+- typecheck 0, eslint 0, node:test 54/54, build 0, dry-run 0, Playwright 22/22 on a fresh build
+  (4347).
+- Real-Chrome captures at phases 0–100 at 1280×800 and 375×812, plus reduced motion.
+
 ## 2026-10-09 (icon) — PNG is a plain blob, not Git LFS
 
 Decision: `.gitattributes` unsets the LFS filter for `*.png` in this capsule, and
