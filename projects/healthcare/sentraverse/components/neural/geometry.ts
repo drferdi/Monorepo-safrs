@@ -1,42 +1,115 @@
 import type { FaceAnalysis } from './face'
 
 export type Vec3 = [number, number, number]
-export type Geometry = { points: Float32Array; lines: Float32Array }
+// Normals are a parallel buffer (4 floats per vertex: a unit normal and a tag) only on the layers
+// that are lit; the 9-float vertex format itself is unchanged.
+export type Geometry = { points: Float32Array; lines: Float32Array; pointNormals?: Float32Array; lineNormals?: Float32Array }
+// One SWC-shaped compartment (allensdk cell_types: type 1 soma, 2 axon, 3 basal, 4 apical; radius; parent).
+export type Compartment = { type: 1 | 2 | 3 | 4; p: Vec3; radius: number; parent: number; birth: number; phase: number }
 type Color = [number, number, number]
+type Normal = [number, number, number, number]
 const WHITE: Color = [.68, .77, .84]
 const BLUE: Color = [.34, .53, .78]
 const AMBER: Color = [.92, .68, .4]
 const TAU = Math.PI * 2
+const STEPS = 11
 
 function random(seed: number) {
   return () => { seed = (Math.imul(seed, 1664525) + 1013904223) | 0; return (seed >>> 0) / 4294967296 }
 }
 
+// The vertex tag in the fourth normal component: the signal lane (-1 none, 0–5) plus 100 × kind
+// (0 soma or dendrite, 1 axon, 2 release particle). The shader decodes it the same way.
+export const tagOf = (lane: number, kind: number) => lane + kind * 100
+
+// WebGL 1 ignores lineWidth, so thickness is a count of parallel strands .012 apart (spec 2026-10-08):
+// a basal trunk base is 4 strands, its tip 1; phones scale the count with their lower density.
+export function strandCount(radius: number, density: number) { return Math.max(1, Math.round(radius / .012 * density / .85)) }
+
+// A parametric neuron in SWC shape (spec 2026-10-08, after Allen cell_types): a soma, 6–9 basal
+// trunks (r0 .05·size), one apical trunk (r0 .075·size, +20 % reach) and one axon (r0 .04·size).
+// Every chain of 11 steps tapers to .35 of its start radius; a chain that still has depth stops at a
+// seeded .45–.8 of its nominal length and splits by Rall's 3/2 rule (the thicker daughter carries a
+// .55–.75 share and continues, the thinner leaves at 35–55°). Lateral jitter is ±.03 L per step and
+// the z-slope ±.5 L per chain. `phase` is the path fraction from the soma to the farthest tip.
+export function makeMorphology(seed: number, size: number, depth: number): Compartment[] {
+  const rand = random(seed)
+  const tree: Compartment[] = [{ type: 1, p: [0, 0, 0], radius: .23 * size, parent: -1, birth: 0, phase: 0 }]
+  const grow = (from: number, start: Vec3, angle: number, nominal: number, r0: number, remaining: number, type: 2 | 3 | 4, birth: number, travelled: number, reach: number) => {
+    const split = remaining > 0 ? .45 + rand() * .35 : 1
+    const length = nominal * split
+    const curve = (rand() - .5) * 1.1, slope = (rand() - .5) * length
+    let parent = from
+    for (let i = 1; i <= STEPS; i++) {
+      const t = i / STEPS, a = angle + curve * t, jitter = (rand() - .5) * .06 * length
+      const p: Vec3 = [start[0] + Math.cos(a) * length * t - Math.sin(a) * jitter, start[1] + Math.sin(a) * length * t + Math.cos(a) * jitter, start[2] + slope * t + Math.sin(t * 5) * length * .045]
+      tree.push({ type, p, radius: r0 * (1 - .65 * t), parent, birth: birth + t * .12, phase: Math.min(1, (travelled + length * t) / reach) })
+      parent = tree.length - 1
+    }
+    if (remaining === 0) return
+    const end = tree[parent], share = .55 + rand() * .2, side = rand() > .5 ? 1 : -1, rest = nominal - length
+    const daughters: [number, number, number][] = [
+      [angle + curve + (rand() - .5) * .35, end.radius * share ** (2 / 3), rest],
+      [angle + curve + side * (.61 + rand() * .35), end.radius * (1 - share) ** (2 / 3), rest * .75],
+    ]
+    for (const [a, radius, len] of daughters) {
+      // The daughter's root sits on the bifurcation point so its chain tapers from its own r0.
+      tree.push({ type, p: end.p, radius, parent, birth: end.birth, phase: end.phase })
+      grow(tree.length - 1, end.p, a, len, radius, remaining - 1, type, end.birth, travelled + length, reach)
+    }
+  }
+  const trunk = (angle: number, nominal: number, r0: number, type: 2 | 3 | 4, levels: number) => {
+    const start: Vec3 = [Math.cos(angle) * .19 * size, Math.sin(angle) * .19 * size, 0]
+    tree.push({ type, p: start, radius: r0, parent: 0, birth: .06, phase: 0 })
+    grow(tree.length - 1, start, angle, nominal, r0, levels, type, .06, 0, nominal)
+  }
+  const basal = 6 + Math.floor(rand() * 4), apical = Math.PI / 2 + (rand() - .5) * .3
+  for (let i = 0; i < basal; i++) trunk(apical + Math.PI / 4 + (i + rand() * .35) / basal * (TAU - Math.PI / 2), size * (.75 + rand() * .65) * 1.5, .05 * size, 3, depth)
+  trunk(apical, size * (.75 + rand() * .65) * 1.8, .075 * size, 4, depth)
+  trunk(-.4, size * 3.4, .04 * size, 2, Math.max(0, depth - 1))
+  return tree
+}
+
 class Tissue {
   points: number[] = []
   lines: number[] = []
+  pointNormals: number[] = []
+  lineNormals: number[] = []
   rand: () => number
   readonly density: number
+  // Lighting context: vertices emitted while a soma is set get a radial normal and the current tag;
+  // everything else faces the camera untagged. `lit` marks layers whose normals reach the GPU.
+  private soma: Vec3 | null = null
+  private tag = -1
+  private lit = false
   constructor(seed: number, density: number) { this.density = density; this.rand = random(seed) }
   vertex(p: Vec3, color = WHITE, size = 1.4, birth = 0, phase = 0) {
     return [...p, ...color, size, birth, phase]
   }
-  point(p: Vec3, color = WHITE, size = 1.4, birth = 0, phase = 0) {
+  private normalOf(p: Vec3): Normal {
+    if (!this.soma) return [0, 0, 1, this.tag]
+    const d: Vec3 = [p[0] - this.soma[0], p[1] - this.soma[1], p[2] - this.soma[2]]
+    const length = Math.hypot(d[0], d[1], d[2]) || 1
+    return [d[0] / length, d[1] / length, d[2] / length, this.tag]
+  }
+  point(p: Vec3, color = WHITE, size = 1.4, birth = 0, phase = 0, normal = this.normalOf(p)) {
     this.points.push(...this.vertex(p, color, size, birth, phase))
+    this.pointNormals.push(...normal)
   }
   line(a: Vec3, b: Vec3, color = WHITE, birth = 0, phase = 0) {
     this.lines.push(...this.vertex(a, color, 1, birth, phase), ...this.vertex(b, color, 1, birth, phase + .006))
+    this.lineNormals.push(...this.normalOf(a), ...this.normalOf(b))
   }
   path(points: Vec3[], color = WHITE, birth = 0) {
     for (let i = 1; i < points.length; i++) this.line(points[i - 1], points[i], color, birth, i / points.length)
   }
-  cell(center: Vec3, radius: number, count: number, color = WHITE, birth = 0, elongation = 1) {
+  cell(center: Vec3, radius: number, count: number, color = WHITE, birth = 0, elongation = 1, flattening = 1) {
     for (let i = 0; i < count * this.density; i++) {
       const theta = this.rand() * TAU, cos = this.rand() * 2 - 1
       const sin = Math.sqrt(1 - cos * cos)
       const irregular = 1 + .12 * Math.sin(theta * 7 + cos * 8) + .065 * Math.sin(theta * 17)
       const r = radius * irregular * (i % 5 === 0 ? .58 : 1)
-      this.point([center[0] + Math.cos(theta) * sin * r, center[1] + cos * r * elongation, center[2] + Math.sin(theta) * sin * r], color, 1.3 + this.rand() * 1.8, birth, theta / TAU)
+      this.point([center[0] + Math.cos(theta) * sin * r, center[1] + cos * r * elongation, center[2] + Math.sin(theta) * sin * r * flattening], color, 1.3 + this.rand() * 1.8, birth, theta / TAU)
     }
     for (let i = 0; i < 80 * this.density; i++) {
       const theta = this.rand() * TAU, z = this.rand() * 2 - 1
@@ -63,23 +136,50 @@ class Tissue {
       this.branch(previous, angle + curve - .43, length * .53, depth - 1, birth + .15, color)
     }
   }
-  neuron(center: Vec3, size: number, branches: number, depth: number, color = WHITE) {
-    this.cell(center, .23 * size, 1700, color)
-    for (let i = 0; i < branches; i++) {
-      const angle = i / branches * TAU + this.rand() * .35
-      const start: Vec3 = [center[0] + Math.cos(angle) * .19 * size, center[1] + Math.sin(angle) * .19 * size, center[2]]
-      this.branch(start, angle, size * (.75 + this.rand() * .65), depth, .06, color)
+  // A neuron from its SWC-shaped morphology (spec 2026-10-08). The soma is a 1:.85:.8 ellipsoid of
+  // points at .35 of the colour (additive blending has no alpha attribute, so dimmer reads as
+  // translucent); each compartment becomes strands counted from its radius; a lane (0–5) marks the
+  // network neurons the signal cycle drives and seeds 25–40 release particles at the axon terminal.
+  neuron(center: Vec3, size: number, depth: number, color = WHITE, lane = -1) {
+    const tree = makeMorphology(Math.floor(this.rand() * 2 ** 31), size, depth)
+    this.lit = true; this.soma = center; this.tag = tagOf(lane, 0)
+    this.cell(center, .23 * size, 1700, [color[0] * .35, color[1] * .35, color[2] * .35], 0, .85, .8)
+    const at = (c: Compartment): Vec3 => [center[0] + c.p[0], center[1] + c.p[1], center[2] + c.p[2]]
+    let terminal = tree[0]
+    for (let i = 1; i < tree.length; i++) {
+      const c = tree[i], parent = tree[c.parent]
+      if (c.type === 2 && c.phase >= terminal.phase) terminal = c
+      if (parent.type === 1 || parent.p === c.p) continue
+      this.tag = tagOf(lane, c.type === 2 ? 1 : 0)
+      const strands = strandCount(c.radius, this.density), shade = c.type === 2 ? BLUE : color
+      const a = at(parent), b = at(c)
+      for (let k = 0; k < strands; k++) {
+        const offset = (k - (strands - 1) / 2) * .012
+        this.line([a[0] + offset, a[1] + offset, a[2]], [b[0] + offset, b[1] + offset, b[2]], shade, c.birth, c.phase)
+      }
+      if (i % 2 === 0) this.point(b, color, .9, c.birth, c.phase)
     }
-    this.branch(center, -.4, size * 3.4, Math.max(0, depth - 1), .1, BLUE)
+    if (lane >= 0) {
+      const count = 25 + Math.floor(this.rand() * 16), origin = at(terminal)
+      for (let i = 0; i < count; i++) {
+        const theta = this.rand() * TAU, cos = this.rand() * 2 - 1, sin = Math.sqrt(1 - cos * cos)
+        this.point(origin, AMBER, 1.4, 0, this.rand(), [Math.cos(theta) * sin, cos, Math.sin(theta) * sin, tagOf(lane, 2)])
+      }
+    }
+    this.soma = null; this.tag = -1
   }
-  finish(): Geometry { return { points: new Float32Array(this.points), lines: new Float32Array(this.lines) } }
+  finish(): Geometry {
+    const geometry: Geometry = { points: new Float32Array(this.points), lines: new Float32Array(this.lines) }
+    if (this.lit) { geometry.pointNormals = new Float32Array(this.pointNormals); geometry.lineNormals = new Float32Array(this.lineNormals) }
+    return geometry
+  }
 }
 
 export const hubs: Vec3[] = [[-3.2, 1.6, 0], [2.9, 1.4, -.5], [-2.5, -1.7, .4], [2.8, -1.8, .1], [.1, 2.9, -1]]
 
 export function makeNeuron(density: number): Geometry {
   const tissue = new Tissue(37, density)
-  tissue.neuron([0, 0, 0], 1, 8, 3)
+  tissue.neuron([0, 0, 0], 1, 3)
   return tissue.finish()
 }
 
@@ -231,10 +331,11 @@ export function makeNetwork(density: number): Geometry {
   for (let i = 0; i < 100 * density; i++) {
     const center: Vec3 = [(tissue.rand() - .5) * 15, (tissue.rand() - .5) * 10, (tissue.rand() - .5) * 8]
     centers.push(center)
-    tissue.neuron(center, .16 + tissue.rand() * .15, 4, 1, i % 3 ? BLUE : WHITE)
+    tissue.neuron(center, .16 + tissue.rand() * .15, 1, i % 3 ? BLUE : WHITE)
   }
   for (const [i, hub] of hubs.entries()) {
-    tissue.neuron(hub, .65, 7, 2, i === 4 ? [.7, .58, .45] : [.54, .62, .78])
+    // The five hubs and the centre are the six signal lanes of the activity cycle (spec 2026-10-08).
+    tissue.neuron(hub, .65, 2, i === 4 ? [.7, .58, .45] : [.54, .62, .78], i)
     const path: Vec3[] = []
     for (let j = 0; j < 40; j++) {
       const t = j / 39
@@ -242,7 +343,7 @@ export function makeNetwork(density: number): Geometry {
     }
     tissue.path(path, WHITE)
   }
-  tissue.neuron([0, 0, 0], .7, 7, 2)
+  tissue.neuron([0, 0, 0], .7, 2, WHITE, 5)
   for (let i = 0; i < centers.length; i++) {
     for (let j = i + 1; j < centers.length; j++) {
       const a = centers[i], b = centers[j]
