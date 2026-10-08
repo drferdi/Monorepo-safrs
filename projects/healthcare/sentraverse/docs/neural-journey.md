@@ -107,19 +107,33 @@ parallax on the face) and 5 (colour after detail and a shoulder fade in the reve
 
 - Morphology. `geometry.ts` `makeMorphology(seed, size, depth)` returns a compartment tree in the
   Allen Institute SWC shape (type 1 soma, 2 axon, 3 basal dendrite, 4 apical dendrite; a radius
-  and a parent index per compartment) and `Tissue.neuron` emits it. The soma is an ellipsoid of
-  points at 35 % of the layer colour. Each trunk is a chain of 11 steps that bifurcates with the
-  Rall 3/2 rule (daughter radius = parent radius × share^(2/3), share .55–.75) at a random
-  .45–.8 of its remaining length and tapers to 35 % of its root radius (r(t) = r0 (1 − .65 t)).
+  and a parent index per compartment) and `Tissue.neuron` emits it. Each trunk is a chain of
+  7–20 steps (about .13 × size each) whose heading is a persistent random walk, so paths
+  meander; it tapers only to 70 % of its root radius and does the bulk of its thinning at the
+  splits, as reconstructions do: at a seeded .45–.8 of its nominal length it bifurcates by the
+  Rall 3/2 rule (daughter radius = parent radius × share^(2/3), share .55–.75), and most chains
+  also shed one or two collaterals part-way (.18–.32 share by the same rule, the chain going on
+  thinner), which makes the arbor bushy (the hero has 345 chains and over 200 bifurcations).
   6–9 basal trunks (root radius .05 × size) sweep 270° away from the apical trunk (.075 × size,
   1.8× longer); one axon (.04 × size, 3.4× longer, one branching level shallower) ends in 25–40
-  vesicle particles. WebGL ignores `lineWidth`, so thickness is drawn as parallel strands:
-  `strandCount(radius, density)` gives one strand per .012 of radius at density .85 (4 at a
-  root, 1 at a tip; density .35 halves them), offset .012 apart, each carrying a brightness
-  weight of sqrt(4 / strands) clamped to 1–2 so a thin tip stays as bright as a thick base.
-  `morphology.test.mjs` pins the tree validity, the taper, the Rall ratios, the strand counts,
-  the normals and the vertex budget (at most 1.3× the pre-spec baseline at density .85, 1.1×
-  at .35).
+  vesicle particles.
+- Drawing (Chief 2026-10-08, "fokus pada realistic dan dramatic visual", replacing the spec's
+  parallel strands, which read as striped cables). Every compartment is one core line whose
+  brightness follows its radius. On neurons of size .5 and up, shafts down to `SHEATH_RADIUS`
+  (.008) add a sheath of soft sprites one radius apart (at least .015, sparser at phone density)
+  whose size slot is the shaft radius; the tag carries +50 for them and the vertex shader turns
+  that world radius into pixels through `u_scale` and the canvas height (`u_height`, 2.8× wide
+  because a gaussian sprite reads as solid over about a third of its width, clamped at 120 px),
+  so thickness, taper and glow come from area at every chapter's scale (.055 in the synapse
+  swarm, .22 in chapter 05, .8 for the daughters, 1.6 for the hero). Their dendrites carry
+  spines (tiny points just off the shaft) at desktop density. The soma is a 1:.85:.8 ellipsoid
+  of membrane dots at 38 % of the colour over faint world-sized body sprites with a warm amber
+  nucleus, so it reads as a translucent cell with a core rather than a white star; the small
+  network neurons keep the soma body but no shaft sheath or spines. The Canvas 2D fallback
+  skips sheath sprites. `morphology.test.mjs` pins the tree validity, the taper and the Rall
+  ratios within one step, the bushiness and tortuosity, the sheath (sizes, lanes, the size
+  gate), the soma body, the spines, the normals and the vertex budgets (lines at most 1.3× the
+  pre-spec baseline at density .85 and 1.1× at .35; hero points 12k, phone network points 40k).
 - Lighting. Lit layers (`makeNeuron`, `makeNetwork`) carry a parallel 4-float normals buffer (a
   unit radial normal from the soma plus a tag); unlit layers receive a constant normal through
   `vertexAttrib4f` and `u_lit = 0`, so their look is unchanged. The vertex shader puts the key
@@ -144,9 +158,10 @@ parallax on the face) and 5 (colour after detail and a shoulder fade in the reve
   terminal; the Canvas 2D fallback draws no particles. `signal.test.mjs` pins the labels, the
   causal chain values, the per-repeat variation and the window.
 - Cost (measured 2026-10-08 with the geometry builders): the normals buffer adds 16 bytes per
-  lit vertex, about 4.0 MB at density .85 (network 3.9 MB, neuron .1 MB, +29 % over the
-  14.0 MB of vertex data) and 1.1 MB at .35 (+21 %). The hero neuron has 2,455 point and 3,872
-  line vertices at density .85.
+  lit vertex, about 4.1 MB at density .85 (+29 % over the 14.4 MB of vertex data) and 1.1 MB
+  at .35 (+22 %). At density .85 the hero neuron has 6,657 point and 4,892 line vertices (the
+  original builder: 3,178 and 17,930) and the network 167,954 and 90,272 (original 149,968 and
+  137,056).
 
 ## Verification
 
