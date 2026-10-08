@@ -42,3 +42,16 @@ test('the distant field recedes into the fog, the foreground gathers at the hubs
     assert.ok(found, 'spoke found for hub ' + hub)
   }
 })
+
+test('a share of the foreground stays where it grew, so the field keeps its depth around the constellation', () => {
+  const network = makeNetwork(.35), anchors = [...hubs, [0, 0, 0]]
+  // Only the hubs and the centre stayed before; their arbors reach 2.4 at most, so unmoved
+  // vertices beyond 3 can only belong to foreground neurons that keep their place.
+  let stayed = 0
+  for (let v = 0; v < network.points.length / 9; v++) {
+    const p = [network.points[v * 9], network.points[v * 9 + 1], network.points[v * 9 + 2]]
+    const t = [network.pointTargets[v * 3], network.pointTargets[v * 3 + 1], network.pointTargets[v * 3 + 2]]
+    if (distance(p, t) < 1e-6 && Math.min(...anchors.map(anchor => distance(p, anchor))) > 3) stayed++
+  }
+  assert.ok(stayed > 1000, 'foreground vertices that stay in the field ' + stayed)
+})

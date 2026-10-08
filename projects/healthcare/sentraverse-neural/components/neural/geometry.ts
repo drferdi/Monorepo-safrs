@@ -243,10 +243,13 @@ class Tissue {
 }
 
 export const hubs: Vec3[] = [[-3.2, 1.6, 0], [2.9, 1.4, -.5], [-2.5, -1.7, .4], [2.8, -1.8, .1], [.1, 2.9, -1]]
-// The distant field recedes this far into the fog as the constellation forms: 8, not the brief's 14.
+// The distant field recedes this far into the fog as the constellation forms: 4, not the brief's 14.
 // With the network camera at z 12, the shader's fog reaches its .12 floor at depth 41.4: at 14 only
-// 37 % of the field stays above that floor (front edge .39), at 8 67 % does (front edge .6).
-export const RECEDE = 8
+// 37 % of the field stays above that floor (front edge .39), at 4 87 % does (front edge .74), so
+// the field thins behind the constellation instead of vanishing.
+export const RECEDE = 4
+// Foreground neurons this close to their nearest hub gather into the constellation; the rest stay.
+const GATHER = 3.5
 const GOLDEN = Math.PI * (3 - Math.sqrt(5))
 export const nearestHub = (p: Vec3) => hubs.reduce((best, hub, i) => Math.hypot(p[0] - hub[0], p[1] - hub[1], p[2] - hub[2]) < Math.hypot(p[0] - hubs[best][0], p[1] - hubs[best][1], p[2] - hubs[best][2]) ? i : best, 0)
 // A foreground neuron's seat in the constellation: on a ring of radius .75–1.15 around its hub, the
@@ -413,7 +416,11 @@ export function makeNetwork(density: number): Geometry {
   for (let i = 0; i < 100 * density; i++) {
     const center: Vec3 = [(tissue.rand() - .5) * 15, (tissue.rand() - .5) * 10, (tissue.rand() - .5) * 8]
     centers.push(center)
-    const hub = nearestHub(center), seat = ringSeat(hub, filled[hub]++)
+    // Neurons that grew within GATHER of a hub join its ring; the outer field keeps its place, so the
+    // frame around the constellation keeps its depth instead of emptying to flat black (brief
+    // 2026-10-09 §7: the organic noise reduces, the background stays atmospheric).
+    const hub = nearestHub(center), far = Math.hypot(center[0] - hubs[hub][0], center[1] - hubs[hub][1], center[2] - hubs[hub][2]) > GATHER
+    const seat = far ? center : ringSeat(hub, filled[hub]++)
     const shift: Vec3 = [seat[0] - center[0], seat[1] - center[1], seat[2] - center[2]]
     shifts.push(shift)
     tissue.constellate(shift)
