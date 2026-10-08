@@ -46,8 +46,10 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   scene: `public/neural-face.webp` (a 240 px grayscale copy of the portrait, never displayed)
   is read once through a 2D canvas (`face.ts` `loadPixels`), `analyseFace` turns its pixels
   into Sobel contour segments and brightness-weighted dots, `geometry.ts` `makeFace` builds
-  them in the renderer's vertex format (three units wide, brighter pixels nearer the camera,
-  grown outward from the centre), and `renderer.ts` draws the `face` layer twice: in chapter 03
+  them in the renderer's vertex format (three units wide; depth from `faceDepth`, a smooth
+  portrait-calibrated relief in source-image coordinates, so lighting, beard and clothing never
+  become bumps; grown from the facial features outward along `faceContour`), and `renderer.ts`
+  draws the `face` layer twice: in chapter 03
   "A human architecture" (phase 25–40, growing in, swaying, the camera closing in as the signal
   chapter starts) and from phase 93 at the end, each time to the right of the chapter text
   (above it on phones). `tactile.ts` `facePlacement` bends the position and size with the
@@ -59,11 +61,21 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   2026-10-08): `public/portrait-ferdi.webp` (1038×1062, not LFS) is rendered by `next/image`
   inside the final chapter (`[data-photo]`), placed by `tactile.ts` `faceBox` in the same box
   the renderer draws the face in (desktop, tablets and phones alike, re-placed on resize), and
-  fades in from phase 95.5 to 98.5 while the drawn face stops turning toward the pointer. A
-  radial mask and a slight desaturation blend it with the field. In reading mode and without
-  JavaScript the photo sits in the flow beside the text (above it on phones); the cinematic
-  placement is cleared when the mode changes.
-- On desktop without reduced motion the face turns up to ±0.22 rad toward the pointer and the
+  resolves from phase 95.5 to 98.5 feature first (2026-10-08, "portrait realism"): `tactile.ts`
+  `portraitState(phase)` gives `relief` (the drawn face settles flat onto the photo plane from
+  phase 94.25 to 95.5, and its turn fades with it) and `reveal` (0 → 1 over 95.5 → 98.5);
+  `portrait-reveal.ts` `createPortraitReveal` paints the unchanged `next/image` through a
+  192 px alpha mask computed from the same `faceContour`/`faceDissolve` field the geometry
+  grows along, onto a `<canvas data-photo-reveal>` inside `[data-photo]`, so nose, eyes and
+  lips appear before cheeks, hair, jaw and shoulders, and the drawn vertices fade (94 %) where
+  the skin has resolved. `[data-photo][data-reveal]` reads `active` (canvas shown, image
+  hidden) or `complete` (the image itself, full resolution); the attribute is removed when the
+  cinematic build is torn down. The final chapter enters without its 24 px slide so the photo
+  stays registered on the drawn face. A radial mask and a slight desaturation blend it with the
+  field. In reading mode and without JavaScript the photo sits in the flow beside the text
+  (above it on phones); the cinematic placement and the reveal are cleared when the mode changes.
+- On desktop without reduced motion the face turns up to ±0.085 rad toward the pointer (chapter
+  03 also sways ±0.045 rad; both were ±0.22 and ±0.23 before 2026-10-08) and the
   points near it brighten: `tactile.ts` `faceLook` maps the pointer onto the face plane, and
   `NeuralJourney.tsx` eases `turn` and `hover` with `gsap.quickTo` on a plain look object.
 - The chapter text never moves with the pointer (Chief 2026-10-08). `tactile.ts` holds the pure
@@ -96,7 +108,8 @@ node scripts/pnpm.mjs run deploy:dry-run
 `node scripts/pnpm.mjs run test` runs the node:test files, including `components/neural/tactile.test.mjs`
 and `components/neural/face.test.mjs`. The Playwright suite in `e2e/neural.spec.ts` covers
 reverse navigation, all five divisions, the drawn face and the photograph at the final chapter
-(also in reading mode and without any canvas context), mobile overflow and the
+(feature-first alpha of the reveal canvas, exact reversal, the full image at the end, a late
+image load, a phone resize, and reading mode and no canvas context), mobile overflow and the
 CTA in view, OS reduced-motion changes, context loss, clean reading-mode transforms, missing
 WebGL, no canvas context at all, JavaScript-disabled reading, pin cleanup, connected-region
 navigation, and frame timing. `e2e/smoke.spec.ts` keeps

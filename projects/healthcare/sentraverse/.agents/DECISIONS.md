@@ -3,6 +3,51 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-08 (later) — Portrait realism: calibrated relief and a feature-first photo reveal
+
+- Decision (Chief, 2026-10-08, "Agreed ... Execute point 1 dan 5", recorded in the local plan
+  `docs/superpowers/plans/2026-10-08-portrait-realism.md`): the drawn face gets a real facial
+  relief instead of brightness-as-depth, and the photograph resolves over it feature first and
+  registered, not as a flat cross-fade. Everything else from the entry below stays: one face,
+  the drawn face in chapter 03 and under the photo, the photo only at the very end (phase 95.5
+  to 98.5), still text, no new dependency, source images unchanged.
+- How: `geometry.ts` `faceDepth(u, v)` is a hand-calibrated 2.5D surface in source-image
+  coordinates (head ellipsoid, nose, brow, eye sockets, cheeks, lips, chin, neck); luminance now
+  only sets dot size. `faceContour(u, v)` is one reveal field for both the geometry's growth
+  order and the photo mask, and `faceDissolve(contour, progress)` is its smoothstep window.
+  `tactile.ts` `portraitState(phase)` gives `relief` (1 → 0 over 94.25 → 95.5, a smoothstep;
+  the shader multiplies z by it and the pointer turn by it) and `reveal` (0 → 1 over 95.5 →
+  98.5). `renderer.ts` carries `u_relief` and `u_reveal` and fades every vertex by 94 % once
+  the skin at its birth value has resolved; the Canvas 2D fallback strokes per segment with the
+  same dissolve. `portrait-reveal.ts` `createPortraitReveal(photo)` precomputes a 192 px
+  contour field, repaints at most 180 steps, draws the unchanged `next/image` with
+  object-fit-cover maths into `<canvas data-photo-reveal>` and masks it with `destination-in`;
+  `[data-photo][data-reveal]` is `active` or `complete`, and `dispose()` clears it so reading
+  mode, reduced motion and no-JavaScript keep the plain image. The photo container now fades
+  in over 0.5 phase units (3 without a reveal canvas) and the final chapter enters without its
+  24 px slide so the photo stays on the drawn face.
+- Visible rulings for Chief to judge by eye: the pointer turn is ±0.085 rad (was ±0.22) and
+  the chapter-03 sway ±0.045 rad (was ±0.23), because a flat-registered reveal cannot tolerate
+  a large turn; both are single numbers in `renderer.ts`.
+- Session rulings (Claude Fable 5.1): the work was found uncommitted in the shared checkout,
+  authored 08:43–08:49 by another session with Task 1 complete and Task 2 written but ungated;
+  it was finished rather than stashed because it breaks none of Chief's decisions and the plan
+  quotes Chief's approval; the plan ledger moved from `docs/plans/active/` to the git-ignored
+  `docs/superpowers/plans/` beside the design spec, so no new tracked folder reaches the
+  published repo; a stray `.portrait-check.config.ts` (no base config spread) was deleted and
+  the sanctioned session-only Chrome config used and deleted.
+- Known, not fixed (Chief's call): on a 768×1024 portrait tablet the opaque photo's left edge
+  (x ≈ 396) overlaps the end of the description line (text block 600 px wide, to x ≈ 661); the
+  drawn face sat there before, the photo makes it visible. Knobs: `facePlacement` scale for
+  aspect < 1.2 (.7) or a narrower text block on portrait tablets.
+- Evidence: typecheck 0, lint 0 (two pre-existing `img` warnings), node:test 14/14 (three new
+  tests in `face.test.mjs`: depth independent of lighting, feature-first and exactly reversible
+  dissolve, relief registered before the first skin pixel), build 0, deploy:dry-run 0,
+  Playwright 14/14 through the installed Chrome against the production preview (two new tests:
+  feature-first canvas alpha with reversal and the full image at the end; late image load and a
+  phone resize). Browser checks of the production build at 1280×800 (phase 96.5, 98.7, chapter
+  03), 375×812 (96.5, 98.7, reading mode), 768×1024 (97) and 800×500 (98.7). `public/` unchanged.
+
 ## 2026-10-08 — The journey ends on the founder's face drawn as neural tissue
 
 - Decision (Chief, 2026-10-07 and 2026-10-08): one human face only, the founder's own; no photo
