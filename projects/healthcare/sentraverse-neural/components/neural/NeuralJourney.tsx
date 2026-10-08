@@ -8,7 +8,7 @@ import type { Look } from './renderer'
 import { faceLook } from './tactile'
 import { FILM, createFilm, filmFrameUrl } from './film'
 import { createMorph, faceCrop } from './morph'
-import { MASTER_DURATION, buildMaster, jumpLabel, legacy, settleLegacy } from './timeline'
+import { MASTER_DURATION, buildMaster, jumpLabel, legacy, settleLegacy, stillCamera } from './timeline'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra } from './story'
 import styles from './journey.module.css'
@@ -54,6 +54,7 @@ export default function NeuralJourney() {
         root.dataset.renderer = engine.mode
         root.dataset.loading = 'false'
         const state = { phase: 0 }
+        const camera = stillCamera()
         // The founder's face (Chief 2026-10-08) is drawn by the renderer from the portrait's
         // pixels; `look` is what the pointer does to it. Without pixels the text ends the story.
         const look: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
@@ -114,10 +115,10 @@ export default function NeuralJourney() {
           lastFrame = time
           // The legacy's void covers the canvases from `legacy.covered`; nothing under it is drawn.
           // Past it the only living layer is the face's transformation.
-          if (state.phase < legacy.covered) engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal)
+          if (state.phase < legacy.covered) engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal, camera)
           else morph?.tick(time)
         }
-        const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover, look) }
+        const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover, look, signal, camera) }
         const observer = new ResizeObserver(resize)
         observer.observe(stage)
         const visibility = () => { if (document.hidden) gsap.ticker.remove(draw); else if (!reduced) gsap.ticker.add(draw) }
@@ -161,7 +162,7 @@ export default function NeuralJourney() {
           // The travel keeps .09 viewport per master unit on desktop and .08 on phones (9 and 8
           // viewports for the hundred units the story had before the legacy took its forty).
           master = buildMaster(gsap, chapters, {
-            state, panels, nav, legacy: scene, titles, film: film ? time => film.render(time) : undefined, morph: morph ? value => morph.render(value) : undefined,
+            state, camera, mobile, panels, nav, legacy: scene, titles, film: film ? time => film.render(time) : undefined, morph: morph ? value => morph.render(value) : undefined,
             overview: root.querySelector('[data-overview]'), scrim: root.querySelector('[data-scrim]'),
             // A refresh (a resize) reverts and silently re-renders the master at its progress, so the
             // status line and `data-phase` are brought up to date by hand once it is done.

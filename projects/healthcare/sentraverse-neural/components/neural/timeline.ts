@@ -42,6 +42,34 @@ export function motionOf(id: string): { enter: string; duration: number } {
   return signatures[signature]
 }
 
+// The stage camera (brief 2026-10-09 §4): one virtual camera over every canvas layer, never over
+// the narrative text (Chief 2026-10-08: chapter text never moves). `scale` zooms about the stage
+// centre, `x` and `y` pan in fractions of the viewport height (positive right and up), `roll` is
+// in radians. Each chapter's framing is reached over its first four phases on its own curve;
+// phones take half of every move and no roll; reduced motion builds no master and keeps the identity.
+export type StageCamera = { scale: number; x: number; y: number; roll: number }
+export const stillCamera = (): StageCamera => ({ scale: 1, x: 0, y: 0, roll: 0 })
+const frame = (scale: number, x: number, y: number, roll: number, curve: string) => ({ scale, x, y, roll, ease: curve })
+export const cameraKeys: Record<string, StageCamera & { ease: string }> = {
+  origin: frame(1, 0, 0, 0, ease.camera),
+  'embryonic-origin': frame(1.04, -.008, .004, 0, ease.camera),
+  neuron: frame(1.09, -.016, .008, .0035, ease.camera),
+  'nervous-system': frame(1.03, 0, 0, 0, ease.camera),
+  'enter-signal': frame(1.05, .01, 0, -.002, ease.signal),
+  axon: frame(1.08, .018, -.004, -.004, ease.signal),
+  synapse: frame(1.05, .008, 0, 0, ease.pulse),
+  network: frame(.94, 0, 0, 0, ease.camera),
+  'division-1': frame(1, 0, 0, 0, ease.camera), 'division-2': frame(1, 0, 0, 0, ease.camera), 'division-3': frame(1, 0, 0, 0, ease.camera), 'division-4': frame(1, 0, 0, 0, ease.camera), 'division-5': frame(1, 0, 0, 0, ease.camera),
+  connected: frame(.97, 0, 0, 0, ease.converge),
+  human: frame(1, 0, 0, 0, ease.pulse),
+}
+export function cameraAt(id: string, mobile: boolean): StageCamera {
+  const key = cameraKeys[id]
+  if (!key) throw new Error(`No camera key for chapter: ${id}`)
+  const share = mobile ? .5 : 1
+  return { scale: 1 + (key.scale - 1) * share, x: key.x * share, y: key.y * share, roll: mobile ? 0 : key.roll }
+}
+
 // Tempo: [phase, time] breakpoints, piecewise linear between them. The key moments take more of
 // the travel for the same phases (the chapter 03 face 25–40 at 1.23×, the network 58–66 at 1.25×,
 // the legacy 94–100 at 6.67×) and the stretches between give it back. The final chapter is one
@@ -117,6 +145,10 @@ export type MasterOptions = {
   titles?: ReadonlyArray<Title | null | undefined>
   scrollTrigger?: ScrollTrigger.Vars
   onUpdate?: () => void
+  // The stage camera the renderer reads every frame (`renderer.ts`); absent, the canvases stay framed.
+  camera?: StageCamera
+  // Phones take half of every camera move and no roll.
+  mobile?: boolean
 }
 
 // The title comes in with its chapter: lines rise from behind their masks one after another;
@@ -153,6 +185,15 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
   if (scrim) {
     master.fromTo(scrim, { autoAlpha: 0 }, { autoAlpha: 1, duration: 3 }, at(58))
     master.to(scrim, { autoAlpha: 0, duration: 2 }, at(93))
+  }
+  if (options.camera) {
+    const camera = options.camera, mobile = !!options.mobile
+    gsap.set(camera, cameraAt(chapters[0].id, mobile))
+    chapters.forEach((chapter, index) => {
+      if (index === 0) return
+      const end = Math.min(at(chapters[index + 1]?.phase ?? 100), at(chapter.phase + 4))
+      master.fromTo(camera, { ...cameraAt(chapters[index - 1].id, mobile) }, { ...cameraAt(chapter.id, mobile), duration: end - at(chapter.phase), ease: cameraKeys[chapter.id].ease, immediateRender: false }, at(chapter.phase))
+    })
   }
   if (scene) {
     // The scene starts with the void open (the neural field still showing through) and the film

@@ -4,6 +4,7 @@ import { axonCenter, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork
 import type { Geometry, Vec3 } from './geometry'
 import { clamp, smooth } from './story'
 import { facePlacement } from './tactile'
+import type { StageCamera } from './timeline'
 
 type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer; pointNormals?: WebGLBuffer; lineNormals?: WebGLBuffer }
 type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number }
@@ -11,6 +12,7 @@ export type Look = { turn: number; highlight: Vec3; hover: number }
 const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0 })
 const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
 const silence = new Float32Array(24)
+const level: StageCamera = { scale: 1, x: 0, y: 0, roll: 0 }
 const envelope = (phase: number, start: number, end: number, fade = 2) => smooth((phase - start) / fade) * (1 - smooth((phase - end) / fade))
 // The network's camera through the divisions: which hub it leans toward, by how much, and the
 // field's turn. `render` draws with it and `hitTest` maps the pointer with it, so they agree.
@@ -44,6 +46,7 @@ uniform float u_dpr;
 uniform float u_pulse;
 uniform vec3 u_highlight;
 uniform float u_hover;
+uniform vec4 u_stage;
 varying vec4 v_color;
 void main() {
   // Activity (spec 2026-10-08): the tag names the lane and the kind (0 soma or dendrite, 1 axon,
@@ -63,7 +66,12 @@ void main() {
   float depth = -p.z;
   float rc = cos(u_roll), rs = sin(u_roll);
   vec2 xy = vec2(p.x*rc-p.y*rs,p.x*rs+p.y*rc);
-  gl_Position = vec4(xy.x*1.85/u_aspect, xy.y*1.85, depth*.99-.1, depth);
+  // The stage camera (brief 2026-10-09 §4): zoom, roll and pan of the whole field about the centre;
+  // the pan (u_stage.yz, fractions of the viewport height) is applied in clip space, so it is
+  // the same number of pixels at every depth.
+  float sc = cos(u_stage.w), sn = sin(u_stage.w);
+  xy = vec2(xy.x*sc-xy.y*sn, xy.x*sn+xy.y*sc)*u_stage.x;
+  gl_Position = vec4(xy.x*1.85/u_aspect + 2.0*u_stage.y*depth/u_aspect, xy.y*1.85 + 2.0*u_stage.z*depth, depth*.99-.1, depth);
   // Focus (spec 2026-10-08): lit layers soften away from the focus plane, size up to x2, alpha to .4.
   float coc = clamp(abs(depth-u_focus)/6.0, 0.0, 1.0)*u_lit;
   // Sheath sprites store the shaft radius in a_size: a world size, scaled with the view and the
@@ -128,6 +136,7 @@ export class NeuralRenderer {
   private attributes: number[] = []
   private normalAttribute = -1
   private signal: Float32Array = silence
+  private stage: StageCamera = level
   private density: number
   private disposed = false
   private face: Geometry | null = null
@@ -181,6 +190,7 @@ export class NeuralRenderer {
       this.normalAttribute = gl.getAttribLocation(program, 'a_normal')
       for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'lit', 'focus', 'height']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
       this.uniforms.set('signal', gl.getUniformLocation(program, 'u_signal[0]'))
+      this.uniforms.set('stage', gl.getUniformLocation(program, 'u_stage'))
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
       gl.clearColor(0, 0, 0, 0)
     } finally { shaders.forEach(shader => gl.deleteShader(shader)) }
@@ -225,6 +235,7 @@ export class NeuralRenderer {
       gl.uniform3fv(uniform('offset'), view.offset)
       gl.uniform3fv(uniform('highlight'), view.highlight)
       gl.uniform4fv(uniform('signal'), this.signal)
+      gl.uniform4f(uniform('stage'), this.stage.scale, this.stage.x, this.stage.y, this.stage.roll)
       // Lit layers are the ones that carry normals; their focus plane is the depth of the model origin.
       const lit = layer.geometry.lineNormals ? 1 : 0
       const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, lit, focus: view.camera[2] - view.offset[2], height: this.height * this.dpr }
@@ -257,15 +268,7 @@ export class NeuralRenderer {
 
   private drawCanvas(geometry: Geometry, view: View) {
     const ctx = this.ctx!
-    const project = (array: Float32Array, i: number) => {
-      const x = array[i] * view.scale, y = array[i + 1] * view.scale, z = array[i + 2] * view.scale
-      const c = Math.cos(view.rotation), s = Math.sin(view.rotation)
-      const px = x * c + z * s + view.offset[0] - view.camera[0]
-      const py = y + view.offset[1] - view.camera[1]
-      const depth = view.camera[2] - (-x * s + z * c + view.offset[2])
-      const scale = this.height * .925 / Math.max(depth, .1)
-      return { x: this.width / 2 + (px * Math.cos(view.roll) - py * Math.sin(view.roll)) * scale, y: this.height / 2 - (px * Math.sin(view.roll) + py * Math.cos(view.roll)) * scale, depth, scale }
-    }
+    const project = (array: Float32Array, i: number) => this.project(array[i], array[i + 1], array[i + 2], view)
     ctx.globalAlpha = view.alpha * .5
     ctx.lineWidth = .65
     ctx.strokeStyle = '#7799b7'
@@ -290,6 +293,24 @@ export class NeuralRenderer {
     }
   }
 
+  // A point relative to the stage centre (CSS pixels, y up) through the stage camera, to screen pixels.
+  private toScreen(x: number, y: number) {
+    const { scale, x: panX, y: panY, roll } = this.stage, c = Math.cos(roll), s = Math.sin(roll)
+    return { x: this.width / 2 + (x * c - y * s) * scale + panX * this.height, y: this.height / 2 - ((x * s + y * c) * scale + panY * this.height) }
+  }
+
+  // A model-space point through a layer's view and the stage camera: the shader's projection in CSS pixels.
+  private project(x: number, y: number, z: number, view: View) {
+    x *= view.scale; y *= view.scale; z *= view.scale
+    const c = Math.cos(view.rotation), s = Math.sin(view.rotation)
+    const px = x * c + z * s + view.offset[0] - view.camera[0]
+    const py = y + view.offset[1] - view.camera[1]
+    const depth = view.camera[2] - (-x * s + z * c + view.offset[2])
+    const scale = this.height * .925 / Math.max(depth, .1)
+    const screen = this.toScreen((px * Math.cos(view.roll) - py * Math.sin(view.roll)) * scale, (px * Math.sin(view.roll) + py * Math.cos(view.roll)) * scale)
+    return { x: screen.x, y: screen.y, depth, scale: scale * this.stage.scale }
+  }
+
   // Where the face sits (Chief 2026-10-08): right of the chapter text on desktop, above it on
   // phones, bent by the viewport so it stays on screen and clear of the text. NeuralJourney
   // reads the same view to map the pointer onto the face plane.
@@ -301,9 +322,10 @@ export class NeuralRenderer {
   }
 
   // `signal` is the activity cycle state, six lanes of (impulse, terminal, release, response).
-  render(phase: number, time: number, reduced = false, hover = -1, look: Look = still, signal: Float32Array = silence) {
+  render(phase: number, time: number, reduced = false, hover = -1, look: Look = still, signal: Float32Array = silence, stage: StageCamera = level) {
     if (this.disposed) return
     this.signal = signal
+    this.stage = stage
     if (this.gl && !this.lost) this.gl.clear(this.gl.COLOR_BUFFER_BIT)
     if (this.ctx) { this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); this.ctx.clearRect(0, 0, this.width, this.height) }
     const right: Vec3 = [this.mobile ? 0 : 1.15, this.mobile ? .7 : 0, 0]
@@ -353,9 +375,8 @@ export class NeuralRenderer {
     return hubs.findIndex(hub => {
       const depth = 12 + hub[0] * Math.sin(rotation) - hub[2] * Math.cos(rotation)
       const scale = this.height * .925 / depth
-      const px = this.width / 2 + (hub[0] * Math.cos(rotation) + hub[2] * Math.sin(rotation) - focus[0] * amount) * scale
-      const py = this.height / 2 - (hub[1] - focus[1] * amount) * scale
-      return Math.hypot(x - px, y - py) < 65
+      const p = this.toScreen((hub[0] * Math.cos(rotation) + hub[2] * Math.sin(rotation) - focus[0] * amount) * scale, (hub[1] - focus[1] * amount) * scale)
+      return Math.hypot(x - p.x, y - p.y) < 65
     })
   }
 

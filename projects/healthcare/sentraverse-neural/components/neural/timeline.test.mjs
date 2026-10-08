@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import * as gsapModule from 'gsap'
 import { chapters } from './story.ts'
-import { MASTER_DURATION, buildMaster, ease, jumpLabel, legacy, legacyParts, motionOf, phaseToTime, settleLegacy } from './timeline.ts'
+import { MASTER_DURATION, buildMaster, cameraAt, ease, jumpLabel, legacy, legacyParts, motionOf, phaseToTime, settleLegacy } from './timeline.ts'
 
 const gsap = gsapModule.gsap ?? gsapModule.default
 // `clearProps` is a CSS-plugin feature with no meaning on the stand-ins below; a headless no-op
@@ -235,4 +235,30 @@ test('each chapter enters with its narrative signature and every title reveals o
   }
   assert.throws(() => motionOf('nowhere'), /No motion signature for chapter: nowhere/)
   master.kill()
+})
+
+test('the stage camera reaches each chapter framing within its chapter, halves its moves on phones and never rolls there', () => {
+  for (const mobile of [false, true]) {
+    const camera = { scale: 1, x: 0, y: 0, roll: 0 }
+    const { master } = stage(undefined, { camera, mobile })
+    for (const [index, chapter] of chapters.entries()) {
+      const next = chapters[index + 1]?.phase ?? 100
+      master.time(index === 0 ? 0 : Math.min(at(next), at(chapter.phase + 4)))
+      const key = cameraAt(chapter.id, mobile)
+      for (const axis of ['scale', 'x', 'y', 'roll']) close(camera[axis], key[axis], 1e-6, `${chapter.id} ${axis} ${mobile ? 'phone' : 'desktop'}`)
+      if (mobile) assert.equal(camera.roll, 0, `${chapter.id} no roll on phones`)
+    }
+    // Scrubbing back returns the earlier framing.
+    master.time(at(100)); master.time(at(32))
+    close(camera.scale, cameraAt('nervous-system', mobile).scale, 1e-6, 'reverse scrub returns the earlier framing')
+    master.kill()
+  }
+  for (const chapter of chapters) {
+    const key = cameraAt(chapter.id, false)
+    assert.ok(Math.abs(key.scale - 1) <= .1 && Math.abs(key.x) <= .03 && Math.abs(key.y) <= .03 && Math.abs(key.roll) <= .005, `${chapter.id} stays restrained`)
+  }
+  close(cameraAt('axon', true).scale - 1, (cameraAt('axon', false).scale - 1) / 2, 1e-9, 'phones take half the zoom')
+  assert.ok(cameraAt('network', false).scale < 1, 'the network zooms out')
+  assert.ok(cameraAt('neuron', false).scale > cameraAt('origin', false).scale, 'the camera closes in on the forming neuron')
+  assert.throws(() => cameraAt('nowhere', false), /No camera key for chapter: nowhere/)
 })
