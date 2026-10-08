@@ -12,45 +12,67 @@ const WHITE: Color = [.68, .77, .84]
 const BLUE: Color = [.34, .53, .78]
 const AMBER: Color = [.92, .68, .4]
 const TAU = Math.PI * 2
-const STEPS = 11
 
 function random(seed: number) {
   return () => { seed = (Math.imul(seed, 1664525) + 1013904223) | 0; return (seed >>> 0) / 4294967296 }
 }
 
-// The vertex tag in the fourth normal component: the signal lane (-1 none, 0–5) plus 100 × kind
-// (0 soma or dendrite, 1 axon, 2 release particle). The shader decodes it the same way.
-export const tagOf = (lane: number, kind: number) => lane + kind * 100
+// The vertex tag in the fourth normal component: the signal lane (-1 none, 0–5), +50 for a sheath
+// sprite (whose size slot is a world radius) and 100 × kind (0 soma or dendrite, 1 axon, 2 release
+// particle). The shader and the Canvas 2D fallback decode it the same way.
+export const tagOf = (lane: number, kind: number, sheath = 0) => lane + sheath * 50 + kind * 100
 
-// WebGL 1 ignores lineWidth, so thickness is a count of parallel strands .012 apart (spec 2026-10-08):
-// a basal trunk base is 4 strands, its tip 1; phones scale the count with their lower density.
-export function strandCount(radius: number, density: number) { return Math.max(1, Math.round(radius / .012 * density / .85)) }
+// On neurons of size .5 and up, shafts down to this radius (world units) are drawn as a core line
+// inside a sheath of soft sprites sized by the radius; thinner twigs and the small network neurons
+// stay single lines.
+export const SHEATH_RADIUS = .008
 
 // A parametric neuron in SWC shape (spec 2026-10-08, after Allen cell_types): a soma, 6–9 basal
 // trunks (r0 .05·size), one apical trunk (r0 .075·size, +20 % reach) and one axon (r0 .04·size).
-// Every chain of 11 steps tapers to .35 of its start radius; a chain that still has depth stops at a
-// seeded .45–.8 of its nominal length and splits by Rall's 3/2 rule (the thicker daughter carries a
-// .55–.75 share and continues, the thinner leaves at 35–55°). Lateral jitter is ±.03 L per step and
-// the z-slope ±.5 L per chain. `phase` is the path fraction from the soma to the farthest tip.
+// Every chain tapers to .7 of its own root radius over 7–20 steps of about .13·size (the bulk of
+// the thinning happens at the Rall splits, as in reconstructions, so the first daughters are still
+// thick enough to carry a sheath); a chain that
+// still has depth stops at a seeded .45–.8 of its nominal length and splits by Rall's 3/2 rule (the
+// thicker daughter carries a .55–.75 share and continues, the thinner leaves at 35–55°), and most
+// such chains also shed collaterals part-way (85 % one, long chains 60 % a second; an .18–.32 share
+// by the same rule each, the chain going on thinner), which is what makes the arbor bushy (Chief
+// 2026-10-08, "realistic dan dramatic"). The
+// heading is a persistent random walk integrated step by step, so paths meander like stained
+// dendrites instead of sweeping one smooth arc; the z-slope is ±.5 L per chain. `phase` is the path
+// fraction from the soma to the farthest tip.
 export function makeMorphology(seed: number, size: number, depth: number): Compartment[] {
   const rand = random(seed)
   const tree: Compartment[] = [{ type: 1, p: [0, 0, 0], radius: .23 * size, parent: -1, birth: 0, phase: 0 }]
   const grow = (from: number, start: Vec3, angle: number, nominal: number, r0: number, remaining: number, type: 2 | 3 | 4, birth: number, travelled: number, reach: number) => {
     const split = remaining > 0 ? .45 + rand() * .35 : 1
     const length = nominal * split
+    const steps = Math.max(7, Math.min(20, Math.round(length / (.13 * size))))
     const curve = (rand() - .5) * 1.1, slope = (rand() - .5) * length
-    let parent = from
-    for (let i = 1; i <= STEPS; i++) {
-      const t = i / STEPS, a = angle + curve * t, jitter = (rand() - .5) * .06 * length
-      const p: Vec3 = [start[0] + Math.cos(a) * length * t - Math.sin(a) * jitter, start[1] + Math.sin(a) * length * t + Math.cos(a) * jitter, start[2] + slope * t + Math.sin(t * 5) * length * .045]
-      tree.push({ type, p, radius: r0 * (1 - .65 * t), parent, birth: birth + t * .12, phase: Math.min(1, (travelled + length * t) / reach) })
+    const collaterals: number[] = []
+    if (remaining > 0) {
+      if (rand() < .85) collaterals.push(3 + Math.floor(rand() * (steps - 5)))
+      if (steps >= 12 && rand() < .6) collaterals.push(3 + Math.floor(rand() * (steps - 5)))
+    }
+    let parent = from, wobble = 0, heading = angle, shrink = 1, x = start[0], y = start[1]
+    for (let i = 1; i <= steps; i++) {
+      const t = i / steps
+      wobble = wobble * .8 + (rand() - .5) * .3
+      heading = angle + curve * t + wobble
+      x += Math.cos(heading) * length / steps; y += Math.sin(heading) * length / steps
+      tree.push({ type, p: [x, y, start[2] + slope * t + Math.sin(t * 5) * length * .045], radius: r0 * (1 - .3 * t) * shrink, parent, birth: birth + t * .12, phase: Math.min(1, (travelled + length * t) / reach) })
       parent = tree.length - 1
+      if (collaterals.includes(i)) {
+        const node = tree[parent], share = .18 + rand() * .14, side = rand() > .5 ? 1 : -1, radius = node.radius * share ** (2 / 3)
+        shrink *= (1 - share) ** (2 / 3)
+        tree.push({ type, p: node.p, radius, parent, birth: node.birth, phase: node.phase })
+        grow(tree.length - 1, node.p, heading + side * (.7 + rand() * .5), (nominal - length * t) * .6, radius, remaining - 1, type, node.birth, travelled + length * t, reach)
+      }
     }
     if (remaining === 0) return
     const end = tree[parent], share = .55 + rand() * .2, side = rand() > .5 ? 1 : -1, rest = nominal - length
     const daughters: [number, number, number][] = [
-      [angle + curve + (rand() - .5) * .35, end.radius * share ** (2 / 3), rest],
-      [angle + curve + side * (.61 + rand() * .35), end.radius * (1 - share) ** (2 / 3), rest * .75],
+      [heading + (rand() - .5) * .35, end.radius * share ** (2 / 3), rest],
+      [heading + side * (.61 + rand() * .35), end.radius * (1 - share) ** (2 / 3), rest * .75],
     ]
     for (const [a, radius, len] of daughters) {
       // The daughter's root sits on the bifurcation point so its chain tapers from its own r0.
@@ -137,30 +159,61 @@ class Tissue {
       this.branch(previous, angle + curve - .43, length * .53, depth - 1, birth + .15, color)
     }
   }
-  // A neuron from its SWC-shaped morphology (spec 2026-10-08). The soma is a 1:.85:.8 ellipsoid of
-  // points at .35 of the colour (additive blending has no alpha attribute, so dimmer reads as
-  // translucent); each compartment becomes strands counted from its radius; a lane (0–5) marks the
-  // network neurons the signal cycle drives and seeds 25–40 release particles at the axon terminal.
+  // A neuron from its SWC-shaped morphology (spec 2026-10-08; redrawn the same day for Chief's
+  // "realistic dan dramatic"). The soma is a 1:.85:.8 ellipsoid of membrane dots at half the colour
+  // over a body of world-sized soft sprites with a warm nucleus. Each compartment becomes one core
+  // line whose brightness follows its radius; on neurons of size .5 and up, shafts down to
+  // SHEATH_RADIUS add a sheath of sprites one radius apart (at least .015, sparser at phone density) whose size
+  // slot is the shaft radius (the shader scales them with the view), so thickness, taper and glow
+  // come from area, not from parallel strands, and their dendrites carry spines at desktop density
+  // (sub-pixel on phones). A lane (0–5) marks the network neurons the signal cycle drives and seeds
+  // 25–40 release particles at the axon terminal.
   neuron(center: Vec3, size: number, depth: number, color = WHITE, lane = -1) {
     const tree = makeMorphology(Math.floor(this.rand() * 2 ** 31), size, depth)
+    const dim = (c: Color, f: number): Color => [c[0] * f, c[1] * f, c[2] * f]
+    const radius = .23 * size
     this.lit = true; this.soma = center; this.tag = tagOf(lane, 0)
-    this.cell(center, .23 * size, 1700, [color[0] * .35, color[1] * .35, color[2] * .35], 0, .85, .8)
+    // Additive blending stacks the membrane dots, the body sprites and the nucleus, so each is kept
+    // faint: together they read as a translucent cell with a warm core instead of a white star.
+    this.cell(center, radius, 1700, dim(color, .38), 0, .85, .8)
+    this.tag = tagOf(lane, 0, 1)
+    for (let i = 0; i < 44 * this.density; i++) {
+      const theta = this.rand() * TAU, cos = this.rand() * 2 - 1, sin = Math.sqrt(1 - cos * cos), r = radius * .55 * Math.cbrt(this.rand())
+      this.point([center[0] + Math.cos(theta) * sin * r, center[1] + cos * r * .85, center[2] + Math.sin(theta) * sin * r * .8], dim(color, .07), radius * (.22 + this.rand() * .2), 0, this.rand())
+    }
+    for (let i = 0; i < 24 * this.density; i++) {
+      const theta = this.rand() * TAU, cos = this.rand() * 2 - 1, sin = Math.sqrt(1 - cos * cos), r = radius * .2 * this.rand()
+      this.point([center[0] + Math.cos(theta) * sin * r, center[1] + cos * r, center[2] + Math.sin(theta) * sin * r], dim(AMBER, .5), radius * .2, 0, this.rand())
+    }
     const at = (c: Compartment): Vec3 => [center[0] + c.p[0], center[1] + c.p[1], center[2] + c.p[2]]
     let terminal = tree[0]
     for (let i = 1; i < tree.length; i++) {
       const c = tree[i], parent = tree[c.parent]
       if (c.type === 2 && c.phase >= terminal.phase) terminal = c
       if (parent.type === 1 || parent.p === c.p) continue
-      this.tag = tagOf(lane, c.type === 2 ? 1 : 0)
-      const strands = strandCount(c.radius, this.density), shade = c.type === 2 ? BLUE : color
-      // Fewer strands add up to less light, so a thin twig is weighted up to twice as bright.
-      const weight = Math.min(2, Math.max(1, Math.sqrt(4 / strands)))
+      const kind = c.type === 2 ? 1 : 0, shade = c.type === 2 ? BLUE : color
       const a = at(parent), b = at(c)
-      for (let k = 0; k < strands; k++) {
-        const offset = (k - (strands - 1) / 2) * .012
-        this.line([a[0] + offset, a[1] + offset, a[2]], [b[0] + offset, b[1] + offset, b[2]], shade, c.birth, c.phase, weight)
+      this.tag = tagOf(lane, kind)
+      this.line(a, b, shade, c.birth, c.phase, Math.min(1.8, .9 + c.radius / .05 * .6))
+      if (i % 2 === 0) this.point(b, color, 1, c.birth, c.phase)
+      if (size >= .5 && parent.radius >= SHEATH_RADIUS) {
+        this.tag = tagOf(lane, kind, 1)
+        const length = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]), count = Math.max(1, Math.round(length / (Math.max(parent.radius, .015) * .85 / this.density)))
+        for (let k = 0; k < count; k++) {
+          const t = (k + .5) / count, r = parent.radius + (c.radius - parent.radius) * t
+          if (r < SHEATH_RADIUS) break
+          this.point([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t], dim(shade, kind ? .3 : .25), r, c.birth, c.phase)
+        }
       }
-      if (i % 2 === 0) this.point(b, color, .9, c.birth, c.phase)
+      if (size >= .5 && this.density >= .5 && c.type !== 2 && c.radius < .035) {
+        this.tag = tagOf(lane, 0)
+        const spines = Math.floor(1.3 * this.density + this.rand())
+        for (let k = 0; k < spines; k++) {
+          const t = this.rand(), side = this.rand() > .5 ? 1 : -1, reach = c.radius + .008 + this.rand() * .014
+          const dx = b[0] - a[0], dy = b[1] - a[1], norm = Math.hypot(dx, dy) || 1
+          this.point([a[0] + dx * t - dy / norm * reach * side, a[1] + dy * t + dx / norm * reach * side, a[2] + (b[2] - a[2]) * t + (this.rand() - .5) * .01], dim(color, .75), .55 + this.rand() * .3, c.birth, c.phase)
+        }
+      }
     }
     if (lane >= 0) {
       const count = 25 + Math.floor(this.rand() * 16), origin = at(terminal)

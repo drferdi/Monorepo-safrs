@@ -22,6 +22,7 @@ attribute float a_phase;
 attribute vec4 a_normal;
 uniform float u_lit;
 uniform float u_focus;
+uniform float u_height;
 uniform mediump float u_points;
 uniform vec4 u_signal[6];
 uniform vec3 u_camera;
@@ -42,9 +43,12 @@ uniform float u_reveal;
 varying vec4 v_color;
 void main() {
   // Activity (spec 2026-10-08): the tag names the lane and the kind (0 soma or dendrite, 1 axon,
-  // 2 release particle); the lane state is (impulse, terminal, release, response).
+  // 2 release particle) and carries +50 on sheath sprites; the lane state is (impulse, terminal,
+  // release, response).
   float kind = floor((a_normal.w+1.0)/100.0);
-  float lane = a_normal.w-kind*100.0;
+  float rem = a_normal.w-kind*100.0;
+  float sheath = step(48.5, rem);
+  float lane = rem-sheath*50.0;
   vec4 sig = vec4(0.0);
   for (int i = 0; i < 6; i++) { if (float(i) == lane) sig = u_signal[i]; }
   float particle = step(1.5, kind);
@@ -59,7 +63,12 @@ void main() {
   gl_Position = vec4(xy.x*1.85/u_aspect, xy.y*1.85, depth*.99-.1, depth);
   // Focus (spec 2026-10-08): lit layers soften away from the focus plane, size up to x2, alpha to .4.
   float coc = clamp(abs(depth-u_focus)/6.0, 0.0, 1.0)*u_lit;
-  gl_PointSize = clamp(a_size*u_dpr*6.0/max(depth, .2), .6, 22.0*u_dpr)*(1.0+coc);
+  // Sheath sprites store the shaft radius in a_size: a world size, scaled with the view and the
+  // canvas height (device pixels) so a trunk reads as a tube at every chapter's scale, widened 2.8×
+  // because a gaussian sprite only reads as solid over about a third of its width.
+  float sized = a_size*u_dpr*6.0/max(depth, .2);
+  float world = a_size*u_scale*2.8*u_height/max(depth, .2);
+  gl_PointSize = clamp(mix(sized, world, sheath), .6, mix(22.0, 120.0, sheath)*u_dpr)*(1.0+coc);
   float born = 1.0-smoothstep(u_growth, u_growth+.07, a_birth);
   float fog = clamp(1.6-depth/28.0, .12, 1.0);
   // The impulse front travels along the axon's path fraction, flashes at the terminal and the
@@ -69,7 +78,7 @@ void main() {
   float activity = max(front, flash);
   float pulse = max(pow(max(0.0, sin(a_phase*19.0-u_time*1.3)), 22.0)*u_pulse, activity);
   float nearby = exp(-distance(a_position, u_highlight)*1.4)*u_hover;
-  // For lines a_size is a brightness weight (tapered strands); points keep it as their size.
+  // For lines a_size is a brightness weight that follows the shaft radius; points keep it as a size.
   vec3 color = (mix(a_color, vec3(1.0,.75,.43), max(pulse*.85, activity)) + vec3(.22,.3,.4)*nearby + a_color*sig.w*.9*(1.0-axon))*mix(a_size, 1.0, u_points);
   float alive = mix(1.0, sig.z*(1.0-sig.z)*4.0, particle);
   // Emission-based lighting (spec 2026-10-08): a warm key, a cool rim, less glow on the far side
@@ -168,7 +177,7 @@ export class NeuralRenderer {
       gl.useProgram(program)
       this.attributes = ['a_position', 'a_color', 'a_size', 'a_birth', 'a_phase'].map(name => gl.getAttribLocation(program, name))
       this.normalAttribute = gl.getAttribLocation(program, 'a_normal')
-      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'relief', 'reveal', 'lit', 'focus']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
+      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'relief', 'reveal', 'lit', 'focus', 'height']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
       this.uniforms.set('signal', gl.getUniformLocation(program, 'u_signal[0]'))
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
       gl.clearColor(0, 0, 0, 0)
@@ -216,7 +225,7 @@ export class NeuralRenderer {
       gl.uniform4fv(uniform('signal'), this.signal)
       // Lit layers are the ones that carry normals; their focus plane is the depth of the model origin.
       const lit = layer.geometry.lineNormals ? 1 : 0
-      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, relief: view.relief, reveal: view.reveal, lit, focus: view.camera[2] - view.offset[2] }
+      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, relief: view.relief, reveal: view.reveal, lit, focus: view.camera[2] - view.offset[2], height: this.height * this.dpr }
       for (const [key, value] of Object.entries(values)) gl.uniform1f(uniform(key), value)
       for (const key of ['lines', 'points'] as const) {
         if (!layer[key] || !layer.geometry[key].length) continue
@@ -271,8 +280,9 @@ export class NeuralRenderer {
     ctx.fillStyle = '#b5c8dc'
     for (let i = 0; i < geometry.points.length; i += 27) {
       if (geometry.points[i + 7] > view.growth) continue
-      // Release particles only move in the shader; the static fallback leaves them out.
-      if (geometry.pointNormals && geometry.pointNormals[i / 9 * 4 + 3] >= 199) continue
+      // Release particles only move in the shader and sheath sprites are a WebGL glow; the static
+      // fallback leaves both out.
+      if (geometry.pointNormals) { const tag = geometry.pointNormals[i / 9 * 4 + 3], kind = Math.floor((tag + 1) / 100); if (kind === 2 || tag - kind * 100 >= 48.5) continue }
       const p = project(geometry.points, i)
       if (p.depth < .2) continue
       const size = clamp(geometry.points[i + 6] * p.scale * .008, .4, 3)
