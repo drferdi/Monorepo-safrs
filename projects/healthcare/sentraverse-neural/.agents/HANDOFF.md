@@ -9,7 +9,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 
 Developed on branch `feat/sidepanel-ui-batch` of the monorepo. Its own repository is
 https://github.com/drferdi/Sentraverse-N (private; Chief named it on 2026-10-09), branch `main`.
-PNG files are in Git LFS, as in the monorepo. The journey, the film (`public/legacy-film/v1/`, 120 frames) and
+PNG is a plain blob, not Git LFS (Vercel clones without LFS). The journey, the film (`public/legacy-film/v1/`, 120 frames) and
 the morph came over unchanged; links to the rest of Sentra point at sentrahai.com. Registered
 in `projects/healthcare/AGENTS.md` and `README.md`.
 

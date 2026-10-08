@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (icon) — PNG is a plain blob, not Git LFS
+
+Decision: `.gitattributes` unsets the LFS filter for `*.png` in this capsule, and
+`app/icon.png` is stored as a plain 60,948-byte blob. This replaces the LFS line of the
+"(repository)" entry below.
+
+Rationale: the first Vercel build of drferdi/Sentraverse-N failed with "Process image
+"/icon.png" failed: TypeError: unsupported file type" (Chief, 2026-10-09). Vercel clones without
+Git LFS by default, so the build read the 130-byte pointer. The only PNG is a small icon; a plain
+blob builds anywhere with no host setting.
+
+Evidence: `git check-attr filter` reads `unset` for the icon; the staged blob is 60,948 bytes
+and starts with the PNG signature.
+
 ## 2026-10-09 (repository) — The capsule's own repository is drferdi/Sentraverse-N
 
 Decision: this capsule's own repository is https://github.com/drferdi/Sentraverse-N (private),

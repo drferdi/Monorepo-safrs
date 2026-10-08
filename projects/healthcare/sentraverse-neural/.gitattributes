@@ -22,8 +22,9 @@
 *.env text eol=lf
 *.toml text eol=lf
 
-# Binary files — do not modify. PNG images are stored in Git LFS (as in the monorepo).
-*.png filter=lfs diff=lfs merge=lfs -text
+# Binary files — do not modify. PNG is a plain blob here, not Git LFS (the monorepo root's
+# default): Vercel clones without LFS, and a pointer breaks the app/icon.png build.
+*.png -filter -diff -merge -text
 *.jpg binary
 *.jpeg binary
 *.gif binary
