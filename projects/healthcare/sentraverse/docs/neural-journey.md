@@ -80,8 +80,12 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   the skin has resolved. `[data-photo][data-reveal]` reads `active` (canvas shown, image
   hidden) or `complete` (the image itself, full resolution); the attribute is removed when the
   cinematic build is torn down. The final chapter enters without its 24 px slide so the photo
-  stays registered on the drawn face. A vertical fade from 70 % down and a slight desaturation
-  blend the figure with the field (the source itself is cut out). In reading mode and without JavaScript the photo sits in the flow beside the text
+  stays registered on the drawn face. The photograph is graded low-key (Chief 2026-10-08, "lebih
+  dramatis, tidak terlalu terang"): `brightness(.74) contrast(1.26) saturate(.55)` under a mask
+  that intersects the vertical fade from 70 % down, a radial vignette centred on the face and a
+  key-light falloff toward the left, so the suit and the far shoulder sink into the field (the
+  source itself is cut out; engines without `mask-composite` show the union of the layers). In
+  reading mode and without JavaScript the photo sits in the flow beside the text
   (above it on phones); the cinematic placement and the reveal are cleared when the mode changes.
 - Over the resolved photograph three futuristic callouts draw in (Chief 2026-10-08: "beri motion
   garis futuristic"): `callouts.ts` holds `dr Ferdi Iskandar` (head), `the Gaffer` (shoulder) and

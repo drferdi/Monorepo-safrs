@@ -3,6 +3,30 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-08 (grade) — The end photograph is graded low-key
+
+- Decision (Chief, 2026-10-08, on seeing the end scene: "Foto saya terakhir buat lebih dramatis,
+  tidak terlalu terang"): the photograph is darker and harder, with its colour pulled back, under
+  a vignette centred on the face and a key-light falloff toward the left.
+- How (commit `1263ffc1`): in `journey.module.css` the image and the reveal canvas carry
+  `filter: brightness(.74) contrast(1.26) saturate(.55)` and a three-layer mask (the vertical
+  fade from 70 %, a radial vignette `ellipse 64% 74% at 50% 33%` from opaque at 40 % through .55
+  at 70 % to .12 at the edge, and a `95deg` linear falloff from .4 on the left to opaque at 50 %)
+  composited with `mask-composite: intersect` (`-webkit-mask-composite: source-in`); the masks
+  stay off the callouts, and the rule sits on the image itself, so reading mode and the
+  no-JavaScript page show the same grade.
+- Rulings on the way (Claude Fable 5.1): the grade is CSS only, so no red test precedes it and
+  the e2e reveal samples (canvas pixels under the mask) are untouched; three candidates were
+  compared in Chrome at 1280×800 through injected override styles before a single build, and a
+  darker .68 / 1.3 pass that read murky in the pane was dropped; engines without
+  `mask-composite` (Chrome before 120, Safari before 15.4) fall back to the union of the layers,
+  so the photo there is darker but barely vignetted.
+- Evidence: `typecheck` 0, `lint` 0 (two pre-existing `img` warnings), node:test 28/28, `build`
+  0, `deploy:dry-run` 0, Playwright 16/16 through the installed Chrome against the production
+  preview (frame pacing mean 6.07 ms); Chrome frames (p4) at phase 30, 96.5, 98.7 and 99.6
+  (1280×800), 30 and 99.6 (375×812), 99.6 (1024×768 and 768×1024), all `data-renderer` webgl,
+  reveal `complete` from 98.7; the Browser pane shows the graded end scene at phase 99.9.
+
 ## 2026-10-08 (portrait) — The half-body portrait, the registered drawn figure and the HUD callouts
 
 - Decision (Chief, 2026-10-08: "Foto saya di bagian akhir, ganti menjadi di lampiran. Lalu beri
