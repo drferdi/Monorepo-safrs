@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import * as gsapModule from 'gsap'
 import { chapters } from './story.ts'
-import { MASTER_DURATION, buildMaster, cameraAt, ease, jumpLabel, legacy, legacyParts, motionOf, phaseToTime, reveal, settleLegacy } from './timeline.ts'
+import { HERO_FAINT, MASTER_DURATION, buildMaster, cameraAt, ease, jumpLabel, legacy, legacyParts, motionOf, phaseToTime, reveal, revealHero, settleLegacy } from './timeline.ts'
 
 const gsap = gsapModule.gsap ?? gsapModule.default
 // `clearProps` is a CSS-plugin feature with no meaning on the stand-ins below; a headless no-op
@@ -268,4 +268,20 @@ test('the flagship reveal: the network falls into step and reorganises inside it
   assert.ok(reveal.order.at + reveal.order.in <= 65.5, 'the constellation has formed before division 1 at 66')
   assert.ok(reveal.sync.out > reveal.sync.at + reveal.sync.in && reveal.sync.out <= 66, 'the hubs fall out of step again as the divisions take over')
   assert.ok(reveal.unify.at >= 89 && reveal.unify.at + reveal.unify.in <= 92, 'the unified system synchronises into SENTRA')
+})
+
+test('the opening words arrive by meaning: Intelligence, then begins, then as connection as one phrase, then the full stop glows', () => {
+  const words = many(4), mark = element()
+  const tl = revealHero(gsap, words, mark)
+  tl.pause()
+  tl.time(0); for (const word of words) close(Number(word.opacity), HERO_FAINT, 1e-9, 'faint at the start')
+  tl.time(.45); assert.ok(Number(words[0].opacity) > HERO_FAINT, 'Intelligence first'); close(Number(words[1].opacity), HERO_FAINT, 1e-9, 'begins waits')
+  tl.time(.95); assert.ok(Number(words[1].opacity) > HERO_FAINT, 'begins second'); close(Number(words[2].opacity), HERO_FAINT, 1e-9, 'the phrase waits')
+  tl.time(1.3); assert.ok(Number(words[2].opacity) > HERO_FAINT); close(Number(words[2].opacity), Number(words[3].opacity), 1e-9, 'as connection arrive as one phrase')
+  const glow = tl.getChildren(false, true, false).find(tween => tween.targets()[0] === mark)
+  assert.ok(glow && glow.startTime() > 1, 'the full stop glows once the phrase is on its way')
+  assert.equal(glow.vars.ease, ease.pulse)
+  tl.progress(1)
+  for (const word of words) { close(Number(word.opacity), 1, 1e-6, 'word settled'); close(Number(word.yPercent), 0, 1e-6, 'word in place') }
+  tl.kill()
 })

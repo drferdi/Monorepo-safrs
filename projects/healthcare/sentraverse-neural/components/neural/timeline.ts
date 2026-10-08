@@ -170,6 +170,23 @@ function revealTitle(scene: gsap.core.Timeline, title: Title, position: number |
   else scene.fromTo(title.lines, { yPercent: 110 }, { yPercent: 0, duration: 1, ease: ease.text, stagger: .12, immediateRender: false }, position)
 }
 
+// The opening words (brief 2026-10-09 §5): "Intelligence" first, "begins" a beat later, "as
+// connection." as one softer phrase on its own curve, then the full stop takes a brief synaptic
+// glow. A one-shot timeline on load (chapter 00 is on screen at scroll 0), never on the scrubbed
+// master. The words start from the faint state the stylesheet holds them in until the experience
+// is ready, so the heading is never invisible and never flashes.
+export const HERO_FAINT = .08
+export function revealHero(gsap: Gsap, words: ArrayLike<Element>, mark: Element | null): gsap.core.Timeline {
+  const list = Array.from(words), [first, second, ...phrase] = list
+  gsap.set(list, { opacity: HERO_FAINT, yPercent: 35 })
+  const tl = gsap.timeline({ defaults: { ease: ease.text } })
+  if (first) tl.to(first, { opacity: 1, yPercent: 0, duration: 1.1 }, .15)
+  if (second) tl.to(second, { opacity: 1, yPercent: 0, duration: 1.1 }, .5)
+  if (phrase.length) tl.to(phrase, { opacity: 1, yPercent: 0, duration: 1.4, ease: 'quart.out' }, 1)
+  if (mark) tl.fromTo(mark, { textShadow: '0 0 0px rgba(155, 185, 215, 0)' }, { textShadow: '0 0 18px rgba(155, 185, 215, .95)', duration: .45, ease: ease.pulse, yoyo: true, repeat: 1 }, 1.9)
+  return tl
+}
+
 export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, options: MasterOptions): gsap.core.Timeline {
   const { state, panels, nav, overview, scrim, legacy: scene } = options
   const at = phaseToTime

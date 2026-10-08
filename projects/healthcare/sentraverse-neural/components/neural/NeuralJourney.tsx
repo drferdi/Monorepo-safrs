@@ -8,7 +8,7 @@ import type { Carrier, Look } from './renderer'
 import { faceLook } from './tactile'
 import { FILM, createFilm, filmFrameUrl } from './film'
 import { createMorph, faceCrop } from './morph'
-import { MASTER_DURATION, buildMaster, jumpLabel, legacy, settleLegacy, stillCamera } from './timeline'
+import { MASTER_DURATION, buildMaster, jumpLabel, legacy, revealHero, settleLegacy, stillCamera } from './timeline'
 import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra } from './story'
 import styles from './journey.module.css'
@@ -19,6 +19,7 @@ export default function NeuralJourney() {
   const fallbackRef = useRef<HTMLCanvasElement>(null)
   const navigateRef = useRef<(phase: number) => void>(() => undefined)
   const audioRef = useRef<AudioContext | null>(null)
+  const heroShownRef = useRef(false)
   const [reading, setReading] = useState(false)
   const [sound, setSound] = useState(false)
   const [audioError, setAudioError] = useState(false)
@@ -169,6 +170,11 @@ export default function NeuralJourney() {
             return heading ? SplitText.create(heading, { type: centered(index) ? 'lines,chars' : 'lines', mask: 'lines', aria: 'auto' }) : null
           })
           const titles = splits.map((split, index) => split && { lines: split.lines, chars: split.chars, centered: centered(index) })
+          // The opening words arrive by meaning once per page load (a breakpoint rebuild shows them settled).
+          const hero = root.querySelector<HTMLElement>('h1')
+          const heroSplit = hero ? SplitText.create(hero, { type: 'words,chars', aria: 'auto' }) : null
+          if (heroSplit && !heroShownRef.current) { revealHero(gsap, heroSplit.words, heroSplit.chars.at(-1) ?? null); heroShownRef.current = true }
+          splits.push(heroSplit)
           // The whole scrubbed story lives in `timeline.ts`; the ScrollTrigger that drives it is
           // created here because it pins this stage over the scroll travel.
           // The travel keeps .09 viewport per master unit on desktop and .08 on phones (9 and 8
@@ -340,7 +346,7 @@ export default function NeuralJourney() {
                   <div data-marker-copy data-division={division ? divisionIndex : undefined}>
                     <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
                     {/* A space between the title lines keeps the heading's name readable once SplitText puts it in an aria-label. */}
-                    {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span>{line}</span></Fragment>)}</h2>}
+                    {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span className={i ? styles.soft : undefined}>{line}</span></Fragment>)}</h1> : <h2>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span>{line}</span></Fragment>)}</h2>}
                     <p className={styles.description}>{chapter.description}</p>
                     {!division && <p className={styles.annotation}><span />{chapter.annotation}</p>}
                     {index === 0 && <button data-jump={phaseOf('embryonic-origin')} className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}

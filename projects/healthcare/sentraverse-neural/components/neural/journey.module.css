@@ -50,6 +50,12 @@
    h2, and a block rule on those would break every word onto its own line. */
 .chapter h1 > span, .chapter h2 > span { display: block; }
 .soft { color: var(--neural-muted); }
+/* Until the experience is ready the opening words wait faint, never hidden (the h1 stays the page's
+   first contentful text), and `revealHero` brings them in. Without scripts, with reduced motion,
+   or once ready (data-loading="false"), they are simply there. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .journey:not([data-loading="false"]) h1 > span { opacity: .08; }
+}
 .description { color: var(--neural-muted); font-size: 12px; line-height: 1.85; max-width: 330px; margin: 28px 0 0; text-wrap: pretty; }
 .annotation { display: flex; align-items: center; gap: 9px; font-size: 8px; letter-spacing: .12em; color: var(--neural-blue); margin-top: 38px; }
 .annotation > span { width: 4px; height: 4px; border: 1px solid var(--neural-blue); border-radius: 50%; }

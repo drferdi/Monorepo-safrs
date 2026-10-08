@@ -396,3 +396,23 @@ test('the constellation forms on the Canvas 2D fallback too, without errors', as
   expect(painted).toBeGreaterThan(1000)
   expect(errors).toEqual([])
 })
+
+test('the opening words arrive by meaning, keep their name, and are never left faint', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto('/')
+  const h1 = page.getByRole('heading', { level: 1 })
+  await expect(h1).toHaveAccessibleName('Intelligence begins as connection.')
+  const faintest = () => h1.evaluate(element => Math.min(...[element, ...element.querySelectorAll('*')].map(node => { let o = 1; for (let n: Element | null = node; n && n !== element.parentElement; n = n.parentElement) o *= Number(getComputedStyle(n).opacity); return o })))
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await expect.poll(faintest, { timeout: 6000 }).toBeGreaterThan(.99)
+  // A breakpoint rebuild does not replay the intro or leave the words faint.
+  await page.setViewportSize({ width: 700, height: 800 })
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.waitForTimeout(400)
+  expect(await faintest()).toBeGreaterThan(.99)
+  // Reduced motion: readable at once.
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.reload()
+  expect(await faintest()).toBeGreaterThan(.99)
+  await expect(h1).toHaveAccessibleName('Intelligence begins as connection.')
+})
