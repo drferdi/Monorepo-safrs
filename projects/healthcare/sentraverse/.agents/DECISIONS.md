@@ -55,11 +55,20 @@ has a dated heading, the decision, a short rationale, and its evidence.
   as a 1 px hairline with a 9 % elliptical trail (2 px with a 22 % trail read as a slab and
   lingered under the photo); the reticle at a 2.5 % margin (.92× crowded the hair, 1.1× floated
   and met the first callout line); the scramble as hex characters, speed .4, reveal delay .12,
-  chosen by reasoning, not compared. The Jev router does not exist on this machine (skipped).
-- Evidence (on `ae21fe7b`): `typecheck` 0, `lint` 0 (two pre-existing `img` warnings), node:test
+  chosen by reasoning, not compared. Found in the Browser pane after the gates (commit
+  `2b298200`): the teardown's `clearProps: 'all'` on the callout labels also stripped the inline
+  `left/top` React sets through `labelStyle`, which React does not re-apply on the next build,
+  so after a breakpoint crossing (a phone rotation, the pane going hidden) all three labels
+  piled into the photo's top-left corner; the teardown before this task had the same flaw.
+  `settleEnding` now clears only `opacity, visibility, transform, transformOrigin`, and the
+  callouts e2e asserts at every viewport, including the 375 px one past the breakpoint, that no
+  two labels overlap (red on the old teardown, green after). The Jev router does not exist on
+  this machine (skipped).
+- Evidence (on `ae21fe7b`, repeated on `2b298200`): `typecheck` 0, `lint` 0 (two pre-existing
+  `img` warnings), node:test
   38/38, `build` 0, `deploy:dry-run` 0, Playwright 16/16 through the installed Chrome
   (session-only `playwright.chrome.config.ts`, deleted) against the production preview on
-  127.0.0.1:4340, frame pacing mean 6.07 ms (p95 6.10); Chrome frames at phase 28.6, 30, 60.4,
+  127.0.0.1:4340, frame pacing mean 6.07 ms (p95 6.10, then 6.20); Chrome frames at phase 28.6, 30, 60.4,
   62, 66.6, 68, 96.5, 97.5, 98.7 and 99.6 (1280×800), 30 and 99.6 (375×812), 99.6 (1024×768 and
   768×1024), all `data-renderer` webgl, reveal `complete` from 98.7, kept in the session
   scratchpad because Playwright empties `test-results/` on every run; the same gates passed on

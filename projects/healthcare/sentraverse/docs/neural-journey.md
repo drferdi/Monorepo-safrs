@@ -115,14 +115,17 @@ story, insights, legal, and proxy routes remain available. The final CTA opens `
   reduced motion); a brief screen-blend flash (`[data-flash]`, peak .5) ends the chain at 1.4
   after the lock. Every length is a knob on the `ending` object in `timeline.ts`. The exact
   label sits in `aria-label` on the `<li>` and the animated `<span data-callout-text>` is
-  `aria-hidden`; `settleEnding` (reading mode, teardown) restores the exact text,
-  `stroke-dashoffset` 0 and dot `r` .55, so the settled state is the one the page had before the
-  sequence. The label font follows the photo width (`clamp(7px, 2.3cqi, 10px)`, the photo is an
+  `aria-hidden`; `settleEnding` (reading mode, teardown) clears only what the scene tweened
+  (`clearProps: 'all'` would strip the labels' inline positions, which React does not re-apply
+  on the next build), restores the exact text, `stroke-dashoffset` 0 and dot `r` .55, so the
+  settled state is the one the page had before the sequence, also after a breakpoint crossing.
+  The label font follows the photo width (`clamp(7px, 2.3cqi, 10px)`, the photo is an
   inline-size container) so the labels fit at 768×1024. `callouts.test.mjs` pins the labels,
   their anchors inside the head, shoulder and torso ellipses, the rightward layout and the
   reticle around the head; `timeline.test.mjs` pins the scan/develop/lock overlap, the exact
   decoded strings and the settled state; the e2e checks the scan and the developing grade at
-  97, the draw-in, the exact text at 100, the fit at four viewports and the still reading mode.
+  97, the draw-in, the exact text at 100, the fit and the separate places of the labels at four
+  viewports (the last one past the breakpoint) and the still reading mode.
 - Chapter titles reveal behind line masks (2026-10-08, "ending"): after `document.fonts.ready`,
   inside the cinematic matchMedia context, `SplitText.create` splits every chapter `h2` once
   (`mask: 'lines'`, `aria: 'auto'`, no `autoSplit`; the two centered titles, chapters 07 and 14,
