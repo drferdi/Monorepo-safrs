@@ -3,6 +3,18 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (brand) — The neuron is the official mark; the ecosystem stands beside the founder
+
+Decision: Chief supplied the official Sentraverse logo, a white neuron on a transparent
+background. It lives unmodified at `public/brand/sentraverse-logo.png` and is the header mark
+(28 px, 24 px on phones). `app/icon.png` is the same neuron on the page's ink (#06090e). In the
+legacy chapter the five divisions stand at the right edge of the stage beside the founder; on
+phones in the cinematic view they stay after the colophon.
+
+Rationale: Chief's instruction. A transparent white icon would vanish on light tab strips.
+
+Evidence: commits `34ed216b` and `41b2b480`; the smoke and neural e2e tests for both.
+
 ## 2026-10-09 (motion) — One living organism
 
 Decision: the journey reads as one organism. It has:
