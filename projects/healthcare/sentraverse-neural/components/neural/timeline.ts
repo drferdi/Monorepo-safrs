@@ -241,6 +241,11 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
     if (title) revealTitle(entry, title, 0)
     const marker = panel.querySelector('[data-marker-line]')
     if (marker) {
+      // The marker starts drawn back before its panel fades in: a tween does not render before its
+      // start, so without this the full copy flashes in with the panel on the first pass down.
+      gsap.set(marker, { scaleX: 0 })
+      gsap.set(panel.querySelector('[data-marker-dot]'), { scale: 0 })
+      gsap.set(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 })
       entry.fromTo(marker, { scaleX: 0 }, { scaleX: 1, duration: .8, ease: 'power2.out', immediateRender: false }, 0)
       entry.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
       entry.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)

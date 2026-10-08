@@ -477,3 +477,21 @@ test('controls inside a chapter that is not on screen cannot take focus, and the
   await page.getByRole('button', { name: 'READ THE STORY', exact: true }).click()
   await expect(page.locator('[data-chapter][inert]')).toHaveCount(0)
 })
+
+test('a division fades in empty and its words arrive once: no flash of the full copy on the first pass down', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await portraitPhase(page, 81.4)
+  const panel = page.locator('#division-4')
+  const read = () => panel.evaluate(element => ({
+    panel: Number(getComputedStyle(element).opacity),
+    copy: Number(getComputedStyle(element.querySelector('[data-marker-copy]')!).opacity),
+    line: new DOMMatrix(getComputedStyle(element.querySelector('[data-marker-line]')!).transform).a,
+  }))
+  const entering = await read()
+  expect(entering.panel).toBeGreaterThan(.2)
+  expect(entering.copy).toBe(0)
+  expect(entering.line).toBeLessThan(.9)
+  await portraitPhase(page, 83)
+  expect((await read()).copy).toBe(1)
+})
