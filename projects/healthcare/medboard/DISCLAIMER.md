@@ -15,7 +15,7 @@ care.
 
 This disclaimer does not limit liability where prohibited by law. See also
 [`DATA_PRIVACY.md`](./DATA_PRIVACY.md) and
-[`docs/PRIVACY.md`](./docs/PRIVACY.md) for data handling expectations.
+[`docs/governance/privacy.md`](./docs/governance/privacy.md) for data handling expectations.
 
 ---
 

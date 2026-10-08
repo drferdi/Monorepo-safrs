@@ -148,17 +148,17 @@ flowchart TD
 
 ### 5. Audrey — Clinical AI Assistant
 
-Voice surface ini sedang **dinonaktifkan sementara** selama exit Google total. Endpoint voice tetap dipertahankan untuk compatibility, tetapi saat ini mengembalikan `503` sampai stack pengganti ditetapkan.
+This voice surface is **temporarily disabled** during system re-baselining. Voice endpoints are maintained for backward compatibility and return HTTP `503 Service Unavailable` until replacement architecture is deployed.
 
 > ⚠️ **Clinical Disclaimer:** Audrey provides AI-assisted suggestions only. All clinical decisions must be made by a licensed healthcare professional.
 
 **API:** `POST /api/voice/chat`
 
 ```json
-// Response saat ini
+// Current response envelope
 {
   "ok": false,
-  "error": "Voice chat sementara dinonaktifkan selama exit Google total."
+  "error": "Voice chat is temporarily disabled during architecture re-baselining."
 }
 ```
 

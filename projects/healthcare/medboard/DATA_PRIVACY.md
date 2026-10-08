@@ -2,7 +2,7 @@
 
 This document describes high-level privacy commitments for **Puskesmas
 Dashboard**. It complements the implementation-focused notes in
-[`docs/PRIVACY.md`](./docs/PRIVACY.md). **This is not legal advice**; replace
+[`docs/governance/privacy.md`](./docs/governance/privacy.md). **This is not legal advice**; replace
 `PRIVACY_CONTACT_EMAIL` with a monitored inbox before external publication.
 
 ## Roles and scope
@@ -41,7 +41,7 @@ monitored, document:
 Describe organizational and technical measures (encryption in transit, access
 control, audit logging, vulnerability management) at a level appropriate for
 public disclosure. Implementation references: [`SECURITY.md`](./SECURITY.md),
-[`docs/PRIVACY.md`](./docs/PRIVACY.md).
+[`docs/governance/privacy.md`](./docs/governance/privacy.md).
 
 ## Contact
 

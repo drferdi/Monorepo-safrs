@@ -16,6 +16,7 @@ import {
   professionalSources,
   stats,
 } from '@/components/sentrapedia/data'
+import SentraAgentNodeGraph from '@/components/sentra-agent-node-graph'
 import { layoutGovernance, typeGovernance } from '@/lib/design-governance'
 import { cn } from '@/lib/utils'
 
@@ -72,45 +73,54 @@ export default function SentrapediaPage() {
               layoutGovernance.sectionX
             )}
           >
-            <p className={typeGovernance.eyebrow}>Referensi Klinis Puskesmas Indonesia</p>
-            <h1
-              className={cn(
-                typeGovernance.editorialDisplay,
-                'mt-3 text-[56px] leading-[0.95] md:text-[96px]'
-              )}
-            >
-              Sentrapedia
-            </h1>
+            <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 xl:gap-14 items-center">
+              <div>
+                <p className={typeGovernance.eyebrow}>Referensi Klinis Puskesmas Indonesia</p>
+                <h1
+                  className={cn(
+                    typeGovernance.editorialDisplay,
+                    'mt-3 text-[56px] leading-[0.95] md:text-[96px]'
+                  )}
+                >
+                  Sentrapedia
+                </h1>
 
-            {/* Garis — titik — garis, andalan Sentra */}
-            <div className="mt-6 flex max-w-[280px] items-center gap-4" aria-hidden="true">
-              <span className="h-px flex-1 bg-accent/60" />
-              <span className="h-2 w-2 rounded-full bg-accent" />
-              <span className="h-px flex-1 bg-accent/60" />
-            </div>
-
-            <p className={cn(typeGovernance.body, 'mt-6 max-w-[640px]')}>
-              Intisari diagnostik dan terapi 144 penyakit puskesmas. Kami menyuling ribuan halaman
-              Permenkes No. 5/2014 menjadi panduan yang langsung bisa Anda pakai di depan pasien.
-            </p>
-            <p className={cn(typeGovernance.bodySm, 'mt-3 max-w-[640px] italic')}>
-              Dikurasi oleh dr. Ferdi Iskandar. Tidak ada teks bertele-tele, hanya referensi taktis
-              dan cepat untuk layanan primer yang sibuk.
-            </p>
-            <div className="mt-10 flex flex-wrap gap-10">
-              {stats.map((s) => (
-                <div key={s.label} className="flex flex-col gap-1">
-                  <span
-                    className={cn(
-                      typeGovernance.editorialDisplay,
-                      'text-4xl md:text-5xl text-accent'
-                    )}
-                  >
-                    {s.val}
-                  </span>
-                  <span className={typeGovernance.monoMeta}>{s.label}</span>
+                {/* Garis — titik — garis, andalan Sentra */}
+                <div className="mt-6 flex max-w-[280px] items-center gap-4" aria-hidden="true">
+                  <span className="h-px flex-1 bg-accent/60" />
+                  <span className="h-2 w-2 rounded-full bg-accent" />
+                  <span className="h-px flex-1 bg-accent/60" />
                 </div>
-              ))}
+
+                <p className={cn(typeGovernance.body, 'mt-6 max-w-[640px]')}>
+                  Intisari diagnostik dan terapi 144 penyakit puskesmas. Kami menyuling ribuan halaman
+                  Permenkes No. 5/2014 menjadi panduan yang langsung bisa Anda pakai di depan pasien.
+                </p>
+                <p className={cn(typeGovernance.bodySm, 'mt-3 max-w-[640px] italic')}>
+                  Dikurasi oleh dr. Ferdi Iskandar. Tidak ada teks bertele-tele, hanya referensi taktis
+                  dan cepat untuk layanan primer yang sibuk.
+                </p>
+                <div className="mt-10 flex flex-wrap gap-10">
+                  {stats.map((s) => (
+                    <div key={s.label} className="flex flex-col gap-1">
+                      <span
+                        className={cn(
+                          typeGovernance.editorialDisplay,
+                          'text-4xl md:text-5xl text-accent'
+                        )}
+                      >
+                        {s.val}
+                      </span>
+                      <span className={typeGovernance.monoMeta}>{s.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Column: Realistic Agent Orchestration Node Graph */}
+              <div className="w-full flex items-center justify-center lg:justify-end overflow-visible py-4">
+                <SentraAgentNodeGraph />
+              </div>
             </div>
           </div>
         </section>

@@ -56,7 +56,7 @@ into one web application, calibrated for the diseases and workflows of Indonesia
 
 Every page follows one design system: a white theme with Oxford Blue and red-orange, IBM Plex
 Sans, sentence-case text, black neumorphic buttons and Lucide icons. A full description of each
-feature is in [`docs/FEATURES.md`](./docs/FEATURES.md).
+feature is in [`docs/architecture/features.md`](./docs/architecture/features.md).
 
 ## Tech stack
 
@@ -150,11 +150,11 @@ pnpm run lint           # type check
 ```
 
 Tests sit next to the code they cover (`*.test.ts`). Suites that need PostgreSQL skip when
-`DATABASE_URL` is not set. Details are in [`docs/testing.md`](./docs/testing.md).
+`DATABASE_URL` is not set. Details are in [`docs/development/testing.md`](./docs/development/testing.md).
 
 ## Deployment
 
-See [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) and [`docs/deploy-vps.md`](./docs/deploy-vps.md).
+See [`docs/deployment/overview.md`](./docs/deployment/overview.md) and [`docs/deployment/vps.md`](./docs/deployment/vps.md).
 Run `pnpm run deploy:dry-run` before a release to check the build and the required settings.
 
 ## Security and privacy
@@ -164,9 +164,9 @@ No. 27/2022). Patient data never belongs in the repository, in test fixtures or 
 
 - Report vulnerabilities privately as described in [`SECURITY.md`](./SECURITY.md).
 - Data handling is described in [`DATA_PRIVACY.md`](./DATA_PRIVACY.md) and
-  [`docs/PRIVACY.md`](./docs/PRIVACY.md).
+  [`docs/governance/privacy.md`](./docs/governance/privacy.md).
 - AI use, providers and human oversight are described in
-  [`docs/AI_GOVERNANCE.md`](./docs/AI_GOVERNANCE.md).
+  [`docs/governance/ai-governance.md`](./docs/governance/ai-governance.md).
 
 ## Documentation
 

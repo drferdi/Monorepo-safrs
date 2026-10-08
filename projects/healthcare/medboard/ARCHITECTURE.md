@@ -21,7 +21,7 @@
 | Voice AI | Disabled during Google exit | endpoints return 503 |
 | Video | LiveKit | livekit-client 2.17.2 |
 | Monitoring | Sentry | @sentry/nextjs 10.43.0 |
-| Deploy | VPS Biznet Gio (Caddy, systemd, Node 24) | docs/deploy-vps.md |
+| Deploy | VPS Biznet Gio (Caddy, systemd, Node 24) | docs/deployment/vps.md |
 
 ---
 

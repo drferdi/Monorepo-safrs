@@ -17,7 +17,7 @@ All notable changes to MedBoard are recorded here. The format follows
   thinking, responding), the consultation stream beside her, and a motion switch that also
   respects the system's reduced-motion setting.
 - Standard repository files: `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, this changelog,
-  `.editorconfig`, `.gitattributes`, `.nvmrc` and `.github/CODEOWNERS`; `docs/FEATURES.md` holds
+  `.editorconfig`, `.gitattributes`, `.nvmrc` and `.github/CODEOWNERS`; `docs/architecture/features.md` holds
   the detailed feature descriptions.
 
 ### Changed
