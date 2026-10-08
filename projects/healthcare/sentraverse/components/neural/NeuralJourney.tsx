@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { calloutPoints, callouts, labelStyle, reticleCorners } from './callouts'
 import { loadPixels } from './face'
 import type { Look } from './renderer'
@@ -30,13 +30,14 @@ export default function NeuralJourney() {
     root.dataset.loading = 'true'
 
     async function initialize() {
-      // Every plugin ships inside the gsap package (3.13+): the ending's text decode and the
-      // reticle's wiggle settle load with ScrollTrigger and register in the same place.
-      const [{ gsap }, { ScrollTrigger }, { ScrambleTextPlugin }, { CustomEase }, { CustomWiggle }, { NeuralRenderer }, { createPortraitReveal }, { LANES, createSignalCycle }] = await Promise.all([
-        import('gsap'), import('gsap/ScrollTrigger'), import('gsap/ScrambleTextPlugin'), import('gsap/CustomEase'), import('gsap/CustomWiggle'), import('./renderer'), import('./portrait-reveal'), import('./signal'),
+      // Every plugin ships inside the gsap package (3.13+): the title splits, the ending's text
+      // decode and the reticle's wiggle settle load with ScrollTrigger and register in the same
+      // place. The fonts are awaited too, so the titles split once on their real metrics.
+      const [{ gsap }, { ScrollTrigger }, { SplitText }, { ScrambleTextPlugin }, { CustomEase }, { CustomWiggle }, { NeuralRenderer }, { createPortraitReveal }, { LANES, createSignalCycle }] = await Promise.all([
+        import('gsap'), import('gsap/ScrollTrigger'), import('gsap/SplitText'), import('gsap/ScrambleTextPlugin'), import('gsap/CustomEase'), import('gsap/CustomWiggle'), import('./renderer'), import('./portrait-reveal'), import('./signal'), document.fonts.ready,
       ])
       if (cancelled || !root || !canvas || !fallback) return
-      gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin, CustomEase, CustomWiggle)
+      gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin, CustomEase, CustomWiggle)
       const media = gsap.matchMedia()
       media.add({ desktop: '(min-width: 768px)', mobile: '(max-width: 767px)', reduced: '(prefers-reduced-motion: reduce)' }, context => {
         const reduced = !!context.conditions?.reduced || reading
@@ -113,6 +114,7 @@ export default function NeuralJourney() {
         intersection.observe(root)
         let narrativeObserver: IntersectionObserver | undefined
         let master: gsap.core.Timeline | undefined
+        let splits: Array<InstanceType<typeof SplitText> | null> = []
 
         if (reduced) {
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
@@ -133,10 +135,19 @@ export default function NeuralJourney() {
           }
         } else {
           if (photo) placePhoto()
+          // The chapter titles are split once per build (no autoSplit inside the scrubbed
+          // timeline), lines behind masks and characters too on the centered titles; aria auto
+          // keeps the heading's name on the h2 and hides the pieces. Reverted on teardown.
+          const centered = (index: number) => chapters[index].id === 'network' || chapters[index].id === 'connected'
+          splits = panels.map((panel, index) => {
+            const heading = panel.querySelector('h2')
+            return heading ? SplitText.create(heading, { type: centered(index) ? 'lines,chars' : 'lines', mask: 'lines', aria: 'auto' }) : null
+          })
+          const titles = splits.map((split, index) => split && { lines: split.lines, chars: split.chars, centered: centered(index) })
           // The whole scrubbed story lives in `timeline.ts`; the ScrollTrigger that drives it is
           // created here because it pins this stage over the scroll travel.
           master = buildMaster(gsap, chapters, {
-            state, panels, nav, photo, reveal: !!portrait,
+            state, panels, nav, photo, reveal: !!portrait, titles,
             overview: root.querySelector('[data-overview]'), scrim: root.querySelector('[data-scrim]'),
             scrollTrigger: { id: 'sentraverse-journey', trigger: root, pin: stage, start: 'top top', end: () => `+=${window.innerHeight * (mobile ? 8 : 9)}`, scrub: mobile ? .35 : .8, invalidateOnRefresh: true },
             onUpdate: update,
@@ -204,6 +215,8 @@ export default function NeuralJourney() {
             // Reading mode shows the ending complete and still, whatever the cinematic scene left behind.
             settleEnding(gsap, photo)
           }
+          // The titles return to their plain markup (the context reverts them too; this is explicit).
+          splits.forEach(split => split?.revert())
           panels.forEach(panel => panel.removeAttribute('aria-hidden'))
           delete root.dataset.enhanced
           delete root.dataset.face
@@ -308,7 +321,8 @@ export default function NeuralJourney() {
                 )}
                 <div data-marker-copy data-division={division ? index - 8 : undefined}>
                   <p className={styles.eyebrow}><span className={styles.index}>{chapter.number}</span>{division ? chapter.annotation : chapter.label}</p>
-                  {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map(line => <span key={line}>{line}</span>)}</h2>}
+                  {/* A space between the title lines keeps the heading's name readable once SplitText puts it in an aria-label. */}
+                  {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <span key={line} className={i ? styles.soft : undefined}>{line}</span>)}</h1> : <h2>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span>{line}</span></Fragment>)}</h2>}
                   <p className={styles.description}>{chapter.description}</p>
                   {!division && <p className={styles.annotation}><span />{chapter.annotation}</p>}
                   {index === 0 && <button data-jump="8" className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}

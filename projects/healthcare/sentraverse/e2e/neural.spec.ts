@@ -1,14 +1,17 @@
 import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
+import { MASTER_DURATION, phaseToTime } from '../components/neural/timeline'
 
 const divisionNames = ['Sentra Artificial Intelligence', 'Sentra Healthcare Solutions', 'Sentra Academic Solutions', 'Sentra Digital & Finance', 'Sentra Mitra Design']
 
+// Scrolls to a story phase through the timeline's own tempo (the scroll travel maps onto the
+// master's hundred units, and phases dwell unevenly across them since 2026-10-08).
 async function portraitPhase(page: Page, phase: number) {
-  await page.evaluate(value => {
+  await page.evaluate(progress => {
     const spacer = document.querySelector('.pin-spacer')!, stage = document.querySelector('[data-stage]')!
     const box = spacer.getBoundingClientRect()
-    window.scrollTo(0, window.scrollY + box.top + (box.height - stage.clientHeight) * value / 100)
-  }, phase)
+    window.scrollTo(0, window.scrollY + box.top + (box.height - stage.clientHeight) * progress)
+  }, phaseToTime(phase) / MASTER_DURATION)
   await expect.poll(async () => Math.abs(Number(await page.locator('main').getAttribute('data-phase')) - phase)).toBeLessThan(.06)
 }
 

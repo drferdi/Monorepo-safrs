@@ -42,7 +42,7 @@ const element = (children = {}, text = '', attributes = {}) => {
 const many = (count, text) => Array.from({ length: count }, (_, i) => element({}, text?.[i]))
 const LABELS = ['dr Ferdi Iskandar', 'the Gaffer', 'Sentraone']
 
-function stage() {
+function stage(titles) {
   const dots = many(3), lines = many(3), glints = many(3), texts = many(3, LABELS)
   const labels = LABELS.map((label, k) => element({ '[data-callout-text]': [texts[k]] }, label, { 'aria-label': label }))
   const corners = many(4), reticle = element({ '[data-reticle-corner]': corners }), scan = element(), flash = element()
@@ -60,7 +60,7 @@ function stage() {
     return element()
   })
   const state = { phase: 0 }
-  const master = buildMaster(gsap, chapters, { state, panels, nav: {}, overview: {}, scrim: {}, photo, reveal: true })
+  const master = buildMaster(gsap, chapters, { state, panels, nav: {}, overview: {}, scrim: {}, photo, reveal: true, titles })
   master.pause()
   return { master, state, panels, photo, dots, lines, labels, texts, glints, corners, reticle, scan, flash }
 }
@@ -99,6 +99,37 @@ test('the phase mapping is monotonic and its ends are pinned', () => {
     assert.ok(time >= previous, `time goes back at phase ${phase}`)
     previous = time
   }
+})
+
+test('the key moments dwell: the chapter 03 face, the network and the final reveal get at least a fifth more scroll than their phases', () => {
+  const share = (from, to) => (phaseToTime(to) - phaseToTime(from)) / (to - from)
+  assert.ok(share(25, 40) >= 1.2, 'face window ' + share(25, 40))
+  assert.ok(share(58, 66) >= 1.2, 'network window ' + share(58, 66))
+  assert.ok(share(94, 100) >= 1.3, 'final reveal ' + share(94, 100))
+  // The reveal window stays one straight stretch, so the scan and the develop keep step with portraitState.
+  const mid = phaseToTime(97), expected = (phaseToTime(95.5) + phaseToTime(98.5)) / 2
+  close(mid, expected, 1e-9, 'reveal window linear')
+})
+
+test('chapter titles rise line by line behind their masks as the chapter enters, and the centered titles come in character by character from the middle', () => {
+  const lines = many(2), chars = many(5), centeredLines = many(1)
+  const titles = chapters.map(chapter => chapter.id === 'nervous-system' ? { lines, chars: [], centered: false } : chapter.id === 'network' ? { lines: centeredLines, chars, centered: true } : null)
+  const { master } = stage(titles)
+  const start = at(28)
+  master.time(start + .05)
+  for (const line of lines) assert.ok(Number(line.yPercent) > 50, 'line still behind the mask ' + line.yPercent)
+  master.time(start + 2)
+  for (const line of lines) close(Number(line.yPercent), 0, 1e-6, 'line risen')
+  assert.ok(Number(lines[1].yPercent) === 0 && Number(lines[0].yPercent) === 0, 'both lines settled')
+  // The centered title: the middle character leads, the ends follow.
+  const network = at(60)
+  master.time(network + .25)
+  const alpha = chars.map(char => Number(char.autoAlpha))
+  assert.ok(alpha[2] > alpha[0] && alpha[2] > alpha[4], 'centre leads ' + alpha)
+  for (const line of centeredLines) close(Number(line.yPercent ?? 0), 0, 1e-9, 'centered lines are not moved')
+  master.time(network + 2)
+  for (const char of chars) close(Number(char.autoAlpha), 1, 1e-6, 'char shown')
+  master.kill()
 })
 
 test('the first chapter is visible at the start, the others hidden, and the human scene settles the callouts complete', () => {

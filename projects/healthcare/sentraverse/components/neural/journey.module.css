@@ -41,7 +41,9 @@
 .eyebrow { font-size: 9px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: var(--neural-muted); display: flex; align-items: center; gap: 18px; margin: 0 0 30px; }
 .index { color: var(--neural-blue); font-size: 10px; padding-right: 15px; border-right: 1px solid var(--neural-line); }
 .chapter h1, .chapter h2 { font-family: var(--font-jakarta), sans-serif; font-size: clamp(42px, 5.1vw, 82px); font-weight: 400; line-height: 1.13; letter-spacing: -.045em; margin: 0; }
-.chapter h1 span, .chapter h2 span { display: block; }
+/* Direct children only: SplitText nests its own line, mask, word and character spans inside the
+   h2, and a block rule on those would break every word onto its own line. */
+.chapter h1 > span, .chapter h2 > span { display: block; }
 .soft { color: var(--neural-muted); }
 .description { color: var(--neural-muted); font-size: 12px; line-height: 1.85; max-width: 330px; margin: 28px 0 0; text-wrap: pretty; }
 .annotation { display: flex; align-items: center; gap: 9px; font-size: 8px; letter-spacing: .12em; color: var(--neural-blue); margin-top: 38px; }

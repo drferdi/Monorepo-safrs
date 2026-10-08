@@ -11,8 +11,12 @@ export const MASTER_DURATION = 100
 // A jump lands this far into a chapter, so the chapter is the active one and its entrance has run.
 export const JUMP_OFFSET = 1.5
 
-// Tempo: [phase, time] breakpoints, piecewise linear between them. Identity for now.
-export const tempo: ReadonlyArray<readonly [number, number]> = [[0, 0], [100, MASTER_DURATION]]
+// Tempo: [phase, time] breakpoints, piecewise linear between them. The scroll travel stays
+// 9 viewports on desktop and 8 on phones; the key moments take more of it for the same phases
+// (the chapter 03 face 25–40 at 1.23×, the network 58–66 at 1.25×, the final reveal 94–100 at
+// 1.42×) and the stretches between give it back. No breakpoint falls inside the reveal window
+// 95.5–98.5, so the scan and the develop keep step with `portraitState`.
+export const tempo: ReadonlyArray<readonly [number, number]> = [[0, 0], [8, 7], [19, 17], [25, 22.5], [40, 41], [58, 57], [66, 67], [91, 89], [94, 91.5], [100, MASTER_DURATION]]
 
 export function phaseToTime(phase: number): number {
   const p = Math.min(100, Math.max(0, phase))
@@ -58,6 +62,8 @@ export const endingParts = {
 }
 
 type Target = object | Element | null | undefined
+// A chapter title split by SplitText (lines behind masks; characters too on the centered titles).
+export type Title = { lines: ArrayLike<Element>; chars: ArrayLike<Element>; centered: boolean }
 export type MasterOptions = {
   state: { phase: number }
   panels: ReadonlyArray<Element>
@@ -67,8 +73,22 @@ export type MasterOptions = {
   photo: Element | null
   // A reveal canvas is painting the photo in: the container only needs a short fade.
   reveal: boolean
+  // One entry per chapter, null where the title is not split (the h1 of the first chapter).
+  titles?: ReadonlyArray<Title | null | undefined>
   scrollTrigger?: ScrollTrigger.Vars
   onUpdate?: () => void
+}
+
+// The title comes in with its chapter: lines rise from behind their masks one after another;
+// the centered titles (chapters 07 and 14) fade their characters in from the middle outward.
+// Start states are set up front, like the panels, so nothing shows before its scene.
+function prepareTitle(gsap: Gsap, title: Title) {
+  if (title.centered) gsap.set(title.chars, { autoAlpha: 0, yPercent: 40 })
+  else gsap.set(title.lines, { yPercent: 110 })
+}
+function revealTitle(scene: gsap.core.Timeline, title: Title, position: number) {
+  if (title.centered) scene.fromTo(title.chars, { autoAlpha: 0, yPercent: 40 }, { autoAlpha: 1, yPercent: 0, duration: .9, stagger: { amount: .6, from: 'center' }, immediateRender: false }, position)
+  else scene.fromTo(title.lines, { yPercent: 110 }, { yPercent: 0, duration: 1, stagger: .12, immediateRender: false }, position)
 }
 
 export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, options: MasterOptions): gsap.core.Timeline {
@@ -77,6 +97,7 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
   gsap.set(panels, { autoAlpha: 0 })
   gsap.set(panels[0], { autoAlpha: 1 })
   if (nav) gsap.set(nav, { autoAlpha: 0 })
+  options.titles?.forEach(title => { if (title) prepareTitle(gsap, title) })
   const master = gsap.timeline({ defaults: { ease: 'power2.inOut' }, scrollTrigger: options.scrollTrigger, onUpdate: options.onUpdate })
   for (let i = 1; i < tempo.length; i++) {
     const [phase, time] = tempo[i], [, previous] = tempo[i - 1]
@@ -101,9 +122,9 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
     gsap.set(photo.querySelectorAll(endingParts.faded), { autoAlpha: 0 })
   }
   chapters.forEach((chapter, index) => {
-    const panel = panels[index]
+    const panel = panels[index], title = options.titles?.[index] ?? null
     if (chapter.id === 'human' && photo) {
-      master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(humanScene(gsap, panel, photo, at), at(ending.revealStart))
+      master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(humanScene(gsap, panel, photo, title, at), at(ending.revealStart))
       return
     }
     // Physical easing (Chief 2026-10-07): entrances decelerate, the marker dot overshoots,
@@ -111,6 +132,7 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
     const scene = gsap.timeline({ id: `scene-${chapter.id}`, defaults: { ease: 'power3.out' } })
     const duration = at(chapters[index + 1]?.phase ?? 102) - at(chapter.phase)
     if (index > 0) scene.fromTo(panel, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, 0)
+    if (title) revealTitle(scene, title, 0)
     const marker = panel.querySelector('[data-marker-line]')
     if (marker) {
       scene.fromTo(marker, { scaleX: 0 }, { scaleX: 1, duration: .8, ease: 'power2.out', immediateRender: false }, 0)
@@ -127,7 +149,7 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
 // before the chapter text) and runs three overlapping labels: `scan` and `develop` share the
 // reveal window, `lock` leads the develop end. Every position and duration is a phase span, so
 // a tempo change stretches the whole sequence with the reveal.
-function humanScene(gsap: Gsap, panel: Element, photo: Element, at: (phase: number) => number): gsap.core.Timeline {
+function humanScene(gsap: Gsap, panel: Element, photo: Element, title: Title | null, at: (phase: number) => number): gsap.core.Timeline {
   const { revealStart, revealEnd } = ending
   const pos = (phase: number) => at(phase) - at(revealStart)
   const dur = (phases: number) => at(revealStart + phases) - at(revealStart)
@@ -135,6 +157,7 @@ function humanScene(gsap: Gsap, panel: Element, photo: Element, at: (phase: numb
   const scene = gsap.timeline({ id: 'scene-human', defaults: { ease: 'power3.out' } })
   // The chapter text enters at its own phase without the 24 px slide, so the photo stays registered.
   scene.fromTo(panel, { autoAlpha: 0, y: 0 }, { autoAlpha: 1, y: 0, duration: 1.2, immediateRender: false }, pos(96))
+  if (title) revealTitle(scene, title, pos(96))
   const scan = photo.querySelector('[data-scan]'), flash = photo.querySelector('[data-flash]'), reticle = photo.querySelector('[data-reticle]')
   const corners = photo.querySelectorAll('[data-reticle-corner]')
   const dots = photo.querySelectorAll('[data-callout-dot]'), lines = photo.querySelectorAll('[data-callout-line]'), labels = photo.querySelectorAll('[data-callout]'), texts = photo.querySelectorAll('[data-callout-text]'), glints = photo.querySelectorAll('[data-callout-glint]')
