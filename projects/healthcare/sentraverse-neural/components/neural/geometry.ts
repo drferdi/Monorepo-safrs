@@ -3,7 +3,7 @@ import type { FaceAnalysis } from './face'
 export type Vec3 = [number, number, number]
 // Normals are a parallel buffer (4 floats per vertex: a unit normal and a tag) only on the layers
 // that are lit; the 9-float vertex format itself is unchanged.
-export type Geometry = { points: Float32Array; lines: Float32Array; pointNormals?: Float32Array; lineNormals?: Float32Array }
+export type Geometry = { points: Float32Array; lines: Float32Array; pointNormals?: Float32Array; lineNormals?: Float32Array; pointTargets?: Float32Array; lineTargets?: Float32Array }
 // One SWC-shaped compartment (allensdk cell_types: type 1 soma, 2 axon, 3 basal, 4 apical; radius; parent).
 export type Compartment = { type: 1 | 2 | 3 | 4; p: Vec3; radius: number; parent: number; birth: number; phase: number }
 type Color = [number, number, number]
@@ -97,6 +97,8 @@ class Tissue {
   lines: number[] = []
   pointNormals: number[] = []
   lineNormals: number[] = []
+  pointTargets: number[] = []
+  lineTargets: number[] = []
   rand: () => number
   readonly density: number
   // Lighting context: vertices emitted while a soma is set get a radial normal and the current tag;
@@ -104,6 +106,12 @@ class Tissue {
   private soma: Vec3 | null = null
   private tag = -1
   private lit = false
+  // The constellation (brief 2026-10-09 §7): vertices emitted while `shift` is set take it as the
+  // way to their place in the constellation; only layers that call `constellate` carry targets.
+  private shift: Vec3 | null = null
+  private targeted = false
+  constellate(shift: Vec3 | null) { this.shift = shift; this.targeted = true }
+  private targetOf(p: Vec3): Vec3 { const s = this.shift; return s ? [p[0] + s[0], p[1] + s[1], p[2] + s[2]] : p }
   constructor(seed: number, density: number) { this.density = density; this.rand = random(seed) }
   vertex(p: Vec3, color = WHITE, size = 1.4, birth = 0, phase = 0) {
     return [...p, ...color, size, birth, phase]
@@ -117,11 +125,13 @@ class Tissue {
   point(p: Vec3, color = WHITE, size = 1.4, birth = 0, phase = 0, normal = this.normalOf(p)) {
     this.points.push(...this.vertex(p, color, size, birth, phase))
     this.pointNormals.push(...normal)
+    this.pointTargets.push(...this.targetOf(p))
   }
   // For lines the size slot is a brightness weight (1 for every line that is not a tapered strand).
-  line(a: Vec3, b: Vec3, color = WHITE, birth = 0, phase = 0, weight = 1) {
+  line(a: Vec3, b: Vec3, color = WHITE, birth = 0, phase = 0, weight = 1, targets?: readonly [Vec3, Vec3]) {
     this.lines.push(...this.vertex(a, color, weight, birth, phase), ...this.vertex(b, color, weight, birth, phase + .006))
     this.lineNormals.push(...this.normalOf(a), ...this.normalOf(b))
+    this.lineTargets.push(...(targets ? targets[0] : this.targetOf(a)), ...(targets ? targets[1] : this.targetOf(b)))
   }
   path(points: Vec3[], color = WHITE, birth = 0) {
     for (let i = 1; i < points.length; i++) this.line(points[i - 1], points[i], color, birth, i / points.length)
@@ -227,11 +237,25 @@ class Tissue {
   finish(): Geometry {
     const geometry: Geometry = { points: new Float32Array(this.points), lines: new Float32Array(this.lines) }
     if (this.lit) { geometry.pointNormals = new Float32Array(this.pointNormals); geometry.lineNormals = new Float32Array(this.lineNormals) }
+    if (this.targeted) { geometry.pointTargets = new Float32Array(this.pointTargets); geometry.lineTargets = new Float32Array(this.lineTargets) }
     return geometry
   }
 }
 
 export const hubs: Vec3[] = [[-3.2, 1.6, 0], [2.9, 1.4, -.5], [-2.5, -1.7, .4], [2.8, -1.8, .1], [.1, 2.9, -1]]
+// The distant field recedes this far into the fog as the constellation forms: 8, not the brief's 14.
+// At 14 the whole field sits on the shader's fog floor (.12) and point-size floor; at 8 its front
+// edge keeps a fog of about .6, so the field thins instead of vanishing.
+export const RECEDE = 8
+const GOLDEN = Math.PI * (3 - Math.sqrt(5))
+export const nearestHub = (p: Vec3) => hubs.reduce((best, hub, i) => Math.hypot(p[0] - hub[0], p[1] - hub[1], p[2] - hub[2]) < Math.hypot(p[0] - hubs[best][0], p[1] - hubs[best][1], p[2] - hubs[best][2]) ? i : best, 0)
+// A foreground neuron's seat in the constellation: on a ring of radius .75–1.15 around its hub, the
+// n-th neuron of that hub a golden angle on from the last, so seats never stack; no randomness, so
+// the seeded field is unchanged.
+export function ringSeat(hub: number, order: number): Vec3 {
+  const centre = hubs[hub], angle = hub + order * GOLDEN, radius = .75 + (order % 3) * .2
+  return [centre[0] + Math.cos(angle) * radius, centre[1] + Math.sin(angle) * radius * .8, centre[2] + Math.sin(angle * 2) * .15]
+}
 
 export function makeNeuron(density: number): Geometry {
   const tissue = new Tissue(37, density)
@@ -374,6 +398,7 @@ export function makeNetwork(density: number): Geometry {
   // Distant neurons use a soma point and sparse arbors in the same GPU buffers.
   // Detailed foreground cells carry morphology without thousands of scene objects.
   const distantCount = density > .5 ? 2600 : 500
+  tissue.constellate([0, 0, -RECEDE])
   for (let i = 0; i < distantCount * density; i++) {
     const center: Vec3 = [(tissue.rand() - .5) * 46, (tissue.rand() - .5) * 30, -8 - tissue.rand() * 20]
     tissue.point(center, [.24, .34, .46], 2 + tissue.rand() * 2, 0, tissue.rand())
@@ -384,11 +409,17 @@ export function makeNetwork(density: number): Geometry {
       tissue.line(end, [end[0] + Math.cos(angle + .6) * length * .4, end[1] + Math.sin(angle + .6) * length * .4, end[2]], [.16, .23, .32])
     }
   }
+  const shifts: Vec3[] = [], filled = hubs.map(() => 0)
   for (let i = 0; i < 100 * density; i++) {
     const center: Vec3 = [(tissue.rand() - .5) * 15, (tissue.rand() - .5) * 10, (tissue.rand() - .5) * 8]
     centers.push(center)
+    const hub = nearestHub(center), seat = ringSeat(hub, filled[hub]++)
+    const shift: Vec3 = [seat[0] - center[0], seat[1] - center[1], seat[2] - center[2]]
+    shifts.push(shift)
+    tissue.constellate(shift)
     tissue.neuron(center, .16 + tissue.rand() * .15, 1, i % 3 ? BLUE : WHITE)
   }
+  tissue.constellate(null)
   for (const [i, hub] of hubs.entries()) {
     // The five hubs and the centre are the six signal lanes of the activity cycle (spec 2026-10-08).
     tissue.neuron(hub, .65, 2, i === 4 ? [.7, .58, .45] : [.54, .62, .78], i)
@@ -403,7 +434,10 @@ export function makeNetwork(density: number): Geometry {
   for (let i = 0; i < centers.length; i++) {
     for (let j = i + 1; j < centers.length; j++) {
       const a = centers[i], b = centers[j]
-      if (Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) < 2.8) tissue.line(a, b, [.18, .28, .41], 0, tissue.rand())
+      if (Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) < 2.8) {
+        const sa = shifts[i], sb = shifts[j]
+        tissue.line(a, b, [.18, .28, .41], 0, tissue.rand(), 1, [[a[0] + sa[0], a[1] + sa[1], a[2] + sa[2]], [b[0] + sb[0], b[1] + sb[1], b[2] + sb[2]]])
+      }
     }
   }
   return tissue.finish()

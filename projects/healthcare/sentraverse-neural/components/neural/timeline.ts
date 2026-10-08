@@ -70,6 +70,13 @@ export function cameraAt(id: string, mobile: boolean): StageCamera {
   return { scale: 1 + (key.scale - 1) * share, x: key.x * share, y: key.y * share, roll: mobile ? 0 : key.roll }
 }
 
+// The flagship reveal (brief 2026-10-09 §7), network 60 → division 66: the field fills the view,
+// the hubs fall into step on the centre's lane (`sync`), the foreground neurons move onto rings
+// around the five hubs while the distant field recedes into the fog (`order`), and the hubs fall
+// out of step again as each division takes its own; SENTRA brings them back into one (`unify`).
+// The renderer reads it; SENTRAVERSE keeps its reveal at the chapter start (DECISIONS 2026-10-09).
+export const reveal = { sync: { at: 60, in: 2.5, out: 65.5 }, order: { at: 60.5, in: 4.5 }, unify: { at: 90, in: 2 } }
+
 // Tempo: [phase, time] breakpoints, piecewise linear between them. The key moments take more of
 // the travel for the same phases (the chapter 03 face 25–40 at 1.23×, the network 58–66 at 1.25×,
 // the legacy 94–100 at 6.67×) and the stretches between give it back. The final chapter is one

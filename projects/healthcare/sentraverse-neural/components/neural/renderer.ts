@@ -6,12 +6,13 @@ import { carrierStyle, handoffAt, hubBlend } from './handoff'
 import type { Host } from './handoff'
 import { clamp, divisions, smooth } from './story'
 import { facePlacement } from './tactile'
+import { reveal } from './timeline'
 import type { StageCamera } from './timeline'
 
-type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer; pointNormals?: WebGLBuffer; lineNormals?: WebGLBuffer }
-type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number }
+type Layer = { geometry: Geometry; points?: WebGLBuffer; lines?: WebGLBuffer; pointNormals?: WebGLBuffer; lineNormals?: WebGLBuffer; pointTargets?: WebGLBuffer; lineTargets?: WebGLBuffer }
+type View = { alpha: number; growth: number; camera: Vec3; rotation: number; scale: number; offset: Vec3; roll: number; pulse: number; highlight: Vec3; hover: number; order: number; sync: number }
 export type Look = { turn: number; highlight: Vec3; hover: number }
-const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0 })
+const baseView = (): View => ({ alpha: 1, growth: 1, camera: [0, 0, 7], rotation: 0, scale: 1, offset: [0, 0, 0], roll: 0, pulse: 0, highlight: [0, 0, 0], hover: 0, order: 0, sync: 0 })
 const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
 const silence = new Float32Array(24)
 const level: StageCamera = { scale: 1, x: 0, y: 0, roll: 0 }
@@ -39,7 +40,9 @@ function sceneAt(phase: number, reduced: boolean, look: Look, mobile: boolean, s
   const separate = smooth((phase - 10) / 5), crossing = smooth((phase - 53) / 5)
   const near: Vec3 = [0, 0, mobile ? 6 : 4.4]
   const focus = networkFocus(phase)
+  const order = smooth((phase - reveal.order.at) / reveal.order.in)
   return {
+    order,
     neuron: view({ alpha: phase < 7 ? 1 : phase < 17 ? 1 - envelope(phase, 7, 16, 2) * .85 : 1 - smooth((phase - 26) / 4), growth: clamp((phase - 17) / 8, 0, 1), scale: phase < 8 ? .45 + smooth(phase / 8) * 3 : phase < 17 ? .6 : 1.6 - smooth((phase - 24) / 6) * .85, rotation: reduced ? .1 : phase * .027, offset: right, camera: [0, 0, 5.4] }),
     embryo: view({ alpha: envelope(phase, 6, 17, 3), growth: clamp((phase - 8) / 8), rotation: reduced ? .2 : phase * .035, offset: right, camera: [0, 0, 6.5] }),
     daughter: (side: number) => view({ alpha: envelope(phase, 9, 17, 2), growth: 0, scale: .8, offset: [right[0] + side * separate * .4, .1 - separate * .4, 1.2], camera: [0, 0, 6.5] }),
@@ -48,7 +51,7 @@ function sceneAt(phase: number, reduced: boolean, look: Look, mobile: boolean, s
     signal: view({ alpha: envelope(phase, 36, 50, 3) * .9, growth: 0, scale: .22, offset: axonCenter(travel - 2), camera: tunnel, pulse: 1 }),
     synapse: view({ alpha: envelope(phase, 49, 60, 3), rotation: reduced ? .05 : -.15 + smooth((phase - 51) / 9) * .3, camera: near, offset: right, pulse: smooth((phase - 56) / 4) }),
     release: (i: number) => view({ alpha: envelope(phase, 52 + i * .06, 58.5, 1.5), growth: 0, scale: .055, camera: near, offset: [right[0] - .45 + crossing * .92, (i % 5 - 2) * .16, Math.sin(i * 4) * .4], pulse: 1 }),
-    network: view({ alpha: smooth((phase - 58) / 5) * (1 - smooth((phase - 94) / 1.8)), camera: [focus.hub[0] * focus.amount, focus.hub[1] * focus.amount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : focus.rotation, pulse: .85, scale: 1 - smooth((phase - 93) / 6) * .6 }),
+    network: view({ alpha: smooth((phase - 58) / 5) * (1 - smooth((phase - 94) / 1.8)), camera: [focus.hub[0] * focus.amount, focus.hub[1] * focus.amount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : focus.rotation, pulse: .85, scale: 1 - smooth((phase - 93) / 6) * .6, order, sync: Math.max(smooth((phase - reveal.sync.at) / reveal.sync.in) * (1 - smooth((phase - reveal.sync.out) / .5)), smooth((phase - reveal.unify.at) / reveal.unify.in)) }),
   }
 }
 type Scene = ReturnType<typeof sceneAt>
@@ -60,7 +63,10 @@ attribute float a_size;
 attribute float a_birth;
 attribute float a_phase;
 attribute vec4 a_normal;
+attribute vec3 a_target;
 uniform float u_lit;
+uniform float u_order;
+uniform float u_sync;
 uniform float u_focus;
 uniform float u_height;
 uniform mediump float u_points;
@@ -90,9 +96,12 @@ void main() {
   float lane = rem-sheath*50.0;
   vec4 sig = vec4(0.0);
   for (int i = 0; i < 6; i++) { if (float(i) == lane) sig = u_signal[i]; }
+  sig = mix(sig, u_signal[5], u_sync*step(-.5, lane));
   float particle = step(1.5, kind);
   float axon = step(.5, kind)*(1.0-particle);
-  vec3 p = (a_position + a_normal.xyz*sig.z*.35*particle) * u_scale;
+  // The constellation (brief 2026-10-09 §7): each vertex moves toward its place as u_order rises.
+  vec3 base = mix(a_position, a_target, u_order);
+  vec3 p = (base + a_normal.xyz*sig.z*.35*particle) * u_scale;
   float c = cos(u_rotation), s = sin(u_rotation);
   p = vec3(p.x*c+p.z*s, p.y, -p.x*s+p.z*c) + u_offset - u_camera;
   float depth = -p.z;
@@ -120,7 +129,7 @@ void main() {
   float flash = axon*sig.y*smoothstep(.85, 1.0, a_phase);
   float activity = max(front, flash);
   float pulse = max(pow(max(0.0, sin(a_phase*19.0-u_time*1.3)), 22.0)*u_pulse, activity);
-  float nearby = exp(-distance(a_position, u_highlight)*1.4)*u_hover;
+  float nearby = exp(-distance(base, u_highlight)*1.4)*u_hover;
   // For lines a_size is a brightness weight that follows the shaft radius; points keep it as a size.
   vec3 color = (mix(a_color, vec3(1.0,.75,.43), max(pulse*.85, activity)) + vec3(.22,.3,.4)*nearby + a_color*sig.w*.9*(1.0-axon))*mix(a_size, 1.0, u_points);
   float alive = mix(1.0, sig.z*(1.0-sig.z)*4.0, particle);
@@ -167,6 +176,7 @@ export class NeuralRenderer {
   private uniforms = new Map<string, WebGLUniformLocation | null>()
   private attributes: number[] = []
   private normalAttribute = -1
+  private targetAttribute = -1
   private signal: Float32Array = silence
   private stage: StageCamera = level
   private density: number
@@ -220,7 +230,8 @@ export class NeuralRenderer {
       gl.useProgram(program)
       this.attributes = ['a_position', 'a_color', 'a_size', 'a_birth', 'a_phase'].map(name => gl.getAttribLocation(program, name))
       this.normalAttribute = gl.getAttribLocation(program, 'a_normal')
-      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'lit', 'focus', 'height']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
+      this.targetAttribute = gl.getAttribLocation(program, 'a_target')
+      for (const name of ['camera', 'offset', 'aspect', 'rotation', 'roll', 'scale', 'alpha', 'growth', 'time', 'dpr', 'pulse', 'points', 'highlight', 'hover', 'lit', 'focus', 'height', 'order', 'sync']) this.uniforms.set(name, gl.getUniformLocation(program, `u_${name}`))
       this.uniforms.set('signal', gl.getUniformLocation(program, 'u_signal[0]'))
       this.uniforms.set('stage', gl.getUniformLocation(program, 'u_stage'))
       gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE)
@@ -243,7 +254,7 @@ export class NeuralRenderer {
     const geometry = factory(this.density)
     const layer: Layer = { geometry }
     if (this.gl && !this.lost) {
-      for (const key of ['points', 'lines', 'pointNormals', 'lineNormals'] as const) {
+      for (const key of ['points', 'lines', 'pointNormals', 'lineNormals', 'pointTargets', 'lineTargets'] as const) {
         const data = geometry[key]
         if (!data) continue
         const buffer = this.gl.createBuffer()
@@ -270,7 +281,7 @@ export class NeuralRenderer {
       gl.uniform4f(uniform('stage'), this.stage.scale, this.stage.x, this.stage.y, this.stage.roll)
       // Lit layers are the ones that carry normals; their focus plane is the depth of the model origin.
       const lit = layer.geometry.lineNormals ? 1 : 0
-      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, lit, focus: view.camera[2] - view.offset[2], height: this.height * this.dpr }
+      const values = { aspect: this.width / this.height, rotation: view.rotation, roll: view.roll, scale: view.scale, alpha: view.alpha, growth: view.growth, time, dpr: this.dpr, pulse: view.pulse, hover: view.hover, lit, focus: view.camera[2] - view.offset[2], height: this.height * this.dpr, order: layer.geometry.pointTargets ? view.order : 0, sync: view.sync }
       for (const [key, value] of Object.entries(values)) gl.uniform1f(uniform(key), value)
       for (const key of ['lines', 'points'] as const) {
         if (!layer[key] || !layer.geometry[key].length) continue
@@ -292,6 +303,17 @@ export class NeuralRenderer {
             gl.vertexAttrib4f(this.normalAttribute, 0, 0, 1, -1)
           }
         }
+        const targets = layer[key === 'points' ? 'pointTargets' : 'lineTargets']
+        if (this.targetAttribute >= 0) {
+          if (targets) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, targets)
+            gl.enableVertexAttribArray(this.targetAttribute)
+            gl.vertexAttribPointer(this.targetAttribute, 3, gl.FLOAT, false, 12, 0)
+          } else {
+            gl.disableVertexAttribArray(this.targetAttribute)
+            gl.vertexAttrib3f(this.targetAttribute, 0, 0, 0)
+          }
+        }
         gl.uniform1f(uniform('points'), key === 'points' ? 1 : 0)
         gl.drawArrays(key === 'points' ? gl.POINTS : gl.LINES, 0, layer.geometry[key].length / 9)
       }
@@ -300,14 +322,17 @@ export class NeuralRenderer {
 
   private drawCanvas(geometry: Geometry, view: View) {
     const ctx = this.ctx!
-    const project = (array: Float32Array, i: number) => this.project(array[i], array[i + 1], array[i + 2], view)
+    const mixed = (array: Float32Array, targets: Float32Array | undefined, i: number) => {
+      const k = i / 9 * 3, t = targets ? view.order : 0
+      return this.project(array[i] + ((targets?.[k] ?? array[i]) - array[i]) * t, array[i + 1] + ((targets?.[k + 1] ?? array[i + 1]) - array[i + 1]) * t, array[i + 2] + ((targets?.[k + 2] ?? array[i + 2]) - array[i + 2]) * t, view)
+    }
     ctx.globalAlpha = view.alpha * .5
     ctx.lineWidth = .65
     ctx.strokeStyle = '#7799b7'
     ctx.beginPath()
     for (let i = 0; i < geometry.lines.length; i += 36) {
       if (geometry.lines[i + 7] > view.growth) continue
-      const a = project(geometry.lines, i), b = project(geometry.lines, i + 9)
+      const a = mixed(geometry.lines, geometry.lineTargets, i), b = mixed(geometry.lines, geometry.lineTargets, i + 9)
       if (a.depth < .2 || b.depth < .2) continue
       ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y)
     }
@@ -318,7 +343,7 @@ export class NeuralRenderer {
       // Release particles only move in the shader and sheath sprites are a WebGL glow; the static
       // fallback leaves both out.
       if (geometry.pointNormals) { const tag = geometry.pointNormals[i / 9 * 4 + 3], kind = Math.floor((tag + 1) / 100); if (kind === 2 || tag - kind * 100 >= 48.5) continue }
-      const p = project(geometry.points, i)
+      const p = mixed(geometry.points, geometry.pointTargets, i)
       if (p.depth < .2) continue
       const size = clamp(geometry.points[i + 6] * p.scale * .008, .4, 3)
       ctx.fillRect(p.x, p.y, size, size)
@@ -363,7 +388,7 @@ export class NeuralRenderer {
     const s = sceneAt(phase, reduced, look, this.mobile, this.faceView())
     const draw = (name: string, factory: (density: number) => Geometry, options: View) => this.draw(this.layer(name, factory), options, time)
     // The dust leaves with the network, so the legacy opens on black (Chief 2026-10-08).
-    draw('dust', makeDust, view({ alpha: .4 * (1 - smooth((phase - 94) / 1.5)), rotation: reduced ? 0 : time * .006 }))
+    draw('dust', makeDust, view({ alpha: .4 * (1 - .55 * s.order) * (1 - smooth((phase - 94) / 1.5)), rotation: reduced ? 0 : time * .006 }))
     if (phase < 30) draw('neuron', makeNeuron, s.neuron)
     if (phase > 6 && phase < 20) {
       draw('embryo', makeEmbryo, s.embryo)
@@ -420,7 +445,7 @@ export class NeuralRenderer {
   private releaseGL() {
     const gl = this.gl
     if (!gl) return
-    for (const layer of this.layers.values()) for (const key of ['points', 'lines', 'pointNormals', 'lineNormals'] as const) { if (layer[key]) gl.deleteBuffer(layer[key]!) }
+    for (const layer of this.layers.values()) for (const key of ['points', 'lines', 'pointNormals', 'lineNormals', 'pointTargets', 'lineTargets'] as const) { if (layer[key]) gl.deleteBuffer(layer[key]!) }
     if (this.program) gl.deleteProgram(this.program)
   }
 

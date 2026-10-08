@@ -372,3 +372,27 @@ test('one carrier is handed from chapter to chapter: it travels, never cuts, sur
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
   await expect(carrier).toBeHidden()
 })
+
+test('the constellation forms on the Canvas 2D fallback too, without errors', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...args: unknown[]) {
+      if (type.includes('webgl')) return null
+      return Reflect.apply(original, this, [type, ...args])
+    } as typeof original
+  })
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-renderer', 'canvas')
+  for (const phase of [60, 62.5, 65, 70]) await portraitPhase(page, phase)
+  const painted = await page.locator('canvas').nth(1).evaluate(canvas => {
+    const context = (canvas as HTMLCanvasElement).getContext('2d')!
+    const { data } = context.getImageData(0, 0, (canvas as HTMLCanvasElement).width, (canvas as HTMLCanvasElement).height)
+    let lit = 0
+    for (let i = 3; i < data.length; i += 4) if (data[i] > 0) lit++
+    return lit
+  })
+  expect(painted).toBeGreaterThan(1000)
+  expect(errors).toEqual([])
+})

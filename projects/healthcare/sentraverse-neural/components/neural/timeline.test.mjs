@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import * as gsapModule from 'gsap'
 import { chapters } from './story.ts'
-import { MASTER_DURATION, buildMaster, cameraAt, ease, jumpLabel, legacy, legacyParts, motionOf, phaseToTime, settleLegacy } from './timeline.ts'
+import { MASTER_DURATION, buildMaster, cameraAt, ease, jumpLabel, legacy, legacyParts, motionOf, phaseToTime, reveal, settleLegacy } from './timeline.ts'
 
 const gsap = gsapModule.gsap ?? gsapModule.default
 // `clearProps` is a CSS-plugin feature with no meaning on the stand-ins below; a headless no-op
@@ -261,4 +261,11 @@ test('the stage camera reaches each chapter framing within its chapter, halves i
   assert.ok(cameraAt('network', false).scale < 1, 'the network zooms out')
   assert.ok(cameraAt('neuron', false).scale > cameraAt('origin', false).scale, 'the camera closes in on the forming neuron')
   assert.throws(() => cameraAt('nowhere', false), /No camera key for chapter: nowhere/)
+})
+
+test('the flagship reveal: the network falls into step and reorganises inside its own chapter, done before the first division', () => {
+  assert.ok(reveal.sync.at >= 60 && reveal.order.at >= 60, 'it starts with the network chapter')
+  assert.ok(reveal.order.at + reveal.order.in <= 65.5, 'the constellation has formed before division 1 at 66')
+  assert.ok(reveal.sync.out > reveal.sync.at + reveal.sync.in && reveal.sync.out <= 66, 'the hubs fall out of step again as the divisions take over')
+  assert.ok(reveal.unify.at >= 89 && reveal.unify.at + reveal.unify.in <= 92, 'the unified system synchronises into SENTRA')
 })
