@@ -1,8 +1,10 @@
 import { analyseFace } from './face'
 import type { FacePixels } from './face'
-import { axonCenter, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse } from './geometry'
+import { axonCenter, faceDepth, hubs, makeAxon, makeDust, makeEmbryo, makeFace, makeNetwork, makeNeuron, makeSynapse } from './geometry'
 import type { Geometry, Vec3 } from './geometry'
-import { clamp, smooth } from './story'
+import { carrierStyle, handoffAt, hubBlend } from './handoff'
+import type { Host } from './handoff'
+import { clamp, divisions, smooth } from './story'
 import { facePlacement } from './tactile'
 import type { StageCamera } from './timeline'
 
@@ -14,12 +16,42 @@ const still: Look = { turn: 0, highlight: [0, 0, 0], hover: 0 }
 const silence = new Float32Array(24)
 const level: StageCamera = { scale: 1, x: 0, y: 0, roll: 0 }
 const envelope = (phase: number, start: number, end: number, fade = 2) => smooth((phase - start) / fade) * (1 - smooth((phase - end) / fade))
+export type Carrier = { x: number; y: number; size: number; color: readonly [number, number, number]; alpha: number }
+const hubColors = divisions.map(division => division.color)
+// Where the thought sits in the face model (makeFace's units, a square portrait): the forehead.
+const MIND: Vec3 = [-.042, 1.11, faceDepth(.486, .13)]
+const view = (options: Partial<View>): View => ({ ...baseView(), ...options })
+const lerp3 = (a: Vec3, b: Vec3, t: number): Vec3 => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
 // The network's camera through the divisions: which hub it leans toward, by how much, and the
 // field's turn. `render` draws with it and `hitTest` maps the pointer with it, so they agree.
 function networkFocus(phase: number) {
-  const active = Math.min(4, Math.max(0, Math.floor((phase - 66) / 5)))
-  return { hub: hubs[active], amount: phase >= 66 && phase < 91 ? .25 : 0, rotation: -.08 + clamp((phase - 64) / 26) * .16 }
+  const { index, next, blend } = hubBlend(phase)
+  return { hub: lerp3(hubs[index], hubs[next], blend), amount: .25 * smooth(phase - 65) * (1 - smooth(phase - 90)), rotation: -.08 + clamp((phase - 64) / 26) * .16 }
 }
+
+// Every layer's view at `phase`, one formula each: the frame draws with them and the carrier finds
+// its host through the same camera.
+function sceneAt(phase: number, reduced: boolean, look: Look, mobile: boolean, seat: ReturnType<typeof facePlacement>) {
+  const right: Vec3 = [mobile ? 0 : 1.15, mobile ? .7 : 0, 0]
+  const travel = reduced ? -8 : -smooth((phase - 36) / 18) * 26
+  const center = axonCenter(travel)
+  const tunnel: Vec3 = [center[0], center[1], travel + 2.6]
+  const separate = smooth((phase - 10) / 5), crossing = smooth((phase - 53) / 5)
+  const near: Vec3 = [0, 0, mobile ? 6 : 4.4]
+  const focus = networkFocus(phase)
+  return {
+    neuron: view({ alpha: phase < 7 ? 1 : phase < 17 ? 1 - envelope(phase, 7, 16, 2) * .85 : 1 - smooth((phase - 26) / 4), growth: clamp((phase - 17) / 8, 0, 1), scale: phase < 8 ? .45 + smooth(phase / 8) * 3 : phase < 17 ? .6 : 1.6 - smooth((phase - 24) / 6) * .85, rotation: reduced ? .1 : phase * .027, offset: right, camera: [0, 0, 5.4] }),
+    embryo: view({ alpha: envelope(phase, 6, 17, 3), growth: clamp((phase - 8) / 8), rotation: reduced ? .2 : phase * .035, offset: right, camera: [0, 0, 6.5] }),
+    daughter: (side: number) => view({ alpha: envelope(phase, 9, 17, 2), growth: 0, scale: .8, offset: [right[0] + side * separate * .4, .1 - separate * .4, 1.2], camera: [0, 0, 6.5] }),
+    face: view({ alpha: envelope(phase, 25, 36, 4), growth: smooth((phase - 26) / 5), offset: [seat.offset.x, seat.offset.y, 0], scale: seat.scale, camera: [0, 0, seat.depth - smooth((phase - 34) / 6) * 2.5], rotation: reduced ? 0 : Math.sin(phase * .15) * .045 + look.turn * .085, pulse: .55, highlight: look.highlight, hover: look.hover }),
+    axon: view({ alpha: envelope(phase, 35, 51, 3), camera: tunnel, roll: reduced || mobile ? 0 : Math.sin(travel * .18) * .12, pulse: 1 }),
+    signal: view({ alpha: envelope(phase, 36, 50, 3) * .9, growth: 0, scale: .22, offset: axonCenter(travel - 2), camera: tunnel, pulse: 1 }),
+    synapse: view({ alpha: envelope(phase, 49, 60, 3), rotation: reduced ? .05 : -.15 + smooth((phase - 51) / 9) * .3, camera: near, offset: right, pulse: smooth((phase - 56) / 4) }),
+    release: (i: number) => view({ alpha: envelope(phase, 52 + i * .06, 58.5, 1.5), growth: 0, scale: .055, camera: near, offset: [right[0] - .45 + crossing * .92, (i % 5 - 2) * .16, Math.sin(i * 4) * .4], pulse: 1 }),
+    network: view({ alpha: smooth((phase - 58) / 5) * (1 - smooth((phase - 94) / 1.8)), camera: [focus.hub[0] * focus.amount, focus.hub[1] * focus.amount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : focus.rotation, pulse: .85, scale: 1 - smooth((phase - 93) / 6) * .6 }),
+  }
+}
+type Scene = ReturnType<typeof sceneAt>
 
 const vertexSource = `
 attribute vec3 a_position;
@@ -322,50 +354,55 @@ export class NeuralRenderer {
   }
 
   // `signal` is the activity cycle state, six lanes of (impulse, terminal, release, response).
-  render(phase: number, time: number, reduced = false, hover = -1, look: Look = still, signal: Float32Array = silence, stage: StageCamera = level) {
-    if (this.disposed) return
+  render(phase: number, time: number, reduced = false, hover = -1, look: Look = still, signal: Float32Array = silence, stage: StageCamera = level): Carrier | null {
+    if (this.disposed) return null
     this.signal = signal
     this.stage = stage
     if (this.gl && !this.lost) this.gl.clear(this.gl.COLOR_BUFFER_BIT)
     if (this.ctx) { this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0); this.ctx.clearRect(0, 0, this.width, this.height) }
-    const right: Vec3 = [this.mobile ? 0 : 1.15, this.mobile ? .7 : 0, 0]
-    const view = baseView()
-    const draw = (name: string, factory: (density: number) => Geometry, options: Partial<View>) => this.draw(this.layer(name, factory), { ...view, ...options }, time)
-    const face = this.face, seat = this.faceView()
-    const placeFace = (options: Partial<View>) => { if (face) draw('face', () => face, { offset: [seat.offset.x, seat.offset.y, 0], scale: seat.scale, camera: [0, 0, seat.depth], highlight: look.highlight, hover: look.hover, ...options }) }
+    const s = sceneAt(phase, reduced, look, this.mobile, this.faceView())
+    const draw = (name: string, factory: (density: number) => Geometry, options: View) => this.draw(this.layer(name, factory), options, time)
     // The dust leaves with the network, so the legacy opens on black (Chief 2026-10-08).
-    draw('dust', makeDust, { alpha: .4 * (1 - smooth((phase - 94) / 1.5)), rotation: reduced ? 0 : time * .006 })
-
-    if (phase < 30) {
-      const alpha = phase < 7 ? 1 : phase < 17 ? 1 - envelope(phase, 7, 16, 2) * .85 : 1 - smooth((phase - 26) / 4)
-      draw('neuron', makeNeuron, { alpha, growth: clamp((phase - 17) / 8, 0, 1), scale: phase < 8 ? .45 + smooth(phase / 8) * 3 : phase < 17 ? .6 : 1.6 - smooth((phase - 24) / 6) * .85, rotation: reduced ? .1 : phase * .027, offset: right, camera: [0, 0, 5.4] })
-    }
+    draw('dust', makeDust, view({ alpha: .4 * (1 - smooth((phase - 94) / 1.5)), rotation: reduced ? 0 : time * .006 }))
+    if (phase < 30) draw('neuron', makeNeuron, s.neuron)
     if (phase > 6 && phase < 20) {
-      draw('embryo', makeEmbryo, { alpha: envelope(phase, 6, 17, 3), growth: clamp((phase - 8) / 8), rotation: reduced ? .2 : phase * .035, offset: right, camera: [0, 0, 6.5] })
+      draw('embryo', makeEmbryo, s.embryo)
       // Daughter cells separate as the selected progenitor differentiates.
-      const t = smooth((phase - 10) / 5)
-      for (const side of [-1, 1]) draw('neuron', makeNeuron, { alpha: envelope(phase, 9, 17, 2), growth: 0, scale: .8, offset: [right[0] + side * t * .4, .1 - t * .4, 1.2], camera: [0, 0, 6.5] })
+      for (const side of [-1, 1]) draw('neuron', makeNeuron, s.daughter(side))
     }
     // Chapter 03 shows the founder's face in place of the generic body (Chief 2026-10-08): it
     // grows in, sways, and the camera closes in as the signal chapter takes over.
-    if (phase > 25 && phase < 40) placeFace({ alpha: envelope(phase, 25, 36, 4), growth: smooth((phase - 26) / 5), camera: [0, 0, seat.depth - smooth((phase - 34) / 6) * 2.5], rotation: reduced ? 0 : Math.sin(phase * .15) * .045 + look.turn * .085, pulse: .55 })
-    if (phase > 35 && phase < 54) {
-      const travel = reduced ? -8 : -smooth((phase - 36) / 18) * 26
-      const center = axonCenter(travel)
-      draw('axon', makeAxon, { alpha: envelope(phase, 35, 51, 3), camera: [center[0], center[1], travel + 2.6], roll: reduced || this.mobile ? 0 : Math.sin(travel * .18) * .12, pulse: 1 })
-      const signal = axonCenter(travel - 2)
-      draw('neuron', makeNeuron, { alpha: envelope(phase, 36, 50, 3) * .9, growth: 0, scale: .22, offset: signal, camera: [center[0], center[1], travel + 2.6], pulse: 1 })
-    }
+    const face = this.face
+    if (face && phase > 25 && phase < 40) draw('face', () => face, s.face)
+    if (phase > 35 && phase < 54) { draw('axon', makeAxon, s.axon); draw('neuron', makeNeuron, s.signal) }
     if (phase > 49 && phase < 63) {
-      draw('synapse', makeSynapse, { alpha: envelope(phase, 49, 60, 3), rotation: reduced ? .05 : -.15 + smooth((phase - 51) / 9) * .3, camera: [0, 0, this.mobile ? 6 : 4.4], offset: right, pulse: smooth((phase - 56) / 4) })
-      const crossing = smooth((phase - 53) / 5)
-      for (let i = 0; i < 14; i++) draw('neuron', makeNeuron, { alpha: envelope(phase, 52 + i * .06, 58.5, 1.5), growth: 0, scale: .055, camera: [0, 0, this.mobile ? 6 : 4.4], offset: [right[0] - .45 + crossing * .92, (i % 5 - 2) * .16, Math.sin(i * 4) * .4], pulse: 1 })
+      draw('synapse', makeSynapse, s.synapse)
+      for (let i = 0; i < 14; i++) draw('neuron', makeNeuron, s.release(i))
     }
-    if (phase > 58 && phase < 99) {
-      const { hub, amount, rotation } = networkFocus(phase)
-      // The network dissolves from 94 into the final chapter's void and film (Chief 2026-10-09:
-      // nothing stands between SENTRA and the film).
-      draw('network', makeNetwork, { alpha: smooth((phase - 58) / 5) * (1 - smooth((phase - 94) / 1.8)), camera: [hub[0] * amount, hub[1] * amount, 8 + smooth((phase - 60) / 6) * 4], rotation: reduced ? 0 : rotation, pulse: .85, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0, scale: 1 - smooth((phase - 93) / 6) * .6 })
+    // The network dissolves from 94 into the final chapter's void and film (Chief 2026-10-09:
+    // nothing stands between SENTRA and the film).
+    if (phase > 58 && phase < 99) draw('network', makeNetwork, { ...s.network, highlight: hubs[Math.max(0, hover)], hover: hover >= 0 ? 1 : 0 })
+    return this.mode === 'svg' ? null : this.carrier(phase, time, reduced, s)
+  }
+
+  // The carrier (`handoff.ts`): where its hosts are on screen at this phase, mixed by the handoff.
+  private carrier(phase: number, time: number, reduced: boolean, s: Scene): Carrier {
+    const { from, to, blend } = handoffAt(phase)
+    const a = this.host(from, phase, s), b = from === to ? a : this.host(to, phase, s)
+    const style = carrierStyle(phase, hubColors)
+    const breath = reduced ? 1 : 1 + style.breath * Math.sin(time * 1.1)
+    return { x: a.x + (b.x - a.x) * blend, y: a.y + (b.y - a.y) * blend, size: style.size * breath * (this.mobile ? .75 : 1), color: style.color, alpha: style.alpha }
+  }
+
+  private host(host: Host, phase: number, s: Scene) {
+    switch (host) {
+      case 'origin': case 'soma': return this.project(0, 0, 0, s.neuron)
+      case 'progenitor': return this.project(0, 0, 0, s.daughter(-1))
+      case 'mind': return this.project(MIND[0], MIND[1], MIND[2], s.face)
+      case 'impulse': return this.project(0, 0, 0, s.signal)
+      case 'cleft': return this.project(0, 0, 0, s.release(7))
+      case 'centre': case 'unified': return this.project(0, 0, 0, s.network)
+      case 'hub': { const { index, next, blend } = hubBlend(phase), p = lerp3(hubs[index], hubs[next], blend); return this.project(p[0], p[1], p[2], s.network) }
     }
   }
 

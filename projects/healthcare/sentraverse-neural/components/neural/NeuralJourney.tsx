@@ -4,7 +4,7 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { analyseFace, loadPixels } from './face'
 import type { FaceAnalysis } from './face'
 import LegacyScene from './LegacyScene'
-import type { Look } from './renderer'
+import type { Carrier, Look } from './renderer'
 import { faceLook } from './tactile'
 import { FILM, createFilm, filmFrameUrl } from './film'
 import { createMorph, faceCrop } from './morph'
@@ -91,6 +91,18 @@ export default function NeuralJourney() {
         const preloadAt = phaseOf('network')
         let hover = -1, lastChapter = -1, lastFrame = 0, visible = true
         const progressSetter = gsap.quickSetter(progressLine, 'scaleX')
+        // The carrier (brief 2026-10-09 §2) follows the renderer's projection every frame.
+        const carrierElement = root.querySelector<HTMLElement>('[data-carrier]')!
+        const carrierX = gsap.quickSetter(carrierElement, 'x', 'px'), carrierY = gsap.quickSetter(carrierElement, 'y', 'px')
+        // `scale` is only an alias (scaleX and scaleY) that quickSetter cannot write, so each axis gets its own.
+        const carrierScaleX = gsap.quickSetter(carrierElement, 'scaleX'), carrierScaleY = gsap.quickSetter(carrierElement, 'scaleY'), carrierAlpha = gsap.quickSetter(carrierElement, 'opacity')
+        let carrierColor = ''
+        const carry = (carrier: Carrier | null) => {
+          if (!carrier) return
+          carrierX(carrier.x); carrierY(carrier.y); carrierScaleX(carrier.size / 16); carrierScaleY(carrier.size / 16); carrierAlpha(carrier.alpha)
+          const color = carrier.color.map(channel => Math.round(channel * 255)).join(' ')
+          if (color !== carrierColor) { carrierElement.style.setProperty('--carrier', color); carrierColor = color }
+        }
         const update = () => {
           const index = activeChapter(state.phase)
           root.dataset.phase = state.phase.toFixed(2)
@@ -115,10 +127,10 @@ export default function NeuralJourney() {
           lastFrame = time
           // The legacy's void covers the canvases from `legacy.covered`; nothing under it is drawn.
           // Past it the only living layer is the face's transformation.
-          if (state.phase < legacy.covered) engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal, camera)
-          else morph?.tick(time)
+          if (state.phase < legacy.covered) carry(engine.render(state.phase, reduced ? 0 : time, reduced, hover, look, signal, camera))
+          else { carrierAlpha(0); morph?.tick(time) }
         }
-        const resize = () => { engine.resize(); engine.render(state.phase, 0, reduced, hover, look, signal, camera) }
+        const resize = () => { engine.resize(); carry(engine.render(state.phase, 0, reduced, hover, look, signal, camera)) }
         const observer = new ResizeObserver(resize)
         observer.observe(stage)
         const visibility = () => { if (document.hidden) gsap.ticker.remove(draw); else if (!reduced) gsap.ticker.add(draw) }
@@ -227,6 +239,7 @@ export default function NeuralJourney() {
           film?.dispose()
           morph?.dispose()
           activity.dispose()
+          gsap.set(carrierElement, { clearProps: 'all' }); carrierElement.style.removeProperty('--carrier')
           // Reading mode shows the legacy still, whatever the cinematic scene left behind.
           if (scene) settleLegacy(gsap, scene, panels[chapters.findIndex(chapter => chapter.id === 'human')])
           // The titles return to their plain markup (the context reverts them too; this is explicit).
@@ -291,6 +304,7 @@ export default function NeuralJourney() {
         <canvas ref={fallbackRef} className={styles.canvas} aria-hidden="true" />
         <div className={styles.vignette} aria-hidden="true" />
         <div data-scrim className={styles.scrim} aria-hidden="true" />
+        <span data-carrier className={styles.carrier} aria-hidden="true" />
         <header className={styles.header}>
           <a href="#top" className={styles.wordmark} onClick={event => { event.preventDefault(); navigateRef.current(0) }} aria-label="Sentraverse, return to origin"><span className={styles.mark} aria-hidden="true">✳</span> SENTRAVERSE<span className={styles.wordmarkDot}>®</span></a>
           <nav data-nav className={styles.nav} aria-label="Primary navigation">

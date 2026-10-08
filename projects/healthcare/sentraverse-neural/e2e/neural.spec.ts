@@ -330,3 +330,45 @@ test('the legacy: the field dissolves into the film, the film holds, and the fin
   await expect(page.locator('[data-legacy-tagline]')).toBeVisible()
   await expect(page.locator('[data-legacy-signature]')).toBeVisible()
 })
+
+test('one carrier is handed from chapter to chapter: it travels, never cuts, survives a jump, and leaves into the legacy void', async ({ page }) => {
+  test.setTimeout(180000)
+  await page.setViewportSize({ width: 1280, height: 800 })
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  const carrier = page.locator('[data-carrier]')
+  const settle = () => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+  const sample = async (phase: number) => {
+    await portraitPhase(page, phase); await settle()
+    const box = (await carrier.boundingBox())!
+    return { x: box.x + box.width / 2, y: box.y + box.height / 2 }
+  }
+  // Each handoff window: no single half-phase step covers most of the way from host to host.
+  for (const [start, end] of [[6.5, 9.5], [16.5, 19.5], [25.5, 28.5], [35.5, 38.5], [49.5, 52.5], [57.5, 60.5], [63.5, 66.5], [69, 71.5], [74, 76.5], [88.5, 91.5]]) {
+    const points: Array<{ x: number; y: number }> = []
+    for (let phase = start; phase <= end + 1e-9; phase += .5) points.push(await sample(phase))
+    const travel = Math.hypot(points.at(-1)!.x - points[0].x, points.at(-1)!.y - points[0].y)
+    for (let i = 1; i < points.length; i++) {
+      const step = Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y)
+      expect(step, `step ${i} in ${start}-${end}`).toBeLessThanOrEqual(Math.max(.65 * travel, 24))
+    }
+    for (const point of points) { expect(point.x).toBeGreaterThan(0); expect(point.x).toBeLessThan(1280); expect(point.y).toBeGreaterThan(0); expect(point.y).toBeLessThan(800) }
+  }
+  // It takes its host's size: the precise impulse is smaller than the breathing origin.
+  const width = async (phase: number) => { await portraitPhase(page, phase); await settle(); return (await carrier.boundingBox())!.width }
+  expect(await width(44)).toBeLessThan(.8 * await width(4))
+  await portraitPhase(page, 50)
+  await expect.poll(() => carrier.evaluate(element => Number(getComputedStyle(element).opacity))).toBeGreaterThan(.9)
+  await portraitPhase(page, 97)
+  await expect.poll(() => carrier.evaluate(element => Number(getComputedStyle(element).opacity))).toBeLessThan(.02)
+  // A hash straight into a division, loaded fresh (a same-document hash change never re-runs the
+  // app's start): the carrier is on its hub, on screen, at once.
+  await page.goto('about:blank')
+  await page.goto('/#division-3')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await expect.poll(async () => { const box = await carrier.boundingBox(); return !!box && box.x > 0 && box.x < 1280 && box.y > 0 && box.y < 800 }).toBe(true)
+  await expect.poll(() => carrier.evaluate(element => Number(getComputedStyle(element).opacity))).toBeGreaterThan(.9)
+  await page.getByRole('button', { name: 'READ THE STORY', exact: true }).click()
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'reading')
+  await expect(carrier).toBeHidden()
+})

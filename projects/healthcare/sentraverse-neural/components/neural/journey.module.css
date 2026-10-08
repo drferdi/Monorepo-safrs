@@ -23,6 +23,11 @@
 .canvas { display: none; }
 .vignette { background: radial-gradient(ellipse at 60% 48%, transparent 30%, rgb(3 5 9 / 48%) 100%); }
 .scrim { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: rgb(6 9 14 / 60%); }
+/* The carrier (brief 2026-10-09 §2): the one entity handed from chapter to chapter, drawn as a
+   soft point of light over the canvases and under the text; the renderer places it every frame.
+   Reading mode, no JavaScript and the text-only fallback show the story without it. */
+.carrier { position: absolute; z-index: 1; top: 0; left: 0; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; pointer-events: none; opacity: 0; --carrier: 235 173 102; background: radial-gradient(circle, rgb(var(--carrier) / 95%) 0, rgb(var(--carrier) / 45%) 18%, rgb(var(--carrier) / 12%) 42%, transparent 70%); mix-blend-mode: screen; will-change: transform, opacity; }
+.journey:not([data-enhanced="cinematic"]) .carrier { display: none; }
 .header { position: absolute; z-index: 4; top: 0; left: 0; width: 100%; padding: 36px 4.2vw; display: flex; align-items: center; justify-content: space-between; gap: 25px; }
 .wordmark { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; letter-spacing: .21em; white-space: nowrap; }
 .mark { font-size: 30px; font-weight: 300; color: var(--neural-blue); line-height: 1; }
