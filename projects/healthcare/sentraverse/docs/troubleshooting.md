@@ -50,13 +50,6 @@ assertion (`!`) if the value is guaranteed non-null in context.
    not auto-start
 4. If stuck mid-simulation: the Reset button returns to idle state
 
-### `Hero` animated chat stops on phase 2 or 3
-
-Phase timers are: 9500ms → 16500ms → 24000ms. On slow connections, heavy
-component hydration may delay the timer. Wait the full 25 seconds before
-assuming a bug. If consistently broken: check `PHASE_TIMES` array in
-`components/Hero.tsx`.
-
 ### `Clients` logo marquee stops scrolling
 
 The marquee uses a CSS animation (`animate-marquee`, 60s linear infinite). If it

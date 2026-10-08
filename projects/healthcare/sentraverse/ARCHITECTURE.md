@@ -66,12 +66,11 @@ sentra-main/
 │   └── google22238cc24e0d1002.html  Google Search Console verification
 │
 ├── components/
-│   ├── [15 page components]       See "Landing Page Sections" below (+ ClinicalPrognosis via ClinicalTrajectory)
+│   ├── neural/                    The home page journey — see "Home Page — The Neural Journey" below
 │   └── ui/
 │       ├── immersive-scroll-gallery.tsx    Scroll-driven full-viewport gallery
 │       ├── interactive-image-accordion.tsx Image accordion with hover interaction
 │       ├── morphing-cursor.tsx             Desktop cursor morphing effect
-│       ├── sentra-bento-cards.tsx          Bento grid card primitive
 │       ├── sentra-kinetic-nav.tsx          12.8 KB — full-screen kinetic sidebar nav
 │       └── text-scramble.tsx              Text scramble animation primitive
 │
@@ -95,30 +94,20 @@ sentra-main/
 
 ---
 
-## Landing Page Sections
+## Home Page — The Neural Journey
 
-Fifteen components are composed in `app/page.tsx` in this exact render order:
+`app/page.tsx` renders `components/neural/NeuralJourney.tsx` alone: fifteen chapters on one GSAP
+master timeline (`components/neural/timeline.ts`) scrubbed by one pinned ScrollTrigger. The
+design record, the knobs and the test map live in `docs/neural-journey.md`.
 
-| #   | Component            | File Size | Key Details                                                                                                                                                                    |
-| --- | -------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | `Navbar`             | 3.2 KB    | Fixed top bar; scroll-aware transparency; `SentraKineticNav` sidebar overlay                                                                                                   |
-| 2   | `Hero`               | 20.4 KB   | Animated Audrey chat — 4 clinical phases with `PHASE_TIMES` [9500, 16500, 24000] ms; `audreyBubble` / `dokterBubble` / `tealBubble` styles; Caveat handwriting font for quotes |
-| 3   | `ProjectSlider`      | 2.2 KB    | Horizontal scroll project highlight cards                                                                                                                                      |
-| 4   | `About`              | 3.4 KB    | Company mission; stats: 24-hour IGD, 80+ healthcare workers, 5 service areas                                                                                                   |
-| 5   | `Clients`            | 13.0 KB   | Auto-scrolling logo marquee — `animate-marquee` 60s linear infinite; renders SVG logos for Next.js, Anthropic, OpenAI, Tailwind + partners                                     |
-| 6   | `SentraSim`          | 57.1 KB   | See below                                                                                                                                                                      |
-| 7   | `Showcase`           | 2.0 KB    | Product capability grid                                                                                                                                                        |
-| 8   | `Services`           | 6.9 KB    | 7-service accordion with parallax image hover                                                                                                                                  |
-| 9   | `Audrey`             | 21.3 KB   | Bayesian analysis demo conversation — Apendisitis Akut case with badges (confidence %, Alvarado score, triage level)                                                           |
-| 10  | `ClinicalTrajectory` | 27.5 KB   | See below (includes `ClinicalPrognosis` as a child component)                                                                                                                  |
-| 11  | `News`               | 4.6 KB    | Latest insights article cards                                                                                                                                                  |
-| 12  | `ScrollGallery`      | 0.3 KB    | Delegates to `ui/immersive-scroll-gallery.tsx`                                                                                                                                 |
-| 13  | `FAQ`                | 4.6 KB    | Accordion FAQ                                                                                                                                                                  |
-| 14  | `CTA`                | 2.0 KB    | Call-to-action section                                                                                                                                                         |
-| 15  | `Footer`             | 6.0 KB    | Site footer                                                                                                                                                                    |
-
-> `ClinicalPrognosis` (28.5 KB) is composed inside `ClinicalTrajectory`, not
-> imported directly by `app/page.tsx`.
+| File | Role |
+| --- | --- |
+| `components/neural/story.ts` | The chapters (id, phase, words); `phaseOf(id)` feeds the jump buttons and hash aliases |
+| `components/neural/timeline.ts` | The master, the phase→time tempo, THE LEGACY's beats, `settleLegacy` |
+| `components/neural/NeuralJourney.tsx` | `gsap.matchMedia` lifecycle, the ScrollTrigger, pointer, sound, reading mode, film preload |
+| `components/neural/renderer.ts` · `geometry.ts` · `signal.ts` | WebGL neural field (Canvas 2D fallback) and its activity cycle |
+| `components/neural/film.ts` · `morph.ts` · `LegacyScene.tsx` | The founder's film as a scrubbed WebP frame sequence (`public/legacy-film/<version>/`) and the face's transformation |
+| `scripts/legacy-film/` | `extract.mjs` (re-export the frames into a new version folder) and `measure.mjs` (re-measure `MORPH`) |
 
 ---
 
@@ -207,37 +196,6 @@ interface SimulationState {
 | Assessment     | `--sdx-c-asesmen` (`#eb5939`)  | Accent — clinical assessment |
 | Critical       | `--sdx-c-critical` (`#E65A4C`) | Critical findings            |
 | Warning        | `--sdx-c-warning` (`#FBBF24`)  | Warning flags                |
-
----
-
-## ClinicalTrajectory — Detailed Architecture
-
-**File:** `components/ClinicalTrajectory.tsx` — 27.5 KB
-
-Renders a live vital-signs trajectory for a patient with Hypertension + DM
-Type 2.
-
-### Demo Dataset (4 visits)
-
-| Visit | Date     | SBP | DBP | HR  | GDS |
-| ----- | -------- | --- | --- | --- | --- |
-| 1     | 12/09    | 140 | 88  | 78  | 210 |
-| 2     | 15/10    | 148 | 92  | 82  | 238 |
-| 3     | 22/11    | 155 | 94  | 88  | 262 |
-| 4     | HARI INI | 168 | 98  | 92  | 284 |
-
-### Risk Probability Bars
-
-| Condition         | Probability |
-| ----------------- | ----------- |
-| Krisis Hipertensi | 72%         |
-| Stroke / ACS      | 58%         |
-| Krisis Glikemik   | 45%         |
-| Sepsis-like       | 12%         |
-| Syok Dekompensasi | 8%          |
-
-The component also includes `ClinicalPrognosis` as a sub-component (imports
-directly).
 
 ---
 
@@ -365,6 +323,10 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Content-Security-Policy: [full CSP — see SECURITY.md]
 ```
+
+`/legacy-film/:version/:file*` (the film frames) also gets
+`Cache-Control: public, max-age=31536000, immutable`; the folder is versioned, so a re-export
+never changes a cached file in place.
 
 ---
 

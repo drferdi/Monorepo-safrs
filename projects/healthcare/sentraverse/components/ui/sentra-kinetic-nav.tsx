@@ -28,10 +28,13 @@ const menuItems = [
   { label: 'Audrey', href: '/#audrey' },
 ]
 
+// The menu's motion, kept on its own tweens: gsap.defaults() would change every animation on the
+// site, including the home page's journey after a client-side visit.
+const MENU_EASE = 'power2.out'
+
 // --- Main Component ---
 export function SentraKineticNav({ isOpen, onClose }: SentraKineticNavProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const hasInitialized = useRef(false)
 
   // Stable onClose reference
   const onCloseRef = useRef(onClose)
@@ -43,11 +46,6 @@ export function SentraKineticNav({ isOpen, onClose }: SentraKineticNavProps) {
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
-
-    if (!hasInitialized.current) {
-      gsap.defaults({ ease: 'power2.out', duration: 0.7 })
-      hasInitialized.current = true
-    }
 
     const ctx = gsap.context(() => {
       const items = container.querySelectorAll('[data-shape]')
@@ -63,9 +61,9 @@ export function SentraKineticNav({ isOpen, onClose }: SentraKineticNavProps) {
         const onEnter = () => {
           shapesBox
             ?.querySelectorAll('[data-shape-id]')
-            .forEach((s) => gsap.to(s, { opacity: 0, duration: 0.2 }))
+            .forEach((s) => gsap.to(s, { opacity: 0, duration: 0.2, ease: MENU_EASE }))
 
-          gsap.to(shape, { opacity: 1, duration: 0.3 })
+          gsap.to(shape, { opacity: 1, duration: 0.3, ease: MENU_EASE })
           gsap.fromTo(
             els,
             { scale: 0.5, opacity: 0, rotation: -10 },
@@ -89,7 +87,7 @@ export function SentraKineticNav({ isOpen, onClose }: SentraKineticNavProps) {
             ease: 'power2.in',
             overwrite: 'auto',
           })
-          gsap.to(shape, { opacity: 0, duration: 0.4, delay: 0.2 })
+          gsap.to(shape, { opacity: 0, duration: 0.4, delay: 0.2, ease: MENU_EASE })
         }
 
         item.addEventListener('mouseenter', onEnter)
@@ -126,7 +124,7 @@ export function SentraKineticNav({ isOpen, onClose }: SentraKineticNavProps) {
       const fadeEls = container.querySelectorAll('[data-fade]')
       const closeBtn = container.querySelector('[data-close-btn]')
 
-      const tl = gsap.timeline()
+      const tl = gsap.timeline({ defaults: { ease: MENU_EASE, duration: 0.7 } })
 
       if (isOpen) {
         tl.set(wrapper, { display: 'block' })

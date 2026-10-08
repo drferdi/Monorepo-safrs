@@ -51,19 +51,15 @@ TypeScript before the build succeeds.
 
 Run this checklist before every production deployment:
 
-### Landing Page
+### Home Page (the neural journey)
 
-- [ ] All 15 home-page components render without console errors (open DevTools →
-      Console)
-- [ ] `Hero` animated Audrey chat progresses through all 4 phases automatically
-      (allow ~25 seconds)
-- [ ] `SentraSim` — click Start → simulation progresses through all 10 steps to
-      COMPLETE
-- [ ] `SentraSim` — Reset button resets simulation to idle state
-- [ ] `Clients` logo marquee scrolls continuously without stopping
-- [ ] `ClinicalTrajectory` vital-signs chart renders on scroll-into-view
-- [ ] `ClinicalPrognosis` survival curves and radar chart render correctly
-- [ ] `ScrollGallery` full-viewport section renders without layout break
+- [ ] Scrolling from the top runs all fifteen chapters without console errors
+      (open DevTools → Console)
+- [ ] The chapter buttons and the division markers jump to their chapters
+- [ ] THE LEGACY: the field dissolves into the film, the film follows the scroll,
+      the left side of the face becomes neural tissue at the end
+- [ ] READ THE STORY shows every chapter unpinned with the still poster
+- [ ] With OS reduced motion on, the story is readable without the pin
 
 ### Navigation
 

@@ -76,27 +76,20 @@ sentra-main/
 │   └── opengraph-image.tsx     OG image for root route
 │
 ├── components/
-│   ├── Hero.tsx                19.4 KB — animated Audrey chat, 4 clinical phases
+│   ├── neural/                 the home page's GSAP journey (docs/neural-journey.md)
 │   ├── SentraSim.tsx           57.1 KB — interactive CDSS simulation, multi-branch
-│   ├── Audrey.tsx              21.3 KB — Audrey AI section with conversation demo
-│   ├── ClinicalTrajectory.tsx  27.5 KB — vital-signs chart, risk probability bars
-│   ├── ClinicalPrognosis.tsx   28.5 KB — survival curves, radar chart, heatmap
 │   ├── Clients.tsx             13.0 KB — auto-scroll logo marquee
-│   ├── Services.tsx             6.9 KB — 7-service accordion
 │   ├── FAQ.tsx                  4.6 KB — accordion FAQ
 │   ├── Footer.tsx               6.0 KB
 │   ├── Navbar.tsx               3.2 KB
 │   ├── News.tsx                 3.7 KB
-│   ├── About.tsx                3.4 KB
 │   ├── ProjectSlider.tsx        2.0 KB
 │   ├── Showcase.tsx             2.0 KB
 │   ├── CTA.tsx                  2.0 KB
-│   ├── ScrollGallery.tsx        0.3 KB — delegates to ui/immersive-scroll-gallery
 │   └── ui/
 │       ├── immersive-scroll-gallery.tsx
 │       ├── interactive-image-accordion.tsx
 │       ├── morphing-cursor.tsx
-│       ├── sentra-bento-cards.tsx
 │       ├── sentra-kinetic-nav.tsx   (12.8 KB)
 │       └── text-scramble.tsx
 │
@@ -277,8 +270,8 @@ All clinical claims published on `sentrahai.com` must be verified by Chief (Dr. 
 
 - Statistical claims (e.g. "40% reduction in misdiagnosis", "97.2% triage accuracy")
 - Clinical descriptions in article content (`app/insights/data.ts`)
-- Feature descriptions in `components/Services.tsx`
-- Any data displayed in `SentraSim`, `ClinicalTrajectory`, or `ClinicalPrognosis` demo datasets
+- The home page's words (`components/neural/story.ts`)
+- Any data displayed in the `SentraSim` demo dataset
 
 Demo data in these components represents simulated clinical scenarios for illustration only. Any update to demo datasets must include a note in the PR confirming the data does not contain or derive from real patient information.
 
