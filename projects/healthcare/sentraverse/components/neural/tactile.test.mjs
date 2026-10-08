@@ -28,10 +28,13 @@ test('the face sees the pointer as a turn across the viewport and a point on its
 test('the face sits right at full size on a wide desktop and stays on screen on a portrait tablet', () => {
   assert.deepEqual(facePlacement({ width: 1280, height: 800 }, false), { offset: { x: 1.9, y: 0 }, depth: 6, scale: 1 })
   const tall = facePlacement({ width: 768, height: 1024 }, false)
-  assert.equal(tall.scale, .7)
+  assert.equal(tall.scale, .55)
   const rightEdge = (tall.offset.x + 1.5 * tall.scale) * 1.85 / (tall.depth * 768 / 1024)
   assert.ok(rightEdge <= .92 + 1e-9, 'right edge ' + rightEdge)
   assert.ok(tall.offset.x > 0, 'still to the right of centre')
+  // The photo is opaque, so its box must clear the description (8vw padding + 330 px) by a margin (Chief 2026-10-08).
+  const photo = faceBox(tall, { width: 768, height: 1024 })
+  assert.ok(photo.left >= 768 * .08 + 330 + 24, 'photo left edge ' + photo.left)
 })
 
 test('on phones the face fills the band above the text and never reaches it', () => {

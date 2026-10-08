@@ -12,8 +12,9 @@ homepage is the GSAP neural journey (`components/neural/`, `docs/neural-journey.
 baseline `834f6d99`, the tactile/face/photo session up to `fb71a429` + docs `33a9ab9e` (see the
 first 2026-10-08 entry in `DECISIONS.md`), then Codex's "portrait realism" change of the same
 day, found uncommitted in the checkout and finished, gated and committed by this session as
-`cf742bb7` (code) plus the docs commit after it. See the "2026-10-08 (later)" entry in
-`DECISIONS.md` for the decisions, the visible rulings and the evidence.
+`cf742bb7` (code) plus the docs commit `b19cfa12`, then the portrait-tablet face scale fix
+(.55) as the commit after that. See the "2026-10-08 (later)" entry in `DECISIONS.md` for the
+decisions, the visible rulings and the evidence.
 
 What the page does now, on top of the earlier state: the drawn face has a real relief
 (`geometry.ts` `faceDepth`, calibrated by hand, not brightness-as-depth) and grows from the
@@ -48,10 +49,10 @@ None. The Jev router at `~/dev/jev/muse-jev-playbook` does not exist on this mac
 ## Next action
 
 1. Chief judges the new relief, the feature-first reveal and the smaller pointer turn by eye.
-2. Known, Chief's call: on a 768×1024 portrait tablet the opaque photo's left edge overlaps the
-   end of the description line (`facePlacement` scale .7 for aspect < 1.2, or a narrower text
-   block there). Earlier known quirk still stands: on phones past the pin end under the tall
-   footer the stage scrolls up and the photo leaves the top of the viewport.
+2. The 768×1024 overlap is fixed (`facePlacement` scale .55 for aspect < 1.2, third commit of
+   this session); Chief judges the smaller tablet face by eye. Earlier known quirk still stands:
+   on phones past the pin end under the tall footer the stage scrolls up and the photo leaves
+   the top of the viewport.
 3. Not checked this session: no-JavaScript on a phone in the browser (Playwright covers it at
    desktop size).
 4. Publish to `drferdi/Sentraverse` (subtree split) when Chief asks; the Vercel root re-point

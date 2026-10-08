@@ -36,10 +36,13 @@ has a dated heading, the decision, a short rationale, and its evidence.
   `docs/superpowers/plans/` beside the design spec, so no new tracked folder reaches the
   published repo; a stray `.portrait-check.config.ts` (no base config spread) was deleted and
   the sanctioned session-only Chrome config used and deleted.
-- Known, not fixed (Chief's call): on a 768×1024 portrait tablet the opaque photo's left edge
-  (x ≈ 396) overlaps the end of the description line (text block 600 px wide, to x ≈ 661); the
-  drawn face sat there before, the photo makes it visible. Knobs: `facePlacement` scale for
-  aspect < 1.2 (.7) or a narrower text block on portrait tablets.
+- Fixed the same day on Chief's order ("perbaiki overlap tablet 768, kecilkan skala
+  wajahnya"): on a 768×1024 portrait tablet the opaque photo's left edge (x ≈ 396) touched the
+  end of the description line (glyphs to x ≈ 387); `facePlacement` now scales the face to .55
+  (was .7) when the aspect ratio is under 1.2, which keeps the right edge at NDC .92 and moves
+  the photo's left edge to x ≈ 467, 80 px clear of the text. `tactile.test.mjs` asserts the
+  box clears 8vw + 330 px + 24 px (red at .7, green at .55). Browser check of the production
+  build at 768×1024, phase 98.7.
 - Evidence: typecheck 0, lint 0 (two pre-existing `img` warnings), node:test 14/14 (three new
   tests in `face.test.mjs`: depth independent of lighting, feature-first and exactly reversible
   dissolve, relief registered before the first skin pixel), build 0, deploy:dry-run 0,
