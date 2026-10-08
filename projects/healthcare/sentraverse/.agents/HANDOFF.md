@@ -57,3 +57,8 @@ None. The Jev router at `~/dev/jev/muse-jev-playbook` does not exist on this mac
    desktop size).
 4. Publish to `drferdi/Sentraverse` (subtree split) when Chief asks; the Vercel root re-point
    and the README publish from 2026-09-27 are still pending.
+5. A neural-realism spec (tapered SWC-shaped neurons, emission-based key/rim/specular
+   lighting, a GSAP-timed impulse → release → response cycle, pointer parallax shear, colour
+   after detail and a shoulder fade in the reveal) sits at the git-ignored
+   `docs/superpowers/specs/2026-10-08-sentraverse-neural-realism-spec.md`, awaiting Chief's
+   approval; no code changed for it.
