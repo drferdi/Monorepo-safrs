@@ -14,8 +14,9 @@ ending more dramatic (GSAP)" in three local commits — `899705ae` (the master t
 Develop → Lock-on over the portrait, labels decode with ScrambleText), `ae21fe7b` (SplitText
 title reveals, the tempo dwells), the docs commit `eda88d20`, then `2b298200` (the ending's
 teardown clears only what it tweened, so the callout labels keep their places across a
-breakpoint crossing; a flaw older than the task, found in the Browser pane) and the docs
-commit after it. See "2026-10-08 (ending)" in `DECISIONS.md` and `docs/neural-journey.md`.
+breakpoint crossing; a flaw older than the task, found in the Browser pane, where the viewport
+had read 0×0 for a moment) and the docs commit after it. See "2026-10-08 (ending)" in
+`DECISIONS.md` and `docs/neural-journey.md`.
 
 Gates on `ae21fe7b` and again on `2b298200`: `typecheck` 0, `lint` 0 (two pre-existing `img`
 warnings), node:test 38/38,
@@ -61,6 +62,8 @@ None. The Jev router at `~/dev/jev/muse-jev-playbook` does not exist on this mac
   wrappers and the `> span` scoping of the block rule in `journey.module.css`.
 - Never `clearProps: 'all'` on an element whose inline style React owns (the callout labels'
   `left/top`): React does not re-apply it on the next build. `settleEnding` names its props.
+- Titles are split once per matchMedia build (no `autoSplit`, by the task): a resize inside a
+  breakpoint keeps the build-time line split; only the 768 px crossing re-splits.
 - In the Browser pane a manual `window.scrollTo` leaves `data-phase` at 0.00; use the chapter
   buttons. The Chrome capture scripts are the evidence source.
 - Engines without `mask-composite` show the union of the photo masks; on phones past the pin

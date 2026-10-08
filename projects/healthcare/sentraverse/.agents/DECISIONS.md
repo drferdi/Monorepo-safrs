@@ -58,8 +58,9 @@ has a dated heading, the decision, a short rationale, and its evidence.
   chosen by reasoning, not compared. Found in the Browser pane after the gates (commit
   `2b298200`): the teardown's `clearProps: 'all'` on the callout labels also stripped the inline
   `left/top` React sets through `labelStyle`, which React does not re-apply on the next build,
-  so after a breakpoint crossing (a phone rotation, the pane going hidden) all three labels
-  piled into the photo's top-left corner; the teardown before this task had the same flaw.
+  so after a breakpoint crossing (a phone rotation; in the pane the viewport had read 0×0 for
+  a moment, the inferred trigger) all three labels piled into the photo's top-left corner; the
+  teardown before this task had the same flaw.
   `settleEnding` now clears only `opacity, visibility, transform, transformOrigin`, and the
   callouts e2e asserts at every viewport, including the 375 px one past the breakpoint, that no
   two labels overlap (red on the old teardown, green after). The Jev router does not exist on
