@@ -7,14 +7,18 @@ import { MASTER_DURATION, phaseToTime } from '../components/neural/timeline'
 const divisionNames = ['Sentra Artificial Intelligence', 'Sentra Healthcare Solutions', 'Sentra Academic Solutions', 'Sentra Digital & Finance', 'Sentra Mitra Design']
 
 // Scrolls to a story phase through the timeline's own tempo (the scroll travel maps onto the
-// master's hundred units, and phases dwell unevenly across them since 2026-10-08).
+// master's hundred units, and phases dwell unevenly across them since 2026-10-08). The target is
+// measured again on every poll: a resize refresh can lengthen the pin after a scroll, and the page
+// ends with the stage (no slack below it since 2026-10-09).
 async function portraitPhase(page: Page, phase: number) {
-  await page.evaluate(progress => {
-    const spacer = document.querySelector('.pin-spacer')!, stage = document.querySelector('[data-stage]')!
-    const box = spacer.getBoundingClientRect()
-    window.scrollTo(0, window.scrollY + box.top + (box.height - stage.clientHeight) * progress)
-  }, phaseToTime(phase) / MASTER_DURATION)
-  await expect.poll(async () => Math.abs(Number(await page.locator('main').getAttribute('data-phase')) - phase)).toBeLessThan(.06)
+  await expect.poll(async () => {
+    await page.evaluate(progress => {
+      const spacer = document.querySelector('.pin-spacer')!, stage = document.querySelector('[data-stage]')!
+      const box = spacer.getBoundingClientRect()
+      window.scrollTo(0, window.scrollY + box.top + (box.height - stage.clientHeight) * progress)
+    }, phaseToTime(phase) / MASTER_DURATION)
+    return Math.abs(Number(await page.locator('main').getAttribute('data-phase')) - phase)
+  }).toBeLessThan(.06)
 }
 
 test('the film: it fades in through the closing void after the SENTRA chapter, runs while the page scrolls, fits a phone, and the still poster is the photograph in reading mode', async ({ page }) => {
