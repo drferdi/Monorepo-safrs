@@ -14,22 +14,25 @@ export interface SubmenuSection {
 }
 
 /** After lab.xevrion.dev/lab/sidebar-submenu: one section open at a time, items hanging off a drawn tree,
- *  and the branch to the current item lit and following it. */
-export function SidebarSubmenu({ sections, initialSection }: { sections: SubmenuSection[]; initialSection: string }) {
+ *  and the branch to the current item lit and following it. With `follow`, items have no lasting selection:
+ *  the branch follows the pointer or focus and rests on the item used last. */
+export function SidebarSubmenu({ sections, initialSection, follow = false }: { sections: SubmenuSection[]; initialSection: string; follow?: boolean }) {
   const [openId, setOpenId] = useState(initialSection);
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [used, setUsed] = useState<Record<string, number>>({});
   const id = useId();
   return <div className="sidebar-submenu">
     {sections.map((section) => {
       const open = section.id === openId;
-      const selectedIndex = section.items.findIndex((item) => item.id === section.selectedId);
+      const selectedIndex = follow ? (open && hovered !== null ? hovered : used[section.id] ?? 0) : section.items.findIndex((item) => item.id === section.selectedId);
       const panelId = `${id}-${section.id}`;
       return <section key={section.id} className="submenu-section" data-open={open}>
-        <div className="submenu-heading"><button type="button" id={`${panelId}-title`} aria-expanded={open} aria-controls={panelId} onClick={() => setOpenId(section.id)}><span>{section.title}</span><span className="submenu-count">{section.items.length}</span><ChevronDown size={13}/></button>{section.action}</div>
+        <div className="submenu-heading"><button type="button" id={`${panelId}-title`} aria-expanded={open} aria-controls={panelId} onClick={() => { setOpenId(section.id); setHovered(null); }}><span>{section.title}</span>{!follow && <span className="submenu-count">{section.items.length}</span>}<ChevronDown size={13}/></button>{section.action}</div>
         <div id={panelId} role="region" aria-labelledby={`${panelId}-title`} className="submenu-body" inert={!open} aria-hidden={!open}>
           <div className="submenu-clip"><div className="submenu-items">
             {section.items.length > 0 && <Branches count={section.items.length} active={selectedIndex}/>}
-            {section.items.map((item, index) => <div key={item.id} className="submenu-item" style={{ "--item-order": index } as CSSProperties} data-active={item.id === section.selectedId}>
-              <button type="button" aria-current={item.id === section.selectedId ? "true" : undefined} onClick={item.onSelect}>{item.label}</button>{item.actions}
+            {section.items.map((item, index) => <div key={item.id} className="submenu-item" style={{ "--item-order": index } as CSSProperties} data-active={follow ? index === selectedIndex : item.id === section.selectedId} {...(follow ? { onPointerEnter: () => setHovered(index), onPointerLeave: () => setHovered(null), onFocus: () => setHovered(index), onBlur: () => setHovered(null) } : {})}>
+              <button type="button" aria-current={!follow && item.id === section.selectedId ? "true" : undefined} onClick={() => { if (follow) setUsed((value) => ({ ...value, [section.id]: index })); item.onSelect(); }}>{item.label}</button>{item.actions}
             </div>)}
             {!section.items.length && section.empty}
           </div></div>

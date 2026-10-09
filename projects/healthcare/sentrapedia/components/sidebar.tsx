@@ -36,22 +36,24 @@ export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSele
     <aside ref={ref} className={`sidebar ${open ? "is-open" : ""}`} inert={!open} aria-hidden={!open} aria-label="Navigasi workspace">
       <div className="sidebar-brand"><Brand /><button className="icon-button" aria-label="Tutup sidebar" title="Tutup sidebar" onClick={onToggle}><PanelLeft size={16}/></button></div>
       <nav className="main-nav" aria-label="Navigasi utama">
-        <div className="nav-group" role="group" aria-labelledby="nav-group-start"><span className="nav-group-title" id="nav-group-start">Mulai</span>
-          <button onClick={() => onNew()}><Plus/><span>Baru</span><kbd>⌘ K</kbd></button>
-          <button onClick={() => onDialog("patient")}><UserRoundPlus/><span>Buat Patient</span></button>
-          <button onClick={() => onDialog("list")}><ListPlus/><span>Buat daftar Patient</span></button>
-        </div>
-        <div className="nav-group" role="group" aria-labelledby="nav-group-tools"><span className="nav-group-title" id="nav-group-tools">Alat kerja</span>
-          <button onClick={() => { if (mobile) onToggle(); onDialog("queue"); }}><ListPlus/><span>Antrean kerja</span></button>
-          <button onClick={() => { if (mobile) onToggle(); onDialog("templates"); }}><SquarePen/><span>Templat dan favorit</span></button>
-          <button onClick={() => { if (mobile) onToggle(); onDialog("knowledge"); }}><BookOpen/><span>Referensi</span></button>
-          <button onClick={() => onDialog("scribe")}><AudioLines/><span>Voice mode</span></button>
-        </div>
-        <div className="nav-group" role="group" aria-labelledby="nav-group-system"><span className="nav-group-title" id="nav-group-system">Sistem</span>
-          <button onClick={() => { if (mobile) onToggle(); onDialog("commands"); }}><Command/><span>Command Center</span><kbd>⌘ J</kbd></button>
-          <button onClick={() => onDialog("search")}><Search/><span>Cari</span><kbd>⌘ /</kbd></button>
-          <button onClick={() => onDialog("settings")}><SlidersHorizontal/><span>Pengaturan Agent</span></button>
-        </div>
+        <SidebarSubmenu follow initialSection="start" sections={[
+          { id: "start", title: "Mulai", items: [
+            { id: "new", label: <><Plus/><span>Baru</span><kbd>⌘ K</kbd></>, onSelect: () => onNew() },
+            { id: "patient", label: <><UserRoundPlus/><span>Buat Patient</span></>, onSelect: () => onDialog("patient") },
+            { id: "list", label: <><ListPlus/><span>Buat daftar Patient</span></>, onSelect: () => onDialog("list") },
+          ] },
+          { id: "tools", title: "Alat kerja", items: [
+            { id: "queue", label: <><ListPlus/><span>Antrean kerja</span></>, onSelect: () => { if (mobile) onToggle(); onDialog("queue"); } },
+            { id: "templates", label: <><SquarePen/><span>Templat dan favorit</span></>, onSelect: () => { if (mobile) onToggle(); onDialog("templates"); } },
+            { id: "knowledge", label: <><BookOpen/><span>Referensi</span></>, onSelect: () => { if (mobile) onToggle(); onDialog("knowledge"); } },
+            { id: "scribe", label: <><AudioLines/><span>Voice mode</span></>, onSelect: () => onDialog("scribe") },
+          ] },
+          { id: "system", title: "Sistem", items: [
+            { id: "commands", label: <><Command/><span>Command Center</span><kbd>⌘ J</kbd></>, onSelect: () => { if (mobile) onToggle(); onDialog("commands"); } },
+            { id: "search", label: <><Search/><span>Cari</span><kbd>⌘ /</kbd></>, onSelect: () => onDialog("search") },
+            { id: "settings", label: <><SlidersHorizontal/><span>Pengaturan Agent</span></>, onSelect: () => onDialog("settings") },
+          ] },
+        ]}/>
       </nav>
       <div className="sidebar-content"><SidebarSubmenu initialSection="encounters" sections={[
         { id: "lists", title: "Daftar Patient", action: <button className="small-icon" aria-label="Tambah daftar Patient" onClick={() => onDialog("list")}><Plus size={12}/></button>, items: state.lists.map((list) => ({ id: list.id, label: <><ListPlus size={14}/><span>{list.name}</span><span className="count">{list.patientIds.length}</span></>, onSelect: () => onDialog("list", list.id) })), empty: <button className="empty-list" onClick={() => onDialog("list")}>Buat daftar Patient</button> },
