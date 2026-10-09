@@ -3,6 +3,17 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (type) — No text under 11 px on desktop or 10 px on phones
+
+Decision: every label in every chapter (specimen, eyebrows, annotations, controls, coordinates,
+cursor label, overview, the legacy's signature and brand lines) is raised to at least 11 px on
+desktop and 10 px on phones; the registered mark (®) is a sign and stays 9 px. Short phones get
+more room above the controls and a closer-set legacy so nothing touches the controls.
+
+Rationale: Chief found the 7–9 px labels too small to read.
+
+Evidence: the neural e2e "no text is smaller than 11 px on a desktop or 10 px on a phone".
+
 ## 2026-10-09 (layout) — The page ends with the stage
 
 Decision: the colophon (copyright, tagline, Privacy and Terms) and the division list below it are

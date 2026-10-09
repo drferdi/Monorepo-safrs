@@ -534,3 +534,22 @@ test('the ecosystem stands to the right of the founder at the end, and the last 
   await expect(nav).toBeHidden()
   await expect.poll(flush).toEqual([0, 0])
 })
+
+test('no text is smaller than 11 px on a desktop or 10 px on a phone, and the legacy clears the controls on a short phone', async ({ page }) => {
+  // Every element that holds its own words; the registered mark (®) is a sign, not text.
+  const smallest = () => page.locator('main').evaluate(main => Math.min(...Array.from(main.querySelectorAll('*'))
+    .filter(element => Array.from(element.childNodes).some(node => node.nodeType === Node.TEXT_NODE && /[\p{L}\p{N}]/u.test(node.textContent ?? '')))
+    .map(element => Number.parseFloat(getComputedStyle(element).fontSize))))
+  for (const [width, height, floor] of [[1280, 800, 11], [375, 812, 10]]) {
+    await page.setViewportSize({ width, height })
+    await page.goto('/')
+    await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+    expect(await smallest(), `${width}x${height}`).toBeGreaterThanOrEqual(floor)
+  }
+  await page.setViewportSize({ width: 360, height: 640 })
+  await page.goto('/')
+  await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+  await portraitPhase(page, 100)
+  const cta = (await page.locator('#human [data-magnetic]').boundingBox())!, controls = (await page.locator('footer').boundingBox())!
+  expect(cta.y + cta.height).toBeLessThanOrEqual(controls.y)
+})

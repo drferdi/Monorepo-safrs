@@ -34,18 +34,18 @@
 .mark { display: block; width: auto; height: 28px; }
 .wordmarkDot { font-size: 9px; align-self: flex-start; margin-left: -9px; margin-top: 6px; }
 .edition, .specimen, .coordinates, .eyebrow, .annotation, .begin, .controls, .cta, .loading { font-family: var(--neural-mono); }
-.edition { font-size: 9px; color: var(--neural-muted); letter-spacing: .12em; }
+.edition { font-size: 11px; color: var(--neural-muted); letter-spacing: .12em; }
 .nav { display: flex; align-items: center; gap: 30px; font-size: 11px; }
 .nav button { color: inherit; border: 0; background: none; padding: 8px 0; }
 .nav a:last-child { border-bottom: 1px solid var(--neural-line); padding-block: 8px; }
 .nav a span { margin-left: 9px; }
-.specimen { position: absolute; left: 4.2vw; top: 150px; display: flex; align-items: center; gap: 14px; font-size: 8px; letter-spacing: .12em; color: var(--neural-muted); }
+.specimen { position: absolute; left: 4.2vw; top: 150px; display: flex; align-items: center; gap: 14px; font-size: 11px; letter-spacing: .12em; color: var(--neural-muted); }
 .specimen i { width: 44px; height: 1px; background: var(--neural-line); }
 .narrative { position: relative; z-index: 2; }
 .chapter { min-height: 90svh; padding: 210px 8vw 130px; position: relative; display: flex; align-items: center; outline: none; }
 .chapter > div { width: min(600px, 100%); }
-.eyebrow { font-size: 9px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: var(--neural-muted); display: flex; align-items: center; gap: 18px; margin: 0 0 30px; }
-.index { color: var(--neural-blue); font-size: 10px; padding-right: 15px; border-right: 1px solid var(--neural-line); }
+.eyebrow { font-size: 11px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: var(--neural-muted); display: flex; align-items: center; gap: 18px; margin: 0 0 30px; }
+.index { color: var(--neural-blue); font-size: 12px; padding-right: 15px; border-right: 1px solid var(--neural-line); }
 .chapter h1, .chapter h2 { font-family: var(--font-jakarta), sans-serif; font-size: clamp(42px, 5.1vw, 82px); font-weight: 400; line-height: 1.13; letter-spacing: -.045em; margin: 0; }
 /* Direct children only: SplitText nests its own line, mask, word and character spans inside the
    h2, and a block rule on those would break every word onto its own line. */
@@ -61,9 +61,9 @@
 }
 @keyframes hero-unaided { to { opacity: 1; } }
 .description { color: var(--neural-muted); font-size: 12px; line-height: 1.85; max-width: 330px; margin: 28px 0 0; text-wrap: pretty; }
-.annotation { display: flex; align-items: center; gap: 9px; font-size: 8px; letter-spacing: .12em; color: var(--neural-blue); margin-top: 38px; }
+.annotation { display: flex; align-items: center; gap: 9px; font-size: 11px; letter-spacing: .12em; color: var(--neural-blue); margin-top: 38px; }
 .annotation > span { width: 4px; height: 4px; border: 1px solid var(--neural-blue); border-radius: 50%; }
-.begin { display: flex; align-items: center; gap: 36px; font-size: 8px !important; letter-spacing: .15em; background: none; border: 0; color: var(--neural-white); padding: 0; margin-top: 46px; }
+.begin { display: flex; align-items: center; gap: 36px; font-size: 11px !important; letter-spacing: .15em; background: none; border: 0; color: var(--neural-white); padding: 0; margin-top: 46px; }
 .begin span { border: 1px solid var(--neural-line); border-radius: 50%; display: grid; place-items: center; width: 30px; height: 30px; font-size: 14px; }
 .division { padding-left: 56%; }
 .division > div { width: 440px; }
@@ -80,11 +80,11 @@
 .centered .eyebrow, .centered .annotation { justify-content: center; }
 .centered .description { margin-inline: auto; max-width: 390px; }
 .centered .annotation { margin-top: 28px; }
-.cta { display: inline-flex; align-items: center; gap: 42px; padding: 19px 0; margin-top: 27px; border-bottom: 1px solid var(--neural-blue); font-size: 9px; letter-spacing: .12em; }
+.cta { display: inline-flex; align-items: center; gap: 42px; padding: 19px 0; margin-top: 27px; border-bottom: 1px solid var(--neural-blue); font-size: 11px; letter-spacing: .12em; }
 .cta span { font-size: 17px; }
-.coordinates { position: absolute; right: 4.2vw; top: 43%; display: flex; flex-direction: column; gap: 25px; text-align: right; font-size: 8px; line-height: 1.8; color: var(--neural-muted); letter-spacing: .1em; }
+.coordinates { position: absolute; right: 4.2vw; top: 43%; display: flex; flex-direction: column; gap: 25px; text-align: right; font-size: 11px; line-height: 1.8; color: var(--neural-muted); letter-spacing: .1em; }
 .crosshair { font-size: 21px; color: var(--neural-blue); font-weight: 200; }
-.controls { display: flex; justify-content: space-between; align-items: center; gap: 24px; position: absolute; bottom: 30px; left: 4.2vw; right: 4.2vw; z-index: 5; font-size: 8px; letter-spacing: .08em; color: var(--neural-muted); }
+.controls { display: flex; justify-content: space-between; align-items: center; gap: 24px; position: absolute; bottom: 30px; left: 4.2vw; right: 4.2vw; z-index: 5; font-size: 11px; letter-spacing: .08em; color: var(--neural-muted); }
 .chapterStatus { display: flex; align-items: center; gap: 20px; min-width: 230px; }
 .chapterStatus > span:first-child { color: var(--neural-blue); }
 .chapterStatus > span:last-child { text-transform: uppercase; }
@@ -94,7 +94,7 @@
 .transport button[aria-current="step"] span { height: 20px; background: var(--neural-blue); }
 .transport button:hover span { background: var(--neural-white); }
 .settings { display: flex; align-items: center; gap: 24px; }
-.settings button { padding: 12px 0; border: 0; background: transparent; color: inherit; font-size: 8px; letter-spacing: .08em; white-space: nowrap; }
+.settings button { padding: 12px 0; border: 0; background: transparent; color: inherit; font-size: 11px; letter-spacing: .08em; white-space: nowrap; }
 .soundIcon { font-size: 14px; color: var(--neural-blue); margin-right: 7px; }
 .progress { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--neural-line); z-index: 5; }
 .progress > span { display: block; height: 100%; background: var(--neural-blue); transform: scaleX(0); transform-origin: left; }
@@ -108,13 +108,13 @@
 .head span { position: absolute; right: -3px; top: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--neural-white); box-shadow: 0 0 10px 2px rgb(155 185 215 / 55%), -14px 0 12px -4px rgb(155 185 215 / 35%); }
 .cursor { position: fixed; z-index: 10; top: -5px; left: -5px; width: 10px; height: 10px; border: 1px solid var(--neural-blue); border-radius: 50%; pointer-events: none; opacity: 0; }
 .cursor[data-active="true"] { box-shadow: 0 0 25px 5px rgb(155 185 215 / 20%); }
-.cursor span { position: absolute; left: 18px; top: -2px; white-space: nowrap; font-family: var(--neural-mono); font-size: 8px; letter-spacing: .12em; text-transform: uppercase; color: var(--neural-blue); opacity: 0; transition: opacity .25s; }
+.cursor span { position: absolute; left: 18px; top: -2px; white-space: nowrap; font-family: var(--neural-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--neural-blue); opacity: 0; transition: opacity .25s; }
 .cursor[data-active="true"] span { opacity: 1; }
 .loading { display: none; }
-.journey[data-loading="true"] .loading { display: flex; position: absolute; right: 15%; top: 49%; flex-direction: column; gap: 16px; font-size: 8px; letter-spacing: .1em; color: var(--neural-blue); }
+.journey[data-loading="true"] .loading { display: flex; position: absolute; right: 15%; top: 49%; flex-direction: column; gap: 16px; font-size: 11px; letter-spacing: .1em; color: var(--neural-blue); }
 .loading i { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--neural-blue), transparent); }
 .overview { display: none; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
-.overview button { position: absolute; pointer-events: auto; width: 195px; padding: 9px 0; border: 0; border-top: 1px solid var(--neural-line); background: transparent; color: var(--neural-white); font-family: var(--neural-mono); font-size: 9px; line-height: 1.8; text-align: left; }
+.overview button { position: absolute; pointer-events: auto; width: 240px; padding: 9px 0; border: 0; border-top: 1px solid var(--neural-line); background: transparent; color: var(--neural-white); font-family: var(--neural-mono); font-size: 12px; line-height: 1.8; text-align: left; }
 .overview button span { margin-right: 10px; color: var(--neural-blue); }
 .overview button:nth-child(1) { left: 16%; top: 29%; }
 .overview button:nth-child(2) { right: 13%; top: 31%; }
@@ -146,7 +146,7 @@
   .marker { right: 54%; width: 15% !important; }
 }
 @media (max-width: 767px) {
-  .overview button { width: 135px; font-size: 7px; }
+  .overview button { width: 150px; font-size: 10px; }
   .overview button:nth-child(1) { left: 7%; top: 25%; }
   .overview button:nth-child(2) { right: 7%; top: 27%; }
   .overview button:nth-child(3) { left: 7%; bottom: auto; top: 34%; }
@@ -157,23 +157,24 @@
   .wordmark { font-size: 11px; }
   .mark { height: 24px; }
   .nav { width: 100%; justify-content: space-between; gap: 12px; font-size: 10px; }
-  .specimen { top: 135px; left: 7vw; font-size: 7px; gap: 10px; }
+  .specimen { top: 135px; left: 7vw; font-size: 10px; gap: 10px; }
   .specimen i { width: 25px; }
   .chapter, .division { padding: 240px 7vw 145px; align-items: flex-end; }
   .journey[data-enhanced="cinematic"] .chapter { padding: 190px 7vw 145px; }
   .chapter h1, .chapter h2 { font-size: clamp(33px, 8.5vw, 58px); letter-spacing: -.05em; }
   .centered h2 { font-size: clamp(27px, 7.2vw, 52px); letter-spacing: .015em; }
-  .eyebrow { margin-bottom: 20px; font-size: 8px; gap: 12px; }
+  .eyebrow { margin-bottom: 20px; font-size: 10px; gap: 12px; }
   .description { margin-top: 20px; font-size: 11px; max-width: 290px; }
-  .annotation { font-size: 7px; margin-top: 22px; line-height: 1.8; }
-  .begin { margin-top: 24px; font-size: 7px !important; }
+  .annotation { font-size: 10px; margin-top: 22px; line-height: 1.8; }
+  .begin { margin-top: 24px; font-size: 10px !important; }
   .marker { top: 31%; left: 24%; width: 35% !important; transform: rotate(28deg); }
   .controls { bottom: 19px; left: 7vw; right: 7vw; flex-wrap: wrap; gap: 8px; }
-  .chapterStatus { font-size: 7px; min-width: 0; flex: 1; }
+  .chapterStatus { font-size: 10px; min-width: 0; flex: 1; gap: 12px; }
+  .chapterStatus > span:first-child { white-space: nowrap; }
   .transport { order: 3; width: 100%; justify-content: space-between; }
   .transport button { padding: 7px; min-width: 14px; min-height: 30px; }
   .settings { gap: 12px; }
-  .settings button { font-size: 7px; }
+  .settings button { font-size: 10px; }
   .soundIcon { display: none; }
   .cursor { display: none; }
   .journey[data-enhanced="reading"] .header { padding-inline: 7vw; }
@@ -181,7 +182,7 @@
   .journey[data-enhanced="reading"] .chapter { min-height: 95svh; padding-top: 190px; }
 }
 @media (max-width: 767px) and (max-height: 700px) {
-  .journey[data-enhanced="cinematic"] .chapter { padding-bottom: 90px; }
+  .journey[data-enhanced="cinematic"] .chapter { padding-bottom: 112px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .journey *, .journey *::before, .journey *::after { scroll-behavior: auto !important; transition: none !important; }
@@ -203,20 +204,20 @@
 .legacyCopy { position: relative; z-index: 1; }
 .legacyCopy h2, .legacyCopy .eyebrow, .tagline, .signature, .brand, .legacyCopy .cta { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
 .legacyCopy h2 { font-weight: 300; letter-spacing: .04em; color: rgb(241 244 248 / 94%); }
-.presence { font-size: 10px; letter-spacing: .32em; color: var(--neural-white); margin-bottom: 34px; }
+.presence { font-size: 12px; letter-spacing: .32em; color: var(--neural-white); margin-bottom: 34px; }
 .tagline { font-family: var(--font-jakarta), sans-serif; font-size: 14px; font-weight: 300; letter-spacing: .2em; text-transform: uppercase; color: #c5cfda; margin: 26px 0 0; }
 .signature, .brand { font-family: var(--neural-mono); display: flex; flex-direction: column; gap: 9px; letter-spacing: .22em; text-transform: uppercase; margin: 0; }
 .signature { margin-top: 42px; }
-.signature strong { font-family: var(--font-inter), sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .3em; color: var(--neural-white); }
-.signature span, .brand span { font-size: 8px; color: var(--neural-muted); }
+.signature strong { font-family: var(--font-inter), sans-serif; font-size: 13px; font-weight: 500; letter-spacing: .3em; color: var(--neural-white); }
+.signature span, .brand span { font-size: 11px; color: var(--neural-muted); }
 .brand { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--neural-line); gap: 8px; }
-.brand strong { font-size: 9px; font-weight: 400; letter-spacing: .36em; color: #91b9d1; }
+.brand strong { font-size: 12px; font-weight: 400; letter-spacing: .36em; color: #91b9d1; }
 .legacyCopy .cta { margin-top: 30px; }
 /* The ecosystem beside the founder: in the flow it follows the words; on the cinematic stage it
    stands at the right edge, centred on the figure. Positioned without a transform (the scene
    tweens its y). */
 .legacyDivisions { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 13px; }
-.legacyDivisions > span { font-family: var(--neural-mono); font-size: 9px; letter-spacing: .36em; text-transform: uppercase; color: #91b9d1; padding-bottom: 16px; margin-bottom: 3px; border-bottom: 1px solid var(--neural-line); }
+.legacyDivisions > span { font-family: var(--neural-mono); font-size: 11px; letter-spacing: .36em; text-transform: uppercase; color: #91b9d1; padding-bottom: 16px; margin-bottom: 3px; border-bottom: 1px solid var(--neural-line); }
 .legacyDivisions a { font-family: var(--font-jakarta), sans-serif; font-size: 13px; font-weight: 300; letter-spacing: .06em; color: #c5cfda; text-decoration: none; transition: color .3s; }
 .legacyDivisions a:hover, .legacyDivisions a:focus-visible { color: var(--neural-white); }
 .legacyDivisions > * { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
@@ -228,12 +229,20 @@
   .journey[data-enhanced="cinematic"] .legacyDivisions { display: none; }
 }
 @media (max-width: 767px) {
-  .presence { font-size: 8px; letter-spacing: .26em; margin-bottom: 22px; }
+  .presence { font-size: 10px; letter-spacing: .26em; margin-bottom: 22px; }
   .tagline { font-size: 11px; letter-spacing: .16em; margin-top: 18px; }
   .signature { margin-top: 26px; gap: 6px; }
-  .signature strong { font-size: 10px; }
+  .signature strong { font-size: 12px; }
+  .signature span, .brand span { font-size: 10px; }
   .brand { margin-top: 20px; padding-top: 16px; }
   .legacyCopy .cta { margin-top: 20px; }
+}
+/* Short phones: the legacy's words close up so the way on clears the controls. */
+@media (max-width: 767px) and (max-height: 700px) {
+  .tagline { margin-top: 12px; }
+  .signature { margin-top: 16px; }
+  .brand { margin-top: 14px; padding-top: 12px; }
+  .legacyCopy .cta { margin-top: 8px; padding-block: 12px; }
 }
 @media (max-height: 620px) and (min-width: 768px) {
   .presence { margin-bottom: 20px; }
