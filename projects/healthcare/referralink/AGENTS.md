@@ -1,5 +1,11 @@
 # Referralink (MEDLINK) — Capsule Router
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 ## Inheritance
 
 This file is sufficient capsule-local guidance after extraction. When nested in a governed
@@ -11,9 +17,9 @@ must not become lifecycle or standalone-verification dependencies.
 - Project: Referralink, published as MEDLINK (package `medlink`, domain: `healthcare`)
 - Objective: Public sandbox dashboard for differential-diagnosis exploration, ICD-10 mapping,
   and referral considerations on synthetic data only.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2`. The diagnosis flow (`api/diagnosis.ts`, `api/_services/diagnosis*`) is
-  clinical-support logic; treat changes to it as R3 and ask Chief first.
+  clinical-support logic; treat changes to it as R3 and ask Gaffer first.
 
 ## Standalone contract
 
@@ -49,7 +55,7 @@ All commands run from this capsule root as argv; see `project.contract.json`.
 
 - Do not add clinical, patient, EMR, or PHI flows into the public sandbox.
 - Prefer the smallest reversible change.
-- Protected auth surface, which requires Chief's explicit approval before any change:
+- Protected auth surface, which requires Gaffer's explicit approval before any change:
   the `App.tsx` session gate (`sessionState`, `getSandboxSession`), `vite-pages/Login.tsx`,
   `src/login.scss`, and `tests/browser/medlink.acceptance.spec.ts`. "Dead code" removal does
   not apply to these files even if the gate calling them looks unreachable; that

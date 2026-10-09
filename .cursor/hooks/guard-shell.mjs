@@ -18,7 +18,9 @@ try {
   const raw = readFileSync(0, "utf8").trim();
   payload = raw ? JSON.parse(raw) : null;
 } catch {
-  respond({ permission: "allow", user_message: "", agent_message: "" });
+  // hooks.json declares failClosed: an unreadable payload must not run unguarded.
+  const message = "SAFRS guard: hook payload could not be parsed; command blocked.";
+  respond({ permission: "deny", user_message: message, agent_message: message });
 }
 
 const root = process.cwd();

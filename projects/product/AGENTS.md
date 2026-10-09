@@ -12,7 +12,7 @@ Karena itu isinya hanya dua berkas: `AGENTS.md` (berkas ini) dan `README.md`.
 
 - Domain: `product`
 - Cakupan: Produk yang dirilis ke publik, lengkap dengan lisensi, changelog, dan kewajiban rilisnya.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2` — rilis publik dan perubahan lisensi adalah `R3`.
 
 ## Capsule anak

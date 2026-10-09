@@ -1,5 +1,11 @@
 # Med Assist — Capsule Router
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 ## Inheritance
 
 This file is sufficient capsule-local guidance after extraction. When nested in a governed
@@ -12,11 +18,11 @@ must not become lifecycle or standalone-verification dependencies.
   `healthcare`)
 - Objective: Chrome side-panel extension that assists FKTP clinicians in ePuskesmas with
   anamnesis, vital signs, differential diagnosis, and pharmacotherapy.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2`. Clinical logic — `lib/iskandar-diagnosis-engine/**`,
   `lib/emergency-detector/**`, `lib/clinical/**`, and `public/data/penyakit.json` — is R3:
-  get Chief's approval before changing it.
-- Language: Bahasa Indonesia for Chief-facing notes; English for code.
+  get Gaffer's approval before changing it.
+- Language: Bahasa Indonesia mixed with English (~70:30) for Gaffer-facing notes; English for code.
 
 ## Standalone contract
 

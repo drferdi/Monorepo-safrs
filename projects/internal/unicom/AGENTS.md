@@ -1,10 +1,16 @@
 # UNICOM Capsule Router
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 ## Objective and ownership
 
 - Project: UNICOM (domain: internal)
 - Objective: provide the legacy multi-agent communication room as a standalone Next.js capsule.
-- Human owner: Chief
+- Human owner: Gaffer
 - Default risk: R1. Provider credentials, production platform adapters, and persistent-state changes require separate authorization.
 
 ## Standalone contract

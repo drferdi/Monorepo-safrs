@@ -114,7 +114,26 @@ const target =
   payload?.tool_input?.notebook_path ??
   payload?.tool_input?.path ??
   null;
-const root = target ? repositoryRootFor(String(target)) : process.cwd();
+/**
+ * Bash events carry no target path, and Claude runs hooks in the session's
+ * current directory, which follows every `cd`. Resolving the root from
+ * process.cwd() made the guard import fail from any subdirectory: node exited
+ * 1, which Claude treats as a non-blocking error, so the command ran unguarded.
+ */
+function repositoryToplevel(directory) {
+  try {
+    return execFileSync("git", ["-C", directory, "rev-parse", "--show-toplevel"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    return directory;
+  }
+}
+
+const root = target
+  ? repositoryRootFor(String(target))
+  : repositoryToplevel(process.cwd());
 const [{ authorize }, claude] = await Promise.all([
   import(pathToFileURL(path.join(root, "tools/automation/src/guard.mjs")).href),
   import(

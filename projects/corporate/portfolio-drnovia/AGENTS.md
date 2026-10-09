@@ -1,5 +1,11 @@
 # Portfolio Dr. Novia — Capsule Agent Router
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
 
 This file is the machine README for the NOVIA STUDIO project. Humans start at
@@ -9,9 +15,9 @@ standalone proof depends on them.
 
 ## Always
 
-- Stay inside this project directory unless Chief explicitly expands scope.
+- Stay inside this project directory unless Gaffer explicitly expands scope.
 - Treat this capsule as a fully standalone project that may be copied into its own repository.
-- Preserve the Framer visual composition (layout, CSS, class names, assets). Copy and image swaps only when Chief asks.
+- Preserve the Framer visual composition (layout, CSS, class names, assets). Copy and image swaps only when Gaffer asks.
 - Attach Lenis to `.framer-bpy7lj` (Content-Wrapper). Never bind Lenis to
   `window` while that nested element is the real scroller.
 - State CURRENT vs TARGET. Do not claim a hosted production URL, a pnpm
@@ -34,11 +40,11 @@ standalone proof depends on them.
 - Intercept wheel/touch on `window` while `.framer-bpy7lj` owns overflow.
 - Weaken tests or an enclosing repository's contribution gates to make a slice pass.
 - Invent auth, CMS, analytics pixels, or production URLs.
-- Commit unless Chief asks.
+- Commit unless Gaffer asks.
 
 ## Owned scope
 
-- Project: Sentra portfolio sites (Dr. Novia Anggraini). Human owner: **Chief**. Default risk: **R1**.
+- Project: Sentra portfolio sites (Dr. Novia Anggraini). Human owner: **Gaffer**. Default risk: **R1**.
 - Capsule: `projects/corporate/portfolio-drnovia/**`.
 - CURRENT runnable site: React 18 + vendored Lenis at root.
 - Consumed, not owned: none of the `@safrs/*` runtime packages.
@@ -93,4 +99,4 @@ flowchart LR
 
 Default **R1** inside this capsule. Escalate: dependencies, lockfile, CI, shared packages, or
 changes to an enclosing repository's governance → **R2**. Hosted production, credentials, DNS → **R3**,
-prepare only until Chief authorizes.
+prepare only until Gaffer authorizes.

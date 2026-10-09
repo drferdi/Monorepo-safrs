@@ -1,5 +1,11 @@
 # SideLab — Capsule Router
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 ## Inheritance
 
 This file is sufficient capsule-local guidance after extraction. When nested in a governed
@@ -12,10 +18,10 @@ must not become lifecycle or standalone-verification dependencies.
 - Objective: research-prototype clinical decision support for FKTP physicians: a Python engine
   (`sidelab-engine/`), a web dashboard and API (`artifacts/`), shared libraries (`lib/`), and a
   desktop shell (`electron-app/`). The physician stays the final clinical authority.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2`. Clinical reasoning in `sidelab-engine/sidelab/` and its safety tests in
-  `sidelab-engine/tests/clinical/` are R3: get Chief's approval before changing them.
-- Language: Bahasa Indonesia for Chief-facing notes; English for code.
+  `sidelab-engine/tests/clinical/` are R3: get Gaffer's approval before changing them.
+- Language: Bahasa Indonesia mixed with English (~70:30) for Gaffer-facing notes; English for code.
 
 ## Standalone contract
 

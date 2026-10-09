@@ -1,5 +1,11 @@
 # HealthSphere — Capsule Router
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 ## Inheritance
 
 This file is sufficient capsule-local guidance after extraction. When nested in a governed
@@ -11,8 +17,8 @@ must not become lifecycle or standalone-verification dependencies.
 - Project: HealthSphere (domain: `healthcare`), formerly Primary Healthcare
 - Objective: Public website of UPTD Puskesmas PONED Balowerti Kediri (`website/`) plus the
   master reference datasets for primary care (`database/`).
-- Human owner: Chief (dr. Ferdi Iskandar)
-- Default risk: `R1`. Destructive changes to `database/` datasets are R2 and need Chief's
+- Human owner: Gaffer (dr. Ferdi Iskandar)
+- Default risk: `R1`. Destructive changes to `database/` datasets are R2 and need Gaffer's
   approval, because other tools consume their diagnosis codes.
 
 ## Standalone contract
@@ -46,7 +52,7 @@ All commands run from this capsule root as argv; see `project.contract.json`.
 ## Rules
 
 - No patient data or secrets in content or commits.
-- Do not delete or change established ICD-10 codes without a sound medical basis; warn Chief
+- Do not delete or change established ICD-10 codes without a sound medical basis; warn Gaffer
   when changing an established diagnosis code.
 - Keep the dataset JSON valid; `icd10.json` is the primary reference when sources conflict.
 - The website is a public information site, not a clinical engine.

@@ -189,6 +189,17 @@
       "network_endpoints": ["127.0.0.1:16686", "127.0.0.1:4317", "127.0.0.1:4318"],
       "provenance": "compose.telemetry.yaml → jaegertracing/all-in-one:1.62",
       "review_status": "APPROVED"
+    },
+    {
+      "id": "openrouter-llm-api",
+      "owner": "repository-maintainers",
+      "purpose": "Model inference gateway for Factory Droid custom models (DeepSeek Pro, DeepSeek V4.1 Flash, GLM-5.3 Flash); prompts can carry repository source and task context",
+      "allowed_operations": ["model-inference"],
+      "data_scope": "repository-source-and-task-context-sent-to-openrouter-and-its-upstream-model-providers",
+      "authentication": "api-key-in-user-scope-factory-settings",
+      "network_endpoints": ["openrouter.ai"],
+      "provenance": "~/.factory/settings.json customModels, baseUrl https://openrouter.ai/api/v1; registered on Gaffer's instruction 2026-10-10",
+      "review_status": "APPROVED"
     }
   ]
 }

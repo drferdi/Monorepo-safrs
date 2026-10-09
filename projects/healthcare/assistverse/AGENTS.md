@@ -1,5 +1,11 @@
 # Assistverse — Capsule Router
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 ## Inheritance
 
 This file is sufficient capsule-local guidance after extraction. When nested in a governed
@@ -11,7 +17,7 @@ must not become lifecycle or standalone-verification dependencies.
 - Project: Assistverse (domain: `healthcare`), package `sentra-assist`
 - Objective: Public Sentra Assist website served under `sentrahai.com/asisten-medis`, with a
   pilot sign-up, wiki, Sentrapedia reference, and an AI chat demo.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R1`. It is an active prototype and never a clinical system.
 
 ## Standalone contract
@@ -47,7 +53,7 @@ All commands run from this capsule root as argv; see `project.contract.json`.
 
 ## Visual assets and illustration guidelines
 
-Chief prefers images in this exact style. Use this prompt and style when generating or selecting
+Gaffer prefers images in this exact style. Use this prompt and style when generating or selecting
 images for this project:
 
 **Prompt style:** "A high-end, premium minimalist architectural wireframe sketch, monochrome,
@@ -61,5 +67,5 @@ inspired, lots of negative space."
 ## Prohibited actions
 
 - Never store patient data; pilot sign-up holds only professional contact details.
-- Do not run `scripts/migrate-turso.mjs` against a real database without Chief's approval.
+- Do not run `scripts/migrate-turso.mjs` against a real database without Gaffer's approval.
 - Do not use production credentials or production data.
