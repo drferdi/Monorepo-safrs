@@ -27,6 +27,14 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   `docs/testing.md` were added. `check_topology` passes locally.
   - Committed tree alone: tsc, eslint and vitest (120 tests) pass.
   - Working tree: typecheck, lint, 168/168 tests, build and deploy:dry-run pass.
+- `1f332331`: sentrapedia now has `project.contract.json` (with `scripts/npm.mjs`), and its
+  known-nonconformance entry is gone. `pnpm project:verify healthcare/sentrapedia` passes every
+  stage, smoke included. `check_project_independence` reports 19 capsules and 1 known
+  non-conformance (control-center).
+- `62d488ee`: `~/.cursor/hooks/jev-intent.ps1` (outside the repo) now sends only the first
+  non-empty line of a prompt, capped at 200 characters, instead of up to 4000 characters. Its
+  test passes 6/6. `.safrs/tool-inventory.json` records the new scope. The original hook is
+  backed up in this session's scratchpad.
 - CI will still flag sentrapedia `docs/architecture.md`, which is not committed. The only copy is
   another session's untracked `docs/ARCHITECTURE.md`. Windows passes because its file names are
   case-insensitive; Linux does not.
@@ -51,10 +59,9 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 ## Next action
 
 - Sentrapedia: commit the architecture doc as lowercase `docs/architecture.md` once its owner
-  session finishes it. Write `project.contract.json` from `capsule.json`, then remove the
-  known-nonconformance entry.
-- Gaffer: these audit actions from section 7 are not approved yet: A-2..A-7, A-11..A-19, and
-  the jev-intent part of A-8. A-1 (key rotation) is Gaffer's own job.
+  session finishes it.
+- Gaffer: these audit actions from section 7 are not approved yet: A-2..A-7 and A-11..A-19.
+  A-1 (key rotation) is Gaffer's own job.
 - `.codex/agents` still say "Chief", and two agents share the name `security-reviewer`.
 - Decide whether `.safrs/adapter-capabilities.json` keeps droid `read_only_disabled`.
 
