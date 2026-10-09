@@ -98,6 +98,6 @@ function Branches({ count, active, row }: { count: number; active: number; row: 
   }, [active, row]);
   return <svg aria-hidden="true" className="submenu-tree" width={14} height={count * row} fill="none" strokeLinecap="round">
     <path d={treePath(count, row)} className="submenu-tree-grey"/>
-    {active >= 0 && <path ref={lit} pathLength={1} className="submenu-tree-lit"/>}
+    <path ref={lit} pathLength={1} className="submenu-tree-lit" visibility={active >= 0 ? "visible" : "hidden"}/>
   </svg>;
 }

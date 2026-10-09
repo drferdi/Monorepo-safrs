@@ -24,13 +24,15 @@ export function restoreNavMemory(raw: string | null, shape: NavShape, fallback: 
   return shape.map((section) => section.id).filter((id) => open.includes(id));
 }
 
-/** The single item the sidebar marks as current: an open tool, else the page shown, else the open encounter, else Beranda. */
-export function activeNavItem({ dialog, view, activeEncounterId }: { dialog: string | null; view: View; activeEncounterId: string | null }): string {
+/** The single item the sidebar marks as current: an open tool, else the page shown, else the open encounter
+ *  (or "Lihat semua encounter" when it is not among the recent ones listed), else Beranda. */
+export function activeNavItem({ dialog, view, activeEncounterId, recentIds }: { dialog: string | null; view: View; activeEncounterId: string | null; recentIds: string[] }): string {
   if (dialog && toolIds.includes(dialog)) return dialog;
   if (view.page === "patients" || view.page === "patient") return "all-patients";
   if (view.page === "lists") return "lists";
   if (view.page === "encounters") return "all-encounters";
-  return activeEncounterId ?? "home";
+  if (!activeEncounterId) return "home";
+  return recentIds.includes(activeEncounterId) ? activeEncounterId : "all-encounters";
 }
 
 export function focusStep(count: number, index: number, key: string): number | null {
