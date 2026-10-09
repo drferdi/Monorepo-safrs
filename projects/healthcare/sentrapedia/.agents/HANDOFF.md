@@ -640,3 +640,24 @@ Risiko dan batas:
 - Ponsel 390 px diuji sekali (E2E sama: gelembung 22 ms, jawaban 3,13 s, enam bagian, terapi + DDI + Kontraindikasi, tanpa galat); garis pohon navigasi disembunyikan ≤900 px.
 
 Langkah berikutnya: keputusan Chief soal regimen apendisitis/kasus bedah, lalu commit bila diminta.
+
+## Pembersihan workspace dan mode fokus MIRA - 2026-10-09
+
+Perubahan (commit `c6965756..235f1a73`, branch `feat/sidepanel-ui-batch`, R1):
+- Dihapus dari tampilan: label header "Clinical Workspace Lokal", pill "Layanan Primer" (beranda dan atas percakapan), baris "Workspace lokal · hanya data fiktif", dan checkbox "Keluhan dan konteks menggunakan data fiktif tanpa identitas pribadi". Request tetap mengirim `synthetic: true`; `lib/mira/client.ts` (detektor identitas) dan gateway tidak berubah. Pengaturan Specialty tetap ada di Pengaturan Agent.
+- Beranda: composer, shortcut dan chip mode menempel di dasar kanvas (desktop dan mobile); footer tetap di bawahnya.
+- Sidebar: tiga grup berjudul Mulai / Alat kerja / Sistem.
+- Mode Tanya baru `workup` "Pemeriksaan penunjang" dan `refer` "Draft rujukan", memakai analisis MIRA yang sama. `workup` menaruh bagian Penunjang di atas; `refer` menambah bagian pertama "Draft Rujukan" (Keputusan, Diagnosis kerja, Ringkasan klinis, Pemeriksaan yang disarankan, Segera kembali atau dirujuk bila) hanya dari data tercatat. Dokumen `question`/`ddx` tidak berubah. Slash `/ref` dan `/refer` tetap memilih Referral Letter lokal lebih dulu.
+
+Bukti:
+- `npx tsc --noEmit` exit 0, `npm run lint` exit 0, `npx vitest run` 136/136 (10 berkas).
+- Browser (dev 127.0.0.1:3101) 1440×900, 1280×640, 375×812, 390×1000: tiga teks yang dihapus tidak ada, tiga grup sidebar, empat chip Tanya, tombol kirim nonaktif saat kosong dan aktif saat berisi teks, tanpa tumpang tindih di viewport pendek.
+- Tinjauan akhir (Opus): 0 Critical; I1 urutan slash dan M1 jangkar mobile diperbaiki di `235f1a73`.
+
+Risiko dan batas:
+- Analisis end-to-end mode baru belum diuji live: gateway melaporkan `reachable: false` karena instance MIRA Sentrapedia (8791) tidak berjalan; 8787 adalah instance lain dan tidak disentuh.
+- Build lama akan membuang seluruh workspace lokal bila menemukan pesan bermode `workup`/`refer` (`restoreWorkspace` menolak mode tak dikenal) — hanya relevan bila terjadi downgrade.
+- Tes "dokumen default tidak berubah" membandingkan kode baru dengan kode baru; belum ada tes render ulang draf `workup`.
+- `npm ci --workspaces=false` dijalankan dari lockfile yang ada (tanpa dependency baru) agar dev server bisa jalan. `.claude/launch.json` capsule dibuat untuk preview dan belum di-commit.
+
+Langkah berikutnya: jalankan instance MIRA 8791 lalu uji satu kasus fiktif per mode baru; keputusan Chief soal merge/PR branch.
