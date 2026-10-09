@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "jev": {
+      "command": "${CLAUDE_PROJECT_DIR:-.}/tools/jev/playbook/.venv/Scripts/python.exe",
+      "args": [
+        "${CLAUDE_PROJECT_DIR:-.}/tools/jev/mcp/jev_mcp.py",
+        "--playbook",
+        "${CLAUDE_PROJECT_DIR:-.}/tools/jev/playbook"
+      ]
+    }
+  }
+}

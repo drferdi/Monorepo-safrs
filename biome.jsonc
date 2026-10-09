@@ -58,6 +58,8 @@
       "!!projects/*/portfolio*/**/src/portfolio-markup.js",
       // Skema/migrasi database dan dokumentasi impor: format asing.
       "!!database",
+      // Vendored third-party code (tools/jev/README.md): never reformat upstream files.
+      "!!tools/jev/playbook",
       "!!docs/design-system",
       "!!docs/brand",
       "!!docs/library",
