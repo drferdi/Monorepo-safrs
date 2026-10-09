@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { emptyCase, type MiraResult } from "../lib/mira/contract";
-import { diagnosisContent, diagnosisSectionTitles, miraDraft, miraMessage, referralSectionTitle } from "../lib/mira/presentation";
+import { diagnosisContent, diagnosisSectionTitles, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay } from "../lib/mira/presentation";
 import { documentSections, replaceSection } from "../lib/studio";
 import { oracleDiseases, relatedDiseases } from "../lib/oracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../lib/typing";
@@ -187,5 +187,18 @@ describe("focus modes", () => {
     expect(titles(diagnosisContent(refer))[0]).toBe(referralSectionTitle);
     const edited = { ...refer, content: refer.content + "\nCatatan klinisi" };
     expect(diagnosisContent(edited)).toBe(edited.content);
+  });
+});
+
+describe("source shown to the clinician", () => {
+  it("shows the case input without naming the internal engine and keeps the stored source intact", () => {
+    const message = miraMessage(analysis);
+    const shown = sourceForDisplay(message);
+    expect(shown).toContain("Keluhan sintetis");
+    expect(shown).toContain("synthetic-trace");
+    expect(shown).not.toMatch(/mira/i);
+    expect(message.sourceText).toContain("\"kind\": \"MIRA\"");
+    expect(sourceForDisplay({ sourceText: "Input\nteks lokal" })).toBe("Input\nteks lokal");
+    expect(sourceForDisplay({})).toBeUndefined();
   });
 });

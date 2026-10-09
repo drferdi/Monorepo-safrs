@@ -13,6 +13,13 @@ export function hasMiraSource(message: Pick<Message, "sourceText">): boolean {
   } catch { return false; }
 }
 
+// The clinician sees the case as entered, with trace and time; engine metadata stays in the stored source.
+export function sourceForDisplay(message: Pick<Message, "sourceText">): string | undefined {
+  if (!hasMiraSource(message)) return message.sourceText;
+  const source = JSON.parse(message.sourceText!) as { case?: unknown; traceId?: unknown; createdAt?: unknown };
+  return JSON.stringify({ case: source.case, traceId: source.traceId, createdAt: source.createdAt }, null, 2);
+}
+
 export type MiraFocus = "workup" | "refer";
 export const referralSectionTitle = "Draft Rujukan";
 export function miraFocus(mode: ModeId): MiraFocus | undefined { return mode === "workup" || mode === "refer" ? mode : undefined; }

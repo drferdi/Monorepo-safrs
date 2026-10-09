@@ -51,8 +51,8 @@ export function createMiraGateway(options: Options = {}) {
       try { payload = JSON.parse(await boundedBody(request, 32768)); } catch { return failure("INPUT", "Input tidak valid atau terlalu panjang.", 400); }
       if (!payload || typeof payload !== "object" || !("case" in payload) || !("synthetic" in payload) || payload.synthetic !== true || Object.keys(payload).some(k => !["case", "synthetic"].includes(k)) || !validCase(payload.case)) return failure("INPUT", "Lengkapi kasus terstruktur dan konfirmasi data fiktif.", 400);
       if (containsIdentity(JSON.stringify(payload.case))) return failure("IDENTITY", "Input mengandung pola identitas. Hapus nama, nomor identitas, kontak dan alamat.", 400);
-      if (!base || !token) return failure("NOT_CONFIGURED", "Token koneksi MIRA belum dikonfigurasi pada server workspace.", 503);
-      if (active) return failure("BUSY", "Analisis MIRA lain masih berjalan. Coba kembali setelah selesai.", 429);
+      if (!base || !token) return failure("NOT_CONFIGURED", "Token koneksi layanan analisis belum dikonfigurasi pada server workspace.", 503);
+      if (active) return failure("BUSY", "Analisis lain masih berjalan. Coba kembali setelah selesai.", 429);
       if (request.signal.aborted) return failure("ABORTED", "Analisis dibatalkan.", 499);
       active = true;
       const controller = new AbortController(); let timedOut = false;
@@ -60,13 +60,13 @@ export function createMiraGateway(options: Options = {}) {
       const timer = setTimeout(() => { timedOut = true; controller.abort(); }, options.timeoutMs ?? 20000);
       const traceId = crypto.randomUUID(); const createdAt = new Date().toISOString();
       try {
-        if (selectedModel && !(await serviceHealth(controller.signal)).modelReady) return failure(options.freeModel ? "FREE_MODEL_REQUIRED" : "MODEL_REQUIRED", "Perencanaan dan asesmen MIRA harus memakai profil OpenRouter yang dipilih. Tidak ada analisis dijalankan.", 503);
+        if (selectedModel && !(await serviceHealth(controller.signal)).modelReady) return failure(options.freeModel ? "FREE_MODEL_REQUIRED" : "MODEL_REQUIRED", "Perencanaan dan asesmen harus memakai profil OpenRouter yang dipilih. Tidak ada analisis dijalankan.", 503);
         const response = await fetchFn(`${base}/v1/diagnosis/step`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, "X-MIRA-Case-Origin": "synthetic" }, body: JSON.stringify({ contractVersion: "1", traceId, case: payload.case }), signal: controller.signal, cache: "no-store", redirect: "error" });
-        if (!response.ok) return failure("SERVICE", "Layanan MIRA menolak permintaan atau belum tersedia.", 502);
+        if (!response.ok) return failure("SERVICE", "Layanan analisis menolak permintaan atau belum tersedia.", 502);
         const raw = await boundedBody(response, 1048576);
         if (token.length > 8 && raw.includes(token)) return failure("RESPONSE", "Respons layanan tidak dapat ditampilkan.", 502);
         const result: unknown = JSON.parse(raw);
-        if (!validResult(result)) return failure("CONTRACT", "Respons MIRA tidak sesuai kontrak. Tidak ada hasil yang digunakan.", 502);
+        if (!validResult(result)) return failure("CONTRACT", "Respons layanan analisis tidak sesuai kontrak. Tidak ada hasil yang digunakan.", 502);
         if (selectedModel && (!profileMatches(result.meta.version) || result.meta.model !== `${selectedModel}+${selectedModel}` || typeof result.meta.costUsd !== "number" || !Number.isFinite(result.meta.costUsd) || result.meta.costUsd < 0 || !Number.isFinite(maxCostUsd) || maxCostUsd < 0 || result.meta.costUsd > maxCostUsd)) return failure(options.freeModel ? "FREE_MODEL_RESPONSE" : "MODEL_RESPONSE", "Profil model atau biaya respons tidak sesuai batas yang dipilih. Hasil tidak digunakan.", 502);
         if (result.status !== "ok") {
           const reasons: Record<string, { status: number; message: string }> = {
@@ -84,7 +84,7 @@ export function createMiraGateway(options: Options = {}) {
           return failure("UNAVAILABLE", "Analisis belum dapat diselesaikan. Pertanyaan tetap tersedia; coba kembali beberapa saat lagi.", 503);
         }
         return reply({ result, traceId, createdAt });
-      } catch { return failure(timedOut ? "TIMEOUT" : controller.signal.aborted ? "ABORTED" : "NETWORK", timedOut ? "MIRA melewati batas waktu. Tidak ada hasil yang disimpan." : controller.signal.aborted ? "Analisis dibatalkan." : "Layanan MIRA tidak dapat dihubungi atau respons tidak dapat dibaca.", timedOut ? 504 : controller.signal.aborted ? 499 : 502); }
+      } catch { return failure(timedOut ? "TIMEOUT" : controller.signal.aborted ? "ABORTED" : "NETWORK", timedOut ? "Analisis melewati batas waktu. Tidak ada hasil yang disimpan." : controller.signal.aborted ? "Analisis dibatalkan." : "Layanan analisis tidak dapat dihubungi atau respons tidak dapat dibaca.", timedOut ? 504 : controller.signal.aborted ? 499 : 502); }
       finally { clearTimeout(timer); request.signal.removeEventListener("abort", cancel); active = false; }
     },
   };
