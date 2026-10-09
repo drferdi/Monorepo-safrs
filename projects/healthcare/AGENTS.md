@@ -12,7 +12,7 @@ It therefore holds only two files: `AGENTS.md` (this file) and `README.md`.
 
 - Domain: `healthcare`
 - Scope: healthcare systems that share compliance context and patient-data handling.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2`; raise to `R3` for logic that decides clinical outcomes (registered in `.safrs/sensitive-paths.json`).
 
 ## Child capsules
@@ -30,7 +30,7 @@ It therefore holds only two files: `AGENTS.md` (this file) and `README.md`.
 | [`sidelab-src`](./sidelab-src/AGENTS.md) | SideLab research-prototype clinical decision support (Python engine, API, dashboard) |
 | [`mantra`](./mantra/AGENTS.md) | Sentra MANTRA hospital management custom apps on Frappe Bench v15 (static SAFRS contract) |
 
-Not yet migrated from abyss-monorepo: `melinda` (deferred by Chief). `mantra` has a static contract: its bench runtime runs only in its dev container.
+Not yet migrated from abyss-monorepo: `melinda` (deferred by Gaffer). `mantra` has a static contract: its bench runtime runs only in its dev container.
 
 Open the `AGENTS.md` of the capsule you are working on; it holds the real build, lint, type-check, and test commands.
 

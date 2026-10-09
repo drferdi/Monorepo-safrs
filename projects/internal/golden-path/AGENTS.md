@@ -1,5 +1,11 @@
 # Golden Path Capsule
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
 
 Read the repository [AGENTS.md](../../../AGENTS.md), [SAFRS_SPEC.md](../../SAFRS_SPEC.md), and [SECURITY.md](../../SECURITY.md) first; they remain canonical.
@@ -7,7 +13,7 @@ Read the repository [AGENTS.md](../../../AGENTS.md), [SAFRS_SPEC.md](../../SAFRS
 ## Objective and owner
 
 - Objective: prove the SAFRS typed Database → API → Web flow with one safe demo record.
-- Human owner: Chief.
+- Human owner: Gaffer.
 - Default risk: R1; dependency, shared-package, API, database, or architecture changes are R2 under root policy.
 
 ## Boundaries and non-goals

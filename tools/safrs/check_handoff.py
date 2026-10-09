@@ -38,7 +38,7 @@ def main() -> None:
             'SAFRS session handoff failed: change set contains work but these handoffs '
             'were not updated:\n- ' + '\n- '.join(missing) + '\nOverwrite each with '
             'current state, work in flight, blockers, and next actions (see AGENTS.md — '
-            'Session protocol).')
+            'Task Lifecycle & Documentation).')
     print('SAFRS session handoff: OK')
 
 

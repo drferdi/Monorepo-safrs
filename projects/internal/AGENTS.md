@@ -12,7 +12,7 @@ Karena itu isinya hanya dua berkas: `AGENTS.md` (berkas ini) dan `README.md`.
 
 - Domain: `internal`
 - Cakupan: Perkakas internal dan demonstrator baseline yang dipakai tim sendiri, bukan pelanggan.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R1` — naikkan ke `R2` untuk perubahan yang menyentuh batas bersama atau rantai build.
 
 ## Capsule anak

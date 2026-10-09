@@ -148,3 +148,23 @@ test("write to a verification-control path stays allowed but carries an R2 notic
   assert.equal(result.exitCode, 0);
   assert.match(result.stderr, /R2/);
 });
+
+test("Bash from a subdirectory is still guarded", () => {
+  const result = runHook(
+    {
+      tool_name: "Bash",
+      tool_input: { command: "git push --force origin main" },
+    },
+    { cwd: path.join(repoRoot, "tools") },
+  );
+  assert.equal(result.exitCode, 2);
+  assert.match(result.stderr, /force-push/);
+});
+
+test("ordinary Bash from a subdirectory is allowed", () => {
+  const result = runHook(
+    { tool_name: "Bash", tool_input: { command: "git status" } },
+    { cwd: path.join(repoRoot, "tools") },
+  );
+  assert.equal(result.exitCode, 0);
+});

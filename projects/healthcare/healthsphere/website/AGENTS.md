@@ -7,7 +7,7 @@ Read the capsule router [`../AGENTS.md`](../AGENTS.md) first; this file only add
 - Name: Puskesmas Website (HealthSphere)
 - Package: `@the-abyss/puskesmas-website`
 - Type: Static React 19 + Vite single-page site for UPTD Puskesmas PONED Balowerti Kediri
-- Owner: Chief (dr. Ferdi Iskandar)
+- Owner: Gaffer (dr. Ferdi Iskandar)
 
 ## Run
 

@@ -12,7 +12,7 @@ Karena itu isinya hanya dua berkas: `AGENTS.md` (berkas ini) dan `README.md`.
 
 - Domain: `academic`
 - Cakupan: Sistem pembelajaran dan administrasi akademik.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R1` — naikkan ke `R2` untuk perubahan yang menyentuh data siswa atau penilaian.
 
 ## Capsule anak
