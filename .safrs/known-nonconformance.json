@@ -7,13 +7,6 @@
       "reference": "docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md",
       "owner": "Chief",
       "reviewBy": "2026-12-31"
-    },
-    {
-      "capsule": "healthcare/sentrapedia",
-      "reason": "New capsule in active development on feat/sidepanel-ui-batch; it declares its lifecycle in capsule.json but has no project.contract.json yet. Code moved under src/ on 2026-10-10; docs/architecture.md is still uncommitted.",
-      "reference": "projects/healthcare/sentrapedia/capsule.json",
-      "owner": "Gaffer",
-      "reviewBy": "2026-11-10"
     }
   ]
 }
