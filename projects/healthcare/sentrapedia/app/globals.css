@@ -46,9 +46,11 @@ textarea { resize: vertical; }
 .brand-wordmark { font-family: inherit; text-shadow: var(--workspace-brand-shadow); letter-spacing: -.45px; }
 .icon-button { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; }
 .icon-button:hover, .small-icon:hover { background: var(--color-border-subtle); }
-.main-nav { padding: 4px 0 0; display: grid; gap: 4px; }
-.main-nav > button { display: flex; gap: 10px; align-items: center; text-align: left; padding: 10px 8px; height: 38px; border-radius: 8px; }
-.main-nav > button:hover { background: var(--color-border-subtle); }
+.main-nav { padding: 4px 0 0; display: grid; gap: 12px; }
+.nav-group { display: grid; gap: 2px; }
+.nav-group-title { padding: 0 8px 2px; font-size: 11px; font-weight: 600; color: var(--color-text-muted); }
+.nav-group > button { display: flex; gap: 10px; align-items: center; text-align: left; padding: 10px 8px; height: 38px; border-radius: 8px; }
+.nav-group > button:hover { background: var(--color-border-subtle); }
 .main-nav svg { width: 16px; height: 16px; }
 kbd { font-family: inherit; font-size: 10px; color: var(--workspace-ink-faint); }
 .main-nav kbd { margin-left: auto; opacity: 0; transition: opacity .15s; }
