@@ -1,6 +1,7 @@
 ---
 name: safrs-boundary-reviewer
 description: Reviews diffs for SAFRS package/project boundary violations, import direction, token contract, and risk-tier path hits. Use after multi-package edits, before PRs, or when asked to check capsule ownership.
+readonly: true
 ---
 
 # SAFRS boundary reviewer
