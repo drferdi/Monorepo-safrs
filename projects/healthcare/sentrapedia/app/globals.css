@@ -197,9 +197,24 @@ h1 span { white-space: normal; }
 }
 .has-context { color: var(--workspace-accent-ink); background: var(--workspace-accent-soft); }
 /* The composer's own row of controls: Mode picker on top; microphone, context and its status bottom left. */
-.composer-mode { position: relative; display: flex; align-items: center; gap: 6px; padding: 0 6px 6px; font-size: 12px; color: var(--color-text-secondary); }
-.composer-mode select { appearance: none; flex: 1; min-width: 0; border: 0; background: none; padding: 2px 22px 2px 0; font-size: 12px; font-weight: 600; color: var(--color-text-primary); cursor: pointer; outline-offset: 2px; }
-.composer-mode > svg { position: absolute; right: 6px; top: 5px; pointer-events: none; color: var(--workspace-ink-faint); }
+/* Mode picker: a quiet trigger and a menu that fades and settles a few pixels into place (no spring, no height change). */
+.composer-mode { position: relative; padding: 0 2px 6px; }
+.mode-trigger { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; padding: 5px 6px; border-radius: 8px; font-size: 12px; color: var(--color-text-muted); text-align: left; transition: background-color 160ms ease, color 160ms ease; }
+.mode-trigger:hover, .composer-mode[data-open="true"] .mode-trigger { background: color-mix(in srgb, var(--color-border-subtle), transparent 45%); color: var(--color-text-secondary); }
+.mode-trigger strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; color: var(--color-text-primary); letter-spacing: -.1px; }
+.mode-trigger > svg { margin-left: auto; flex-shrink: 0; color: var(--workspace-ink-faint); transition: transform 220ms cubic-bezier(.23, 1, .32, 1); }
+.composer-mode[data-open="true"] .mode-trigger > svg { transform: rotate(180deg); }
+.mode-menu { position: absolute; z-index: 6; left: 2px; top: calc(100% - 2px); width: min(300px, calc(100% - 4px)); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 6px; border: 1px solid var(--color-border-subtle); border-radius: 12px; background: var(--workspace-white); box-shadow: 0 14px 36px color-mix(in srgb, var(--color-text-primary), transparent 88%), 0 2px 6px color-mix(in srgb, var(--color-text-primary), transparent 94%); opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-6px) scale(.985); transform-origin: top left; transition: opacity 140ms ease-out, transform 180ms cubic-bezier(.23, 1, .32, 1), visibility 0s linear 180ms; }
+.composer-mode[data-placement="up"] .mode-menu { top: auto; bottom: calc(100% - 2px); transform: translateY(6px) scale(.985); transform-origin: bottom left; }
+.composer-mode[data-open="true"] .mode-menu { opacity: 1; visibility: visible; pointer-events: auto; transform: none; transition: opacity 160ms ease-out, transform 220ms cubic-bezier(.23, 1, .32, 1), visibility 0s; }
+.mode-menu-group + .mode-menu-group { margin-top: 4px; padding-top: 4px; border-top: 1px solid color-mix(in srgb, var(--color-border-subtle), transparent 30%); }
+.mode-menu-label { display: block; padding: 7px 10px 3px; font-size: 10px; letter-spacing: .6px; text-transform: uppercase; color: var(--workspace-ink-faint); }
+.mode-option { display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 6px 10px; border-radius: 7px; font-size: 13px; line-height: 1.35; color: var(--color-text-secondary); cursor: pointer; transition: background-color 120ms ease, color 120ms ease; }
+.mode-option > span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mode-option > svg { flex-shrink: 0; color: var(--workspace-accent-ink); }
+.mode-option[data-active="true"] { background: color-mix(in srgb, var(--color-border-subtle), transparent 40%); color: var(--color-text-primary); }
+.mode-option[aria-selected="true"] { background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .mode-menu, .composer-mode[data-open="true"] .mode-menu { transform: none; transition: opacity 120ms linear, visibility 0s linear 120ms; } .composer-mode[data-open="true"] .mode-menu { transition: opacity 120ms linear, visibility 0s; } }
 .icon-tool { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 8px; color: var(--color-text-secondary); }
 .icon-tool:hover { background: var(--color-border-subtle); color: var(--color-text-primary); }
 .icon-tool.has-context { color: var(--workspace-accent-ink); }
