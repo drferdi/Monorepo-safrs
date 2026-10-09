@@ -8,7 +8,7 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 - Project: `avery`
 - Objective: Menjalankan dan merawat Avery, agen Hermes milik Sentra, sebagai konfigurasi terversi — dari laptop sampai VPS — sehingga penambahan agen baru cukup lewat konfigurasi, bukan pemasangan ulang.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R1`; use root policy and sensitive-path registry for escalation.
 
 ## Owned scope
@@ -52,4 +52,4 @@ Yang **boleh** masuk: persona (`SOUL.md`), skills, contoh konfigurasi tanpa nila
 - Do not modify other projects or shared packages without recording scope expansion.
 - Do not use production credentials or production data.
 - Do not bypass root verification, risk classification, or human authorization requirements.
-- Jangan menulis ulang `ai/profiles/avery/SOUL.md` tanpa persetujuan Chief; berkas itu menentukan perilaku agen yang sedang melayani grup sungguhan.
+- Jangan menulis ulang `ai/profiles/avery/SOUL.md` tanpa persetujuan Gaffer; berkas itu menentukan perilaku agen yang sedang melayani grup sungguhan.

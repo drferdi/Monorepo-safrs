@@ -12,10 +12,10 @@ must not become lifecycle or standalone-verification dependencies.
 - Objective: research-prototype clinical decision support for FKTP physicians: a Python engine
   (`sidelab-engine/`), a web dashboard and API (`artifacts/`), shared libraries (`lib/`), and a
   desktop shell (`electron-app/`). The physician stays the final clinical authority.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2`. Clinical reasoning in `sidelab-engine/sidelab/` and its safety tests in
-  `sidelab-engine/tests/clinical/` are R3: get Chief's approval before changing them.
-- Language: Bahasa Indonesia for Chief-facing notes; English for code.
+  `sidelab-engine/tests/clinical/` are R3: get Gaffer's approval before changing them.
+- Language: Bahasa Indonesia for Gaffer-facing notes; English for code.
 
 ## Standalone contract
 

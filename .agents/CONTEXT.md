@@ -11,7 +11,7 @@ Last updated: 2026-08-23
 - **Name:** SAFRS Monorepo (`drferdii/Monorepo-safrs`)
 - **Visibility:** **PUBLIC** — verified 2026-08-18 with `gh repo view` (`"visibility":"PUBLIC"`).
   This file previously said private. No credential is exposed: `.env` is gitignored and has never
-  been committed. Chief confirmed on 2026-08-18 that it stays public (D-001, accepted).
+  been committed. Gaffer confirmed on 2026-08-18 that it stays public (D-001, accepted).
 - **Root:** `D:\DEV\Monorepo`
 - **Owner:** Dr. Ferdi Iskandar (solo developer, non-coding operator)
 - **Posture:** Agent-first — human sets intent, agents execute, machines verify.
@@ -45,7 +45,7 @@ sentrawiki/   documentation surface; its setup plan is still PROPOSED
 
 ## Protected Areas & Risk Tiers
 
-Single source: `.safrs/sensitive-paths.json` (R2/R3 patterns, machine-enforced) and the Risk handling section in `AGENTS.md`. Standing non-machine reminders: never read/print/commit/transmit `.env`; never modify `.agents/knowledge/` without Chief's approval.
+Single source: `.safrs/sensitive-paths.json` (R2/R3 patterns, machine-enforced) and the Risk handling section in `AGENTS.md`. Standing non-machine reminders: never read/print/commit/transmit `.env`; never modify `.agents/knowledge/` without Gaffer's approval.
 
 ## Golden-Path Baseline
 
@@ -55,7 +55,7 @@ Single source: Golden-path baseline section in `AGENTS.md` and [ADR 0001](docs/a
 
 - Shell: PowerShell on Windows.
 - Line endings: git stores LF (`.gitattributes`); `.ps1/.bat/.cmd` stay CRLF. Do not change `.gitattributes` casually.
-- Language: agent chat diagnostics in Bahasa Indonesia; all repo docs, code, commands, and identifiers in English — concise, no filler.
+- Language: agent chat diagnostics in Bahasa Indonesia mixed with English (~70:30); all repo docs, code, commands, and identifiers in English — concise, no filler.
 - Legacy repo (`D:\Devops\abyss-monorepo`): migration source only. **Never read its `.env`** (live credentials); never copy its `node_modules`, `.env`, `.next`, or lockfiles.
 
 ## AI Agent Knowledge

@@ -12,11 +12,11 @@ must not become lifecycle or standalone-verification dependencies.
   `healthcare`)
 - Objective: Chrome side-panel extension that assists FKTP clinicians in ePuskesmas with
   anamnesis, vital signs, differential diagnosis, and pharmacotherapy.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2`. Clinical logic — `lib/iskandar-diagnosis-engine/**`,
   `lib/emergency-detector/**`, `lib/clinical/**`, and `public/data/penyakit.json` — is R3:
-  get Chief's approval before changing it.
-- Language: Bahasa Indonesia for Chief-facing notes; English for code.
+  get Gaffer's approval before changing it.
+- Language: Bahasa Indonesia for Gaffer-facing notes; English for code.
 
 ## Standalone contract
 

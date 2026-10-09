@@ -11,7 +11,7 @@ must not become lifecycle or standalone-verification dependencies.
 - Project: Assistverse (domain: `healthcare`), package `sentra-assist`
 - Objective: Public Sentra Assist website served under `sentrahai.com/asisten-medis`, with a
   pilot sign-up, wiki, Sentrapedia reference, and an AI chat demo.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R1`. It is an active prototype and never a clinical system.
 
 ## Standalone contract
@@ -47,7 +47,7 @@ All commands run from this capsule root as argv; see `project.contract.json`.
 
 ## Visual assets and illustration guidelines
 
-Chief prefers images in this exact style. Use this prompt and style when generating or selecting
+Gaffer prefers images in this exact style. Use this prompt and style when generating or selecting
 images for this project:
 
 **Prompt style:** "A high-end, premium minimalist architectural wireframe sketch, monochrome,
@@ -61,5 +61,5 @@ inspired, lots of negative space."
 ## Prohibited actions
 
 - Never store patient data; pilot sign-up holds only professional contact details.
-- Do not run `scripts/migrate-turso.mjs` against a real database without Chief's approval.
+- Do not run `scripts/migrate-turso.mjs` against a real database without Gaffer's approval.
 - Do not use production credentials or production data.

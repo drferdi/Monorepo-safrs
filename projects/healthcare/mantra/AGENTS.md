@@ -11,11 +11,11 @@ must not become lifecycle or standalone-verification dependencies.
 - Project: Sentra MANTRA (domain: `healthcare`)
 - Objective: hospital management platform (not an electronic medical record) built as custom
   apps on a Frappe Bench v15 runtime for the site `mantra.localhost`.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2`. `apps/sentra_mantra_integrations/**` and `apps/sentra_mantra_hospital/**`
-  are R3: get Chief's approval before changing them. Auth, database schema, migrations,
+  are R3: get Gaffer's approval before changing them. Auth, database schema, migrations,
   workflow gates, infrastructure, and destructive operations always need approval.
-- Language: Bahasa Indonesia for Chief-facing notes; English for code.
+- Language: Bahasa Indonesia for Gaffer-facing notes; English for code.
 
 ## Standalone contract
 
@@ -61,7 +61,7 @@ against a real hospital database. Portal and Beranda browser tests: `cd e2e && n
   contract, not generic DocType REST access.
 - `sentra_mantra_integrations` holds external adapters and retry/reconciliation logic, not
   system-of-record storage.
-- Tahap 2 GL gate: Workflow State `Approved` `doc_status` stays `0` until Chief gives GO.
+- Tahap 2 GL gate: Workflow State `Approved` `doc_status` stays `0` until Gaffer gives GO.
 
 ## Prohibited actions
 

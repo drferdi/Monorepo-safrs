@@ -10,7 +10,7 @@ must not become lifecycle or standalone-verification dependencies.
 
 - Project: Sentraverse (domain: `healthcare`)
 - Objective: Public Sentra marketing website and platform hub for sentrahai.com.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R1`. Breaking public routes or the `/dashboard` and `/asisten-medis`
   rewrites needs review.
 

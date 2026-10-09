@@ -1,6 +1,6 @@
 # Sidepanel UI Authority — READ BEFORE TOUCHING ANYTHING
 
-Last updated: 2026-06-28 | Owner: Chief
+Last updated: 2026-06-28 | Owner: Gaffer
 
 > Capsule router: [`../../AGENTS.md`](../../AGENTS.md). This file may only ADD scoped
 > context for the side panel.
@@ -12,13 +12,13 @@ This directory has been destroyed and recovered 4 times by automated refactoring
 ## UI Authority Contract
 
 The current UI authority is `clinical-trajectory-v2`.
-The current built UI design explicitly confirmed by Chief is the authoritative baseline for this directory.
+The current built UI design explicitly confirmed by Gaffer is the authoritative baseline for this directory.
 
 ### Never replace the approved design
 
 - Do **not** replace this sidepanel UI with any prior, alternate, simplified, or regenerated design.
 - Do **not** "clean up" the layout into a different composition without explicit written approval.
-- Do **not** assume another branch, stash, checkpoint, or remembered version is more correct than the design Chief has already approved.
+- Do **not** assume another branch, stash, checkpoint, or remembered version is more correct than the design Gaffer has already approved.
 - If a requested change might alter the approved render output, stop and ask before editing protected UI files.
 
 The following must ALWAYS be present in the built extension:

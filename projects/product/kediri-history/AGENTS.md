@@ -8,7 +8,7 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 - Project: `kediri-history`
 - Objective: Kediri — A Living Civilization; cinematic web history experience for Pemerintah Kota Kediri.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: `R2`; production publish and credential use are R3.
 
 ## Owned scope

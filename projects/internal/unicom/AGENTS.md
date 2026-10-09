@@ -4,7 +4,7 @@
 
 - Project: UNICOM (domain: internal)
 - Objective: provide the legacy multi-agent communication room as a standalone Next.js capsule.
-- Human owner: Chief
+- Human owner: Gaffer
 - Default risk: R1. Provider credentials, production platform adapters, and persistent-state changes require separate authorization.
 
 ## Standalone contract

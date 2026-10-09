@@ -8,7 +8,7 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 - Project: `Academic Smartboard`
 - Objective: `Platform bimbingan belajar multi\-tenant: penjadwalan sesi, kurikulum, evaluasi, payroll tutor, dan agen AI Kayyisa untuk Kurikulum Merdeka\.`
-- Human owner: `Chief`
+- Human owner: `Gaffer`
 - Default risk: `R1`; use root policy and sensitive-path registry for escalation.
 
 ## Owned scope

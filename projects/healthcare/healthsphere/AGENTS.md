@@ -11,8 +11,8 @@ must not become lifecycle or standalone-verification dependencies.
 - Project: HealthSphere (domain: `healthcare`), formerly Primary Healthcare
 - Objective: Public website of UPTD Puskesmas PONED Balowerti Kediri (`website/`) plus the
   master reference datasets for primary care (`database/`).
-- Human owner: Chief (dr. Ferdi Iskandar)
-- Default risk: `R1`. Destructive changes to `database/` datasets are R2 and need Chief's
+- Human owner: Gaffer (dr. Ferdi Iskandar)
+- Default risk: `R1`. Destructive changes to `database/` datasets are R2 and need Gaffer's
   approval, because other tools consume their diagnosis codes.
 
 ## Standalone contract
@@ -46,7 +46,7 @@ All commands run from this capsule root as argv; see `project.contract.json`.
 ## Rules
 
 - No patient data or secrets in content or commits.
-- Do not delete or change established ICD-10 codes without a sound medical basis; warn Chief
+- Do not delete or change established ICD-10 codes without a sound medical basis; warn Gaffer
   when changing an established diagnosis code.
 - Keep the dataset JSON valid; `icd10.json` is the primary reference when sources conflict.
 - The website is a public information site, not a clinical engine.

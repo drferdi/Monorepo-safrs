@@ -7,7 +7,7 @@ Read the repository [AGENTS.md](../../../AGENTS.md), [SAFRS_SPEC.md](../../SAFRS
 ## Objective and owner
 
 - Objective: prove the SAFRS typed Database → API → Web flow with one safe demo record.
-- Human owner: Chief.
+- Human owner: Gaffer.
 - Default risk: R1; dependency, shared-package, API, database, or architecture changes are R2 under root policy.
 
 ## Boundaries and non-goals

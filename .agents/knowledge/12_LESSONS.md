@@ -6,7 +6,7 @@ Entry rules:
 
 - One-liners only; one lesson per line, each with date and brief context.
 - Add only when: the same mistake happened **twice**, review found missing context,
-  or Chief corrected the same thing across sessions.
+  or Gaffer corrected the same thing across sessions.
 - Delete lessons that no longer apply — don't pile them up. No duplicates; tighten existing entries.
 - Project-specific lessons live in `projects/<name>/AGENTS.md`, not here.
 
@@ -15,8 +15,8 @@ Entry rules:
 ## Repo & Tooling
 
 - On Windows a file's case on disk can differ from the case git tracks, and the case-insensitive filesystem hides it; `git ls-files` is the reference, and `ls` can also silently omit entries (2026-08-18, `docs/plans/` held two files whose disk name was lowercase while the index held uppercase, and `ls` did not list `packages/env/`).
-- Read root `AGENTS.md` before the first reply of a session, not after several turns — its language and address rules bind from turn one (2026-08-18, Chief corrected forbidden-term use twice).
-- Rehydrate = Always (MUST) only, one parallel batch; Always (SHOULD) is not a second mandatory pass (2026-08-18, Chief: rehydrate too slow).
+- Read root `AGENTS.md` before the first reply of a session, not after several turns — its language and address rules bind from turn one (2026-08-18, Gaffer corrected forbidden-term use twice).
+- Rehydrate = Always (MUST) only, one parallel batch; Always (SHOULD) is not a second mandatory pass (2026-08-18, Gaffer: rehydrate too slow).
 - Always `pnpm` — never `npm` or `yarn` (2026-08-11, abyss-monorepo legacy).
 - Never claim test/lint/build passes without running it — evidence before assertions (2026-08-11).
 - After adding/removing workspace packages, refresh the lockfile before `--frozen-lockfile`

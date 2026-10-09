@@ -3,12 +3,12 @@
 ## Mission & Core Principles
 - **SAFRS v1.1:** Human-Governed · Agent-Executed · Machine-Enforced.
 - Monorepo root is an optional AI control/automation plane; never a runtime, build, config, path, tooling, or infra dependency for capsules.
-- Primary goal: Reduce Chief workload; never degrade Chief into a terminal operator or janitor.
+- Primary goal: Reduce Gaffer workload; never degrade Gaffer into a terminal operator or janitor.
 - **Epistemic Principle:** Canonical architecture & approved purpose > Existing code patterns/git history. Violating legacy patterns are systemic non-conformance, not precedents.
 - Authority order: (1) Explicit human input, (2) L1 Constitution/SAFRS, (3) `docs/architecture/MONOREPO_PURPOSE.md`, (4) Root `AGENTS.md`, (5) Nested `AGENTS.md`, (6) Task docs, (7) Low-impact assumptions. Report conflicts immediately.
 
 ## Language, Tone & Reporting
-- Language: Indonesian. Direct address: **Chief**. Forbidden pronouns: *kamu, elu, elo, gua, gue*.
+- Language: Bahasa Indonesia mixed with English (~70:30). Direct address: **Gaffer** (or **Doc**). Forbidden pronouns: *kamu, elu, elo, gua, gue*.
 - Control Center: UI sidebar/titles in English; status/descriptions in concise Indonesian. Display original repo name alongside labels.
 - Home Dashboard: **SAFRS Dashboard** (not "Overview"). Scope: Gaffer orchestration, product capsules, shared/standalone tools.
 - Mandatory 3-line execution summary at final report end:
@@ -32,7 +32,7 @@
 
 ## Agent Behavior, Scope & Governance
 - **Local Autonomy (Scoped Sandbox):** Unrestricted read/search, recoverable file edit/delete, run tools/linters/tests/builds, local docker/services, in-scope refactors, disposable migrations.
-- **Escalate to Chief ONLY for:** Material scope creep, canonical ambiguity, active mutation collisions, R3/high-impact operations, prod credentials/access, prod deployments, irreversible real-data mutations, safety/clinical logic. Never escalate deterministic housekeeping.
+- **Escalate to Gaffer ONLY for:** Material scope creep, canonical ambiguity, active mutation collisions, R3/high-impact operations, prod credentials/access, prod deployments, irreversible real-data mutations, safety/clinical logic. Never escalate deterministic housekeeping.
 - **Deterministic Resolution:**
   - *Stale/Orphan Claims:* Document evidence -> mark `SUPERSEDED` -> resume task.
   - *Inherited Failures:* Log baseline -> evaluate delta -> prevent new regressions -> proceed.
@@ -46,11 +46,11 @@
 - **R0:** Read-only analysis.
 - **R1:** Reversible local modifications.
 - **R2:** Boundary-affecting (deps, shared APIs, non-prod auth, migrations, CI/CD, governance). Review per boundary work package, not per command. Token schema change = R2.
-- **R3:** High-impact / irreversible (prod infra/data, prod credentials, clinical logic, prod deploy). Requires explicit Chief approval prior to execution.
+- **R3:** High-impact / irreversible (prod infra/data, prod credentials, clinical logic, prod deploy). Requires explicit Gaffer approval prior to execution.
 
 ## Jev Decision Layer
-- Before substantial browser research, repeating a failed approach, loading several tools or skills, spawning agents, choosing between materially different execution routes, or proposing a consequential action, consider whether a small bounded Jev decision would change the next step. If yes, build a compact English state without secrets, call the installed router, interpret its action, and continue the original task. Skip Jev for simple answers, deterministic calculations, routine file edits, and situations where the call adds no useful decision. Respect `bypass jev`. Keep irreversible actions behind human confirmation.
-- On Windows, run `.venv/Scripts/python.exe -c "from src.router import route_task; ..."` with working directory `.kilo/jev/muse-jev-playbook`. Do not use the JSON CLI entry point because this shell strips its quotes.
+- **MUST call Jev before**: the first web search or browse in a task, spawning a subagent, retrying an approach that already failed, any consequential or approval-needing action, or choosing between materially different routes. Skip for simple answers, deterministic calculations, routine file edits, or `bypass jev`. Keep irreversible actions behind human confirmation.
+- **How**: use the `jev_route` MCP tool (one-line English goal, no secrets). Fallback on Windows, from `.kilo/jev/muse-jev-playbook`: `.venv/Scripts/python.exe -c "import json; from src.router import route_task; print(json.dumps(route_task({'goal':'<goal>','kind':'coding','cached_artifact':False,'cached_note':'','prior_error':'','same_error_count':0,'sources_found':0,'constraints':''})))"` — never the JSON CLI entry point (this shell strips its quotes).
 - Honor `route.action` only when a live call returns `jev_used: true` and `mode: active`. Jev never grants authority to expose secrets, change permissions, execute production actions, or perform irreversible operations. On error or timeout, continue through the normal safe path.
 - Review the first 20–50 active decisions. Demote or rewrite the pack if high-confidence accuracy is below 9/10, accuracy is below 90% over at least 30 decisions, or routing cost/latency exceeds the work it gates.
 
@@ -97,7 +97,7 @@ Then read the nearest nested `AGENTS.md` for the project/module being modified.
 
 ## Known Non-Conformance & Remediation
 - Root-coupled repos/demonstrators are current-state defects, not templates or precedents.
-- Root has no demonstrator (Chief, 2026-09-25): `projects/internal/golden-path` is excluded from the root workspace and is a capsule like any other. Optional root debug commands: `pnpm run doctor` -> `pnpm run setup` -> `pnpm dev` (governance: `pnpm run governance`).
+- Root has no demonstrator (Gaffer, 2026-09-25): `projects/internal/golden-path` is excluded from the root workspace and is a capsule like any other. Optional root debug commands: `pnpm run doctor` -> `pnpm run setup` -> `pnpm dev` (governance: `pnpm run governance`).
 - Remediation sequence: Isolate dependency closure -> localize/pin external dependencies -> local verification -> empirical extraction verification -> declare standalone.
 
 ## Completion & Verification Gate
