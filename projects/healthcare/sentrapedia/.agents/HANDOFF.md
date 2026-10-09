@@ -667,3 +667,10 @@ Lanjutan (2026-10-09, commit `3fc31ea1`, `cb543f19`):
 - Tab Tanya/Dokumentasi/Rencana/Komunikasi dipindah ke atas kolom teks (beranda dan chat) dengan neumorfisme tipis (bayangan 1–3 px; tab aktif tertekan).
 - Bukti: tsc 0, `eslint app components lib tests` 0, vitest 138/138; browser 1440×900 dan 375×812 (tab di atas form, tanpa overflow horizontal, pesan galat tanpa "MIRA").
 - Catatan: pesan profil model masih menyebut "OpenRouter" bila profil tidak cocok; belum diubah karena tidak diminta.
+
+Lanjutan (2026-10-09, commit `8f4048f4`, `b6582795`):
+- Logo: neuron dari `assets/icons.png` (file asli Chief tetap) dipotong menjadi `assets/sentraverse-mark.png` untuk Brand; wordmark "Sentrapedia" tetap. Logo lama `sentra-logomark-approved-reference.png` dihapus Chief dan penghapusannya di-commit.
+- Avatar Patient: `components/patient-avatar.tsx` memakai `assets/man.png` (Male) dan `assets/women.png` (Female); jenis kelamin lain/belum diisi tetap ikon orang generik. Dipakai di sidebar, panel konteks, pemilih Patient dan pencarian.
+- Sidebar submenu meniru lab.xevrion.dev/lab/sidebar-submenu tanpa dependensi baru: bilah di satu rel dengan spring (visualDuration 0,35 s, bounce 0,12; `lib/submenu-motion.ts`), lipat 320 ms, pohon SVG, cabang aktif digambar turun 400 ms lalu meregang ke item aktif, item muncul dari blur 4 px dengan jeda 40 ms. Diukur di browser: bilah 80→40 px (71,6 px pada 60 ms), cabang 119→51 px (95,7 px pada 90 ms).
+- Bukti: tsc 0, `eslint app components lib tests` 0, vitest 140/140.
+- Catatan: pengujian membuat dua Patient fiktif (Pasien uji laki-laki/perempuan) beserta Encounter-nya di local storage browser pane; hapus bila tidak diperlukan. Pada layar 760 px area submenu hanya ±125 px karena judul grup menu di atasnya.
