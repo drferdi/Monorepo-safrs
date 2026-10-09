@@ -1,7 +1,6 @@
 // Geometry and spring for the sidebar submenu, after lab.xevrion.dev/lab/sidebar-submenu.
 // Rows are a fixed height so the tree is one drawn path rather than measured.
 export const SUBMENU_ROW = 34;
-export const SUBMENU_TITLE = 40;
 const TRUNK = 4;
 const BEND = 6;
 const REACH = 12;
@@ -25,5 +24,3 @@ function createSpring(visualDuration: number, bounce: number) {
   return { at, duration };
 }
 export const spring = createSpring(0.35, 0.12);
-// The same curve for CSS transitions (the section bar).
-export const springEasing = `linear(${Array.from({ length: 21 }, (_, i) => spring.at((i / 20) * spring.duration).toFixed(4)).join(", ")})`;

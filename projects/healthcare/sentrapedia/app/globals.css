@@ -374,11 +374,9 @@ h1 span { white-space: normal; }
 .toast > button { display: flex; color: var(--color-text-muted); padding: 0; margin-left: 8px; }
 
 /* One expanded subtree; matching fold curves keep the rest of the sidebar stable. */
-/* After lab.xevrion.dev/lab/sidebar-submenu: a bar rides one rail to the open title on a spring, sections fold
-   on one shared curve so the menu height holds still, items settle in from a blur, the lit branch draws down. */
-.sidebar-submenu { position: relative; margin: 24px 0; padding-left: 9px; }
-.sidebar-submenu::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--color-border-subtle), var(--color-text-muted) 35%); }
-.submenu-bar { position: absolute; z-index: 1; left: -1px; top: 10px; width: 3px; height: 20px; border-radius: 3px; background: var(--color-action-primary); transition: transform var(--submenu-spring-ms) var(--submenu-spring); }
+/* After lab.xevrion.dev/lab/sidebar-submenu: sections fold on one shared curve so the menu height holds still,
+   items settle in from a blur, and the lit branch draws down to the current item. */
+.sidebar-submenu { position: relative; margin: 24px 0; }
 .submenu-section { position: relative; }
 .submenu-heading { display: flex; align-items: center; gap: 4px; height: 40px; }
 .submenu-heading > button:first-child { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; text-align: left; min-height: 36px; padding: 7px 4px; border-radius: 6px; font-size: 12px; color: var(--color-text-secondary); transition: color 200ms ease-out; }
@@ -413,7 +411,7 @@ h1 span { white-space: normal; }
 .system-loading { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--color-background-canvas); color: var(--color-text-secondary); }
 .system-loading .pixel-grid { grid-template-columns: repeat(4, 6px); grid-auto-rows: 6px; gap: 3px; }
 .system-loading p { font-size: 13px; }
-@media (prefers-reduced-motion: reduce) { .pixel-grid > span { transform: none; } .submenu-bar, .submenu-body, .submenu-item { transition-duration: 0ms !important; transition-delay: 0ms !important; } .submenu-item { filter: none !important; } .submenu-tree-lit { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .pixel-grid > span { transform: none; } .submenu-body, .submenu-item { transition-duration: 0ms !important; transition-delay: 0ms !important; } .submenu-item { filter: none !important; } .submenu-tree-lit { animation: none !important; } }
 
 @media (min-height: 1000px) { .home-bottom { margin-bottom: 16px; } }
 @media (max-width: 1150px) { .sidebar { width: 238px; } .advertisement { gap: 20px; padding-left: 20px; } .ad-art { width: 95px; } .ad-copy > span { font-size: 12px; } .home-content { width: min(780px, calc(100% - 48px)); } .composer-tools-left, .composer-tools-right { gap: 6px; } }
