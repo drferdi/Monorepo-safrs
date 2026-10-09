@@ -974,6 +974,18 @@ pnpm dev              # local Postgres + control-center on http://127.0.0.1:3100
 pnpm check            # governance + tokens + lint + typecheck + test + build
 ```
 
+`pnpm setup` creates `.env` from [`.env.example`](.env.example). Never commit `.env`; agents are
+blocked from reading it.
+
+| Variable | Used for |
+| --- | --- |
+| `DATABASE_URL` | Local Postgres started by `pnpm db:start` (Docker) |
+| `APP_URL` | Base URL of the local app |
+| `NODE_ENV` | Runtime mode (`development` locally) |
+| `EMAIL_FROM`, `RESEND_API_KEY` | Email capability (`tools/capabilities/manifests/email.json`) |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Stripe capability (`tools/capabilities/manifests/stripe.json`) |
+| `OTEL_SDK_DISABLED`, `OTEL_EXPORTER_OTLP_ENDPOINT` | Optional OpenTelemetry export (`compose.telemetry.yaml`) |
+
 Working on this repository as an agent (or with one) starts at
 [`AGENTS.md`](AGENTS.md), which routes to everything else. Complete documentation and knowledge base guides are available on the [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki).
 
