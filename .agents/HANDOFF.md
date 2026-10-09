@@ -22,16 +22,25 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
     `check_tool_inventory` and `check_docs` pass.
   - `0587c471`: sentrapedia added to `.safrs/known-nonconformance.json` (reviewBy 2026-11-10).
     `check_project_independence` passes (18 capsules, 2 known non-conformance).
-- `pnpm governance` still fails at `check_topology` on sentrapedia (`src`, `docs/data.md`,
-  `docs/testing.md`, `.agents/CONTEXT.md`). `pnpm project:verify internal/golden-path` now gets
-  past the gate but fails on a symlink in `apps/web/.next/dev/node_modules` that points outside
-  the capsule. That symlink is a local build cache and was already there.
+- `ffe210a5`: Gaffer ordered every capsule to follow the monorepo topology, so sentrapedia's
+  code moved under `src/`. `CONTEXT.md` moved to `.agents/`, and `docs/data.md` and
+  `docs/testing.md` were added. `check_topology` passes locally.
+  - Committed tree alone: tsc, eslint and vitest (120 tests) pass.
+  - Working tree: typecheck, lint, 168/168 tests, build and deploy:dry-run pass.
+- CI will still flag sentrapedia `docs/architecture.md`, which is not committed. The only copy is
+  another session's untracked `docs/ARCHITECTURE.md`. Windows passes because its file names are
+  case-insensitive; Linux does not.
+- `pnpm project:verify internal/golden-path` gets past the gate but fails on a symlink in
+  `apps/web/.next/dev/node_modules` that points outside the capsule. The symlink is a local
+  build cache and was already there.
 
 ## Work in flight
 
 - The working tree still holds other sessions' uncommitted work: med-assist and sentrapedia
   capsule edits, `.codex/config.toml` (`model_verbosity`), `.agents/skills/gaffer-orchestration`,
-  and the untracked `.agents/skills/superpowers/`. This session did not touch any of it.
+  and the untracked `.agents/skills/superpowers/`. This session left their content alone. The
+  sentrapedia edits moved into `src/` with their folders. A path-move note was added at the top of
+  the uncommitted `projects/healthcare/sentrapedia/.agents/HANDOFF.md`.
 
 ## Blockers
 
@@ -41,8 +50,9 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Next action
 
-- Gaffer: decide sentrapedia's topology. Either move its code under `src/` and add the missing
-  docs, or change `CAPSULE_REQUIRED` in `tools/safrs/check_topology.py`.
+- Sentrapedia: commit the architecture doc as lowercase `docs/architecture.md` once its owner
+  session finishes it. Write `project.contract.json` from `capsule.json`, then remove the
+  known-nonconformance entry.
 - Gaffer: these audit actions from section 7 are not approved yet: A-2..A-7, A-11..A-19, and
   the jev-intent part of A-8. A-1 (key rotation) is Gaffer's own job.
 - `.codex/agents` still say "Chief", and two agents share the name `security-reviewer`.
@@ -50,5 +60,6 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Owner collision
 
-Sentrapedia is being edited by another session (files changed 2026-10-10 05:09, its HANDOFF is
-dirty). This session only touched root files for it.
+Sentrapedia has another session's uncommitted work. Its code was last edited 2026-10-09 20:50
+and `oracle-ii/` on 2026-10-10 05:09. Gaffer ordered the `src/` move anyway, and that session's
+edits moved with their folders. The note at the top of its HANDOFF tells it to use the new paths.
