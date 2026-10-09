@@ -661,3 +661,9 @@ Risiko dan batas:
 - `npm ci --workspaces=false` dijalankan dari lockfile yang ada (tanpa dependency baru) agar dev server bisa jalan. `.claude/launch.json` capsule dibuat untuk preview dan belum di-commit.
 
 Langkah berikutnya: jalankan instance MIRA 8791 lalu uji satu kasus fiktif per mode baru; keputusan Chief soal merge/PR branch.
+
+Lanjutan (2026-10-09, commit `3fc31ea1`, `cb543f19`):
+- Kata "MIRA" tidak lagi tampil: pesan galat gateway memakai "layanan analisis"; tab Sumber menampilkan input kasus, trace dan waktu (`sourceForDisplay`), sementara sumber tersimpan tetap utuh. Header internal `X-MIRA-Case-Origin` dan nama berkas/kode tidak berubah karena tidak tampil.
+- Tab Tanya/Dokumentasi/Rencana/Komunikasi dipindah ke atas kolom teks (beranda dan chat) dengan neumorfisme tipis (bayangan 1–3 px; tab aktif tertekan).
+- Bukti: tsc 0, `eslint app components lib tests` 0, vitest 138/138; browser 1440×900 dan 375×812 (tab di atas form, tanpa overflow horizontal, pesan galat tanpa "MIRA").
+- Catatan: pesan profil model masih menyebut "OpenRouter" bila profil tidak cocok; belum diubah karena tidak diminta.
