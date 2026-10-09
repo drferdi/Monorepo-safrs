@@ -1,25 +1,26 @@
 import type { Patient } from "./workspace";
 import { structureNote, type NoteField } from "./note-structure";
 
-export const modeIds = ["question", "ddx", "ap", "clinic", "hpi", "telephone", "chronic", "handoff", "tasks", "avs", "education", "referral", "authorization", "scribe", "workup", "refer"] as const;
+export const modeIds = ["question", "ddx", "ap", "clinic", "hpi", "telephone", "chronic", "handoff", "tasks", "avs", "education", "referral", "authorization", "scribe", "workup", "refer", "monitoring"] as const;
 export type ModeId = typeof modeIds[number];
 export const modes: { id: ModeId; label: string; title: string; description: string; placeholder: string }[] = [
-  { id: "question", label: "Ajukan pertanyaan", title: "Clinical question brief", description: "Susun pertanyaan Clinical dan tentukan Evidence yang dibutuhkan.", placeholder: "Apa yang ingin Anda telaah hari ini?" },
+  { id: "question", label: "Pertanyaan Klinis", title: "Clinical question brief", description: "Susun pertanyaan Clinical dan tentukan Evidence yang dibutuhkan.", placeholder: "Apa yang ingin Anda telaah hari ini?" },
   { id: "ddx", label: "Diagnosis Banding", title: "Differential diagnosis", description: "Atur temuan dan susun lembar Differential Diagnosis.", placeholder: "Jelaskan Presentation, History, dan temuan utama..." },
-  { id: "ap", label: "Buat A&P", title: "Assessment & plan", description: "Susun Assessment menjadi Plan terstruktur.", placeholder: "Masukkan Assessment dan usulan Management..." },
-  { id: "clinic", label: "Buat Clinic Note", title: "Clinic note", description: "Susun Clinic Note dari detail Clinical yang diberikan.", placeholder: "Tambahkan History, Examination, Assessment, dan Plan..." },
-  { id: "hpi", label: "Buat HPI", title: "History of present illness", description: "Susun riwayat Presenting Concern.", placeholder: "Jelaskan Onset, Duration, Course, dan Associated Symptoms..." },
-  { id: "telephone", label: "Telephone Note", title: "Telephone encounter", description: "Dokumentasikan percakapan telepon dan langkah yang disepakati.", placeholder: "Jelaskan percakapan, hal yang dibahas, dan langkah berikutnya..." },
-  { id: "chronic", label: "Chronic Care", title: "Chronic care note", description: "Dokumentasikan Longitudinal Care dan Follow-up yang belum selesai.", placeholder: "Tuliskan kondisi, perubahan Interval, dan Care Goals..." },
-  { id: "handoff", label: "Buat Handoff", title: "Clinical handoff", description: "Susun ringkasan Transfer of Care terstruktur.", placeholder: "Jelaskan Situation, Background, Assessment, dan tugas tertunda..." },
-  { id: "tasks", label: "Daftar tugas", title: "Encounter task list", description: "Susun langkah yang diberikan menjadi daftar tugas dengan checklist.", placeholder: "Masukkan tugas Follow-up, satu per baris..." },
-  { id: "avs", label: "Buat AVS", title: "After-visit summary", description: "Susun ringkasan untuk Patient yang akan ditinjau Clinician.", placeholder: "Masukkan pembahasan dan instruksi yang disepakati..." },
-  { id: "education", label: "Patient Education", title: "Patient education", description: "Atur informasi yang ingin dibagikan kepada Patient.", placeholder: "Masukkan topik dan materi edukasi yang telah disetujui..." },
-  { id: "referral", label: "Surat rujukan", title: "Surat rujukan", description: "Susun surat rujukan dari informasi klinis yang diberikan.", placeholder: "Masukkan tujuan rujukan, alasan rujukan, dan temuan relevan..." },
+  { id: "ap", label: "Asesmen & Rencana", title: "Assessment & plan", description: "Susun Assessment menjadi Plan terstruktur.", placeholder: "Masukkan Assessment dan usulan Management..." },
+  { id: "clinic", label: "Catatan SOAP", title: "Clinic note", description: "Susun Clinic Note dari detail Clinical yang diberikan.", placeholder: "Tambahkan History, Examination, Assessment, dan Plan..." },
+  { id: "hpi", label: "Anamnesis (HPI)", title: "History of present illness", description: "Susun riwayat Presenting Concern.", placeholder: "Jelaskan Onset, Duration, Course, dan Associated Symptoms..." },
+  { id: "telephone", label: "Catatan Telepon", title: "Telephone encounter", description: "Dokumentasikan percakapan telepon dan langkah yang disepakati.", placeholder: "Jelaskan percakapan, hal yang dibahas, dan langkah berikutnya..." },
+  { id: "chronic", label: "Catatan Kronis", title: "Chronic care note", description: "Dokumentasikan Longitudinal Care dan Follow-up yang belum selesai.", placeholder: "Tuliskan kondisi, perubahan Interval, dan Care Goals..." },
+  { id: "handoff", label: "Handoff (SBAR)", title: "Clinical handoff", description: "Susun ringkasan Transfer of Care terstruktur.", placeholder: "Jelaskan Situation, Background, Assessment, dan tugas tertunda..." },
+  { id: "tasks", label: "Daftar Tugas", title: "Encounter task list", description: "Susun langkah yang diberikan menjadi daftar tugas dengan checklist.", placeholder: "Masukkan tugas Follow-up, satu per baris..." },
+  { id: "avs", label: "Ringkasan Kunjungan", title: "After-visit summary", description: "Susun ringkasan untuk Patient yang akan ditinjau Clinician.", placeholder: "Masukkan pembahasan dan instruksi yang disepakati..." },
+  { id: "education", label: "Edukasi Pasien", title: "Patient education", description: "Atur informasi yang ingin dibagikan kepada Patient.", placeholder: "Masukkan topik dan materi edukasi yang telah disetujui..." },
+  { id: "referral", label: "Surat Rujukan", title: "Surat rujukan", description: "Susun surat rujukan dari informasi klinis yang diberikan.", placeholder: "Masukkan tujuan rujukan, alasan rujukan, dan temuan relevan..." },
   { id: "authorization", label: "Prior Authorization", title: "Prior authorization", description: "Susun permintaan penjaminan dengan detail pendukung.", placeholder: "Masukkan layanan, Clinical Indication, dan Previous Treatments..." },
   { id: "scribe", label: "Scribe Note", title: "Scribed encounter note", description: "Susun transkrip Encounter menjadi draf yang dapat diedit.", placeholder: "Tempel percakapan Encounter atau mulai dikte..." },
-  { id: "workup", label: "Pemeriksaan penunjang", title: "Diagnostic workup", description: "Analisis kasus dengan pemeriksaan penunjang yang disarankan di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan pemeriksaan yang sudah ada..." },
-  { id: "refer", label: "Draft rujukan", title: "Draft rujukan", description: "Analisis kasus dengan draf rujukan dan keputusan disposisi di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan alasan mempertimbangkan rujukan..." },
+  { id: "workup", label: "Pemeriksaan Penunjang", title: "Diagnostic workup", description: "Analisis kasus dengan pemeriksaan penunjang yang disarankan di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan pemeriksaan yang sudah ada..." },
+  { id: "refer", label: "Analisis Rujukan", title: "Draft rujukan", description: "Analisis kasus dengan draf rujukan dan keputusan disposisi di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan alasan mempertimbangkan rujukan..." },
+  { id: "monitoring", label: "Monitoring", title: "Rencana monitoring", description: "Susun rencana pemantauan: parameter, target, frekuensi, dan kriteria eskalasi.", placeholder: "Tuliskan masalah, parameter yang dipantau, target, dan frekuensinya..." },
 ];
 
 export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: "Standard" | "Extended"; language: "English" | "Bahasa Indonesia"; patient?: Patient; instructions: string }
@@ -46,6 +47,7 @@ export function createDraft(input: DraftInput): string {
     authorization: id ? ["Layanan yang diminta", "Clinical indication", "Previous treatments dan Response", "Dokumen pendukung", "Pernyataan klinisi / persyaratan penjamin"] : ["Requested service", "Clinical indication", "Previous treatments and response", "Supporting documentation", "Clinician attestation / insurer requirements"],
     workup: id ? ["Temuan yang disampaikan", "Pemeriksaan penunjang yang diusulkan"] : ["Supplied findings", "Proposed investigations"],
     refer: id ? ["Alasan rujukan", "Ringkasan klinis", "Pemeriksaan yang sudah dilakukan"] : ["Reason for referral", "Clinical summary", "Investigations done"],
+    monitoring: id ? ["Masalah yang dipantau", "Parameter dan target", "Frekuensi dan cara pemantauan", "Kriteria eskalasi", "Penanggung jawab dan tindak lanjut"] : ["Problem monitored", "Parameters and targets", "Frequency and method", "Escalation criteria", "Owner and follow-up"],
     scribe: id ? ["Transkrip Encounter (verbatim)", "Chief concern", "History of present illness", "Examination findings yang disebutkan", "Assessment Clinician yang disebutkan", "Plan dan Follow-up yang disepakati"] : ["Visit transcript (verbatim)", "Chief concern", "History of present illness", "Examination findings stated", "Clinician assessment stated", "Agreed plan and follow-up"],
   };
   const note = structureNote(prompt);
@@ -65,6 +67,7 @@ export function createDraft(input: DraftInput): string {
     authorization: [["request"], ["assessment"], ["previous"], ["investigations", "background"], []],
     workup: [["concern", "history", "examination"], ["investigations"]],
     refer: [["concern", "request"], ["history", "examination"], ["investigations"]],
+    monitoring: [["concern", "assessment"], ["investigations", "goals"], ["plan"], [], ["followup", "pending"]],
     scribe: [[], ["concern"], ["history"], ["examination"], ["assessment"], ["plan", "followup"]],
   };
   const patientInfo = input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} ${id ? "tahun" : "years"}` : ""} · ${id && input.patient.sex === "Not specified" ? "Sex belum diisi" : input.patient.sex}` : id ? "Patient belum dipilih" : "No patient selected";

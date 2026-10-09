@@ -56,7 +56,7 @@ export function Sidebar({ state, activeItem, open, mobile, onToggle, onDialog, o
             { id: "all-encounters", label: <><ArrowRight/><span>Lihat semua encounter</span></>, onSelect: go(() => onPage({ page: "encounters" })) },
           ] },
           { id: "tools", title: "Alat Klinis", items: [
-            { id: "knowledge", label: <><BookOpen/><span>Referensi</span></>, onSelect: go(() => onDialog("knowledge")) },
+            { id: "knowledge", label: <><BookOpen/><span>Pustaka Klinis</span></>, onSelect: go(() => onDialog("knowledge")) },
             { id: "queue", label: <><ListTodo/><span>Antrean kerja</span></>, onSelect: go(() => onDialog("queue")) },
             { id: "templates", label: <><SquarePen/><span>Templat dan favorit</span></>, onSelect: go(() => onDialog("templates")) },
             { id: "scribe", label: <><AudioLines/><span>Voice mode</span></>, onSelect: go(() => onDialog("scribe")) },

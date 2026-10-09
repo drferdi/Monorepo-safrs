@@ -15,7 +15,7 @@ export function KnowledgeDialog({ initialTab, initialCase, saveOnSuccess, onClos
   const items = searchDiseases(query, category);
   const disease = oracleDiseases.find(d => d.id === selected);
   if (initialCase || initialTab === "mira") return <Dialog title="Analisis kasus" subtitle="Tinjau keluhan lalu mulai analisis. Data tambahan bersifat opsional." onClose={onClose}><MiraCaseForm initialCase={initialCase} saveOnSuccess={saveOnSuccess} onSave={onSave}/></Dialog>;
-  return <Dialog title="Referensi" subtitle="Katalog penyakit lokal dan analisis kasus untuk ditinjau klinisi." wide onClose={onClose}>
+  return <Dialog title="Pustaka Klinis" subtitle="Katalog penyakit lokal dan analisis kasus untuk ditinjau klinisi." wide onClose={onClose}>
     <div className="workflow-tabs" role="group" aria-label="Sumber pengetahuan"><button aria-pressed={tab === "oracle"} onClick={() => setTab("oracle")}>Penyakit · {oracleDiseases.length} entri</button><button aria-pressed={tab === "mira"} onClick={() => setTab("mira")}>Analisis kasus</button></div>
     {tab === "mira" ? <MiraCaseForm initialCase={initialCase} saveOnSuccess={saveOnSuccess} onSave={onSave}/> : <div className="oracle-catalog">
       <p className="panel-caption">Isi referensi belum diverifikasi klinis. Kutipan halaman PNPK belum tersedia. {oracleCategories.length} kategori pada entri; metadata sumber mendefinisikan {oracleSource.declaredCategories} kategori.</p>
