@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createPersonalDraft, defaultReviewItems, reviewComplete, queueItems, saveLocalWorkspace } from "../lib/workflow";
-import { initialWorkspace, restoreWorkspace, workspaceReducer, type Workspace, type Message } from "../lib/workspace";
+import { createPersonalDraft, defaultReviewItems, reviewComplete, queueItems, saveLocalWorkspace } from "../src/lib/workflow";
+import { initialWorkspace, restoreWorkspace, workspaceReducer, type Workspace, type Message } from "../src/lib/workspace";
 
 const doc: Message = { id: "doc", role: "assistant", mode: "clinic", content: "Original", originalContent: "Original", sourceText: "Immutable source", createdAt: "2026-10-09T01:00:00Z", reviewItems: defaultReviewItems };
 const state: Workspace = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [doc] }] };

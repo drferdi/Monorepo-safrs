@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { initialWorkspace, workspaceReducer, restoreWorkspace } from "../lib/workspace";
-import { createDraft, modes } from "../lib/drafts";
+import { initialWorkspace, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
+import { createDraft, modes } from "../src/lib/drafts";
 
 describe("workspace relationships", () => {
   it("creates a patient and associates a new encounter with that patient", () => {

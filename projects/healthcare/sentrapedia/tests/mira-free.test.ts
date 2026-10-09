@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { freeOpenRouterModel, freeServiceVersion } from "../lib/mira/free-profile";
-import { createMiraGateway } from "../lib/mira/gateway";
-import { emptyCase } from "../lib/mira/contract";
+import { freeOpenRouterModel, freeServiceVersion } from "../src/lib/mira/free-profile";
+import { createMiraGateway } from "../src/lib/mira/gateway";
+import { emptyCase } from "../src/lib/mira/contract";
 
 const version = (plan = freeOpenRouterModel, assess = freeOpenRouterModel, provider = "openrouter") => `mira-service/test+contract=1+provider=${provider}+data=synthetic-only+plan=${plan}+assess=${assess}+experimental`;
 const input = () => new Request("http://127.0.0.1:3104/api/mira", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Kasus sintetis untuk uji" }, synthetic: true }) });

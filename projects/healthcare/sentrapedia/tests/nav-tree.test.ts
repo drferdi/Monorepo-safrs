@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { focusStep } from "../lib/nav-tree";
+import { focusStep } from "../src/lib/nav-tree";
 
 describe("keyboard movement through rows", () => {
   it("moves one row at a time and jumps to either end", () => {

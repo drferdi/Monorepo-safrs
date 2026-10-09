@@ -7,7 +7,7 @@
     "dev": "next dev --hostname 127.0.0.1 --port 3101",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1 --port 3101",
-    "lint": "eslint app components lib tests",
+    "lint": "eslint src tests",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs"

@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { oracleCategories, oracleDiseases, oracleSource, searchDiseases, relatedDiseases } from "../lib/oracle";
-import { createMiraGateway } from "../lib/mira/gateway";
-import { containsIdentity, validCase, validResult, type MiraResult } from "../lib/mira/contract";
-import { miraDraft, miraMessage } from "../lib/mira/presentation";
-import { initialWorkspace, newEncounter, restoreWorkspace, workspaceReducer } from "../lib/workspace";
-import requestSchema from "../lib/mira/request.schema.json";
-import responseSchema from "../lib/mira/response.schema.json";
-import { SUPPORTED_KEYWORDS, type JsonSchema } from "../lib/mira/validate-json";
+import { oracleCategories, oracleDiseases, oracleSource, searchDiseases, relatedDiseases } from "../src/lib/oracle";
+import { createMiraGateway } from "../src/lib/mira/gateway";
+import { containsIdentity, validCase, validResult, type MiraResult } from "../src/lib/mira/contract";
+import { miraDraft, miraMessage } from "../src/lib/mira/presentation";
+import { initialWorkspace, newEncounter, restoreWorkspace, workspaceReducer } from "../src/lib/workspace";
+import requestSchema from "../src/lib/mira/request.schema.json";
+import responseSchema from "../src/lib/mira/response.schema.json";
+import { SUPPORTED_KEYWORDS, type JsonSchema } from "../src/lib/mira/validate-json";
 
 const caseData = { demographics: { ageYears: 30, sex: "unknown" }, chiefComplaint: "Keluhan fiktif untuk uji integrasi", anamnesis: { freeText: "Contoh sintetis" }, vitals: {}, physicalExam: [], results: [], currentMedications: [], knownConditions: [], allergies: [], facilityCapabilities: [] };
 const result: MiraResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "J00", label: "Nama keluaran uji", confidenceTier: "low" }], alternatives: [], cannotMiss: [{ icd10: "C92.0", label: "Kondisi di luar Oracle", confidenceTier: "unknown" }] }, evidence: [{ icd10: "J00", supporting: ["Alasan dari layanan"], opposing: ["Data belum lengkap"] }], missingInformation: ["Pemfis belum tersedia"], nextBestActions: [{ kind: "exam", item: "Lengkapi pemfis", reason: "Data kurang" }], disposition: null, unfilled: [{ field: "disposition", reason: "Belum cukup data" }], meta: { version: "test-only", model: "mock", costUsd: 0 } };
@@ -24,8 +24,8 @@ describe("MIRA contract and presentation", () => {
   it("supports every keyword of the localized contract snapshots", () => {
     function inspect(schema: JsonSchema) { for (const [key, value] of Object.entries(schema)) { expect(SUPPORTED_KEYWORDS.has(key)).toBe(true); if (key === "properties" || key === "$defs") Object.values(value as Record<string, JsonSchema>).forEach(inspect); if (key === "items") inspect(value as JsonSchema); } }
     inspect(requestSchema); inspect(responseSchema);
-    expect(createHash("sha256").update(readFileSync("lib/mira/request.schema.json")).digest("hex")).toBe("84eba75c9810b794d1875dde77fc204dd5515b879056a8b47c60eef398e607dc");
-    expect(createHash("sha256").update(readFileSync("lib/mira/response.schema.json")).digest("hex")).toBe("b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171");
+    expect(createHash("sha256").update(readFileSync("src/lib/mira/request.schema.json")).digest("hex")).toBe("84eba75c9810b794d1875dde77fc204dd5515b879056a8b47c60eef398e607dc");
+    expect(createHash("sha256").update(readFileSync("src/lib/mira/response.schema.json")).digest("hex")).toBe("b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171");
   });
   it("preserves repeated and otherwise unlisted service evidence", () => {
     const draft = miraDraft({ ...result, evidence: [...result.evidence, { icd10: "J00", supporting: ["Pendukung tambahan"], opposing: [] }, { icd10: "R50", supporting: [], opposing: ["Alasan tambahan terpisah"] }] }, "trace", "time");

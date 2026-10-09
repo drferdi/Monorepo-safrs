@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, documentSections, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../lib/studio";
-import { defaultReviewItems } from "../lib/workflow";
-import { createDraft, modeIds, modes } from "../lib/drafts";
-import { initialWorkspace, restoreWorkspace, workspaceReducer, type Message, type Workspace } from "../lib/workspace";
+import { intentGroups, documentSections, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../src/lib/studio";
+import { defaultReviewItems } from "../src/lib/workflow";
+import { createDraft, modeIds, modes } from "../src/lib/drafts";
+import { initialWorkspace, restoreWorkspace, workspaceReducer, type Message, type Workspace } from "../src/lib/workspace";
 
 const message: Message = { id: "doc", role: "assistant", content: "# Note\n\n## History\nOriginal\n\n## Plan\nKeep\n---\nFooter", mode: "clinic", createdAt: "2026-10-09T01:00:00Z" };
 const state: Workspace = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [message] }] };

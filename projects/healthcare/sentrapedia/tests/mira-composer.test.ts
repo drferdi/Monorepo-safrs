@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { composerCase, composerUsesMira, composerMiraMessages } from "../lib/mira/composer";
-import { emptyCase, type MiraAnalysis } from "../lib/mira/contract";
-import { validCase } from "../lib/mira/contract";
-import { hasMiraSource } from "../lib/mira/presentation";
+import { composerCase, composerUsesMira, composerMiraMessages } from "../src/lib/mira/composer";
+import { emptyCase, type MiraAnalysis } from "../src/lib/mira/contract";
+import { validCase } from "../src/lib/mira/contract";
+import { hasMiraSource } from "../src/lib/mira/presentation";
 
 describe("main clinical composer", () => {
   it("labels only structured MIRA source snapshots as MIRA drafts", () => {

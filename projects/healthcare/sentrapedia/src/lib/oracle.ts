@@ -1,4 +1,4 @@
-import data from "../oracle/sentrapedia.json";
+import data from "../../oracle/sentrapedia.json";
 
 export interface Disease { id: number; nama: string; kategori: string; kode: string; definisi: string; gejala: string[]; diagnosis: string; terapi: string; rujukan: string }
 export const oracleDiseases: readonly Disease[] = data.diseases;

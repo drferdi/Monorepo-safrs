@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { emptyCase, type MiraResult } from "../lib/mira/contract";
-import { diagnosisContent, diagnosisSectionTitles, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay } from "../lib/mira/presentation";
-import { documentSections, replaceSection } from "../lib/studio";
-import { oracleDiseases, relatedDiseases } from "../lib/oracle";
-import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../lib/typing";
+import { emptyCase, type MiraResult } from "../src/lib/mira/contract";
+import { diagnosisContent, diagnosisSectionTitles, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay } from "../src/lib/mira/presentation";
+import { documentSections, replaceSection } from "../src/lib/studio";
+import { oracleDiseases, relatedDiseases } from "../src/lib/oracle";
+import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
 
 const analysis = {
   case: { ...emptyCase(), chiefComplaint: "Keluhan sintetis", anamnesis: { freeText: "Gejala sintetis" }, currentMedications: ["Obat tercatat"], results: [{ name: "Tes sintetis", value: 3, unit: "unit" }] },

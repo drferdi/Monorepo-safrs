@@ -72,7 +72,7 @@ Real clinical use needs clinician-reviewed AI/evidence retrieval, a secure datab
 
 ```powershell
 npx tsc --noEmit
-npx eslint app components lib tests --fix
+npx eslint src tests --fix
 npm test -- tests/workspace.test.ts
 npm run build
 npm run deploy:dry-run
@@ -80,4 +80,4 @@ npm run deploy:dry-run
 
 `capsule.json` contains lifecycle argv contracts. The deployment dry run checks build outputs, dependency traces, and absence of capsule escapes without deploying or writing remote state. The Dockerfile packages the standalone server with static assets, runs as a non-root user, and listens on port 3000. The Docker image itself must be tested when deploying; a dry run does not claim a live deployment.
 
-All configs, dependencies, lock state, design-token snapshot, tests, and deployment files are capsule-local. `app/sentra-tokens.css` is a project-owned snapshot of Sentra Foundation Tokens v1.0; screenshot-specific semantic overrides live in `app/globals.css`. No root package is required.
+All configs, dependencies, lock state, design-token snapshot, tests, and deployment files are capsule-local. `src/app/sentra-tokens.css` is a project-owned snapshot of Sentra Foundation Tokens v1.0; screenshot-specific semantic overrides live in `src/app/globals.css`. No root package is required.

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { requestMiraAnalysis } from "../lib/mira/client";
-import { emptyCase } from "../lib/mira/contract";
+import { requestMiraAnalysis } from "../src/lib/mira/client";
+import { emptyCase } from "../src/lib/mira/contract";
 
 const caseData = { ...emptyCase(), chiefComplaint: "Kasus fiktif untuk pengujian" };
 const response = { traceId: "test-trace", createdAt: "2026-10-09T00:00:00Z", result: { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "R51", label: "Hipotesis uji fiktif", confidenceTier: "low" }], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: ["Tanda vital belum tersedia"], nextBestActions: [], disposition: null, unfilled: [], meta: { version: "test", model: "test", costUsd: 0.01 } } };

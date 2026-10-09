@@ -4,15 +4,17 @@ The Indonesian interface preserves English medical and technical terminology. Ex
 
 ## Changed files
 
-- `app/globals.css`: Tosca semantic colors, accessible foregrounds, brand shadow, submenu transitions, pixel styling, and responsive/reduced-motion rules.
-- `app/layout.tsx`, `app/loading.tsx`: Indonesian metadata/document language and route loading UI.
-- `components/brand.tsx`: Sentrapedia wordmark, original inherited font family, accessible brand label.
-- `components/sidebar-submenu.tsx`, `components/sidebar.tsx`: one expanded section, active branch, localized navigation, and inert collapsed panels.
-- `components/pixel-loader.tsx`: reusable pixel status indicator and completion check.
-- `components/composer.tsx`, `components/forms.tsx`, `components/dialog.tsx`, `components/scribe.tsx`, `components/message-card.tsx`, `components/workspace.tsx`: localized controls, errors, accessibility labels, and process status integration.
-- `lib/drafts.ts`, `lib/workspace.ts`: localized template instructions, preserved English medical headings, and Indonesian defaults.
+Application code lives under `src/` since 2026-10-10 (monorepo capsule topology). Older entries below name the pre-move paths; prefix them with `src/`.
+
+- `src/app/globals.css`: Tosca semantic colors, accessible foregrounds, brand shadow, submenu transitions, pixel styling, and responsive/reduced-motion rules.
+- `src/app/layout.tsx`, `src/app/loading.tsx`: Indonesian metadata/document language and route loading UI.
+- `src/components/brand.tsx`: Sentrapedia wordmark, original inherited font family, accessible brand label.
+- `src/components/sidebar-submenu.tsx`, `src/components/sidebar.tsx`: one expanded section, active branch, localized navigation, and inert collapsed panels.
+- `src/components/pixel-loader.tsx`: reusable pixel status indicator and completion check.
+- `src/components/composer.tsx`, `src/components/forms.tsx`, `src/components/dialog.tsx`, `src/components/scribe.tsx`, `src/components/message-card.tsx`, `src/components/workspace.tsx`: localized controls, errors, accessibility labels, and process status integration.
+- `src/lib/drafts.ts`, `src/lib/workspace.ts`: localized template instructions, preserved English medical headings, and Indonesian defaults.
 - `tests/workspace.test.ts`: language/default/persistence regression checks.
-- `README.md`, `CONTEXT.md`, `.agents/HANDOFF.md`: current identity, implementation notes, and verification evidence.
+- `README.md`, `.agents/CONTEXT.md`, `.agents/HANDOFF.md`: current identity, implementation notes, and verification evidence.
 - `docs/verification/sentrapedia-*.png`: desktop, mobile, submenu, and pending clipboard evidence.
 
 ## Global palette and brand
