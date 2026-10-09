@@ -88,9 +88,7 @@
 .squad li > div { display: flex; flex-direction: column; align-items: center; gap: 7px; }
 .squad strong { font-family: var(--font-jakarta), sans-serif; font-size: 18px; font-weight: 500; letter-spacing: .01em; color: #fff; }
 .squad span { font-family: var(--neural-mono); font-size: 11px; line-height: 1.6; letter-spacing: .1em; color: var(--neural-muted); }
-.squad > p, .squad span { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
-/* The names stay bright: a soft light of their own over the dark halo. */
-.squad strong { text-shadow: 0 0 10px rgb(214 230 255 / 45%), 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%); }
+.squad > p, .squad span, .squad strong { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
 .squad span { color: #b4c2d2; }
 .cta { display: inline-flex; align-items: center; gap: 42px; padding: 19px 0; margin-top: 27px; border-bottom: 1px solid var(--neural-blue); font-size: 11px; letter-spacing: .12em; }
 .cta span { font-size: 17px; }

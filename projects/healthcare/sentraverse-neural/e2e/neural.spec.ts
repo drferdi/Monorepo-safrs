@@ -569,6 +569,8 @@ test('the network chapter names the SentraSquad one by one after its title, from
       await expect(members.nth(i).locator('strong')).toHaveText(name)
       await expect(members.nth(i)).toHaveCSS('opacity', '1')
       await expect(members.nth(i)).toHaveCSS('filter', 'blur(0px)')
+      // No glow of their own: every shadow on a name is the dark halo the chapter text shares.
+      expect(await members.nth(i).locator('strong').evaluate(element => getComputedStyle(element).textShadow)).not.toMatch(/rgba?\((?!6, 9, 14)/)
       const box = (await members.nth(i).boundingBox())!
       expect(box.x, `${width}: ${name} left`).toBeGreaterThanOrEqual(0)
       expect(box.x + box.width, `${width}: ${name} right`).toBeLessThanOrEqual(width)
