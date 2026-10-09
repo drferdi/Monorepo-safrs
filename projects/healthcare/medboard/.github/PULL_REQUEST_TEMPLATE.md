@@ -20,7 +20,7 @@ Closes #<!-- issue number jika ada -->
 ## Clinical Safety Checklist
 > Wajib diisi untuk PR yang menyentuh `src/lib/cdss/`, `src/lib/emr/`, `server.ts`, atau `platform/`
 
-- [ ] Vital signs red flag thresholds di `engine.ts` **tidak diubah** (atau sudah review Chief)
+- [ ] Vital signs red flag thresholds di `engine.ts` **tidak diubah** (atau sudah review Gaffer)
 - [ ] `enableGuardrails` tetap `true`
 - [ ] Tidak ada PHI di test fixtures, komentar, atau error messages
 - [ ] Output CDSS masih mengandung disclaimer klinis di `alerts[]`
@@ -35,7 +35,7 @@ Closes #<!-- issue number jika ada -->
 - [ ] `pnpm run test:cdss` pass (jika CDSS berubah)
 - [ ] Brand signature `// Architected and built by Drferdi.` ada di semua file baru
 - [ ] Tidak ada cross-app import
-- [ ] CORS origins tidak diubah tanpa persetujuan Chief
+- [ ] CORS origins tidak diubah tanpa persetujuan Gaffer
 
 ---
 
@@ -56,7 +56,7 @@ Closes #<!-- issue number jika ada -->
 
 ---
 
-> ⚠️ **Production deployment memerlukan Gate 5 — Chief approval.**
+> ⚠️ **Production deployment memerlukan Gate 5 — Gaffer approval.**
 > Jangan merge ke production branch tanpa `genesis/05-trust-bridge/preview/chief-approval.md`.
 
 ---

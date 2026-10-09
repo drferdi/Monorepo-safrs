@@ -17,7 +17,7 @@ and so do the non-GSAP files its HANDOFF listed as unreached (SentraSim, Showcas
 Clients, FAQ, Interlude, ProjectSlider). Kept from the later work: the CI test glob and the
 kinetic nav's local defaults. The immutable `/legacy-film` header left with the film.
 
-Rationale: Chief (2026-10-09): "seharusnya sentraverse baru ini folder sendiri"; Chief chose the
+Rationale: Gaffer (2026-10-09): "seharusnya sentraverse baru ini folder sendiri"; Gaffer chose the
 folder name `sentraverse-neural`, restoring the old landing, and a local commit only.
 
 Evidence: typecheck 0, eslint 0 (2 pre-existing warnings in `app/insights`), node:test 2/2,
@@ -26,9 +26,9 @@ shows the Hero landing. The smoke test's waiting-list check failed before the sp
 a link; a form has rendered since the 2026-09-26 migration) and now asserts the email field and
 the submit button.
 
-## 2026-10-09 (GSAP debt) — Chief's rulings on the GSAP audit, and the debt worked off
+## 2026-10-09 (GSAP debt) — Gaffer's rulings on the GSAP audit, and the debt worked off
 
-- Rulings (Chief, 2026-10-09, on the audit's open questions): (1) scrub "sesuaikan dengan best
+- Rulings (Gaffer, 2026-10-09, on the audit's open questions): (1) scrub "sesuaikan dengan best
   practice /gsap": the official GSAP ScrollTrigger and performance guidance favours a numeric
   scrub (a short catch-up) over `scrub: true` for scroll-linked work, so the master keeps `.8`
   on desktop and `.35` on phones; at rest the frame is exactly the scroll position's (the e2e
@@ -73,7 +73,7 @@ the submit button.
 
 ## 2026-10-09 (morph) — At the end of THE LEGACY part of the face becomes neural tissue
 
-- Decision (Chief, 2026-10-09, on the film chapter at rest: "di bagian akhir ini buat efek state
+- Decision (Gaffer, 2026-10-09, on the film chapter at rest: "di bagian akhir ini buat efek state
   of the art sebagian wajah saya berubah menjadi persyarafan neuron", then on the first build
   "meleset itu, wajah kiri saja"): over the film's held last frame the left side of the face as
   seen (the far cheek, the ear, the temple and the hair) transforms into neural tissue; the
@@ -95,7 +95,7 @@ the submit button.
 - Rulings (Claude Fable 5.1): the first build at density .65 read as static noise over the
   cheek, so the dots were thinned to .4 and the edges and somas strengthened (the face must read
   as a wireframe of light, not sparkle); the seam wavers and fades rather than cutting the face
-  with a ruler; the first build transformed the near, camera-facing side and Chief flipped it to
+  with a ruler; the first build transformed the near, camera-facing side and Gaffer flipped it to
   the left as seen (one knob, `MORPH.cut.side`), so the axons now leave the temple into the code
   on the left; the rest at `to` 7 px keeps the nose bridge and the near eye in the photograph.
 - Evidence: typecheck 0, lint 0, node:test 44/44 (5 in `morph.test.mjs`, 1 new in
@@ -109,7 +109,7 @@ the submit button.
 
 ## 2026-10-09 (frame sequence) — The film is a scroll-scrubbed frame sequence; nothing stands between SENTRA and the film
 
-- Decision (Chief, 2026-10-09, on the film chapter's frames: "ya ini gak nyambung dan pastikan
+- Decision (Gaffer, 2026-10-09, on the film chapter's frames: "ya ini gak nyambung dan pastikan
   video saya berjalan sesuai timing scroll"): (1) the drawn face no longer returns before the
   final chapter; the SENTRA network dissolves from 94 straight into the void and the film.
   (2) The frame on screen is the scroll position's, exactly: GSAP's image-sequence pattern
@@ -119,7 +119,7 @@ the submit button.
   frame for the clock's time, standing in the nearest loaded one; `canvas.dataset.frame`
   records what is on screen). `public/legacy-film/f000..f119.webp` + `poster.webp` (the last
   frame at 832×1104, the still poster for reading mode and no JavaScript) are extracted from
-  Chief's `cladeo.mp4` in Chrome (quality .72, 5.5 MB in all; the script is in the session
+  Gaffer's `cladeo.mp4` in Chrome (quality .72, 5.5 MB in all; the script is in the session
   scratchpad); `public/legacy-ferdi.mp4` is removed. `timeline.ts`: `MasterOptions.film?:
   (time) => void`, called from the clock tween's `onUpdate`; `follow`, `followFilm`, `isFilm`
   and `Film` are gone; `settleLegacy` pauses nothing. `LegacyScene.tsx`: `<canvas
@@ -139,7 +139,7 @@ the submit button.
 
 ## 2026-10-09 (film chapter) — After SENTRA the page dissolves into the film; the gate is retired
 
-- Decision (Chief, 2026-10-09, after rejecting the film inside the gate: "ini arah yang salah",
+- Decision (Gaffer, 2026-10-09, after rejecting the film inside the gate: "ini arah yang salah",
   then "habis phase Sentra ini -> masuk ke nuansa video namun buat agar transisi nya menjadi
   blending. Video besar ukuran asli kecil sedikit"): the final chapter is the film. After the
   SENTRA chapter the neural field dissolves into it; the film stands large, near its native
@@ -165,7 +165,7 @@ the submit button.
   `settleLegacy` pauses the film and clears the veil and the box. `NeuralJourney.tsx` no longer
   places the scene from the drawn face, builds no reveal and passes no dolly.
 - Rulings (Claude Fable 5.1): the box, not the mask, removes the watermark; the size is capped
-  by the stage, so on Chief's ~890 px window the viewport, not the design, decides it; the
+  by the stage, so on Gaffer's ~890 px window the viewport, not the design, decides it; the
   title may cross the film's dissolved left edge on 1024 and 768 px (the words carry their own
   halo), so the e2e no longer requires the title and the figure apart.
 - Evidence: typecheck 0, lint 0, node:test 36/36, build 0, Playwright neural + smoke 15/15 on
@@ -177,7 +177,7 @@ the submit button.
 
 ## 2026-10-09 (film playback) — The film follows the master's clock by playing, not by seeking
 
-- Decision (Chief, 2026-10-09, on the preview: "di final phase malah putus gak karuan ... kan
+- Decision (Gaffer, 2026-10-09, on the preview: "di final phase malah putus gak karuan ... kan
   bisa jadi GSAP scroll? dia muter kalau di scroll?"): the film runs while the page scrolls. It
   supersedes the scrubbed `currentTime` of "2026-10-08 (video)"; the cue, the fade, the window
   (96.7 → 98.8) and the held last frame stay.
@@ -199,11 +199,11 @@ the submit button.
   on 1280×800 (worst gap 158 ms, once) and 227 on 375×812 (worst gap 85 ms), the film within
   ~.1 s of the clock throughout and paused at 10.176 s at the end (`filmplay.mjs` in the
   session scratchpad). A re-export with a short keyframe interval would make reverse seeks
-  cheap too; it remains Chief's call.
+  cheap too; it remains Gaffer's call.
 
 ## 2026-10-08 (video) — The film takes over from the photograph after the reveal, scrubbed by the master
 
-- Decision (Chief, 2026-10-08, with the clip `cladeo.mp4`: "Ganti dengan konsep video ini somehow
+- Decision (Gaffer, 2026-10-08, with the clip `cladeo.mp4`: "Ganti dengan konsep video ini somehow
   agar bisa menjadi blend dengan design sebelumnya, visualisasi nya jangan terlalu terang, ingat
   tetap harus blended dengan FULL GSAP"): the gate, the dolly and the reveal stay; the clip (10.2 s,
   832×1104: the same pose as the photograph, then the architect turning to a universe of code and
@@ -232,7 +232,7 @@ the submit button.
   dollied world; the scrub guarantees are node tests on stand-ins (`timeline.test.mjs`, "the
   film") and the e2e asserts only the film's opacity, because the Playwright project runs the
   bundled Chromium without H.264.
-- Open (Chief's call): the clip as supplied is 14.5 MB with a `clideo.com` watermark; the right
+- Open (Gaffer's call): the clip as supplied is 14.5 MB with a `clideo.com` watermark; the right
   fix is a re-export (720p, short keyframe interval, no watermark), which cannot be done here
   (no ffmpeg; installing one is an unreviewed dependency). On iOS, seeking without a gesture may
   show nothing until the first play; the photograph stays underneath, so the degrade is the
@@ -246,7 +246,7 @@ the submit button.
 
 ## 2026-10-08 (blend) — The founder's photograph blends into the surrounding tones
 
-- Decision (Chief, 2026-10-08, on the eighth session's frames: the figure against the gate read
+- Decision (Gaffer, 2026-10-08, on the eighth session's frames: the figure against the gate read
   disproportionate and the thread had stalled on it; "buat saja sosok saya blend dengan latar
   belakang / colour sekitar, tampak sedikit sudah cukup"): the photograph recedes into the
   scene's own tones instead of standing out from them. It supersedes the low-key grade of
@@ -263,7 +263,7 @@ the submit button.
   finals (`developTo` .58 / 1 / .3). The opacity is on the container, not the image, so the
   reveal's `img` hide-and-show and the e2e's `img` opacity checks are untouched.
 - Rulings (Claude Fable 5.1): .5 rather than fainter, because at phase 100 the figure is 133 px
-  wide on desktop and 87 px on phones and a .35 variant was captured beside it for Chief to
+  wide on desktop and 87 px on phones and a .35 variant was captured beside it for Gaffer to
   compare; opacity and filter before any `mix-blend-mode` on the photo, which stacks a mask, a
   filter and a 3D transform inside the dollied world where Chrome's compositing has already
   misdrawn planes.
@@ -275,7 +275,7 @@ the submit button.
 
 ## 2026-10-08 (legacy) — THE LEGACY: the final chapter is a 2.5D gateway with a camera pullback
 
-- Decision (Chief, 2026-10-08, the brief "SENTRAVERSE — THE LEGACY, Cinematic Final Chapter
+- Decision (Gaffer, 2026-10-08, the brief "SENTRAVERSE — THE LEGACY, Cinematic Final Chapter
   Redesign"): the final chapter (15/15, phases 94–100) is "THE LEGACY — THE ARCHITECT BEHIND
   THE UNIVERSE": the Gaffer's unchanged half-body portrait standing before a monumental
   gateway, in five scroll-driven phases (presence, revelation, pullback, universe, legacy),
@@ -319,7 +319,7 @@ the submit button.
   geometry either way, so the fault is in compositing, not layout. Also: with
   `invalidateOnRefresh`, a ScrollTrigger refresh reverts the master and re-renders it with
   events suppressed, so `onUpdate` work has to be repeated in `onRefresh`.
-- Rulings (Claude Fable 5.1, for Chief's eye): the eye 54 % across and .15 photo widths above
+- Rulings (Claude Fable 5.1, for Gaffer's eye): the eye 54 % across and .15 photo widths above
   the Gaffer's centre on desktop (centred and .1 below on phones, a lower camera so the gate
   looms); the opening 3.4 × 3.1 photo widths (3.1 so the lintel and its strip stay in the
   desktop frame at the end); frame edges .75/.55/.4/.28, the core .6, the haze .26; the
@@ -350,7 +350,7 @@ the submit button.
 
 ## 2026-10-08 (ending) — Scan → Develop → Lock-on, masked title reveals and the dwells
 
-- Decision (Chief, 2026-10-08, the task "Make the Sentraverse neural journey ending more
+- Decision (Gaffer, 2026-10-08, the task "Make the Sentraverse neural journey ending more
   dramatic (GSAP)"): the master timeline moves out of the effect into `timeline.ts`; the final
   chapter runs a Scan → Develop → Lock-on sequence over the portrait before the callouts, whose
   labels decode into their exact strings; chapter titles reveal line by line behind masks, the
@@ -422,7 +422,7 @@ the submit button.
 
 ## 2026-10-08 (grade) — The end photograph is graded low-key
 
-- Decision (Chief, 2026-10-08, on seeing the end scene: "Foto saya terakhir buat lebih dramatis,
+- Decision (Gaffer, 2026-10-08, on seeing the end scene: "Foto saya terakhir buat lebih dramatis,
   tidak terlalu terang"): the photograph is darker and harder, with its colour pulled back, under
   a vignette centred on the face and a key-light falloff toward the left.
 - How (commit `1263ffc1`): in `journey.module.css` the image and the reveal canvas carry
@@ -446,7 +446,7 @@ the submit button.
 
 ## 2026-10-08 (portrait) — The half-body portrait, the registered drawn figure and the HUD callouts
 
-- Decision (Chief, 2026-10-08: "Foto saya di bagian akhir, ganti menjadi di lampiran. Lalu beri
+- Decision (Gaffer, 2026-10-08: "Foto saya di bagian akhir, ganti menjadi di lampiran. Lalu beri
   motion garis futuristic: 1. dr Ferdi Iskandar 2. the Gaffer 3. Sentraone", with a 500×500 PNG
   attached): the attachment is the end photograph, and three animated futuristic callout lines
   with exactly those labels sit over it.
@@ -465,7 +465,7 @@ the submit button.
   labels fit at 768×1024.
 - Rulings on the way (Claude Fable 5.1): overwriting the two existing `public/` assets is the
   one exception to the rule that only files this session adds may be touched there, taken
-  because Chief asked for exactly this replacement; the chapter 03 drawn figure is now a
+  because Gaffer asked for exactly this replacement; the chapter 03 drawn figure is now a
   half-body bust (head, shoulders, folded arms) instead of a head, because one source drives
   both the drawing and the photograph (a head-only crop for chapter 03 would need a second asset
   and a second registration; not done); the desktop scale is 1.2 above aspect 1.45 (1 before) so
@@ -484,7 +484,7 @@ the submit button.
 
 ## 2026-10-08 (redraw) — Neurons as glowing sheathed shafts on a bushy, tortuous SWC tree
 
-- Decision (Chief, 2026-10-08, on seeing chapter 02 after the spec build: "visual neuron nya kok
+- Decision (Gaffer, 2026-10-08, on seeing chapter 02 after the spec build: "visual neuron nya kok
   malah jadi jelek? ... kamu harus fokus pada realistic dan dramatic visual"): realism and drama
   override the spec's drawing values. The SWC tree, the Rall rule, the lighting and the activity
   cycle from the entry below stay; the parallel-strand method (spec §2) and the .35 soma go.
@@ -520,11 +520,11 @@ the submit button.
 
 ## 2026-10-08 (realism) — SWC-shaped neurons, emission-based lighting, a GSAP activity cycle
 
-- Decision (Chief, 2026-10-08, "Setuju, implementasikan poin 2 sampai 4 sesuai spec"): points
+- Decision (Gaffer, 2026-10-08, "Setuju, implementasikan poin 2 sampai 4 sesuai spec"): points
   2, 3 and 4 of the neural-realism spec (git-ignored
   `docs/superpowers/specs/2026-10-08-sentraverse-neural-realism-spec.md`) are built; points 1
   (pointer-parallax shear on the face) and 5 (colour after detail, shoulder fade in the reveal)
-  wait for Chief's word. This supersedes the "no shader changes" non-goal of the 2026-10-07
+  wait for Gaffer's word. This supersedes the "no shader changes" non-goal of the 2026-10-07
   tactile spec: the shader now carries normals, lighting, a focus plane and the signal uniforms.
   Everything from the entries below stays (one face, still text, scrim and halo, no new
   dependency, source images unchanged).
@@ -533,7 +533,7 @@ the submit button.
   `morphology.test.mjs`), `3d42f121` (key, rim, occlusion, impulse specular, focus plane),
   `8d91b089` (`signal.ts`, `signal.test.mjs`, `u_signal[6]`, `main[data-signal]`, the e2e
   case). GSAP schedules the cycle; there is no second animation loop.
-- Rulings on the way (Claude Fable 5.1), for Chief to judge by eye: the occlusion floor is .7,
+- Rulings on the way (Claude Fable 5.1), for Gaffer to judge by eye: the occlusion floor is .7,
   not the spec's .45, and each strand carries a brightness weight sqrt(4 / strands) clamped to
   1–2, because the first build left the hero neuron too dark and its tips too thin; the circle
   of confusion is clamped to 0–1 so far tissue never grows past 2× size; strand counts scale
@@ -553,7 +553,7 @@ the submit button.
 
 ## 2026-10-08 (later) — Portrait realism: calibrated relief and a feature-first photo reveal
 
-- Decision (Chief, 2026-10-08, "Agreed ... Execute point 1 dan 5", recorded in the local plan
+- Decision (Gaffer, 2026-10-08, "Agreed ... Execute point 1 dan 5", recorded in the local plan
   `docs/superpowers/plans/2026-10-08-portrait-realism.md`): the drawn face gets a real facial
   relief instead of brightness-as-depth, and the photograph resolves over it feature first and
   registered, not as a flat cross-fade. Everything else from the entry below stays: one face,
@@ -574,17 +574,17 @@ the submit button.
   mode, reduced motion and no-JavaScript keep the plain image. The photo container now fades
   in over 0.5 phase units (3 without a reveal canvas) and the final chapter enters without its
   24 px slide so the photo stays on the drawn face.
-- Visible rulings for Chief to judge by eye: the pointer turn is ±0.085 rad (was ±0.22) and
+- Visible rulings for Gaffer to judge by eye: the pointer turn is ±0.085 rad (was ±0.22) and
   the chapter-03 sway ±0.045 rad (was ±0.23), because a flat-registered reveal cannot tolerate
   a large turn; both are single numbers in `renderer.ts`.
 - Session rulings (Claude Fable 5.1): the work was found uncommitted in the shared checkout,
   authored 08:43–08:49 by another session with Task 1 complete and Task 2 written but ungated;
-  it was finished rather than stashed because it breaks none of Chief's decisions and the plan
-  quotes Chief's approval; the plan ledger moved from `docs/plans/active/` to the git-ignored
+  it was finished rather than stashed because it breaks none of Gaffer's decisions and the plan
+  quotes Gaffer's approval; the plan ledger moved from `docs/plans/active/` to the git-ignored
   `docs/superpowers/plans/` beside the design spec, so no new tracked folder reaches the
   published repo; a stray `.portrait-check.config.ts` (no base config spread) was deleted and
   the sanctioned session-only Chrome config used and deleted.
-- Fixed the same day on Chief's order ("perbaiki overlap tablet 768, kecilkan skala
+- Fixed the same day on Gaffer's order ("perbaiki overlap tablet 768, kecilkan skala
   wajahnya"): on a 768×1024 portrait tablet the opaque photo's left edge (x ≈ 396) touched the
   end of the description line (glyphs to x ≈ 387); `facePlacement` now scales the face to .55
   (was .7) when the aspect ratio is under 1.2, which keeps the right edge at NDC .92 and moves
@@ -601,7 +601,7 @@ the submit button.
 
 ## 2026-10-08 — The journey ends on the founder's face drawn as neural tissue
 
-- Decision (Chief, 2026-10-07 and 2026-10-08): one human face only, the founder's own; no photo
+- Decision (Gaffer, 2026-10-07 and 2026-10-08): one human face only, the founder's own; no photo
   and no card — the face is formed by the same WebGL lines and glowing points as every other
   scene; the final chapter keeps its text on the left with the face on the right (above the text
   on phones); chapter 03's anatomical drawing stays; the body silhouette and the final-scene body
@@ -620,7 +620,7 @@ the submit button.
   type stripping can import `geometry.ts` in tests; the wake targets `[data-marker-copy]`
   rather than the first child, because division chapters start with their marker line; float
   products in tests are compared with a tolerance.
-- Same day, after the review and a look in the browser, Chief added: chapter 03 "A human
+- Same day, after the review and a look in the browser, Gaffer added: chapter 03 "A human
   architecture" drops the generic body drawing and shows the face too (it grows in, sways and
   the camera closes in as the signal chapter starts); the chapter text must never move with the
   pointer (the text-block tilt, `perspective` and `preserve-3d` were removed; the CTA pull and
@@ -633,7 +633,7 @@ the submit button.
   to a touch guard on every wake handler.
 - Later that day, after the halo build: the centered titles "SENTRAVERSE" (chapter 07) and
   "SENTRA" (chapter 14) were still harsh, so they get the same soft halo, 92 % white and a faint
-  light edge ("harus blend tapi jelas"); and Chief asked for his real face at the end ("di
+  light edge ("harus blend tapi jelas"); and Gaffer asked for his real face at the end ("di
   akhir munculkan wajah image asli saya"). The photograph `public/portrait-ferdi.webp` (from
   `88705077`, WebP so not LFS) is rendered by `next/image` in the final chapter and placed by
   `tactile.ts` `faceBox` in the box the renderer draws the face in, resolving from phase 95.5

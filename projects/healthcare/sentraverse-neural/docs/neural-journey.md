@@ -74,7 +74,7 @@ opens `https://sentrahai.com/ekosistem`.
   on screen on portrait tablets and clear of the text on short phones. `main[data-face]` reads `ready` or `unavailable`; the chapter text never depends on
   it. The body silhouette, the generic body drawing of chapter 03 and the final-scene
   nervous-system draw are gone.
-- The ending is THE LEGACY (Chief 2026-10-09, "film chapter"; see that entry in
+- The ending is THE LEGACY (Gaffer 2026-10-09, "film chapter"; see that entry in
   `DECISIONS.md`): after the SENTRA chapter the neural field dissolves into the founder's film.
   The final chapter, phases 94–100 over 40 of the master's 131.5 units, is `LegacyScene.tsx`
   (`[data-legacy]`): a void, the film box `[data-film]` (the film's last frame as the
@@ -89,7 +89,7 @@ opens `https://sentrahai.com/ekosistem`.
   GSAP's image-sequence pattern, 120 WebP frames at 12 fps in `public/legacy-film/v1/`, extracted
   from the clip in Chrome by `scripts/legacy-film/extract.mjs`, because the clip has a single
   keyframe and a seeked `<video>` costs up to ~220 ms a frame; nothing loads until the story
-  reaches the network chapter (phase 60, about five viewports before the film; Chief 2026-10-09:
+  reaches the network chapter (phase 60, about five viewports before the film; Gaffer 2026-10-09:
   pay for the film only on the way to it), then frame 0 and frame 119 first and the rest in
   order, six at a time, one retry each, a failed frame recorded in `data-missing`; a frame not yet
   loaded is stood in for by the nearest loaded one; the folder is versioned and served
@@ -105,9 +105,9 @@ opens `https://sentrahai.com/ekosistem`.
   canvas outside it, so the shared mask never doubles; `settleLegacy` clears what the scene
   tweened. The drawn face no longer returns before the final chapter (the network dissolves from
   94 straight into the void and the film; the feature-first photo reveal of 2026-10-08 and its
-  shader relief were removed on 2026-10-09). The last beat is the morph (Chief 2026-10-09, "sebagian wajah
+  shader relief were removed on 2026-10-09). The last beat is the morph (Gaffer 2026-10-09, "sebagian wajah
   saya berubah menjadi persyarafan neuron"; `morph.ts`): over the held last frame a front sweeps
-  in from the left side of the face as seen (`MORPH.cut.side`, Chief's call) between 99.05 and 99.9 (`legacy.morph`, a plain `{ value }`
+  in from the left side of the face as seen (`MORPH.cut.side`, Gaffer's call) between 99.05 and 99.9 (`legacy.morph`, a plain `{ value }`
   tween without easing whose `onUpdate` hands the progress to the module); the flesh it passes
   darkens to the void and, a few pixels behind, the face's own edges and light return as the
   material of chapters 03 and 14 (`face.ts` on the frame's face crop, the glyphs above the
@@ -134,7 +134,7 @@ opens `https://sentrahai.com/ekosistem`.
   03 also sways ±0.045 rad; both were ±0.22 and ±0.23 before 2026-10-08) and the
   points near it brighten: `tactile.ts` `faceLook` maps the pointer onto the face plane, and
   `NeuralJourney.tsx` eases `turn` and `hover` with `gsap.quickTo` on a plain look object.
-- The chapter text never moves with the pointer (Chief 2026-10-08). `tactile.ts` holds the pure
+- The chapter text never moves with the pointer (Gaffer 2026-10-08). `tactile.ts` holds the pure
   maths (magnet pull, face placement, face look), covered by `tactile.test.mjs`; `face.test.mjs`
   covers the analysis and `makeFace`. `wake.ts` wires the pointer to the controls only: the CTA
   is pulled 18 % toward the pointer and grows 4 %, buttons lift 2 px. Tracking uses
@@ -152,7 +152,7 @@ opens `https://sentrahai.com/ekosistem`.
 
 ## Neuron morphology, lighting and the activity cycle
 
-Points 2, 3 and 4 of the neural-realism spec (Chief 2026-10-08, "Setuju, implementasikan poin 2
+Points 2, 3 and 4 of the neural-realism spec (Gaffer 2026-10-08, "Setuju, implementasikan poin 2
 sampai 4 sesuai spec"; the spec itself is the git-ignored
 `docs/superpowers/specs/2026-10-08-sentraverse-neural-realism-spec.md`). Points 1 (pointer
 parallax on the face) and 5 (colour after detail and a shoulder fade in the reveal) are not built.
@@ -169,7 +169,7 @@ parallax on the face) and 5 (colour after detail and a shoulder fade in the reve
   6–9 basal trunks (root radius .05 × size) sweep 270° away from the apical trunk (.075 × size,
   1.8× longer); one axon (.04 × size, 3.4× longer, one branching level shallower) ends in 25–40
   vesicle particles.
-- Drawing (Chief 2026-10-08, "fokus pada realistic dan dramatic visual", replacing the spec's
+- Drawing (Gaffer 2026-10-08, "fokus pada realistic dan dramatic visual", replacing the spec's
   parallel strands, which read as striped cables). Every compartment is one core line whose
   brightness follows its radius. On neurons of size .5 and up, shafts down to `SHEATH_RADIUS`
   (.008) add a sheath of soft sprites one radius apart (at least .015, sparser at phone density)
@@ -265,7 +265,7 @@ no new loop and no new dependency.
   network attracts. Touch, phones and reduced motion are unchanged.
 - **Hygiene**:
   - Off-screen chapters are `inert` beside `aria-hidden`.
-  - The page ends with the stage (Chief 2026-10-09): no colophon below it, so the last screen
+  - The page ends with the stage (Gaffer 2026-10-09): no colophon below it, so the last screen
     never scrolls away.
   - `app/robots.ts` and the Organization JSON-LD ship now. Canonical, sitemap and the Open Graph
     image wait for the domain.
@@ -290,7 +290,7 @@ so a new test file runs without touching `package.json`; CI runs it on every pus
 (the region, the front, the crop, the seeded neurons, the pulse lanes) and `timeline.test.mjs`
 (the master's 131.5 units, the phase mapping and its dwells, the labels, the title reveals, the
 legacy's dissolve, film, morph and text beats, the settled state). The Playwright suite in
-`e2e/neural.spec.ts` (local only for now, Chief 2026-10-09) covers the WebGL renderer staying
+`e2e/neural.spec.ts` (local only for now, Gaffer 2026-10-09) covers the WebGL renderer staying
 active (a shader that fails to link would fall back to Canvas 2D silently), the activity cycle
 playing only in the network window and parking under reduced motion, reverse navigation, all
 five divisions, the film (the dissolve, the frame following the scroll, the morph read off the
@@ -302,7 +302,7 @@ missing WebGL, no canvas context, JavaScript-disabled reading, pin cleanup, conn
 navigation and frame timing. `e2e/smoke.spec.ts` checks the page loads with the journey as its main landmark and reaches the
 way on to sentrahai.com.
 
-Performance targets (Chief 2026-10-09, "sesuaikan best practice"): the Core Web Vitals "good"
+Performance targets (Gaffer 2026-10-09, "sesuaikan best practice"): the Core Web Vitals "good"
 thresholds at the 75th percentile — LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1 — and no film bytes
 before the visitor heads for the film. Measured 2026-10-09 on `next start` locally in Chrome:
 375×812 with Fast 4G (9 Mbps, 60 ms) and 4× CPU throttling LCP 1,420 ms, CLS 0, 578 KB until

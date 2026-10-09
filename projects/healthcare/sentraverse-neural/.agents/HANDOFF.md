@@ -20,7 +20,7 @@ drferdi/Sentraverse-N). This session implemented the brief
 - pointer node glow and micro-label;
 - `inert` off-screen chapters;
 - `robots.txt` and Organization JSON-LD;
-- after Chief's "glitch" report and the final review: a division's marker and copy now start drawn
+- after Gaffer's "glitch" report and the final review: a division's marker and copy now start drawn
   back (they flashed in full with the panel on the first pass down), links from kept outer neurons
   fold instead of scratching across the frame, the micro-label forgets on scroll, and the h1 comes
   up by itself if the scripts never start.
@@ -34,14 +34,14 @@ Gates (fresh build, `next start` on 127.0.0.1:4347):
 
 ## Work in flight
 
-- Chief reviews the look in the Browser pane: the flagship (phase 60–66), the carrier, and the
+- Gaffer reviews the look in the Browser pane: the flagship (phase 60–66), the carrier, and the
   opening words.
 - INP and LCP from field data after the first deploy (the opening words wait at .08 opacity until
   ready).
 
 ## Blockers
 
-The deploy target (Vercel project, domain) waits for Chief. Canonical, sitemap and the Open Graph
+The deploy target (Vercel project, domain) waits for Gaffer. Canonical, sitemap and the Open Graph
 image wait for the domain.
 
 ## Known quirks
@@ -64,6 +64,6 @@ image wait for the domain.
 
 ## Next action
 
-1. Chief: judge the flagship and the carrier by eye. Rule on the SENTRAVERSE timing (DECISIONS).
-2. Chief: the deploy target and domain, then canonical, sitemap and the OG image.
-3. Snapshot the capsule to drferdi/Sentraverse-N when Chief says so.
+1. Gaffer: judge the flagship and the carrier by eye. Rule on the SENTRAVERSE timing (DECISIONS).
+2. Gaffer: the deploy target and domain, then canonical, sitemap and the OG image.
+3. Snapshot the capsule to drferdi/Sentraverse-N when Gaffer says so.

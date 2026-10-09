@@ -1,6 +1,6 @@
 # Oracle dan MIRA — cakupan disetujui
 
-Authority: Chief “Okay integrate both oracle and MIRA” menyetujui arah perbandingan dan usulan integrasi pada 2026-10-09. Solo tanpa worker tambahan. R2 kontrak/server, R3 permukaan analisis klinis diotorisasi melalui permintaan integrasi; tidak mengubah isi/aturan klinis Oracle atau MIRA. Tidak melakukan inferensi berbayar dalam verifikasi.
+Authority: Gaffer “Okay integrate both oracle and MIRA” menyetujui arah perbandingan dan usulan integrasi pada 2026-10-09. Solo tanpa worker tambahan. R2 kontrak/server, R3 permukaan analisis klinis diotorisasi melalui permintaan integrasi; tidak mengubah isi/aturan klinis Oracle atau MIRA. Tidak melakukan inferensi berbayar dalam verifikasi.
 
 Outcome: dialog Referensi & MIRA di sidebar, composer dan Command Center. Oracle dapat dicari nama/kode/kategori, ditampilkan verbatim dengan file/hash/ID dan status belum diverifikasi. Kategori berasal dari 15 nilai aktual; kode berulang tidak dideduplikasi. Semua empat file Oracle tetap utuh.
 

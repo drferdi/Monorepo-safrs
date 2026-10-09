@@ -1,6 +1,6 @@
 # Clinical Workspace Implementation Plan
 
-> Execute inline with superpowers:executing-plans. Chief explicitly selected no additional workers.
+> Execute inline with superpowers:executing-plans. Gaffer explicitly selected no additional workers.
 
 **Goal:** Implement the five approved Sentrapedia workflow/design ideas locally.
 **Architecture:** Extend optional document metadata in the existing reducer; pure helpers own grouping, section offsets, comparison and timelines. Small client components consume those helpers. Workspace coordinates navigation and callbacks.
@@ -28,6 +28,6 @@ Legacy records without metadata; edited final documents reverting to draft; sour
 ## Ledger
 
 - Planning: source schema and component contracts inspected. Main node_modules remain incomplete; use existing independently installed extraction with identical lockfile, without installing packages. Source-only runtime health remains a separate baseline issue.
-- Ruling: perform final review inline, because Chief explicitly requested no additional workers. Independent reviewer coverage will not be claimed.
+- Ruling: perform final review inline, because Gaffer explicitly requested no additional workers. Independent reviewer coverage will not be claimed.
 
-- Complete: 32 tests plus typecheck/lint/build/dry-run passed in independent extraction; final build `n5GFGZS4Ho1TjNkiMpZoc`. 32 files match exactly. Seven viewports passed; tablet clipping was corrected. Inline review and migration/browser checks recorded in HANDOFF. Chief's no-install constraint leaves main checkout dependencies as an inherited limitation. No worker, install, commit or publication.
+- Complete: 32 tests plus typecheck/lint/build/dry-run passed in independent extraction; final build `n5GFGZS4Ho1TjNkiMpZoc`. 32 files match exactly. Seven viewports passed; tablet clipping was corrected. Inline review and migration/browser checks recorded in HANDOFF. Gaffer's no-install constraint leaves main checkout dependencies as an inherited limitation. No worker, install, commit or publication.

@@ -1,6 +1,6 @@
 # Local Workflow Tools Implementation Plan
 
-Execution: Chief confirmed spec and instructed execution on 2026-10-09; solo, no additional workers. Use executing-plans task-by-task.
+Execution: Gaffer confirmed spec and instructed execution on 2026-10-09; solo, no additional workers. Use executing-plans task-by-task.
 
 Goal: Four persistent local workflow tools with no clinical inference.
 Architecture: Optional version-1 metadata with validated restore, pure workflow helpers, and capsule-local dialogs. Snapshot/checklist guards are enforced by reducer, with React integration and existing token styles.
@@ -20,4 +20,4 @@ Review focus: Invalid metadata must not erase legacy records; edit/restore reset
 Verification root: C:/Users/drfer/AppData/Local/Temp/sentrapedia-identity-20261008-220319 (preinstalled identical independent capsule). Commands: npx --no-install tsc --noEmit; npx --no-install eslint <changed TS files> --fix; npm test -- tests/workflow.test.ts tests/workspace.test.ts tests/studio.test.ts; npm run build; npm run deploy:dry-run.
 
 
-Status: CLOSED after solo implementation and observed final gates on 2026-10-09. Evidence: docs/verification/2026-10-09-local-workflow-tools.md. Final build: 6I7GNHw6WblHE_NKJOZ4x; 45/45 tests; 37 matching source/config files. Chief instruction forbids additional workers, so review is solo. No installation or external mutation. Main checkout dependency limitation and browser quota-banner coverage limit remain documented.
+Status: CLOSED after solo implementation and observed final gates on 2026-10-09. Evidence: docs/verification/2026-10-09-local-workflow-tools.md. Final build: 6I7GNHw6WblHE_NKJOZ4x; 45/45 tests; 37 matching source/config files. Gaffer instruction forbids additional workers, so review is solo. No installation or external mutation. Main checkout dependency limitation and browser quota-banner coverage limit remain documented.

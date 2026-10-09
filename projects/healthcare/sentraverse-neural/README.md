@@ -15,7 +15,7 @@ split lives in that capsule's git history and `.agents/DECISIONS.md`.
   and their tests.
 - Out of scope: the rest of sentrahai.com (story, ecosystem, insights, privacy, terms), which
   stays in `sentraverse`; this site links to it.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 
 ## Interfaces
 

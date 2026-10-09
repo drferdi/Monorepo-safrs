@@ -84,7 +84,7 @@ See `.agents/HANDOFF.md` for executed commands and browser checks. Native microp
 
 ## Perapian desain — 9 Oktober 2026
 
-Chief mengalihkan pekerjaan PNPK ke perapian tampilan yang ada. Perubahan produk hanya pada `app/globals.css`; templat, alur kerja, data sumber, serta arsip PNPK tidak diubah.
+Gaffer mengalihkan pekerjaan PNPK ke perapian tampilan yang ada. Perubahan produk hanya pada `app/globals.css`; templat, alur kerja, data sumber, serta arsip PNPK tidak diubah.
 
 - Lebar composer dan panel promosi diselaraskan, maksimum 720px. Judul memakai ukuran responsif dan pembagian baris yang seimbang. Padding sidebar, navigasi, header, dan composer dirapikan.
 - Teks sekunder lebih kontras; label sidebar dan footer lebih terbaca. Isi draf memakai ukuran 14px dan jarak antarbagian yang lebih longgar. Wordmark, Arial/Helvetica, Tosca, submenu, dan pixel loader dipertahankan.
@@ -96,7 +96,7 @@ Verifikasi dijalankan pada salinan kapsul mandiri dengan dependensi yang sudah t
 
 ## Clinical Cockpit — 9 Oktober 2026
 
-Kelima konsep yang disetujui Chief sudah tersedia dalam alur lokal:
+Kelima konsep yang disetujui Gaffer sudah tersedia dalam alur lokal:
 
 1. **Clinical Cockpit:** navigasi, canvas, serta panel konteks/Timeline. Panel samping tersedia di atas 1200px; layar lebih kecil memakai dialog. Nilai konteks berasal dari label yang diberikan, dengan sumber terpisah dan status belum tersedia.
 2. **Encounter Timeline:** urutan waktu WIB dari data tersimpan, jumlah dokumen dan statusnya, serta pemilihan Encounter. Filter mengikuti Patient aktif; Encounter tanpa Patient tidak digabung.
@@ -110,7 +110,7 @@ Bukti: `docs/verification/sentrapedia-advanced-{desktop,home,mobile,commands,foc
 
 ## Tata letak ringkas dan headline dinamis
 
-Beranda kini menempatkan tab Tanya, Dokumentasi, Rencana, Komunikasi di atas headline, dengan composer dan promosi sejajar hingga 780px. Ruang atas, sidebar/panel, dan pilihan templat dirapatkan. Label antarmuka mengikuti daftar Chief, termasuk Layanan Primer, Standar, Mulai Transkripsi, Tambah Konteks, Diagnosis Banding, dan “Ketik / untuk templat”. Nilai pengaturan lama tetap kompatibel.
+Beranda kini menempatkan tab Tanya, Dokumentasi, Rencana, Komunikasi di atas headline, dengan composer dan promosi sejajar hingga 780px. Ruang atas, sidebar/panel, dan pilihan templat dirapatkan. Label antarmuka mengikuti daftar Gaffer, termasuk Layanan Primer, Standar, Mulai Transkripsi, Tambah Konteks, Diagnosis Banding, dan “Ketik / untuk templat”. Nilai pengaturan lama tetap kompatibel.
 
 Headline berubah hanya ketika kelompok tujuan berganti, melalui transisi CSS 180ms; aturan reduced motion tetap berlaku. Area headline mempertahankan tinggi sehingga input tidak bergeser. Teks awal: “Kasus kompleks. Analisis lebih tajam.”; tiap tab lain memiliki headline dan kalimat pendamping sendiri. Input yang belum dikirim tetap utuh.
 
@@ -118,7 +118,7 @@ Bukti terbaru: `docs/verification/sentrapedia-density-{desktop,mobile,headline}.
 
 ## Diagnosis: tujuh bagian dan navigasi motion (2026-10-09)
 
-Chief memilih perapian tampilan dengan penanda untuk isi yang belum tersedia. Alur Med Assist dipelajari dari DiagnosisStepFlow, DiagnosisStep, TatalaksanaStep dan diagnosisSteps: temuan, diagnosis/alasan, lalu tatalaksana/edukasi. Sentrapedia mengadaptasi organisasi presentasinya secara lokal, tanpa impor lintas kapsul, aturan diagnosis, pemilihan obat, atau transfer RME.
+Gaffer memilih perapian tampilan dengan penanda untuk isi yang belum tersedia. Alur Med Assist dipelajari dari DiagnosisStepFlow, DiagnosisStep, TatalaksanaStep dan diagnosisSteps: temuan, diagnosis/alasan, lalu tatalaksana/edukasi. Sentrapedia mengadaptasi organisasi presentasinya secara lokal, tanpa impor lintas kapsul, aturan diagnosis, pemilihan obat, atau transfer RME.
 
 Draf analisis sekarang berurutan: Ringkasan Kasus, Gejala, Diagnosis Banding, Diagnosis, Penunjang, Terapi, Edukasi. Data masukan dipisahkan dari usulan pemeriksaan; alasan mendukung/menyangkal dan kandidat jangan-terlewat tetap utuh. Terapi/Edukasi yang tidak ada pada kontrak ditandai Belum tersedia. Referensi/jejak tersedia dalam disclosure; sumber JSON asli dan baseline tetap utuh. Draf lama yang belum diedit dinormalisasi hanya untuk tampilan; draf yang sudah diedit dipertahankan. Salin, Unduh dan editor memakai isi yang ditampilkan.
 

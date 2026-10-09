@@ -1,6 +1,6 @@
 # Oracle + MIRA integration verification — 2026-10-09
 
-Chief authorized “Okay integrate both oracle and MIRA”; implementation and review solo, no extra worker. Bounded local integration complete. Actual inference remains unverified because the Sentrapedia server token is absent. Risk R2 server/contract; R3 analysis surface explicitly requested; no upstream clinical rules changed.
+Gaffer authorized “Okay integrate both oracle and MIRA”; implementation and review solo, no extra worker. Bounded local integration complete. Actual inference remains unverified because the Sentrapedia server token is absent. Risk R2 server/contract; R3 analysis surface explicitly requested; no upstream clinical rules changed.
 
 ## Delivered and provenance
 
@@ -21,7 +21,7 @@ Independent preinstalled extraction: C:\Users\drfer\AppData\Local\Temp\sentraped
 | npm run build | Exit 0; /, /_not-found, dynamic /api/mira |
 | npm run deploy:dry-run | Exit 0 PASS; 6 traces, zero external source dependencies |
 
-Final build TL2K0LuhZqyCyGOtmg7zY. Hash report 2026-10-09-oracle-mira-extraction-hashes.json: 57 source/test/script/config/asset/Oracle files equal byte-for-byte. Main and extraction lockfiles match. No dependency changes or installation claim. Install command not rerun under Chief's no-install constraint. Standalone server running on 127.0.0.1:3104; no deployment performed.
+Final build TL2K0LuhZqyCyGOtmg7zY. Hash report 2026-10-09-oracle-mira-extraction-hashes.json: 57 source/test/script/config/asset/Oracle files equal byte-for-byte. Main and extraction lockfiles match. No dependency changes or installation claim. Install command not rerun under Gaffer's no-install constraint. Standalone server running on 127.0.0.1:3104; no deployment performed.
 
 Original Oracle hashes unchanged from pre-integration inventory:
 
@@ -42,5 +42,5 @@ Screenshots: oracle-mira-catalog-desktop.png, oracle-mira-health-desktop.png, or
 
 ## Limits and next steps
 
-Existing MIRA health directly responds; authenticated live inference, provider/model current configuration, actual quota/billing and clinical accuracy were not tested. Sentrapedia needs an authorized server-side MIRA_SERVICE_TOKEN and restart for live synthetic analysis. No secrets copied from Med Assist or MIRA. Ordinary composer remains deterministic; this is the separate explicit MIRA flow. Clinical review, secure storage, production authentication/verifier, full safety pipeline, PNPK version registry/page citations and OCR remain separate work. No deployment or production-readiness claim. Independent reviewer not used per Chief's solo direction. Next.js bundled guides were unavailable; existing installed server source was inspected for the internal-URL issue.
+Existing MIRA health directly responds; authenticated live inference, provider/model current configuration, actual quota/billing and clinical accuracy were not tested. Sentrapedia needs an authorized server-side MIRA_SERVICE_TOKEN and restart for live synthetic analysis. No secrets copied from Med Assist or MIRA. Ordinary composer remains deterministic; this is the separate explicit MIRA flow. Clinical review, secure storage, production authentication/verifier, full safety pipeline, PNPK version registry/page citations and OCR remain separate work. No deployment or production-readiness claim. Independent reviewer not used per Gaffer's solo direction. Next.js bundled guides were unavailable; existing installed server source was inspected for the internal-URL issue.
 Final delta: preserve every matching evidence row and unlisted service evidence in the readable draft; full raw response remains in Source. Schema keyword/snapshot-hash tests added. Final gates rerun at 03:10–03:11 Asia/Jakarta; 64 tests pass. Earlier browser mock used the preceding build; its result fixture renders identically, and these presentation additions are verified by targeted tests. Primary preview restarted on final build.

@@ -1,6 +1,6 @@
 # Main composer MIRA — observed verification
 
-Chief reported a local Clinical question brief rather than an AI response. Verified root cause: WorkspaceApp.generate called createDraft for every built-in main-composer submission. The separate MIRA dialog/API was working, but the main input was not connected. Earlier paid-profile API success did not prove this path.
+Gaffer reported a local Clinical question brief rather than an AI response. Verified root cause: WorkspaceApp.generate called createDraft for every built-in main-composer submission. The separate MIRA dialog/API was working, but the main input was not connected. Earlier paid-profile API success did not prove this path.
 
 ## Bounded change
 
@@ -22,11 +22,11 @@ Execution root: C:/Users/drfer/AppData/Local/Temp/sentrapedia-identity-20261008-
 
 68 source/config/test/script/asset/Oracle/README files match this extraction by SHA-256, zero mismatches. All four original Oracle files and the official logo retain their prior hashes. Proof: 2026-10-09-main-composer-extraction-hashes.json. Standalone preview 3104 was stopped before rebuilding to avoid Windows output locks, then restarted with this capsule's ignored environment file (session16765). The isolated MIRA8791 and shared service8787 were unchanged.
 
-TDD log: initial relative copy executed from the extraction could not find the new test and ran no tests; corrected to absolute source path. The regression then intentionally failed RED because lib/mira/composer did not exist. Implemented helper/wiring and observed all final gates pass. No lint suppressions or implicit any. Bundled Next guides remain unavailable; no new framework API introduced. Solo self-review, no independent reviewer under Chief's solo instruction.
+TDD log: initial relative copy executed from the extraction could not find the new test and ran no tests; corrected to absolute source path. The regression then intentionally failed RED because lib/mira/composer did not exist. Implemented helper/wiring and observed all final gates pass. No lint suppressions or implicit any. Bundled Next guides remain unavailable; no new framework API introduced. Solo self-review, no independent reviewer under Gaffer's solo instruction.
 
 ## Real browser acceptance
 
-Browser at http://127.0.0.1:3104, existing Chief data initially 1 Demo Patient/1 Encounter. Created a separate QA MIRA Fiktif Patient with age67/Male and raw note Riwayat HT. Entered the exact complaint in the MAIN composer: “pasien mengeluh nyeri kepala bagian belakang selama 2 hari, nyeri menetap”. Pressed Enter, rather than the separate Analisis MIRA shortcut.
+Browser at http://127.0.0.1:3104, existing Gaffer data initially 1 Demo Patient/1 Encounter. Created a separate QA MIRA Fiktif Patient with age67/Male and raw note Riwayat HT. Entered the exact complaint in the MAIN composer: “pasien mengeluh nyeri kepala bagian belakang selama 2 hari, nyeri menetap”. Pressed Enter, rather than the separate Analisis MIRA shortcut.
 
 1. Preview opened with the exact complaint, age67, male and raw HT history. Missing exam/vitals/medications/knownConditions/allergies/results stayed empty. No Patient name/ID appeared in the case. Fictional checkbox unchecked; analysis disabled even with healthy connection.
 2. Closed preview: original main prompt retained and zero assistant documents created. Reopened by Enter, consent still unchecked.
@@ -35,7 +35,7 @@ Browser at http://127.0.0.1:3104, existing Chief data initially 1 Demo Patient/1
 5. Source view contained full case/result/trace/time/Oracle snapshot. Saved only this fictional source artifact to 2026-10-09-main-composer-live.json. Name/ID excluded.
 6. Reload retained one Draf MIRA document and exactly identical source text. Four review boxes unchecked; reviewed/final options disabled.
 7. Mobile390×844 document width390; preview width358/document width390, no horizontal overflow. Diagnosis Banding Enter opened the corresponding new preview; consent reset and submission disabled. No second inference call made for this routing check.
-8. Deleted ONLY the QA Patient and its encounter through the application confirmation. Chief's Demo, original complaint, raw HT context and local brief remain. Returned to the original encounter and reused its prompt, leaving it ready in the main composer; no further case sent.
+8. Deleted ONLY the QA Patient and its encounter through the application confirmation. Gaffer's Demo, original complaint, raw HT context and local brief remain. Returned to the original encounter and reused its prompt, leaving it ready in the main composer; no further case sent.
 
 Screenshots: mira-composer-preview.png, mira-composer-live-desktop.png, mira-composer-review-mobile.png, mira-composer-preview-mobile.png.
 

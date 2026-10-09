@@ -15,7 +15,7 @@ The Oracle catalogue is downstream/local reference data and is not reached befor
 
 The probable latency mitigation is throughput sorting among endpoints that already satisfy current provider requirements. OpenRouter documents that `provider.sort="throughput"` sorts eligible endpoints by throughput; the model variant `:nitro` also makes priority-tier endpoints eligible and can incur priority pricing. Therefore `:nitro` is not proposed. Preserve `zdr=true`, `data_collection=deny`, `require_parameters=true`, model selection, prompts, schemas, budgets, and clinical behavior.
 
-The routing adapter belongs to shared MIRA source outside this capsule. Chief's existing instruction forbids changing the shared MIRA service. No code, runtime process, credential, model request, or Patient/Encounter data was changed. The smallest safe implementation requires explicit scope expansion: add an opt-in per-process throughput-sort setting defaulting off in shared MIRA, enable it only for the dedicated Sentrapedia 8791 launcher, then verify with one synthetic-only call within the existing budgets. Do not change or restart 8787/Med Assist.
+The routing adapter belongs to shared MIRA source outside this capsule. Gaffer's existing instruction forbids changing the shared MIRA service. No code, runtime process, credential, model request, or Patient/Encounter data was changed. The smallest safe implementation requires explicit scope expansion: add an opt-in per-process throughput-sort setting defaulting off in shared MIRA, enable it only for the dedicated Sentrapedia 8791 launcher, then verify with one synthetic-only call within the existing budgets. Do not change or restart 8787/Med Assist.
 
 ## Evidence and limits
 
@@ -27,7 +27,7 @@ The routing adapter belongs to shared MIRA source outside this capsule. Chief's 
 
 ## Next step
 
-Ask Chief whether the narrowly scoped shared-MIRA opt-in for only Sentrapedia's 8791 process is authorized. If approved, implement, run focused adapter tests and capsule gates available without installing dependencies, restart only the verified 8791 listener, and perform one synthetic-only inference to confirm the route and returned result.
+Ask Gaffer whether the narrowly scoped shared-MIRA opt-in for only Sentrapedia's 8791 process is authorized. If approved, implement, run focused adapter tests and capsule gates available without installing dependencies, restart only the verified 8791 listener, and perform one synthetic-only inference to confirm the route and returned result.
 
 ## Live check after throughput sort - 2026-10-09
 
@@ -39,6 +39,6 @@ The feature therefore completed one formerly unavailable class of request within
 
 Verification: focused provider tests32passed, full MIRA service suite129passed/1skipped, with17 existing Starlette/Pydantic deprecation warnings; launcher `-ValidateOnly` PASS; PowerShell launcher parse PASS; current health good. No npm tests/build ran because this change did not alter Sentrapedia TypeScript and the main-checkout dependency limitation persists. No install.
 
-Manual self-review: shared adapter defaults to the old routing body, rejects non-throughput and non-OpenRouter settings at startup, and merges privacy policy after caller values; the `StepEngine` passes the setting only on its OpenRouter branch. Sentrapedia launcher is the sole location that enables it. No fresh-context reviewer was dispatched because Chief explicitly directed solo work/no additional workers. This is a review limitation.
+Manual self-review: shared adapter defaults to the old routing body, rejects non-throughput and non-OpenRouter settings at startup, and merges privacy policy after caller values; the `StepEngine` passes the setting only on its OpenRouter branch. Sentrapedia launcher is the sole location that enables it. No fresh-context reviewer was dispatched because Gaffer explicitly directed solo work/no additional workers. This is a review limitation.
 
 Final: Ruling: choose one direct local gateway POST rather than browser composer submission to preserve active browser-local data - no Patient/Encounter state was written - cost if wrong: composer save/reload behavior is not re-proven in this session.

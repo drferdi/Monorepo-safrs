@@ -1,6 +1,6 @@
 # Verifikasi empat fitur lokal — 2026-10-09
 
-Chief menyetujui rancangan dengan “Comfirmed, Executive”. Eksekusi dan review solo; tidak ada worker, instalasi, layanan AI, perubahan PNPK, atau deployment. Penambahan kontrak lokal bersifat R2; checklist/status bukan keputusan klinis.
+Gaffer menyetujui rancangan dengan “Comfirmed, Executive”. Eksekusi dan review solo; tidak ada worker, instalasi, layanan AI, perubahan PNPK, atau deployment. Penambahan kontrak lokal bersifat R2; checklist/status bukan keputusan klinis.
 
 ## Gate yang diamati
 
@@ -34,6 +34,6 @@ Bukti gambar: `sentrapedia-workflow-{templates,history,review,queue}.png`, `sent
 
 ## Batas dan tindak lanjut
 
-Review sendiri memeriksa gate reducer, reset tanda setelah edit/pemulihan, sumber immutable, data lama, ekspor metadata, penggunaan token lokal, dan integrasi. Tidak ada review independen sesuai arahan Chief. QuotaExceeded disimulasikan pada tes helper, bukan dengan sengaja memenuhi storage browser. Banner kegagalan simpan terhubung ke hasil helper; tampilan banner pada kegagalan browser nyata belum diuji.
+Review sendiri memeriksa gate reducer, reset tanda setelah edit/pemulihan, sumber immutable, data lama, ekspor metadata, penggunaan token lokal, dan integrasi. Tidak ada review independen sesuai arahan Gaffer. QuotaExceeded disimulasikan pada tes helper, bukan dengan sengaja memenuhi storage browser. Banner kegagalan simpan terhubung ke hasil helper; tampilan banner pada kegagalan browser nyata belum diuji.
 
-Penyimpanan lokal tidak terenkripsi, kapasitas browser terbatas, riwayat maksimal 50 snapshot/dokumen; versi lampau sebelum fitur tidak direkonstruksi. Tidak ada sinkronisasi, audit permanen, autentikasi penandatangan, impor backup, atau validasi klinis. Berikutnya: Chief mencoba alur harian pada data fiktif; knowledge base tetap ditunda.
+Penyimpanan lokal tidak terenkripsi, kapasitas browser terbatas, riwayat maksimal 50 snapshot/dokumen; versi lampau sebelum fitur tidak direkonstruksi. Tidak ada sinkronisasi, audit permanen, autentikasi penandatangan, impor backup, atau validasi klinis. Berikutnya: Gaffer mencoba alur harian pada data fiktif; knowledge base tetap ditunda.

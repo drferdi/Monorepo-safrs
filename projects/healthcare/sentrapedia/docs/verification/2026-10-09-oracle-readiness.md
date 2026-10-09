@@ -1,6 +1,6 @@
 # Pemeriksaan kesiapan wiring Oracle — 2026-10-09
 
-Permintaan Chief: wiring database penyakit memakai file di oracle/, dengan gaffer-routing-superpower. Pemeriksaan ini inventaris dan kontrak lokal; belum merupakan verifikasi klinis, implementasi, atau rencana eksekusi yang disetujui.
+Permintaan Gaffer: wiring database penyakit memakai file di oracle/, dengan gaffer-routing-superpower. Pemeriksaan ini inventaris dan kontrak lokal; belum merupakan verifikasi klinis, implementasi, atau rencana eksekusi yang disetujui.
 
 ## Bukti yang diamati
 
@@ -27,10 +27,10 @@ SHA-256 sumber asli:
 
 CONTEXT.md, .agents/HANDOFF.md, lib/drafts.ts, components/forms.tsx, components/workspace.tsx, package.json dan tsconfig.json diperiksa. Aplikasi memiliki pencarian workspace serta draf lokal, belum adapter/query penyakit. TypeScript sudah mendukung import JSON. Tidak diperlukan instalasi, provider AI, atau layanan database untuk katalog file lokal ini. Rancangan/rencana sebelumnya di docs/specs dan docs/plans/completed tidak mencakup wiring oracle yang baru diminta. ASSESSMENT.md PNPK dibaca untuk mempertahankan batas kutipan dan review; dataset oracle belum terbukti hasil ekstraksi koleksi PNPK tersebut.
 
-## Usulan cakupan untuk ditinjau Chief
+## Usulan cakupan untuk ditinjau Gaffer
 
 Jadikan sentrapedia.json kandidat sumber tunggal lokal, pertahankan semua file oracle asli dan ID. Sediakan pencarian nama/kode/kategori, daftar kategori dari nilai aktual entri, dan detail sembilan bidang asli. Setiap detail menampilkan provenance file, hash dan ID record; status belum diverifikasi klinis. Kutipan halaman PNPK tetap belum tersedia. Integrasikan akses katalog pada navigasi/pencarian Sentrapedia dengan visual yang ada. Tidak menjadikan hasil lookup sebagai diagnosis, ranking DDx berbasis pasien, rekomendasi obat, atau isi klinis otomatis dalam draf.
 
-Risk: R2 untuk integrasi kontrak lokal; inferensi/rekomendasi klinis tetap di luar cakupan. Eksekusi solo sesuai arahan Chief sebelumnya. Skill yang dipanggil mensyaratkan persetujuan usulan sebelum planning/implementasi; persetujuan fitur lama tidak digunakan sebagai persetujuan rincian wiring baru. Setelah persetujuan, buat spec/rencana bounded, implementasikan adapter dan UI, lalu typecheck → lint → targeted tests → build/dry-run → browser/ekstraksi dan HANDOFF.
+Risk: R2 untuk integrasi kontrak lokal; inferensi/rekomendasi klinis tetap di luar cakupan. Eksekusi solo sesuai arahan Gaffer sebelumnya. Skill yang dipanggil mensyaratkan persetujuan usulan sebelum planning/implementasi; persetujuan fitur lama tidak digunakan sebagai persetujuan rincian wiring baru. Setelah persetujuan, buat spec/rencana bounded, implementasikan adapter dan UI, lalu typecheck → lint → targeted tests → build/dry-run → browser/ekstraksi dan HANDOFF.
 
 Pemeriksaan struktur berhasil (exit 0). Tidak menjalankan tes/build produk pada tahap inventaris; kode produk dan file oracle belum diubah. Jev dilewati karena inspeksi kontrak lokal deterministik dan belum ada keputusan klinis/eksternal yang akan dieksekusi.

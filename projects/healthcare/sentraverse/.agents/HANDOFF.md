@@ -37,5 +37,5 @@ None. The Jev router at `~/dev/jev/muse-jev-playbook` does not exist on this mac
 
 ## Next action
 
-1. Chief: the governance docs above.
-2. Push and publish to `drferdi/Sentraverse` when Chief asks.
+1. Gaffer: the governance docs above.
+2. Push and publish to `drferdi/Sentraverse` when Gaffer asks.

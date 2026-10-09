@@ -1,7 +1,7 @@
 # Templat, riwayat, peninjauan, dan antrean Sentrapedia
 
-Status: IMPLEMENTED — rancangan disetujui Chief dengan “Comfirmed, Executive” pada 2026-10-09; eksekusi dan review solo sesuai arahan tanpa worker tambahan.
-Risiko: R2, penambahan kontrak penyimpanan lokal. Eksekusi solo sesuai instruksi Chief sebelumnya.
+Status: IMPLEMENTED — rancangan disetujui Gaffer dengan “Comfirmed, Executive” pada 2026-10-09; eksekusi dan review solo sesuai arahan tanpa worker tambahan.
+Risiko: R2, penambahan kontrak penyimpanan lokal. Eksekusi solo sesuai instruksi Gaffer sebelumnya.
 
 ## Tujuan dan batas
 
@@ -60,9 +60,9 @@ Mempercepat dokumentasi, menjaga isi sebelum perubahan, dan memudahkan pengguna 
 2. Edit nyata membuat snapshot; edit identik tidak; pemulihan mempertahankan isi sebelumnya; source/baseline tidak berubah; reload dan metadata malformed diuji.
 3. Finalisasi ditolak sebelum checklist lengkap dan Ditinjau; edit/reset/pemulihan membatalkan tanda; dokumen lama terbaca.
 4. Tiga kelompok antrean, pin, filter, tugas manual, buka Encounter, dan pembersihan relasi bekerja setelah reload.
-5. Verifikasi typecheck lalu lint dan targeted tests; build dan deploy dry run; salinan mandiri identik tanpa instalasi. Dua kegagalan verifikasi berturut-turut mengikuti circuit breaker Chief.
+5. Verifikasi typecheck lalu lint dan targeted tests; build dan deploy dry run; salinan mandiri identik tanpa instalasi. Dua kegagalan verifikasi berturut-turut mengikuti circuit breaker Gaffer.
 6. Browser desktop/ponsel: seluruh alur memakai data QA fiktif, keyboard/Escape, dialog, overflow, preview build aktual, dan data awal dipertahankan. Uji storage error dan laporkan jika batas lingkungan mencegah pengujian.
 
 ## Urutan teknis yang diusulkan
 
-Kontrak penyimpanan dan helper teruji terlebih dahulu; lalu templat/favorit; riwayat dan pemulihan; checklist/gate; antrean; integrasi/export; pemeriksaan browser dan review solo. Rencana dan bukti penutupan tersedia di docs/plans/completed/2026-10-09-local-workflow-tools.md dan docs/verification/2026-10-09-local-workflow-tools.md. Berikutnya tinjauan penggunaan oleh Chief.
+Kontrak penyimpanan dan helper teruji terlebih dahulu; lalu templat/favorit; riwayat dan pemulihan; checklist/gate; antrean; integrasi/export; pemeriksaan browser dan review solo. Rencana dan bukti penutupan tersedia di docs/plans/completed/2026-10-09-local-workflow-tools.md dan docs/verification/2026-10-09-local-workflow-tools.md. Berikutnya tinjauan penggunaan oleh Gaffer.

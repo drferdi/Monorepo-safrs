@@ -1,6 +1,6 @@
 # Sentrapedia advanced clinical workspace
 
-Authority: Chief approved ideas 1–5 for implementation, then chose inline execution without additional workers. This spec makes that approved scope explicit; no provider, knowledge base, or installation is authorized.
+Authority: Gaffer approved ideas 1–5 for implementation, then chose inline execution without additional workers. This spec makes that approved scope explicit; no provider, knowledge base, or installation is authorized.
 
 ## Outcome
 

@@ -5,7 +5,7 @@ Capsule identity. Change it rarely, and state only facts that the capsule's own 
 
 - Purpose: the cinematic neural journey of Sentra as its own site, fifteen chapters on one GSAP
   master timeline scrubbed by the scroll, ending on the founder's film.
-- Human owner: Chief (dr. Ferdi Iskandar)
+- Human owner: Gaffer (dr. Ferdi Iskandar)
 - Default risk: R1
 - Stack: Next.js 16 (webpack build), React 19, gsap 3.15, TypeScript 5.9; Node 24, pnpm 11.21.0
   with its own lockfile

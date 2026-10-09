@@ -10,14 +10,14 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 - `main` at `dba377cd`. Landed since 2026-09-25: root without demonstrator and security patches
   (`5901a8d3`), Jev active (`de9e91bb`), sentrabot and golden-path standalone (`01587ee3`), golden-path
   context doc and `AGENTS.md` shell notes, sentrabot overrides in `package.json`, avery standalone
-  with a retroactive Chief integrity review (`46da5ed4`), kediri GSAP production hardening
+  with a retroactive Gaffer integrity review (`46da5ed4`), kediri GSAP production hardening
   (`884f7ea0`, cherry-picked from the `kediri` remote where it merged on 2026-09-12).
 - `project-independence`: 8 active capsules, 1 known non-conformance (`internal/control-center`).
 - `pnpm dev` proven (2026-09-25): Postgres healthy, control-center `http://127.0.0.1:3100` HTTP 200.
 - Housekeeping (2026-09-26): `D:\DEV\Monorepo.worktrees` removed; `core.longpaths=true` (node_modules
   paths exceed 260 characters); local branches trimmed from 48 to 4 (`main`,
   `feat/coding-brief-v2`, `feat/auth-foundation`, `codex/release-baseline-recovery`). Worktrees go in
-  a temporary location outside `D:\DEV` until Chief settles AGENTS.md rule 8 (see memory
+  a temporary location outside `D:\DEV` until Gaffer settles AGENTS.md rule 8 (see memory
   `pnpm-store-never-at-drive-root`).
 
 ## Work in flight
@@ -30,11 +30,11 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 - Clinical paths registered in `.safrs/sensitive-paths.json` as R3 (medboard CDSS, med-assist
   diagnosis engine, emergency detector, clinical lib and `penyakit.json`, sidelab engine and its
   clinical tests, mantra hospital and integrations apps).
-- Left for the new Monorepo on Chief's instruction (2026-09-27): medboard's 4 hidden CDSS test
+- Left for the new Monorepo on Gaffer's instruction (2026-09-27): medboard's 4 hidden CDSS test
   failures, sidelab's 3 failing tests and coverage gate (its `test` is red), and mantra, which
   waits in the gitignored `docs/plans/active/healthcare-migration-tools/mantra-staging` without a
   contract. Melinda is deferred and untouched.
-- Chief: re-point Railway/Vercel to the new capsule folders and decide whether to push the branch.
+- Gaffer: re-point Railway/Vercel to the new capsule folders and decide whether to push the branch.
 
 `fix/independence-skip-ignored`, base `dba377cd`, claim `INDEPENDENCE-SKIP-GIT-IGNORED` (R2):
 - `check_project_independence.py` read every file on disk, so the ignored avery `runtime/` (3.1 GB of
@@ -48,12 +48,12 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Blockers
 
-None for this branch; the checker is a verification control, so Chief's integrity review is needed.
+None for this branch; the checker is a verification control, so Gaffer's integrity review is needed.
 
 ## Next action
 
-- Chief: integrity review and merge `fix/independence-skip-ignored`.
-- Chief decision: `feat/auth-foundation` (sentrabot email verification, password reset, rate
+- Gaffer: integrity review and merge `fix/independence-skip-ignored`.
+- Gaffer decision: `feat/auth-foundation` (sentrabot email verification, password reset, rate
   limiting) and `codex/release-baseline-recovery` (2026-09-10) never landed anywhere; copies live on
   the `sentrabot` remote. Default: keep them there and delete locally; landing needs a large rebase
   onto the rebuilt capsule.

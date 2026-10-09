@@ -1,6 +1,6 @@
 # DeepSeek Flash integration - 2026-10-09
 
-Chief explicitly approved paid DeepSeek Flash after free-model failures and rejected training-use consent. This supersedes free-only selection. Solo; no installs, shared MIRA/Med Assist mutations, patient data, production deployment or clinical-rule edits.
+Gaffer explicitly approved paid DeepSeek Flash after free-model failures and rejected training-use consent. This supersedes free-only selection. Solo; no installs, shared MIRA/Med Assist mutations, patient data, production deployment or clinical-rule edits.
 
 Selected deepseek/deepseek-v4.1-flash for BOTH stages. Official models/ZDR APIs checked: catalog prompt0.0000003 USD/token, completion0.0000012 USD/token, structured_outputs/response_format/temperature,25 ZDR endpoints. Snapshot 2026-10-09-deepseek-flash-preflight.json. Pin excludes auto/latest aliases and other models. Nonclinical original assessment-schema diagnostic passed: finishReason stop, schemaValid true, reported cost0.000589695 USD (2048-token request ceiling, no retry, provider ZDR/deny-training/require-parameters).
 
@@ -26,4 +26,4 @@ Browser desktop1247 and mobile390: paid-profile name/budgets and readiness displ
 
 Review solo. Technical success does NOT establish clinical correctness: the observed model output treated an empty allergy list as a recorded absence and reasoned from missing red flags, so clinician review remains essential. Those statements are retained transparently in evidence, not converted into active advice or repaired by inventing findings. PNPK source/page verification remains absent, Oracle not clinically reviewed, browser data unencrypted, synthetic-only. No independent review per solo constraint.
 
-Jev returned ask_human for paid/account category; Chief's explicit paid-Flash authorization already fulfilled that request; no account/privacy settings or purchase changed. Future work: separate clinical evaluation of missing-data interpretation and verified guideline sourcing before any real patient use. Free-only plan superseded; paid technical integration complete.
+Jev returned ask_human for paid/account category; Gaffer's explicit paid-Flash authorization already fulfilled that request; no account/privacy settings or purchase changed. Future work: separate clinical evaluation of missing-data interpretation and verified guideline sourcing before any real patient use. Free-only plan superseded; paid technical integration complete.

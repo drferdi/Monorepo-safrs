@@ -1,6 +1,6 @@
 # Oracle/MIRA implementation plan
 
-Spec approved by Chief's 2026-10-09 integrate-both instruction; tightly coupled solo execution. No installs or paid verification. Existing independently installed extraction used for gates. Review solo per Chief.
+Spec approved by Gaffer's 2026-10-09 integrate-both instruction; tightly coupled solo execution. No installs or paid verification. Existing independently installed extraction used for gates. Review solo per Gaffer.
 
 - [x] 1. Add tests/oracle-mira.test.ts first. lib/oracle.ts owns JSON lookup/provenance; locally vendor MIRA v1 schemas/types/validator in lib/mira/, record SOURCE.md and hashes. Tests query/codes/categories/schema/PII/format/persistence.
 - [x] 2. lib/mira/gateway.ts owns server transport and validation. app/api/mira/route.ts exposes health and step. Tests with injected fetch/config cover missing token, origin, malformed bodies/results, PII, timeout, busy/cancel, unavailable sanitization and valid responses. No live POST. .env.example and capsule.json declare optional service/config.

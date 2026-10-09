@@ -14,7 +14,7 @@ node scripts/pnpm.mjs run deploy:dry-run
   morphology, signal, tactile, handoff, constellation). Tested modules are leaves with no runtime relative imports.
 - End-to-end: Playwright on the installed Chrome, `e2e/neural.spec.ts` and `e2e/smoke.spec.ts`,
   against a running build (`PLAYWRIGHT_BASE_URL`, default `http://127.0.0.1:4346`). Local only
-  for now (Chief 2026-10-09); CI runs lint, unit tests and build.
+  for now (Gaffer 2026-10-09); CI runs lint, unit tests and build.
 - Capsule topology from the enclosing repository: `python tools/safrs/check_topology.py`.
 
 Known limits: frame timings are local evidence, not 60 fps on every GPU; INP is read from field

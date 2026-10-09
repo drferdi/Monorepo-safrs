@@ -1,6 +1,6 @@
 # Approved paid DeepSeek Flash - COMPLETE 2026-10-09
 
-Authorization: Chief explicitly permits paid DeepSeek Flash and declines provider training-use consent. Solo, no installs or shared MIRA mutations. Supersedes free-only plan, whose live acceptance failed.
+Authorization: Gaffer explicitly permits paid DeepSeek Flash and declines provider training-use consent. Solo, no installs or shared MIRA mutations. Supersedes free-only plan, whose live acceptance failed.
 
 - [x] Public catalog/ZDR/price compatibility verified; original-schema bounded nonclinical live diagnostic passes.
 - [x] Pin BOTH stages to deepseek/deepseek-v4.1-flash with service US$0.10 step/US$1 daily budgets,60s deadline,existing privacy/synthetic/clinical postchecks.
