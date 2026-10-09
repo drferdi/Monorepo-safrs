@@ -50,7 +50,9 @@ def marker_path(session_id: str, trigger: str) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--playbook", required=True)
-    playbook = ap.parse_args().playbook
+    ap.add_argument("--agent", default="claude", help="agent name recorded in logs/agents.jsonl")
+    opts = ap.parse_args()
+    playbook = opts.playbook
     try:
         event = json.load(sys.stdin)
     except Exception:
@@ -64,7 +66,12 @@ def main() -> int:
         return 0  # already consulted Jev for this kind of step in this session
     try:
         sys.path.insert(0, playbook)
+        from jev_mcp import USAGE, ensure_api_key, record_usage  # same folder as this hook
         from src.router import route_task
+
+        USAGE["agent"] = opts.agent
+        USAGE["log"] = os.path.join(playbook, "logs", "agents.jsonl")
+        ensure_api_key()
 
         state = {
             "goal": goal_from(tool_name, event.get("tool_input") or {}),
@@ -78,6 +85,7 @@ def main() -> int:
         }
         with contextlib.redirect_stdout(sys.stderr):
             out = route_task(state)
+        record_usage(state, out)
         with open(marker, "w", encoding="utf-8") as fh:
             fh.write(str(out.get("action")))
         context = (

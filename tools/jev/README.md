@@ -38,11 +38,35 @@ Every agent runs the server with the playbook's own interpreter:
 
 ```text
 command: <repo>\tools\jev\playbook\.venv\Scripts\python.exe
-args:    <repo>\tools\jev\mcp\jev_mcp.py --playbook <repo>\tools\jev\playbook
+args:    <repo>\tools\jev\mcp\jev_mcp.py --playbook <repo>\tools\jev\playbook --agent <name>
 ```
 
 Claude Code reads it from the repository `.mcp.json`. Codex, Cursor, Factory Droid, Gemini
 (Antigravity) and Opencode point to the same paths from their user-level configuration.
+
+## Agent coverage
+
+Each agent gets the tool, a rule to use it, and an automatic trigger where the agent supports one.
+
+| Agent | `jev_route` tool | Rule | Automatic trigger |
+| --- | --- | --- | --- |
+| Claude Code | `.mcp.json` (pre-approved in `.claude/settings.json`) | root `AGENTS.md` | `PreToolUse` hook before WebSearch, WebFetch, Agent, Task |
+| Codex | `~/.codex/config.toml` | `AGENTS.md`, `~/.codex/AGENTS.md` | none available |
+| Cursor | `~/.cursor/mcp.json` | `.cursor/rules/10-jev.mdc` | user `beforeSubmitPrompt` intent hook |
+| Factory Droid | `~/.factory/mcp.json` | `AGENTS.md`, `~/.factory/AGENTS.md` | `SessionStart` reminder |
+| Gemini (Antigravity) | `~/.gemini/config/mcp_config.json` | `GEMINI.md` adapter, user `GEMINI.md` | none available |
+| Grok | `~/.grok/config.toml` | `AGENTS.md` (read as project instructions) | none available |
+| Opencode | `jev-router` plugin | `~/.config/opencode/AGENTS.md` | plugin consults before the first expensive tool |
+
+Every server instance is started with `--agent <name>` and appends one line per call to
+`playbook/logs/agents.jsonl` (agent, kind, action; no goal text). Check coverage with:
+
+```text
+python tools/jev/mcp/jev_usage.py --days 7
+```
+
+If an agent process started before `TYPESAFE_API_KEY` was set, the server and the hook read it
+from the Windows user environment.
 
 ## Governance
 

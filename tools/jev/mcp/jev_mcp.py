@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import datetime
 import json
+import os
 import sys
 import traceback
 
@@ -41,6 +43,48 @@ TOOL = {
         "required": ["goal", "kind"],
     },
 }
+
+# Set in main(): which agent this server instance serves, and where usage is recorded.
+USAGE = {"agent": "unknown", "log": None}
+
+
+def ensure_api_key() -> None:
+    """Load TYPESAFE_API_KEY from the Windows user environment when the agent process lacks it.
+
+    Desktop apps keep the environment they started with, so a key added later is invisible to
+    them. The value is read into this process only; it is never printed or logged.
+    """
+    if os.environ.get("TYPESAFE_API_KEY") or os.name != "nt":
+        return
+    try:
+        import winreg
+
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+            value, _ = winreg.QueryValueEx(key, "TYPESAFE_API_KEY")
+        if value:
+            os.environ["TYPESAFE_API_KEY"] = str(value)
+    except OSError:
+        pass
+
+
+def record_usage(state: dict, out: dict) -> None:
+    """Append one line per call to logs/agents.jsonl: agent, kind, action. No goal text."""
+    if not USAGE["log"]:
+        return
+    entry = {
+        "ts": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "agent": USAGE["agent"],
+        "kind": state.get("kind"),
+        "action": out.get("action"),
+        "jev_used": bool(out.get("jev_used")),
+    }
+    try:
+        os.makedirs(os.path.dirname(USAGE["log"]), exist_ok=True)
+        with open(USAGE["log"], "a", encoding="utf-8") as fh:
+            fh.write(json.dumps(entry) + "\n")
+    except OSError:
+        pass
+
 
 DEFAULTS = {
     "cached_artifact": False,
@@ -75,10 +119,12 @@ def call_jev(route_task, args: dict) -> dict:
         # Anything the router prints must not corrupt the JSON-RPC stream on stdout.
         with contextlib.redirect_stdout(sys.stderr):
             out = route_task(state)
+        record_usage(state, out)
         line = f"Jev: {out.get('action')} ({out.get('reason')})"
         return {"content": [{"type": "text", "text": line + "\n" + json.dumps(out, ensure_ascii=False)}]}
     except Exception as exc:  # report, never crash the server
         traceback.print_exc(file=sys.stderr)
+        record_usage(state, {"action": "error", "jev_used": False})
         return {
             "isError": True,
             "content": [{"type": "text", "text": f"Jev did not run ({type(exc).__name__}: {exc}). Continue on the normal safe path."}],
@@ -113,7 +159,12 @@ def handle(msg: dict, route_task) -> dict | None:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--playbook", required=True)
-    route_task = make_router(ap.parse_args().playbook)
+    ap.add_argument("--agent", default="unknown", help="agent name recorded in logs/agents.jsonl")
+    opts = ap.parse_args()
+    USAGE["agent"] = opts.agent
+    USAGE["log"] = os.path.join(opts.playbook, "logs", "agents.jsonl")
+    ensure_api_key()
+    route_task = make_router(opts.playbook)
     for raw in sys.stdin:
         raw = raw.strip()
         if not raw:

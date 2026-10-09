@@ -5,7 +5,9 @@
       "args": [
         "${CLAUDE_PROJECT_DIR:-.}/tools/jev/mcp/jev_mcp.py",
         "--playbook",
-        "${CLAUDE_PROJECT_DIR:-.}/tools/jev/playbook"
+        "${CLAUDE_PROJECT_DIR:-.}/tools/jev/playbook",
+        "--agent",
+        "claude"
       ]
     }
   }

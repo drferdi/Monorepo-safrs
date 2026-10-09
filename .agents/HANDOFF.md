@@ -7,6 +7,10 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Current state
 
+- Jev lives in `tools/jev` (tracked; vendored playbook, MCP server, Claude hook, usage report) and is
+  registered as `jev-typesafe`. All seven agents point to it; `python tools/jev/mcp/jev_usage.py`
+  shows per-agent calls. The Codex copy in `~/.codex/projects/muse-jev-playbook` is deleted after
+  Codex restarts on the new path.
 - `main` at `e1bb32c8` (2026-10-07). Agent compliance audit report:
   `verify-report/agent-audit-2026-10-10.txt` (gitignored).
 - The governance commits that sat on `feat/sidepanel-ui-batch` (e4643c32, 000a4f7a, fab8dc31) were
