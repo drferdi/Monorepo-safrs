@@ -5,7 +5,7 @@ import { emptyCase, type MiraAnalysis } from "./contract";
 import { miraMessage } from "./presentation";
 
 export function composerUsesMira(mode: ModeId, personalTemplate: boolean): boolean {
-  return !personalTemplate && (mode === "question" || mode === "ddx");
+  return !personalTemplate && (["question", "ddx", "workup", "refer"] as ModeId[]).includes(mode);
 }
 
 export function composerCase(prompt: string, context: string, patient?: Pick<Patient, "age" | "sex" | "notes"> & Partial<Pick<Patient, "name" | "id">>) {
@@ -21,5 +21,5 @@ export function composerCase(prompt: string, context: string, patient?: Pick<Pat
 }
 
 export function composerMiraMessages(analysis: MiraAnalysis, prompt: string, mode: ModeId, reviewDefaults?: ReviewItem[]): Message[] {
-  return [{ id: newId(), role: "user", content: prompt.trim(), mode, createdAt: analysis.createdAt }, { ...miraMessage(analysis, reviewDefaults), mode }];
+  return [{ id: newId(), role: "user", content: prompt.trim(), mode, createdAt: analysis.createdAt }, miraMessage(analysis, reviewDefaults, mode)];
 }

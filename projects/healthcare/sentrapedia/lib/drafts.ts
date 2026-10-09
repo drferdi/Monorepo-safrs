@@ -1,11 +1,13 @@
 import type { Patient } from "./workspace";
 import { structureNote, type NoteField } from "./note-structure";
 
-export const modeIds = ["question", "ddx", "ap", "clinic", "hpi", "telephone", "chronic", "handoff", "tasks", "avs", "education", "referral", "authorization", "scribe"] as const;
+export const modeIds = ["question", "ddx", "ap", "clinic", "hpi", "telephone", "chronic", "handoff", "tasks", "avs", "education", "referral", "authorization", "scribe", "workup", "refer"] as const;
 export type ModeId = typeof modeIds[number];
 export const modes: { id: ModeId; label: string; title: string; description: string; placeholder: string }[] = [
   { id: "question", label: "Ajukan pertanyaan", title: "Clinical question brief", description: "Susun pertanyaan Clinical dan tentukan Evidence yang dibutuhkan.", placeholder: "Apa yang ingin Anda telaah hari ini?" },
   { id: "ddx", label: "Diagnosis Banding", title: "Differential diagnosis", description: "Atur temuan dan susun lembar Differential Diagnosis.", placeholder: "Jelaskan Presentation, History, dan temuan utama..." },
+  { id: "workup", label: "Pemeriksaan penunjang", title: "Diagnostic workup", description: "Analisis kasus dengan pemeriksaan penunjang yang disarankan di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan pemeriksaan yang sudah ada..." },
+  { id: "refer", label: "Draft rujukan", title: "Referral draft", description: "Analisis kasus dengan draf rujukan dan keputusan disposisi di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan alasan mempertimbangkan rujukan..." },
   { id: "ap", label: "Buat A&P", title: "Assessment & plan", description: "Susun Assessment menjadi Plan terstruktur.", placeholder: "Masukkan Assessment dan usulan Management..." },
   { id: "clinic", label: "Buat Clinic Note", title: "Clinic note", description: "Susun Clinic Note dari detail Clinical yang diberikan.", placeholder: "Tambahkan History, Examination, Assessment, dan Plan..." },
   { id: "hpi", label: "Buat HPI", title: "History of present illness", description: "Susun riwayat Presenting Concern.", placeholder: "Jelaskan Onset, Duration, Course, dan Associated Symptoms..." },
@@ -42,6 +44,8 @@ export function createDraft(input: DraftInput): string {
     education: id ? ["Topik dan materi yang diberikan", "Penjelasan yang diberikan", "Informasi perawatan mandiri yang disepakati", "Pertanyaan untuk tindak lanjut"] : ["Topic and supplied teaching points", "What this means", "Agreed self-care information", "Questions to ask at follow-up"],
     referral: id ? ["Reason for referral", "Informasi Clinical relevan", "Temuan / Examination", "Previous management", "Masukan Specialist yang diminta"] : ["Reason for referral", "Relevant clinical information", "Findings / investigations", "Management to date", "Requested specialist input"],
     authorization: id ? ["Layanan yang diminta", "Clinical indication", "Previous treatments dan Response", "Dokumen pendukung", "Pernyataan klinisi / persyaratan penjamin"] : ["Requested service", "Clinical indication", "Previous treatments and response", "Supporting documentation", "Clinician attestation / insurer requirements"],
+    workup: id ? ["Temuan yang disampaikan", "Pemeriksaan penunjang yang diusulkan"] : ["Supplied findings", "Proposed investigations"],
+    refer: id ? ["Alasan rujukan", "Ringkasan klinis", "Pemeriksaan yang sudah dilakukan"] : ["Reason for referral", "Clinical summary", "Investigations done"],
     scribe: id ? ["Transkrip Encounter (verbatim)", "Chief concern", "History of present illness", "Examination findings yang disebutkan", "Assessment Clinician yang disebutkan", "Plan dan Follow-up yang disepakati"] : ["Visit transcript (verbatim)", "Chief concern", "History of present illness", "Examination findings stated", "Clinician assessment stated", "Agreed plan and follow-up"],
   };
   const note = structureNote(prompt);
@@ -59,6 +63,8 @@ export function createDraft(input: DraftInput): string {
     education: [["concern"], ["assessment"], ["plan"], ["followup"]],
     referral: [["concern", "recipient"], ["history", "background"], ["examination", "investigations"], ["previous", "plan"], ["request"]],
     authorization: [["request"], ["assessment"], ["previous"], ["investigations", "background"], []],
+    workup: [["concern", "history", "examination"], ["investigations"]],
+    refer: [["concern", "request"], ["history", "examination"], ["investigations"]],
     scribe: [[], ["concern"], ["history"], ["examination"], ["assessment"], ["plan", "followup"]],
   };
   const patientInfo = input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} ${id ? "tahun" : "years"}` : ""} · ${id && input.patient.sex === "Not specified" ? "Sex belum diisi" : input.patient.sex}` : id ? "Patient belum dipilih" : "No patient selected";

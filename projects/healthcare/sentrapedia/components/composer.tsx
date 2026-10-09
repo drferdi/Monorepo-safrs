@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, AudioLines, Square, ChevronDown, CircleHelp, ClipboardList, FileText, FileUp, ListChecks, Mic, Search, SlidersHorizontal, Stethoscope } from "lucide-react";
+import { ArrowUp, AudioLines, Square, ChevronDown, CircleHelp, ClipboardList, FileText, FileUp, FlaskConical, ListChecks, Mic, Search, Send, SlidersHorizontal, Stethoscope } from "lucide-react";
 import { PixelLoader } from "./pixel-loader";
 import { useId, useState, type ReactNode } from "react";
 import { modes, type ModeId } from "../lib/drafts";
@@ -8,7 +8,7 @@ import { intentGroups } from "../lib/studio";
 import type { Settings } from "../lib/workspace";
 
 interface Props { prompt: string; onPrompt: (value: string) => void; mode: ModeId; onMode: (mode: ModeId) => void; settings: Settings; onModel: (model: Settings["model"]) => void; context: string; onContext: () => void; onSettings: () => void; onScribe: () => void; onSubmit: () => void; busy: boolean; miraEnabled?: boolean; synthetic?: boolean; onSynthetic?: (value: boolean) => void; analysisError?: string; onCancelAnalysis?: () => void; showIntents?: boolean; templateControls?: ReactNode }
-const icons = { question: CircleHelp, ddx: Search, ap: ClipboardList, clinic: ClipboardList, hpi: FileText, telephone: FileText, chronic: Stethoscope, handoff: ClipboardList, tasks: ListChecks, avs: FileText, education: FileText, referral: FileText, authorization: FileText, scribe: AudioLines };
+const icons = { question: CircleHelp, ddx: Search, ap: ClipboardList, clinic: ClipboardList, hpi: FileText, telephone: FileText, chronic: Stethoscope, handoff: ClipboardList, tasks: ListChecks, avs: FileText, education: FileText, referral: FileText, authorization: FileText, scribe: AudioLines, workup: FlaskConical, refer: Send };
 
 export function IntentTabs({ mode, onMode }: { mode: ModeId; onMode: (mode: ModeId) => void }) {
   const group = intentGroups.find((item) => item.modes.includes(mode))!;

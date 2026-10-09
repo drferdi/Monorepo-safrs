@@ -2,6 +2,7 @@ import { validCase, validResult, type MiraResult, type MiraAnalysis } from "./co
 import type { CaseState } from "./types";
 import { oracleSource, oracleDiseases, type Disease } from "../oracle";
 import { newId, type Message } from "../workspace";
+import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
 
 export function hasMiraSource(message: Pick<Message, "sourceText">): boolean {
@@ -12,9 +13,13 @@ export function hasMiraSource(message: Pick<Message, "sourceText">): boolean {
   } catch { return false; }
 }
 
+export type MiraFocus = "workup" | "refer";
+export const referralSectionTitle = "Draft Rujukan";
+export function miraFocus(mode: ModeId): MiraFocus | undefined { return mode === "workup" || mode === "refer" ? mode : undefined; }
+
 export const diagnosisSectionTitles = ["Ringkasan Gejala", "Differential Diagnosis", "Diagnosis", "Penunjang", "Terapi Farmakologi", "Edukasi"];
 // Field labels inside the sections, rendered as small headings by the clinical document view.
-export const diagnosisFieldLabels = new Set(["Keluhan utama", "Pasien", "Anamnesis", "Tanda vital", "Pemeriksaan fisik", "Hasil pemeriksaan", "Kondisi yang diketahui", "Alergi", "Obat yang sedang digunakan", "Data yang perlu dilengkapi", "Pertanyaan lanjutan", "Alternatif", "Jangan terlewat", "Kemungkinan utama", "Temuan terkait", "Rencana awal", "Definisi", "Gejala khas", "Kriteria diagnosis", "Pemeriksaan penunjang", "Pemeriksaan fisik yang disarankan", "Kemampuan fasilitas", "Terapi", "Segera kembali atau dirujuk bila", "Rujukan", "Kandidat lain", "Terapi referensi", "DDI", "Kontraindikasi", "Bidang belum terisi", "Jejak analisis"]);
+export const diagnosisFieldLabels = new Set(["Keluhan utama", "Pasien", "Anamnesis", "Tanda vital", "Pemeriksaan fisik", "Hasil pemeriksaan", "Kondisi yang diketahui", "Alergi", "Obat yang sedang digunakan", "Data yang perlu dilengkapi", "Pertanyaan lanjutan", "Alternatif", "Jangan terlewat", "Kemungkinan utama", "Temuan terkait", "Rencana awal", "Definisi", "Gejala khas", "Kriteria diagnosis", "Pemeriksaan penunjang", "Pemeriksaan fisik yang disarankan", "Kemampuan fasilitas", "Terapi", "Segera kembali atau dirujuk bila", "Rujukan", "Kandidat lain", "Terapi referensi", "DDI", "Kontraindikasi", "Bidang belum terisi", "Jejak analisis", "Keputusan", "Diagnosis kerja", "Ringkasan klinis", "Pemeriksaan yang disarankan"]);
 export const diagnosisReferenceMarker = "Referensi penyakit terkait";
 
 const recorded = (text: string) => text.split(/\r?\n/).map(line => `  ${line}`).join("\n");
@@ -29,7 +34,7 @@ function referenceIncludes(sourceCode: string, code: string): boolean {
   });
 }
 
-export function miraDraft(result: MiraResult, traceId: string, createdAt: string, caseData?: CaseState): string {
+export function miraDraft(result: MiraResult, traceId: string, createdAt: string, caseData?: CaseState, focus?: MiraFocus): string {
   // Bullets only where there are several points; a single point stays a plain line.
   const points = (items: string[], indent = "") => items.length > 1 ? items.map(item => `${indent}- ${item}`).join("\n") : items.length ? `${indent}${items[0]}` : "";
   const list = (items: string[] | undefined) => points((items ?? []).map(item => recorded(item).trimStart()));
@@ -60,14 +65,25 @@ export function miraDraft(result: MiraResult, traceId: string, createdAt: string
   const demographics = [caseData?.demographics.ageYears == null ? "" : `${caseData.demographics.ageYears} tahun`, caseData?.demographics.sex === "M" ? "Laki-laki" : caseData?.demographics.sex === "F" ? "Perempuan" : "", caseData?.demographics.pregnant === undefined ? "" : `Hamil: ${caseData.demographics.pregnant ? "Ya" : "Tidak"}`].filter(Boolean).join(" · ");
   const disposition = result.disposition ? `${result.disposition.decision === "refer" ? "Rujuk" : "Tangani di FKTP"} · ${{ routine: "rutin", urgent: "segera", emergency: "gawat darurat" }[result.disposition.urgency]}` : "";
 
+  const vitals = list(caseData ? Object.entries(caseData.vitals).map(([key, value]) => `${vitalLabels[key] ?? key}: ${value}`) : []);
+  const exam = list(caseData?.physicalExam);
+  const results = list(caseData?.results.map(r => `${r.name}: ${r.value}${r.unit ? ` ${r.unit}` : ""}${r.flag ? ` (${r.flag})` : ""}`));
+  const referral: [string, string] = [referralSectionTitle, join([
+    field("Keputusan", disposition),
+    field("Diagnosis kerja", diagnoses("likely")),
+    field("Ringkasan klinis", join([field("Keluhan utama", caseData ? recorded(caseData.chiefComplaint) : ""), field("Pasien", demographics), field("Tanda vital", vitals), field("Pemeriksaan fisik", exam), field("Hasil pemeriksaan", results)])),
+    field("Pemeriksaan yang disarankan", tests),
+    narrative(primary, [["Segera kembali atau dirujuk bila", "rujukan"]]),
+  ])];
+
   const parts: [string, string][] = [
     ["Ringkasan Gejala", join([
       field("Keluhan utama", caseData ? recorded(caseData.chiefComplaint) : ""),
       field("Pasien", demographics),
       field("Anamnesis", join([caseData?.anamnesis.freeText ? recorded(caseData.anamnesis.freeText) : "", ...(caseData?.anamnesis.qa ?? []).map(qa => `${recorded(qa.question)}\n${recorded(qa.answer)}`)])),
-      field("Tanda vital", list(caseData ? Object.entries(caseData.vitals).map(([key, value]) => `${vitalLabels[key] ?? key}: ${value}`) : [])),
-      field("Pemeriksaan fisik", list(caseData?.physicalExam)),
-      field("Hasil pemeriksaan", list(caseData?.results.map(r => `${r.name}: ${r.value}${r.unit ? ` ${r.unit}` : ""}${r.flag ? ` (${r.flag})` : ""}`))),
+      field("Tanda vital", vitals),
+      field("Pemeriksaan fisik", exam),
+      field("Hasil pemeriksaan", results),
       field("Kondisi yang diketahui", list(caseData?.knownConditions)),
       field("Alergi", list(caseData?.allergies)),
       field("Obat yang sedang digunakan", list(caseData?.currentMedications)),
@@ -99,20 +115,20 @@ export function miraDraft(result: MiraResult, traceId: string, createdAt: string
       field("Jejak analisis", `Trace: ${traceId}\nWaktu: ${createdAt}\nBiaya (USD): ${result.meta.costUsd ?? "-"}`),
     ])],
   ];
-  return ["# Analisis kasus", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), parts.map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
+  return ["# Analisis kasus", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), (focus === "workup" ? [parts[3], ...parts.filter((_, i) => i !== 3)] : focus === "refer" ? [referral, ...parts] : parts).map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
 }
 
-export function diagnosisContent(message: Pick<Message, "content" | "originalContent" | "sourceText">): string {
+export function diagnosisContent(message: Pick<Message, "content" | "originalContent" | "sourceText"> & Partial<Pick<Message, "mode">>): string {
   // Untouched analysis drafts always show in the current format; edited drafts stay as written.
   if (!hasMiraSource(message) || message.content !== message.originalContent || !message.content.startsWith("# Analisis kasus\n")) return message.content;
   try {
     const source: unknown = JSON.parse(message.sourceText!);
     if (!source || typeof source !== "object" || !("case" in source) || !("result" in source) || !("traceId" in source) || !("createdAt" in source) || !validCase(source.case) || !validResult(source.result) || typeof source.traceId !== "string" || typeof source.createdAt !== "string") return message.content;
-    return miraDraft(source.result, source.traceId, source.createdAt, source.case);
+    return miraDraft(source.result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined);
   } catch { return message.content; }
 }
 
-export function miraMessage(analysis: MiraAnalysis, reviewDefaults?: ReviewItem[]): Message {
-  const content = miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case);
-  return { id: newId(), role: "assistant", mode: "ddx", content, originalContent: content, createdAt: analysis.createdAt, reviewStatus: "draft", reviewItems: freshReview(reviewDefaults), sourceText: JSON.stringify({ kind: "MIRA", contractVersion: "1", ...analysis, oracleSource, review: "belum ditinjau" }, null, 2) };
+export function miraMessage(analysis: MiraAnalysis, reviewDefaults?: ReviewItem[], mode: ModeId = "ddx"): Message {
+  const content = miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case, miraFocus(mode));
+  return { id: newId(), role: "assistant", mode, content, originalContent: content, createdAt: analysis.createdAt, reviewStatus: "draft", reviewItems: freshReview(reviewDefaults), sourceText: JSON.stringify({ kind: "MIRA", contractVersion: "1", ...analysis, oracleSource, review: "belum ditinjau" }, null, 2) };
 }

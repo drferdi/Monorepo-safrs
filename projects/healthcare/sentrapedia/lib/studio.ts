@@ -3,7 +3,7 @@ import { structureNote, type NoteField } from "./note-structure";
 import type { Encounter } from "./workspace";
 
 export const intentGroups: { id: string; label: string; headline: string; description: string; modes: ModeId[] }[] = [
-  { id: "ask", label: "Tanya", headline: "Kasus kompleks. Analisis lebih tajam.", description: "Telusuri bukti dan pertajam pemahaman klinis.", modes: ["question", "ddx"] },
+  { id: "ask", label: "Tanya", headline: "Kasus kompleks. Analisis lebih tajam.", description: "Telusuri bukti dan pertajam pemahaman klinis.", modes: ["question", "ddx", "workup", "refer"] },
   { id: "document", label: "Dokumentasi", headline: "Catatan rapi. Informasi lebih jelas.", description: "Susun informasi menjadi draf yang siap ditinjau.", modes: ["clinic", "hpi", "telephone", "chronic", "scribe"] },
   { id: "plan", label: "Rencana", headline: "Langkah terarah. Rencana lebih matang.", description: "Tata asesmen dan langkah tindak lanjut dalam satu tempat.", modes: ["ap", "tasks", "handoff"] },
   { id: "communicate", label: "Komunikasi", headline: "Pesan jelas. Pemahaman lebih baik.", description: "Siapkan informasi yang mudah dipahami dan ditinjau.", modes: ["avs", "education", "referral", "authorization"] },

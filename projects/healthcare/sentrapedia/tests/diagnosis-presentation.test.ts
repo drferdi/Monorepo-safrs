@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { emptyCase, type MiraResult } from "../lib/mira/contract";
-import { diagnosisContent, diagnosisSectionTitles, miraMessage } from "../lib/mira/presentation";
+import { diagnosisContent, diagnosisSectionTitles, miraDraft, miraMessage, referralSectionTitle } from "../lib/mira/presentation";
 import { documentSections, replaceSection } from "../lib/studio";
 import { oracleDiseases, relatedDiseases } from "../lib/oracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../lib/typing";
@@ -159,5 +159,33 @@ describe("thinking steps", () => {
     expect(thinkingStepAt(thinkingStepMs * 3 + 1)).toBe(3);
     expect(thinkingStepAt(60000)).toBe(thinkingSteps.length - 1);
     expect(thinkingStepMs * (thinkingSteps.length - 1)).toBeLessThanOrEqual(2500);
+  });
+});
+
+describe("focus modes", () => {
+  const titles = (content: string) => documentSections(content).map(s => s.title);
+  it("puts Penunjang first for workup and keeps the default document unchanged", () => {
+    const workup = miraMessage(analysis, undefined, "workup");
+    expect(workup.mode).toBe("workup");
+    expect(titles(workup.content)).toEqual(["Penunjang", "Ringkasan Gejala", "Differential Diagnosis", "Diagnosis", "Terapi Farmakologi", "Edukasi"]);
+    expect(miraMessage(analysis).content).toBe(miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case));
+    expect(miraMessage(analysis).mode).toBe("ddx");
+  });
+  it("prepends a referral draft built from recorded data only", () => {
+    const withRefer = { ...analysis, result: { ...analysis.result, disposition: { decision: "refer" as const, urgency: "urgent" as const } } };
+    const refer = miraMessage(withRefer, undefined, "refer");
+    expect(titles(refer.content)).toEqual([referralSectionTitle, ...diagnosisSectionTitles]);
+    const body = section(refer.content, referralSectionTitle);
+    expect(body).toContain("Keputusan\nRujuk · segera");
+    expect(body).toContain("Diagnosis sintetis (J00)");
+    expect(body).toContain("Keluhan sintetis");
+    expect(body).toContain("Usulan tes sintetis");
+    expect(section(miraMessage(analysis, undefined, "refer").content, referralSectionTitle)).not.toContain("Keputusan");
+  });
+  it("re-renders untouched focus drafts in focus order and leaves edited ones alone", () => {
+    const refer = miraMessage(analysis, undefined, "refer");
+    expect(titles(diagnosisContent(refer))[0]).toBe(referralSectionTitle);
+    const edited = { ...refer, content: refer.content + "\nCatatan klinisi" };
+    expect(diagnosisContent(edited)).toBe(edited.content);
   });
 });
