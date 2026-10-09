@@ -8,9 +8,9 @@ import { PatientAvatar } from "./patient-avatar";
 import type { Workspace } from "../lib/workspace";
 
 export type DialogName = "patient" | "list" | "settings" | "search" | "context" | "scribe" | "upgrade" | "account" | "feedback" | "encounter" | "legal" | "clinical" | "commands" | "templates" | "queue" | "knowledge" | null;
-interface Props { state: Workspace; open: boolean; mobile: boolean; onToggle: () => void; onDialog: (name: DialogName, id?: string) => void; onNew: (patientId?: string) => void; onSelect: (id: string) => void; onToast: (text: string) => void }
+interface Props { state: Workspace; activeDialog: DialogName; open: boolean; mobile: boolean; onToggle: () => void; onDialog: (name: DialogName, id?: string) => void; onNew: (patientId?: string) => void; onSelect: (id: string) => void; onToast: (text: string) => void }
 
-export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSelect, onToast }: Props) {
+export function Sidebar({ state, activeDialog, open, mobile, onToggle, onDialog, onNew, onSelect, onToast }: Props) {
   const [feedback, setFeedback] = useState("");
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -36,7 +36,7 @@ export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSele
     <aside ref={ref} className={`sidebar ${open ? "is-open" : ""}`} inert={!open} aria-hidden={!open} aria-label="Navigasi workspace">
       <div className="sidebar-brand"><Brand /><button className="icon-button" aria-label="Tutup sidebar" title="Tutup sidebar" onClick={onToggle}><PanelLeft size={16}/></button></div>
       <nav className="main-nav" aria-label="Navigasi utama">
-        <SidebarSubmenu follow initialSection="start" sections={[
+        <SidebarSubmenu follow initialSection="start" activeItemId={activeDialog} memoryKey="sentrapedia-nav-v1" sections={[
           { id: "start", title: "Mulai", items: [
             { id: "new", label: <><Plus/><span>Baru</span><kbd>⌘ K</kbd></>, onSelect: () => onNew() },
             { id: "patient", label: <><UserRoundPlus/><span>Buat Patient</span></>, onSelect: () => onDialog("patient") },

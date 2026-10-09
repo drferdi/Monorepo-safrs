@@ -1,8 +1,11 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
+import { focusStep, locate, restoreNavMemory } from "../lib/nav-tree";
 import { litPath, rowMiddle, spring, SUBMENU_ROW, treePath } from "../lib/submenu-motion";
+
+function readMemory(key: string): string | null { try { return localStorage.getItem(key); } catch { return null; } }
 
 export interface SubmenuSection {
   id: string;
@@ -15,18 +18,45 @@ export interface SubmenuSection {
 
 /** After lab.xevrion.dev/lab/sidebar-submenu: one section open at a time, items hanging off a drawn tree,
  *  and the branch to the current item lit and following it. With `follow`, items have no lasting selection:
- *  the branch follows the pointer or focus and rests on the item used last. */
-export function SidebarSubmenu({ sections, initialSection, follow = false }: { sections: SubmenuSection[]; initialSection: string; follow?: boolean }) {
-  const [openId, setOpenId] = useState(initialSection);
+ *  the branch follows the pointer or focus and rests on the open dialog's item, else the item used last.
+ *  The open group and last items are remembered under `memoryKey`; arrow keys, Home and End move between rows. */
+export function SidebarSubmenu({ sections, initialSection, follow = false, activeItemId = null, memoryKey }: { sections: SubmenuSection[]; initialSection: string; follow?: boolean; activeItemId?: string | null; memoryKey?: string }) {
+  const shape = sections.map((section) => ({ id: section.id, itemIds: section.items.map((item) => item.id) }));
+  const [memory] = useState(() => follow && memoryKey ? restoreNavMemory(readMemory(memoryKey), shape, initialSection) : { open: initialSection, used: {} });
+  const [openId, setOpenId] = useState(memory.open);
   const [hovered, setHovered] = useState<number | null>(null);
-  const [used, setUsed] = useState<Record<string, number>>({});
+  const [used, setUsed] = useState<Record<string, number>>(memory.used);
+  const [seenActive, setSeenActive] = useState<string | null | undefined>(undefined);
+  // An open dialog, however it was opened, opens its group and becomes the group's item (adjusted during render).
+  if (follow && activeItemId !== seenActive) {
+    setSeenActive(activeItemId);
+    const spot = locate(shape, activeItemId);
+    if (spot) { setOpenId(spot.section); setUsed((value) => ({ ...value, [spot.section]: spot.index })); }
+  }
+  useEffect(() => { if (follow && memoryKey) try { localStorage.setItem(memoryKey, JSON.stringify({ open: openId, used })); } catch { /* Memory is a convenience; the tree works without it. */ } }, [follow, memoryKey, openId, used]);
   const id = useId();
-  return <div className="sidebar-submenu">
+  function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    const rows = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>(".submenu-heading > button:first-child, .submenu-section[data-open=\"true\"] .submenu-item > button:first-child"));
+    const index = rows.indexOf(document.activeElement as HTMLButtonElement);
+    if (index < 0) return;
+    const section = rows[index].closest<HTMLElement>(".submenu-section");
+    const onTitle = rows[index].parentElement?.classList.contains("submenu-heading");
+    if (event.key === "ArrowRight" && onTitle && section?.dataset.section) {
+      event.preventDefault(); setOpenId(section.dataset.section);
+      requestAnimationFrame(() => requestAnimationFrame(() => section.querySelector<HTMLButtonElement>(".submenu-item > button")?.focus()));
+      return;
+    }
+    if (event.key === "ArrowLeft" && !onTitle) { event.preventDefault(); section?.querySelector<HTMLButtonElement>(".submenu-heading > button")?.focus(); return; }
+    const next = focusStep(rows.length, index, event.key);
+    if (next === null) return;
+    event.preventDefault(); rows[next].focus();
+  }
+  return <div className="sidebar-submenu" onKeyDown={follow ? onKeyDown : undefined}>
     {sections.map((section) => {
       const open = section.id === openId;
       const selectedIndex = follow ? (open && hovered !== null ? hovered : used[section.id] ?? 0) : section.items.findIndex((item) => item.id === section.selectedId);
       const panelId = `${id}-${section.id}`;
-      return <section key={section.id} className="submenu-section" data-open={open}>
+      return <section key={section.id} className="submenu-section" data-open={open} data-section={section.id}>
         <div className="submenu-heading"><button type="button" id={`${panelId}-title`} aria-expanded={open} aria-controls={panelId} onClick={() => { setOpenId(section.id); setHovered(null); }}><span>{section.title}</span>{!follow && <span className="submenu-count">{section.items.length}</span>}<ChevronDown size={13}/></button>{section.action}</div>
         <div id={panelId} role="region" aria-labelledby={`${panelId}-title`} className="submenu-body" inert={!open} aria-hidden={!open}>
           <div className="submenu-clip"><div className="submenu-items">
