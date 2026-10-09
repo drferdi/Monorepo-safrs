@@ -200,6 +200,17 @@
       "network_endpoints": ["openrouter.ai"],
       "provenance": "~/.factory/settings.json customModels, baseUrl https://openrouter.ai/api/v1; registered on Gaffer's instruction 2026-10-10",
       "review_status": "APPROVED"
+    },
+    {
+      "id": "jev-typesafe",
+      "owner": "repository-maintainers",
+      "purpose": "Jev decision router for coding agents (tools/jev): decides whether to search, spawn a subagent, retry, or ask Gaffer before costly steps",
+      "allowed_operations": ["route-decision"],
+      "data_scope": "one-line-task-goal-and-routing-state-no-secrets-no-repository-content",
+      "authentication": "TYPESAFE_API_KEY-from-process-environment",
+      "network_endpoints": ["api.typesafe.ai"],
+      "provenance": "tools/jev/playbook (vendored Bodila51/muse-jev-playbook@70edf68, MIT) with typesafe-sdk 0.7.1; approved by Gaffer 2026-10-10",
+      "review_status": "APPROVED"
     }
   ]
 }
