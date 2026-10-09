@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { intentGroups, documentSections, replaceSection, encounterTimeline, contextFacts } from "../lib/studio";
 import { defaultReviewItems } from "../lib/workflow";
-import { modeIds } from "../lib/drafts";
+import { modeIds, modes } from "../lib/drafts";
 import { initialWorkspace, restoreWorkspace, workspaceReducer, type Message, type Workspace } from "../lib/workspace";
 
 const message: Message = { id: "doc", role: "assistant", content: "# Note\n\n## History\nOriginal\n\n## Plan\nKeep\n---\nFooter", mode: "clinic", createdAt: "2026-10-09T01:00:00Z" };
@@ -49,5 +49,11 @@ describe("workspace presentation helpers", () => {
     const facts = contextFacts("Keluhan: Contoh fiktif", "Obat: Obat contoh");
     expect(facts.find((fact) => fact.key === "allergies")?.values).toEqual([]);
     expect(facts.find((fact) => fact.key === "concern")?.values).toEqual([{ source: "Konteks Encounter", text: "Contoh fiktif" }]);
+  });
+});
+
+describe("slash picker order", () => {
+  it("keeps the local Referral Letter as the first match for /ref and /refer", () => {
+    for (const query of ["ref", "refer"]) expect(modes.filter((item) => `${item.id} ${item.label}`.toLowerCase().includes(query))[0].id).toBe("referral");
   });
 });

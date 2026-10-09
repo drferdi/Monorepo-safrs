@@ -6,8 +6,6 @@ export type ModeId = typeof modeIds[number];
 export const modes: { id: ModeId; label: string; title: string; description: string; placeholder: string }[] = [
   { id: "question", label: "Ajukan pertanyaan", title: "Clinical question brief", description: "Susun pertanyaan Clinical dan tentukan Evidence yang dibutuhkan.", placeholder: "Apa yang ingin Anda telaah hari ini?" },
   { id: "ddx", label: "Diagnosis Banding", title: "Differential diagnosis", description: "Atur temuan dan susun lembar Differential Diagnosis.", placeholder: "Jelaskan Presentation, History, dan temuan utama..." },
-  { id: "workup", label: "Pemeriksaan penunjang", title: "Diagnostic workup", description: "Analisis kasus dengan pemeriksaan penunjang yang disarankan di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan pemeriksaan yang sudah ada..." },
-  { id: "refer", label: "Draft rujukan", title: "Referral draft", description: "Analisis kasus dengan draf rujukan dan keputusan disposisi di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan alasan mempertimbangkan rujukan..." },
   { id: "ap", label: "Buat A&P", title: "Assessment & plan", description: "Susun Assessment menjadi Plan terstruktur.", placeholder: "Masukkan Assessment dan usulan Management..." },
   { id: "clinic", label: "Buat Clinic Note", title: "Clinic note", description: "Susun Clinic Note dari detail Clinical yang diberikan.", placeholder: "Tambahkan History, Examination, Assessment, dan Plan..." },
   { id: "hpi", label: "Buat HPI", title: "History of present illness", description: "Susun riwayat Presenting Concern.", placeholder: "Jelaskan Onset, Duration, Course, dan Associated Symptoms..." },
@@ -20,6 +18,8 @@ export const modes: { id: ModeId; label: string; title: string; description: str
   { id: "referral", label: "Referral Letter", title: "Referral letter", description: "Susun Referral dari informasi Clinical yang diberikan.", placeholder: "Masukkan penerima, Reason for Referral, dan temuan relevan..." },
   { id: "authorization", label: "Prior Authorization", title: "Prior authorization", description: "Susun permintaan penjaminan dengan detail pendukung.", placeholder: "Masukkan layanan, Clinical Indication, dan Previous Treatments..." },
   { id: "scribe", label: "Scribe Note", title: "Scribed encounter note", description: "Susun transkrip Encounter menjadi draf yang dapat diedit.", placeholder: "Tempel percakapan Encounter atau mulai dikte..." },
+  { id: "workup", label: "Pemeriksaan penunjang", title: "Diagnostic workup", description: "Analisis kasus dengan pemeriksaan penunjang yang disarankan di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan pemeriksaan yang sudah ada..." },
+  { id: "refer", label: "Draft rujukan", title: "Referral draft", description: "Analisis kasus dengan draf rujukan dan keputusan disposisi di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan alasan mempertimbangkan rujukan..." },
 ];
 
 export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: "Standard" | "Extended"; language: "English" | "Bahasa Indonesia"; patient?: Patient; instructions: string }
