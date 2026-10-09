@@ -1,0 +1,1804 @@
+[
+  {
+    "id": "~deepseek/deepseek-flash-latest",
+    "name": "DeepSeek: DeepSeek Flash Latest",
+    "pricing": {
+      "prompt": "0.0000000283",
+      "completion": "0.0000012",
+      "input_cache_read": "0.000000005"
+    },
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logit_bias",
+      "logprobs",
+      "max_tokens",
+      "min_p",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_k",
+      "top_logprobs",
+      "top_p"
+    ],
+    "zdr": []
+  },
+  {
+    "id": "deepseek/deepseek-v4.1-flash",
+    "name": "DeepSeek: DeepSeek V4.1 Flash",
+    "pricing": {
+      "prompt": "0.0000003",
+      "completion": "0.0000012",
+      "input_cache_read": "0.000000006"
+    },
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logit_bias",
+      "logprobs",
+      "max_tokens",
+      "min_p",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_k",
+      "top_logprobs",
+      "top_p"
+    ],
+    "zdr": [
+      {
+        "provider_name": "Crusoe",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "seed",
+          "min_p",
+          "repetition_penalty",
+          "top_k",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000029",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000007",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Decart",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "min_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "stop",
+          "seed",
+          "max_tokens",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000009",
+          "completion": "0.00000018",
+          "input_cache_read": "0.000000018",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Fireworks",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "repetition_penalty",
+          "logit_bias",
+          "logprobs",
+          "top_logprobs",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000045",
+          "completion": "0.0000018",
+          "input_cache_read": "0.000000009",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Ionstream",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "top_p",
+          "top_k",
+          "frequency_penalty",
+          "presence_penalty",
+          "stop",
+          "seed",
+          "logit_bias",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000005",
+          "completion": "0.00000115",
+          "input_cache_read": "0.000000006",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "InferenceNet",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "seed",
+          "top_k",
+          "min_p",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "repetition_penalty",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000105",
+          "completion": "0.0000006",
+          "input_cache_read": "0.000000015",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "DekaLLM",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "frequency_penalty",
+          "logit_bias",
+          "max_tokens",
+          "presence_penalty",
+          "seed",
+          "stop",
+          "temperature",
+          "top_p",
+          "response_format",
+          "structured_outputs",
+          "logprobs",
+          "top_logprobs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000012",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000005",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "OpenInference",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "max_tokens",
+          "stop",
+          "seed",
+          "top_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "min_p",
+          "logit_bias",
+          "repetition_penalty",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000002",
+          "completion": "0.000001",
+          "input_cache_read": "0.0000002",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "CoreWeave",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "top_k",
+          "repetition_penalty",
+          "frequency_penalty",
+          "presence_penalty",
+          "stop",
+          "seed",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000002",
+          "completion": "0.00000065",
+          "input_cache_read": "0.00000003",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Sail Research",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "frequency_penalty",
+          "max_tokens",
+          "presence_penalty",
+          "seed",
+          "stop",
+          "temperature",
+          "top_k",
+          "top_p",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000008",
+          "completion": "0.0000004",
+          "input_cache_read": "0.00000001",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "BaseTen",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000003",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000007",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Makora",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "stop",
+          "max_tokens",
+          "seed",
+          "min_p",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000027",
+          "completion": "0.00000115",
+          "input_cache_read": "0.000000009",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "DigitalOcean",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "max_tokens",
+          "response_format",
+          "logprobs",
+          "top_logprobs",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000225",
+          "completion": "0.0000009",
+          "input_cache_read": "0.000000006",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Phala",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "seed",
+          "top_k",
+          "min_p",
+          "repetition_penalty",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000021",
+          "completion": "0.00000084",
+          "input_cache_read": "0.0000000042",
+          "discount": 0.3
+        }
+      },
+      {
+        "provider_name": "Together",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "repetition_penalty",
+          "logit_bias",
+          "min_p",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000003",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000006",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Relace",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "min_p",
+          "stop",
+          "max_tokens",
+          "logit_bias",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000024",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000005",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "SiliconFlow",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "frequency_penalty",
+          "max_tokens",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000003",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000006",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Modal",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "stop",
+          "max_tokens",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000003",
+          "completion": "0.0000012",
+          "input_cache_read": "0.00000003",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Wafer",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "min_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "stop",
+          "seed",
+          "max_tokens",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000045",
+          "completion": "0.0000006",
+          "input_cache_read": "0.000000044",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "BaseTen",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000003",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000007",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Parasail",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "seed",
+          "stop",
+          "top_k",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000003",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000006",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Fireworks",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "repetition_penalty",
+          "logit_bias",
+          "logprobs",
+          "top_logprobs",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000003",
+          "completion": "0.0000012",
+          "input_cache_read": "0.000000006",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Morph",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "stop",
+          "top_p",
+          "top_k",
+          "min_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "seed",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000045",
+          "completion": "0.0000006",
+          "input_cache_read": "0.00000001",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Venice",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000003",
+          "completion": "0.0000012",
+          "input_cache_read": "0.0000000075",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Novita",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "seed",
+          "top_k",
+          "repetition_penalty",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000195",
+          "completion": "0.00000078",
+          "input_cache_read": "0.0000000039",
+          "discount": 0.35
+        }
+      },
+      {
+        "provider_name": "DeepInfra",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "top_k",
+          "seed",
+          "min_p",
+          "logit_bias",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "response_format",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000014",
+          "completion": "0.00000042",
+          "input_cache_read": "0.0000000042",
+          "discount": 0.3
+        }
+      }
+    ]
+  },
+  {
+    "id": "deepseek/deepseek-v4.1-flash:batch",
+    "name": "DeepSeek: DeepSeek V4.1 Flash (batch)",
+    "pricing": {
+      "prompt": "0.000000112",
+      "completion": "0.000000336",
+      "input_cache_read": "0.00000000336"
+    },
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logit_bias",
+      "max_tokens",
+      "min_p",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_k",
+      "top_p"
+    ],
+    "zdr": []
+  },
+  {
+    "id": "deepseek/deepseek-v4-flash-vision-exp",
+    "name": "DeepSeek: DeepSeek V4 Flash Vision Exp",
+    "pricing": {
+      "prompt": "0.0000002156",
+      "completion": "0.0000006468",
+      "input_cache_read": "0.00000000686"
+    },
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logit_bias",
+      "logprobs",
+      "max_tokens",
+      "min_p",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_k",
+      "top_logprobs",
+      "top_p"
+    ],
+    "zdr": [
+      {
+        "provider_name": "SiliconFlow",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "frequency_penalty",
+          "max_tokens",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000044",
+          "completion": "0.00000132",
+          "input_cache_read": "0.000000028",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "DeepInfra",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "top_k",
+          "seed",
+          "min_p",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000002156",
+          "completion": "0.0000006468",
+          "input_cache_read": "0.00000000686",
+          "discount": 0.51
+        }
+      }
+    ]
+  },
+  {
+    "id": "~deepseek/deepseek-v4-flash-latest",
+    "name": "DeepSeek: DeepSeek V4 Flash Latest",
+    "pricing": {
+      "prompt": "0.00000000368",
+      "completion": "0.000000489252",
+      "input_cache_read": "0.00000000368"
+    },
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logit_bias",
+      "logprobs",
+      "max_tokens",
+      "min_p",
+      "parallel_tool_calls",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_a",
+      "top_k",
+      "top_logprobs",
+      "top_p"
+    ],
+    "zdr": []
+  },
+  {
+    "id": "deepseek/deepseek-v4-flash-0731",
+    "name": "DeepSeek: DeepSeek V4 Flash 0731",
+    "pricing": {
+      "prompt": "0.0000000046",
+      "completion": "0.00000128",
+      "input_cache_read": "0.0000000046"
+    },
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logit_bias",
+      "logprobs",
+      "max_tokens",
+      "min_p",
+      "parallel_tool_calls",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_a",
+      "top_k",
+      "top_logprobs",
+      "top_p"
+    ],
+    "zdr": [
+      {
+        "provider_name": "Cohere",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "seed",
+          "structured_outputs",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "parallel_tool_calls",
+          "logprobs",
+          "top_logprobs",
+          "repetition_penalty",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000014",
+          "completion": "0.00000028",
+          "input_cache_read": "0.00000007",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Sail Research",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "frequency_penalty",
+          "max_tokens",
+          "presence_penalty",
+          "seed",
+          "stop",
+          "temperature",
+          "top_k",
+          "top_p",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000019",
+          "completion": "0.00000042",
+          "input_cache_read": "0.000000012",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "BaseTen",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000013",
+          "completion": "0.00000026",
+          "input_cache_read": "0.000000028",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Reka",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "temperature",
+          "top_p",
+          "max_tokens",
+          "stop",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000021",
+          "completion": "0.000000528",
+          "input_cache_read": "0.0000000056",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Relace",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "tools",
+          "tool_choice",
+          "temperature",
+          "top_p",
+          "top_k",
+          "min_p",
+          "stop",
+          "max_tokens",
+          "logit_bias",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000000046",
+          "completion": "0.00000128",
+          "input_cache_read": "0.0000000046",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "OpenInference",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "max_tokens",
+          "stop",
+          "seed",
+          "response_format",
+          "top_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "min_p",
+          "logit_bias",
+          "repetition_penalty",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000000368",
+          "completion": "0.000000489252",
+          "input_cache_read": "0.00000000368",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Inceptron",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "max_tokens",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "logit_bias",
+          "parallel_tool_calls",
+          "presence_penalty",
+          "seed",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "structured_outputs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000005",
+          "completion": "0.00000065",
+          "input_cache_read": "0.000000027",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Wafer",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "min_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "stop",
+          "seed",
+          "max_tokens",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "logprobs",
+          "top_logprobs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000013",
+          "completion": "0.00000023",
+          "input_cache_read": "0.00000012",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "DigitalOcean",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "max_tokens",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "structured_outputs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000119",
+          "completion": "0.000000238",
+          "input_cache_read": "0.0000000238",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Sail Research",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "structured_outputs",
+          "logprobs",
+          "top_logprobs",
+          "temperature",
+          "top_p",
+          "top_k",
+          "frequency_penalty",
+          "presence_penalty",
+          "stop",
+          "seed",
+          "max_tokens",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000001",
+          "completion": "0.0000003",
+          "input_cache_read": "0.00000003",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "CoreWeave",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "top_k",
+          "repetition_penalty",
+          "frequency_penalty",
+          "presence_penalty",
+          "stop",
+          "seed",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000013",
+          "completion": "0.00000028",
+          "input_cache_read": "0.00000007",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Phala",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "seed",
+          "top_k",
+          "min_p",
+          "repetition_penalty",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000308",
+          "completion": "0.000000924",
+          "input_cache_read": "0.0000000196",
+          "discount": 0.3
+        }
+      },
+      {
+        "provider_name": "Together",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "repetition_penalty",
+          "logit_bias",
+          "min_p",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000014",
+          "completion": "0.00000028",
+          "input_cache_read": "0.00000003",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Mancer 2",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "logit_bias",
+          "top_k",
+          "min_p",
+          "seed",
+          "top_a",
+          "response_format",
+          "logprobs",
+          "top_logprobs",
+          "tools",
+          "tool_choice",
+          "structured_outputs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000002",
+          "completion": "0.0000006",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Novita",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "seed",
+          "top_k",
+          "repetition_penalty",
+          "tools",
+          "response_format",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000004092",
+          "completion": "0.0000012276",
+          "input_cache_read": "0.00000002604",
+          "discount": 0.07
+        }
+      },
+      {
+        "provider_name": "BaseTen",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000013",
+          "completion": "0.00000026",
+          "input_cache_read": "0.000000028",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Venice",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000013",
+          "completion": "0.00000026",
+          "input_cache_read": "0.000000028",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "DeepInfra",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "top_k",
+          "seed",
+          "min_p",
+          "tools",
+          "tool_choice",
+          "structured_outputs",
+          "logit_bias",
+          "response_format",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000006",
+          "completion": "0.00000018",
+          "input_cache_read": "0.000000015",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Parasail",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "seed",
+          "stop",
+          "top_k",
+          "logit_bias",
+          "structured_outputs",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000014",
+          "completion": "0.00000028",
+          "input_cache_read": "0.00000005",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "SiliconFlow",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "frequency_penalty",
+          "max_tokens",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000022",
+          "completion": "0.00000066",
+          "input_cache_read": "0.000000028",
+          "discount": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "deepseek/deepseek-v4-flash",
+    "name": "DeepSeek: DeepSeek V4 Flash 0423",
+    "pricing": {
+      "prompt": "0.0000000099",
+      "completion": "0.00000128",
+      "input_cache_read": "0.0000000099"
+    },
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logit_bias",
+      "logprobs",
+      "max_completion_tokens",
+      "max_tokens",
+      "min_p",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_a",
+      "top_k",
+      "top_logprobs",
+      "top_p"
+    ],
+    "zdr": [
+      {
+        "provider_name": "Relace",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "min_p",
+          "stop",
+          "max_tokens",
+          "logit_bias",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "response_format",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000000099",
+          "completion": "0.00000128",
+          "input_cache_read": "0.0000000099",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Wafer",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "min_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "stop",
+          "seed",
+          "max_tokens",
+          "logit_bias",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000055",
+          "completion": "0.00000017",
+          "input_cache_read": "0.000000013",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "OpenInference",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "max_tokens",
+          "stop",
+          "seed",
+          "response_format",
+          "top_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "min_p",
+          "logit_bias",
+          "repetition_penalty",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000000792",
+          "completion": "0.000000489252",
+          "input_cache_read": "0.00000000792",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Azure",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "max_completion_tokens",
+          "tools",
+          "tool_choice",
+          "response_format",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000021",
+          "completion": "0.00000056",
+          "input_cache_read": "0.000000031",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Mancer 2",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "logit_bias",
+          "top_k",
+          "min_p",
+          "seed",
+          "top_a",
+          "response_format",
+          "logprobs",
+          "top_logprobs",
+          "tools",
+          "structured_outputs",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000019",
+          "completion": "0.0000005",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "DigitalOcean",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "max_tokens",
+          "tool_choice",
+          "tools",
+          "structured_outputs",
+          "response_format",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.000000098",
+          "completion": "0.000000196",
+          "input_cache_read": "0.0000000196",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Venice",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "top_k",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.0000000966",
+          "completion": "0.0000001925",
+          "input_cache_read": "0.0000000196",
+          "discount": 0.3
+        }
+      },
+      {
+        "provider_name": "Novita",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "seed",
+          "top_k",
+          "repetition_penalty",
+          "tool_choice",
+          "tools",
+          "response_format",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000014",
+          "completion": "0.00000028",
+          "input_cache_read": "0.000000028",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "DeepInfra",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "stop",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "top_k",
+          "seed",
+          "min_p",
+          "tools",
+          "tool_choice",
+          "structured_outputs",
+          "response_format",
+          "logit_bias",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000009",
+          "completion": "0.00000018",
+          "input_cache_read": "0.000000018",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "Parasail",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "max_tokens",
+          "temperature",
+          "top_p",
+          "frequency_penalty",
+          "presence_penalty",
+          "repetition_penalty",
+          "seed",
+          "stop",
+          "top_k",
+          "logit_bias",
+          "tools",
+          "tool_choice",
+          "structured_outputs",
+          "response_format",
+          "logprobs",
+          "top_logprobs",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000014",
+          "completion": "0.00000028",
+          "input_cache_read": "0.00000007",
+          "discount": 0
+        }
+      },
+      {
+        "provider_name": "SiliconFlow",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "top_k",
+          "frequency_penalty",
+          "max_tokens",
+          "tools",
+          "tool_choice",
+          "response_format",
+          "reasoning_effort"
+        ],
+        "pricing": {
+          "prompt": "0.00000013",
+          "completion": "0.00000028",
+          "input_cache_read": "0.000000028",
+          "discount": 0
+        }
+      }
+    ]
+  }
+]

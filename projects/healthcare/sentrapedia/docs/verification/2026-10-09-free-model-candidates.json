@@ -1,0 +1,271 @@
+[
+  {
+    "id": "apodex/apodex-1.1-mini:free",
+    "structured": true,
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "max_tokens",
+      "presence_penalty",
+      "reasoning",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_k",
+      "top_p"
+    ],
+    "zdrEndpoints": 1,
+    "eligible": 1
+  },
+  {
+    "id": "dots-studio/dots-3-note-preview:free",
+    "structured": true,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "response_format",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "liquid/lfm-2.5-2.6b:free",
+    "structured": true,
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logprobs",
+      "max_completion_tokens",
+      "max_tokens",
+      "min_p",
+      "presence_penalty",
+      "reasoning",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_k",
+      "top_logprobs",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "nvidia/nemotron-3.5-lightning:free",
+    "structured": false,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "seed",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "thinkingmachines/inkling-small:free",
+    "structured": false,
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "max_tokens",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "seed",
+      "stop",
+      "temperature",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "poolside/laguna-s-2.1:free",
+    "structured": false,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "temperature",
+      "tool_choice",
+      "tools"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "thinkingmachines/inkling:free",
+    "structured": false,
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "max_tokens",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "seed",
+      "stop",
+      "temperature",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "poolside/laguna-xs-2.1:free",
+    "structured": false,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "temperature",
+      "tool_choice",
+      "tools"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "cohere/north-mini-code:free",
+    "structured": false,
+    "parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "max_tokens",
+      "presence_penalty",
+      "reasoning",
+      "seed",
+      "stop",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_k",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "nvidia/nemotron-3.5-content-safety:free",
+    "structured": false,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "seed",
+      "temperature",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "structured": false,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "reasoning_effort",
+      "seed",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+    "structured": false,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "seed",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "google/gemma-4-26b-a4b-it:free",
+    "structured": false,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "response_format",
+      "seed",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "google/gemma-4-31b-it:free",
+    "structured": false,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "response_format",
+      "seed",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  },
+  {
+    "id": "nvidia/nemotron-3-super-120b-a12b:free",
+    "structured": true,
+    "parameters": [
+      "include_reasoning",
+      "max_tokens",
+      "reasoning",
+      "reasoning_effort",
+      "response_format",
+      "seed",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_p"
+    ],
+    "zdrEndpoints": 0,
+    "eligible": 0
+  }
+]

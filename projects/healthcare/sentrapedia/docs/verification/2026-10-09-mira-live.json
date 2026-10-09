@@ -1,0 +1,56 @@
+{
+  "checkedAt": "2026-10-08T20:35:14.1891939Z",
+  "synthetic": true,
+  "case": {
+    "knownConditions": [],
+    "vitals": {
+      "respiratoryRate": 18,
+      "spo2": 98,
+      "temperature": 36.8
+    },
+    "anamnesis": {
+      "freeText": "Simulasi integrasi, bukan pasien nyata. Tidak demam, masih makan dan minum."
+    },
+    "physicalExam": [
+      "Simulasi: kesadaran baik, napas tenang"
+    ],
+    "chiefComplaint": "Kasus fiktif: batuk pilek dua hari tanpa sesak",
+    "facilityCapabilities": [
+      "Layanan primer"
+    ],
+    "results": [],
+    "allergies": [],
+    "demographics": {
+      "sex": "unknown",
+      "ageYears": 30
+    },
+    "currentMedications": []
+  },
+  "health": {
+    "reachable": true,
+    "modelReady": true,
+    "configured": true,
+    "freeOnly": true,
+    "model": "apodex/apodex-1.1-mini:free"
+  },
+  "httpStatus": 503,
+  "response": {
+    "error": {
+      "code": "UNAVAILABLE",
+      "message": "MIRA belum dapat menyelesaikan analisis. Periksa koneksi, kebijakan data atau kuota layanan."
+    }
+  },
+  "upstream": {
+    "error": {
+      "code": "MODEL_ERROR",
+      "message": "assessment call failed: BadRequestError"
+    },
+    "latencyMs": 8859,
+    "successfulCalls": 1,
+    "costUsd": 0.0,
+    "models": {
+      "plan": "apodex/apodex-1.1-mini:free",
+      "assessment": "apodex/apodex-1.1-mini:free"
+    }
+  }
+}

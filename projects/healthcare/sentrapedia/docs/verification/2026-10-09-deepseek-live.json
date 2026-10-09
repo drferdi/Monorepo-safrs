@@ -1,0 +1,168 @@
+{
+  "checkedAt": "2026-10-08T20:51:27.3230184Z",
+  "synthetic": true,
+  "case": {
+    "knownConditions": [],
+    "vitals": {
+      "respiratoryRate": 18,
+      "spo2": 98,
+      "temperature": 36.8
+    },
+    "anamnesis": {
+      "freeText": "Simulasi integrasi, bukan pasien nyata. Tidak demam, masih makan dan minum."
+    },
+    "physicalExam": [
+      "Simulasi: kesadaran baik, napas tenang"
+    ],
+    "chiefComplaint": "Kasus fiktif: batuk pilek dua hari tanpa sesak",
+    "facilityCapabilities": [
+      "Layanan primer"
+    ],
+    "results": [],
+    "allergies": [],
+    "demographics": {
+      "sex": "unknown",
+      "ageYears": 30
+    },
+    "currentMedications": []
+  },
+  "health": {
+    "reachable": true,
+    "modelReady": true,
+    "configured": true,
+    "freeOnly": false,
+    "model": "deepseek/deepseek-v4.1-flash",
+    "maxCostUsd": 0.1
+  },
+  "httpStatus": 200,
+  "response": {
+    "result": {
+      "contractVersion": "1",
+      "status": "ok",
+      "differential": {
+        "likely": [
+          {
+            "icd10": "J00",
+            "label": "Acute nasopharyngitis [common cold]",
+            "confidenceTier": "high"
+          }
+        ],
+        "alternatives": [
+          {
+            "icd10": "J06.9",
+            "label": "Acute upper respiratory infection, unspecified",
+            "confidenceTier": "moderate"
+          }
+        ],
+        "cannotMiss": [
+          {
+            "icd10": "J18.9",
+            "label": "Pneumonia, unspecified",
+            "confidenceTier": "low"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "icd10": "J00",
+          "supporting": [
+            "Chief complaint: cough and runny nose for two days without shortness of breath.",
+            "No fever; still eating and drinking.",
+            "Vital signs: RR 18/min, SpO2 98%, temperature 36.8°C.",
+            "Physical examination: alert and calm breathing."
+          ],
+          "opposing": []
+        },
+        {
+          "icd10": "J06.9",
+          "supporting": [
+            "Cough and runny nose for two days.",
+            "No fever and normal vital signs."
+          ],
+          "opposing": [
+            "J00 is more specific for common cold with cough and runny nose."
+          ]
+        },
+        {
+          "icd10": "J18.9",
+          "supporting": [
+            "Cough is present."
+          ],
+          "opposing": [
+            "No fever (temperature 36.8°C).",
+            "No shortness of breath.",
+            "RR 18/min and SpO2 98%.",
+            "Calm breathing on examination."
+          ]
+        }
+      ],
+      "missingInformation": [
+        "Sex is not recorded.",
+        "Red-flag symptoms not fully documented: dyspnea, chest pain, confusion, dehydration, inability to eat/drink, fever >39°C, symptoms >10 days, worsening after 5 days.",
+        "Immunocompromised state, pregnancy, or significant comorbidities not recorded.",
+        "Chest auscultation findings not recorded.",
+        "Throat and nasal examination findings not recorded.",
+        "Influenza/COVID-19 exposure or testing not recorded.",
+        "Allergy history is recorded as none, but should be verified before medication."
+      ],
+      "nextBestActions": [
+        {
+          "kind": "question",
+          "item": "Screen for red flags: RR >24/min, SpO2 <94%, dyspnea, chest pain, confusion, dehydration, unable to eat/drink, temperature >39°C, symptoms >10 days, worsening after 5 days, immunocompromised state, pregnancy, or significant comorbidities.",
+          "reason": "The plan requires immediate red-flag screening before concluding uncomplicated viral URI."
+        }
+      ],
+      "disposition": {
+        "decision": "treat",
+        "urgency": "routine"
+      },
+      "unfilled": [
+        {
+          "field": "differential.likely",
+          "reason": "No unfilled likely diagnosis; J00 is supported by the recorded findings."
+        },
+        {
+          "field": "differential.alternatives",
+          "reason": "No unfilled alternative diagnosis; J06.9 is a reasonable alternative."
+        },
+        {
+          "field": "differential.cannotMiss",
+          "reason": "No unfilled cannot-miss diagnosis; J18.9 is included for exclusion."
+        },
+        {
+          "field": "disposition",
+          "reason": "Disposition is supported: no red flags recorded, so primary-care treatment is appropriate."
+        }
+      ],
+      "meta": {
+        "version": "mira-service/0.1.0+contract=1+provider=openrouter+data=synthetic-only+plan=deepseek/deepseek-v4.1-flash+assess=deepseek/deepseek-v4.1-flash+experimental",
+        "model": "deepseek/deepseek-v4.1-flash+deepseek/deepseek-v4.1-flash",
+        "costUsd": 0.010288
+      }
+    },
+    "traceId": "b2bf3638-02d8-4dea-bda1-b24e2b3eb872",
+    "createdAt": "2026-10-08T20:50:52.529Z"
+  },
+  "audit": {
+    "latencyMs": 34782,
+    "costUsd": 0.010288,
+    "calls": [
+      {
+        "role": "plan",
+        "model_requested": "deepseek/deepseek-v4.1-flash",
+        "model_served": "deepseek/deepseek-v4.1-flash",
+        "provider_served": "Morph",
+        "cost_usd": 0.003037,
+        "cost_source": "reported"
+      },
+      {
+        "role": "assessment",
+        "model_requested": "deepseek/deepseek-v4.1-flash",
+        "model_served": "deepseek/deepseek-v4.1-flash",
+        "provider_served": "Together",
+        "cost_usd": 0.007251,
+        "cost_source": "reported"
+      }
+    ]
+  }
+}

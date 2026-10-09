@@ -1,0 +1,320 @@
+{
+ "date": "2026-10-09",
+ "kind": "browser E2E, Playwright 1.63 + installed Chrome, fresh profile, synthetic cases only",
+ "services": {
+  "gateway": "127.0.0.1:3104 standalone build Vsy2e_MDr6t0b4Brg8mWq",
+  "mira": "127.0.0.1:8791 +ddx=provisional+assessment=fast+therapy=fast"
+ },
+ "chatBehaviour": {
+  "textarea": {
+   "emptyHeight": 52,
+   "grownHeight": 82
+  },
+  "bubbleMs": 17,
+  "afterSend": {
+   "textareaValue": "",
+   "textareaEnabled": true,
+   "focused": true,
+   "stopButton": 1
+  },
+  "stepsSeen": [
+   "Permintaan klinis diterima",
+   "Intensi klinis teridentifikasi",
+   "Sentra Oracle aktif…"
+  ],
+  "answerSeconds": 2.628,
+  "typingDoneSeconds": 6.95,
+  "bottomGapWhenDone": 0,
+  "restoredAfterModeSwitch": true,
+  "finished": true,
+  "activeSectionsSeen": [
+   "0",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5"
+  ],
+  "sectionGrowth": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "navGrowth": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "unfoldFrames": 32,
+  "doseNotation": true,
+  "hasDDI": true,
+  "hasKI": true,
+  "ligatures": "no-contextual",
+  "problems": [],
+  "banned": []
+ },
+ "therapyCase": "Laki-laki 28 tahun, duh tubuh uretra purulen 3 hari, nyeri saat berkemih (+ kontak seksual baru, tanpa alergi)",
+ "latency12": [
+  {
+   "text": "Nyeri perut kanan bawah sejak 1 hari",
+   "seconds": 3.399,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": true,
+   "therapyKI": true,
+   "codes": [
+    "N80.9",
+    "K35.8",
+    "A00.9",
+    "R10.3",
+    "K35"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Demam dan batuk 3 hari",
+   "seconds": 2.856,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": true,
+   "therapyKI": true,
+   "codes": [
+    "J02.9",
+    "J03.9",
+    "J18.9",
+    "J06.9",
+    "J06"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Sakit kepala",
+   "seconds": 2.898,
+   "penunjang": "Tidak perlu saat ini.",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": false,
+   "therapyKI": false,
+   "codes": [
+    "G43",
+    "G44.2",
+    "I61",
+    "R51"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Demam tinggi 4 hari, nyeri kepala, nyeri otot, ptekie",
+   "seconds": 2.868,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": true,
+   "therapyKI": true,
+   "codes": [
+    "A90",
+    "A75.9",
+    "A09",
+    "A96.0",
+    "A98.4",
+    "A22.9"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Nyeri perut kanan bawah sejak 1 hari",
+   "seconds": 3.378,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": false,
+   "therapyDDI": false,
+   "therapyKI": false,
+   "codes": [
+    "K35.8",
+    "N83.2",
+    "A00.9",
+    "K65.0",
+    "R10.0",
+    "K35"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Demam dan batuk 3 hari",
+   "seconds": 2.9,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": true,
+   "therapyKI": true,
+   "codes": [
+    "J02.9",
+    "J03.9",
+    "J18.9",
+    "J06.9",
+    "J06"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Sakit kepala",
+   "seconds": 2.895,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": true,
+   "therapyKI": true,
+   "codes": [
+    "G43",
+    "G44.2",
+    "I61",
+    "R51"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Demam tinggi 4 hari, nyeri kepala, nyeri otot, ptekie",
+   "seconds": 3.402,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": true,
+   "therapyKI": true,
+   "codes": [
+    "A90",
+    "A75.9",
+    "A09",
+    "A96.0",
+    "A98.4",
+    "A91"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Nyeri perut kanan bawah sejak 1 hari",
+   "seconds": 2.88,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": false,
+   "therapyDDI": false,
+   "therapyKI": false,
+   "codes": [
+    "K35.8",
+    "N70.9",
+    "N23",
+    "A00.9",
+    "R10.0",
+    "K35"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Demam dan batuk 3 hari",
+   "seconds": 2.887,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": false,
+   "therapyKI": false,
+   "codes": [
+    "J02.9",
+    "J03.9",
+    "J18.9",
+    "J06.9",
+    "J06"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Sakit kepala",
+   "seconds": 2.902,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": true,
+   "therapyKI": true,
+   "codes": [
+    "G43",
+    "G44.2",
+    "I61",
+    "R51"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "text": "Demam tinggi 4 hari, nyeri kepala, nyeri otot, ptekie",
+   "seconds": 3.405,
+   "penunjang": "Perlu",
+   "badge": "Draf analisis",
+   "hasSummary": true,
+   "therapyDose": true,
+   "therapyDDI": true,
+   "therapyKI": true,
+   "codes": [
+    "A90",
+    "A75.9",
+    "A09",
+    "A96.0",
+    "A98.4",
+    "A22.9"
+   ],
+   "spinnerLeft": 0,
+   "errorShown": 0
+  },
+  {
+   "n": 12,
+   "max": 3.405,
+   "median": 2.9,
+   "over5": 0,
+   "draftsBeforeReload": 12,
+   "draftsAfterReload": 12,
+   "consoleProblems": [
+    "error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+   ]
+  }
+ ],
+ "screenshots": [
+  "sentrapedia-chat-thinking.png",
+  "sentrapedia-chat-unfold.png",
+  "sentrapedia-chat-typing.png",
+  "sentrapedia-chat-therapy.png",
+  "sentrapedia-chat-therapy-mobile.png"
+ ],
+ "limits": [
+  "appendicitis complaint-only: 2/3 runs every therapy copy returned an empty regimen; the section then shows the Oracle PPK narrative",
+  "therapy is model output for synthetic cases; clinical accuracy not validated",
+  "the one console 404 is the browser's /favicon.ico"
+ ],
+ "mobile390": "same chat E2E at 390x844: bubble 22 ms, answer 3.13 s, six sections, therapy dose + DDI + Kontraindikasi, no console errors; screenshot sentrapedia-chat-therapy-mobile.png",
+ "latency12Build": "Z80wjCF_xamyIM_NJugNq (the later build changes only cancel handling and detail-line styling)"
+}

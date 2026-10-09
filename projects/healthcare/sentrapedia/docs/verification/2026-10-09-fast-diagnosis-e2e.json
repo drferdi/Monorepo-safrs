@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-09",
+  "target": "complete diagnosis draft rendered in under 5 s after Enter",
+  "configuration": {
+    "service": "dedicated MIRA 127.0.0.1:8791 via scripts/run-mira-deepseek.ps1",
+    "model": "google/gemini-2.5-flash (both parts)",
+    "flags": ["MIRA_PROVISIONAL_DIFFERENTIAL=true", "MIRA_FAST_ASSESSMENT=true", "MIRA_OPENROUTER_ZDR=false", "MIRA_OPENROUTER_PROVIDER_SORT=throughput"],
+    "version_suffix": "+ddx=provisional+assessment=fast",
+    "fast_mode": "no planning call; diagnosis (differential/evidence/disposition) and workup (missingInformation/nextBestActions) in parallel; each part sent 3 times, first valid JSON wins, losers cancelled and charged at the winner's cost"
+  },
+  "browser_e2e": {
+    "tool": "Playwright 1.63 with installed Google Chrome, fresh profile, http://127.0.0.1:3104",
+    "flow": "type fictional complaint in composer, tick fictional-data confirmation, press Enter, wait for the new assistant draft",
+    "cases": ["Nyeri perut kanan bawah sejak 1 hari", "Demam dan batuk 3 hari", "Sakit kepala", "Demam tinggi 4 hari, nyeri kepala, nyeri otot, ptekie"],
+    "runs": 12,
+    "seconds": {"max": 3.403, "median": 2.881, "over5": 0},
+    "every_run": {"badge": "Draf analisis", "ringkasanKasus": true, "spinnerLeft": 0, "errorShown": 0},
+    "drafts_before_reload": 12,
+    "drafts_after_reload": 12,
+    "console": "one 404 for the browser's default /favicon.ico (app has no favicon); unrelated to diagnosis",
+    "screenshot": "docs/verification/sentrapedia-fast-diagnosis-desktop.png"
+  },
+  "audit_last_12": {"status": "all ok", "service_latency_max_ms": 3093, "cost_usd_total": 0.070171, "cost_usd_max_step": 0.007074},
+  "earlier_runs_same_session": {
+    "two_stage_gemini_with_provisional": "3/3 ok, 7.9-12.0 s",
+    "fast_two_copies_gateway": "12/12 under 5 s (max 3.89/4.24 s), but browser 2/8 at 5.43 s: one copy returned empty output, one slow copy; fixed by validating JSON inside the race and using 3 copies",
+    "invalid_json_seen": "trace 4a443e3b MODEL_OUTPUT_INVALID before the race validated JSON"
+  },
+  "limits": "Fictional cases only; clinical quality not validated (examples: non-endemic cannotMiss such as A96.0 Machupo in the dengue-like case, symptom codes R51/R10.x still chosen as likely at times). No hosted deployment."
+}

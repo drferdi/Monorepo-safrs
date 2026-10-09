@@ -1,0 +1,203 @@
+[
+  {
+    "contextPanel": false,
+    "documentWidth": 320,
+    "headerControls": [
+      {
+        "label": "Buka Command Center",
+        "left": 175,
+        "right": 207
+      },
+      {
+        "label": "Aktifkan Focus Mode",
+        "left": 208,
+        "right": 240
+      },
+      {
+        "label": "Konteks dan Timeline",
+        "left": 241,
+        "right": 273
+      },
+      {
+        "label": " Ekspor",
+        "left": 274,
+        "right": 306
+      }
+    ],
+    "height": 568,
+    "width": 320
+  },
+  {
+    "contextPanel": false,
+    "documentWidth": 390,
+    "headerControls": [
+      {
+        "label": "Buka Command Center",
+        "left": 245,
+        "right": 277
+      },
+      {
+        "label": "Aktifkan Focus Mode",
+        "left": 278,
+        "right": 310
+      },
+      {
+        "label": "Konteks dan Timeline",
+        "left": 311,
+        "right": 343
+      },
+      {
+        "label": " Ekspor",
+        "left": 344,
+        "right": 376
+      }
+    ],
+    "height": 844,
+    "width": 390
+  },
+  {
+    "contextPanel": false,
+    "documentWidth": 760,
+    "headerControls": [
+      {
+        "label": "Buka Command Center",
+        "left": 615,
+        "right": 647
+      },
+      {
+        "label": "Aktifkan Focus Mode",
+        "left": 648,
+        "right": 680
+      },
+      {
+        "label": "Konteks dan Timeline",
+        "left": 681,
+        "right": 713
+      },
+      {
+        "label": " Ekspor",
+        "left": 714,
+        "right": 746
+      }
+    ],
+    "height": 650,
+    "width": 760
+  },
+  {
+    "contextPanel": false,
+    "documentWidth": 768,
+    "headerControls": [
+      {
+        "label": "Buka Command Center",
+        "left": 559.75,
+        "right": 591.75
+      },
+      {
+        "label": "Aktifkan Focus Mode",
+        "left": 597.75,
+        "right": 629.75
+      },
+      {
+        "label": "Konteks dan Timeline",
+        "left": 635.75,
+        "right": 667.75
+      },
+      {
+        "label": " Ekspor",
+        "left": 673.75,
+        "right": 745
+      }
+    ],
+    "height": 768,
+    "width": 768
+  },
+  {
+    "contextPanel": false,
+    "documentWidth": 1024,
+    "headerControls": [
+      {
+        "label": "Buka Command Center",
+        "left": 801.53125,
+        "right": 833.53125
+      },
+      {
+        "label": "Aktifkan Focus Mode",
+        "left": 839.53125,
+        "right": 871.53125
+      },
+      {
+        "label": "Konteks dan Timeline",
+        "left": 877.53125,
+        "right": 909.53125
+      },
+      {
+        "label": " Ekspor",
+        "left": 915.53125,
+        "right": 1001
+      }
+    ],
+    "height": 768,
+    "width": 1024
+  },
+  {
+    "contextPanel": true,
+    "documentWidth": 1280,
+    "headerControls": [
+      {
+        "label": "Buka Command Center",
+        "left": 797.53125,
+        "right": 829.53125
+      },
+      {
+        "label": "Aktifkan Focus Mode",
+        "left": 835.53125,
+        "right": 867.53125
+      },
+      {
+        "label": "Konteks dan Timeline",
+        "left": 873.53125,
+        "right": 905.53125
+      },
+      {
+        "label": " Ekspor",
+        "left": 911.53125,
+        "right": 997
+      }
+    ],
+    "height": 900,
+    "width": 1280
+  },
+  {
+    "contextPanel": true,
+    "documentWidth": 1536,
+    "headerControls": [
+      {
+        "label": "Buka Command Center",
+        "left": 908.390625,
+        "right": 940.390625
+      },
+      {
+        "label": "Aktifkan Focus Mode",
+        "left": 946.390625,
+        "right": 978.390625
+      },
+      {
+        "label": "Konteks dan Timeline",
+        "left": 984.390625,
+        "right": 1016.390625
+      },
+      {
+        "label": " Ekspor",
+        "left": 1022.390625,
+        "right": 1107.859375
+      },
+      {
+        "label": "Tingkatkan",
+        "left": 1113.859375,
+        "right": 1223
+      }
+    ],
+    "height": 960,
+    "width": 1536
+  }
+]

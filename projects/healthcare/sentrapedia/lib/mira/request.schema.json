@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentra/med-assist/diagnosis-engine/mira-step-request.schema.json",
+  "title": "MIRA reasoning service: step request",
+  "description": "Sent by Med Assist to POST {VITE_MIRA_SERVICE_URL}/v1/diagnosis/step. The case is de-identified and has passed lib/api/pii-guard.ts before sending. Mirrors CaseState in lib/diagnosis-engine/types.ts.",
+  "type": "object",
+  "required": ["contractVersion", "traceId", "case"],
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": { "const": "1" },
+    "traceId": { "type": "string", "minLength": 1 },
+    "case": { "$ref": "#/$defs/caseState" }
+  },
+  "$defs": {
+    "stringList": { "type": "array", "items": { "type": "string" } },
+    "optionalNumber": { "type": "number" },
+    "caseState": {
+      "type": "object",
+      "required": [
+        "demographics",
+        "chiefComplaint",
+        "anamnesis",
+        "vitals",
+        "physicalExam",
+        "results",
+        "currentMedications",
+        "knownConditions",
+        "allergies",
+        "facilityCapabilities"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "demographics": {
+          "type": "object",
+          "required": ["ageYears", "sex"],
+          "additionalProperties": false,
+          "properties": {
+            "ageYears": { "type": ["number", "null"], "minimum": 0 },
+            "sex": { "enum": ["M", "F", "unknown"] },
+            "pregnant": { "type": "boolean" }
+          }
+        },
+        "chiefComplaint": { "type": "string" },
+        "anamnesis": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "freeText": { "type": "string" },
+            "qa": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["question", "answer"],
+                "additionalProperties": false,
+                "properties": {
+                  "question": { "type": "string" },
+                  "answer": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "vitals": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "systolic": { "$ref": "#/$defs/optionalNumber" },
+            "diastolic": { "$ref": "#/$defs/optionalNumber" },
+            "heartRate": { "$ref": "#/$defs/optionalNumber" },
+            "respiratoryRate": { "$ref": "#/$defs/optionalNumber" },
+            "temperature": { "$ref": "#/$defs/optionalNumber" },
+            "spo2": { "$ref": "#/$defs/optionalNumber" },
+            "gcs": { "$ref": "#/$defs/optionalNumber" }
+          }
+        },
+        "physicalExam": { "$ref": "#/$defs/stringList" },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": ["string", "number"] },
+              "unit": { "type": "string" },
+              "flag": { "enum": ["normal", "abnormal"] }
+            }
+          }
+        },
+        "currentMedications": { "$ref": "#/$defs/stringList" },
+        "knownConditions": { "$ref": "#/$defs/stringList" },
+        "allergies": { "$ref": "#/$defs/stringList" },
+        "facilityCapabilities": { "$ref": "#/$defs/stringList" }
+      }
+    }
+  }
+}

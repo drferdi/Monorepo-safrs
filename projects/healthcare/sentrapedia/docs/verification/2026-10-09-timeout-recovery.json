@@ -1,0 +1,38 @@
+{
+  "observedAt": "2026-10-09T05:13:09.0817824+07:00",
+  "failedAnalysis": {
+    "loggedAt": "2026-10-09T05:07:13.299278+07:00",
+    "traceId": "14aa1024-5785-4e52-828d-081d6bd71e69",
+    "status": "unavailable",
+    "errorCode": "TIMEOUT",
+    "latencyMs": 60000,
+    "recordedCostUsd": 0,
+    "completedCalls": 0
+  },
+  "diagnosis": "Service returned contract-valid unavailable/TIMEOUT after 60000 ms. Provider slowness, quota and billing cause are not established.",
+  "configuredServiceDeadlineSeconds": 120,
+  "workspaceTimeoutSeconds": 135,
+  "inferenceRetried": false,
+  "retryDecision": "Jev active stop_retry",
+  "health": {
+    "configured": true,
+    "reachable": true,
+    "modelReady": true
+  },
+  "verification": {
+    "typecheckExit": 0,
+    "lintExit": 0,
+    "testsPassed": 80,
+    "testFilesPassed": 7,
+    "buildId": "xeamyT4O_BWiPuzHinZgY",
+    "buildExit": 0,
+    "deployDryRunExit": 0,
+    "standaloneTracesValidated": 6,
+    "externalSourceDependencies": 0
+  },
+  "limitations": [
+    "No live inference after the deadline change; completion remains unverified.",
+    "Recorded zero cost is not proof that the upstream provider did not charge.",
+    "Clinical output remains a fictional draft for review."
+  ]
+}

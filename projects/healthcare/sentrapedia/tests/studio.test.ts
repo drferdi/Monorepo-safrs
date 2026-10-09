@@ -1,0 +1,53 @@
+import { describe, expect, it } from "vitest";
+import { intentGroups, documentSections, replaceSection, encounterTimeline, contextFacts } from "../lib/studio";
+import { defaultReviewItems } from "../lib/workflow";
+import { modeIds } from "../lib/drafts";
+import { initialWorkspace, restoreWorkspace, workspaceReducer, type Message, type Workspace } from "../lib/workspace";
+
+const message: Message = { id: "doc", role: "assistant", content: "# Note\n\n## History\nOriginal\n\n## Plan\nKeep\n---\nFooter", mode: "clinic", createdAt: "2026-10-09T01:00:00Z" };
+const state: Workspace = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [message] }] };
+
+describe("document provenance and review", () => {
+  it("requires review before final and resets changed content to draft while retaining the baseline", () => {
+    const action = { type: "message.review", encounterId: "demo-encounter", messageId: "doc", status: "final" } as const;
+    expect(workspaceReducer(state, action).encounters[0].messages[0].reviewStatus).not.toBe("final");
+    const ready = { ...state, encounters: [{ ...state.encounters[0], messages: [{ ...message, reviewItems: defaultReviewItems.map((item) => ({ ...item, checked: true })) }] }] };
+    const reviewed = workspaceReducer(ready, { ...action, status: "reviewed" });
+    const final = workspaceReducer(reviewed, action);
+    expect(final.encounters[0].messages[0].reviewStatus).toBe("final");
+    expect(workspaceReducer(final, { type: "message.edit", encounterId: "demo-encounter", messageId: "doc", content: message.content }).encounters[0].messages[0].reviewStatus).toBe("final");
+    const changed = workspaceReducer(final, { type: "message.edit", encounterId: "demo-encounter", messageId: "doc", content: "Changed" }).encounters[0].messages[0];
+    expect(changed.reviewStatus).toBe("draft");
+    expect(changed.originalContent).toBe(message.content);
+  });
+  it("preserves legacy documents and discards malformed optional metadata only", () => {
+    expect(restoreWorkspace(JSON.stringify(state))).toEqual(state);
+    const malformed = { ...state, encounters: [{ ...state.encounters[0], messages: [{ ...message, sourceText: 42, reviewStatus: "approved", originalContent: null }] }] };
+    expect(restoreWorkspace(JSON.stringify(malformed)).encounters[0].messages[0]).toEqual(message);
+  });
+});
+
+describe("workspace presentation helpers", () => {
+  it("replaces a section without altering another section, headings, or footer", () => {
+    const sections = documentSections(message.content);
+    const history = sections.find((section) => section.title === "History")!;
+    expect(replaceSection(message.content, history, "Updated\n\n")).toBe(message.content.replace("Original\n\n", "Updated\n\n"));
+    expect(sections.find((section) => section.title === "Plan")?.body).toBe("Keep\n");
+  });
+  it("covers every mode once in four intent groups", () => {
+    const ids = intentGroups.flatMap((group) => group.modes);
+    expect([...ids].sort()).toEqual([...modeIds].sort());
+    expect(new Set(ids).size).toBe(modeIds.length);
+  });
+  it("filters timeline by patient and keeps unlinked encounters separate", () => {
+    const encounters = [...state.encounters, { ...state.encounters[0], id: "other", patientId: "other" }, { ...state.encounters[0], id: "unlinked", patientId: null }];
+    expect(encounterTimeline(encounters, encounters[0]).map((item) => item.id)).toEqual(["demo-encounter"]);
+    expect(encounterTimeline(encounters, encounters[2]).map((item) => item.id)).toEqual(["unlinked"]);
+    expect(encounterTimeline(encounters, undefined)).toEqual([]);
+  });
+  it("keeps source labels separate and does not infer absent allergies", () => {
+    const facts = contextFacts("Keluhan: Contoh fiktif", "Obat: Obat contoh");
+    expect(facts.find((fact) => fact.key === "allergies")?.values).toEqual([]);
+    expect(facts.find((fact) => fact.key === "concern")?.values).toEqual([{ source: "Konteks Encounter", text: "Contoh fiktif" }]);
+  });
+});

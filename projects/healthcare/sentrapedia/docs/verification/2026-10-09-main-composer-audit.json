@@ -1,0 +1,35 @@
+{
+  "traceId": "00f3b79a-9cbc-4942-a159-660132bb1e09",
+  "status": "ok",
+  "latencyMs": 39266,
+  "costUsd": 0.021168,
+  "costSource": [
+    "reported"
+  ],
+  "models": {
+    "plan": "deepseek/deepseek-v4.1-flash",
+    "assessment": "deepseek/deepseek-v4.1-flash"
+  },
+  "calls": [
+    {
+      "n": 1,
+      "role": "plan",
+      "model_requested": "deepseek/deepseek-v4.1-flash",
+      "model_served": "deepseek/deepseek-v4.1-flash",
+      "provider_served": "Parasail",
+      "cost_usd": 0.010006,
+      "cost_source": "reported",
+      "latency_s": 20.22
+    },
+    {
+      "n": 2,
+      "role": "assessment",
+      "model_requested": "deepseek/deepseek-v4.1-flash",
+      "model_served": "deepseek/deepseek-v4.1-flash",
+      "provider_served": "Together",
+      "cost_usd": 0.011162,
+      "cost_source": "reported",
+      "latency_s": 19.03
+    }
+  ]
+}

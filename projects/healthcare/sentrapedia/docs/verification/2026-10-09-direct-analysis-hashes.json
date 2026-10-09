@@ -1,0 +1,414 @@
+{
+  "count": 68,
+  "mismatches": [],
+  "files": [
+    {
+      "file": ".env.example",
+      "sourceSha256": "1ff757ad7350adc4ab9adfa89fdab4511ac94697c53285829acf52b99ede02f6",
+      "extractionSha256": "1ff757ad7350adc4ab9adfa89fdab4511ac94697c53285829acf52b99ede02f6",
+      "equal": true
+    },
+    {
+      "file": "app\\api\\mira\\route.ts",
+      "sourceSha256": "1b4b3be7fb511de1da443308e9a27a4210822870fd8864de42329bf0e5c463d5",
+      "extractionSha256": "1b4b3be7fb511de1da443308e9a27a4210822870fd8864de42329bf0e5c463d5",
+      "equal": true
+    },
+    {
+      "file": "app\\globals.css",
+      "sourceSha256": "dfc72ea4de64025073574ce4271da30cbe86b64eb1b52d1ec876db938ad8c0b8",
+      "extractionSha256": "dfc72ea4de64025073574ce4271da30cbe86b64eb1b52d1ec876db938ad8c0b8",
+      "equal": true
+    },
+    {
+      "file": "app\\layout.tsx",
+      "sourceSha256": "16d2644487900e5f58849d46f052d7c316331fa0c1fcbffe70d414b48dd2082c",
+      "extractionSha256": "16d2644487900e5f58849d46f052d7c316331fa0c1fcbffe70d414b48dd2082c",
+      "equal": true
+    },
+    {
+      "file": "app\\loading.tsx",
+      "sourceSha256": "2303c874f307134f23e182222f30b06fab7dfbb3ba646e03973e026aad09d096",
+      "extractionSha256": "2303c874f307134f23e182222f30b06fab7dfbb3ba646e03973e026aad09d096",
+      "equal": true
+    },
+    {
+      "file": "app\\page.tsx",
+      "sourceSha256": "a919f859cac4ed9a2ad45a444e50d54830f2a6ff774a0a9160d64ab14acf79e3",
+      "extractionSha256": "a919f859cac4ed9a2ad45a444e50d54830f2a6ff774a0a9160d64ab14acf79e3",
+      "equal": true
+    },
+    {
+      "file": "app\\sentra-tokens.css",
+      "sourceSha256": "e02db587593b180a7195fa4d12bdec5762bef4f9d4f2d89d1f4f024152f37474",
+      "extractionSha256": "e02db587593b180a7195fa4d12bdec5762bef4f9d4f2d89d1f4f024152f37474",
+      "equal": true
+    },
+    {
+      "file": "assets\\sentra-logomark-approved-reference.png",
+      "sourceSha256": "8fdff9096da0cdd7929c5266ce7ea78afc4384aae1a20ac3d38ebdf09d5c1e3c",
+      "extractionSha256": "8fdff9096da0cdd7929c5266ce7ea78afc4384aae1a20ac3d38ebdf09d5c1e3c",
+      "equal": true
+    },
+    {
+      "file": "capsule.json",
+      "sourceSha256": "4014b180b93fec8a4e20b630f2fba42c680de1c9330e50ec065a84ee0f57d524",
+      "extractionSha256": "4014b180b93fec8a4e20b630f2fba42c680de1c9330e50ec065a84ee0f57d524",
+      "equal": true
+    },
+    {
+      "file": "components\\brand.tsx",
+      "sourceSha256": "ddcfb545858f416e1fcf94f7bd98c63f9031bc8aefa5f9cf0331f46f323cedea",
+      "extractionSha256": "ddcfb545858f416e1fcf94f7bd98c63f9031bc8aefa5f9cf0331f46f323cedea",
+      "equal": true
+    },
+    {
+      "file": "components\\clinical-panel.tsx",
+      "sourceSha256": "66c31fa4d0fb7b67c5b446a0448f4a6a3650ff5ba76ef8961f808b724b6ed13e",
+      "extractionSha256": "66c31fa4d0fb7b67c5b446a0448f4a6a3650ff5ba76ef8961f808b724b6ed13e",
+      "equal": true
+    },
+    {
+      "file": "components\\command-palette.tsx",
+      "sourceSha256": "a9fe79e3e89004eb669f2ed1298b9829a215473162a046a4f2387e90d8e16e14",
+      "extractionSha256": "a9fe79e3e89004eb669f2ed1298b9829a215473162a046a4f2387e90d8e16e14",
+      "equal": true
+    },
+    {
+      "file": "components\\composer.tsx",
+      "sourceSha256": "89667812f9af71e933d59a2648104ccc0ad04aeee2656c4d14d76da885fa837b",
+      "extractionSha256": "89667812f9af71e933d59a2648104ccc0ad04aeee2656c4d14d76da885fa837b",
+      "equal": true
+    },
+    {
+      "file": "components\\dialog.tsx",
+      "sourceSha256": "3aeff9ea3b7579325a04deec5cf00515c961af08116e85e93ec971cc00984546",
+      "extractionSha256": "3aeff9ea3b7579325a04deec5cf00515c961af08116e85e93ec971cc00984546",
+      "equal": true
+    },
+    {
+      "file": "components\\document-studio.tsx",
+      "sourceSha256": "c1d097f601a2fab3c046417e8ee0a3aed77ff8135952db749be2ca7598cce899",
+      "extractionSha256": "c1d097f601a2fab3c046417e8ee0a3aed77ff8135952db749be2ca7598cce899",
+      "equal": true
+    },
+    {
+      "file": "components\\document-workflow.tsx",
+      "sourceSha256": "729987b0a2e9e8e7ad7a3b254f7dcef764ffe9da0c3043fb4f8101aff52a4718",
+      "extractionSha256": "729987b0a2e9e8e7ad7a3b254f7dcef764ffe9da0c3043fb4f8101aff52a4718",
+      "equal": true
+    },
+    {
+      "file": "components\\forms.tsx",
+      "sourceSha256": "76b63488e75b7c7fa7ce7f839ea51e00699290259fb83ae4ac0dd983f5e0ddc1",
+      "extractionSha256": "76b63488e75b7c7fa7ce7f839ea51e00699290259fb83ae4ac0dd983f5e0ddc1",
+      "equal": true
+    },
+    {
+      "file": "components\\knowledge-dialog.tsx",
+      "sourceSha256": "570b5eb86b98154d8c967d9cbc5db3371fc690ebeb3bc64c48c303c43377ae5d",
+      "extractionSha256": "570b5eb86b98154d8c967d9cbc5db3371fc690ebeb3bc64c48c303c43377ae5d",
+      "equal": true
+    },
+    {
+      "file": "components\\message-card.tsx",
+      "sourceSha256": "8533f601a58c99958030c43054e17f7bd611c936dde81d18112d2c3efe43c48f",
+      "extractionSha256": "8533f601a58c99958030c43054e17f7bd611c936dde81d18112d2c3efe43c48f",
+      "equal": true
+    },
+    {
+      "file": "components\\mira-case-form.tsx",
+      "sourceSha256": "89685cba6dae884c41328dd09bb358c80ffab9b8fc68de37fee91517b12d3140",
+      "extractionSha256": "89685cba6dae884c41328dd09bb358c80ffab9b8fc68de37fee91517b12d3140",
+      "equal": true
+    },
+    {
+      "file": "components\\pixel-loader.tsx",
+      "sourceSha256": "471cf4e87af91ae197fea70f1b698a924b774ef465a04faa12d1fa8d7dfd3d29",
+      "extractionSha256": "471cf4e87af91ae197fea70f1b698a924b774ef465a04faa12d1fa8d7dfd3d29",
+      "equal": true
+    },
+    {
+      "file": "components\\scribe.tsx",
+      "sourceSha256": "9ed972da7a304afa2c6f23b646a924cd846b696422127bdc26441248637ee5b0",
+      "extractionSha256": "9ed972da7a304afa2c6f23b646a924cd846b696422127bdc26441248637ee5b0",
+      "equal": true
+    },
+    {
+      "file": "components\\sidebar-submenu.tsx",
+      "sourceSha256": "2948edfb43f1f78ba14b23de2482be6562266676b8ed10059d9a1552ad958135",
+      "extractionSha256": "2948edfb43f1f78ba14b23de2482be6562266676b8ed10059d9a1552ad958135",
+      "equal": true
+    },
+    {
+      "file": "components\\sidebar.tsx",
+      "sourceSha256": "918fb80be36f88fda6aa8c0c86ec726fedf80f2cfa06fff059390bc4d5bac306",
+      "extractionSha256": "918fb80be36f88fda6aa8c0c86ec726fedf80f2cfa06fff059390bc4d5bac306",
+      "equal": true
+    },
+    {
+      "file": "components\\template-library.tsx",
+      "sourceSha256": "93372f33190bcb54e19a38f0006e42f481224e8d2b315449349b0558835a7053",
+      "extractionSha256": "93372f33190bcb54e19a38f0006e42f481224e8d2b315449349b0558835a7053",
+      "equal": true
+    },
+    {
+      "file": "components\\work-queue.tsx",
+      "sourceSha256": "aacf9177deef399975646e3480352e7108661d90e1d4534b605fd5b36a3cf741",
+      "extractionSha256": "aacf9177deef399975646e3480352e7108661d90e1d4534b605fd5b36a3cf741",
+      "equal": true
+    },
+    {
+      "file": "components\\workspace.tsx",
+      "sourceSha256": "e78923718cfa5a506548c52ddf52a075be03a9be6f158f52e4257f163b3672aa",
+      "extractionSha256": "e78923718cfa5a506548c52ddf52a075be03a9be6f158f52e4257f163b3672aa",
+      "equal": true
+    },
+    {
+      "file": "config/mira-deepseek.env.example",
+      "sourceSha256": "ecd2ccf9c7ca0db2832031e750f00aa68eeb4597530103e2e2acafb24312e036",
+      "extractionSha256": "ecd2ccf9c7ca0db2832031e750f00aa68eeb4597530103e2e2acafb24312e036",
+      "equal": true
+    },
+    {
+      "file": "config\\mira-free.env.example",
+      "sourceSha256": "abee4228f43bf4bc8c502832c992677e016e765e52fd0b046debb1ec31eac87e",
+      "extractionSha256": "abee4228f43bf4bc8c502832c992677e016e765e52fd0b046debb1ec31eac87e",
+      "equal": true
+    },
+    {
+      "file": "Dockerfile",
+      "sourceSha256": "98668f37248e867f243a6290468f620a089daf03132fb53398753e7e86d63fc0",
+      "extractionSha256": "98668f37248e867f243a6290468f620a089daf03132fb53398753e7e86d63fc0",
+      "equal": true
+    },
+    {
+      "file": "eslint.config.mjs",
+      "sourceSha256": "6e0819e9aa12117dbd9d5e476de941b504bc8d83f5e83f6e7c644f5d29848336",
+      "extractionSha256": "6e0819e9aa12117dbd9d5e476de941b504bc8d83f5e83f6e7c644f5d29848336",
+      "equal": true
+    },
+    {
+      "file": "lib/mira/composer.ts",
+      "sourceSha256": "0a12e7111fce466b62fb75740851e7b328237add67ef6c627ac16a8d190816f8",
+      "extractionSha256": "0a12e7111fce466b62fb75740851e7b328237add67ef6c627ac16a8d190816f8",
+      "equal": true
+    },
+    {
+      "file": "lib/mira/model-profile.ts",
+      "sourceSha256": "c01a0d22321fa0fe5d3811cdb5662ddf5b4fbb3d393b8cb0adfa044311aeae74",
+      "extractionSha256": "c01a0d22321fa0fe5d3811cdb5662ddf5b4fbb3d393b8cb0adfa044311aeae74",
+      "equal": true
+    },
+    {
+      "file": "lib\\drafts.ts",
+      "sourceSha256": "77f4f2bd2800beb9101603ea982dc3cd918cd565b27fe6f28b0fa70aca75c8e0",
+      "extractionSha256": "77f4f2bd2800beb9101603ea982dc3cd918cd565b27fe6f28b0fa70aca75c8e0",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\contract.ts",
+      "sourceSha256": "c829152bc3025641d81cfb5b69b6f0f5a781f474b73f06b9a676108a9a76ac0f",
+      "extractionSha256": "c829152bc3025641d81cfb5b69b6f0f5a781f474b73f06b9a676108a9a76ac0f",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\free-profile.ts",
+      "sourceSha256": "f8835d48f0b1a1cf1e25b5c2ecee25468cbc154629de00809318e27502dd6686",
+      "extractionSha256": "f8835d48f0b1a1cf1e25b5c2ecee25468cbc154629de00809318e27502dd6686",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\gateway.ts",
+      "sourceSha256": "bb30f66e3e7456a4c70729e0ed84a551ac9a12bc70acbb34c1b9b3109286e2b6",
+      "extractionSha256": "bb30f66e3e7456a4c70729e0ed84a551ac9a12bc70acbb34c1b9b3109286e2b6",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\presentation.ts",
+      "sourceSha256": "a779c5d60b371ac8c766549079da21f95177473d4eccd9823e0f492165647b4b",
+      "extractionSha256": "a779c5d60b371ac8c766549079da21f95177473d4eccd9823e0f492165647b4b",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\request.schema.json",
+      "sourceSha256": "84eba75c9810b794d1875dde77fc204dd5515b879056a8b47c60eef398e607dc",
+      "extractionSha256": "84eba75c9810b794d1875dde77fc204dd5515b879056a8b47c60eef398e607dc",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\response.schema.json",
+      "sourceSha256": "6bb903b94fc7d3b55a33cd230f2e44e9f295128eaaecd0c3547d5701f8d3bde4",
+      "extractionSha256": "6bb903b94fc7d3b55a33cd230f2e44e9f295128eaaecd0c3547d5701f8d3bde4",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\SOURCE.md",
+      "sourceSha256": "3f59336852ba2235976cf698b42d1ba88e2995ea31241cb15760d27c53887d2c",
+      "extractionSha256": "3f59336852ba2235976cf698b42d1ba88e2995ea31241cb15760d27c53887d2c",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\types.ts",
+      "sourceSha256": "dbe0365b1bb026add2b872b7e89bc3700d5dab95a874731cf6c447a8cc9f2b2d",
+      "extractionSha256": "dbe0365b1bb026add2b872b7e89bc3700d5dab95a874731cf6c447a8cc9f2b2d",
+      "equal": true
+    },
+    {
+      "file": "lib\\mira\\validate-json.ts",
+      "sourceSha256": "8494a84484afd1da990a0b97f3ec78371d675aed47c3d6ebb695990059cd0f95",
+      "extractionSha256": "8494a84484afd1da990a0b97f3ec78371d675aed47c3d6ebb695990059cd0f95",
+      "equal": true
+    },
+    {
+      "file": "lib\\note-structure.ts",
+      "sourceSha256": "5386fc45b59eec41b58d14f91fbc4612fe1ffc938ca6e32cf2a30ffe1f9a6465",
+      "extractionSha256": "5386fc45b59eec41b58d14f91fbc4612fe1ffc938ca6e32cf2a30ffe1f9a6465",
+      "equal": true
+    },
+    {
+      "file": "lib\\oracle.ts",
+      "sourceSha256": "011324754308f164e88c879a85def0634b3b10828df8aec10e355ffdc187159a",
+      "extractionSha256": "011324754308f164e88c879a85def0634b3b10828df8aec10e355ffdc187159a",
+      "equal": true
+    },
+    {
+      "file": "lib\\studio.ts",
+      "sourceSha256": "454fc11747f402104f41874c5709ebd15d35d878d5d01a93c5fa2a8861d22f6c",
+      "extractionSha256": "454fc11747f402104f41874c5709ebd15d35d878d5d01a93c5fa2a8861d22f6c",
+      "equal": true
+    },
+    {
+      "file": "lib\\ui-labels.ts",
+      "sourceSha256": "b6957f302acd6d93e6bb9804c8d9cb0699672d83253b66e9dfb0e32ad7741516",
+      "extractionSha256": "b6957f302acd6d93e6bb9804c8d9cb0699672d83253b66e9dfb0e32ad7741516",
+      "equal": true
+    },
+    {
+      "file": "lib\\workflow.ts",
+      "sourceSha256": "85b8bec0b96c4b4ce450fdb04348248647012535a8f00044baf49bd1dc074649",
+      "extractionSha256": "85b8bec0b96c4b4ce450fdb04348248647012535a8f00044baf49bd1dc074649",
+      "equal": true
+    },
+    {
+      "file": "lib\\workspace.ts",
+      "sourceSha256": "8da176224b4e967f03bd4fde27fdd31b971085d23f49f812ff857a0b5061590a",
+      "extractionSha256": "8da176224b4e967f03bd4fde27fdd31b971085d23f49f812ff857a0b5061590a",
+      "equal": true
+    },
+    {
+      "file": "next.config.ts",
+      "sourceSha256": "75672fb1daffec7b85ee7f89311ac2e6512958d8caac46fdfae33ff3338fc6fa",
+      "extractionSha256": "75672fb1daffec7b85ee7f89311ac2e6512958d8caac46fdfae33ff3338fc6fa",
+      "equal": true
+    },
+    {
+      "file": "oracle\\data.ts",
+      "sourceSha256": "d7423acc04d2f986f7a460dd8d4711ee19772f32b7a05fcc07d3b5dcb8207946",
+      "extractionSha256": "d7423acc04d2f986f7a460dd8d4711ee19772f32b7a05fcc07d3b5dcb8207946",
+      "equal": true
+    },
+    {
+      "file": "oracle\\diseases-data.ts",
+      "sourceSha256": "e7107164ef7090af180fb4b19f80b6012375be056e83c46408ae01e058c2a1c5",
+      "extractionSha256": "e7107164ef7090af180fb4b19f80b6012375be056e83c46408ae01e058c2a1c5",
+      "equal": true
+    },
+    {
+      "file": "oracle\\diseases.json",
+      "sourceSha256": "0e5af5cbc9f71a1b1ffbb1dd399b135473a4427c899117b46d6558114e860ced",
+      "extractionSha256": "0e5af5cbc9f71a1b1ffbb1dd399b135473a4427c899117b46d6558114e860ced",
+      "equal": true
+    },
+    {
+      "file": "oracle\\sentrapedia.json",
+      "sourceSha256": "73e40882cdd313f46f406c99c3474aab9ebde44418d3e1681b0f5aaec9f9cd9a",
+      "extractionSha256": "73e40882cdd313f46f406c99c3474aab9ebde44418d3e1681b0f5aaec9f9cd9a",
+      "equal": true
+    },
+    {
+      "file": "package-lock.json",
+      "sourceSha256": "674ad2c0cdd283dd43c8618f30f3d459e49f46c1535d2a9bf445941061508149",
+      "extractionSha256": "674ad2c0cdd283dd43c8618f30f3d459e49f46c1535d2a9bf445941061508149",
+      "equal": true
+    },
+    {
+      "file": "package.json",
+      "sourceSha256": "6b3bd8fa2515ca72b08ef4f4491a0b8b9f29561cd39ee292a45c12984e2a0848",
+      "extractionSha256": "6b3bd8fa2515ca72b08ef4f4491a0b8b9f29561cd39ee292a45c12984e2a0848",
+      "equal": true
+    },
+    {
+      "file": "README.md",
+      "sourceSha256": "352b2533ff240ea8950ffaa76bdaad6b883fa64304300b7d814f140c853f8a20",
+      "extractionSha256": "352b2533ff240ea8950ffaa76bdaad6b883fa64304300b7d814f140c853f8a20",
+      "equal": true
+    },
+    {
+      "file": "scripts/run-mira-deepseek.ps1",
+      "sourceSha256": "da6b97d21118f8e55498c8e59070133748a613acd4a33dfda1913f9a8f015761",
+      "extractionSha256": "da6b97d21118f8e55498c8e59070133748a613acd4a33dfda1913f9a8f015761",
+      "equal": true
+    },
+    {
+      "file": "scripts\\deploy-dry-run.mjs",
+      "sourceSha256": "e216c67a63d9ba0b3fc19f6322b1abbce85139378b392c183360a376bc1eedb5",
+      "extractionSha256": "e216c67a63d9ba0b3fc19f6322b1abbce85139378b392c183360a376bc1eedb5",
+      "equal": true
+    },
+    {
+      "file": "scripts\\run-mira-free.ps1",
+      "sourceSha256": "f339b6a8b7a6d7e63b3a338cc4827c076f7cf65b009a49fdeb3d0d5bf4c06263",
+      "extractionSha256": "f339b6a8b7a6d7e63b3a338cc4827c076f7cf65b009a49fdeb3d0d5bf4c06263",
+      "equal": true
+    },
+    {
+      "file": "tests/mira-composer.test.ts",
+      "sourceSha256": "38ae2ae9eb25c5df79b47e6c47379f6f659557220a3e6c88ac2ef11a97c05c5c",
+      "extractionSha256": "38ae2ae9eb25c5df79b47e6c47379f6f659557220a3e6c88ac2ef11a97c05c5c",
+      "equal": true
+    },
+    {
+      "file": "tests/mira-paid.test.ts",
+      "sourceSha256": "c30ad871f5b410e0252ac9a13da2adee1ad7b41d5cbfae157b17f6a6fdea5d67",
+      "extractionSha256": "c30ad871f5b410e0252ac9a13da2adee1ad7b41d5cbfae157b17f6a6fdea5d67",
+      "equal": true
+    },
+    {
+      "file": "tests\\mira-free.test.ts",
+      "sourceSha256": "5dd178e369bb4fe0c72bbf4bc54453b64d8e65888b57e1c37b1a8951eaf4b973",
+      "extractionSha256": "5dd178e369bb4fe0c72bbf4bc54453b64d8e65888b57e1c37b1a8951eaf4b973",
+      "equal": true
+    },
+    {
+      "file": "tests\\oracle-mira.test.ts",
+      "sourceSha256": "d143fac9ca3c18619935e194337d828725ec31c0232ab7c5d4bb95da855701c1",
+      "extractionSha256": "d143fac9ca3c18619935e194337d828725ec31c0232ab7c5d4bb95da855701c1",
+      "equal": true
+    },
+    {
+      "file": "tests\\studio.test.ts",
+      "sourceSha256": "f42c89db4afb8769dbd4903bf09c52f8ef3b268b5001b1a8ec68324c7a9a6ce4",
+      "extractionSha256": "f42c89db4afb8769dbd4903bf09c52f8ef3b268b5001b1a8ec68324c7a9a6ce4",
+      "equal": true
+    },
+    {
+      "file": "tests\\workflow.test.ts",
+      "sourceSha256": "76fdb14beab5041685877f06b104ce049d99bff206a926151cd24be898372ee1",
+      "extractionSha256": "76fdb14beab5041685877f06b104ce049d99bff206a926151cd24be898372ee1",
+      "equal": true
+    },
+    {
+      "file": "tests\\workspace.test.ts",
+      "sourceSha256": "126f5f4682d139b99c2bf936a1cf050d23e430efadb821667e00d28902efa895",
+      "extractionSha256": "126f5f4682d139b99c2bf936a1cf050d23e430efadb821667e00d28902efa895",
+      "equal": true
+    },
+    {
+      "file": "tsconfig.json",
+      "sourceSha256": "755b218fee1c0c9f6e73ac3ee731b6c72d39b7ff2e8980f06ff02f6c3cfa1d64",
+      "extractionSha256": "755b218fee1c0c9f6e73ac3ee731b6c72d39b7ff2e8980f06ff02f6c3cfa1d64",
+      "equal": true
+    }
+  ]
+}

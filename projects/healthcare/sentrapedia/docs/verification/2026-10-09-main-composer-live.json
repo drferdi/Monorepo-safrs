@@ -1,0 +1,229 @@
+{
+  "kind": "MIRA",
+  "contractVersion": "1",
+  "case": {
+    "demographics": {
+      "ageYears": 67,
+      "sex": "M"
+    },
+    "chiefComplaint": "pasien mengeluh nyeri kepala bagian belakang selama 2 hari, nyeri menetap",
+    "anamnesis": {
+      "freeText": "Catatan kasus\nRiwayat HT"
+    },
+    "vitals": {},
+    "physicalExam": [],
+    "results": [],
+    "currentMedications": [],
+    "knownConditions": [],
+    "allergies": [],
+    "facilityCapabilities": []
+  },
+  "result": {
+    "contractVersion": "1",
+    "status": "ok",
+    "differential": {
+      "likely": [
+        {
+          "icd10": "R51",
+          "label": "Headache, unspecified",
+          "confidenceTier": "low"
+        }
+      ],
+      "alternatives": [
+        {
+          "icd10": "G44.2",
+          "label": "Tension-type headache",
+          "confidenceTier": "low"
+        },
+        {
+          "icd10": "I10",
+          "label": "Essential (primary) hypertension",
+          "confidenceTier": "low"
+        }
+      ],
+      "cannotMiss": [
+        {
+          "icd10": "I60.9",
+          "label": "Subarachnoid hemorrhage, unspecified",
+          "confidenceTier": "low"
+        },
+        {
+          "icd10": "I61.9",
+          "label": "Intracerebral hemorrhage, unspecified",
+          "confidenceTier": "low"
+        },
+        {
+          "icd10": "I63.9",
+          "label": "Cerebral infarction, unspecified",
+          "confidenceTier": "low"
+        },
+        {
+          "icd10": "G00.9",
+          "label": "Bacterial meningitis, unspecified",
+          "confidenceTier": "low"
+        },
+        {
+          "icd10": "M31.6",
+          "label": "Other giant cell arteritis",
+          "confidenceTier": "low"
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "icd10": "R51",
+        "supporting": [
+          "67-year-old male with persistent occipital headache for 2 days",
+          "Headache is the only documented symptom; no specific features of a primary headache syndrome are recorded"
+        ],
+        "opposing": [
+          "Age 67 and history of hypertension (Riwayat HT) are risk factors for secondary headache",
+          "No vital signs, physical examination, or results recorded to confirm primary headache or exclude secondary causes"
+        ]
+      },
+      {
+        "icd10": "G44.2",
+        "supporting": [
+          "Persistent headache for 2 days without documented red flags (not examined)"
+        ],
+        "opposing": [
+          "Occipital location, age 67, and hypertension may suggest secondary headache",
+          "No documented features of tension-type headache (e.g., bilateral, pressing, mild, no vomiting) and no examination to exclude secondary causes"
+        ]
+      },
+      {
+        "icd10": "I10",
+        "supporting": [
+          "History of hypertension (Riwayat HT)"
+        ],
+        "opposing": [
+          "No blood pressure recorded; headache may or may not be related to hypertension",
+          "No end-organ damage assessment recorded"
+        ]
+      },
+      {
+        "icd10": "I60.9",
+        "supporting": [
+          "Persistent occipital headache in a 67-year-old with hypertension"
+        ],
+        "opposing": [
+          "No thunderclap onset, meningeal signs, or focal deficits recorded; however these were not examined"
+        ]
+      },
+      {
+        "icd10": "I61.9",
+        "supporting": [
+          "Age 67, hypertension, persistent headache"
+        ],
+        "opposing": [
+          "No focal neurologic deficit or altered consciousness recorded; not examined"
+        ]
+      },
+      {
+        "icd10": "I63.9",
+        "supporting": [
+          "Age 67, hypertension, posterior headache could be posterior circulation ischemia"
+        ],
+        "opposing": [
+          "No focal deficit, visual symptoms, or neurologic examination recorded"
+        ]
+      },
+      {
+        "icd10": "G00.9",
+        "supporting": [
+          "Headache in older adult"
+        ],
+        "opposing": [
+          "No fever, neck stiffness, or altered mental status recorded; not examined"
+        ]
+      },
+      {
+        "icd10": "M31.6",
+        "supporting": [
+          "Age >50 with new persistent headache"
+        ],
+        "opposing": [
+          "No temporal artery tenderness, jaw claudication, visual symptoms, or ESR/CRP recorded"
+        ]
+      }
+    ],
+    "missingInformation": [
+      "Vital signs: blood pressure in both arms, heart rate, respiratory rate, SpO2, temperature",
+      "Focused neurologic examination: Glasgow Coma Scale, NIHSS, focal deficits, pupillary exam, fundoscopy",
+      "Meningeal signs: neck stiffness, Kernig/Brudzinski",
+      "Temporal artery tenderness, jaw claudication, visual symptoms",
+      "Headache characteristics: thunderclap onset, severity, associated nausea/vomiting, photophobia/phonophobia, fever, neck stiffness, confusion, seizure, visual loss",
+      "Cardiac, lung, extremity edema, skin rash examination",
+      "Laboratory results: hematology, chemistry/renal/electrolytes, liver/protein, coagulation, cardiac/inflammatory/endocrine, urine studies",
+      "Non-contrast CT head result"
+    ],
+    "nextBestActions": [
+      {
+        "kind": "question",
+        "item": "Ask about red-flag symptoms: thunderclap onset, focal deficit, fever, neck stiffness, confusion, seizure, visual loss, jaw claudication, and visual symptoms.",
+        "reason": "Rule out secondary headache causes in a 67-year-old male with hypertension and persistent occipital headache."
+      },
+      {
+        "kind": "exam",
+        "item": "Perform physical examination documenting blood pressure in both arms, heart rate, respiratory rate, SpO2, temperature, Glasgow Coma Scale, NIHSS, focal neurologic deficits, pupillary exam, fundoscopy, meningeal signs, temporal artery tenderness, jaw claudication, visual symptoms, cardiac exam, lung exam, extremity edema, skin rash.",
+        "reason": "Initial priority is to obtain vital signs and focused neurologic examination, then rule out secondary headache causes."
+      },
+      {
+        "kind": "test",
+        "item": "Request hematology: hemoglobin, hematocrit, white blood cells, platelet count.",
+        "reason": "Laboratory diagnostics as part of secondary headache workup."
+      },
+      {
+        "kind": "test",
+        "item": "Request chemistry/renal/electrolytes: sodium, potassium, chloride, bicarbonate, urea nitrogen, creatinine, glucose, calcium total, magnesium, phosphate.",
+        "reason": "Laboratory diagnostics as part of secondary headache workup."
+      },
+      {
+        "kind": "test",
+        "item": "Request liver/protein: ALT, AST, alkaline phosphatase, total bilirubin, albumin, total protein.",
+        "reason": "Laboratory diagnostics as part of secondary headache workup."
+      },
+      {
+        "kind": "test",
+        "item": "Request coagulation: INR(PT), PT, PTT.",
+        "reason": "Laboratory diagnostics as part of secondary headache workup."
+      },
+      {
+        "kind": "test",
+        "item": "Request cardiac/inflammatory/endocrine: troponin T, C-reactive protein, sedimentation rate, thyroid stimulating hormone.",
+        "reason": "Laboratory diagnostics as part of secondary headache workup."
+      },
+      {
+        "kind": "test",
+        "item": "Request urine studies: pH, specific gravity, leukocytes, blood, glucose, protein, nitrite, WBC, RBC, bacteria, creatinine.",
+        "reason": "Urine studies as part of secondary headache workup."
+      },
+      {
+        "kind": "test",
+        "item": "Request non-contrast CT head.",
+        "reason": "Rule out hemorrhagic stroke, subarachnoid hemorrhage, mass, hydrocephalus, or other acute intracranial pathology."
+      }
+    ],
+    "disposition": null,
+    "unfilled": [
+      {
+        "field": "disposition",
+        "reason": "No vital signs, physical examination, or results recorded to determine whether red flags, severe hypertension with end-organ damage, or neurologic deficit are present; cannot decide treat vs refer."
+      }
+    ],
+    "meta": {
+      "version": "mira-service/0.1.0+contract=1+provider=openrouter+data=synthetic-only+plan=deepseek/deepseek-v4.1-flash+assess=deepseek/deepseek-v4.1-flash+experimental",
+      "model": "deepseek/deepseek-v4.1-flash+deepseek/deepseek-v4.1-flash",
+      "costUsd": 0.021168
+    }
+  },
+  "traceId": "00f3b79a-9cbc-4942-a159-660132bb1e09",
+  "createdAt": "2026-10-08T21:06:25.169Z",
+  "oracleSource": {
+    "file": "oracle/sentrapedia.json",
+    "hash": "73e40882cdd313f46f406c99c3474aab9ebde44418d3e1681b0f5aaec9f9cd9a",
+    "version": "1.0.0",
+    "declaredCategories": 14
+  },
+  "review": "belum ditinjau"
+}

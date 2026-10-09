@@ -1,0 +1,30 @@
+{
+  "name": "sentrapedia",
+  "version": "0.1.0",
+  "private": true,
+  "engines": { "node": ">=22.0.0" },
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 3101",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1 --port 3101",
+    "lint": "eslint app components lib tests",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "deploy:dry-run": "node scripts/deploy-dry-run.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "1.53.0",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "16.4.0",
+    "typescript": "^5.9.0",
+    "vitest": "5.0.3"
+  }
+}
