@@ -527,9 +527,21 @@ h1 span { white-space: normal; }
 .timeline-document span { display: block; font-size: 10px; overflow-wrap: anywhere; }
 .timeline-document small { display: block; font-size: 9px; color: var(--color-text-muted); margin-top: 5px; line-height: 1.6; }
 .composer-area { position: relative; }
-.intent-groups { display: flex; gap: 4px; margin-top: 8px; border-bottom: 1px solid var(--color-border-subtle); }
-.intent-groups > button { padding: 8px 11px; font-size: 12px; color: var(--color-text-muted); border-bottom: 2px solid transparent; }
-.intent-groups > button[aria-pressed="true"] { border-color: var(--workspace-focus); color: var(--workspace-accent-ink); font-weight: 600; }
+.intent-groups { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.intent-groups > button {
+  --control-surface: var(--color-background-canvas);
+  padding: 8px 14px; font-size: 12px; color: var(--color-text-secondary); border-radius: 9px;
+  border: 1px solid color-mix(in srgb, var(--control-surface), var(--color-border-subtle) 45%);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--control-surface), var(--workspace-white) 35%), var(--control-surface));
+  box-shadow: 1px 1px 3px color-mix(in srgb, var(--workspace-on-accent), transparent 92%), -1px -1px 2px var(--workspace-white);
+  transition: box-shadow .15s, color .15s;
+}
+.intent-groups > button:hover { color: var(--workspace-accent-ink); box-shadow: 2px 2px 4px color-mix(in srgb, var(--workspace-on-accent), transparent 90%), -1px -1px 2px var(--workspace-white); }
+.intent-groups > button[aria-pressed="true"] {
+  --control-surface: var(--workspace-accent-soft);
+  color: var(--workspace-accent-ink); font-weight: 600; background: var(--control-surface);
+  box-shadow: inset 1px 1px 2px color-mix(in srgb, var(--workspace-on-accent), transparent 88%), inset -1px -1px 2px color-mix(in srgb, var(--workspace-white), transparent 50%);
+}
 .intent-modes { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 8px 0 0; }
 .intent-modes .action-chip { height: 31px; font-size: 11px; gap: 6px; }
 .slash-hint { font-size: 10px; color: var(--color-text-muted); margin-left: auto; padding: 4px 0; }
@@ -575,9 +587,6 @@ h1 span { white-space: normal; }
 .focus-mode .home-content { padding-top: 24px; }
 .home-heading-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .home-heading-row .workspace-eyebrow { margin: 0; justify-content: flex-start; }
-.home-content > .intent-groups { width: fit-content; gap: 5px; margin: 20px 0 0; border-bottom: 0; }
-.home-content > .intent-groups button { border-bottom: 0; border-radius: 7px; padding: 9px 13px; }
-.home-content > .intent-groups button[aria-pressed="true"] { background: var(--workspace-accent-soft); }
 .home-headline { min-height: 112px; display: grid; align-items: center; }
 .home-content > .composer-area { margin-top: auto; padding-top: 32px; }
 .home-headline h1 { font-size: clamp(28px, 2.5vw, 32px); line-height: 1.2; letter-spacing: -.9px; margin: 0; text-wrap: balance; text-shadow: 0 2px 4px color-mix(in srgb, var(--workspace-accent-ink), transparent 82%); }
@@ -642,8 +651,6 @@ h1 span { white-space: normal; }
   .header-right .upgrade-button { display: none; }
 }
 @media (max-width: 760px) {
-  .home-content > .intent-groups { width: 100%; gap: 3px; margin-top: 16px; }
-  .home-content > .intent-groups button { padding: 9px 5px; font-size: 12px; }
   .home-headline { min-height: 140px; }
   .home-content > .composer-area { margin-top: auto; }
   .home-headline h1 { font-size: 28px; }
@@ -652,8 +659,8 @@ h1 span { white-space: normal; }
   .header-right .upgrade-button { display: none; }
   .header-patient { max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .encounter-title { max-width: 90px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-  .intent-groups { gap: 0; }
-  .intent-groups > button { padding: 11px 6px; font-size: 11px; flex: 1; }
+  .intent-groups { gap: 6px; flex-wrap: nowrap; }
+  .intent-groups > button { padding: 9px 4px; font-size: 11px; flex: 1; }
   .intent-modes { gap: 6px; }
   .slash-hint { width: 100%; margin-left: 0; padding-top: 2px; }
   .studio-columns { grid-template-columns: minmax(0, 1fr); }
