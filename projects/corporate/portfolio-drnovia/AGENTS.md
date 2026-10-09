@@ -1,5 +1,11 @@
 # Portfolio Dr. Novia — Capsule Agent Router
 
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
 Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
 
 This file is the machine README for the NOVIA STUDIO project. Humans start at
