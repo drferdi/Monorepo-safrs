@@ -73,7 +73,9 @@ Reload Cursor or confirm under **Settings → Hooks** after pull. Scripts use No
 | `playwright` | Browser automation / E2E assist via MCP |
 | `firecrawl` | Web scrape/search (needs `FIRECRAWL_API_KEY` in user env) |
 | `sequential-thinking` | Structured multi-step reasoning assist |
-| `filesystem` | Scoped FS tools under `D:/DEV` |
+
+No filesystem MCP is shipped: its reads bypassed the `beforeReadFile` credential guard, and
+Cursor's own file tools already cover the repository (Gaffer, 2026-10-10).
 
 Database MCP candidates remain **deferred** — same verdict as `docs/bootstrap/CLAUDE_SETUP.md` and `.agents/DECISIONS.md` (2026-08-11):
 

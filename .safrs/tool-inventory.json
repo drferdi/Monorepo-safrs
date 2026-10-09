@@ -158,17 +158,6 @@
       "review_status": "APPROVED"
     },
     {
-      "id": "filesystem-mcp",
-      "owner": "repository-maintainers",
-      "purpose": "Scoped filesystem tools under D:/DEV for monorepo agent workflows",
-      "allowed_operations": ["read", "list", "search", "write-scoped"],
-      "data_scope": "D:/DEV only as configured in .cursor/mcp.json",
-      "authentication": "os-user",
-      "network_endpoints": ["registry.npmjs.org"],
-      "provenance": ".cursor/mcp.json → @modelcontextprotocol/server-filesystem with D:/DEV root",
-      "review_status": "APPROVED"
-    },
-    {
       "id": "deps-graph",
       "owner": "repository-maintainers",
       "purpose": "Render the monorepo inter-package dependency graph (read-only, manual/CI-optional aid)",
