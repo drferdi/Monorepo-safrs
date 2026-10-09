@@ -84,9 +84,9 @@
    its role, with the chapter's soft halo. */
 .squad { margin-top: 40px; }
 .squad > p { margin: 0 0 18px; font-family: var(--neural-mono); font-size: 11px; letter-spacing: .32em; text-transform: uppercase; color: #91b9d1; }
-.squad ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; }
+.squad ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; width: min(1120px, 90vw); position: relative; left: 50%; translate: -50% 0; }
 .squad li { display: flex; flex-direction: column; align-items: center; gap: 7px; }
-.squad strong { font-family: var(--font-jakarta), sans-serif; font-size: 14px; font-weight: 400; letter-spacing: .01em; color: rgb(229 233 238 / 94%); }
+.squad strong { font-family: var(--font-jakarta), sans-serif; font-size: 18px; font-weight: 400; letter-spacing: .01em; color: rgb(229 233 238 / 94%); }
 .squad span { font-family: var(--neural-mono); font-size: 11px; line-height: 1.6; letter-spacing: .1em; color: var(--neural-muted); }
 .squad > *, .squad strong, .squad span { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
 .cta { display: inline-flex; align-items: center; gap: 42px; padding: 19px 0; margin-top: 27px; border-bottom: 1px solid var(--neural-blue); font-size: 11px; letter-spacing: .12em; }
@@ -174,9 +174,9 @@
   .centered h2 { font-size: clamp(27px, 7.2vw, 52px); letter-spacing: .015em; }
   .squad { margin-top: 24px; }
   .squad > p { margin-bottom: 12px; font-size: 10px; }
-  .squad ul { grid-template-columns: repeat(2, 1fr); gap: 12px 16px; }
+  .squad ul { grid-template-columns: repeat(2, 1fr); gap: 12px 16px; width: 100%; }
   .squad li:last-child { grid-column: 1 / -1; }
-  .squad strong { font-size: 13px; }
+  .squad strong { font-size: 16px; }
   .squad span { font-size: 10px; }
   .eyebrow { margin-bottom: 20px; font-size: 10px; gap: 12px; }
   .description { margin-top: 20px; font-size: 11px; max-width: 290px; }
@@ -260,7 +260,7 @@
   .squad > p { margin-bottom: 8px; }
   .squad ul { gap: 6px 14px; }
   .squad li { gap: 2px; }
-  .squad strong { font-size: 12px; }
+  .squad strong { font-size: 14px; }
   .squad span { line-height: 1.4; }
 }
 /* Short phones: the legacy's words close up so the way on clears the controls. */
