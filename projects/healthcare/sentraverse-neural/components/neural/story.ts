@@ -24,6 +24,15 @@ export const chapters = [
 // opens on while the figure alone is lit, and the signature under the title at the end.
 export const legacyCopy = { presence: 'The human behind the system', name: 'dr Ferdi Iskandar', role: 'The Gaffer · Architect of Sentraverse', brand: 'Sentraverse' } as const
 
+// SentraSquad (Chief 2026-10-09): the team named in the network chapter, written as Chief gave it.
+export const squad = [
+  { name: 'Asyraf Hadi', role: 'CMO + GROWTH LEAD' },
+  { name: 'dr. Novi Dwi Anggraini', role: 'CMO + CLINICAL DIRECTOR' },
+  { name: 'Joseph Arianto', role: 'COO + GOVT. LIAISON' },
+  { name: 'Farhan Nugroho', role: 'FULLSTACK + INFRASTRUCTURE MAINTENANCE LEAD' },
+  { name: 'Kevin Susanto', role: 'QA LEAD' },
+] as const
+
 // The journey is its own site (Chief 2026-10-09); the pages it points to live on sentrahai.com.
 export const sentra = (path: string) => `https://sentrahai.com${path}`
 

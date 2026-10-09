@@ -250,6 +250,13 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
       entry.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
       entry.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)
     }
+    // The SentraSquad arrive one by one once the network's title has formed (drawn back at build,
+    // like the marker, so they never show before their turn).
+    const members = Array.from(panel.querySelectorAll('[data-squad] > p, [data-squad] li'))
+    if (members.length) {
+      gsap.set(members, { autoAlpha: 0, y: 10 })
+      entry.fromTo(members, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .7, stagger: .25, ease: ease.text, immediateRender: false }, 1.4)
+    }
     if (index < chapters.length - 1) entry.to(panel, { autoAlpha: 0, y: -10, duration: .8, ease: 'power2.in' }, duration - .8)
     master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(entry, at(chapter.phase))
   })

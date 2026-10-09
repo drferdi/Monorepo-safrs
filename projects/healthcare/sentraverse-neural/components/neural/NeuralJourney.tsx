@@ -11,7 +11,7 @@ import { FILM, createFilm, filmFrameUrl } from './film'
 import { createMorph, faceCrop } from './morph'
 import { MASTER_DURATION, buildMaster, jumpLabel, legacy, phaseToTime, revealHero, settleLegacy, stillCamera } from './timeline'
 import { attachPointerWake } from './wake'
-import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra } from './story'
+import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra, squad } from './story'
 import styles from './journey.module.css'
 
 export default function NeuralJourney() {
@@ -374,6 +374,12 @@ export default function NeuralJourney() {
                     {index === 0 ? <h1>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span className={i ? styles.soft : undefined}>{line}</span></Fragment>)}</h1> : <h2>{chapter.title.split('\n').map((line, i) => <Fragment key={line}>{i > 0 && ' '}<span>{line}</span></Fragment>)}</h2>}
                     <p className={styles.description}>{chapter.description}</p>
                     {!division && <p className={styles.annotation}><span />{chapter.annotation}</p>}
+                    {chapter.id === 'network' && (
+                      <div data-squad className={styles.squad}>
+                        <p>SentraSquad</p>
+                        <ul>{squad.map(member => <li key={member.name}><strong>{member.name}</strong><span>{member.role}</span></li>)}</ul>
+                      </div>
+                    )}
                     {index === 0 && <button data-jump={phaseOf('embryonic-origin')} className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}
                   </div>
                 )}

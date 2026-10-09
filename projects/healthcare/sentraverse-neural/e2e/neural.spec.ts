@@ -553,3 +553,29 @@ test('no text is smaller than 11 px on a desktop or 10 px on a phone, and the le
   const cta = (await page.locator('#human [data-magnetic]').boundingBox())!, controls = (await page.locator('footer').boundingBox())!
   expect(cta.y + cta.height).toBeLessThanOrEqual(controls.y)
 })
+
+test('the network chapter names the SentraSquad one by one after its title, on desktop, phone and short phone', async ({ page }) => {
+  const squad = ['Asyraf Hadi', 'dr. Novi Dwi Anggraini', 'Joseph Arianto', 'Farhan Nugroho', 'Kevin Susanto']
+  for (const [width, height] of [[1280, 800], [375, 812], [360, 640]]) {
+    await page.setViewportSize({ width, height })
+    await page.goto('/')
+    await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
+    const members = page.locator('#network [data-squad] li')
+    await portraitPhase(page, 60.3)
+    await expect(members.first()).toHaveCSS('opacity', '0')
+    await portraitPhase(page, 63.5)
+    await expect(page.locator('#network [data-squad] > p')).toHaveText('SentraSquad')
+    for (const [i, name] of squad.entries()) {
+      await expect(members.nth(i).locator('strong')).toHaveText(name)
+      await expect(members.nth(i)).toHaveCSS('opacity', '1')
+      const box = (await members.nth(i).boundingBox())!
+      expect(box.x, `${width}: ${name} left`).toBeGreaterThanOrEqual(0)
+      expect(box.x + box.width, `${width}: ${name} right`).toBeLessThanOrEqual(width)
+    }
+    const last = (await members.last().boundingBox())!, controls = (await page.locator('footer').boundingBox())!
+    expect(last.y + last.height, `${width}: clears the controls`).toBeLessThanOrEqual(controls.y)
+    const header = (await page.locator('header').boundingBox())!, eyebrow = (await page.locator('#network [data-marker-copy] > p').first().boundingBox())!
+    expect(eyebrow.y, `${width}x${height}: the chapter starts below the header`).toBeGreaterThanOrEqual(header.y + header.height)
+  }
+  await expect(page.locator('#network [data-squad] li').nth(3).locator('span')).toHaveText('FULLSTACK + INFRASTRUCTURE MAINTENANCE LEAD')
+})

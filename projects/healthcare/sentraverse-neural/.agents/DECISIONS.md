@@ -3,6 +3,19 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (content) — The SentraSquad in the network chapter
+
+Decision: the network chapter (SENTRAVERSE) names the SentraSquad under its title, five across on
+desktop and two columns on phones, each name over its role exactly as Chief wrote them (`squad` in
+`story.ts`). They arrive one by one after the title forms, drawn back at build so they never show
+early. On short phones (700 px tall or less) the chapter's sentence is left to the reading view
+so the squad fits between the header and the controls.
+
+Rationale: Chief's instruction.
+
+Evidence: the neural e2e "the network chapter names the SentraSquad" at 1280x800, 375x812 and
+360x640.
+
 ## 2026-10-09 (type) — No text under 11 px on desktop or 10 px on phones
 
 Decision: every label in every chapter (specimen, eyebrows, annotations, controls, coordinates,
