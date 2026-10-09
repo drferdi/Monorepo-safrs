@@ -374,31 +374,34 @@ h1 span { white-space: normal; }
 .toast > button { display: flex; color: var(--color-text-muted); padding: 0; margin-left: 8px; }
 
 /* One expanded subtree; matching fold curves keep the rest of the sidebar stable. */
-.sidebar-submenu { margin: 24px 0; }
-.submenu-section { position: relative; padding-left: 9px; border-left: 1px solid var(--color-border-subtle); }
-.submenu-heading { display: flex; align-items: center; gap: 4px; min-height: 40px; }
-.submenu-heading > button:first-child { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; text-align: left; min-height: 36px; padding: 7px 4px; border-radius: 6px; font-size: 12px; color: var(--color-text-secondary); }
+/* After lab.xevrion.dev/lab/sidebar-submenu: a bar rides one rail to the open title on a spring, sections fold
+   on one shared curve so the menu height holds still, items settle in from a blur, the lit branch draws down. */
+.sidebar-submenu { position: relative; margin: 24px 0; padding-left: 9px; }
+.sidebar-submenu::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--color-border-subtle), var(--color-text-muted) 35%); }
+.submenu-bar { position: absolute; z-index: 1; left: -1px; top: 10px; width: 3px; height: 20px; border-radius: 3px; background: var(--color-action-primary); transition: transform var(--submenu-spring-ms) var(--submenu-spring); }
+.submenu-section { position: relative; }
+.submenu-heading { display: flex; align-items: center; gap: 4px; height: 40px; }
+.submenu-heading > button:first-child { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; text-align: left; min-height: 36px; padding: 7px 4px; border-radius: 6px; font-size: 12px; color: var(--color-text-secondary); transition: color 200ms ease-out; }
 .submenu-heading > button:first-child:hover { background: var(--workspace-accent-soft); }
 .submenu-heading > button:first-child > span:first-child { flex: 1; }
 .submenu-heading svg { transition: transform 320ms cubic-bezier(.23, 1, .32, 1); }
 .submenu-count { color: var(--color-text-secondary); font-size: 10px; }
-.submenu-section[data-open="true"]::before { content: ""; position: absolute; left: -2px; top: 10px; width: 3px; height: 20px; background: var(--color-action-primary); border-radius: 3px; }
 .submenu-section[data-open="true"] .submenu-heading > button:first-child { color: var(--workspace-accent-ink); font-weight: 600; }
 .submenu-section[data-open="true"] .submenu-heading > button:first-child svg { transform: rotate(180deg); }
-.submenu-body { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 320ms cubic-bezier(.23, 1, .32, 1), opacity 320ms ease-out; }
+.submenu-body { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 320ms cubic-bezier(.23, 1, .32, 1), opacity 320ms cubic-bezier(.23, 1, .32, 1); }
 .submenu-section[data-open="true"] .submenu-body { grid-template-rows: 1fr; opacity: 1; }
 .submenu-clip { min-height: 0; overflow: hidden; }
 .submenu-items { position: relative; padding: 0 0 6px 14px; }
-.submenu-item { height: 34px; display: flex; align-items: center; position: relative; gap: 2px; opacity: 0; transform: translateY(-4px); transition: opacity 280ms ease-out, transform 280ms cubic-bezier(.23, 1, .32, 1); }
-.submenu-section[data-open="true"] .submenu-item { opacity: 1; transform: translateY(0); transition-delay: calc(40ms + min(var(--item-order), 8) * 35ms); }
-.submenu-item::before { content: ""; position: absolute; left: -10px; top: 0; height: 100%; border-left: 1px solid var(--color-border-subtle); }
-.submenu-item:last-child::before { height: 17px; }
-.submenu-item::after { content: ""; position: absolute; left: -10px; top: 9px; width: 9px; height: 8px; border-left: 1px solid var(--color-border-subtle); border-bottom: 1px solid var(--color-border-subtle); border-bottom-left-radius: 7px; pointer-events: none; }
-.submenu-item > button:first-child { min-width: 0; flex: 1; height: 32px; display: flex; align-items: center; gap: 7px; padding: 6px; border-radius: 6px; text-align: left; font-size: 12px; }
+.submenu-tree { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.submenu-tree-grey { stroke: color-mix(in srgb, var(--color-border-subtle), var(--color-text-muted) 35%); stroke-width: 1.25; }
+.submenu-tree-lit { stroke: var(--color-action-primary); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.submenu-section[data-open="true"] .submenu-tree-lit { animation: submenu-lit-draw 400ms cubic-bezier(.23, 1, .32, 1) 80ms both; }
+@keyframes submenu-lit-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.submenu-item { height: 34px; display: flex; align-items: center; position: relative; gap: 2px; opacity: 0; transform: translateY(-4px); filter: blur(4px); transition: opacity 280ms cubic-bezier(.23, 1, .32, 1), transform 280ms cubic-bezier(.23, 1, .32, 1), filter 280ms cubic-bezier(.23, 1, .32, 1); }
+.submenu-section[data-open="true"] .submenu-item { opacity: 1; transform: translateY(0); filter: blur(0); transition-delay: calc(50ms + min(var(--item-order), 8) * 40ms); }
+.submenu-item > button:first-child { min-width: 0; flex: 1; height: 32px; display: flex; align-items: center; gap: 7px; padding: 6px; border-radius: 6px; text-align: left; font-size: 12px; transition: color 150ms ease-out; }
 .submenu-item > button:first-child > span:first-of-type { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
 .submenu-item:hover > button:first-child, .submenu-item[data-active="true"] > button:first-child { background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); }
-.submenu-active-branch { position: absolute; z-index: 1; left: 4px; top: 0; width: 10px; border-left: 2px solid var(--color-action-primary); border-bottom: 2px solid var(--color-action-primary); border-bottom-left-radius: 8px; pointer-events: none; transform-origin: top; transition: height 350ms cubic-bezier(.23, 1, .32, 1); }
-.submenu-section[data-open="true"] .submenu-active-branch { animation: branch-reveal 400ms ease-out; }
 @keyframes branch-reveal { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 
 /* Fast illumination and a slower fade create the pixel trail without a spinner. */
@@ -410,7 +413,7 @@ h1 span { white-space: normal; }
 .system-loading { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--color-background-canvas); color: var(--color-text-secondary); }
 .system-loading .pixel-grid { grid-template-columns: repeat(4, 6px); grid-auto-rows: 6px; gap: 3px; }
 .system-loading p { font-size: 13px; }
-@media (prefers-reduced-motion: reduce) { .pixel-grid > span { transform: none; } .submenu-active-branch { animation: none !important; } .submenu-item { transition-delay: 0ms !important; } }
+@media (prefers-reduced-motion: reduce) { .pixel-grid > span { transform: none; } .submenu-bar, .submenu-body, .submenu-item { transition-duration: 0ms !important; transition-delay: 0ms !important; } .submenu-item { filter: none !important; } .submenu-tree-lit { animation: none !important; } }
 
 @media (min-height: 1000px) { .home-bottom { margin-bottom: 16px; } }
 @media (max-width: 1150px) { .sidebar { width: 238px; } .advertisement { gap: 20px; padding-left: 20px; } .ad-art { width: 95px; } .ad-copy > span { font-size: 12px; } .home-content { width: min(780px, calc(100% - 48px)); } .composer-tools-left, .composer-tools-right { gap: 6px; } }
