@@ -24,7 +24,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 3,
+      "read_order": 4,
       "scope": "always"
     },
     {
@@ -33,7 +33,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 4,
+      "read_order": 5,
       "scope": "always"
     },
     {
@@ -42,7 +42,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 5,
+      "read_order": 6,
       "scope": "always"
     },
     {
@@ -302,12 +302,21 @@
       "scope": "always"
     },
     {
+      "id": "session-boundaries",
+      "path": ".agents/BOUNDARIES.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MUST",
+      "read_order": 3,
+      "scope": "always"
+    },
+    {
       "id": "lessons",
       "path": ".agents/knowledge/12_LESSONS.md",
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 6,
+      "read_order": 7,
       "scope": "always"
     },
     {
@@ -341,7 +350,7 @@
       "status": "CANONICAL",
       "normativity": "MUST",
       "scope": "always",
-      "read_order": 7
+      "read_order": 8
     },
     {
       "id": "agent-autonomy-model",

@@ -72,11 +72,12 @@ Read only the context required for the task.
 
 1. `.agents/knowledge/00_READ_FIRST.md`
 2. `.agents/HANDOFF.md`
-3. `.agents/knowledge/02_OBJECTIVES.md`
-4. `.agents/knowledge/03_ARCHITECTURE.md`
-5. `.agents/knowledge/04_CONTEXT.md`
-6. `.agents/knowledge/12_LESSONS.md`
-7. `docs/architecture/MONOREPO_PURPOSE.md`
+3. `.agents/BOUNDARIES.md`
+4. `.agents/knowledge/02_OBJECTIVES.md`
+5. `.agents/knowledge/03_ARCHITECTURE.md`
+6. `.agents/knowledge/04_CONTEXT.md`
+7. `.agents/knowledge/12_LESSONS.md`
+8. `docs/architecture/MONOREPO_PURPOSE.md`
 
 **Always (SHOULD):** `.agents/knowledge/01_COLLABORATION.md`, `.agents/knowledge/11_RESPONSE_STANDARDS.md`, `SAFRS_SPEC.md`, `.agents/CONTEXT.md`
 
