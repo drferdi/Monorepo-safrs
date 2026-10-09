@@ -1,7 +1,9 @@
-// Pure logic for the sidebar's Mulai / Alat kerja / Sistem tree: where the open dialog sits,
-// what the browser remembers between visits, and how the keyboard moves through rows.
+// Pure logic for the sidebar tree: where an item sits, which groups the browser remembers as open,
+// the one item that is current, and how the keyboard moves through rows.
 export type NavShape = { id: string; itemIds: string[] }[];
-export interface NavMemory { open: string; used: Record<string, number> }
+export type View = { page: "workspace" | "patients" | "lists" | "encounters" } | { page: "patient"; id: string };
+
+const toolIds = ["knowledge", "queue", "templates", "scribe", "settings", "commands"];
 
 export function locate(shape: NavShape, itemId: string | null): { section: string; index: number } | null {
   if (!itemId) return null;
@@ -12,21 +14,23 @@ export function locate(shape: NavShape, itemId: string | null): { section: strin
   return null;
 }
 
-export function restoreNavMemory(raw: string | null, shape: NavShape, fallback: string): NavMemory {
-  const empty = { open: fallback, used: {} };
-  if (!raw) return empty;
+/** The open groups, from what the browser kept (UI state only, never patient data). */
+export function restoreNavMemory(raw: string | null, shape: NavShape, fallback: string[]): string[] {
+  if (!raw) return fallback;
   let data: unknown;
-  try { data = JSON.parse(raw); } catch { return empty; }
-  if (!data || typeof data !== "object" || Array.isArray(data)) return empty;
-  const { open, used } = data as { open?: unknown; used?: unknown };
-  const memory: NavMemory = { open: shape.some((section) => section.id === open) ? open as string : fallback, used: {} };
-  if (used && typeof used === "object" && !Array.isArray(used)) {
-    for (const section of shape) {
-      const index = (used as Record<string, unknown>)[section.id];
-      if (Number.isInteger(index) && (index as number) >= 0 && (index as number) < section.itemIds.length) memory.used[section.id] = index as number;
-    }
-  }
-  return memory;
+  try { data = JSON.parse(raw); } catch { return fallback; }
+  const open = data && typeof data === "object" && !Array.isArray(data) ? (data as { open?: unknown }).open : undefined;
+  if (!Array.isArray(open)) return fallback;
+  return shape.map((section) => section.id).filter((id) => open.includes(id));
+}
+
+/** The single item the sidebar marks as current: an open tool, else the page shown, else the open encounter, else Beranda. */
+export function activeNavItem({ dialog, view, activeEncounterId }: { dialog: string | null; view: View; activeEncounterId: string | null }): string {
+  if (dialog && toolIds.includes(dialog)) return dialog;
+  if (view.page === "patients" || view.page === "patient") return "all-patients";
+  if (view.page === "lists") return "lists";
+  if (view.page === "encounters") return "all-encounters";
+  return activeEncounterId ?? "home";
 }
 
 export function focusStep(count: number, index: number, key: string): number | null {

@@ -4,6 +4,7 @@ import { Check, FileUp, Search, ShieldCheck, Trash2 } from "lucide-react";
 import { PatientAvatar } from "./patient-avatar";
 import { useRef, useState, type Dispatch } from "react";
 import { PixelLoader } from "./pixel-loader";
+import { encounterTitle } from "../lib/nav-format";
 import { specialtyLabel, modelLabel } from "../lib/ui-labels";
 import { Dialog } from "./dialog";
 import { newId, specialties, type Encounter, type Patient, type PatientList, type Settings, type Workspace, type WorkspaceAction } from "../lib/workspace";
@@ -76,6 +77,6 @@ export function SearchDialog({ state, onSelect, onPatient, onClose }: { state: W
   const [query, setQuery] = useState("");
   const term = query.toLowerCase().trim();
   const patients = state.patients.filter((p) => `${p.name} ${p.notes}`.toLowerCase().includes(term));
-  const encounters = state.encounters.filter((e) => `${e.title} ${e.context} ${e.messages.map((m) => m.content).join(" ")}`.toLowerCase().includes(term));
-  return <Dialog title="Cari dalam workspace" subtitle="Cari Patient, Encounter, konteks, dan isi draf." onClose={onClose}><div className="search-input"><Search size={18}/><input aria-label="Cari dalam workspace" autoFocus placeholder="Cari dalam workspace…" value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>esc</kbd></div><div className="search-results"><div className="section-label">Patient</div>{patients.map((p) => <button key={p.id} onClick={() => onPatient(p.id)}><PatientAvatar sex={p.sex} size={16}/><span>{p.name}</span><span className="result-type">Patient</span></button>)}<div className="section-label">Encounter</div>{encounters.map((e) => <button key={e.id} onClick={() => onSelect(e.id)}><FileUp size={16}/><span>{e.title}</span><span className="result-type">{e.messages.length ? `${e.messages.length} pesan` : "Encounter"}</span></button>)}{!patients.length && !encounters.length && <div className="search-empty"><Search size={25}/><strong>Tidak ada hasil untuk “{query}”</strong><p>Coba nama Patient lain atau frasa dari draf.</p></div>}</div></Dialog>;
+  const encounters = state.encounters.filter((e) => `${encounterTitle(e)} ${e.context} ${e.messages.map((m) => m.content).join(" ")}`.toLowerCase().includes(term));
+  return <Dialog title="Cari dalam workspace" subtitle="Cari pasien, encounter, konteks, dan isi draf." onClose={onClose}><div className="search-input"><Search size={18}/><input aria-label="Cari dalam workspace" autoFocus placeholder="Cari pasien atau encounter…" value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>esc</kbd></div><div className="search-results"><div className="section-label">Pasien</div>{patients.map((p) => <button key={p.id} onClick={() => onPatient(p.id)}><PatientAvatar sex={p.sex} size={16}/><span>{p.name}</span><span className="result-type">Pasien</span></button>)}<div className="section-label">Encounter</div>{encounters.map((e) => <button key={e.id} onClick={() => onSelect(e.id)}><FileUp size={16}/><span>{encounterTitle(e)}</span><span className="result-type">{e.messages.length ? `${e.messages.length} pesan` : "Encounter"}</span></button>)}{!patients.length && !encounters.length && <div className="search-empty"><Search size={25}/><strong>Tidak ada hasil untuk “{query}”</strong><p>Coba nama pasien lain atau frasa dari draf.</p></div>}</div></Dialog>;
 }

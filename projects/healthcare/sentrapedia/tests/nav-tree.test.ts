@@ -1,23 +1,33 @@
 import { describe, expect, it } from "vitest";
-import { focusStep, locate, restoreNavMemory, type NavShape } from "../lib/nav-tree";
+import { activeNavItem, focusStep, locate, restoreNavMemory, type NavShape } from "../lib/nav-tree";
 
 const shape: NavShape = [
-  { id: "start", itemIds: ["new", "patient", "list"] },
-  { id: "tools", itemIds: ["queue", "templates", "knowledge", "scribe"] },
-  { id: "system", itemIds: ["commands", "search", "settings"] },
+  { id: "patients", itemIds: ["all-patients", "lists"] },
+  { id: "encounters", itemIds: ["e1", "e2", "all-encounters"] },
+  { id: "tools", itemIds: ["knowledge", "queue", "templates", "scribe"] },
 ];
 
 describe("sidebar navigation tree logic", () => {
-  it("finds the group and row of the dialog that is open", () => {
-    expect(locate(shape, "settings")).toEqual({ section: "system", index: 2 });
-    expect(locate(shape, "knowledge")).toEqual({ section: "tools", index: 2 });
+  it("finds the group and row of the current item", () => {
+    expect(locate(shape, "templates")).toEqual({ section: "tools", index: 2 });
+    expect(locate(shape, "e2")).toEqual({ section: "encounters", index: 1 });
     expect(locate(shape, "account")).toBeNull();
     expect(locate(shape, null)).toBeNull();
   });
-  it("restores the remembered group and rows, dropping anything that no longer fits", () => {
-    expect(restoreNavMemory(JSON.stringify({ open: "tools", used: { tools: 3, system: 1 } }), shape, "start")).toEqual({ open: "tools", used: { tools: 3, system: 1 } });
-    expect(restoreNavMemory(JSON.stringify({ open: "gone", used: { tools: 9, start: -1, system: 1.5, other: 0, system2: "x" } }), shape, "start")).toEqual({ open: "start", used: {} });
-    for (const raw of [null, "", "{broken", "[]", "42", JSON.stringify({ open: 3 })]) expect(restoreNavMemory(raw, shape, "start")).toEqual({ open: "start", used: {} });
+  it("restores the groups left open, dropping any that no longer exist", () => {
+    expect(restoreNavMemory(JSON.stringify({ open: ["tools", "patients"] }), shape, ["encounters"])).toEqual(["patients", "tools"]);
+    expect(restoreNavMemory(JSON.stringify({ open: [] }), shape, ["encounters"])).toEqual([]);
+    expect(restoreNavMemory(JSON.stringify({ open: ["gone", "tools", 3, "tools"] }), shape, ["encounters"])).toEqual(["tools"]);
+    for (const raw of [null, "", "{broken", "[]", "42", JSON.stringify({ open: "tools" })]) expect(restoreNavMemory(raw, shape, ["encounters"])).toEqual(["encounters"]);
+  });
+  it("lights one item: an open tool first, then the page, then the encounter, else Beranda", () => {
+    expect(activeNavItem({ dialog: "knowledge", view: { page: "encounters" }, activeEncounterId: "e1" })).toBe("knowledge");
+    expect(activeNavItem({ dialog: "patient", view: { page: "encounters" }, activeEncounterId: "e1" })).toBe("all-encounters");
+    expect(activeNavItem({ dialog: null, view: { page: "patient", id: "p1" }, activeEncounterId: "e1" })).toBe("all-patients");
+    expect(activeNavItem({ dialog: null, view: { page: "patients" }, activeEncounterId: null })).toBe("all-patients");
+    expect(activeNavItem({ dialog: null, view: { page: "lists" }, activeEncounterId: null })).toBe("lists");
+    expect(activeNavItem({ dialog: null, view: { page: "workspace" }, activeEncounterId: "e2" })).toBe("e2");
+    expect(activeNavItem({ dialog: null, view: { page: "workspace" }, activeEncounterId: null })).toBe("home");
   });
   it("moves keyboard focus one row at a time and jumps to either end", () => {
     expect(focusStep(5, 1, "ArrowDown")).toBe(2);

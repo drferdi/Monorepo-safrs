@@ -16,6 +16,8 @@ describe("sidebar submenu motion", () => {
     const tree = treePath(3);
     for (const i of [0, 1, 2]) expect(tree).toContain(branchPath(rowMiddle(i)));
     expect(treePath(0)).toBe("");
+    for (const i of [0, 1]) expect(treePath(2, 46)).toContain(branchPath(rowMiddle(i, 46)));
+    expect(rowMiddle(1, 46)).toBe(69);
     expect(litPath(rowMiddle(1))).toMatch(/^M\d+ 0 V/);
     expect(litPath(rowMiddle(1))).toContain(branchPath(rowMiddle(1)).slice(branchPath(rowMiddle(1)).indexOf("Q")));
   });
