@@ -13,16 +13,26 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   split by risk class, based on `main`:
   - `governance/agents-jev-policy` (this branch, R2, controls and root memory only): Jev and
     Gaffer address rules in root and capsule `AGENTS.md` files and `.cursor/rules`; OpenRouter
-    registered in `.safrs/tool-inventory.json`; Claude PreToolUse guard now covers `Bash`; Claude
-    commits as `Claude <claude@local>` through the `env` block in `.claude/settings.json`.
+    registered in `.safrs/tool-inventory.json`; Claude PreToolUse guard now covers `Bash`, and
+    both Claude hooks launch from `git rev-parse --show-toplevel` (they silently failed open
+    after any `cd`); Claude commits as `Claude <claude@local>` via `.claude/settings.json` env;
+    `.agents/BOUNDARIES.md` routed as MUST read 3; Cursor guards fail closed on unreadable
+    payloads; `check_handoff.py` points at an existing AGENTS.md heading.
   - `docs/gaffer-address` (R3 by path: `projects/**/production/**` text only): "Chief" to
     "Gaffer" across docs, capsule memory and skills, plus the non-control part of e4643c32.
   - `feat/sidepanel-ui-batch` keeps only the parts for capsules that exist on that branch
     (sentrapedia, sentraverse-neural), the root HANDOFF note, and three files whose context exists
     only there. Old tip kept at `refs/backup/2026-10-10/feat-sidepanel-ui-batch`.
+- `chore/agent-skill-hygiene` (R2, no controls): verify skills follow the capsule handoff rule,
+  `04_CONTEXT.md` follows the AGENTS.md authority order, Cursor reviewers 08-11 `readonly: true`,
+  README lists `.env.example` variable names.
 - Re-applying both new branches on the rewritten UI branch reproduces the old tree byte for byte.
-- `check_sensitive_changes` (SAFRS_BASE_REF=main): this branch R2 and passing; `docs/gaffer-address`
-  R3 and passing.
+- `check_sensitive_changes` (SAFRS_BASE_REF=main): this branch and `chore/agent-skill-hygiene`
+  R2 and passing; `docs/gaffer-address` R3 and passing. Governance unittest 68/68; Claude guard
+  tests pass except the pre-existing Windows-path case; automation-policy 20/22, same two
+  pre-existing Codex failures as `main`.
+- Merge simulation: no conflicts between the three branches; merging this branch into
+  `feat/sidepanel-ui-batch` conflicts only on this file (take this version).
 
 ## Work in flight
 
@@ -39,11 +49,12 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Next action
 
-- Gaffer: review and merge `governance/agents-jev-policy`, then `docs/gaffer-address`; merge
-  `main` into `feat/sidepanel-ui-batch`.
+- Gaffer: review and merge `governance/agents-jev-policy`, `docs/gaffer-address` and
+  `chore/agent-skill-hygiene`; merge `main` into `feat/sidepanel-ui-batch`.
+- `.codex/agents` still say "Chief" and two agents share the name `security-reviewer`; left
+  alone while Gaffer works in `.codex/`.
 - Decide whether `.safrs/adapter-capabilities.json` should drop droid `read_only_disabled`, now
   that Droid runs auto-high and OpenRouter is registered.
-- `check_handoff.py` still points to "AGENTS.md § Session protocol", which no longer exists.
 
 ## Owner collision
 
