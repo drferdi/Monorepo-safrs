@@ -1,0 +1,16 @@
+---
+description: Consult Jev before costly or consequential steps (always)
+alwaysApply: true
+---
+
+# Jev decision router
+
+Canonical rule: root `AGENTS.md` (Jev Decision Layer). Setup: `tools/jev/README.md`.
+
+1. Call the `jev_route` MCP tool before the first web search or browse in a task, before spawning
+   a subagent, before retrying an approach that already failed, before any approval-needing
+   action, and before choosing between materially different routes.
+2. State the result in one line: `Jev: <action> (<reason>)`. Honor it in active mode; `ask_human`
+   and irreversible actions always need Gaffer's confirmation.
+3. Skip Jev for simple answers, deterministic calculations, routine file edits, or `bypass jev`.
+   If Jev errors, continue on the normal safe path and say that Jev did not run.
