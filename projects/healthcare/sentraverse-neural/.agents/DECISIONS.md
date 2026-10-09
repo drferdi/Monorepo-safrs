@@ -3,6 +3,18 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (layout) — The page ends with the stage
+
+Decision: the colophon (copyright, tagline, Privacy and Terms) and the division list below it are
+removed, so at the end of the scroll the legacy screen stays put instead of sliding up. On phones
+in the cinematic view the divisions are no longer listed; EXPLORE SENTRAVERSE leads to the same
+ecosystem page. This supersedes "they stay after the colophon" in the entry below.
+
+Rationale: Chief's instruction; nothing should scroll in under the final screen.
+
+Evidence: the neural e2e "the last screen is the end of the page" (stage flush with the window
+at the end, desktop and phone).
+
 ## 2026-10-09 (brand) — The neuron is the official mark; the ecosystem stands beside the founder
 
 Decision: Chief supplied the official Sentraverse logo, a white neuron on a transparent

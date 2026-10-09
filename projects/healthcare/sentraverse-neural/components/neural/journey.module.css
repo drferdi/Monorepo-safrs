@@ -33,7 +33,7 @@
 /* The official mark (Chief 2026-10-09): the neuron, white on transparent. */
 .mark { display: block; width: auto; height: 28px; }
 .wordmarkDot { font-size: 9px; align-self: flex-start; margin-left: -9px; margin-top: 6px; }
-.edition, .specimen, .coordinates, .eyebrow, .annotation, .begin, .controls, .cta, .colophon, .loading { font-family: var(--neural-mono); }
+.edition, .specimen, .coordinates, .eyebrow, .annotation, .begin, .controls, .cta, .loading { font-family: var(--neural-mono); }
 .edition { font-size: 9px; color: var(--neural-muted); letter-spacing: .12em; }
 .nav { display: flex; align-items: center; gap: 30px; font-size: 11px; }
 .nav button { color: inherit; border: 0; background: none; padding: 8px 0; }
@@ -113,10 +113,6 @@
 .loading { display: none; }
 .journey[data-loading="true"] .loading { display: flex; position: absolute; right: 15%; top: 49%; flex-direction: column; gap: 16px; font-size: 8px; letter-spacing: .1em; color: var(--neural-blue); }
 .loading i { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--neural-blue), transparent); }
-.colophon { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 90px; padding: 30px 4.2vw; font-size: 8px; letter-spacing: .08em; color: var(--neural-muted); border-top: 1px solid var(--neural-line); }
-.colophon div { display: flex; gap: 20px; }
-.accessibleDivisions { display: none; flex-wrap: wrap; gap: 20px; padding: 10px 4.2vw 30px; font-size: 10px; color: var(--neural-muted); }
-.accessibleDivisions > span { color: var(--neural-white); }
 .overview { display: none; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .overview button { position: absolute; pointer-events: auto; width: 195px; padding: 9px 0; border: 0; border-top: 1px solid var(--neural-line); background: transparent; color: var(--neural-white); font-family: var(--neural-mono); font-size: 9px; line-height: 1.8; text-align: left; }
 .overview button span { margin-right: 10px; color: var(--neural-blue); }
@@ -180,9 +176,6 @@
   .settings button { font-size: 7px; }
   .soundIcon { display: none; }
   .cursor { display: none; }
-  .colophon { align-items: flex-start; flex-direction: column; padding-inline: 7vw; }
-  .accessibleDivisions { padding-inline: 7vw; flex-direction: column; }
-  .journey[data-enhanced="cinematic"] .accessibleDivisions { display: flex; }
   .journey[data-enhanced="reading"] .header { padding-inline: 7vw; }
   .journey[data-enhanced="reading"] .controls { padding-inline: 7vw; }
   .journey[data-enhanced="reading"] .chapter { min-height: 95svh; padding-top: 190px; }

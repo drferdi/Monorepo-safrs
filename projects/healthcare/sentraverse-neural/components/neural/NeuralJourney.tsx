@@ -14,7 +14,7 @@ import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra } from './story'
 import styles from './journey.module.css'
 
-export default function NeuralJourney({ year }: { year: number }) {
+export default function NeuralJourney() {
   const rootRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fallbackRef = useRef<HTMLCanvasElement>(null)
@@ -405,13 +405,7 @@ export default function NeuralJourney({ year }: { year: number }) {
         </div>
         <div className={styles.cursor} data-cursor aria-hidden="true"><span data-cursor-label /></div>
       </div>
-      <div className={styles.colophon}>
-        <span>SENTRAVERSE © {year}</span><span>INTELLIGENCE BEGINS AS CONNECTION.</span>
-        <div><a href={sentra('/privacy')}>Privacy</a><a href={sentra('/terms')}>Terms</a></div>
-      </div>
       <noscript><p className={styles.noScript}>The complete story is available below each illustration. Enable JavaScript for the cinematic journey.</p></noscript>
-      {/* Phones in the cinematic view have no room beside the figure: the ecosystem follows the page there. */}
-      <div className={styles.accessibleDivisions} aria-label="Ecosystem divisions"><span>Discover the ecosystem</span>{divisions.map(division => <a href={sentra('/ekosistem')} key={division.name}>{division.name}</a>)}</div>
     </main>
   )
 }

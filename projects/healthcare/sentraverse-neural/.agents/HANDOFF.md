@@ -18,7 +18,7 @@ drferdi/Sentraverse-N). This session implemented the brief
 - the opening words by meaning (`revealHero`);
 - the neural-trace progress line;
 - pointer node glow and micro-label;
-- `inert` off-screen chapters and the server-rendered year;
+- `inert` off-screen chapters;
 - `robots.txt` and Organization JSON-LD;
 - after Chief's "glitch" report and the final review: a division's marker and copy now start drawn
   back (they flashed in full with the panel on the first pass down), links from kept outer neurons

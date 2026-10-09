@@ -265,7 +265,8 @@ no new loop and no new dependency.
   network attracts. Touch, phones and reduced motion are unchanged.
 - **Hygiene**:
   - Off-screen chapters are `inert` beside `aria-hidden`.
-  - The colophon year comes from the server.
+  - The page ends with the stage (Chief 2026-10-09): no colophon below it, so the last screen
+    never scrolls away.
   - `app/robots.ts` and the Organization JSON-LD ship now. Canonical, sitemap and the Open Graph
     image wait for the domain.
 

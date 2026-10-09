@@ -481,7 +481,6 @@ test('controls inside a chapter that is not on screen cannot take focus, and the
   await expect(page.locator('#human')).toHaveAttribute('inert', '')
   await page.locator('#human [data-magnetic]').focus()
   expect(await page.evaluate(() => !!document.activeElement?.closest('#human'))).toBe(false)
-  await expect(page.locator('main')).toContainText(`SENTRAVERSE © ${new Date().getFullYear()}`)
   expect(errors.filter(text => /hydrat/i.test(text))).toEqual([])
   await page.getByRole('button', { name: 'READ THE STORY', exact: true }).click()
   await expect(page.locator('[data-chapter][inert]')).toHaveCount(0)
@@ -513,7 +512,7 @@ test('if the scripts never start, the opening words do not stay faint', async ({
   await expect.poll(() => h1.evaluate(element => Math.min(...Array.from(element.children, child => Number(getComputedStyle(child).opacity)))), { timeout: 9000 }).toBeGreaterThan(.99)
 })
 
-test('the ecosystem stands to the right of the founder at the end, and follows the page on a phone', async ({ page }) => {
+test('the ecosystem stands to the right of the founder at the end, and the last screen is the end of the page', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 })
   await page.goto('/')
   await expect(page.locator('main')).toHaveAttribute('data-enhanced', 'cinematic')
@@ -525,8 +524,13 @@ test('the ecosystem stands to the right of the founder at the end, and follows t
   expect(list.x).toBeGreaterThan(film.x + film.width / 2)
   expect(list.x).toBeGreaterThan(copy.x + copy.width)
   expect(list.x + list.width).toBeLessThanOrEqual(1280)
-  await expect(page.locator('main > [aria-label="Ecosystem divisions"]')).toBeHidden()
+  // Scrolled as far as the page goes, the stage still fills the window: nothing scrolls in below it.
+  const flush = async () => {
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight))
+    return page.locator('[data-stage]').evaluate(stage => { const box = stage.getBoundingClientRect(); return [Math.round(box.top), Math.round(box.bottom - window.innerHeight)] })
+  }
+  await expect.poll(flush).toEqual([0, 0])
   await page.setViewportSize({ width: 390, height: 844 })
   await expect(nav).toBeHidden()
-  await expect(page.locator('main > [aria-label="Ecosystem divisions"]').getByRole('link', { name: divisionNames[0], exact: true })).toBeVisible()
+  await expect.poll(flush).toEqual([0, 0])
 })
