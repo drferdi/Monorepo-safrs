@@ -41,7 +41,7 @@ export function workspaceDate(value: string): string {
   return Number.isNaN(date.getTime()) ? "Tanggal belum tersedia" : new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).format(date) + " WIB";
 }
 export function contextFacts(context: string, notes: string) {
-  const sources = [{ source: "Konteks Encounter", fields: structureNote(context).fields }, { source: "Catatan Patient", fields: structureNote(notes).fields }];
+  const sources = [{ source: "Konteks Encounter", fields: structureNote(context).fields }, { source: "Catatan Pasien", fields: structureNote(notes).fields }];
   const fields: { key: NoteField; label: string }[] = [{ key: "concern", label: "Keluhan utama" }, { key: "history", label: "Anamnesis" }, { key: "background", label: "Riwayat" }, { key: "medications", label: "Obat" }, { key: "allergies", label: "Alergi" }];
   return fields.map((field) => ({ ...field, values: sources.flatMap(({ source, fields: data }) => data[field.key] ? [{ source, text: data[field.key]! }] : []) }));
 }

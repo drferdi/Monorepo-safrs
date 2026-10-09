@@ -15,7 +15,7 @@ export const storageKey = "sentrapedia-workspace-v1";
 
 export const initialWorkspace: Workspace = {
   version: 1,
-  patients: [{ id: "demo-patient", name: "Patient", age: "", sex: "Not specified", notes: "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." }],
+  patients: [{ id: "demo-patient", name: "Pasien", age: "", sex: "Not specified", notes: "Pasien demonstrasi fiktif. Ganti dengan informasi fiktif saja." }],
   lists: [],
   encounters: [
     { id: "demo-encounter", patientId: "demo-patient", title: "Encounter (10/08 09:03 PM)", createdAt: "2026-10-08T14:03:00Z", messages: [], context: "" },
@@ -74,6 +74,12 @@ export function workspaceReducer(state: Workspace, action: WorkspaceAction): Wor
 function record(value: unknown): value is Record<string, unknown> { return typeof value === "object" && value !== null && !Array.isArray(value); }
 function strings(value: unknown, keys: string[]): boolean { return record(value) && keys.every((key) => typeof value[key] === "string"); }
 
+// Builds before 2026-10-09 seeded the demo patient as "Patient"; only that untouched seed text now reads "Pasien".
+function seedWording(patient: Patient): Patient {
+  if (patient.id !== "demo-patient") return patient;
+  return { ...patient, name: patient.name === "Patient" ? initialWorkspace.patients[0].name : patient.name, notes: patient.notes === "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." ? initialWorkspace.patients[0].notes : patient.notes };
+}
+
 export function restoreWorkspace(raw: string | null): Workspace {
   if (!raw) return initialWorkspace;
   try {
@@ -85,7 +91,7 @@ export function restoreWorkspace(raw: string | null): Workspace {
     if (!record(data.settings) || !strings(data.settings, ["specialty", "model", "language", "instructions"]) || !specialties.includes(String(data.settings.specialty)) || !["Standard", "Extended"].includes(String(data.settings.model)) || !["English", "Bahasa Indonesia"].includes(String(data.settings.language))) return initialWorkspace;
     if (data.activeEncounterId !== null && (typeof data.activeEncounterId !== "string" || !data.encounters.some((e: Record<string, unknown>) => e.id === data.activeEncounterId))) return initialWorkspace;
     const workspace = data as unknown as Workspace;
-    return cleanWorkflowState({ ...workspace, encounters: workspace.encounters.map((encounter) => ({ ...cleanWorkflowEncounter(encounter), messages: encounter.messages.map((message) => {
+    return cleanWorkflowState({ ...workspace, patients: workspace.patients.map(seedWording), encounters: workspace.encounters.map((encounter) => ({ ...cleanWorkflowEncounter(encounter), messages: encounter.messages.map((message) => {
       const clean = { ...message };
       if (typeof clean.sourceText !== "string") delete clean.sourceText;
       if (typeof clean.originalContent !== "string") delete clean.originalContent;

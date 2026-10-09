@@ -81,6 +81,27 @@ describe("Indonesian wording", () => {
   });
 });
 
+describe("Indonesian patient wording", () => {
+  it("says Pasien, never Patient, in mode texts and Indonesian drafts", () => {
+    for (const mode of modes) expect([mode.label, mode.title, mode.description, mode.placeholder].join(" ")).not.toMatch(/\bpatient\b/i);
+    for (const mode of modeIds) {
+      const draft = createDraft({ mode, prompt: "Keluhan: sintetis", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
+      expect(draft).not.toMatch(/\bpatient\b/i);
+      expect(draft).toContain("Pasien belum dipilih");
+    }
+  });
+});
+
+describe("saved seed patient", () => {
+  it("renames the untouched demo patient from an older build to Pasien and leaves every other patient as it is", () => {
+    const old = { ...initialWorkspace, patients: [{ ...initialWorkspace.patients[0], name: "Patient", notes: "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." }, { id: "own", name: "Patient", age: "", sex: "Female", notes: "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." }, { ...initialWorkspace.patients[0], id: "demo-edited", name: "Bu Ani" }] };
+    const [demo, own, edited] = restoreWorkspace(JSON.stringify(old)).patients;
+    expect(demo).toEqual(initialWorkspace.patients[0]);
+    expect(own).toEqual(old.patients[1]);
+    expect(edited.name).toBe("Bu Ani");
+  });
+});
+
 describe("composer hint per intent tab", () => {
   it("shows the tab's own hint on its default mode and the chip's hint on the others", () => {
     expect(composerPlaceholder("question")).toBe("Diskusikan kasus yang sedang Anda tangani.");

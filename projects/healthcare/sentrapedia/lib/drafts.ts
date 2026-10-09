@@ -13,8 +13,8 @@ export const modes: { id: ModeId; label: string; title: string; description: str
   { id: "chronic", label: "Catatan Kronis", title: "Chronic care note", description: "Dokumentasikan Longitudinal Care dan Follow-up yang belum selesai.", placeholder: "Tuliskan kondisi, perubahan Interval, dan Care Goals..." },
   { id: "handoff", label: "Handoff (SBAR)", title: "Clinical handoff", description: "Susun ringkasan Transfer of Care terstruktur.", placeholder: "Jelaskan Situation, Background, Assessment, dan tugas tertunda..." },
   { id: "tasks", label: "Daftar Tugas", title: "Encounter task list", description: "Susun langkah yang diberikan menjadi daftar tugas dengan checklist.", placeholder: "Masukkan tugas Follow-up, satu per baris..." },
-  { id: "avs", label: "Ringkasan Kunjungan", title: "After-visit summary", description: "Susun ringkasan untuk Patient yang akan ditinjau Clinician.", placeholder: "Masukkan pembahasan dan instruksi yang disepakati..." },
-  { id: "education", label: "Edukasi Pasien", title: "Patient education", description: "Atur informasi yang ingin dibagikan kepada Patient.", placeholder: "Masukkan topik dan materi edukasi yang telah disetujui..." },
+  { id: "avs", label: "Ringkasan Kunjungan", title: "After-visit summary", description: "Susun ringkasan untuk Pasien yang akan ditinjau Clinician.", placeholder: "Masukkan pembahasan dan instruksi yang disepakati..." },
+  { id: "education", label: "Edukasi Pasien", title: "Edukasi Pasien", description: "Atur informasi yang ingin dibagikan kepada Pasien.", placeholder: "Masukkan topik dan materi edukasi yang telah disetujui..." },
   { id: "referral", label: "Surat Rujukan", title: "Surat rujukan", description: "Susun surat rujukan dari informasi klinis yang diberikan.", placeholder: "Masukkan tujuan rujukan, alasan rujukan, dan temuan relevan..." },
   { id: "authorization", label: "Prior Authorization", title: "Prior authorization", description: "Susun permintaan penjaminan dengan detail pendukung.", placeholder: "Masukkan layanan, Clinical Indication, dan Previous Treatments..." },
   { id: "scribe", label: "Scribe Note", title: "Scribed encounter note", description: "Susun transkrip Encounter menjadi draf yang dapat diedit.", placeholder: "Tempel percakapan Encounter atau mulai dikte..." },
@@ -70,7 +70,7 @@ export function createDraft(input: DraftInput): string {
     monitoring: [["concern", "assessment"], ["investigations", "goals"], ["plan"], [], ["followup", "pending"]],
     scribe: [[], ["concern"], ["history"], ["examination"], ["assessment"], ["plan", "followup"]],
   };
-  const patientInfo = input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} ${id ? "tahun" : "years"}` : ""} · ${id && input.patient.sex === "Not specified" ? "Sex belum diisi" : input.patient.sex}` : id ? "Patient belum dipilih" : "No patient selected";
+  const patientInfo = input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} ${id ? "tahun" : "years"}` : ""} · ${id && input.patient.sex === "Not specified" ? "Sex belum diisi" : input.patient.sex}` : id ? "Pasien belum dipilih" : "No patient selected";
   const body = input.mode === "tasks" ? `## ${sections.tasks[0]}\n${prompt.split(/\n+/).filter(Boolean).map((line) => `- [ ] ${line.replace(/^[-*]\s*(\[[ x]\]\s*)?/, "")}`).join("\n")}` : sections[input.mode].map((title, index) => {
     let value = mapping[input.mode][index].map((key) => note.fields[key]).filter(Boolean).join("\n");
     if (input.mode === "scribe" && index === 0) value = prompt;
