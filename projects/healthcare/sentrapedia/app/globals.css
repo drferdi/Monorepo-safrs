@@ -103,8 +103,8 @@ kbd { font-family: inherit; font-size: 10px; color: var(--workspace-ink-faint); 
 .upgrade-button:hover, .primary:hover { background: var(--color-action-primary-hover); }
 .workspace-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .home-view { overflow-y: auto; scrollbar-width: thin; }
-.home-view .workspace-body { flex: 0 0 auto; }
-.home-content { width: min(780px, calc(100% - 48px)); margin: clamp(24px, calc(8dvh - 12px), 60px) auto 20px; text-align: left; }
+.home-view .workspace-body { flex: 1 0 auto; }
+.home-content { width: min(780px, calc(100% - 48px)); flex: 1 0 auto; display: flex; flex-direction: column; margin: clamp(24px, calc(8dvh - 12px), 60px) auto 0; text-align: left; }
 h1 { font-size: clamp(30px, 3vw, 36px); font-weight: 400; line-height: 1.25; letter-spacing: -1.2px; margin: 0 0 24px; text-wrap: balance; }
 h1 span { white-space: normal; }
 .specialty-pill { display: inline-flex; align-items: center; justify-content: center; background: var(--workspace-white); padding: 5px 10px; border: 1px solid var(--color-border-subtle); border-radius: 20px; font-size: 12px; color: var(--color-text-secondary); line-height: 16px; }
@@ -582,7 +582,7 @@ button.specialty-pill:hover { border-color: var(--workspace-ink-faint); }
 .home-content > .intent-groups button { border-bottom: 0; border-radius: 7px; padding: 9px 13px; }
 .home-content > .intent-groups button[aria-pressed="true"] { background: var(--workspace-accent-soft); }
 .home-headline { min-height: 112px; display: grid; align-items: center; }
-.home-content > .composer-area { margin-top: 80px; }
+.home-content > .composer-area { margin-top: auto; padding-top: 32px; }
 .home-headline h1 { font-size: clamp(28px, 2.5vw, 32px); line-height: 1.2; letter-spacing: -.9px; margin: 0; text-wrap: balance; text-shadow: 0 2px 4px color-mix(in srgb, var(--workspace-accent-ink), transparent 82%); }
 .home-headline p { margin: 10px 0 0; font-size: 13px; line-height: 1.6; color: var(--color-text-secondary); }
 .headline-transition { animation: headline-enter 180ms ease-out; }
