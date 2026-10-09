@@ -113,8 +113,6 @@ button.specialty-pill:hover { border-color: var(--workspace-ink-faint); }
 .composer textarea { display: block; width: 100%; min-height: 52px; max-height: 180px; padding: 5px 6px; background: none; border: none; outline: none; resize: none; font-size: 15px; line-height: 24px; field-sizing: content; overflow-y: auto; }
 .composer textarea::placeholder { color: var(--color-text-muted); opacity: 1; }
 .composer-analysis { margin-top: 14px; text-align: left; font-size: 11px; line-height: 1.6; color: var(--color-text-secondary); }
-.composer-confirm { display: flex; align-items: flex-start; gap: 8px; }
-.composer-confirm input { margin-top: 3px; flex-shrink: 0; accent-color: var(--color-action-primary); }
 .composer-analysis-status { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .composer-analysis-status > span { display: flex; align-items: center; gap: 8px; }
 .composer-toolbar { margin-top: 7px; display: flex; align-items: center; justify-content: space-between; gap: 7px; }
@@ -198,8 +196,6 @@ button.specialty-pill:hover { border-color: var(--workspace-ink-faint); }
 .encounter-title { display: flex; align-items: center; gap: 8px; color: var(--color-text-secondary); font-size: 12px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .conversation { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
 .conversation-inner { width: min(780px, calc(100% - 48px)); margin: 18px auto 0; padding-bottom: 22px; }
-.conversation-intro { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 28px; }
-.conversation-intro > span:last-child { font-size: 10px; color: var(--color-text-muted); display: inline-flex; gap: 4px; align-items: center; }
 .user-message { display: flex; align-items: flex-start; margin: 20px 0 26px auto; width: fit-content; max-width: 90%; background: var(--color-background-surface); border: 1px solid var(--color-border-subtle); border-radius: 13px 13px 3px 13px; padding: 12px 10px 12px 17px; gap: 10px; line-height: 21px; white-space: pre-wrap; }
 .user-message .icon-button { flex-shrink: 0; width: 23px; height: 23px; color: var(--color-text-muted); }
 .assistant-message { margin: 0 0 28px; }
@@ -458,8 +454,6 @@ button.specialty-pill:hover { border-color: var(--workspace-ink-faint); }
   .export-encounter { font-size: 0; padding: 8px; gap: 0; min-height: 31px; }
   .header-right { gap: 6px; }
   .conversation-inner, .chat-composer { width: calc(100% - 32px); }
-  .conversation-intro { margin-bottom: 18px; }
-  .conversation-intro > span:last-child { font-size: 10px; }
   .draft-content { padding-left: 0; }
   .message-actions, .evidence-handoff { margin-left: 0; }
   .user-message { max-width: 96%; font-size: 12px; }
@@ -481,8 +475,6 @@ button.specialty-pill:hover { border-color: var(--workspace-ink-faint); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
 
 /* Clinical workspace: local document workflow and contextual navigation. */
-.workspace-label { display: flex; gap: 9px; align-items: center; font-weight: 600; font-size: 12px; }
-.workspace-label > span { padding: 3px 6px; border-radius: 4px; background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); font-size: 10px; font-weight: 400; }
 .header-right { gap: 6px; flex-shrink: 0; }
 .header-right .icon-button { flex-shrink: 0; }
 .header-left { flex: 1; }
@@ -658,7 +650,6 @@ button.specialty-pill:hover { border-color: var(--workspace-ink-faint); }
   .home-headline h1 { font-size: 28px; }
   .home-heading-row .specialty-pill { font-size: 11px; padding: 4px 8px; }
   .home-heading-row .workspace-eyebrow { font-size: 8px; letter-spacing: 1px; }
-  .workspace-label { font-size: 10px; }
   .header-right { gap: 1px; }
   .header-right .upgrade-button { display: none; }
   .header-patient { max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

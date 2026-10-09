@@ -6,7 +6,7 @@ import { documentSections, replaceSection } from "../lib/studio";
 import type { Message, ReviewStatus, WorkspaceAction } from "../lib/workspace";
 import { reviewComplete } from "../lib/workflow";
 import { HistoryPanel, ReviewPanel } from "./document-workflow";
-import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, hasMiraSource } from "../lib/mira/presentation";
+import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, hasMiraSource, referralSectionTitle } from "../lib/mira/presentation";
 import { DiagnosisDocument } from "./diagnosis-document";
 
 const diagnosisLabels = new Set(["Keluhan utama", "Kondisi yang tercatat", "Alergi tercatat", "Obat yang sedang digunakan (input kasus)", "Anamnesis tercatat", "Tanda vital tercatat", "Pemeriksaan fisik tercatat", "Informasi yang belum tersedia", "Pertanyaan lanjutan dari layanan", "Alternatif", "Jangan terlewat", "Kemungkinan utama — belum ditinjau klinisi", "Pertimbangan layanan", "Bidang belum terisi", "Hasil pemeriksaan tercatat", "Usulan pemeriksaan dari layanan", "Kemampuan fasilitas tercatat", "Jejak analisis"]);
@@ -37,7 +37,7 @@ export function DocumentStudio({ message, onEdit, onReview, encounterId, dispatc
   const document = useRef<HTMLDivElement>(null);
   const content = diagnosisContent(message);
   const sections = documentSections(content);
-  const diagnosis = hasMiraSource(message) && ["Ringkasan Kasus", diagnosisSectionTitles[0]].includes(sections[0]?.title);
+  const diagnosis = hasMiraSource(message) && ["Ringkasan Kasus", referralSectionTitle, ...diagnosisSectionTitles].includes(sections[0]?.title);
   const [typing] = useState(() => diagnosis && !revealed.has(message.id) && Date.now() - Date.parse(message.createdAt) < freshAnswerMs);
   useEffect(() => { revealed.add(message.id); }, [message.id]);
   const section = sections[selected];
