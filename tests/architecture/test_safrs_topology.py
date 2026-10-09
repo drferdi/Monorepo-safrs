@@ -47,7 +47,6 @@ class SafrsTopologyTests(unittest.TestCase):
             '.codex/config.toml',
             '.codex/hooks.json',
             '.codex/hooks/guard-tool-use.mjs',
-            '.codex/hooks/format-edited-files.mjs',
             '.codex/agents/safrs-reviewer.toml',
             '.codex/agents/security-reviewer.toml',
             '.agents/skills/verify/SKILL.md',

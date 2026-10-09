@@ -523,37 +523,6 @@ test("Codex guard resolves the repository registry from a nested project cwd", (
   );
 });
 
-test("Codex formatter extracts unique apply_patch paths", async () => {
-  const formatterUrl = pathToFileURL(
-    join(repositoryRoot, ".codex/hooks/format-edited-files.mjs"),
-  ).href;
-  const formatter = await import(formatterUrl);
-  const paths = formatter.extractEditedPaths({
-    tool_name: "apply_patch",
-    tool_input: {
-      command: [
-        "*** Begin Patch",
-        "*** Update File: src/a.ts",
-        "*** Add File: src/b.json",
-        "*** Update File: src/a.ts",
-        "*** End Patch",
-      ].join("\n"),
-    },
-  });
-  assert.deepEqual(paths, ["src/a.ts", "src/b.json"]);
-  assert.equal(formatter.shouldFormat("src/a.ts"), true);
-  assert.equal(formatter.shouldFormat(".next/cache/a.js"), false);
-  assert.equal(
-    formatter.shouldFormat("packages/database/src/generated/a.ts"),
-    false,
-  );
-  assert.equal(formatter.shouldFormat("README.md"), false);
-  assert.equal(
-    formatter.findRepositoryRoot(join(repositoryRoot, "packages/api")),
-    repositoryRoot,
-  );
-});
-
 test("Codex project config wires only pinned Context7 and three child threads", () => {
   const config = parseToml(".codex/config.toml");
   assert.equal(config.agents.enabled, true);
@@ -574,23 +543,21 @@ test("Codex project config wires only pinned Context7 and three child threads", 
   }
 });
 
-test("Codex hooks use repository root discovery for Windows and POSIX", () => {
+test("Codex PreToolUse hook uses repository root discovery without mutation", () => {
   const config = JSON.parse(readFileSync(".codex/hooks.json", "utf8"));
   assert.equal(
     config.hooks.PreToolUse[0].matcher,
     "Bash|apply_patch|Edit|Write",
   );
-  assert.equal(config.hooks.PostToolUse[0].matcher, "apply_patch|Edit|Write");
-  for (const group of [
-    config.hooks.PreToolUse[0],
-    config.hooks.PostToolUse[0],
-  ]) {
-    assert.match(group.hooks[0].command, /git rev-parse --show-toplevel/u);
-    assert.match(
-      group.hooks[0].commandWindows,
-      /git rev-parse --show-toplevel/u,
-    );
-  }
+  assert.equal(Object.hasOwn(config.hooks, "PostToolUse"), false);
+  assert.match(
+    config.hooks.PreToolUse[0].hooks[0].command,
+    /git rev-parse --show-toplevel/u,
+  );
+  assert.match(
+    config.hooks.PreToolUse[0].hooks[0].commandWindows,
+    /git rev-parse --show-toplevel/u,
+  );
 });
 
 test("Codex custom reviewers are instruction-level read-only without model overrides", () => {

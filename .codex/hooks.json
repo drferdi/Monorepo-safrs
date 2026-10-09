@@ -14,20 +14,6 @@
           }
         ]
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "apply_patch|Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/format-edited-files.mjs\"",
-            "commandWindows": "node \"$(git rev-parse --show-toplevel)\\.codex\\hooks\\format-edited-files.mjs\"",
-            "timeout": 30,
-            "statusMessage": "Formatting edited files"
-          }
-        ]
-      }
     ]
   }
 }
