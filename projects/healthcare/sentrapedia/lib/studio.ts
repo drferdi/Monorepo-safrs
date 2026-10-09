@@ -1,13 +1,19 @@
-import type { ModeId } from "./drafts";
+import { modes, type ModeId } from "./drafts";
 import { structureNote, type NoteField } from "./note-structure";
 import type { Encounter } from "./workspace";
 
-export const intentGroups: { id: string; label: string; headline: string; description: string; modes: ModeId[] }[] = [
-  { id: "ask", label: "Tanya", headline: "Kasus kompleks. Analisis lebih tajam.", description: "Telusuri bukti dan pertajam pemahaman klinis.", modes: ["question", "ddx", "workup", "refer"] },
-  { id: "document", label: "Dokumentasi", headline: "Catatan rapi. Informasi lebih jelas.", description: "Susun informasi menjadi draf yang siap ditinjau.", modes: ["clinic", "hpi", "telephone", "chronic", "scribe"] },
-  { id: "plan", label: "Rencana", headline: "Langkah terarah. Rencana lebih matang.", description: "Tata asesmen dan langkah tindak lanjut dalam satu tempat.", modes: ["ap", "tasks", "handoff"] },
-  { id: "communicate", label: "Komunikasi", headline: "Pesan jelas. Pemahaman lebih baik.", description: "Siapkan informasi yang mudah dipahami dan ditinjau.", modes: ["avs", "education", "referral", "authorization"] },
+export const intentGroups: { id: string; label: string; headline: string; description: string; placeholder: string; modes: ModeId[] }[] = [
+  { id: "ask", label: "Tanya", headline: "Kasus kompleks. Analisis lebih tajam.", description: "Telusuri bukti dan pertajam pemahaman klinis.", placeholder: "Diskusikan kasus yang sedang Anda tangani.", modes: ["question", "ddx", "workup", "refer"] },
+  { id: "document", label: "Dokumentasi", headline: "Catatan rapi. Informasi lebih jelas.", description: "Susun informasi menjadi draf yang siap ditinjau.", placeholder: "Tuliskan anamnesis, pemeriksaan, dan temuan untuk disusun menjadi catatan.", modes: ["clinic", "hpi", "telephone", "chronic", "scribe"] },
+  { id: "plan", label: "Rencana", headline: "Langkah terarah. Rencana lebih matang.", description: "Tata asesmen dan langkah tindak lanjut dalam satu tempat.", placeholder: "Tuliskan asesmen dan rencana tata laksana yang ingin Anda susun.", modes: ["ap", "tasks", "handoff"] },
+  { id: "communicate", label: "Komunikasi", headline: "Pesan jelas. Pemahaman lebih baik.", description: "Siapkan informasi yang mudah dipahami dan ditinjau.", placeholder: "Tuliskan informasi yang ingin disampaikan kepada pasien atau sejawat.", modes: ["avs", "education", "referral", "authorization"] },
 ];
+
+// A tab's own hint shows on its default mode; the other chips keep their specific hint.
+export function composerPlaceholder(mode: ModeId): string {
+  const group = intentGroups.find((item) => item.modes[0] === mode);
+  return group ? group.placeholder : modes.find((item) => item.id === mode)!.placeholder;
+}
 
 export interface DocumentSection { title: string; start: number; end: number; body: string }
 export function documentSections(content: string): DocumentSection[] {

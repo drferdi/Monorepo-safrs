@@ -15,11 +15,11 @@ export const modes: { id: ModeId; label: string; title: string; description: str
   { id: "tasks", label: "Daftar tugas", title: "Encounter task list", description: "Susun langkah yang diberikan menjadi daftar tugas dengan checklist.", placeholder: "Masukkan tugas Follow-up, satu per baris..." },
   { id: "avs", label: "Buat AVS", title: "After-visit summary", description: "Susun ringkasan untuk Patient yang akan ditinjau Clinician.", placeholder: "Masukkan pembahasan dan instruksi yang disepakati..." },
   { id: "education", label: "Patient Education", title: "Patient education", description: "Atur informasi yang ingin dibagikan kepada Patient.", placeholder: "Masukkan topik dan materi edukasi yang telah disetujui..." },
-  { id: "referral", label: "Referral Letter", title: "Referral letter", description: "Susun Referral dari informasi Clinical yang diberikan.", placeholder: "Masukkan penerima, Reason for Referral, dan temuan relevan..." },
+  { id: "referral", label: "Surat rujukan", title: "Surat rujukan", description: "Susun surat rujukan dari informasi klinis yang diberikan.", placeholder: "Masukkan tujuan rujukan, alasan rujukan, dan temuan relevan..." },
   { id: "authorization", label: "Prior Authorization", title: "Prior authorization", description: "Susun permintaan penjaminan dengan detail pendukung.", placeholder: "Masukkan layanan, Clinical Indication, dan Previous Treatments..." },
   { id: "scribe", label: "Scribe Note", title: "Scribed encounter note", description: "Susun transkrip Encounter menjadi draf yang dapat diedit.", placeholder: "Tempel percakapan Encounter atau mulai dikte..." },
   { id: "workup", label: "Pemeriksaan penunjang", title: "Diagnostic workup", description: "Analisis kasus dengan pemeriksaan penunjang yang disarankan di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan pemeriksaan yang sudah ada..." },
-  { id: "refer", label: "Draft rujukan", title: "Referral draft", description: "Analisis kasus dengan draf rujukan dan keputusan disposisi di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan alasan mempertimbangkan rujukan..." },
+  { id: "refer", label: "Draft rujukan", title: "Draft rujukan", description: "Analisis kasus dengan draf rujukan dan keputusan disposisi di bagian atas.", placeholder: "Jelaskan keluhan, temuan, dan alasan mempertimbangkan rujukan..." },
 ];
 
 export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: "Standard" | "Extended"; language: "English" | "Bahasa Indonesia"; patient?: Patient; instructions: string }
@@ -42,7 +42,7 @@ export function createDraft(input: DraftInput): string {
     tasks: [id ? "Daftar tugas" : "Tasks"],
     avs: id ? ["Kunjungan hari ini", "Yang dibahas", "Langkah yang disepakati", "Medications / Investigations yang dibahas", "Waktu dan cara tindak lanjut"] : ["Your visit today", "What we discussed", "Your agreed next steps", "Medicines / tests discussed", "When and how to follow up"],
     education: id ? ["Topik dan materi yang diberikan", "Penjelasan yang diberikan", "Informasi perawatan mandiri yang disepakati", "Pertanyaan untuk tindak lanjut"] : ["Topic and supplied teaching points", "What this means", "Agreed self-care information", "Questions to ask at follow-up"],
-    referral: id ? ["Reason for referral", "Informasi Clinical relevan", "Temuan / Examination", "Previous management", "Masukan Specialist yang diminta"] : ["Reason for referral", "Relevant clinical information", "Findings / investigations", "Management to date", "Requested specialist input"],
+    referral: id ? ["Alasan rujukan", "Informasi Clinical relevan", "Temuan / Examination", "Previous management", "Masukan Specialist yang diminta"] : ["Reason for referral", "Relevant clinical information", "Findings / investigations", "Management to date", "Requested specialist input"],
     authorization: id ? ["Layanan yang diminta", "Clinical indication", "Previous treatments dan Response", "Dokumen pendukung", "Pernyataan klinisi / persyaratan penjamin"] : ["Requested service", "Clinical indication", "Previous treatments and response", "Supporting documentation", "Clinician attestation / insurer requirements"],
     workup: id ? ["Temuan yang disampaikan", "Pemeriksaan penunjang yang diusulkan"] : ["Supplied findings", "Proposed investigations"],
     refer: id ? ["Alasan rujukan", "Ringkasan klinis", "Pemeriksaan yang sudah dilakukan"] : ["Reason for referral", "Clinical summary", "Investigations done"],

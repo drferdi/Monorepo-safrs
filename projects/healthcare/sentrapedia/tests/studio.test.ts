@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, documentSections, replaceSection, encounterTimeline, contextFacts } from "../lib/studio";
+import { intentGroups, documentSections, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../lib/studio";
 import { defaultReviewItems } from "../lib/workflow";
-import { modeIds, modes } from "../lib/drafts";
+import { createDraft, modeIds, modes } from "../lib/drafts";
 import { initialWorkspace, restoreWorkspace, workspaceReducer, type Message, type Workspace } from "../lib/workspace";
 
 const message: Message = { id: "doc", role: "assistant", content: "# Note\n\n## History\nOriginal\n\n## Plan\nKeep\n---\nFooter", mode: "clinic", createdAt: "2026-10-09T01:00:00Z" };
@@ -55,5 +55,21 @@ describe("workspace presentation helpers", () => {
 describe("slash picker order", () => {
   it("keeps the local Referral Letter as the first match for /ref and /refer", () => {
     for (const query of ["ref", "refer"]) expect(modes.filter((item) => `${item.id} ${item.label}`.toLowerCase().includes(query))[0].id).toBe("referral");
+  });
+});
+
+describe("Indonesian wording", () => {
+  it("says rujukan, never referral, on screen and in Indonesian drafts", () => {
+    for (const mode of modes) expect([mode.label, mode.title, mode.description, mode.placeholder].join(" ")).not.toMatch(/referral/i);
+    for (const mode of ["referral", "refer"] as const) expect(createDraft({ mode, prompt: "Keluhan sintetis", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" })).not.toMatch(/referral/i);
+  });
+});
+
+describe("composer hint per intent tab", () => {
+  it("shows the tab's own hint on its default mode and the chip's hint on the others", () => {
+    expect(composerPlaceholder("question")).toBe("Diskusikan kasus yang sedang Anda tangani.");
+    for (const group of intentGroups) expect(composerPlaceholder(group.modes[0])).toBe(group.placeholder);
+    expect(new Set(intentGroups.map((group) => group.placeholder)).size).toBe(intentGroups.length);
+    expect(composerPlaceholder("refer")).toBe(modes.find((mode) => mode.id === "refer")!.placeholder);
   });
 });
