@@ -43,6 +43,7 @@ textarea { resize: vertical; }
 .sidebar-brand { min-height: 56px; padding: 0 2px 8px; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: inline-flex; gap: 5px; align-items: center; font-size: 20px; letter-spacing: 1.1px; font-weight: 500; color: var(--color-text-primary); }
 .brand img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
+.patient-avatar { object-fit: contain; flex-shrink: 0; }
 .brand-wordmark { font-family: inherit; text-shadow: var(--workspace-brand-shadow); letter-spacing: -.45px; }
 .icon-button { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; }
 .icon-button:hover, .small-icon:hover { background: var(--color-border-subtle); }
