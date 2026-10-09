@@ -554,7 +554,7 @@ test('no text is smaller than 11 px on a desktop or 10 px on a phone, and the le
   expect(cta.y + cta.height).toBeLessThanOrEqual(controls.y)
 })
 
-test('the network chapter names the SentraSquad one by one after its title, each out of a burst of light, on desktop, phone and short phone', async ({ page }) => {
+test('the network chapter names the SentraSquad one by one after its title, out of one burst of light behind them, on desktop, phone and short phone', async ({ page }) => {
   const squad = ['Asyraf Hadi', 'dr. Novi Dwi Anggraini', 'Joseph Arianto', 'Farhan Nugroho', 'Kevin Susanto']
   for (const [width, height] of [[1280, 800], [375, 812], [360, 640]]) {
     await page.setViewportSize({ width, height })
@@ -579,10 +579,16 @@ test('the network chapter names the SentraSquad one by one after its title, each
     expect(eyebrow.y, `${width}x${height}: the chapter starts below the header`).toBeGreaterThanOrEqual(header.y + header.height)
   }
   await expect(page.locator('#network [data-squad-name]').nth(3).locator('span')).toHaveText('FULLSTACK + INFRASTRUCTURE MAINTENANCE LEAD')
-  // In the moment a name arrives its burst is alight behind it; once it has settled the light is gone.
-  const burst = page.locator('#network [data-burst]').first()
-  await portraitPhase(page, 61.55)
+  // One burst from behind the middle of the row: alight as the names arrive, the middle name out
+  // of it before the ends, and gone once they have settled.
+  const burst = page.locator('#network [data-burst]'), names = page.locator('#network [data-squad-name]')
+  await expect(burst).toHaveCount(1)
+  await portraitPhase(page, 61.85)
   expect(Number(await burst.evaluate(element => getComputedStyle(element).opacity))).toBeGreaterThan(.3)
+  const [source, row] = [(await burst.boundingBox())!, (await page.locator('#network [data-squad] ul').boundingBox())!]
+  expect(Math.abs(source.x + source.width / 2 - (row.x + row.width / 2))).toBeLessThan(4)
+  const opacity = (i: number) => names.nth(i).evaluate(element => Number(getComputedStyle(element).opacity))
+  expect(await opacity(2)).toBeGreaterThan(await opacity(0))
   await portraitPhase(page, 63.5)
   await expect(burst).toHaveCSS('opacity', '0')
 })

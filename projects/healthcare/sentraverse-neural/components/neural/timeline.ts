@@ -250,26 +250,34 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
       entry.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
       entry.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)
     }
-    // The SentraSquad arrive one by one once the network's title has formed (Chief 2026-10-09): a
-    // burst of light breaks behind each name with a shock ring, and the name comes out of the
-    // glare blurred and overbright, then settles clear. Everything is drawn back at build, like
-    // the marker, so nothing shows before its turn.
+    // The SentraSquad arrive once the network's title has formed (Chief 2026-10-09): one burst of
+    // light breaks behind the middle of the row with a shock ring, and each name comes out of the
+    // glare as the wave reaches it, the middle first and the ends last, blurred and overbright,
+    // then settles clear. Everything is drawn back at build, like the marker, so nothing shows
+    // before its turn.
     const squadTitle = panel.querySelector('[data-squad] > p')
     const names = Array.from(panel.querySelectorAll('[data-squad-name]'))
     if (squadTitle && names.length) {
-      const bursts = Array.from(panel.querySelectorAll('[data-burst]')), shocks = Array.from(panel.querySelectorAll('[data-shock]'))
+      const burst = panel.querySelector('[data-burst]'), shock = panel.querySelector('[data-shock]')
+      // The wave reaches each name by its distance from the source as laid out (a row of five on
+      // desktop, two columns on phones); a breakpoint change rebuilds the master and measures again.
+      const start = 1.75, row = (names[0].closest('ul') ?? panel).getBoundingClientRect()
+      const distances = names.map(name => { const box = name.getBoundingClientRect(); return Math.hypot(box.x + box.width / 2 - (row.x + row.width / 2), box.y + box.height / 2 - (row.y + row.height / 2)) })
+      const farthest = Math.max(...distances) || 1
       gsap.set(squadTitle, { autoAlpha: 0, y: 10 })
-      gsap.set([...bursts, ...shocks], { autoAlpha: 0 })
       gsap.set(names, { autoAlpha: 0, scale: .82, filter: 'blur(10px) brightness(2.6)' })
       entry.fromTo(squadTitle, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .7, ease: ease.text, immediateRender: false }, 1.4)
+      if (burst) {
+        gsap.set(burst, { autoAlpha: 0 })
+        entry.fromTo(burst, { autoAlpha: 0, scale: .15 }, { autoAlpha: 1, scale: 1, duration: .3, ease: 'power3.out', immediateRender: false }, start)
+        entry.to(burst, { autoAlpha: 0, scale: 1.6, duration: 1.1, ease: 'power2.out' }, start + .3)
+      }
+      if (shock) {
+        gsap.set(shock, { autoAlpha: 0 })
+        entry.fromTo(shock, { autoAlpha: .95, scale: .1 }, { autoAlpha: 0, scale: 1.8, duration: 1.3, ease: 'expo.out', immediateRender: false }, start + .05)
+      }
       names.forEach((name, i) => {
-        const start = 1.75 + i * .3
-        if (bursts[i]) {
-          entry.fromTo(bursts[i], { autoAlpha: 0, scale: .2 }, { autoAlpha: 1, scale: 1.1, duration: .18, ease: 'power3.out', immediateRender: false }, start)
-          entry.to(bursts[i], { autoAlpha: 0, scale: 2.3, duration: .75, ease: 'power2.out' }, start + .18)
-        }
-        if (shocks[i]) entry.fromTo(shocks[i], { autoAlpha: .95, scale: .15 }, { autoAlpha: 0, scale: 3.4, duration: .9, ease: 'expo.out', immediateRender: false }, start + .04)
-        entry.fromTo(name, { autoAlpha: 0, scale: .82, filter: 'blur(10px) brightness(2.6)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px) brightness(1)', duration: .8, ease: ease.text, immediateRender: false }, start + .08)
+        entry.fromTo(name, { autoAlpha: 0, scale: .82, filter: 'blur(10px) brightness(2.6)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px) brightness(1)', duration: .8, ease: ease.text, immediateRender: false }, start + .12 + distances[i] / farthest * .44)
       })
     }
     if (index < chapters.length - 1) entry.to(panel, { autoAlpha: 0, y: -10, duration: .8, ease: 'power2.in' }, duration - .8)

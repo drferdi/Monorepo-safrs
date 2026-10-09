@@ -85,13 +85,13 @@
 .squad { margin-top: 40px; }
 .squad > p { margin: 0 0 18px; font-family: var(--neural-mono); font-size: 11px; letter-spacing: .32em; text-transform: uppercase; color: #91b9d1; }
 .squad ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; width: min(1120px, 90vw); position: relative; left: 50%; translate: -50% 0; }
-.squad li { position: relative; }
+.squadRow { position: relative; }
 .squad li > div { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; }
-/* The burst behind each name: a flash of light and a shock ring, both centred on the name and
-   placed by margins (GSAP owns their transform). Hidden until the timeline plays them. */
-.squad i { position: absolute; left: 50%; top: 12px; border-radius: 50%; pointer-events: none; opacity: 0; mix-blend-mode: screen; }
-.squad [data-burst] { width: 180px; height: 180px; margin: -90px 0 0 -90px; background: radial-gradient(circle, rgb(255 246 230 / 95%) 0, rgb(205 222 248 / 60%) 16%, rgb(130 168 222 / 22%) 40%, transparent 68%); }
-.squad [data-shock] { width: 70px; height: 70px; margin: -35px 0 0 -35px; border: 1px solid rgb(214 230 255 / 85%); box-shadow: 0 0 14px 2px rgb(169 196 230 / 45%), inset 0 0 10px rgb(169 196 230 / 35%); }
+/* One burst behind the middle of the row: a wide flash of light and a shock ring, placed by
+   margins (GSAP owns their transform). Hidden until the timeline plays them. */
+.squad i { position: absolute; left: 50%; top: 50%; border-radius: 50%; pointer-events: none; opacity: 0; mix-blend-mode: screen; }
+.squad [data-burst] { width: 820px; height: 320px; margin: -160px 0 0 -410px; background: radial-gradient(ellipse, rgb(255 246 230 / 95%) 0, rgb(205 222 248 / 62%) 14%, rgb(130 168 222 / 24%) 38%, transparent 68%); }
+.squad [data-shock] { width: 640px; height: 220px; margin: -110px 0 0 -320px; border: 1px solid rgb(214 230 255 / 85%); box-shadow: 0 0 18px 3px rgb(169 196 230 / 45%), inset 0 0 14px rgb(169 196 230 / 35%); }
 .squad strong { font-family: var(--font-jakarta), sans-serif; font-size: 18px; font-weight: 500; letter-spacing: .01em; color: #fff; }
 .squad span { font-family: var(--neural-mono); font-size: 11px; line-height: 1.6; letter-spacing: .1em; color: var(--neural-muted); }
 .squad > p, .squad span { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
@@ -185,6 +185,8 @@
   .squad > p { margin-bottom: 12px; font-size: 10px; }
   .squad ul { grid-template-columns: repeat(2, 1fr); gap: 12px 16px; width: 100%; }
   .squad li:last-child { grid-column: 1 / -1; }
+  .squad [data-burst] { width: 420px; height: 380px; margin: -190px 0 0 -210px; }
+  .squad [data-shock] { width: 300px; height: 260px; margin: -130px 0 0 -150px; }
   .squad strong { font-size: 16px; }
   .squad span { font-size: 10px; }
   .eyebrow { margin-bottom: 20px; font-size: 10px; gap: 12px; }
