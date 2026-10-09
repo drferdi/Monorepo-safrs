@@ -250,12 +250,27 @@ export function buildMaster(gsap: Gsap, chapters: ReadonlyArray<Chapter>, option
       entry.fromTo(panel.querySelector('[data-marker-dot]'), { scale: 0 }, { scale: 1, duration: .4, ease: 'back.out(1.7)', immediateRender: false }, .6)
       entry.fromTo(panel.querySelector('[data-marker-copy]'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .8, immediateRender: false }, .8)
     }
-    // The SentraSquad arrive one by one once the network's title has formed (drawn back at build,
-    // like the marker, so they never show before their turn).
-    const members = Array.from(panel.querySelectorAll('[data-squad] > p, [data-squad] li'))
-    if (members.length) {
-      gsap.set(members, { autoAlpha: 0, y: 10 })
-      entry.fromTo(members, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .7, stagger: .25, ease: ease.text, immediateRender: false }, 1.4)
+    // The SentraSquad arrive one by one once the network's title has formed (Chief 2026-10-09): a
+    // burst of light breaks behind each name with a shock ring, and the name comes out of the
+    // glare blurred and overbright, then settles clear. Everything is drawn back at build, like
+    // the marker, so nothing shows before its turn.
+    const squadTitle = panel.querySelector('[data-squad] > p')
+    const names = Array.from(panel.querySelectorAll('[data-squad-name]'))
+    if (squadTitle && names.length) {
+      const bursts = Array.from(panel.querySelectorAll('[data-burst]')), shocks = Array.from(panel.querySelectorAll('[data-shock]'))
+      gsap.set(squadTitle, { autoAlpha: 0, y: 10 })
+      gsap.set([...bursts, ...shocks], { autoAlpha: 0 })
+      gsap.set(names, { autoAlpha: 0, scale: .82, filter: 'blur(10px) brightness(2.6)' })
+      entry.fromTo(squadTitle, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .7, ease: ease.text, immediateRender: false }, 1.4)
+      names.forEach((name, i) => {
+        const start = 1.75 + i * .3
+        if (bursts[i]) {
+          entry.fromTo(bursts[i], { autoAlpha: 0, scale: .2 }, { autoAlpha: 1, scale: 1.1, duration: .18, ease: 'power3.out', immediateRender: false }, start)
+          entry.to(bursts[i], { autoAlpha: 0, scale: 2.3, duration: .75, ease: 'power2.out' }, start + .18)
+        }
+        if (shocks[i]) entry.fromTo(shocks[i], { autoAlpha: .95, scale: .15 }, { autoAlpha: 0, scale: 3.4, duration: .9, ease: 'expo.out', immediateRender: false }, start + .04)
+        entry.fromTo(name, { autoAlpha: 0, scale: .82, filter: 'blur(10px) brightness(2.6)' }, { autoAlpha: 1, scale: 1, filter: 'blur(0px) brightness(1)', duration: .8, ease: ease.text, immediateRender: false }, start + .08)
+      })
     }
     if (index < chapters.length - 1) entry.to(panel, { autoAlpha: 0, y: -10, duration: .8, ease: 'power2.in' }, duration - .8)
     master.addLabel(chapter.id, at(chapter.phase)).addLabel(`${chapter.id}-enter`, at(chapter.phase + JUMP_OFFSET)).add(entry, at(chapter.phase))

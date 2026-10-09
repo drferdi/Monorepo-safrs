@@ -377,7 +377,7 @@ export default function NeuralJourney() {
                     {chapter.id === 'network' && (
                       <div data-squad className={styles.squad}>
                         <p>SentraSquad</p>
-                        <ul>{squad.map(member => <li key={member.name}><strong>{member.name}</strong><span>{member.role}</span></li>)}</ul>
+                        <ul>{squad.map(member => <li key={member.name}><i data-burst aria-hidden="true" /><i data-shock aria-hidden="true" /><div data-squad-name><strong>{member.name}</strong><span>{member.role}</span></div></li>)}</ul>
                       </div>
                     )}
                     {index === 0 && <button data-jump={phaseOf('embryonic-origin')} className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}
