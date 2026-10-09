@@ -554,7 +554,7 @@ test('no text is smaller than 11 px on a desktop or 10 px on a phone, and the le
   expect(cta.y + cta.height).toBeLessThanOrEqual(controls.y)
 })
 
-test('the network chapter names the SentraSquad one by one after its title, out of one burst of light behind them, on desktop, phone and short phone', async ({ page }) => {
+test('the network chapter names the SentraSquad one by one after its title, from the middle outwards, on desktop, phone and short phone', async ({ page }) => {
   const squad = ['Asyraf Hadi', 'dr. Novi Dwi Anggraini', 'Joseph Arianto', 'Farhan Nugroho', 'Kevin Susanto']
   for (const [width, height] of [[1280, 800], [375, 812], [360, 640]]) {
     await page.setViewportSize({ width, height })
@@ -568,7 +568,7 @@ test('the network chapter names the SentraSquad one by one after its title, out 
     for (const [i, name] of squad.entries()) {
       await expect(members.nth(i).locator('strong')).toHaveText(name)
       await expect(members.nth(i)).toHaveCSS('opacity', '1')
-      await expect(members.nth(i)).toHaveCSS('filter', 'blur(0px) brightness(1)')
+      await expect(members.nth(i)).toHaveCSS('filter', 'blur(0px)')
       const box = (await members.nth(i).boundingBox())!
       expect(box.x, `${width}: ${name} left`).toBeGreaterThanOrEqual(0)
       expect(box.x + box.width, `${width}: ${name} right`).toBeLessThanOrEqual(width)
@@ -579,16 +579,10 @@ test('the network chapter names the SentraSquad one by one after its title, out 
     expect(eyebrow.y, `${width}x${height}: the chapter starts below the header`).toBeGreaterThanOrEqual(header.y + header.height)
   }
   await expect(page.locator('#network [data-squad-name]').nth(3).locator('span')).toHaveText('FULLSTACK + INFRASTRUCTURE MAINTENANCE LEAD')
-  // One burst from behind the middle of the row: alight as the names arrive, the middle name out
-  // of it before the ends, and gone once they have settled.
-  const burst = page.locator('#network [data-burst]'), names = page.locator('#network [data-squad-name]')
-  await expect(burst).toHaveCount(1)
-  await portraitPhase(page, 61.85)
-  expect(Number(await burst.evaluate(element => getComputedStyle(element).opacity))).toBeGreaterThan(.3)
-  const [source, row] = [(await burst.boundingBox())!, (await page.locator('#network [data-squad] ul').boundingBox())!]
-  expect(Math.abs(source.x + source.width / 2 - (row.x + row.width / 2))).toBeLessThan(4)
+  // The middle name comes into focus before the ends, and no light effect is drawn behind them.
+  const names = page.locator('#network [data-squad-name]')
+  await portraitPhase(page, 61.75)
   const opacity = (i: number) => names.nth(i).evaluate(element => Number(getComputedStyle(element).opacity))
   expect(await opacity(2)).toBeGreaterThan(await opacity(0))
-  await portraitPhase(page, 63.5)
-  await expect(burst).toHaveCSS('opacity', '0')
+  await expect(page.locator('#network [data-squad] i')).toHaveCount(0)
 })

@@ -3,6 +3,17 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-09 (motion) — No light effect behind the SentraSquad
+
+Decision: after three tries (a burst per name, one oval burst, then a starburst and a soft bloom
+with a lens streak), Chief ruled out light behind the names. They arrive from the middle of the
+row outwards, each coming into focus (fade, 8 px rise, blur 6 px to 0), and stay bright white.
+
+Rationale: Chief's ruling: "gak suka cahaya begitu, hilangkan saja cahaya".
+
+Evidence: the neural e2e "the network chapter names the SentraSquad" asserts the order and that
+nothing is drawn behind the names.
+
 ## 2026-10-09 (content) — The SentraSquad in the network chapter
 
 Decision: the network chapter (SENTRAVERSE) names the SentraSquad under its title, five across on

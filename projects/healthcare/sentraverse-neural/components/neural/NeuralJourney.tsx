@@ -14,9 +14,6 @@ import { attachPointerWake } from './wake'
 import { activeChapter, chapters, divisions, legacyCopy, phaseOf, sentra, squad } from './story'
 import styles from './journey.module.css'
 
-// The sparks the SentraSquad's burst throws out (`timeline.ts` sends each on its own line).
-const SPARKS = 28
-
 export default function NeuralJourney() {
   const rootRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -380,7 +377,7 @@ export default function NeuralJourney() {
                     {chapter.id === 'network' && (
                       <div data-squad className={styles.squad}>
                         <p>SentraSquad</p>
-                        <div className={styles.squadRow}><i data-burst aria-hidden="true" /><i data-rays aria-hidden="true" /><i data-sparks aria-hidden="true">{Array.from({ length: SPARKS }, (_, i) => <b key={i} />)}</i><ul>{squad.map(member => <li key={member.name}><div data-squad-name><strong>{member.name}</strong><span>{member.role}</span></div></li>)}</ul></div>
+                        <ul>{squad.map(member => <li key={member.name}><div data-squad-name><strong>{member.name}</strong><span>{member.role}</span></div></li>)}</ul>
                       </div>
                     )}
                     {index === 0 && <button data-jump={phaseOf('embryonic-origin')} className={styles.begin}>SCROLL TO DISCOVER <span aria-hidden="true">↓</span></button>}
