@@ -1,65 +1,54 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-10 (Claude, agent-compliance fixes on `governance/agents-jev-policy`)
+Last updated: 2026-10-10 (Claude, approved R2 fixes from the agent audit on `feat/sidepanel-ui-batch`)
+Previous body: `git show 4e074a3b:.agents/HANDOFF.md`
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
 
 ## Current state
 
-- Jev lives in `tools/jev` (tracked; vendored playbook, MCP server, Claude hook, usage report) and is
-  registered as `jev-typesafe`. All seven agents point to it; `python tools/jev/mcp/jev_usage.py`
-  shows per-agent calls. The Codex copy in `~/.codex/projects/muse-jev-playbook` is deleted after
-  Codex restarts on the new path.
-- `main` at `e1bb32c8` (2026-10-07). Agent compliance audit report:
-  `verify-report/agent-audit-2026-10-10.txt` (gitignored).
-- The governance commits that sat on `feat/sidepanel-ui-batch` (e4643c32, 000a4f7a, fab8dc31) were
-  split by risk class, based on `main`:
-  - `governance/agents-jev-policy` (this branch, R2, controls and root memory only): Jev and
-    Gaffer address rules in root and capsule `AGENTS.md` files and `.cursor/rules`; OpenRouter
-    registered in `.safrs/tool-inventory.json`; Claude PreToolUse guard now covers `Bash`, and
-    both Claude hooks launch from `git rev-parse --show-toplevel` (they silently failed open
-    after any `cd`); Claude commits as `Claude <claude@local>` via `.claude/settings.json` env;
-    `.agents/BOUNDARIES.md` routed as MUST read 3; Cursor guards fail closed on unreadable
-    payloads; `check_handoff.py` points at an existing AGENTS.md heading.
-  - `docs/gaffer-address` (R3 by path: `projects/**/production/**` text only): "Chief" to
-    "Gaffer" across docs, capsule memory and skills, plus the non-control part of e4643c32.
-  - `feat/sidepanel-ui-batch` keeps only the parts for capsules that exist on that branch
-    (sentrapedia, sentraverse-neural), the root HANDOFF note, and three files whose context exists
-    only there. Old tip kept at `refs/backup/2026-10-10/feat-sidepanel-ui-batch`.
-- `chore/agent-skill-hygiene` (R2, no controls): verify skills follow the capsule handoff rule,
-  `04_CONTEXT.md` follows the AGENTS.md authority order, Cursor reviewers 08-11 `readonly: true`,
-  README lists `.env.example` variable names.
-- Re-applying both new branches on the rewritten UI branch reproduces the old tree byte for byte.
-- `check_sensitive_changes` (SAFRS_BASE_REF=main): this branch and `chore/agent-skill-hygiene`
-  R2 and passing; `docs/gaffer-address` R3 and passing. Governance unittest 68/68; Claude guard
-  tests pass except the pre-existing Windows-path case; automation-policy 20/22, same two
-  pre-existing Codex failures as `main`.
-- Merge simulation: no conflicts between the three branches; merging this branch into
-  `feat/sidepanel-ui-batch` conflicts only on this file (take this version).
+- `main` is at `ee38362a` (2026-10-09); `origin/main` is at `f7008f45` (2026-10-07). They have
+  diverged (main 621 ahead, 39 behind). Pushes stay behind the `.husky/pre-push` publish gate.
+- `governance/agents-jev-policy` and `chore/agent-skill-hygiene` are merged into `main`.
+- Agent audit 2026-10-10: `verify-report/agent-audit-2026-10-10.txt` (gitignored). Overall
+  NON-COMPLIANT. Native configs of Codex, Antigravity, Grok, Opencode and Factory auto-approve.
+  Plaintext API keys sit in `~/.gemini/config/mcp_config.json` and `~/.factory/settings.json`;
+  rotating them is Gaffer's job.
+- Gaffer approved three R2 fixes from that audit (on `feat/sidepanel-ui-batch`, not pushed):
+  - `fa3b86a4`: Codex PostToolUse Biome formatter removed. The test and `CODEX_SETUP.md` now
+    match. Automation-policy 21/21 and topology unittest 7/7 pass.
+  - `d081a67c`: Cursor filesystem MCP removed. It read files past the `beforeReadFile` guard.
+    `check_tool_inventory` and `check_docs` pass.
+  - `0587c471`: sentrapedia added to `.safrs/known-nonconformance.json` (reviewBy 2026-11-10).
+    `check_project_independence` passes (18 capsules, 2 known non-conformance).
+- `pnpm governance` still fails at `check_topology` on sentrapedia (`src`, `docs/data.md`,
+  `docs/testing.md`, `.agents/CONTEXT.md`). `pnpm project:verify internal/golden-path` now gets
+  past the gate but fails on a symlink in `apps/web/.next/dev/node_modules` that points outside
+  the capsule. That symlink is a local build cache and was already there.
 
 ## Work in flight
 
-- Git identity: the shared `user.name=Codex` was removed from `.git/config`. Agents now commit
-  under their own name through `includeIf "onbranch:<agent>/**"` and, for Claude and Codex, an
-  environment block that applies on any branch.
+- The working tree still holds other sessions' uncommitted work: med-assist and sentrapedia
+  capsule edits, `.codex/config.toml` (`model_verbosity`), `.agents/skills/gaffer-orchestration`,
+  and the untracked `.agents/skills/superpowers/`. This session did not touch any of it.
 
 ## Blockers
 
-- Merging this branch (R2) and `docs/gaffer-address` (R3) into `main` needs Gaffer.
+- `docs/gaffer-address` (`bf4be2af`, R3 by path) is not merged into `main`. It needs Gaffer.
 - `feat/sidepanel-ui-batch` still couples five capsule `AGENTS.md` files with the capsules created
-  next to them (healthcare index, medboard, sentraverse, sentrapedia, sentraverse-neural). A
-  Gaffer integrity review clears it at merge time.
+  next to them. A Gaffer integrity review clears it at merge time.
 
 ## Next action
 
-- Gaffer: review and merge `governance/agents-jev-policy`, `docs/gaffer-address` and
-  `chore/agent-skill-hygiene`; merge `main` into `feat/sidepanel-ui-batch`.
-- `.codex/agents` still say "Chief" and two agents share the name `security-reviewer`; left
-  alone while Gaffer works in `.codex/`.
-- Decide whether `.safrs/adapter-capabilities.json` should drop droid `read_only_disabled`, now
-  that Droid runs auto-high and OpenRouter is registered.
+- Gaffer: decide sentrapedia's topology. Either move its code under `src/` and add the missing
+  docs, or change `CAPSULE_REQUIRED` in `tools/safrs/check_topology.py`.
+- Gaffer: these audit actions from section 7 are not approved yet: A-2..A-7, A-11..A-19, and
+  the jev-intent part of A-8. A-1 (key rotation) is Gaffer's own job.
+- `.codex/agents` still say "Chief", and two agents share the name `security-reviewer`.
+- Decide whether `.safrs/adapter-capabilities.json` keeps droid `read_only_disabled`.
 
 ## Owner collision
 
-None.
+Sentrapedia is being edited by another session (files changed 2026-10-10 05:09, its HANDOFF is
+dirty). This session only touched root files for it.

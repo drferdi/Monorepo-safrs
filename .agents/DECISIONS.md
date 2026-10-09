@@ -3,6 +3,19 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-10-10 - Codex drops its PostToolUse formatter; Cursor drops the filesystem MCP
+
+Gaffer approved both (R2) after the 2026-10-10 agent audit. Codex keeps only the PreToolUse
+SAFRS guard; the Biome PostToolUse hook (`.codex/hooks/format-edited-files.mjs`) is removed
+and formatting is checked by `pnpm lint` at final verification. This supersedes the
+"PreToolUse/PostToolUse hooks" wording of the 2026-08-11 Codex entry. Cursor no longer ships
+`@modelcontextprotocol/server-filesystem`: its reads bypassed the `beforeReadFile` credential
+guard, and Cursor's own file tools already cover the repository. Sentrapedia is recorded in
+`.safrs/known-nonconformance.json` until it carries a project contract and the capsule
+topology paths. Evidence: `tests/repository/automation-policy.test.mjs`,
+`tests/architecture/test_safrs_topology.py`, `tools/safrs/check_tool_inventory.py`,
+`tools/safrs/check_project_independence.py`.
+
 ## 2026-09-25 - Root token gate scans only the root workspace; lockfile guard
 
 Gaffer approved ("implement Point 1-2-3"): the root token gate (`packages/token/scope.txt`) no
