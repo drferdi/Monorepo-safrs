@@ -1,17 +1,16 @@
 "use client";
 
-import { ArrowRight, AudioLines, BookOpen, ChevronRight, Command, Ellipsis, Folder, House, ListTodo, PanelLeft, Plus, Search, SlidersHorizontal, SquarePen, Users } from "lucide-react";
+import { ArrowRight, ChevronRight, Ellipsis, ListPlus, PanelLeft, Plus, Search, SlidersHorizontal, SquarePen, UserRoundPlus, AudioLines, Command, BookOpen } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Brand } from "./brand";
 import { SidebarSubmenu } from "./sidebar-submenu";
-import { encounterMeta, encounterTitle, recentEncounters } from "../lib/nav-format";
-import type { View } from "../lib/nav-tree";
+import { PatientAvatar } from "./patient-avatar";
 import type { Workspace } from "../lib/workspace";
 
-export type DialogName = "patient" | "list" | "settings" | "search" | "context" | "scribe" | "upgrade" | "account" | "feedback" | "encounter" | "legal" | "clinical" | "commands" | "templates" | "queue" | "knowledge" | "new-encounter" | null;
-interface Props { state: Workspace; activeItem: string; open: boolean; mobile: boolean; onToggle: () => void; onDialog: (name: DialogName, id?: string) => void; onHome: () => void; onPage: (view: View) => void; onSelect: (id: string) => void; onToast: (text: string) => void }
+export type DialogName = "patient" | "list" | "settings" | "search" | "context" | "scribe" | "upgrade" | "account" | "feedback" | "encounter" | "legal" | "clinical" | "commands" | "templates" | "queue" | "knowledge" | null;
+interface Props { state: Workspace; open: boolean; mobile: boolean; onToggle: () => void; onDialog: (name: DialogName, id?: string) => void; onNew: (patientId?: string) => void; onSelect: (id: string) => void; onToast: (text: string) => void }
 
-export function Sidebar({ state, activeItem, open, mobile, onToggle, onDialog, onHome, onPage, onSelect, onToast }: Props) {
+export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSelect, onToast }: Props) {
   const [feedback, setFeedback] = useState("");
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -32,45 +31,34 @@ export function Sidebar({ state, activeItem, open, mobile, onToggle, onDialog, o
     document.addEventListener("keydown", handler);
     return () => { document.removeEventListener("keydown", handler); if (previous instanceof HTMLElement && !document.querySelector("dialog[open]")) previous.focus(); };
   }, [mobile, open, onToggle]);
-  // On a phone the drawer gives way to whatever the reader chose.
-  const go = (action: () => void) => () => { if (mobile) onToggle(); action(); };
-  const recent = recentEncounters(state.encounters);
   return <>
     {open && <button className="sidebar-scrim" aria-label="Tutup navigasi" onClick={onToggle} />}
     <aside ref={ref} className={`sidebar ${open ? "is-open" : ""}`} inert={!open} aria-hidden={!open} aria-label="Navigasi workspace">
       <div className="sidebar-brand"><Brand /><button className="icon-button" aria-label="Tutup sidebar" title="Tutup sidebar" onClick={onToggle}><PanelLeft size={16}/></button></div>
-      <div className="sidebar-actions">
-        <button className="button primary new-encounter" onClick={go(() => onDialog("new-encounter"))}><Plus size={15}/>Encounter Baru</button>
-        <button className="sidebar-search" onClick={go(() => onDialog("search"))}><Search size={14}/><span>Cari pasien atau encounter...</span><kbd>⌘K</kbd></button>
-      </div>
-      <nav className="main-nav sidebar-content" aria-label="Navigasi utama">
-        <div className="nav-label">RUANG KERJA</div>
-        <button className="nav-leaf" aria-current={activeItem === "home" ? "page" : undefined} onClick={go(onHome)}><House/><span>Beranda</span></button>
-        <SidebarSubmenu initialOpen={["patients", "encounters"]} activeItemId={activeItem} memoryKey="sentrapedia-nav-v2" sections={[
-          { id: "patients", title: "Pasien", count: state.patients.length, action: <button className="small-icon" aria-label="Tambah pasien" title="Tambah pasien" onClick={go(() => onDialog("patient"))}><Plus size={12}/></button>, items: [
-            { id: "all-patients", label: <><Users/><span>Semua Pasien</span></>, onSelect: go(() => onPage({ page: "patients" })) },
-            { id: "lists", label: <><Folder/><span>Koleksi Pasien</span><span className="count">{state.lists.length}</span></>, onSelect: go(() => onPage({ page: "lists" })), actions: <button className="small-icon" aria-label="Buat koleksi pasien" title="Buat koleksi pasien" onClick={go(() => onDialog("list"))}><Plus size={12}/></button> },
-          ] },
-          { id: "encounters", title: "Encounter", count: state.encounters.length, row: 46, caption: <div className="submenu-caption">{recent.length ? "TERBARU" : "Belum ada encounter"}</div>, items: [
-            ...recent.map((encounter) => ({ id: encounter.id, label: <span className="encounter-label"><strong title={encounterTitle(encounter)}>{encounterTitle(encounter)}</strong><small>{encounterMeta(encounter, state.patients)}</small></span>, onSelect: go(() => onSelect(encounter.id)), actions: <button className="small-icon" aria-label={`Opsi untuk ${encounterTitle(encounter)}`} onClick={go(() => onDialog("encounter", encounter.id))}><Ellipsis size={13}/></button> })),
-            { id: "all-encounters", label: <><ArrowRight/><span>Lihat semua encounter</span></>, onSelect: go(() => onPage({ page: "encounters" })) },
-          ] },
-          { id: "tools", title: "Alat Klinis", items: [
-            { id: "knowledge", label: <><BookOpen/><span>Pustaka Klinis</span></>, onSelect: go(() => onDialog("knowledge")) },
-            { id: "queue", label: <><ListTodo/><span>Antrean kerja</span></>, onSelect: go(() => onDialog("queue")) },
-            { id: "templates", label: <><SquarePen/><span>Templat dan favorit</span></>, onSelect: go(() => onDialog("templates")) },
-            { id: "scribe", label: <><AudioLines/><span>Voice mode</span></>, onSelect: go(() => onDialog("scribe")) },
-          ] },
-        ]}/>
+      <nav className="main-nav" aria-label="Navigasi utama">
+        <div className="nav-group" role="group" aria-labelledby="nav-group-start"><span className="nav-group-title" id="nav-group-start">Mulai</span>
+          <button onClick={() => onNew()}><Plus/><span>Baru</span><kbd>⌘ K</kbd></button>
+          <button onClick={() => onDialog("patient")}><UserRoundPlus/><span>Buat Patient</span></button>
+          <button onClick={() => onDialog("list")}><ListPlus/><span>Buat daftar Patient</span></button>
+        </div>
+        <div className="nav-group" role="group" aria-labelledby="nav-group-tools"><span className="nav-group-title" id="nav-group-tools">Alat kerja</span>
+          <button onClick={() => { if (mobile) onToggle(); onDialog("queue"); }}><ListPlus/><span>Antrean kerja</span></button>
+          <button onClick={() => { if (mobile) onToggle(); onDialog("templates"); }}><SquarePen/><span>Templat dan favorit</span></button>
+          <button onClick={() => { if (mobile) onToggle(); onDialog("knowledge"); }}><BookOpen/><span>Pustaka Klinis</span></button>
+          <button onClick={() => onDialog("scribe")}><AudioLines/><span>Voice mode</span></button>
+        </div>
+        <div className="nav-group" role="group" aria-labelledby="nav-group-system"><span className="nav-group-title" id="nav-group-system">Sistem</span>
+          <button onClick={() => { if (mobile) onToggle(); onDialog("commands"); }}><Command/><span>Command Center</span><kbd>⌘ J</kbd></button>
+          <button onClick={() => onDialog("search")}><Search/><span>Cari</span><kbd>⌘ /</kbd></button>
+          <button onClick={() => onDialog("settings")}><SlidersHorizontal/><span>Pengaturan Agent</span></button>
+        </div>
       </nav>
-      <div className="sidebar-bottom">
-        <nav className="main-nav" aria-label="Pengaturan"><SidebarSubmenu initialOpen={[]} activeItemId={activeItem} sections={[
-          { id: "settings-group", title: "Pengaturan", items: [
-            { id: "settings", label: <><SlidersHorizontal/><span>Pengaturan Agent</span></>, onSelect: go(() => onDialog("settings")) },
-            { id: "commands", label: <><Command/><span>Command Center</span><kbd>⌘J</kbd></>, onSelect: go(() => onDialog("commands")) },
-          ] },
-        ]}/></nav>
-        <form className="feedback" onSubmit={(event) => { event.preventDefault(); if (feedback.trim()) { onToast("Masukan tersimpan secara lokal. Terima kasih telah membantu mengembangkan workspace."); sessionStorage.setItem("sentrapedia-feedback", feedback); setFeedback(""); } }}><input aria-label="Masukan" placeholder="Tulis masukan di sini..." value={feedback} onChange={(e) => setFeedback(e.target.value)} maxLength={1000}/><button aria-label="Simpan masukan" disabled={!feedback.trim()}><ArrowRight size={13}/></button></form>
+      <div className="sidebar-content"><SidebarSubmenu initialSection="encounters" sections={[
+        { id: "lists", title: "Daftar Patient", action: <button className="small-icon" aria-label="Tambah daftar Patient" onClick={() => onDialog("list")}><Plus size={12}/></button>, items: state.lists.map((list) => ({ id: list.id, label: <><ListPlus size={14}/><span>{list.name}</span><span className="count">{list.patientIds.length}</span></>, onSelect: () => onDialog("list", list.id) })), empty: <button className="empty-list" onClick={() => onDialog("list")}>Buat daftar Patient</button> },
+        { id: "patients", title: "Semua Patient", selectedId: state.encounters.find((e) => e.id === state.activeEncounterId)?.patientId, items: state.patients.map((patient) => ({ id: patient.id, label: <><PatientAvatar sex={patient.sex} size={14}/><span>{patient.name}</span></>, onSelect: () => onDialog("patient", patient.id), actions: <><button className="small-icon" aria-label={`Edit ${patient.name}`} onClick={() => onDialog("patient", patient.id)}><Ellipsis size={13}/></button><button className="small-icon" aria-label={`Encounter baru untuk ${patient.name}`} title="Encounter baru" onClick={() => onNew(patient.id)}><SquarePen size={12}/></button></> })), empty: <button className="empty-text" onClick={() => onDialog("patient")}>Tambah Patient pertama <Plus size={12}/></button> },
+        { id: "encounters", title: "Semua Encounter", selectedId: state.activeEncounterId, items: state.encounters.map((encounter) => ({ id: encounter.id, label: <span title={encounter.title}>{encounter.title}</span>, onSelect: () => onSelect(encounter.id), actions: <button className="small-icon" aria-label={`Opsi untuk ${encounter.title}`} onClick={() => onDialog("encounter", encounter.id)}><Ellipsis size={13}/></button> })), empty: <span className="empty-text">Belum ada Encounter</span> },
+      ]}/></div>
+      <div className="sidebar-bottom"><form className="feedback" onSubmit={(event) => { event.preventDefault(); if (feedback.trim()) { onToast("Masukan tersimpan secara lokal. Terima kasih telah membantu mengembangkan workspace."); sessionStorage.setItem("sentrapedia-feedback", feedback); setFeedback(""); } }}><input aria-label="Masukan" placeholder="Tulis masukan di sini..." value={feedback} onChange={(e) => setFeedback(e.target.value)} maxLength={1000}/><button aria-label="Simpan masukan" disabled={!feedback.trim()}><ArrowRight size={13}/></button></form>
         <button className="account" onClick={() => onDialog("account")}><span className="avatar">FI</span><strong>Sentrapedia</strong><span className="lite-badge">Lite</span><ChevronRight size={15}/></button>
       </div>
     </aside>

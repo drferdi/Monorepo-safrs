@@ -4,7 +4,6 @@ import { Check, FileUp, Search, ShieldCheck, Trash2 } from "lucide-react";
 import { PatientAvatar } from "./patient-avatar";
 import { useRef, useState, type Dispatch } from "react";
 import { PixelLoader } from "./pixel-loader";
-import { encounterTitle } from "../lib/nav-format";
 import { specialtyLabel, modelLabel } from "../lib/ui-labels";
 import { Dialog } from "./dialog";
 import { newId, specialties, type Encounter, type Patient, type PatientList, type Settings, type Workspace, type WorkspaceAction } from "../lib/workspace";
@@ -15,13 +14,13 @@ export function PatientForm({ patient, onSave, onDelete, onClose }: { patient?: 
   const [sex, setSex] = useState(patient?.sex ?? "Not specified");
   const [notes, setNotes] = useState(patient?.notes ?? "");
   const [confirmDelete, setConfirmDelete] = useState(false);
-  return <Dialog title={patient ? "Detail pasien" : "Buat pasien"} subtitle="Simpan konteks bersama, dari pertanyaan pertama hingga Follow-up." onClose={onClose}><form onSubmit={(e) => { e.preventDefault(); if (name.trim()) onSave({ id: patient?.id ?? newId(), name: name.trim(), age, sex, notes }); }}>
-    <div className="notice"><ShieldCheck size={16}/><span>Workspace lokal · Gunakan data pasien fiktif saja.</span></div>
-    <label className="field"><span>Nama pasien <span className="required">*</span></span><input autoFocus required placeholder="Contoh: Pasien Demo" value={name} onChange={(e) => setName(e.target.value)} maxLength={80}/></label>
+  return <Dialog title={patient ? "Detail Patient" : "Buat Patient"} subtitle="Simpan konteks bersama, dari pertanyaan pertama hingga Follow-up." onClose={onClose}><form onSubmit={(e) => { e.preventDefault(); if (name.trim()) onSave({ id: patient?.id ?? newId(), name: name.trim(), age, sex, notes }); }}>
+    <div className="notice"><ShieldCheck size={16}/><span>Workspace lokal · Gunakan data Patient fiktif saja.</span></div>
+    <label className="field"><span>Nama Patient <span className="required">*</span></span><input autoFocus required placeholder="Contoh: Patient Demo" value={name} onChange={(e) => setName(e.target.value)} maxLength={80}/></label>
     <div className="field-grid"><label className="field"><span>Usia</span><input type="number" min="0" max="130" placeholder="Tahun" value={age} onChange={(e) => setAge(e.target.value)}/></label><label className="field"><span>Sex</span><select aria-label="Sex" value={sex} onChange={(e) => setSex(e.target.value)}><option value="Not specified">Belum diisi</option><option>Female</option><option>Male</option><option value="Other">Lainnya</option></select></label></div>
-    <label className="field"><span>Konteks tambahan</span><textarea placeholder="History, Medications, Allergies, atau preferensi yang relevan…" value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} maxLength={10000}/><small>Tersedia sebagai konteks saat membuat draf dalam encounter pasien ini.</small></label>
-    {confirmDelete && <div className="form-warning">Hapus pasien ini dan semua encounter terkait? <button type="button" className="text-danger" onClick={() => { if (patient) onDelete(patient.id); }}>Ya, hapus pasien lokal</button></div>}
-    <div className="dialog-footer">{patient && <button type="button" className="button danger-ghost push-left" onClick={() => setConfirmDelete(true)}><Trash2 size={14}/> Hapus</button>}<button type="button" className="button" onClick={onClose}>Batal</button><button className="button primary" disabled={!name.trim()}>{patient ? "Simpan perubahan" : "Buat pasien"}</button></div>
+    <label className="field"><span>Konteks tambahan</span><textarea placeholder="History, Medications, Allergies, atau preferensi yang relevan…" value={notes} onChange={(e) => setNotes(e.target.value)} rows={4} maxLength={10000}/><small>Tersedia sebagai konteks saat membuat draf dalam Encounter Patient ini.</small></label>
+    {confirmDelete && <div className="form-warning">Hapus Patient ini dan semua Encounter terkait? <button type="button" className="text-danger" onClick={() => { if (patient) onDelete(patient.id); }}>Ya, hapus Patient lokal</button></div>}
+    <div className="dialog-footer">{patient && <button type="button" className="button danger-ghost push-left" onClick={() => setConfirmDelete(true)}><Trash2 size={14}/> Hapus</button>}<button type="button" className="button" onClick={onClose}>Batal</button><button className="button primary" disabled={!name.trim()}>{patient ? "Simpan perubahan" : "Buat Patient"}</button></div>
   </form></Dialog>;
 }
 
@@ -77,6 +76,6 @@ export function SearchDialog({ state, onSelect, onPatient, onClose }: { state: W
   const [query, setQuery] = useState("");
   const term = query.toLowerCase().trim();
   const patients = state.patients.filter((p) => `${p.name} ${p.notes}`.toLowerCase().includes(term));
-  const encounters = state.encounters.filter((e) => `${encounterTitle(e)} ${e.context} ${e.messages.map((m) => m.content).join(" ")}`.toLowerCase().includes(term));
-  return <Dialog title="Cari dalam workspace" subtitle="Cari pasien, encounter, konteks, dan isi draf." onClose={onClose}><div className="search-input"><Search size={18}/><input aria-label="Cari dalam workspace" autoFocus placeholder="Cari pasien atau encounter…" value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>esc</kbd></div><div className="search-results"><div className="section-label">Pasien</div>{patients.map((p) => <button key={p.id} onClick={() => onPatient(p.id)}><PatientAvatar sex={p.sex} size={16}/><span>{p.name}</span><span className="result-type">Pasien</span></button>)}<div className="section-label">Encounter</div>{encounters.map((e) => <button key={e.id} onClick={() => onSelect(e.id)}><FileUp size={16}/><span>{encounterTitle(e)}</span><span className="result-type">{e.messages.length ? `${e.messages.length} pesan` : "Encounter"}</span></button>)}{!patients.length && !encounters.length && <div className="search-empty"><Search size={25}/><strong>Tidak ada hasil untuk “{query}”</strong><p>Coba nama pasien lain atau frasa dari draf.</p></div>}</div></Dialog>;
+  const encounters = state.encounters.filter((e) => `${e.title} ${e.context} ${e.messages.map((m) => m.content).join(" ")}`.toLowerCase().includes(term));
+  return <Dialog title="Cari dalam workspace" subtitle="Cari Patient, Encounter, konteks, dan isi draf." onClose={onClose}><div className="search-input"><Search size={18}/><input aria-label="Cari dalam workspace" autoFocus placeholder="Cari dalam workspace…" value={query} onChange={(e) => setQuery(e.target.value)}/><kbd>esc</kbd></div><div className="search-results"><div className="section-label">Patient</div>{patients.map((p) => <button key={p.id} onClick={() => onPatient(p.id)}><PatientAvatar sex={p.sex} size={16}/><span>{p.name}</span><span className="result-type">Patient</span></button>)}<div className="section-label">Encounter</div>{encounters.map((e) => <button key={e.id} onClick={() => onSelect(e.id)}><FileUp size={16}/><span>{e.title}</span><span className="result-type">{e.messages.length ? `${e.messages.length} pesan` : "Encounter"}</span></button>)}{!patients.length && !encounters.length && <div className="search-empty"><Search size={25}/><strong>Tidak ada hasil untuk “{query}”</strong><p>Coba nama Patient lain atau frasa dari draf.</p></div>}</div></Dialog>;
 }

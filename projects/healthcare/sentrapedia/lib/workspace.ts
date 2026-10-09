@@ -1,5 +1,4 @@
 import { modeIds, type ModeId } from "./drafts";
-import { fallbackTitle } from "./nav-format";
 
 import { changedMessage, cleanWorkflowEncounter, cleanWorkflowMessage, cleanWorkflowState, reviewComplete, workflowReducer, type PersonalTemplate, type ReviewItem, type Revision, type WorkflowAction, type WorkStatus, type WorkTask } from "./workflow";
 
@@ -19,9 +18,9 @@ export const initialWorkspace: Workspace = {
   patients: [{ id: "demo-patient", name: "Patient", age: "", sex: "Not specified", notes: "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." }],
   lists: [],
   encounters: [
-    { id: "demo-encounter", patientId: "demo-patient", title: "Encounter • 8 Okt", createdAt: "2026-10-08T14:03:00Z", messages: [], context: "" },
+    { id: "demo-encounter", patientId: "demo-patient", title: "Encounter (10/08 09:03 PM)", createdAt: "2026-10-08T14:03:00Z", messages: [], context: "" },
     { id: "demo-pneumonia", patientId: "demo-patient", title: "Pneumonia", createdAt: "2026-10-08T14:00:00Z", messages: [], context: "" },
-    { id: "demo-previous", patientId: "demo-patient", title: "Encounter • 27 Sep", createdAt: "2026-09-26T20:22:00Z", messages: [], context: "" },
+    { id: "demo-previous", patientId: "demo-patient", title: "Encounter (09/27 03:22 AM)", createdAt: "2026-09-26T20:22:00Z", messages: [], context: "" },
     { id: "demo-followup", patientId: "demo-patient", title: "Kehamilan 2 dengan perdarahan", createdAt: "2026-09-26T20:00:00Z", messages: [], context: "" },
   ],
   activeEncounterId: "demo-encounter",
@@ -100,5 +99,5 @@ export function newId(): string { return crypto.randomUUID(); }
 
 export function newEncounter(patientId: string | null = null): Encounter {
   const now = new Date();
-  return { id: newId(), patientId, title: fallbackTitle(now), createdAt: now.toISOString(), messages: [], context: "" };
+  return { id: newId(), patientId, title: `Encounter (${now.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", timeZone: "Asia/Jakarta" })} ${now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" })})`, createdAt: now.toISOString(), messages: [], context: "" };
 }
