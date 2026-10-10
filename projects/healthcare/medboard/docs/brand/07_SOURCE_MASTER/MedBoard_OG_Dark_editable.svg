@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="100%" height="100%" fill="#000000"/><g transform="translate(90,120) scale(0.56)">
+<path d="M 86,83 H 143 A 44,44 0 0 1 187,127 V 185 A 44,44 0 0 1 143,229 H 86 A 44,44 0 0 1 42,185 V 127 A 44,44 0 0 1 86,83 Z M 89,113 H 140 A 17,17 0 0 1 157,130 V 182 A 17,17 0 0 1 140,199 H 89 A 17,17 0 0 1 72,182 V 130 A 17,17 0 0 1 89,113 Z" fill="#FFFFFF" fill-rule="evenodd"/>
+<path d="M 86,271 H 143 A 44,44 0 0 1 187,315 V 373 A 44,44 0 0 1 143,417 H 86 A 44,44 0 0 1 42,373 V 315 A 44,44 0 0 1 86,271 Z M 89,301 H 140 A 17,17 0 0 1 157,318 V 370 A 17,17 0 0 1 140,387 H 89 A 17,17 0 0 1 72,370 V 318 A 17,17 0 0 1 89,301 Z" fill="#FFFFFF" fill-rule="evenodd"/>
+<rect x="219" y="104" width="239" height="32" rx="16" fill="#FFFFFF"/>
+<rect x="219" y="167" width="177" height="31" rx="15.5" fill="#FFFFFF"/>
+<rect x="219" y="292" width="239" height="31" rx="15.5" fill="#FFFFFF"/>
+<rect x="219" y="354" width="177" height="32" rx="16" fill="#FFFFFF"/></g><text x="430" y="280" fill="#FFFFFF" font-family="Inter Display" font-weight="700" font-size="110" letter-spacing="-2" text-anchor="start">MedBoard</text><text x="435" y="345" fill="#B8C2CE" font-family="Inter" font-weight="400" font-size="38" letter-spacing="1.2" text-anchor="start">See Earlier. Decide Better.</text><text x="435" y="410" fill="#B8C2CE" font-family="Inter" font-weight="500" font-size="26" letter-spacing="0.4" text-anchor="start">Clinical Smartboard by Sentra</text></svg>
