@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retriever</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+
+  <!-- One window: a macOS title bar and a single monospace transcript. -->
+  <div class="window" id="consoleShell">
+
+    <div class="title-bar" id="titleBar">
+      <div class="traffic-lights">
+        <button class="traffic-light close" id="closeBtn" type="button" aria-label="Close window"></button>
+        <button class="traffic-light minimize" id="minimizeBtn" type="button" aria-label="Minimize window"></button>
+        <button class="traffic-light zoom" id="zoomBtn" type="button" aria-label="Zoom window"></button>
+      </div>
+      <div class="title" id="appTitle">retriever console</div>
+    </div>
+
+    <!-- The transcript is the whole body. Output lines are inserted before the prompt
+         line, which is the transcript's last line and the only input. -->
+    <pre class="transcript" id="display" role="log" aria-live="polite"><div class="prompt-line" id="promptLine"><label class="prompt" for="cmdInput">sentra ~/retriever $ </label><input type="text" id="cmdInput" class="prompt-input" autofocus autocomplete="off" spellcheck="false" aria-label="Command or target URL"></div></pre>
+
+  </div>
+
+  <script>var exports = {}; function require(id) { return exports; };</script>
+  <script src="./renderer.js"></script>
+</body>
+</html>

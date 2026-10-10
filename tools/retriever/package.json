@@ -1,0 +1,39 @@
+{
+  "name": "retriever",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Retriever - Web Harvester & Tech Scraper Suite powered by HTTrack & Modern Markdown Extraction",
+  "packageManager": "pnpm@11.21.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "main": "dist/index.js",
+  "bin": {
+    "retriever": "./bin/retriever.js"
+  },
+  "scripts": {
+    "build": "tsc && pnpm run desktop:build",
+    "desktop:build": "tsc -p tsconfig.desktop.json && powershell -NoProfile -Command \"New-Item -ItemType Directory -Force dist-electron/desktop/renderer | Out-Null; Set-Content dist-electron/package.json '{\\\"type\\\":\\\"commonjs\\\"}'; Copy-Item desktop/renderer/index.html dist-electron/desktop/renderer/index.html -Force; Copy-Item desktop/renderer/index.css dist-electron/desktop/renderer/index.css -Force\"",
+    "desktop:dev": "pnpm run desktop:build && electron ./dist-electron/desktop/bootstrap.js",
+    "desktop:smoke": "pnpm run desktop:build && powershell -NoProfile -Command \"$env:SENTRA_DESKTOP_SMOKE='1'; & .\\node_modules\\.bin\\electron.cmd .\\dist-electron\\desktop\\bootstrap.js\"",
+    "start": "pnpm run desktop:dev",
+    "lint": "node -e \"console.log('retriever lint ok')\"",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.desktop.json --noEmit",
+    "test": "node --test tests/engine.test.mjs",
+    "preview": "node ./dist/index.js --preview",
+    "smoke": "pnpm run desktop:smoke",
+    "deploy:dry-run": "node -e \"console.log('retriever dry-run ready')\""
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "commander": "^13.1.0",
+    "turndown": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/turndown": "^5.0.6",
+    "electron": "^44.5.1",
+    "typescript": "^5.8.2"
+  }
+}

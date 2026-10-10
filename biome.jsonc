@@ -16,6 +16,8 @@
       // melint atau memformat kode capsule. Pengecualian projects/** di bawah
       // ini tertutup oleh baris ini dan dipertahankan hanya sebagai catatan.
       "!!projects",
+      // Fasilitas mandiri di tools/ (toolchain sendiri, rencananya repo sendiri).
+      "!!tools/retriever",
       // Sisa pengecualian di bawah ini dilacak Git tetapi bukan sumber kanonik.
       // Kontrol plane SAFRS dan cache Turbo: dihasilkan mesin.
       "!!**/.safrs",

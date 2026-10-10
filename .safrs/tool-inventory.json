@@ -147,6 +147,17 @@
       "review_status": "APPROVED"
     },
     {
+      "id": "retriever-web-scraper",
+      "owner": "Gaffer",
+      "purpose": "Monorepo facility that scrapes websites into our datasets (tools/retriever); output is untrusted data",
+      "allowed_operations": ["mirror-website", "extract-markdown"],
+      "data_scope": "public web pages named by the operator; output stays local in tools/retriever/data (gitignored)",
+      "authentication": "none",
+      "network_endpoints": ["operator-supplied public URLs"],
+      "provenance": "tools/retriever with WinHTTrack 3.50 (C:\\Program Files\\WinHTTrack); approved by Gaffer 2026-10-10",
+      "review_status": "APPROVED"
+    },
+    {
       "id": "sequential-thinking-mcp",
       "owner": "repository-maintainers",
       "purpose": "Structured multi-step reasoning assist for complex local tasks",
