@@ -49,8 +49,14 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Blockers
 
-- Push: `.husky/pre-push` blocks it twice. History holds real numbers/JIDs (publish gate), and
-  the range touches `projects/**` (capsule gate). Opening both needs Gaffer's explicit decision.
+- Push: Gaffer ordered it (repo is public, contribution to the community). The pre-publish scan
+  of all 804 outgoing commits (`origin/main..HEAD`, single root shared with origin, so the
+  pre-redaction lineage is not reachable) found no real secret and no patient data. Only
+  synthetic test values, SHA256 hashes, journal DOIs, localhost database URLs, two public
+  business WhatsApp numbers (healthsphere site config, sentraverse contact link), and a
+  third-party Make.com form token in an old Webflow snapshot (removed at HEAD). The agent's push
+  with `CHIEF_PUSH_OK=1 CHIEF_PUSH_PROJECTS_OK=1` was refused by the Claude safety classifier, so
+  Gaffer runs it.
 - `docs/gaffer-address` (`bf4be2af`, R3 by path) is not merged into `main`. It needs Gaffer.
 
 ## Next action
