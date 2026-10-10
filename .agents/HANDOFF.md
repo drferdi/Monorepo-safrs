@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-10 (Claude, approved R2 fixes from the agent audit on `feat/sidepanel-ui-batch`)
+Last updated: 2026-10-10 (Claude, Jev MCP fix for Claude Code on `feat/sidepanel-ui-batch`)
 Previous body: `git show 4e074a3b:.agents/HANDOFF.md`
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -35,6 +35,18 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   non-empty line of a prompt, capped at 200 characters, instead of up to 4000 characters. Its
   test passes 6/6. `.safrs/tool-inventory.json` records the new scope. The original hook is
   backed up in this session's scratchpad.
+- `f80e4ace`: Claude Code's Jev MCP ("jev CONNECTION_CLOSED") is fixed. The repo `.mcp.json`
+  resolved the interpreter from `${CLAUDE_PROJECT_DIR}`, which is the session start directory. So
+  every session started in a capsule or worktree failed, and the entry shadowed the working
+  user-scope server. `.mcp.json` and `enabledMcpjsonServers` are removed; Claude uses the
+  `~/.claude.json` user entry that points at `D:\DEV\monorepo\tools\jev`, the only Jev.
+  - The Jev `PreToolUse` hook now finds the main checkout via `--git-common-dir`. It exited 127
+    in worktrees, which have no `.venv`.
+  - Verified: `claude mcp list` shows jev Connected from the root, a capsule and `C:\Users\drfer`,
+    with no multiple-scopes warning. `jev_route` answered live in a session. The hook printed a
+    Jev decision (exit 0) from the root, a capsule and a worktree. Automation-policy passes 21/21.
+  - Outside the repo: `~/AGENTS.md` and `~/.claude/CLAUDE.md` now point at `tools/jev` (the
+    fallback is `-c route_task`, mode active). Backups are in that session's scratchpad.
 - CI will still flag sentrapedia `docs/architecture.md`, which is not committed. The only copy is
   another session's untracked `docs/ARCHITECTURE.md`. Windows passes because its file names are
   case-insensitive; Linux does not.
@@ -64,6 +76,9 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   A-1 (key rotation) is Gaffer's own job.
 - `.codex/agents` still say "Chief", and two agents share the name `security-reviewer`.
 - Decide whether `.safrs/adapter-capabilities.json` keeps droid `read_only_disabled`.
+- Gaffer: decide whether to delete the stale Jev copies `~/.agents/jev`,
+  `~/.codex/projects/muse-jev-playbook` (30 MB) and `~/.opencode/jev`. No agent config uses them.
+- Claude sessions started before `f80e4ace` still hold the old MCP config. Restart them.
 
 ## Owner collision
 
