@@ -1,0 +1,29 @@
+/* SENTRAVERSE - PROPOSED BRAND TOKENS v1.0 | non-invasive CSS file.
+   Import into an approved stylesheet; does not modify Next.js routing/rewrite configs. */
+:root {
+  --sv-color-ink: #151515;
+  --sv-color-void: #0B0D10;
+  --sv-color-paper: #F7F8F8;
+  --sv-color-white: #FFFFFF;
+  --sv-color-slate: #52616B;
+  --sv-color-mist: #DCE4E5;
+  --sv-color-silver: #ADB9BD;
+  --sv-color-signal: #21BFAE;
+  --sv-color-signal-dark: #086F66;
+  --sv-color-subtle: #E8EFEE;
+  --sv-color-disabled: #879395;
+  --sv-font-sans: Inter, Arial, Helvetica, sans-serif;
+  --sv-radius-sm: 6px;
+  --sv-radius-md: 12px;
+  --sv-radius-lg: 20px;
+  --sv-content-max: 1200px;
+  --sv-motion-quick: 160ms;
+  --sv-motion-standard: 240ms;
+  --sv-motion-slow: 420ms;
+}
+.sv-theme-dark { color: var(--sv-color-paper); background: var(--sv-color-void); }
+.sv-theme-light { color: var(--sv-color-ink); background: var(--sv-color-paper); }
+.sv-focus-visible:focus-visible { outline: 3px solid var(--sv-color-signal); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .sv-animated { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "name": "Sentraverse Proposed Brand System v1.0",
+  "status": "PROPOSED - owner approval required for official adoption",
+  "color": {
+    "void": {
+      "$type": "color",
+      "$value": "#0B0D10",
+      "description": "Primary dark canvas"
+    },
+    "ink": {
+      "$type": "color",
+      "$value": "#151515",
+      "description": "Master artwork ink"
+    },
+    "paper": {
+      "$type": "color",
+      "$value": "#F7F8F8",
+      "description": "Primary light canvas"
+    },
+    "white": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "description": "Reverse surface"
+    },
+    "slate": {
+      "$type": "color",
+      "$value": "#52616B",
+      "description": "Secondary body text"
+    },
+    "silver": {
+      "$type": "color",
+      "$value": "#ADB9BD",
+      "description": "Decorative and metadata"
+    },
+    "mist": {
+      "$type": "color",
+      "$value": "#DCE4E5",
+      "description": "Borders and dividers"
+    },
+    "signal": {
+      "$type": "color",
+      "$value": "#21BFAE",
+      "description": "Accent - never white body text"
+    },
+    "signal_dark": {
+      "$type": "color",
+      "$value": "#086F66",
+      "description": "Accessible action/link option"
+    }
+  },
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "$value": "Inter, Arial, sans-serif"
+    },
+    "body": {
+      "$type": "fontFamily",
+      "$value": "Inter, Arial, sans-serif"
+    }
+  },
+  "radius": {
+    "sm": "6px",
+    "md": "12px",
+    "lg": "20px"
+  },
+  "spacing": {
+    "base": "4px",
+    "contentMax": "1200px"
+  },
+  "motion": {
+    "quick": "160ms",
+    "standard": "240ms",
+    "slow": "420ms"
+  },
+  "contrastChecks": {
+    "inkOnPaper": 17.16,
+    "paperOnVoid": 18.29,
+    "whiteOnDeepSignal": 6.04,
+    "whiteOnSignal": 2.3
+  }
+}
