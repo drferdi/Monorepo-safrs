@@ -206,7 +206,7 @@
       "owner": "repository-maintainers",
       "purpose": "Jev decision router for coding agents (tools/typesafe-jev): decides whether to search, spawn a subagent, retry, or ask Gaffer before costly steps",
       "allowed_operations": ["route-decision"],
-      "data_scope": "one-line-task-goal-and-routing-state-via-tools-jev; the user-level Cursor intent hook (~/.cursor/hooks/jev-intent.ps1) sends only the first non-empty line of each prompt, capped at 200 characters",
+      "data_scope": "one-line-task-goal-and-routing-state-via-tools-typesafe-jev; the user-level Cursor intent hook (~/.cursor/hooks/jev-intent.ps1 via tools/typesafe-jev/mcp/jev_intent.py) sends only the first non-empty line of each prompt, capped at 200 characters",
       "authentication": "TYPESAFE_API_KEY-from-process-environment",
       "network_endpoints": ["api.typesafe.ai"],
       "provenance": "tools/typesafe-jev/playbook (vendored Bodila51/muse-jev-playbook@70edf68, MIT) with typesafe-sdk 0.7.1; approved by Gaffer 2026-10-10",

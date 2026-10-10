@@ -17,8 +17,9 @@ import re
 import sys
 import tempfile
 
-RESEARCH_TOOLS = {"WebSearch", "WebFetch"}
-SUBAGENT_TOOLS = {"Agent", "Task"}
+# Claude Code, Factory Droid (FetchUrl) and Grok (snake_case tool ids) names.
+RESEARCH_TOOLS = {"WebSearch", "WebFetch", "FetchUrl", "web_search", "web_fetch"}
+SUBAGENT_TOOLS = {"Agent", "Task", "task"}
 
 
 def trigger_for(tool_name: str) -> str | None:

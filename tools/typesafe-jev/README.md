@@ -14,7 +14,8 @@ build, test, or runtime dependency of any project under `projects/`.
 | --- | --- |
 | `playbook/` | Vendored [Bodila51/muse-jev-playbook](https://github.com/Bodila51/muse-jev-playbook) at commit `70edf68` (MIT, see `playbook/LICENSE`); upstream `.github/` omitted. |
 | `mcp/jev_mcp.py` | MCP stdio server exposing one tool, `jev_route`. No third-party dependencies. |
-| `mcp/jev_hook.py` | Optional Claude Code `PreToolUse` hook that consults Jev before research or subagents. Never blocks a tool. |
+| `mcp/jev_hook.py` | `PreToolUse` hook (Claude Code, Factory Droid, Grok) that consults Jev before research or subagents. Never blocks a tool. |
+| `mcp/jev_intent.py` | Classifies one prompt line for Cursor's prompt-submit hook through the playbook client. Fails open. |
 
 Local, untracked files (ignored by `playbook/.gitignore`): `playbook/.venv/`,
 `playbook/config.yaml` (mode and thresholds; start from `playbook/config.example.yaml`), and
@@ -56,11 +57,14 @@ Each agent gets the tool, a rule to use it, and an automatic trigger where the a
 | --- | --- | --- | --- |
 | Claude Code | `~/.claude.json` (user scope, `claude mcp add -s user`) | root `AGENTS.md` | `PreToolUse` hook before WebSearch, WebFetch, Agent, Task |
 | Codex | `~/.codex/config.toml` | `AGENTS.md`, `~/.codex/AGENTS.md` | none available |
-| Cursor | `~/.cursor/mcp.json` | `.cursor/rules/10-jev.mdc` | user `beforeSubmitPrompt` intent hook |
-| Factory Droid | `~/.factory/mcp.json` | `AGENTS.md`, `~/.factory/AGENTS.md` | `SessionStart` reminder |
-| Gemini (Antigravity) | `~/.gemini/config/mcp_config.json` | `GEMINI.md` adapter, user `GEMINI.md` | none available |
-| Grok | `~/.grok/config.toml` | `AGENTS.md` (read as project instructions) | none available |
+| Cursor | `~/.cursor/mcp.json` | `.cursor/rules/10-jev.mdc` | user `beforeSubmitPrompt` intent hook (`jev-intent.ps1` → `mcp/jev_intent.py`) |
+| Factory Droid | `~/.factory/mcp.json` | `AGENTS.md`, `~/.factory/AGENTS.md` | `~/.factory/hooks.json`: `SessionStart` reminder and `PreToolUse` hook before WebSearch, FetchUrl, Task |
+| Gemini (Antigravity) | `~/.gemini/config/mcp_config.json` | `GEMINI.md` adapter, `~/.gemini/config/GEMINI.md` | none available |
+| Grok | `~/.grok/config.toml` | `~/.grok/rules/jev.md`, `AGENTS.md` | `PreToolUse` hook in `~/.grok/config.toml` before web_search, web_fetch, task |
 | Opencode | `jev-router` plugin | `~/.config/opencode/AGENTS.md` | plugin consults before the first expensive tool |
+
+Factory Droid runs hook commands with `cmd.exe`: use unquoted paths (they have no spaces) and wrap
+PowerShell text in `powershell -NoProfile -Command "..."`.
 
 Every server instance is started with `--agent <name>` and appends one line per call to
 `playbook/logs/agents.jsonl` (agent, kind, action; no goal text). Check coverage with:
