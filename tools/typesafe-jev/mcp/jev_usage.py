@@ -4,7 +4,7 @@ Reads <playbook>/logs/agents.jsonl (written by jev_mcp.py and the Opencode plugi
 per agent, calls in the window, successful Jev decisions, and the last call. Agents expected to
 use Jev but silent in the window are listed so a broken wiring is visible.
 
-Usage:  python tools/jev/mcp/jev_usage.py [--playbook tools/jev/playbook] [--days 7]
+Usage:  python tools/typesafe-jev/mcp/jev_usage.py [--playbook tools/typesafe-jev/playbook] [--days 7]
 """
 from __future__ import annotations
 

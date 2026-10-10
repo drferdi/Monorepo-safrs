@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Jev decision router
 
-Canonical rule: root `AGENTS.md` (Jev Decision Layer). Setup: `tools/jev/README.md`.
+Canonical rule: root `AGENTS.md` (Jev Decision Layer). Setup: `tools/typesafe-jev/README.md`.
 
 1. Call the `jev_route` MCP tool before the first web search or browse in a task, before spawning
    a subagent, before retrying an approach that already failed, before any approval-needing
