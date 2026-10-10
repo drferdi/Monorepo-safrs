@@ -136,3 +136,9 @@
   patient, date and counts; status and tasks sit under "Status dan tugas".
 - The thinking card keeps its timed steps (M-02 declined). Dark mode and the type-scale refactor
   are out of scope.
+
+## 2026-10-11 — Own repository
+- Sentrapedia is an independent project with its own repository, https://github.com/drferdi/Sentrapedia.
+  The monorepo is the governance/work framework only; no architectural dependency on it unless documented.
+- History is published by `git subtree split` of `projects/healthcare/sentrapedia`, keeping the capsule history.
+  Every push to it still passes the monorepo publish gate by Gaffer's decision.

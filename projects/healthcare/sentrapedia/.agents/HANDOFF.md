@@ -1,5 +1,30 @@
 # Sentrapedia handoff
 
+## Standalone repository published — 2026-10-11 04:30 Asia/Jakarta
+
+Status: Sentrapedia now has its own repository, https://github.com/drferdi/Sentrapedia (private),
+`main` = `ce4ac21`. Gaffer ordered it to be saved there as an independent project and opened the
+monorepo publish gate for this push (`CHIEF_PUSH_OK=1`). R1: history publication to a private repo.
+
+Changes: `git subtree split --prefix=projects/healthcare/sentrapedia` gave 31 commits with the
+capsule history and no other monorepo paths. Capsule `.gitignore` now covers `verify-report/`,
+`.superpowers/`, `docs/superpowers/` and `.claude/` so the standalone clone does not rely on the
+monorepo root ignore file (`df48d766`). Monorepo remote `sentrapedia` added.
+
+Gates: fresh clone of the split branch outside the monorepo: `npm ci --workspaces=false` 0 (MIRA
+engine installed), typecheck 0, lint 0, `npm test` 158/158. History scan of 187,668 added lines:
+no API keys, tokens or private keys; committed env files are examples with empty values; no
+WhatsApp JIDs; 5 phone-like matches are sequential dummy numbers in PII-redaction tests, the rest
+are SHA-256 fragments. Capsule gate not triggered (no `projects/` paths in the split).
+
+Limits: monorepo branch `codex/oracle-ii-grounding` is still 1+ commits ahead of its origin; not
+pushed. This HANDOFF entry itself is not yet in the standalone repo.
+
+Next: to sync later, from the monorepo root run `git subtree split --prefix=projects/healthcare/sentrapedia
+-b sentrapedia-standalone` then push it to `sentrapedia main` (fast-forward; publish gate needs Gaffer).
+In PowerShell: `$env:CHIEF_PUSH_OK=1; git push sentrapedia sentrapedia-standalone:refs/heads/main;
+Remove-Item Env:CHIEF_PUSH_OK`.
+
 ## Design audit fixes — 2026-10-11 03:05 Asia/Jakarta
 
 Status: implemented and locally verified, uncommitted on branch `codex/oracle-ii-grounding`
