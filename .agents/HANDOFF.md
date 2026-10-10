@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-10 (Claude, clean-up on Gaffer's order on `codex/oracle-ii-grounding`)
+Last updated: 2026-10-11 (Claude, Jev coverage fixes on `codex/oracle-ii-grounding`)
 Previous body: `git show 8d898739:.agents/HANDOFF.md`
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -45,8 +45,20 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   only Jev on disk. All seven agents (Claude, Codex, Antigravity, Grok, Factory Droid, Cursor,
   OpenCode) point at it; each configured server answered an MCP handshake with `jev_route`.
   Actual calls in the last two days: Claude 14 and Codex 28; the other five had none yet.
-  Cursor's `jev-intent.ps1` hook still calls api.typesafe.ai directly, not the playbook.
-  The synced claude.ai skill `audit-monorepo-agent` still names `.kilo/jev`; fix it at the source.
+- 2026-10-11 (`88e56bb7`), the coverage fixes:
+  - Cursor: `~/.cursor/hooks/jev-intent.ps1` now runs `tools/typesafe-jev/mcp/jev_intent.py`
+    (playbook client, usage logged as `cursor`). Hook tests 6/6; live call logged `intent:act`.
+  - Factory Droid: its hooks never ran, because Droid uses `cmd.exe`. `~/.factory/hooks.json` now
+    has a working `SessionStart` reminder and a `PreToolUse` Jev hook; a live `droid` search
+    logged `agent: droid`.
+  - Grok: `~/.grok/rules/jev.md` plus a `PreToolUse` hook in `~/.grok/config.toml`. Not verified:
+    Grok is not logged in.
+  - Antigravity: rule and MCP are present; not verified, because the `agy` CLI needs a login.
+  - OpenCode: `opencode run` hangs whenever it calls `jev_route` (the plugin loads, no python is
+    spawned). Two fixes failed, so the circuit breaker stopped the work. Next: test inside the
+    OpenCode TUI.
+  - Skill `audit-monorepo-agent`: corrected copy in `~/Downloads/audit-monorepo-agent.zip`;
+    Gaffer uploads it in claude.ai Settings → Skills.
 - MyPrompt (`projects/internal/prompt`, own repo `drferdi/Myprompt`, published by
   `git subtree split --prefix=projects/internal/prompt`) may move to `tools/` too. Waiting for
   Gaffer, because the subtree prefix changes.
@@ -67,6 +79,8 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 - Pushed: `origin/codex/oracle-ii-grounding` matched `4facfd13` (2026-10-11); Gaffer ran it after
   the agent uploaded the 531 Git LFS objects, which the husky pre-push hook skips.
+- Gaffer: push `88e56bb7` and the HANDOFF commit (no new LFS objects); log in to Grok and
+  Antigravity once so their Jev use can be verified; upload the corrected skill zip.
 - Gaffer: decide the MyPrompt move, and whether `.husky/pre-push` should also run
   `git lfs pre-push`.
 - Gaffer: audit actions A-2..A-7 and A-11..A-19 are not approved yet. A-1 (key rotation) is
