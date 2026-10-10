@@ -50,6 +50,16 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   - Gaffer approved deleting the stale copies `~/.agents/jev`, `~/.codex/projects/muse-jev-playbook`
     and `~/.opencode/jev`; they are gone. No agent config used them. Their small logs and HANDOFF
     are archived in that session's scratchpad (`stale-jev-archive/`).
+- `5c1c031e` (R2, Gaffer asked for it): the uncommitted gaffer-orchestration "Mandatory closeout"
+  is committed. Its HANDOFF path is now repo-relative instead of `D:\DEV\Monorepo\...`. Task
+  `TASK-20261010-GAFFER-SKILL-CLOSEOUT` ended `ABORTED` because `pnpm task close` from VERIFYING
+  aborts; the work itself landed. Use VERIFYING → REVIEW → MERGED → CLOSED next time.
+- `pnpm governance` stays red at `check_task_ownership`. That check fails on the first changed
+  path without an active owner in `main`. `projects/healthcare/` is owned by
+  `TASK-20260927-HEALTHCARE-MIGRATION` (REVIEW). Three scopes have no owner:
+  `.agents/skills/superpowers/` (92 untracked), `.codex/config.toml` (`model_verbosity`) and
+  `projects/internal/retriever/` (1340 untracked, mostly `data/`). Their sessions must claim,
+  commit, ignore or drop them.
 - CI will still flag sentrapedia `docs/architecture.md`, which is not committed. The only copy is
   another session's untracked `docs/ARCHITECTURE.md`. Windows passes because its file names are
   case-insensitive; Linux does not.
@@ -60,8 +70,8 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 ## Work in flight
 
 - The working tree still holds other sessions' uncommitted work: med-assist and sentrapedia
-  capsule edits, `.codex/config.toml` (`model_verbosity`), `.agents/skills/gaffer-orchestration`,
-  and the untracked `.agents/skills/superpowers/`. This session left their content alone. The
+  capsule edits, `.codex/config.toml` (`model_verbosity`), and the untracked
+  `.agents/skills/superpowers/` and `projects/internal/retriever/`. This session left their content alone. The
   sentrapedia edits moved into `src/` with their folders. A path-move note was added at the top of
   the uncommitted `projects/healthcare/sentrapedia/.agents/HANDOFF.md`.
 
