@@ -19,6 +19,8 @@ packages:
   - '!projects/healthcare/**'
   - packages/*
   - tools/*
+  # retriever punya workspace dan lockfile sendiri (rencananya repo sendiri).
+  - '!tools/retriever'
 
 allowBuilds:
   '@prisma/engines': true
