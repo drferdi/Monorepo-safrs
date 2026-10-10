@@ -29,7 +29,7 @@ Gates on the working tree: typecheck 0, eslint 0 (2 pre-existing warnings in
 
 ## Blockers
 
-None. The Jev router at `~/dev/jev/muse-jev-playbook` does not exist on this machine (skipped).
+None.
 
 ## Known quirks
 
