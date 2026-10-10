@@ -47,6 +47,9 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
     Jev decision (exit 0) from the root, a capsule and a worktree. Automation-policy passes 21/21.
   - Outside the repo: `~/AGENTS.md` and `~/.claude/CLAUDE.md` now point at `tools/jev` (the
     fallback is `-c route_task`, mode active). Backups are in that session's scratchpad.
+  - Gaffer approved deleting the stale copies `~/.agents/jev`, `~/.codex/projects/muse-jev-playbook`
+    and `~/.opencode/jev`; they are gone. No agent config used them. Their small logs and HANDOFF
+    are archived in that session's scratchpad (`stale-jev-archive/`).
 - CI will still flag sentrapedia `docs/architecture.md`, which is not committed. The only copy is
   another session's untracked `docs/ARCHITECTURE.md`. Windows passes because its file names are
   case-insensitive; Linux does not.
@@ -76,8 +79,6 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   A-1 (key rotation) is Gaffer's own job.
 - `.codex/agents` still say "Chief", and two agents share the name `security-reviewer`.
 - Decide whether `.safrs/adapter-capabilities.json` keeps droid `read_only_disabled`.
-- Gaffer: decide whether to delete the stale Jev copies `~/.agents/jev`,
-  `~/.codex/projects/muse-jev-playbook` (30 MB) and `~/.opencode/jev`. No agent config uses them.
 - Claude sessions started before `f80e4ace` still hold the old MCP config. Restart them.
 
 ## Owner collision
