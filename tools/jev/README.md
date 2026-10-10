@@ -41,8 +41,12 @@ command: <repo>\tools\jev\playbook\.venv\Scripts\python.exe
 args:    <repo>\tools\jev\mcp\jev_mcp.py --playbook <repo>\tools\jev\playbook --agent <name>
 ```
 
-Claude Code reads it from the repository `.mcp.json`. Codex, Cursor, Factory Droid, Gemini
-(Antigravity) and Opencode point to the same paths from their user-level configuration.
+Every agent, Claude Code included, points to these absolute paths from its user-level
+configuration, so `tools/jev` in the main checkout is the only Jev. The repository ships no
+`.mcp.json`: its `${CLAUDE_PROJECT_DIR}` path resolved against the directory a session started in.
+Sessions started in a capsule or a worktree then failed with "The system cannot find the path
+specified", because `.venv` exists only in the main checkout. That entry also shadowed the
+working user entry.
 
 ## Agent coverage
 
@@ -50,7 +54,7 @@ Each agent gets the tool, a rule to use it, and an automatic trigger where the a
 
 | Agent | `jev_route` tool | Rule | Automatic trigger |
 | --- | --- | --- | --- |
-| Claude Code | `.mcp.json` (pre-approved in `.claude/settings.json`) | root `AGENTS.md` | `PreToolUse` hook before WebSearch, WebFetch, Agent, Task |
+| Claude Code | `~/.claude.json` (user scope, `claude mcp add -s user`) | root `AGENTS.md` | `PreToolUse` hook before WebSearch, WebFetch, Agent, Task |
 | Codex | `~/.codex/config.toml` | `AGENTS.md`, `~/.codex/AGENTS.md` | none available |
 | Cursor | `~/.cursor/mcp.json` | `.cursor/rules/10-jev.mdc` | user `beforeSubmitPrompt` intent hook |
 | Factory Droid | `~/.factory/mcp.json` | `AGENTS.md`, `~/.factory/AGENTS.md` | `SessionStart` reminder |

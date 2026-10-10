@@ -6,7 +6,6 @@
     "GIT_COMMITTER_NAME": "Claude",
     "GIT_COMMITTER_EMAIL": "claude@local"
   },
-  "enabledMcpjsonServers": ["jev"],
   "permissions": {
     "deny": [
       "Read(./.env)",
@@ -43,7 +42,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "R=\"$(git rev-parse --show-toplevel)\"; \"$R/tools/jev/playbook/.venv/Scripts/python.exe\" \"$R/tools/jev/mcp/jev_hook.py\" --playbook \"$R/tools/jev/playbook\" --agent claude",
+            "command": "R=\"$(git rev-parse --path-format=absolute --git-common-dir)\"; R=\"${R%/.git}\"; \"$R/tools/jev/playbook/.venv/Scripts/python.exe\" \"$R/tools/jev/mcp/jev_hook.py\" --playbook \"$R/tools/jev/playbook\" --agent claude",
             "timeout": 20
           }
         ]
