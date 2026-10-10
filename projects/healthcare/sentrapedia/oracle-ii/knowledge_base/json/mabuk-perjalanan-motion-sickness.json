@@ -1,0 +1,44 @@
+{
+  "id": 319,
+  "nama": "Mabuk Perjalanan (Motion Sickness)",
+  "slug": "mabuk-perjalanan-motion-sickness",
+  "kode_icd": "T75.3",
+  "kategori": "Penyakit Saraf",
+  "definisi": "Mabuk perjalanan (kinetosis) adalah sindrom gangguan fisiologis yang timbul akibat ketidakcocokan sensorik (sensory conflict) antara input visual, vestibular (telinga dalam), dan proprioseptif selama berada di kendaraan bergerak.",
+  "gejala": [
+    "Mual dan muntah",
+    "Pusing / melayang",
+    "Keringat dingin (diaporesis)",
+    "Wajah pucat",
+    "Hipersalivasi",
+    "Mengantuk dan lemas"
+  ],
+  "diagnosis": "Penegakan diagnosis klinis berdasarkan riwayat timbulnya gejala khas saat bepergian dengan transportasi darat, laut, atau udara, dan menghilang secara bertahap setelah gerakan berhenti.",
+  "terapi": "1. Non-farmakologis: Duduk di bagian kendaraan dengan gerakan paling stabil (depan mobil, tengah kapal, atas sayap pesawat), memandang lurus ke garis horizon yang stabil, sirkulasi udara segar cukup, hindari membaca atau menatap layar gadget saat kendaraan berjalan.\n2. Farmakologis Profilaksis (diminum 30-60 menit sebelum keberangkatan):\n   - Dimenhidrinat: 50-100 mg oral (dewasa) atau 25-50 mg (anak 6-12 tahun), dapat diulang setiap 4-6 jam prn.\n   - Skopolamin transdermal patch (ditempel di retroaurikular 4 jam sebelum perjalanan).\n   - Antiemetik: Domperidone 10 mg oral atau Metoklopramid 10 mg oral bila mual berat.",
+  "rujukan": "Rujuk ke Spesialis Saraf / THT bila pusing dan muntah menetap lama berhari-hari setelah perjalanan usai, atau terdapat kecurigaan kelainan vestibular sentral / vertigo patologis lain.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

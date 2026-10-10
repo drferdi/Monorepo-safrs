@@ -1,0 +1,44 @@
+{
+  "id": 338,
+  "nama": "Gangguan Cemas Menyeluruh (GAD)",
+  "slug": "gangguan-cemas-menyeluruh-gad",
+  "kode_icd": "F41.1",
+  "kategori": "Penyakit Jiwa",
+  "definisi": "Gangguan Cemas Menyeluruh (Generalized Anxiety Disorder / GAD) adalah gangguan kecemasan yang ditandai oleh kekhawatiran dan ansietas berlebihan yang pervasif dan tidak realistis mengenai berbagai peristiwa kehidupan sehari-hari, berlangsung hampir setiap hari selama minimal 6 bulan, disertai gejala ketegangan motorik dan hiperaktivitas otonom.",
+  "gejala": [
+    "Kekhawatiran kronis yang sulit dikendalikan",
+    "Gelisah, tegang, atau merasa terpojok (on edge)",
+    "Mudah lelah dan sulit berkonsentrasi",
+    "Ketegangan otot (pegal pada leher, bahu, punggung)",
+    "Gangguan tidur (sulit tidur nyenyak)",
+    "Gejala otonom: palpitasi jantung, berkeringat dingin, mulut kering, pusing, gangguan lambung"
+  ],
+  "diagnosis": "Ditegakkan berdasarkan kriteria PPDGJ-III / DSM-5: kecemasan dan kekhawatiran berlebihan hampir setiap hari selama minimal 6 bulan tentang berbagai aktivitas, disertai minimal 3 dari 6 gejala (kegelisahan, mudah lelah, konsentrasi buruk, iritabilitas, ketegangan otot, gangguan tidur).",
+  "terapi": "1. Psikoterapi: Cognitive Behavioral Therapy (CBT), latihan relaksasi pernapasan diafragma (deep breathing), dan mindfulness.\n2. Farmakologis Lini Pertama:\n   - Golongan SSRI: Sertralin 1 x 25-50 mg/hari oral atau Fluoksetin 1 x 20 mg/hari oral (efek terapi optimal muncul setelah 2-4 minggu).\n   - Benzodiazepin jangka sangat pendek (maks 2-4 minggu) untuk mengatasi kecemasan akut: Diazepam 2-5 mg 1-2x/hari oral atau Alprazolam 0.25-0.5 mg oral prn.",
+  "rujukan": "Rujuk ke Spesialis Kedokteran Jiwa (Sp.KJ) bila terdapat komorbiditas depresi berat dengan risiko bunuh diri, serangan panik berat, riwayat penyalahgunaan zat, atau gejala refrakter setelah 8-12 minggu terapi SSRI optimal.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

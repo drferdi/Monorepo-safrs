@@ -1,0 +1,43 @@
+{
+  "id": 332,
+  "nama": "Tetanus",
+  "slug": "tetanus",
+  "kode_icd": "A35",
+  "kategori": "Penyakit Infeksi",
+  "definisi": "Tetanus adalah penyakit infeksi akut sistem saraf yang disebabkan oleh eksotoksin tetanospasmin dari bakteri anaerob Clostridium tetani yang masuk melalui luka tercemar tanah/karat, ditandai dengan rigiditas otot dan spasme paroksismal tanpa gangguan sensorik.",
+  "gejala": [
+    "Trismus (kejang otot pengunyah / rahang terkunci)",
+    "Risus sardonicus (senyum seringai khas akibat spasme otot fasial)",
+    "Kaku kuduk dan opistotonus (punggung melengkung kaku ke belakang)",
+    "Perut teraba keras seperti papan (defans muskular volunteer)",
+    "Spasme paroksismal nyeri yang dipicu rangsang suara, sentuhan, atau cahaya"
+  ],
+  "diagnosis": "Ditegakkan murni secara klinis dari riwayat luka tercemar dan trias trismus + risus sardonicus + spasme refleksif. Spatula test positif (penyentuhan dinding posterior faring memicu spasme otot masseter menggigit spatula).",
+  "terapi": "1. Netralisasi Toksin Bebas Segera:\n   - Human Tetanus Immunoglobulin (HTIG) 3.000-6.000 IU IM dosis tunggal, ATAU Anti-Tetanus Serum (ATS) 100.000 IU (setengah IM, setengah IV) didahului skin test.\n2. Eradikasi Kuman Sumber Toksin:\n   - Metronidazol 3 x 500 mg IV selama 7-10 hari (lini pertama pilihan), ATAU Penisilin Prokain 1.2-2.4 juta IU/hari IM.\n   - Debridemen bedah luka kotor setelah antitoksin diberikan.\n3. Pengendalian Spasme & Kejang:\n   - Diazepam infus titrasi 100-300 mg/hari dalam larutan dekstrosa atau bolus IV 10 mg setiap 3-4 jam.\n4. Imunisasi Tetanus Toksoid (TT) pada sisi tubuh berbeda.",
+  "rujukan": "Rujuk SEGERA (CITO ambulans dengan monitor) ke ICU Rumah Sakit Rujukan untuk perawatan isolasi ruang gelap/tenang dan kesiapan intubasi trakeostomi mekanik ventilator bila terjadi spasme laring/apnea.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

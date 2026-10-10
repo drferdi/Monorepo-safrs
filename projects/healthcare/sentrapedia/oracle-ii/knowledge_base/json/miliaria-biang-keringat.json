@@ -1,0 +1,42 @@
+{
+  "id": 350,
+  "nama": "Miliaria (Biang Keringat)",
+  "slug": "miliaria-biang-keringat",
+  "kode_icd": "L74.3",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Miliaria (keringat buntet / biang keringat) adalah kelainan kulit yang timbul akibat retensi dan sumbatan saluran kelenjar keringat ekrin di lingkungan panas dan lembap. Tipe kristalina: sumbatan di stratum korneum; Tipe rubra: sumbatan di epidermis tengah dengan inflamasi.",
+  "gejala": [
+    "Miliaria kristalina: vesikel jernih kecil superfisial seperti tetesan embun tanpa eritema, tidak gatal, mudah pecah",
+    "Miliaria rubra: papul dan vesikel merah kecil gatal menusuk dan pedih pada area tertutup pakaian/lipatan tubuh",
+    "Banyak berkeringat",
+    "Umum pada bayi, balita, atau orang yang tirah baring lama"
+  ],
+  "diagnosis": "Ditegakkan dari inspeksi klinis lesi papulovesikel mikro di area oklusi keringat (leher, dada, punggung, lipatan ketiak/paha) pada cuaca panas lembap.",
+  "terapi": "1. Modifikasi Lingkungan (Pilar Utama Penanganan):\n   - Menjaga sirkulasi udara sejuk dan ventilasi baik (gunakan AC/kipas angin).\n   - Memakai pakaian tipis, longgar, menyerap keringat berbahan katun.\n   - Mandi air dingin dan segera keringkan tubuh.\n2. Farmakologis Topikal:\n   - Bedak kocok kalamin (Caladine) atau bedak salisil 1-2% dioleskan pada area lesi.\n   - Krim Hidrokortison 1% tipis jangka pendek (2-3 hari) bila miliaria rubra sangat meradang dan gatal.\n   - Antihistamin oral bila gatal mengganggu tidur bayi/anak.",
+  "rujukan": "Rujuk ke Spesialis Kulit bila timbul komplikasi infeksi bakteri sekunder luas (miliaria pustulosa / impetiginisasi) yang membutuhkan antibiotik sistemik atau tidak membaik dengan tata laksana primer.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

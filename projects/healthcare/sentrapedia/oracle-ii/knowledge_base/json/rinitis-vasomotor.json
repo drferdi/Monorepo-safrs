@@ -1,0 +1,42 @@
+{
+  "id": 314,
+  "nama": "Rinitis Vasomotor",
+  "slug": "rinitis-vasomotor",
+  "kode_icd": "J30.0",
+  "kategori": "Penyakit THT",
+  "definisi": "Rinitis vasomotor adalah gangguan fungsional neurovaskular mukosa hidung non-alergi dan non-infeksi yang ditandai oleh ketidakseimbangan sistem saraf otonom (hiperaktivitas parasimpatis), dipicu oleh rangsangan non-spesifik seperti perubahan suhu dingin, kelembapan, asap rokok, bau menyengat, atau stres.",
+  "gejala": [
+    "Hidung tersumbat bergantian kiri dan kanan",
+    "Sekret hidung encer berlebihan (rinorea serosa profus)",
+    "Keluhan dipicu udara dingin, makanan pedas/panas, atau bau tajam",
+    "Jarang disertai bersin paroksismal atau mata gatal (membedakan dari rinitis alergi)"
+  ],
+  "diagnosis": "Diagnosis per eksklusi: gejala hidung tersumbat dan rinorea tanpa riwayat atopi, tes alergi (skin prick test) negatif, rinoskopi anterior memperlihatkan konka hipertrofi berwarna merah gelap atau keunguan dengan sekret serosa.",
+  "terapi": "1. Menghindari faktor pemicu spesifik (asap, bau menyengat, udara dingin mendadak).\n2. Cuci hidung dengan larutan NaCl 0.9% secara teratur.\n3. Farmakologis:\n   - Antikolinergik topikal: Ipratropium bromida semprot hidung 0.03% (sangat efektif mengurangi rinorea serosa).\n   - Kortikosteroid topikal intranasal: Flutikason atau Mometason 1-2 semprot/hari untuk mengurangi kongesti mukosa.\n   - Dekongestan oral bila diperlukan dalam durasi singkat.",
+  "rujukan": "Rujuk ke Spesialis THT-KL bila obstruksi hidung berat menetap refrakter terhadap medikamentosa, atau dipertimbangkan tindakan bedah reduksi konka (konkotomi / kauterisasi konka).",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

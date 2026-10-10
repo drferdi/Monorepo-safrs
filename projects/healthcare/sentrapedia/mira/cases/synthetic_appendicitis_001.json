@@ -1,0 +1,73 @@
+{
+  "_comment": "Fully synthetic teaching case invented for a MIRA smoke test. Not derived from any real patient or from MIMIC-IV. Units follow MIRA's MIMIC conventions (US units, temperature in Fahrenheit) because MIRA's tools and reference ranges assume them.",
+  "case_id": "synthetic_appendicitis_001",
+  "synthetic": true,
+  "dataset_name": "synthetic_appendicitis",
+  "hadm_id": 90000001,
+  "subject_id": 90000001,
+  "expected_diagnosis": "Acute appendicitis (uncomplicated)",
+  "demographics": {
+    "sex": "M",
+    "age": 22,
+    "anchor_year": 2026
+  },
+  "chief_complaint": "Abdominal pain",
+  "hpi": "22-year-old man with no significant past medical history presents with abdominal pain that started about 20 hours ago. The pain began as a dull ache around the belly button and over the last 10 hours moved to the right lower abdomen, where it is now sharp, constant, and rated 7 out of 10. Walking, coughing, and going over bumps in the car make it worse; lying still helps a little. He has lost his appetite since yesterday evening and vomited twice this morning (food, no blood, no bile). He felt warm and had chills overnight but did not measure his temperature. Last bowel movement was yesterday morning and was normal; no diarrhea, no blood in stool. No burning on urination, no blood in urine, no increased urinary frequency, no flank pain. No testicular pain or swelling. No cough, shortness of breath, or chest pain. No recent travel, no sick contacts, no new foods. No previous abdominal surgery. No known drug allergies. Does not smoke, drinks alcohol occasionally on weekends, no drug use. Works as a university student. Family history is non-contributory.",
+  "admission_medication": "No current medication.",
+  "physical_exam": "Vitals: T 100.6 F, HR 104, BP 128/78, RR 18, SpO2 99% on room air.\nGeneral: Young man lying still on the stretcher, appears uncomfortable, in moderate distress due to pain.\nHEENT: Dry mucous membranes, no scleral icterus.\nNeck: Supple.\nCardiovascular: Tachycardic, regular rhythm, no murmurs.\nLungs: Clear to auscultation bilaterally, no crackles or wheezes.\nAbdomen: Soft, non-distended. Hypoactive bowel sounds. Tenderness maximal in the right lower quadrant at McBurney's point with voluntary guarding and localized rebound tenderness. Positive Rovsing sign. Positive psoas sign. No palpable mass. No hepatosplenomegaly. No costovertebral angle tenderness.\nGenitourinary: Normal external genitalia, testes non-tender without swelling.\nRectal: Deferred.\nExtremities: Warm, no edema.\nNeuro: Alert and oriented, no focal deficits.\nSkin: No rash, no jaundice.",
+  "triage_vitals": {
+    "temperature": 100.6,
+    "heartrate": 104,
+    "resprate": 18,
+    "o2sat": 99,
+    "sbp": 128,
+    "dbp": 78,
+    "pain": "7"
+  },
+  "labs_blood": [
+    {"label": "White Blood Cells", "value": 15.8, "unit": "K/uL", "ref_low": 4.0, "ref_high": 10.0, "flag": "abnormal"},
+    {"label": "Neutrophils", "value": 86.0, "unit": "%", "ref_low": 50.0, "ref_high": 70.0, "flag": "abnormal"},
+    {"label": "Lymphocytes", "value": 9.0, "unit": "%", "ref_low": 20.0, "ref_high": 40.0, "flag": "abnormal"},
+    {"label": "Hemoglobin", "value": 15.1, "unit": "g/dL", "ref_low": 13.7, "ref_high": 17.5, "flag": null},
+    {"label": "Hematocrit", "value": 44.2, "unit": "%", "ref_low": 40.0, "ref_high": 51.0, "flag": null},
+    {"label": "Platelet Count", "value": 268, "unit": "K/uL", "ref_low": 150, "ref_high": 400, "flag": null},
+    {"label": "Sodium", "value": 138, "unit": "mEq/L", "ref_low": 133, "ref_high": 145, "flag": null},
+    {"label": "Potassium", "value": 4.0, "unit": "mEq/L", "ref_low": 3.3, "ref_high": 5.1, "flag": null},
+    {"label": "Chloride", "value": 101, "unit": "mEq/L", "ref_low": 96, "ref_high": 108, "flag": null},
+    {"label": "Bicarbonate", "value": 24, "unit": "mEq/L", "ref_low": 22, "ref_high": 32, "flag": null},
+    {"label": "Urea Nitrogen", "value": 14, "unit": "mg/dL", "ref_low": 6, "ref_high": 20, "flag": null},
+    {"label": "Creatinine", "value": 0.9, "unit": "mg/dL", "ref_low": 0.5, "ref_high": 1.2, "flag": null},
+    {"label": "Glucose", "value": 102, "unit": "mg/dL", "ref_low": 70, "ref_high": 100, "flag": "abnormal"},
+    {"label": "C-Reactive Protein", "value": 48.0, "unit": "mg/L", "ref_low": 0.0, "ref_high": 5.0, "flag": "abnormal"},
+    {"label": "Lipase", "value": 32, "unit": "IU/L", "ref_low": 0, "ref_high": 60, "flag": null},
+    {"label": "Alanine Aminotransferase (ALT)", "value": 22, "unit": "IU/L", "ref_low": 0, "ref_high": 40, "flag": null},
+    {"label": "Asparate Aminotransferase (AST)", "value": 24, "unit": "IU/L", "ref_low": 0, "ref_high": 40, "flag": null},
+    {"label": "Alkaline Phosphatase", "value": 71, "unit": "IU/L", "ref_low": 40, "ref_high": 130, "flag": null},
+    {"label": "Bilirubin, Total", "value": 0.8, "unit": "mg/dL", "ref_low": 0.0, "ref_high": 1.5, "flag": null},
+    {"label": "Lactate", "value": 1.4, "unit": "mmol/L", "ref_low": 0.5, "ref_high": 2.0, "flag": null}
+  ],
+  "labs_urine": [
+    {"label": "Specific Gravity", "value": 1.024, "unit": " ", "ref_low": 1.001, "ref_high": 1.035, "flag": null},
+    {"label": "pH", "value": 6.0, "unit": "units", "ref_low": 5.0, "ref_high": 8.0, "flag": null},
+    {"label": "Leukocytes", "value_text": "NEG", "unit": " ", "flag": null},
+    {"label": "Nitrite", "value_text": "NEG", "unit": " ", "flag": null},
+    {"label": "Blood", "value_text": "NEG", "unit": " ", "flag": null},
+    {"label": "Protein", "value_text": "NEG", "unit": "mg/dL", "flag": null},
+    {"label": "Ketone", "value_text": "15", "unit": "mg/dL", "flag": "abnormal"},
+    {"label": "WBC", "value": 1, "unit": "#/hpf", "ref_low": 0, "ref_high": 5, "flag": null},
+    {"label": "RBC", "value": 1, "unit": "#/hpf", "ref_low": 0, "ref_high": 2, "flag": null}
+  ],
+  "radiology": [
+    {
+      "modality": "Ultrasound",
+      "region": "Abdomen",
+      "report": "EXAMINATION: Ultrasound, right lower quadrant.\nINDICATION: Right lower quadrant pain, fever, leukocytosis.\nFINDINGS: In the right lower quadrant there is a blind-ending, non-compressible tubular structure measuring 9 mm in diameter arising from the cecum, with a thickened hyperemic wall on color Doppler. A 6 mm echogenic focus with posterior acoustic shadowing is seen near its base, consistent with an appendicolith. Surrounding echogenic inflamed fat. Trace free fluid adjacent to it. No drainable fluid collection. Normal-appearing right kidney without hydronephrosis.\nIMPRESSION: Findings consistent with acute appendicitis with an appendicolith. No sonographic evidence of abscess."
+    },
+    {
+      "modality": "CT",
+      "region": "Abdomen",
+      "report": "EXAMINATION: CT abdomen and pelvis with intravenous contrast.\nINDICATION: Right lower quadrant pain, fever, leukocytosis.\nFINDINGS: The appendix is dilated to 11 mm with wall thickening and mucosal hyperenhancement. A 6 mm appendicolith is present at the appendiceal base. Moderate periappendiceal fat stranding. No extraluminal gas. No periappendiceal fluid collection or abscess. The remainder of the bowel is normal in caliber without obstruction. Liver, gallbladder, pancreas, spleen, adrenal glands, and kidneys are unremarkable. No hydronephrosis. No free air. Small amount of free fluid in the pelvis.\nIMPRESSION: Acute uncomplicated appendicitis with appendicolith. No perforation or abscess."
+    }
+  ],
+  "microbiology": []
+}

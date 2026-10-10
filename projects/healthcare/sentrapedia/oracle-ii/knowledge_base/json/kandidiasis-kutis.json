@@ -1,0 +1,41 @@
+{
+  "id": 344,
+  "nama": "Kandidiasis Kutis",
+  "slug": "kandidiasis-kutis",
+  "kode_icd": "B37.2",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Kandidiasis kutis adalah infeksi jamur pada kulit dan kuku yang disebabkan oleh spesies Candida (terutama Candida albicans), terutama menyerang area lipatan kulit yang hangat dan lembap (intertriginosa: lipat paha, ketiak, inframamaria, sela jari).",
+  "gejala": [
+    "Gatal hebat dan rasa terbakar pada lipatan kulit",
+    "Plak eritematosa merah cerah berbatas tegas dengan maserasi basah",
+    "Lesi satelit yang khas: papul dan pustul kecil merah di sekeliling tepi plak utama"
+  ],
+  "diagnosis": "Ditegakkan dari gambaran lesi satelit khas pada area intertriginosa. Konfirmasi mikroskopis kerokan kulit dengan KOH 10-20% atau pewarnaan Gram memperlihatkan sel ragi bertunas (budding yeast), blastospora, dan pseudohifa jamur.",
+  "terapi": "1. Menjaga area lipatan tetap kering dan bersih (menggunakan bedak tabur penyerap pasca sembuh).\n2. Antijamur Topikal:\n   - Mikonazol krim 2%, Klotrimazol krim 1%, atau Ketokonazol krim 2% dioleskan 2 kali sehari selama 2-3 minggu.\n   - Nistatin salep/krim dioleskan 2-3 kali sehari.\n3. Antijamur Oral (pada lesi luas atau penderita diabetes/imunokompromais):\n   - Flukonazol 1 x 150 mg oral per minggu selama 2-4 minggu, atau Itrakonazol 1 x 100-200 mg/hari selama 1-2 minggu.\n4. Kontrol gula darah pada penderita diabetes melitus.",
+  "rujukan": "Rujuk ke Spesialis Kulit / Penyakit Dalam bila kandidiasis kutis resisten terapi luas berulang, dicurigai kandidiasis mukokutan kronik atau imunodefisiensi berat.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

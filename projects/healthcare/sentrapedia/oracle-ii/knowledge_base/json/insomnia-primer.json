@@ -1,0 +1,43 @@
+{
+  "id": 337,
+  "nama": "Insomnia Primer",
+  "slug": "insomnia-primer",
+  "kode_icd": "F51.0",
+  "kategori": "Penyakit Jiwa",
+  "definisi": "Insomnia primer adalah gangguan tidur yang ditandai dengan kesulitan memulai tidur (sleep onset), mempertahankan tidur (sleep maintenance), atau bangun terlalu dini dan tidak dapat tidur kembali, yang terjadi minimal 3 malam per minggu selama minimal 1 bulan, menimbulkan distres dan gangguan fungsi di siang hari, tanpa disebabkan oleh gangguan medis/psikiatri lain.",
+  "gejala": [
+    "Sulit tidur meskipun tubuh lelah",
+    "Sering terbangun di malam hari dan sulit tidur kembali",
+    "Bangun terlalu pagi",
+    "Rasa lelah, mengantuk, dan sulit konsentrasi di siang hari",
+    "Kecemasan terkait waktu tidur"
+  ],
+  "diagnosis": "Penegakan diagnosis klinis dari riwayat pola tidur melalui buku harian tidur (sleep diary). Menyingkirkan sleep apnea (mendengkur keras tercekik), sindrom kaki gelisah (restless legs syndrome), dan depresi/ansietas mayor.",
+  "terapi": "1. Terapi Perilaku Kognitif untuk Insomnia (CBT-I) & Sleep Hygiene (Lini Pertama Pilihan):\n   - Jadwal tidur dan bangun yang tetap setiap hari (termasuk akhir pekan).\n   - Gunakan tempat tidur HANYA untuk tidur dan hubungan seksual (stimulus control).\n   - Hindari layar gadget, kafein, alkohol, dan makan berat 4-6 jam sebelum tidur.\n   - Olahraga teratur di pagi/siang hari, bukan menjelang tidur.\n2. Farmakologis Jangka Pendek (Hanya bila CBT-I belum efektif, batasi < 2-4 minggu):\n   - Non-benzodiazepin (Z-drugs): Zolpidem 5-10 mg oral sebelum tidur.\n   - Alternatif sedatif non-adiktif: Amitriptilin 12.5-25 mg oral malam hari bila disertai kecemasan/nyeri kronik.",
+  "rujukan": "Rujuk ke Spesialis Kedokteran Jiwa (Sp.KJ) bila insomnia kronik menetap > 3 bulan refrakter terapi primer, dicurigai komorbiditas depresi mayor dengan ide bunuh diri, atau ketergantungan obat hipnotik-sedatif.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

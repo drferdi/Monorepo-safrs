@@ -1,0 +1,42 @@
+{
+  "id": 305,
+  "nama": "Kandidiasis Mulut (Oral Thrush)",
+  "slug": "kandidiasis-mulut-oral-thrush",
+  "kode_icd": "B37.0",
+  "kategori": "Penyakit Infeksi",
+  "definisi": "Kandidiasis mulut adalah infeksi jamur oportunistik pada mukosa rongga mulut yang disebabkan oleh spesies Candida (terutama Candida albicans), sering terjadi pada bayi, lansia pengguna gigi tiruan, pengguna kortikosteroid inhalasi, atau status imunokompromais.",
+  "gejala": [
+    "Bercak putih tebal seperti dadih susu (pseudomembran) pada lidah, palatum, atau pipi bagian dalam",
+    "Bercak mudah dikerok meninggalkan dasar mukosa merah dan berdarah",
+    "Sensasi terbakar di mulut",
+    "Nyeri saat menelan pada bayi menyebabkan malas menyusu"
+  ],
+  "diagnosis": "Diagnosis klinis dengan mengerok pseudomembran putih. Konfirmasi mikroskopis FKTP: sediaan kerokan mukosa dengan larutan KOH 10% memperlihatkan sel ragi bertunas (budding yeast) dan pseudohifa jamur.",
+  "terapi": "1. Nistatin suspensi oral 100.000 IU/mL: Dewasa dan anak 4 x 1-2 mL (teteskan ke dalam rongga mulut dan kumur perlahan sebelum ditelan) selama 7-14 hari (minimal 48 jam setelah gejala hilang).\n2. Alternatif pada dewasa/lansia: Mikonazol gel oral 2% dioleskan 4 kali sehari.\n3. Flukonazol oral 1 x 100-200 mg/hari selama 7-14 hari bila infeksi luas atau refrakter.\n4. Membersihkan puting susu ibu, dot botol susu bayi, dan merendam gigi tiruan dalam larutan klorheksidin.",
+  "rujukan": "Rujuk ke Spesialis Penyakit Dalam / Imunologi bila kandidiasis mulut terjadi pada dewasa muda tanpa riwayat steroid/antibiotik (penapisan infeksi HIV/AIDS atau diabetes melitus tidak terkontrol) atau dicurigai ekstensi kandidiasis esofagus.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

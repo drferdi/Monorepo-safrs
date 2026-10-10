@@ -1,0 +1,44 @@
+{
+  "id": 334,
+  "nama": "Migren Tanpa Aura",
+  "slug": "migren-tanpa-aura",
+  "kode_icd": "G43.0",
+  "kategori": "Penyakit Saraf",
+  "definisi": "Migren tanpa aura adalah nyeri kepala primer neurovaskular berulang dengan serangan berdurasi 4 hingga 72 jam, khas unilateral, berdenyut, intensitas sedang-berat, diperberat oleh aktivitas fisik rutin, dan disertai mual, fotofobia, serta fonofobia.",
+  "gejala": [
+    "Nyeri kepala unilateral berdenyut (pulsating)",
+    "Intensitas sedang hingga berat (mengganggu aktivitas)",
+    "Diperberat oleh aktivitas fisik rutin (berjalan atau naik tangga)",
+    "Mual dan/atau muntah",
+    "Fotofobia (silau cahaya) dan fonofobia (sensitif suara bising)",
+    "Pencetus: kurang tidur, stres, telat makan, keju/cokelat, menstruasi"
+  ],
+  "diagnosis": "Ditegakkan berdasarkan kriteria ICHD-3: minimal 5 episode serangan yang memenuhi kriteria durasi 4-72 jam, memiliki minimal 2 karakteristik (unilateral, berdenyut, intensitas sedang-berat, diperberat aktivitas rutin), dan minimal 1 gejala penyerta (mual/muntah atau fotofobia + fonofobia).",
+  "terapi": "1. Terapi Abortif Akut (Diberikan seawal mungkin saat serangan):\n   - Lini Pertama (Serangan Ringan-Sedang): Parasetamol 1000 mg oral, Ibuprofen 400-800 mg oral, atau Asam Mefenamat 500 mg.\n   - Lini Kedua (Serangan Sedang-Berat): Triptan (Sumatriptan 50-100 mg oral) ATAU Ergotamin tartrat 1 mg + Kafein 100 mg oral saat awal serangan (maks 6 tablet per serangan).\n   - Antiemetik: Domperidone 10 mg oral atau Metoklopramid 10 mg oral bila mual dominan.\n2. Terapi Preventif (bila serangan >= 4 hari/bulan atau disabilitas berat):\n   - Propranolol 2 x 20-40 mg/hari, Topiramat 25-50 mg/hari, atau Flunarizin 5-10 mg/hari malam hari.",
+  "rujukan": "Rujuk ke Spesialis Saraf bila status migrainosus (serangan berlangsung > 72 jam tanpa jeda), dicurigai migren dengan komplikasi neurologis fokal (migren basilar, migren hemiplegik), atau refrakter terhadap terapi profilaksis.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

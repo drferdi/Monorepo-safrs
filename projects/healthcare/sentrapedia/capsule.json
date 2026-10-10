@@ -1,18 +1,18 @@
 {
   "id": "sentrapedia",
-  "runtime": { "name": "node", "version": ">=22" },
+  "runtime": { "name": "node", "version": ">=24" },
   "risk": "R2",
   "lifecycle": {
     "install": ["npm", "ci", "--workspaces=false"],
     "build": ["npm", "run", "build"],
-    "test": ["npm", "test", "--", "tests/workspace.test.ts", "tests/studio.test.ts", "tests/workflow.test.ts", "tests/oracle-mira.test.ts", "tests/mira-free.test.ts", "tests/mira-paid.test.ts", "tests/mira-composer.test.ts", "tests/mira-client.test.ts"],
+    "test": ["npm", "run", "test:all"],
     "run": ["npm", "run", "dev"],
     "lint": ["npm", "run", "lint"],
     "typecheck": ["npm", "run", "typecheck"],
     "deployDryRun": ["npm", "run", "deploy:dry-run"]
   },
-  "requiredEnvironment": [],
-  "externalServices": ["Optional existing local MIRA service; server-only token; synthetic cases only; approved pinned OpenRouter Gemini 2.5 Flash paid model for both stages"],
+  "requiredEnvironment": ["OPENROUTER_API_KEY"],
+  "externalServices": ["OpenRouter provider API; synthetic cases only; Gemini 2.5 Flash for both stages"],
   "buildOutputs": [".next/standalone", ".next/static"],
   "generatedPaths": [".next", "node_modules", "next-env.d.ts"],
   "sensitiveSurfaces": ["Browser-local patient and encounter data; fictional data only", "Optional microphone speech recognition may contact browser speech provider"],

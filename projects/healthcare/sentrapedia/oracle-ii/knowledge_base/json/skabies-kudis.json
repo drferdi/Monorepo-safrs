@@ -1,0 +1,42 @@
+{
+  "id": 345,
+  "nama": "Skabies (Kudis)",
+  "slug": "skabies-kudis",
+  "kode_icd": "B86",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Skabies adalah penyakit kulit menular yang disebabkan oleh infestasi dan sensitisasi terhadap tungau Sarcoptes scabiei var. hominis, yang membuat terowongan di stratum korneum kulit manusia.",
+  "gejala": [
+    "Pruritus nokturnal (gatal hebat memuncak pada malam hari)",
+    "Menyerang sekelompok orang yang tinggal bersama (asrama, pesantren, satu keluarga)",
+    "Kanikulus (terowongan halus putih keabu-abuan berkelok) dengan vesikel di ujungnya",
+    "Predileksi khas: sela-sela jari tangan, pergelangan tangan ventral, siku, ketiak, areola mammae, umbilikus, genitalia eksterna pria"
+  ],
+  "diagnosis": "Ditegakkan jika ditemukan minimal 2 dari 4 tanda kardinal skabies (pruritus nokturnal, menyerang sekelompok, terowongan/kanikulus di tempat predileksi, ditemukannya tungau). Baku emas: biopsi kerokan kulit superfisial dengan minyak mineral memperlihatkan tungau, telur, atau feses (skibala) tungau.",
+  "terapi": "1. Skabisid Topikal Lini Pertama:\n   - Permetrin krim 5%: dioleskan merata ke seluruh tubuh dari leher hingga ujung jari kaki (pada bayi termasuk kepala) malam hari sebelum tidur, dibiarkan selama 8-12 jam, lalu dibilas bersih. Diulang 1 minggu kemudian.\n   - Alternatif: Salep 2-4 (Sulfur presipitatum 4-10%) dioleskan 3 malam berturut-turut (pilihan aman untuk bayi < 2 bulan dan ibu hamil/menyusui).\n2. Pengobatan serentak seluruh anggota keluarga/penghuni asrama serumah.\n3. Dekontaminasi lingkungan: cuci semua seprai, pakaian, dan handuk dengan air panas (> 60°C) atau bungkus dalam kantong plastik rapat selama minimal 72 jam.",
+  "rujukan": "Rujuk ke Spesialis Kulit bila Skabies Krustosa (Norwegian scabies: hiperkeratosis krustosa masif pada pasien imunodefisiensi), infeksi sekunder selulitis berat, atau lesi refrakter setelah 2 siklus permetrin.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

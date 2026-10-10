@@ -5,6 +5,7 @@ import { PixelLoader } from "./pixel-loader";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { modes, type ModeId } from "../lib/drafts";
 import { composerPlaceholder, intentGroups } from "../lib/studio";
+import { modeCategories } from "../lib/clinical-templates";
 import { modelLabel } from "../lib/ui-labels";
 import { focusStep } from "../lib/nav-tree";
 import type { PersonalTemplate } from "../lib/workflow";
@@ -20,7 +21,7 @@ export function IntentTabs({ mode, onMode }: { mode: ModeId; onMode: (mode: Mode
 
 const modeLabel = (id: ModeId) => modes.find((item) => item.id === id)!.label;
 
-/** One picker for every template: favourites first, then each category's modes, then personal templates.
+/** One picker for every template: favourites first, then the six clinical categories of Chief's template pack, then personal templates.
  *  A select-only combobox: focus stays on the trigger, arrows/Home/End move, Enter or Space picks, Escape closes.
  *  The menu opens towards the side with room (upward when the composer sits at the bottom of the chat). */
 function ModePicker({ mode, templates, favorites, templateKey, onTemplate }: Pick<Props, "mode" | "templates" | "favorites" | "templateKey" | "onTemplate">) {
@@ -36,7 +37,7 @@ function ModePicker({ mode, templates, favorites, templateKey, onTemplate }: Pic
   const favourites = favorites.filter((key) => name(key));
   const groups = [
     ...(favourites.length ? [{ id: "favorite", label: "Favorit", options: favourites.map((key) => ({ key, label: `★ ${name(key)}` })) }] : []),
-    ...intentGroups.map((group) => ({ id: group.id, label: group.label, options: group.modes.map((item) => ({ key: `mode:${item}`, label: modeLabel(item) })) })),
+    ...modeCategories.map((group, index) => ({ id: `category-${index}`, label: group.label, options: group.modes.map((item) => ({ key: `mode:${item}`, label: modeLabel(item) })) })),
     ...(templates.length ? [{ id: "personal", label: "Templat pribadi", options: templates.map((item) => ({ key: `template:${item.id}`, label: item.name })) }] : []),
   ];
   const options = groups.flatMap((group) => group.options);
@@ -107,7 +108,7 @@ export function Composer(props: Props) {
     <div className="composer-toolbar"><div className="composer-tools-left">
       <button type="button" className="icon-tool mic-button" data-state={dictation.recording ? "listening" : "idle"} aria-pressed={dictation.recording} disabled={dictation.starting} aria-label={dictation.recording ? "Hentikan dikte" : "Dikte ke kolom teks"} title={dictation.recording ? "Mendengarkan · klik untuk berhenti" : "Dikte ke kolom teks (layanan speech browser)"} onClick={dictation.toggle}><Mic size={16}/></button>
       <button type="button" className={`icon-tool context-button ${props.context ? "has-context" : ""}`} aria-label={props.context ? "Ubah konteks encounter" : "Tambah konteks"} title={props.context ? "Ubah konteks encounter" : "Tambah konteks"} onClick={props.onContext}><Paperclip size={16}/></button>
-      <span className="context-status" role="status">{dictation.recording ? <span className="listening">Mendengarkan…</span> : <>{props.patientName ?? "Tanpa pasien"} · {props.context ? "konteks terisi" : "belum ada konteks"}</>}</span>
+      <span className="context-status" role="status">{dictation.recording ? <span key="listening" className="listening">Mendengarkan…</span> : <span key="summary">{props.patientName ?? "Tanpa pasien"} · {props.context ? "konteks terisi" : "belum ada konteks"}</span>}</span>
     </div><div className="composer-tools-right">
       <div className="model-select"><select aria-label="Format keluaran" value={props.settings.model} onChange={(e) => props.onModel(e.target.value as Settings["model"])}><option value="Standard">{modelLabel("Standard")}</option><option value="Extended">{modelLabel("Extended")}</option></select><ChevronDown size={11}/></div>
       {props.busy && props.miraEnabled ? <button type="button" className="button square send-button" aria-label="Hentikan analisis" title="Hentikan analisis" onClick={props.onCancelAnalysis}><Square size={13} fill="currentColor"/></button> : <button className="button square send-button" aria-label={props.miraEnabled ? "Analisis kasus" : "Buat draf"} title={props.miraEnabled ? "Analisis langsung · Enter" : "Buat draf · Enter"} disabled={!props.prompt.trim() || props.busy}>{props.busy ? <PixelLoader label="Sedang menyusun draf…"/> : <ArrowUp size={18}/>}</button>}

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "extractedRoot": "C:\\Users\\drfer\\AppData\\Local\\Temp\\sentrapedia-oracle-proof-20261010-195126",
+  "buildId": "53NDRloPsbjPyFj3j5LW7",
+  "page": 200,
+  "staticAsset": 200,
+  "groundedPost": 200,
+  "noMatch": 422,
+  "mockedInferenceRequests": 1,
+  "realProviderCalls": 0,
+  "groundingPassages": 6,
+  "corpusSha256": "4a28f3293ecff578f23c88a086bbbc27830d28f8f5d90951d8b9e4d9884da116",
+  "corpusUnchanged": true
+}

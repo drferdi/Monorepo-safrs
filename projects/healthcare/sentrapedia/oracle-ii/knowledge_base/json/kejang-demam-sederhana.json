@@ -1,0 +1,43 @@
+{
+  "id": 331,
+  "nama": "Kejang Demam Sederhana",
+  "slug": "kejang-demam-sederhana",
+  "kode_icd": "R56.0",
+  "kategori": "Penyakit Anak",
+  "definisi": "Kejang demam sederhana adalah bangkitan kejang yang terjadi pada kenaikan suhu tubuh (suhu rektal > 38°C) yang disebabkan oleh proses ekstrakranial pada anak usia 6 bulan hingga 5 tahun, berlangsung singkat (< 15 menit), bersifat umum (tonik dan/atau klonik), dan tidak berulang dalam 24 jam.",
+  "gejala": [
+    "Kejang umum seluruh tubuh (kelojotan tonik-klonik)",
+    "Mata mendelik ke atas",
+    "Penurunan kesadaran sesaat selama kejang",
+    "Durasi kejang singkat < 15 menit",
+    "Anak sadar penuh kembali pasca-kejang tanpa defisit neurologis"
+  ],
+  "diagnosis": "Penegakan diagnosis klinis pada anak usia 6 bulan - 5 tahun dengan demam tanpa riwayat infeksi intrakranial (tidak ada kaku kuduk, fontanel tidak membonjol) dan tidak ada gangguan elektrolit/metabolik berat. Eksklusi meningitis/ensefalitis adalah wajib.",
+  "terapi": "1. Penanganan Saat Kejang Berlangsung:\n   - Baringkan anak di tempat aman miringkan posisi tubuh, bebaskan jalan napas, jangan memasukkan benda ke mulut.\n   - Diazepam rektal: 5 mg (BB < 12 kg) atau 10 mg (BB >= 12 kg). Jika kejang belum berhenti, dapat diulang 1 kali dengan interval 5 menit.\n2. Tatalaksana Demam (Pencegahan):\n   - Antipiretik: Parasetamol 10-15 mg/kgBB oral setiap 4-6 jam prn, atau Ibuprofen 10 mg/kgBB setiap 6-8 jam.\n   - Terapi penyebab infeksi pencetus demam (ISPA, OMA, diare).\n   - Antikonvulsan profilaksis intermiten: Diazepam oral 0.3 mg/kgBB/kali setiap 8 jam selama 48 jam pertama demam (pada kasus dengan risiko rekurensi tinggi).",
+  "rujukan": "Rujuk CITO ke IGD RS bila kejang demam kompleks (kejang fokal/sepihak, durasi > 15 menit, atau berulang >= 2 kali dalam 24 jam), usia anak < 6 bulan, penurunan kesadaran persisten pasca-kejang, kaku kuduk positif, atau status epileptikus.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

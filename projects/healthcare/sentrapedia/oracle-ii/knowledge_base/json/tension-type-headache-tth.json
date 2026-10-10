@@ -1,0 +1,43 @@
+{
+  "id": 333,
+  "nama": "Tension-Type Headache (TTH)",
+  "slug": "tension-type-headache-tth",
+  "kode_icd": "G44.2",
+  "kategori": "Penyakit Saraf",
+  "definisi": "Tension-Type Headache (nyeri kepala tegang) adalah bentuk nyeri kepala primer tersering, ditandai dengan nyeri kepala bilateral seperti diikat tali kencang atau ditekan beban berat di dahi/oksipital, berhubungan erat dengan stres psikologis, kelelahan, dan ketegangan otot perikranial.",
+  "gejala": [
+    "Nyeri kepala bilateral tumpul menekan atau mengikat (tight band-like)",
+    "Intensitas ringan hingga sedang",
+    "Nyeri tidak berdenyut dan tidak diperberat aktivitas fisik rutin (berjalan/naik tangga)",
+    "Nyeri tekan pada otot perikranial (trapezius, leher, oksipital)",
+    "Tidak disertai mual atau muntah hebat (bisa fotofobia ATAU fonofobia ringan, tidak keduanya)"
+  ],
+  "diagnosis": "Ditegakkan berdasarkan kriteria diagnostik ICHD-3: minimal 10 episode nyeri kepala dengan karakteristik bilateral menekan, intensitas ringan-sedang, durasi 30 menit hingga 7 hari, tanpa mual/muntah, dan tidak diperberat aktivitas fisik.",
+  "terapi": "1. Terapi Abortif / Akut Lini Pertama:\n   - Parasetamol 1000 mg oral per kali (maks 4000 mg/hari).\n   - Ibuprofen 400 mg oral per kali atau Naproksen 500 mg oral.\n   - Kombinasi analgesik + kafein oral.\n2. Terapi Preventif (pada TTH kronik > 15 hari/bulan):\n   - Amitriptilin 10-25 mg oral malam hari sebelum tidur, titrasi bertahap hingga 50-75 mg/hari.\n3. Non-farmakologis: Manajemen stres, perbaikan postur tubuh kerja, teknik relaksasi otot, akupresur leher.",
+  "rujukan": "Rujuk ke Spesialis Saraf bila nyeri kepala tidak responsif terhadap terapi lini pertama, frekuensi semakin meningkat progresif, atau dicurigai red flags nyeri kepala (SNOOP: Systemic symptoms, Neurologic deficit, Onset mendadak thunderclap, Older age > 50 tahun, Positional).",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

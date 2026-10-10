@@ -1,0 +1,43 @@
+{
+  "id": 336,
+  "nama": "Vertigo Posisi Paroksismal Jinak (BPPV)",
+  "slug": "vertigo-posisi-paroksismal-jinak-bppv",
+  "kode_icd": "H81.1",
+  "kategori": "Penyakit Saraf",
+  "definisi": "BPPV adalah gangguan sistem vestibular perifer tersering yang ditandai dengan sensasi berputar paroksismal singkat (< 1 menit) yang dipicu oleh perubahan posisi kepala terhadap gravitasi, diakibatkan oleh perpindahan partikel otokonia kalsium karbonat ke dalam kanalis semisirkularis (paling sering kanalis posterior).",
+  "gejala": [
+    "Sensasi berputar hebat mendadak saat memutar kepala di tempat tidur, bangun tidur, atau mendongak",
+    "Durasi serangan singkat (< 30-60 detik)",
+    "Mual dan muntah",
+    "Ketidakseimbangan gait sesaat pasca-serangan",
+    "Tidak ada penurunan pendengaran atau tinnitus"
+  ],
+  "diagnosis": "Manuver Provokasi Dix-Hallpike positif: memicu vertigo dan nistagmus torsional ke atas (upbeating torsional) dengan periode laten 2-5 detik, durasi < 1 menit, dan mengalami kelelahan (fatigability) saat pengujian diulang.",
+  "terapi": "1. Manuver Reposisi Kanalit (Terapi Definitif Utama):\n   - Manuver Epley untuk BPPV kanalis posterior (tingkat keberhasilan 80-90% pada sesi pertama).\n   - Manuver Semont atau latihan Brandt-Daroff di rumah.\n2. Farmakologis Simtomatik (Hanya untuk meredakan mual akut, bukan terapi utama BPPV):\n   - Betahistin mesilat 3 x 6-12 mg atau Betahistin dihidroklorida 2 x 24 mg oral.\n   - Dimenhidrinat 50 mg oral atau Domperidone 10 mg oral saat mual/muntah hebat.",
+  "rujukan": "Rujuk ke Spesialis Saraf bila nistagmus vertikal murni ke bawah (downbeating nystagmus) tanpa periode laten (curiga lesi serebelum/batang otak), terdapat defisit neurologis fokal lain, vertigo persisten konstan tidak berhubungan dengan posisi kepala, atau refrakter terhadap reposisi kanalit.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

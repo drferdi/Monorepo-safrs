@@ -1,0 +1,414 @@
+"""Run one MIRA encounter on a single non-MIMIC case, using MIRA's own code paths.
+
+Usage (from the repository root, with src/.venv active and the FHIR server up):
+
+    python assist/run_one_case.py --dry-run
+    python assist/run_one_case.py --preflight-only
+    python assist/run_one_case.py --max-calls 80 --max-usd 8
+    python assist/run_one_case.py --provider openrouter --preflight-only
+
+Modes
+-----
+--dry-run         No OpenAI calls at all. Builds the case in MIRA's dataset
+                  format, loads it with MIRA's loader, creates the FHIR
+                  patient, then calls MIRA's tool functions directly (physical
+                  exam, labs, urine, imaging, microbiology, medication) so the
+                  data path "case -> tool -> FHIR -> text for the agent" is
+                  proven without spending money. Also checks that the API
+                  budget guard stops a call.
+--preflight-only  Checks that the configured models exist for this API key
+                  (models.retrieve; these metadata calls are not billed as
+                  completions) and exits.
+(default)         One full encounter, followed by a trace and a summary.
+
+--provider openrouter routes every model call through OpenRouter without changing upstream
+code: OpenAI() clients are pointed at OpenRouter by OPENAI_BASE_URL/OPENAI_API_KEY (set in this
+process only, from OPENROUTER_API_KEY), and the budget guard's create() wrapper adds the
+openai/ model prefix, the fixed privacy policy (zero data retention, no data collection,
+require_parameters) and the attribution header. The preflight then checks OpenRouter's public
+model and ZDR-endpoint lists instead of models.retrieve.
+
+What this script deliberately does NOT change
+---------------------------------------------
+- No upstream file is modified. Prompts, models, temperatures, max steps,
+  and tool schemas come from src/config.py, src/routines.py, src/runs/run.py.
+- Single runtime deviation (decided by the project owner): the
+  ``ProcedureSearch`` tool is removed from the tool list offered to the agent
+  and to the Plan tool, because its vector database is built from MIMIC-IV
+  procedure codes that we do not have. This is a new experimental condition.
+- A budget guard wraps the OpenAI client at runtime. It counts every chat
+  completion, stops the run at --max-calls or --max-usd, and aborts after
+  repeated API errors (upstream retries failed calls without a limit).
+"""
+
+from __future__ import annotations
+
+import argparse
+import asyncio
+import json
+import os
+import sys
+import time
+import traceback
+from datetime import datetime
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "src"
+ASSIST = ROOT / "assist"
+DATASETS_DIR = ASSIST / "cases" / "mira_datasets"  # generated, gitignored
+OUTPUTS_DIR = ASSIST / "outputs"
+
+# MIRA reads this at import time (src/paths.py), so set it before any import.
+os.environ["MIRA_DIAGNOSIS_DATASETS_DIR"] = str(DATASETS_DIR)
+sys.path.insert(0, str(SRC))
+sys.path.insert(0, str(ASSIST))
+for stream in (sys.stdout, sys.stderr):  # Windows consoles default to cp1252
+    try:
+        stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
+EXCLUDED_TOOLS = {"ProcedureSearch"}
+
+from common.guard import ApiGuard, RunAborted  # noqa: E402  (needs ASSIST on sys.path)
+from common.data_policy import (  # noqa: E402
+    DATA_POLICIES,
+    DEVELOPMENT_DEFAULT,
+    is_synthetic_case_file,
+    policy_problem,
+)
+from common.providers import (  # noqa: E402
+    API_KEY_ENV,
+    PROVIDERS,
+    model_id,
+    preflight_openrouter,
+    route_openai_sdk_to_openrouter,
+)
+
+# Parameters each role sends, checked against OpenRouter before any completion call.
+OPENROUTER_REQUIREMENTS = {"plan": {"structured_outputs"}, "physician": {"structured_outputs", "tools", "temperature"}}
+
+
+# --------------------------------------------------------------------------- helpers
+
+
+def check_fhir(base_url: str) -> None:
+    import requests
+
+    try:
+        r = requests.get(f"{base_url}metadata", timeout=10)
+        r.raise_for_status()
+    except Exception as exc:
+        sys.exit(f"FHIR server not reachable at {base_url}metadata ({exc}). Start it first.")
+
+
+def filtered_tools():
+    from runs.run import func_name_to_func, tools, tools_for_planning_routine
+
+    keep = lambda t: t["function"]["name"] not in EXCLUDED_TOOLS  # noqa: E731
+    return (
+        [t for t in tools if keep(t)],
+        [t for t in tools_for_planning_routine if keep(t)],
+        {k: v for k, v in func_name_to_func.items() if k not in EXCLUDED_TOOLS},
+    )
+
+
+def build_patient(dataset_name: str):
+    from backend.fhir_client import base_url, headersList, session
+    from config import (
+        MEDICAL_ASSISTANT_MODEL,
+        MEDICAL_ASSISTANT_TEMPERATURE,
+        PATIENT_ASSISTANT_MODEL,
+        PATIENT_ASSISTANT_TEMPERATURE,
+    )
+    from dataset.mimic_dataset import MIMIC_Dataset
+    from routines import COMPLETION_PROMPT, MEDICAL_SYSTEM_PROMPT, PATIENT_SYSTEM_PROMPT
+    from runs.run import prepare_patient
+
+    check_fhir(base_url)
+    tools, planning_tools, func_map = filtered_tools()
+    ds = MIMIC_Dataset.load_dataset(dataset_name)  # MIRA's own loader
+    hadm_id = next(iter(ds.hadm_ids))
+    return ds, prepare_patient(  # MIRA's own per-patient setup
+        ds_name=dataset_name,
+        ds=ds,
+        ds_idx=hadm_id,
+        base_url=base_url,
+        headers_list=headersList,
+        session=session,
+        tools_for_planning_routine=planning_tools,
+        tools=tools,
+        func_name_to_func=func_map,
+        medical_assistant_model=MEDICAL_ASSISTANT_MODEL,
+        medical_assistant_temperature=MEDICAL_ASSISTANT_TEMPERATURE,
+        patient_assistant_model=PATIENT_ASSISTANT_MODEL,
+        patient_assistant_temperature=PATIENT_ASSISTANT_TEMPERATURE,
+        medical_system_prompt=MEDICAL_SYSTEM_PROMPT,
+        completion_prompt=COMPLETION_PROMPT,
+        patient_system_prompt=PATIENT_SYSTEM_PROMPT,
+    )
+
+
+def final_diagnosis(history: list[dict]) -> str | None:
+    diagnosis = None
+    for msg in history:
+        for call in msg.get("tool_calls") or []:
+            if call["function"]["name"] == "Finish":
+                try:
+                    diagnosis = json.loads(call["function"]["arguments"]).get("diagnosis")
+                except json.JSONDecodeError:
+                    diagnosis = call["function"]["arguments"]
+    return diagnosis
+
+
+def write_trace(path: Path, history: list[dict], title: str) -> None:
+    lines = [f"# {title}", ""]
+    for i, msg in enumerate(history):
+        role = msg.get("role")
+        if role == "system":
+            lines += [f"## [{i}] SYSTEM PROMPT", "", "```text", str(msg.get("content", "")).strip(), "```", ""]
+        elif role == "user":
+            lines += [f"## [{i}] PATIENT (or runner starter)", "", str(msg.get("content", "")).strip(), ""]
+        elif role == "assistant" and msg.get("tool_calls"):
+            for call in msg["tool_calls"]:
+                args = call["function"]["arguments"]
+                try:
+                    args = json.dumps(json.loads(args), indent=2, ensure_ascii=False)
+                except Exception:
+                    pass
+                lines += [f"## [{i}] AGENT TOOL CALL: {call['function']['name']}", "", "```json", args, "```", ""]
+        elif role == "assistant":
+            lines += [f"## [{i}] AGENT", "", str(msg.get("content", "")).strip(), ""]
+        elif role == "tool":
+            lines += [f"## [{i}] TOOL RESULT: {msg.get('name')}", "", "```text", str(msg.get("content", "")).strip(), "```", ""]
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+# --------------------------------------------------------------------------- modes
+
+
+def preflight(guard: ApiGuard) -> bool:
+    from config import MEDICAL_ASSISTANT_MODEL, PATIENT_ASSISTANT_MODEL, REASONING_MODEL
+    from openai import OpenAI
+
+    if guard.provider == "openrouter":
+        requirements: dict[str, set[str]] = {}
+        for role, model in (("plan", REASONING_MODEL), ("physician", MEDICAL_ASSISTANT_MODEL),
+                            ("physician", PATIENT_ASSISTANT_MODEL)):
+            requirements.setdefault(model_id("openrouter", model), set()).update(OPENROUTER_REQUIREMENTS[role])
+        problems = preflight_openrouter(requirements)
+        for model in requirements:
+            print(f"[preflight] OpenRouter {model}: "
+                  + ("OK" if not any(p.startswith(model + ":") for p in problems) else "NOT usable"))
+        for problem in problems:
+            print(f"[preflight]   {problem}")
+        if problems:
+            print("[preflight] Stop. The privacy policy is fixed; choosing another model or provider is the "
+                  "project owner's decision and would be a new experimental condition.")
+        return not problems
+
+    client = OpenAI()
+    ok = True
+    for label, model in (
+        ("physician agent", MEDICAL_ASSISTANT_MODEL),
+        ("patient simulator", PATIENT_ASSISTANT_MODEL),
+        ("Plan tool", REASONING_MODEL),
+    ):
+        try:
+            client.models.retrieve(model)
+            print(f"[preflight] {label}: model '{model}' is available for this API key.")
+        except Exception as exc:
+            ok = False
+            print(f"[preflight] {label}: model '{model}' is NOT available: {exc}")
+    if not ok:
+        print("[preflight] Stop. Choosing a substitute model is the project owner's decision "
+              "and would be a new experimental condition.")
+    return ok
+
+
+def dry_run(run_dir: Path, dataset_name: str) -> None:
+    ds, bundle = build_patient(dataset_name)
+    medical_assistant, patient_assistant, patient_ctx, patient_data, collector, primary_symptom = bundle
+    ctx = patient_ctx.to_dict()
+    func_map = medical_assistant.func_name_to_func
+
+    probes = [
+        ("PhysicalExamination", {}),
+        ("LabRequestList", {"lab_values": [{"lab_value": v} for v in (
+            "White Blood Cells", "Neutrophils", "C-Reactive Protein", "Lipase", "Troponin T")]}),
+        ("UrineRequestList", {"urine_values": [{"urine_value": v} for v in ("Leukocytes", "Nitrite", "HCG, Qualitative")]}),
+        ("RadiologyRequestFHIR", {"modality": "Ultrasound", "region": "Abdomen", "info": "RLQ pain"}),
+        ("RadiologyRequestFHIR", {"modality": "CT", "region": "Abdomen", "info": "RLQ pain"}),
+        ("RadiologyRequestFHIR", {"modality": "Radiograph", "region": "Chest", "info": "not in case"}),
+        ("MicrobiologyRequestList", {"microbiology_tests": [{"microbiology_value": "Blood Culture, Routine"}]}),
+        ("MedicationRequestList", {"medications": [{
+            "drug_name": "Ceftriaxone", "dosage_text": "1 g IV every 24 hours", "dosage_value": 1,
+            "dosage_unit": "g", "period": 24, "period_unit": "h", "frequency": 1, "route": "Intravenous"}]}),
+        ("ProcedureRequestFHIR", {"procedure": "Laparoscopic appendectomy"}),
+        ("Finish", {"diagnosis": "dry-run placeholder"}),
+    ]
+
+    out = [
+        "# Dry run: MIRA data path without any OpenAI call", "",
+        f"Dataset: `{dataset_name}`, hadm_id {patient_ctx.patient_hadm_id}, "
+        f"FHIR Patient/{patient_ctx.patient_id}", "",
+        "## First message the physician agent receives (conv.run_simulation)", "",
+        f"`The patient you are now seeing has primary symptoms: {primary_symptom}`", "",
+        "## Patient simulator system prompt (routines.PATIENT_SYSTEM_PROMPT, filled by runs.run.prepare_patient)", "",
+        "```text", patient_assistant.instructions, "```", "",
+        "## Tools offered to the agent", "",
+        ", ".join(t["function"]["name"] for t in medical_assistant.tools), "",
+        "## Tool probes (MIRA tool functions called directly, results posted to FHIR)", "",
+    ]
+    for name, args in probes:
+        fn = func_map[name]
+        kwargs = dict(ctx)
+        kwargs.update(args)
+        try:
+            result = asyncio.run(fn(**kwargs)) if asyncio.iscoroutinefunction(fn) else fn(**kwargs)
+        except Exception as exc:
+            result = f"ERROR: {exc!r}"
+        out += [f"### {name} {json.dumps(args)[:160]}", "", "```text", str(result).strip(), "```", ""]
+        print(f"[dry-run] {name}: {str(result).strip()[:120]!r}")
+
+    # Prove that the guard stops a real API attempt (limit is 0 in dry-run mode).
+    try:
+        patient_assistant.chat("Hello, what brings you in today?")
+        guard_result = "FAILED: a completion call was not blocked."
+    except RunAborted as exc:
+        guard_result = f"OK: call blocked before reaching OpenAI ({exc})."
+    out += ["## Budget guard check", "", guard_result, ""]
+    print(f"[dry-run] guard: {guard_result}")
+    (run_dir / "dry_run_report.md").write_text("\n".join(out), encoding="utf-8")
+
+
+def full_run(run_dir: Path, dataset_name: str, guard: ApiGuard, case: dict) -> None:
+    from conv import run_simulation, save_conversation
+
+    ds, bundle = build_patient(dataset_name)
+    medical_assistant, patient_assistant, patient_ctx, patient_data, collector, primary_symptom = bundle
+
+    started = time.time()
+    status = "completed"
+    try:
+        asyncio.run(run_simulation(medical_assistant, patient_assistant, primary_symptom))
+    except RunAborted as exc:
+        status = f"aborted by guard: {exc}"
+    except Exception as exc:
+        status = f"error: {exc!r}"
+        traceback.print_exc()
+    elapsed = time.time() - started
+
+    try:
+        collector.save()  # MIRA's HTML view, written under run_dir (cwd)
+    except Exception as exc:
+        print(f"HTML collector save failed: {exc!r}")
+    if status == "completed":
+        save_conversation(  # MIRA's own evaluable JSONL output
+            medical_assistant, patient_assistant, patient_ctx, patient_data,
+            patient_data.patients.index[0], ds.diagnosis,
+            total_time_elapsed=elapsed, save_dir=str(run_dir / "evaluable_outputs"),
+        )
+
+    history = medical_assistant.message_history
+    write_trace(run_dir / "trace_physician.md", history, "Physician agent trace (full message history)")
+    write_trace(run_dir / "trace_patient.md", patient_assistant.message_history, "Patient simulator trace")
+    (run_dir / "physician_history.json").write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
+    (run_dir / "api_calls.jsonl").write_text("\n".join(json.dumps(c) for c in guard.calls), encoding="utf-8")
+
+    tool_calls = [c["function"]["name"] for m in history for c in (m.get("tool_calls") or [])]
+    summary = {
+        "status": status,
+        "case_id": case["case_id"],
+        "expected_diagnosis": case.get("expected_diagnosis"),
+        "final_diagnosis": final_diagnosis(history),
+        "physician_turns": medical_assistant.global_step,
+        "patient_turns": patient_assistant.global_step,
+        "tool_calls": tool_calls,
+        "api_calls": len(guard.calls),
+        "api_calls_by_role": {r: sum(1 for c in guard.calls if c["role"] == r) for r in ("physician", "patient", "plan")},
+        "api_errors": guard.errors,
+        "prompt_tokens": sum(c["prompt_tokens"] for c in guard.calls),
+        "completion_tokens": sum(c["completion_tokens"] for c in guard.calls),
+        "estimated_cost_usd": round(guard.cost_usd, 4),
+        "elapsed_seconds": round(elapsed, 1),
+        "excluded_tools": sorted(EXCLUDED_TOOLS),
+    }
+    (run_dir / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(json.dumps(summary, indent=2, ensure_ascii=False))
+
+
+def check_data_policy(policy: str, provider: str, cases: list[dict]) -> None:
+    """Exit before any model call when the policy does not allow sending these cases."""
+    problem = policy_problem(policy, provider)
+    if problem:
+        sys.exit(problem)
+    if policy == "synthetic-only":
+        unmarked = [c.get("case_id", "?") for c in cases if not is_synthetic_case_file(c)]
+        if unmarked:
+            sys.exit(f"--data-policy synthetic-only: not marked \"synthetic\": true: {', '.join(unmarked)}")
+
+
+def prepare_provider(provider: str) -> None:
+    """Load the provider's key from the environment or src/.env; for OpenRouter, route the
+    OpenAI SDK there for this process. Exits when the key is missing."""
+    key_name = API_KEY_ENV[provider]
+    if not os.environ.get(key_name):
+        from dotenv import load_dotenv
+        load_dotenv(SRC / ".env")
+    if not os.environ.get(key_name):
+        sys.exit(f"{key_name} is empty. Put it in src/.env first.")
+    if provider == "openrouter":
+        route_openai_sdk_to_openrouter(os.environ)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--case", default=str(ASSIST / "cases" / "synthetic_appendicitis_001.json"))
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--preflight-only", action="store_true")
+    parser.add_argument("--max-calls", type=int, default=80)
+    parser.add_argument("--max-usd", type=float, default=8.0)
+    parser.add_argument("--provider", choices=PROVIDERS, default="openai")
+    parser.add_argument("--data-policy", choices=DATA_POLICIES, default=DEVELOPMENT_DEFAULT,
+                        help="which case data may be sent to the provider (project owner's decision)")
+    args = parser.parse_args()
+
+    from mira_adapter import write_mira_dataset
+
+    case_path = Path(args.case).resolve()
+    case = json.loads(case_path.read_text(encoding="utf-8"))
+    mode = "dry-run" if args.dry_run else "preflight" if args.preflight_only else "run"
+    if mode == "run":
+        check_data_policy(args.data_policy, args.provider, [case])  # before writing or sending anything
+    dataset_name = write_mira_dataset(case_path, DATASETS_DIR)
+
+    run_dir = OUTPUTS_DIR / f"{datetime.now():%Y%m%d-%H%M%S}_{case['case_id']}_{mode}"
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.dry_run:
+        os.environ.setdefault("OPENAI_API_KEY", "sk-dry-run-no-calls-are-made")
+    else:
+        prepare_provider(args.provider)
+
+    from config import REASONING_MODEL
+
+    guard = ApiGuard(max_calls=0 if args.dry_run else args.max_calls, max_usd=args.max_usd, provider=args.provider)
+    guard.reasoning_model = REASONING_MODEL
+    guard.install()
+
+    os.chdir(run_dir)  # MIRA's HTML collector writes relative to the working directory
+    if args.dry_run:
+        dry_run(run_dir, dataset_name)
+    else:
+        if not preflight(guard):
+            sys.exit(2)
+        if args.preflight_only:
+            return
+        full_run(run_dir, dataset_name, guard, case)
+    print(f"Outputs: {run_dir}")
+
+
+if __name__ == "__main__":
+    main()

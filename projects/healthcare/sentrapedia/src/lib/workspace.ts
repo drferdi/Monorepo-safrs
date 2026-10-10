@@ -7,7 +7,7 @@ export interface PatientList { id: string; name: string; patientIds: string[] }
 export type ReviewStatus = "draft" | "reviewed" | "final";
 export interface Message { id: string; role: "user" | "assistant"; content: string; mode: ModeId; createdAt: string; reviewStatus?: ReviewStatus; originalContent?: string; sourceText?: string; reviewItems?: ReviewItem[]; revisions?: Revision[]; revisionSequence?: number; templateSnapshot?: PersonalTemplate }
 export interface Encounter { id: string; patientId: string | null; title: string; createdAt: string; messages: Message[]; context: string; workStatus?: WorkStatus; pinned?: boolean; tasks?: WorkTask[]; updatedAt?: string }
-export interface Settings { specialty: string; model: "Standard" | "Extended"; language: "English" | "Bahasa Indonesia"; instructions: string }
+export interface Settings { specialty: string; model: "Standard" | "Extended"; language: "English" | "Bahasa Indonesia"; instructions: string; name?: string }
 export interface Workspace { version: 1; patients: Patient[]; lists: PatientList[]; encounters: Encounter[]; activeEncounterId: string | null; settings: Settings; templates?: PersonalTemplate[]; favorites?: string[]; reviewDefaults?: ReviewItem[] }
 
 export const specialties = ["Primary Care", "Internal Medicine", "Emergency Medicine", "Pediatrics", "Obstetrics & Gynecology", "Family Medicine", "Cardiology", "Psychiatry"];
@@ -91,7 +91,9 @@ export function restoreWorkspace(raw: string | null): Workspace {
     if (!record(data.settings) || !strings(data.settings, ["specialty", "model", "language", "instructions"]) || !specialties.includes(String(data.settings.specialty)) || !["Standard", "Extended"].includes(String(data.settings.model)) || !["English", "Bahasa Indonesia"].includes(String(data.settings.language))) return initialWorkspace;
     if (data.activeEncounterId !== null && (typeof data.activeEncounterId !== "string" || !data.encounters.some((e: Record<string, unknown>) => e.id === data.activeEncounterId))) return initialWorkspace;
     const workspace = data as unknown as Workspace;
-    return cleanWorkflowState({ ...workspace, patients: workspace.patients.map(seedWording), encounters: workspace.encounters.map((encounter) => ({ ...cleanWorkflowEncounter(encounter), messages: encounter.messages.map((message) => {
+    const settings = { ...workspace.settings };
+    if (typeof settings.name !== "string") delete settings.name;
+    return cleanWorkflowState({ ...workspace, settings, patients: workspace.patients.map(seedWording), encounters: workspace.encounters.map((encounter) => ({ ...cleanWorkflowEncounter(encounter), messages: encounter.messages.map((message) => {
       const clean = { ...message };
       if (typeof clean.sourceText !== "string") delete clean.sourceText;
       if (typeof clean.originalContent !== "string") delete clean.originalContent;

@@ -1,0 +1,43 @@
+{
+  "id": 340,
+  "nama": "Dermatitis Atopik",
+  "slug": "dermatitis-atopik",
+  "kode_icd": "L20.9",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Dermatitis atopik (eksim atopik) adalah penyakit inflamasi kulit kronik residif yang sangat gatal, ditandai dengan disfungsi sawar kulit (kerusakan barier filaggrin) dan sensitisasi imunologis, sering berhubungan dengan riwayat atopi pribadi atau keluarga (asma, rinitis alergi).",
+  "gejala": [
+    "Pruritus hebat (gatal adalah gejala kardinal)",
+    "Lesi kulit eritema, papul, vesikel, eksudasi/krusta pada fase infantil (pipi dan ekstensor)",
+    "Plak likenifikasi likenoid kering di fosa antekubiti dan poplitea pada fase anak dan dewasa",
+    "Kulit kering difus (xerosis kutis)",
+    "Dennie-Morgan fold (garis lipatan bawah mata)"
+  ],
+  "diagnosis": "Ditegakkan berdasarkan Kriteria Hanifin dan Rajka (minimal 3 kriteria mayor: pruritus, morfologi dan distribusi khas, dermatitis kronik residif, riwayat atopi; ditambah minimal 3 kriteria minor).",
+  "terapi": "1. Pemulihan Sawar Kulit (Pilar Utama):\n   - Pelembap (emolien/moisturizer seperti ceramide atau vaselin album) dioleskan tebal segera setelah mandi (rule of 3 minutes) minimal 2-3 kali sehari.\n   - Mandi air suam-suam kuku dengan sabun ber-pH netral tanpa pewangi.\n2. Farmakologis Anti-inflamasi Topikal (Saat Flare/Kambuh):\n   - Kortikosteroid Topikal: Hidrokortison krim 1-2.5% untuk wajah dan lipatan anak; Mometason furoat 0.1% atau Betametason valerat 0.1% krim untuk badan dan ekstremitas selama 1-2 minggu.\n   - Calcineurin inhibitor topikal (Takrolimus 0.03-0.1%) sebagai alternatif aman jangka panjang pada area wajah.\n3. Antihistamin oral generasi ke-1 (Klorfeniramin/Hidroksizin) malam hari untuk efek sedatif pereda siklus gatal-garuk.",
+  "rujukan": "Rujuk ke Spesialis Dermatologi dan Venereologi (Sp.DV) bila dermatitis atopik luas resisten terapi topikal lini pertama, timbul komplikasi infeksi sekunder berat seperti eksema herpetikum (infeksi virus HSV luas), atau memerlukan fototerapi/terapi sistemik biologik.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

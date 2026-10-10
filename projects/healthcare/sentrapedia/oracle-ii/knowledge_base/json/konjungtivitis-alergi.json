@@ -1,0 +1,43 @@
+{
+  "id": 321,
+  "nama": "Konjungtivitis Alergi",
+  "slug": "konjungtivitis-alergi",
+  "kode_icd": "H10.1",
+  "kategori": "Penyakit Mata",
+  "definisi": "Konjungtivitis alergi adalah reaksi inflamasi konjungtiva bilateral yang diperantarai oleh reaksi imun hipersensitivitas tipe I terhadap alergen lingkungan (debu, serbuk sari, bulu hewan).",
+  "gejala": [
+    "Gatal hebat pada kedua mata (gejala kardinal)",
+    "Mata merah berair",
+    "Kelopak mata bengkak (kemosis)",
+    "Sekret mukoid bening bertali (stringy discharge)",
+    "Papil konjungtiva tarsal superior (cobblestone appearance pada konjungtivitis vernal)"
+  ],
+  "diagnosis": "Ditegakkan dari gatal mata bilateral yang dominan dengan riwayat atopi. Pemeriksaan fisik: injeksi konjungtiva, kemosis, sekret mukoid serosa, dan hipertrofi papil konjungtiva tarsal.",
+  "terapi": "1. Menghindari paparan alergen pencetus dan kompres dingin kelopak mata.\n2. Farmakologis Topikal:\n   - Tetes mata antihistamin + mast cell stabilizer: Olopatadin 0.1% 2 kali sehari atau Ketotifen 0.025% 2 kali sehari.\n   - Tetes mata mast cell stabilizer murni: Natrium Kromoglikat 2% 4 kali sehari.\n   - Air mata buatan (artificial tears) untuk membilas alergen dari permukaan konjungtiva.\n   - Antihistamin oral generasi ke-2 (Setirizin/Loratadin) bila disertai rinitis alergi.",
+  "rujukan": "Rujuk ke Spesialis Mata bila dicurigai Konjungtivitis Vernal berat dengan keterlibatan kornea (shield ulcer, Horner-Trantas dots) atau memerlukan terapi kortikosteroid topikal jangka panjang yang memerlukan pemantauan TIO.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

@@ -1,0 +1,41 @@
+{
+  "id": 342,
+  "nama": "Tinea Korporis dan Tinea Kruris",
+  "slug": "tinea-korporis-dan-tinea-kruris",
+  "kode_icd": "B35.4",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Tinea adalah infeksi jamur dermatofit superfisial (Trichophyton, Microsporum, Epidermophyton) pada jaringan berkeratin. Tinea korporis mengenai kulit tubuh berambut halus (badan, leher, ekstremitas); Tinea kruris mengenai lipat paha, perineum, dan gluteus.",
+  "gejala": [
+    "Gatal hebat terutama saat berkeringat",
+    "Bercak merah bersisik berbentuk anular (cincin) bulat/lonjong dengan bagian tepi lebih aktif dan meninggi (central healing)",
+    "Lesi polisiklik berbatas tegas dengan papul dan skuama di tepi"
+  ],
+  "diagnosis": "Ditegakkan dari efloresensi khas tepi aktif central healing. Konfirmasi laboratorium FKTP: kerokan skuama tepi lesi dengan larutan KOH 10-20% memperlihatkan hifa panjang bersepta (true hyphae) bercabang dan artrospora.",
+  "terapi": "1. Antijamur Topikal (Lini Pertama untuk lesi terbatas):\n   - Mikonazol krim 2%, Klotrimazol krim 1%, Ketokonazol krim 2%, atau Terbinafin krim 1% dioleskan 2 kali sehari pada lesi hingga 2 cm ke luar batas lesi selama minimal 2-4 minggu (lanjutkan 1 minggu setelah lesi sembuh klinis).\n2. Antijamur Sistemik Oral (bila lesi luas, multipel, atau refrakter):\n   - Griseofulvin: 500 mg/hari oral (dewasa) atau 10-20 mg/kgBB/hari selama 2-4 minggu bersama makanan berlemak, ATAU\n   - Ketokonazol 200 mg/hari oral selama 2-4 minggu (monitor fungsi hati), ATAU Itrakonazol 1 x 100 mg/hari selama 2 minggu.\n3. Edukasi menjaga area lipatan tetap kering, tidak memakai pakaian ketat basah, dan handuk terpisah.",
+  "rujukan": "Rujuk ke Spesialis Kulit dan Kelamin bila tinea insognito (lesi terdistorsi akibat salah penggunaan kortikosteroid topikal), keterlibatan folikel rambut dalam (Majocchi granuloma), atau resisten terhadap antijamur oral.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

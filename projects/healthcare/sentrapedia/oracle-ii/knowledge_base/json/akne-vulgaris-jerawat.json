@@ -1,0 +1,43 @@
+{
+  "id": 348,
+  "nama": "Akne Vulgaris (Jerawat)",
+  "slug": "akne-vulgaris-jerawat",
+  "kode_icd": "L70.0",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Akne vulgaris adalah penyakit inflamasi kronik unit pilosebasea yang multifaktorial (hiperkeratinisasi folikel, hiperproduksi sebum androgenik, kolonisasi bakteri Cutibacterium acnes, dan respons inflamasi), umum timbul pada masa pubertas.",
+  "gejala": [
+    "Komedo terbuka (blackhead) dan komedo tertutup (whitehead)",
+    "Papul dan pustul inflamasi eritematosa",
+    "Nodul dan kista nyeri pada akne derajat berat",
+    "Jaringan parut pasca-akne (skar atrofi/hipertrofi) dan hiperpigmentasi pasca-inflamasi (HPI)",
+    "Predileksi: wajah, dada, punggung atas"
+  ],
+  "diagnosis": "Penegakan diagnosis klinis berdasarkan inspeksi lesi polimorfik komedo, papul, dan pustul pada area kaya kelenjar sebasea. Penentuan derajat keparahan (ringan: komedo dominan; sedang: papul/pustul multipel; berat: nodul/kista luas).",
+  "terapi": "1. Akne Ringan (Komedonal/Papular Ringan):\n   - Retinoid topikal (Adapalen gel 0.1% atau Tretinoin krim 0.025-0.05%) dioleskan tipis malam hari.\n   - Benzoil Peroksida (BPO) gel 2.5-5% dioleskan pagi/siang hari.\n2. Akne Sedang (Papulopustular):\n   - Kombinasi Retinoid topikal + BPO + Antibiotik topikal (Klindamisin gel 1%).\n   - Antibiotik Oral Sistemik (bila lesi inflamasi luas): Doksisiklin 1 x 50-100 mg/hari oral selama 6-12 minggu.\n3. Edukasi: membersihkan wajah 2 kali sehari dengan sabun pembersih lembut, tidak memencet jerawat, dan menggunakan tabir surya non-komedogenik.",
+  "rujukan": "Rujuk ke Spesialis Kulit dan Kelamin bila Akne Konglobata / Akne Fulminans (akne kistik nodular berat dengan ulserasi), skar hipertrofik/keloid masif, atau memerlukan terapi Isotretinoin oral.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

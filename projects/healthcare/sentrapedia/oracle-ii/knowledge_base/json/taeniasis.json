@@ -1,0 +1,41 @@
+{
+  "id": 302,
+  "nama": "Taeniasis",
+  "slug": "taeniasis",
+  "kode_icd": "B68.9",
+  "kategori": "Penyakit Infeksi",
+  "definisi": "Taeniasis adalah infeksi usus oleh cacing pita Taenia saginata (cacing pita sapi) atau Taenia solium (cacing pita babi) akibat konsumsi daging mentah/setengah matang yang mengandung larva sistiserkus.",
+  "gejala": [
+    "Keluarnya segmen proglotid putih pipih bergerak aktif melalui anus atau ditemukan di pakaian dalam",
+    "Gangguan pencernaan ringan: perut kembung, mual, penurunan berat badan",
+    "Rasa lapar berlebihan atau anoreksia"
+  ],
+  "diagnosis": "Ditemukannya proglotid motil pada tinja atau pakaian dalam atau telur cacing pita bulat berdinding tebal bergaris radial pada pemeriksaan feses mikroskopis.",
+  "terapi": "1. Prazikuantel: 5-10 mg/kgBB oral dosis tunggal (lini pertama pilihan).\n2. Alternatif: Albendazol 400 mg oral per hari selama 3 hari berturut-turut.\n3. Edukasi memasak daging sapi dan babi hingga matang sempurna (suhu inti > 65°C).",
+  "rujukan": "Rujuk CITO ke Spesialis Saraf / RS bila dicurigai koinfeksi Sistiserkosis / Neurosistiserkosis (akibat menelan telur Taenia solium): kejang onset baru, sakit kepala hebat, hidrosefalus, atau defisit neurologis fokal.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

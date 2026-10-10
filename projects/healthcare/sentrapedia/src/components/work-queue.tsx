@@ -5,13 +5,14 @@ import { Pin } from "lucide-react";
 import { newId, type Encounter, type Workspace, type WorkspaceAction } from "../lib/workspace";
 import { queueItems, workLabels, type WorkStatus } from "../lib/workflow";
 import { Dialog } from "./dialog";
+import { smooth } from "./smooth";
 
 export function WorkQueue({ state, dispatch, onSelect, onClose }: { state: Workspace; dispatch: (action: WorkspaceAction) => void; onSelect: (id: string) => void; onClose: () => void }) {
   const [query, setQuery] = useState("");
   const [patient, setPatient] = useState("all");
   const items = queueItems(state, query, patient);
-  function update(encounter: Encounter, updates: Partial<Pick<Encounter, "workStatus" | "pinned" | "tasks">>) { dispatch({ type: "queue.update", encounterId: encounter.id, updates, at: new Date().toISOString() }); }
-  return <Dialog title="Antrean kerja" subtitle="Status pekerjaan manual per Encounter, terpisah dari status dokumen dan penilaian klinis." wide onClose={onClose}>
+  function update(encounter: Encounter, updates: Partial<Pick<Encounter, "workStatus" | "pinned" | "tasks">>) { smooth(() => dispatch({ type: "queue.update", encounterId: encounter.id, updates, at: new Date().toISOString() })); }
+  return <Dialog title="Antrean kerja" subtitle="Status pekerjaan manual per Encounter, terpisah dari status dokumen dan penilaian klinis." landscape onClose={onClose}>
     <div className="queue-filters"><label>Cari<input aria-label="Cari antrean" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Encounter, Pasien, atau tugas…"/></label><label>Pasien<select aria-label="Filter Pasien antrean" value={patient} onChange={(event) => setPatient(event.target.value)}><option value="all">Semua Pasien</option><option value="unlinked">Tidak terkait Pasien</option>{state.patients.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label></div>
     <div className="queue-columns">{(Object.keys(workLabels) as WorkStatus[]).map((status) => <section key={status}><h3>{workLabels[status]} <span>{items.filter((e) => (e.workStatus ?? "active") === status).length}</span></h3>{items.filter((e) => (e.workStatus ?? "active") === status).map((encounter) => <QueueCard key={encounter.id} encounter={encounter} patientName={state.patients.find((p) => p.id === encounter.patientId)?.name ?? "Tidak terkait Pasien"} onUpdate={(updates) => update(encounter, updates)} onSelect={() => onSelect(encounter.id)}/>)}{!items.some((e) => (e.workStatus ?? "active") === status) && <p className="panel-empty">Belum ada pekerjaan.</p>}</section>)}</div>
   </Dialog>;

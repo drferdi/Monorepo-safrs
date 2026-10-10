@@ -1,0 +1,43 @@
+{
+  "id": 346,
+  "nama": "Pedikulosis Kapitis dan Pubis",
+  "slug": "pedikulosis-kapitis-dan-pubis",
+  "kode_icd": "B85.0",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Pedikulosis adalah infeksi ektoparasit obligat yang mengisap darah manusia. Pedikulosis kapitis disebabkan oleh kutu kepala Pediculus humanus var. capitis; Pedikulosis pubis (phthiriasis) disebabkan oleh kutu Pthirus pubis pada rambut pubis.",
+  "gejala": [
+    "Gatal hebat pada kulit kepala dan area retroaurikular (kapitis) atau area genital (pubis)",
+    "Ekskoriasi lecet kulit akibat garukan dengan risiko infeksi sekunder impetigo",
+    "Telur kutu (nits) putih keabuan menempel erat pada batang rambut",
+    "Kutu dewasa terlihat bergerak merayap di rambut",
+    "Maculae caeruleae (bercak abu-abu kebiruan pada kulit paha/perut pada pedikulosis pubis)"
+  ],
+  "diagnosis": "Inspeksi visual teliti rambut kepala atau pubis: ditemukannya telur kutu (nits) yang melekat kuat pada batang rambut (tidak mudah rontok seperti ketombe) atau visualisasi kutu dewasa motil menggunakan sisir serit (fine-toothed comb).",
+  "terapi": "1. Pedikulosid Topikal Lini Pertama:\n   - Permetrin losion 1%: dioleskan pada rambut dan kulit kepala yang telah dikeramasi, diamkan selama 10 menit, lalu dibilas bersih. Diulang setelah 7-10 hari untuk membunuh kutu baru menetas.\n   - Alternatif: Malation losion 0.5% didiamkan selama 8-12 jam.\n2. Sisir serit rambut basah untuk mengeluarkan telur dan kutu mati.\n3. Pedikulosis pubis: cukur rambut pubis dan obati pasangan seksual serentak.\n4. Cuci seprai dan topi dengan air panas.",
+  "rujukan": "Rujuk ke Spesialis Kulit bila infestasi kutu menyebar luas ke bulu mata (phthiriasis palpebrarum), infeksi sekunder impetigo meluas dengan limfadenitis servikal supuratif, atau resistensi permetrin.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

@@ -1,0 +1,42 @@
+{
+  "id": 330,
+  "nama": "Episkleritis",
+  "slug": "episkleritis",
+  "kode_icd": "H15.1",
+  "kategori": "Penyakit Mata",
+  "definisi": "Episkleritis adalah inflamasi jinak akut yang mengenai jaringan episklera vaskular antara konjungtiva dan sklera, bersifat swasirna (self-limiting), sering idiopatik atau berhubungan dengan penyakit autoimun sistemik ringan.",
+  "gejala": [
+    "Mata merah sektoral (terlokalisasi pada satu kuadran) atau difus",
+    "Rasa pegal atau tidak nyaman ringan pada mata (bukan nyeri hebat)",
+    "Tidak ada penurunan penglihatan (visus normal)",
+    "Tidak ada sekret purulen (mata berair ringan)"
+  ],
+  "diagnosis": "Pemeriksaan fisik: injeksi vaskular episklera berbatas tegas (sektoral), pembuluh darah dapat digerakkan di atas sklera. Tes Fenilefrin 2.5%: teteskan fenilefrin, pembuluh darah episklera akan mengalami vasokonstriksi dan memucat dalam 10-15 menit (membedakan dari skleritis yang TIDAK memucat).",
+  "terapi": "1. Mayoritas kasus sembuh spontan dalam 1-2 minggu tanpa terapi khusus.\n2. Terapi suportif: kompres dingin dan air mata buatan 4 kali sehari.\n3. Medikamentosa:\n   - OAINS oral: Ibuprofen 3 x 400 mg/hari oral selama 5-7 hari bila ada nyeri pegal.\n   - Tetes mata kortikosteroid ringan (Fluorometolon 0.1%) 3-4 kali sehari jangka pendek pada kasus nodular yang mengganggu.",
+  "rujukan": "Rujuk ke Spesialis Mata bila nyeri mata sangat hebat yang membangunkan tidur menjalar ke pelipis (kecurigaan skleritis), mata merah tidak memucat dengan fenilefrin, atau episkleritis sering kambuh berulang.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

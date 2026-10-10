@@ -1,0 +1,41 @@
+{
+  "id": 304,
+  "nama": "Ulkus Mulut (Stomatitis Aftosa Rekuren)",
+  "slug": "ulkus-mulut-stomatitis-aftosa-rekuren",
+  "kode_icd": "K12.0",
+  "kategori": "Penyakit Pencernaan",
+  "definisi": "Stomatitis Aftosa Rekuren (SAR / sariawan) adalah lesi ulseratif mukosa rongga mulut yang berulang, nyeri, berbatas tegas dengan dasar nekrotik putih-kekuningan dan halo eritematosa, sering dipicu trauma lokal, stres, defisiensi nutrisi, atau faktor genetik.",
+  "gejala": [
+    "Nyeri pada mukosa mulut (bibir dalam, pipi dalam, lidah)",
+    "Nyeri saat makan, minum, atau berbicara",
+    "Ulkus bulat dangkal berbatas merah dengan membran sentral putih-abu-abu"
+  ],
+  "diagnosis": "Ditegakkan secara klinis dari riwayat rekurensi ulkus dan morfologi khas tipe minor (< 10 mm, sembuh 7-14 hari tanpa jaringan parut) atau tipe mayor (> 10 mm).",
+  "terapi": "1. Non-farmakologis: Menjaga higienitas mulut, hindari makanan pedas, asam, asin, dan bergerigi tajam.\n2. Farmakologis Topikal:\n   - Antiseptik kumur: Klorheksidin glukonat 0.1-0.2% kumur 2-3 kali sehari.\n   - Anestesi topikal: Gel lidokain 2% dioleskan pada lesi sebelum makan untuk mengurangi rasa nyeri.\n   - Kortikosteroid topikal: Triamsinolon asetonid pasta oral 0.1% dioleskan tipis pada lesi 2-3 kali sehari pasca makan.\n3. Suplementasi vitamin B kompleks, vitamin C, asam folat, dan zat besi bila dicurigai defisiensi.",
+  "rujukan": "Rujuk ke Spesialis Penyakit Mulut / Bedah Mulut bila ulkus tidak sembuh setelah > 3 minggu (waspada karsinoma sel skuamosa rongga mulut), ulkus sangat besar multipel, atau dicurigai manifestasi penyakit sistemik (Behcet disease, Crohn disease).",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

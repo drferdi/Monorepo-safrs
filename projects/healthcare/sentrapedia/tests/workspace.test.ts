@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { initialWorkspace, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
 import { createDraft, modes } from "../src/lib/drafts";
+import { greeting } from "../src/lib/ui-labels";
 
 describe("workspace relationships", () => {
   it("creates a patient and associates a new encounter with that patient", () => {
@@ -62,11 +63,15 @@ describe("local drafts", () => {
     expect(result).toContain("## Agreed plan and follow-up\nFollow-up as discussed.");
     expect(result).toContain("## Visit transcript (verbatim)");
   });
-  it("preserves English medical headings and unfamiliar Indonesian free text", () => {
+  it("names the clinic note's headings in Indonesian as Chief chose and keeps unfamiliar free text", () => {
     const result = createDraft({ mode: "clinic", prompt: "Keluhan: Keluhan contoh.\nAsesmen: Asesmen yang diberikan.\nRencana: Kontrol sesuai pembahasan.\nInformasi lain yang tidak berlabel.", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
-    expect(result).toContain("## Chief concern\nKeluhan contoh.");
+    expect(result).toContain("# Catatan Klinis\n");
+    expect(result).toContain("## Keluhan Utama\nKeluhan contoh.");
+    expect(result).toContain("## Riwayat Penyakit\n");
+    expect(result).toContain("## Riwayat Pengobatan / Alergi\n");
+    expect(result).toContain("## Pemeriksaan Fisik\n");
     expect(result).toContain("## Assessment\nAsesmen yang diberikan.");
-    expect(result).toContain("## Plan\nKontrol sesuai pembahasan.");
+    expect(result).toContain("## Tata Laksana\nKontrol sesuai pembahasan.");
     expect(result).toContain("Informasi lain yang tidak berlabel.");
   });
 });
@@ -84,5 +89,21 @@ describe("storage validation", () => {
   });
   it("round-trips a complete workspace", () => {
     expect(restoreWorkspace(JSON.stringify(initialWorkspace))).toEqual(initialWorkspace);
+  });
+  it("keeps a saved greeting name and drops one that is not text", () => {
+    const named = { ...initialWorkspace, settings: { ...initialWorkspace.settings, name: "dr. Rani" } };
+    expect(restoreWorkspace(JSON.stringify(named)).settings.name).toBe("dr. Rani");
+    const wrong = { ...initialWorkspace, settings: { ...initialWorkspace.settings, name: 42 } };
+    expect(restoreWorkspace(JSON.stringify(wrong)).settings).toEqual(initialWorkspace.settings);
+  });
+});
+
+describe("greeting", () => {
+  it.each([[4, "pagi"], [10.9, "pagi"], [11, "siang"], [14.9, "siang"], [15, "sore"], [17.9, "sore"], [18, "malam"], [23, "malam"], [3.9, "malam"]])("greets at %s o'clock with selamat %s", (hour, part) => {
+    expect(greeting(hour, "dr. Rani")).toBe(`Selamat ${part}, dr. Rani`);
+  });
+  it("greets without a name until one is saved", () => {
+    expect(greeting(19, "")).toBe("Selamat malam");
+    expect(greeting(19, "   ")).toBe("Selamat malam");
   });
 });

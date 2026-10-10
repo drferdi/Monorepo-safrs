@@ -18,4 +18,4 @@ The reference data ships with the build. The app does not change it at runtime.
 
 ## MIRA service
 
-`src/app/api/mira/route.ts` forwards case reviews to an optional local MIRA service. It reads `MIRA_SERVICE_URL` and `MIRA_SERVICE_TOKEN` on the server only; the browser never sees the token. `src/lib/mira/request.schema.json` and `src/lib/mira/response.schema.json` fix the payload shapes, and `tests/oracle-mira.test.ts` pins their hashes. Only synthetic cases may be sent. The variable names are listed in `.env.example`; `config/*.env.example` covers the separate MIRA launcher.
+`src/app/api/mira/route.ts` forwards case reviews to the bundled `mira/service` started by `scripts/run-system.mjs`. The supervisor supplies its private loopback URL and token to the server; the browser never sees the token. The request/response schemas remain in `src/lib/mira/` and `mira/service/contract/`. Oracle II retrieval validates page/source hashes before forwarding evidence. Only confirmed synthetic cases may be sent. `.env.example` names the server-side provider key; no external MIRA folder is needed. See `docs/mira-integration.md`.

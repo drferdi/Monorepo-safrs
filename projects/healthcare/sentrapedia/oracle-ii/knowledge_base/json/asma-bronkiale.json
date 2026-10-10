@@ -1,0 +1,43 @@
+{
+  "id": 312,
+  "nama": "Asma Bronkiale",
+  "slug": "asma-bronkiale",
+  "kode_icd": "J45.9",
+  "kategori": "Penyakit Paru",
+  "definisi": "Asma bronkiale adalah penyakit heterogen saluran napas kronik yang ditandai oleh inflamasi kronik jalan napas, hipereaktivitas bronkus terhadap berbagai stimulus, dan limitasi aliran udara ekspirasi yang bervariasi dan reversibel.",
+  "gejala": [
+    "Sesak napas episodik berulang",
+    "Mengi (wheezing) terutama saat ekspirasi",
+    "Rasa dada tertekan / berat",
+    "Batuk terutama pada malam hari atau dini hari",
+    "Dipicu alergen, udara dingin, aktivitas fisik (exercise-induced), stres, atau infeksi virus"
+  ],
+  "diagnosis": "Riwayat gejala respiratorik variatif yang memburuk pada malam/dini hari dengan variasi intensitas. Auskultasi: wheezing ekspirasi difus bilateral. Penunjang: Arus Puncak Ekspirasi (APE / Peak Flow Meter) dengan variabilitas diurnal > 10% atau reversibilitas perbaikan APE > 20% pasca-bronkodilator inhalasi.",
+  "terapi": "1. Tatalaksana Serangan Asma Akut Ringan-Sedang di FKTP:\n   - Inhalasi SABA: Salbutamol nebulisasi 2.5-5 mg atau via MDI + spacer 4-10 semprotan setiap 20 menit dalam 1 jam pertama.\n   - Oksigenasi via kanul nasal target SpO2 93-95%.\n   - Kortikosteroid sistemik oral: Metilprednisolon 32-40 mg atau Prednison 40-50 mg oral segera.\n2. Tatalaksana Kontroler Jangka Panjang (GINA Track 1 & 2):\n   - Pelega & Pengontrol Harian: ICS dosis rendah + Formoterol (Budesonide-Formoterol) PRN saat sesak atau pemeliharaan teratur.",
+  "rujukan": "Rujuk CITO ke IGD RS bila serangan asma berat (bicara terputus per kata, retraksi suprasternal hebat, sianosis, SpO2 < 90%, silent chest / suara napas hilang, APE < 50% prediksi yang tidak membaik dengan nebulisasi 3 kali).",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

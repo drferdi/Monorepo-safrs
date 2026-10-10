@@ -1,0 +1,42 @@
+{
+  "id": 301,
+  "nama": "Oksiuriasis (Enterobiasis / Cacing Kremi)",
+  "slug": "oksiuriasis-enterobiasis-cacing-kremi",
+  "kode_icd": "B80",
+  "kategori": "Penyakit Infeksi",
+  "definisi": "Oksiuriasis adalah infeksi usus yang disebabkan oleh cacing kremi Enterobius vermicularis, sangat menular antaranggota keluarga melalui autoinfeksi dan kontak feses-oral.",
+  "gejala": [
+    "Pruritus ani nokturnal (gatal hebat di area perianal terutama malam hari)",
+    "Tidur gelisah dan rewel pada anak",
+    "Ekskoriasi lecet kulit perianal akibat garukan",
+    "Kadang terlihat cacing kecil putih seperti benang bergerak di perianal/tinja"
+  ],
+  "diagnosis": "Diagnosis ditegakkan dari keluhan gatal perianal malam hari. Penegakan pasti menggunakan metode Graham tape test (scotch adhesive tape swab pada kulit perianal pagi hari sebelum mandi): pemeriksaan mikroskopis menunjukkan telur cacing asimetris lonjong pipih di satu sisi.",
+  "terapi": "1. Farmakologis (Wajib diulang 2 minggu kemudian untuk memutus siklus cacing matang baru):\n   - Pirantel Pamoat: 10-11 mg/kgBB oral dosis tunggal (maksimum 1 gram), diulang setelah 2 minggu.\n   - Albendazol: 400 mg oral dosis tunggal, diulang setelah 2 minggu.\n   - Mebendazol: 100-500 mg oral dosis tunggal, diulang setelah 2 minggu.\n2. Pengobatan serentak seluruh anggota keluarga yang tinggal serumah.\n3. Edukasi kebersihan: mencuci seprai pakaian dengan air panas, memotong kuku pendek, mencuci tangan.",
+  "rujukan": "Rujuk ke FKRTL bila terjadi komplikasi salpingitis/vulvovaginitis cacing kremi ektopik pada anak perempuan atau infeksi sekunder selulitis perianal refrakter.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

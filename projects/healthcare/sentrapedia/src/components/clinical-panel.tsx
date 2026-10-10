@@ -15,7 +15,7 @@ export function ClinicalPanel({ state, encounter, patient, onSelect, onContext, 
     <header className="clinical-panel-header"><span>CLINICAL COCKPIT</span>{onClose && <button className="icon-button" aria-label="Tutup panel konteks" onClick={onClose}><PanelRightClose size={16}/></button>}</header>
     <div className="patient-summary"><span className="patient-symbol"><PatientAvatar sex={patient?.sex} size={22}/></span><div><strong>{patient?.name ?? "Encounter tanpa Pasien"}</strong><small>{patient ? [patient.age && `${patient.age} tahun`, patient.sex !== "Not specified" && patient.sex].filter(Boolean).join(" · ") : "Hubungkan melalui detail Encounter"}</small></div></div>
     <div className="panel-tabs" role="group" aria-label="Tampilan panel"><button aria-pressed={view === "context"} onClick={() => setView("context")}>Konteks</button><button aria-pressed={view === "timeline"} onClick={() => setView("timeline")}>Timeline <span>{timeline.length}</span></button></div>
-    <div className="panel-scroll">{view === "context" ? <>
+    <div className="panel-scroll" key={view}>{view === "context" ? <>
       <div className="panel-section-heading"><h2>Ringkasan sumber</h2><button className="text-button" onClick={onContext}>Edit konteks <ArrowUpRight size={13}/></button></div>
       <p className="panel-caption">Dari label pada konteks dan catatan Pasien.</p>
       {facts.length ? <dl className="context-facts">{facts.map((fact) => <div key={fact.key}><dt>{fact.label}</dt><dd>{fact.values.map((value) => <div key={value.source}><p>{value.text}</p><small>{value.source}</small></div>)}</dd></div>)}</dl> : <p className="panel-empty">Belum ada konteks. Tambahkan lewat Edit konteks.</p>}

@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentra/med-assist/diagnosis-engine/mira-step-request.schema.json",
+  "title": "MIRA reasoning service: step request",
+  "description": "Sent by Med Assist to POST {VITE_MIRA_SERVICE_URL}/v1/diagnosis/step. The case is de-identified and has passed lib/api/pii-guard.ts before sending. Mirrors CaseState in lib/diagnosis-engine/types.ts.",
+  "type": "object",
+  "required": ["contractVersion", "traceId", "case"],
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": { "const": "1" },
+    "traceId": { "type": "string", "minLength": 1 },
+    "case": { "$ref": "#/$defs/caseState" },
+    "grounding": { "$ref": "#/$defs/oracleGrounding" }
+  },
+  "$defs": {
+    "stringList": { "type": "array", "items": { "type": "string" } },
+    "optionalNumber": { "type": "number" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "oracleGrounding": {
+      "type": "object",
+      "required": ["version", "corpus", "queryDigest", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "const": "oracle-grounding-v1" },
+        "corpus": {
+          "type": "object",
+          "required": ["name", "databaseSha256", "retrievedAt", "reviewProvenance"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "const": "Oracle II" },
+            "databaseSha256": { "$ref": "#/$defs/sha256" },
+            "retrievedAt": { "type": "string", "minLength": 1, "maxLength": 64 },
+            "reviewProvenance": { "type": "string", "minLength": 1, "maxLength": 500 }
+          }
+        },
+        "queryDigest": { "$ref": "#/$defs/sha256" },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["evidenceId", "text", "retrievalKind", "retrievalRank", "source", "extraction"],
+            "additionalProperties": false,
+            "properties": {
+              "evidenceId": { "type": "string", "minLength": 1, "maxLength": 100 },
+              "text": { "type": "string", "minLength": 1, "maxLength": 1600 },
+              "retrievalKind": { "enum": ["candidate", "clinical_fact", "page"] },
+              "retrievalRank": { "type": "integer", "minimum": 1, "maximum": 6 },
+              "source": {
+                "type": "object",
+                "required": ["fileNo", "filename", "documentSha256", "pdfPage", "pageTextSha256", "driveUrl"],
+                "additionalProperties": false,
+                "properties": {
+                  "fileNo": { "type": "string", "minLength": 1, "maxLength": 32 },
+                  "filename": { "type": "string", "minLength": 1, "maxLength": 500 },
+                  "documentSha256": { "$ref": "#/$defs/sha256" },
+                  "pdfPage": { "type": "integer", "minimum": 1 },
+                  "pageTextSha256": { "$ref": "#/$defs/sha256" },
+                  "driveUrl": { "type": "string", "minLength": 1, "maxLength": 2048 }
+                }
+              },
+              "extraction": {
+                "type": "object",
+                "required": ["candidateId", "category", "sourceCharOffset", "sourceCharEnd", "reviewStatus", "requiresVisualReview"],
+                "additionalProperties": false,
+                "properties": {
+                  "candidateId": { "type": ["string", "null"], "maxLength": 100 },
+                  "category": { "type": ["string", "null"], "maxLength": 100 },
+                  "sourceCharOffset": { "type": ["integer", "null"], "minimum": 0 },
+                  "sourceCharEnd": { "type": ["integer", "null"], "minimum": 0 },
+                  "reviewStatus": { "type": "string", "minLength": 1, "maxLength": 200 },
+                  "requiresVisualReview": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "caseState": {
+      "type": "object",
+      "required": [
+        "demographics",
+        "chiefComplaint",
+        "anamnesis",
+        "vitals",
+        "physicalExam",
+        "results",
+        "currentMedications",
+        "knownConditions",
+        "allergies",
+        "facilityCapabilities"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "demographics": {
+          "type": "object",
+          "required": ["ageYears", "sex"],
+          "additionalProperties": false,
+          "properties": {
+            "ageYears": { "type": ["number", "null"], "minimum": 0 },
+            "sex": { "enum": ["M", "F", "unknown"] },
+            "pregnant": { "type": "boolean" }
+          }
+        },
+        "chiefComplaint": { "type": "string" },
+        "anamnesis": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "freeText": { "type": "string" },
+            "qa": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["question", "answer"],
+                "additionalProperties": false,
+                "properties": {
+                  "question": { "type": "string" },
+                  "answer": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "vitals": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "systolic": { "$ref": "#/$defs/optionalNumber" },
+            "diastolic": { "$ref": "#/$defs/optionalNumber" },
+            "heartRate": { "$ref": "#/$defs/optionalNumber" },
+            "respiratoryRate": { "$ref": "#/$defs/optionalNumber" },
+            "temperature": { "$ref": "#/$defs/optionalNumber" },
+            "spo2": { "$ref": "#/$defs/optionalNumber" },
+            "gcs": { "$ref": "#/$defs/optionalNumber" }
+          }
+        },
+        "physicalExam": { "$ref": "#/$defs/stringList" },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": ["string", "number"] },
+              "unit": { "type": "string" },
+              "flag": { "enum": ["normal", "abnormal"] }
+            }
+          }
+        },
+        "currentMedications": { "$ref": "#/$defs/stringList" },
+        "knownConditions": { "$ref": "#/$defs/stringList" },
+        "allergies": { "$ref": "#/$defs/stringList" },
+        "facilityCapabilities": { "$ref": "#/$defs/stringList" }
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { dirname, isAbsolute, relative, resolve } from "node:path";
 
 const capsule = process.cwd();
 const inside = (file) => { const path = relative(capsule, file); return !path.startsWith("..") && !isAbsolute(path); };
-const required = ["package-lock.json", "next.config.ts", ".next/BUILD_ID", ".next/standalone/server.js", ".next/standalone/package.json", ".next/static", "Dockerfile"];
+const required = ["package-lock.json", "next.config.ts", ".next/BUILD_ID", ".next/standalone/server.js", ".next/standalone/package.json", ".next/static", "Dockerfile", ".next/standalone/mira/service/app.py", ".next/standalone/mira/requirements.lock", ".next/standalone/mira/SOURCE.json", ".next/standalone/scripts/run-system.mjs", ".next/standalone/scripts/install-mira.mjs"];
 for (const file of required) {
   if (!existsSync(resolve(capsule, file))) throw new Error(`Missing deploy input: ${file}. Run npm ci and npm run build first.`);
 }
@@ -24,4 +24,4 @@ const pkg = JSON.parse(readFileSync(resolve(capsule, "package.json"), "utf8"));
 for (const [name, version] of Object.entries({ ...pkg.dependencies, ...pkg.devDependencies })) {
   if (/^(workspace:|file:|link:)/.test(version)) throw new Error(`Non-registry dependency: ${name}`);
 }
-console.log(JSON.stringify({ status: "PASS", project: pkg.name, buildId: readFileSync(resolve(capsule, ".next/BUILD_ID"), "utf8").trim(), tracesValidated: traces, externalSourceDependencies: 0, deployment: "Docker copies standalone server and static assets; exposes port 3000", sideEffects: "none — no deployment, credentials, containers, or remote writes" }, null, 2));
+console.log(JSON.stringify({ status: "PASS", project: pkg.name, buildId: readFileSync(resolve(capsule, ".next/BUILD_ID"), "utf8").trim(), tracesValidated: traces, externalSourceDependencies: 0, bundledMira: true, deployment: "Docker installs bundled MIRA and starts one managed system; exposes port 3000", sideEffects: "none - no deployment, credentials, containers, or remote writes" }, null, 2));

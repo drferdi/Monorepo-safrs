@@ -1,0 +1,42 @@
+{
+  "id": 306,
+  "nama": "Parotitis Epidemika (Gondongan / Mumps)",
+  "slug": "parotitis-epidemika-gondongan-mumps",
+  "kode_icd": "B26.9",
+  "kategori": "Penyakit Anak",
+  "definisi": "Parotitis epidemika adalah penyakit infeksi virus menular akut yang disebabkan oleh Paramyxovirus, ditandai dengan pembengkakan dan nyeri pada satu atau kedua kelenjar saliva parotis, ditularkan melalui droplet respirasi atau kontak langsung saliva.",
+  "gejala": [
+    "Demam subfebris, malaise, nyeri kepala, anoreksia",
+    "Pembengkakan kelenjar parotis di depan dan bawah telinga (unilateral lalu bilateral)",
+    "Nyeri saat membuka mulut, mengunyah, atau menelan makanan asam",
+    "Eritema pada orifisium duktus Stensen"
+  ],
+  "diagnosis": "Penegakan diagnosis klinis berdasarkan anamnesis demam yang disertai pembengkakan khas kelenjar parotis yang mengangkat daun telinga. Pemeriksaan fisik: pembengkakan teraba lunak, nyeri tekan, batas tidak tegas di angulus mandibula.",
+  "terapi": "1. Penanganan bersifat suportif simtomatik (penyakit swasirna dalam 7-10 hari):\n   - Tirah baring selama masa demam.\n   - Kompres hangat atau dingin pada area parotis yang bengkak.\n   - Diet lunak dan hidrasi cukup, hindari makanan/minuman berasa asam.\n   - Analgesik-antipiretik: Parasetamol 10-15 mg/kgBB/kali pada anak atau 500 mg 3-4x/hari pada dewasa; Ibuprofen 200-400 mg 3x/hari.\n2. Isolasi penderita minimal 5 hari sejak pembengkakan parotis muncul.",
+  "rujukan": "Rujuk ke FKRTL bila terjadi komplikasi sistemik: orkitis/epididimitis pada laki-laki pascapubertas (testis bengkak dan sangat nyeri), ooforitis, pankreatitis akut (nyeri epigastrium hebat), atau meningoensefalitis gondongan (kaku kuduk, penurunan kesadaran).",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

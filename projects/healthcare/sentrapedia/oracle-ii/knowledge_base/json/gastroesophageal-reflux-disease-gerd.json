@@ -1,0 +1,44 @@
+{
+  "id": 292,
+  "nama": "Gastroesophageal Reflux Disease (GERD)",
+  "slug": "gastroesophageal-reflux-disease-gerd",
+  "kode_icd": "K21.9",
+  "kategori": "Penyakit Pencernaan",
+  "definisi": "GERD adalah kondisi refluks isi lambung ke dalam esofagus yang menimbulkan gejala mengganggu (heartburn dan regurgitasi) dan/atau komplikasi mukosa esofagus, diakibatkan oleh inkompetensi sfingter esofagus bawah (lower esophageal sphincter / LES).",
+  "gejala": [
+    "Heartburn (rasa panas terbakar di retrosternal dada)",
+    "Regurgitasi asam (asam/pahit naik ke rongga mulut)",
+    "Disfagia intermiten",
+    "Batuk kronik malam hari",
+    "Suara serak (laringitis refluks)",
+    "Sensasi globus (mengganjal di tenggorokan)"
+  ],
+  "diagnosis": "Diagnosis ditegakkan secara klinis dengan adanya gejala khas heartburn dan regurgitasi minimal 2 kali per minggu menggunakan kuesioner GERD-Q (skor >= 8 sangat sugestif GERD) atau uji terapi empirik PPI (PPI test) selama 1-2 minggu dengan respons klinis positif.",
+  "terapi": "1. Non-farmakologis: Menurunkan berat badan bila overweight, meninggikan kepala tempat tidur 15-20 cm saat tidur, tidak berbaring minimal 2-3 jam setelah makan, menghindari makanan berlemak, cokelat, kafein, mint, dan alkohol.\n2. Farmakologis:\n   - PPI dosis standar ganda: Omeprazole 2 x 20 mg/hari atau Lansoprazole 2 x 30 mg/hari atau Esomeprazole 1 x 40 mg/hari selama 4-8 minggu.\n   - Prokinetik: Domperidone 3 x 10 mg oral sebelum makan bila disertai keluhan pengosongan lambung lambat.\n   - Antasida atau Natrium Alginat 3-4 x 10 mL pasca makan untuk proteksi mukosa saat serangan heartburn.",
+  "rujukan": "Rujuk ke FKRTL / Sp.PD untuk pemeriksaan esofagogastroduodenoskopi (EGD) bila usia > 40 tahun dengan onset baru, terdapat alarm symptoms (disfagia progresif, odinofagia, penurunan BB, hematemesis), atau gejala refrakter setelah 8 minggu terapi PPI ganda.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

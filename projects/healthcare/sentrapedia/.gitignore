@@ -6,3 +6,7 @@ out/
 !.env.example
 coverage/
 .runtime/
+__pycache__/
+.pytest_cache/
+*.sqlite-wal
+*.sqlite-shm

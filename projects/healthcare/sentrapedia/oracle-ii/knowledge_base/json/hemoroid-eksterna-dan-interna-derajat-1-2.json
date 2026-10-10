@@ -1,0 +1,42 @@
+{
+  "id": 303,
+  "nama": "Hemoroid Eksterna dan Interna Derajat 1-2",
+  "slug": "hemoroid-eksterna-dan-interna-derajat-1-2",
+  "kode_icd": "I84.9",
+  "kategori": "Penyakit Pencernaan",
+  "definisi": "Hemoroid adalah pelebaran dan peradangan pleksus vaskular submukosa anorektal (bantalan vaskular anus). Derajat 1: perdarahan tanpa prolaps; Derajat 2: prolaps saat mengejan namun masuk kembali secara spontan.",
+  "gejala": [
+    "Perdarahan segar menetes pasca-defekasi (hematochezia segar tanpa nyeri pada interna)",
+    "Rasa mengganjal di anus",
+    "Gatal pada area perianal (pruritus ani)",
+    "Nyeri tajam mendadak pada hemoroid eksterna bila terjadi trombosis"
+  ],
+  "diagnosis": "Diagnosis klinis berdasarkan inspeksi anal (massa trombosis eksterna atau prolaps interna) dan pemeriksaan colok dubur (digital rectal examination) serta anoskopi di FKTP.",
+  "terapi": "1. Konservatif & Gaya Hidup (Kunci Terapi Derajat 1-2):\n   - Diet tinggi serat (sayur, buah, suplemen psyllium husk) dan cairan 2-2.5 liter/hari untuk melunakkan tinja tanpa mengejan.\n   - Rendam duduk air hangat (sitz bath) 15-20 menit 2-3 kali sehari.\n2. Farmakologis:\n   - Supositoria atau salep antihemoroid topikal kombinasi anestesi lokal dan kortikosteroid ringan (2 kali sehari selama 5-7 hari).\n   - Flebotropik oral: Micronized Purified Flavonoid Fraction (MPFF: Diosmin 450 mg + Hesperidin 50 mg) 3 x 2 tablet selama 4 hari pertama, lalu 2 x 2 tablet selama 3 hari berikutnya.",
+  "rujukan": "Rujuk ke Spesialis Bedah di FKRTL bila hemoroid derajat 3 (prolaps perlu didorong manual), derajat 4 (prolaps permanen/inkarserata), perdarahan masif berulang yang menyebabkan anemia kronik, atau hemoroid interna strangulata.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

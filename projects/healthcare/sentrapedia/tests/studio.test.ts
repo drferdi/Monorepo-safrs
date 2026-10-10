@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, documentSections, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../src/lib/studio";
+import { intentGroups, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../src/lib/studio";
 import { defaultReviewItems } from "../src/lib/workflow";
 import { createDraft, modeIds, modes } from "../src/lib/drafts";
+import { clinicalTemplates, insertTemplate, modeCategories, templateText } from "../src/lib/clinical-templates";
 import { initialWorkspace, restoreWorkspace, workspaceReducer, type Message, type Workspace } from "../src/lib/workspace";
 
 const message: Message = { id: "doc", role: "assistant", content: "# Note\n\n## History\nOriginal\n\n## Plan\nKeep\n---\nFooter", mode: "clinic", createdAt: "2026-10-09T01:00:00Z" };
@@ -42,10 +43,10 @@ describe("workspace presentation helpers", () => {
   it("offers each category's quick actions from its own modes, as Chief's table names them", () => {
     const label = (id: string) => modes.find((mode) => mode.id === id)!.label;
     expect(intentGroups.map((group) => [group.label, group.quick.map(label)])).toEqual([
-      ["Analisis", ["Pertanyaan Klinis", "Diagnosis Banding", "Pemeriksaan Penunjang"]],
-      ["Dokumentasi", ["Catatan SOAP", "Anamnesis (HPI)", "Catatan Kronis", "Handoff (SBAR)"]],
-      ["Rencana", ["Asesmen & Rencana", "Daftar Tugas", "Surat Rujukan", "Monitoring"]],
-      ["Komunikasi", ["Edukasi Pasien", "Ringkasan Kunjungan", "Catatan Telepon"]],
+      ["Analisis", ["Pertanyaan Klinis (PICO)", "Diagnosis Banding (DDx)", "Pemeriksaan Penunjang", "Pengodean Diagnosis (ICD-10)"]],
+      ["Dokumentasi", ["Catatan Klinis (SOAP)", "Anamnesis (HPI)", "Catatan Penyakit Kronis", "Serah Terima Klinis (SBAR)"]],
+      ["Rencana", ["Asesmen dan Rencana (A&P)", "Daftar Tugas Klinis", "Surat Rujukan", "Pemantauan Klinis"]],
+      ["Komunikasi", ["Edukasi Pasien", "Ringkasan Kunjungan", "Catatan Konsultasi Telepon"]],
     ]);
     for (const group of intentGroups) { expect(group.quick.every((id) => group.modes.includes(id))).toBe(true); expect(group.quick[0]).toBe(group.modes[0]); }
   });
@@ -108,5 +109,72 @@ describe("composer hint per intent tab", () => {
     for (const group of intentGroups) expect(composerPlaceholder(group.modes[0])).toBe(group.placeholder);
     expect(new Set(intentGroups.map((group) => group.placeholder)).size).toBe(intentGroups.length);
     expect(composerPlaceholder("refer")).toBe(modes.find((mode) => mode.id === "refer")!.placeholder);
+  });
+});
+
+describe("two-column document", () => {
+  it("ends a local draft on its last section, without a closing disclaimer (Chief: HAPUS)", () => {
+    const draft = createDraft({ mode: "clinic", prompt: "Keluhan: batuk sintetis 3 hari\nPemeriksaan: paru bersih", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
+    expect(draft.endsWith("## Teks sumber (verbatim)\nKeluhan: batuk sintetis 3 hari\nPemeriksaan: paru bersih")).toBe(true);
+    const english = createDraft({ mode: "clinic", prompt: "Fictional visit", context: "Context supplied.", specialty: "Primary Care", model: "Standard", language: "English", instructions: "" });
+    expect(english.endsWith("## Additional context\nContext supplied.")).toBe(true);
+  });
+  it("folds the source text and additional context, and only those", () => {
+    const draft = createDraft({ mode: "clinic", prompt: "Keluhan: batuk sintetis 3 hari", context: "Konteks fiktif.", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "Ringkas" });
+    expect(documentSections(draft).filter((section) => supportingSection(section.title)).map((section) => section.title)).toEqual(["Teks sumber (verbatim)", "Konteks tambahan"]);
+    const english = createDraft({ mode: "clinic", prompt: "Chief concern: fictional cough", context: "Context supplied.", specialty: "Primary Care", model: "Standard", language: "English", instructions: "" });
+    expect(documentSections(english).filter((section) => supportingSection(section.title)).map((section) => section.title)).toEqual(["Source text (verbatim)", "Additional context"]);
+  });
+  it("shows a local draft's title without the draft and patient line above the first section", () => {
+    const draft = createDraft({ mode: "clinic", prompt: "Keluhan: batuk sintetis 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
+    expect(draft).toContain("Draf lokal · Primary Care · Standard");
+    expect(documentTitle(draft)).toBe("# Catatan Klinis");
+    expect(documentTitle("Tanpa judul\n\n## Satu\nisi")).toBe("");
+  });
+});
+
+describe("clinical template pack", () => {
+  const label = (id: string) => modes.find((mode) => mode.id === id)!.label;
+  it("lists the 18 modes once each in Chief's final order and six categories", () => {
+    expect(modeCategories.map((category) => [category.label, category.modes.map(label)])).toEqual([
+      ["Dokumentasi klinis", ["Anamnesis (HPI)", "Catatan Klinis (SOAP)", "Diagnosis Banding (DDx)", "Asesmen dan Rencana (A&P)", "Catatan Scribe"]],
+      ["Diagnosis dan evaluasi", ["Pemeriksaan Penunjang", "Pengodean Diagnosis (ICD-10)", "Catatan Penyakit Kronis", "Pemantauan Klinis"]],
+      ["Komunikasi dan tindak lanjut", ["Ringkasan Kunjungan", "Edukasi Pasien", "Catatan Konsultasi Telepon", "Daftar Tugas Klinis"]],
+      ["Koordinasi pelayanan", ["Surat Rujukan", "Telaah Rujukan", "Serah Terima Klinis (SBAR)"]],
+      ["Evidence-based practice", ["Pertanyaan Klinis (PICO)"]],
+      ["Administrasi klinis", ["Persetujuan Penjaminan (Prior Authorization)"]],
+    ]);
+    expect(modes.map((mode) => mode.id)).toEqual(clinicalTemplates.map((template) => template.mode));
+    expect([...modeIds].sort()).toEqual(clinicalTemplates.map((template) => template.mode).sort());
+  });
+  it("writes a template as the pack does, every field marked for the clinician", () => {
+    expect(templateText(clinicalTemplates[0])).toBe(`ANAMNESIS TERSTRUKTUR — HPI KOMPREHENSIF
+DRAF — VERIFIKASI KLINISI DIPERLUKAN
+
+IDENTITAS DOKUMENTASI
+- Tanggal dan waktu anamnesis: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+- Sumber informasi dan reliabilitas anamnesis: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+
+KELUHAN DAN KRONOLOGI
+- Keluhan utama (kata-kata pasien): Belum tersedia — lengkapi dan verifikasi oleh klinisi
+- Awitan, durasi, dan perjalanan keluhan: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+- Lokasi, penjalaran, karakter, dan intensitas: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+- Frekuensi, pola, serta faktor pencetus/peringan: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+- Gejala penyerta dan gejala yang disangkal (pertinent negatives): Belum tersedia — lengkapi dan verifikasi oleh klinisi
+
+KONTEKS RELEVAN
+- Riwayat penyakit dan tindakan terdahulu: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+- Obat yang digunakan dan riwayat alergi: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+- Riwayat keluarga, sosial, dan faktor risiko yang relevan: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+
+KLARIFIKASI
+- Pertanyaan lanjutan yang belum terjawab: Belum tersedia — lengkapi dan verifikasi oleh klinisi
+- Ringkasan kronologis berdasarkan keterangan yang tersedia: Belum tersedia — lengkapi dan verifikasi oleh klinisi`);
+    expect(new Set(clinicalTemplates.map((template) => template.name)).size).toBe(18);
+    expect(clinicalTemplates.every((template) => template.sections.length > 0 && template.rule)).toBe(true);
+  });
+  it("adds the structure after what is already typed and never replaces it", () => {
+    expect(insertTemplate("Keluhan: batuk sintetis 3 hari\n", "STRUKTUR")).toBe("Keluhan: batuk sintetis 3 hari\n\nSTRUKTUR");
+    expect(insertTemplate("  ", "STRUKTUR")).toBe("STRUKTUR");
   });
 });

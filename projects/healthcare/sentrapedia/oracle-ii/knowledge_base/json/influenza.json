@@ -1,0 +1,45 @@
+{
+  "id": 307,
+  "nama": "Influenza",
+  "slug": "influenza",
+  "kode_icd": "J11.1",
+  "kategori": "Penyakit Paru",
+  "definisi": "Influenza adalah infeksi saluran pernapasan akut menular yang disebabkan oleh virus Influenza tipe A atau B, ditandai dengan awitan gejala sistemik mendadak seperti demam tinggi, mialgia, dan batuk kering.",
+  "gejala": [
+    "Demam mendadak tinggi (> 38°C) menggigil",
+    "Nyeri otot dan sendi (mialgia difus hebat)",
+    "Sakit kepala retroorbital",
+    "Batuk kering",
+    "Sakit tenggorokan",
+    "Rinorea (hidung berair)",
+    "Kelelahan ekstrem (fatigue)"
+  ],
+  "diagnosis": "Diagnosis klinis berdasarkan pola awitan mendadak trias demam tinggi + mialgia + gejala respiratorik saat musim penularan. Penunjang: Rapid Influenza Diagnostic Test (RIDT) swab nasofaring bila tersedia.",
+  "terapi": "1. Suportif (Pasien Tanpa Faktor Risiko):\n   - Istirahat tirah baring, hidrasi cairan hangat cukup.\n   - Antipiretik/analgesik: Parasetamol 500-1000 mg 3-4x/hari atau Ibuprofen 400 mg 3x/hari.\n   - Dekongestan oral (pseudoefedrin) bila hidung tersumbat berat.\n2. Antiviral Spesifik (Oseltamivir):\n   - Diberikan dalam < 48 jam sejak onset pada populasi risiko tinggi komplikasi (lansia > 65 tahun, ibu hamil, anak < 2 tahun, komorbiditas kronik, imunokompromais):\n   - Oseltamivir 2 x 75 mg oral per hari selama 5 hari.",
+  "rujukan": "Rujuk ke RS bila timbul tanda bahaya respirasi: sesak napas, takipnea, saturasi O2 < 92%, nyeri dada pleuritik, hemoptisis, penurunan kesadaran, atau kecurigaan komplikasi pneumonia influenza berat.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

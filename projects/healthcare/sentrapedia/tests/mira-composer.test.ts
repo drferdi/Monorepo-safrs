@@ -14,7 +14,7 @@ describe("main clinical composer", () => {
     expect(composerUsesMira("ddx", false)).toBe(true);
     for (const mode of ["clinic", "scribe", "ap", "education"] as const) expect(composerUsesMira(mode, false)).toBe(false);
     expect(composerUsesMira("question", true)).toBe(false);
-    for (const mode of ["workup", "refer"] as const) { expect(composerUsesMira(mode, false)).toBe(true); expect(composerUsesMira(mode, true)).toBe(false); }
+    for (const mode of ["workup", "refer", "icd10"] as const) { expect(composerUsesMira(mode, false)).toBe(true); expect(composerUsesMira(mode, true)).toBe(false); }
   });
   it("stages the exact complaint and recorded context, without patient name or identifier", () => {
     const data = composerCase("nyeri kepala menetap 2 hari", "Riwayat HT", { name: "Private name", id: "private-id", age: "67", sex: "Male", notes: "Belum ada pemfis" });

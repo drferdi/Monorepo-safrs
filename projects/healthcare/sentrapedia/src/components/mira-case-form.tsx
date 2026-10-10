@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { containsIdentity, emptyCase, validCase, validResult, type MiraAnalysis } from "../lib/mira/contract";
+import { containsIdentity, emptyCase, validCase, type MiraAnalysis } from "../lib/mira/contract";
 import type { CaseState } from "../lib/mira/types";
-import { miraDraft } from "../lib/mira/presentation";
+import { requestMiraAnalysis } from "../lib/mira/client";
+import { miraDraft, oracleCitations } from "../lib/mira/presentation";
 import { PixelLoader } from "./pixel-loader";
 
 
@@ -15,34 +16,30 @@ export function MiraCaseForm({ initialCase, saveOnSuccess = false, onSave }: { i
   const [caseData, setCase] = useState<CaseState>(() => initialCase ? structuredClone(initialCase) : emptyCase());
   const [listText, setListText] = useState(() => ({ physicalExam: initialCase?.physicalExam.join("\n") ?? "", currentMedications: initialCase?.currentMedications.join("\n") ?? "", knownConditions: initialCase?.knownConditions.join("\n") ?? "", allergies: initialCase?.allergies.join("\n") ?? "", facilityCapabilities: initialCase?.facilityCapabilities.join("\n") ?? "" }));
   const [synthetic, setSynthetic] = useState(false);
-  const [connection, setConnection] = useState<{ reachable: boolean; configured: boolean; modelReady: boolean } | null>(null);
+  const [connection, setConnection] = useState<{ reachable: boolean; configured: boolean; modelReady: boolean; groundingReady: boolean } | null>(null);
   const [connectionError, setConnectionError] = useState("");
   const [analysis, setAnalysis] = useState<MiraAnalysis | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [refresh, setRefresh] = useState(0);
   const controller = useRef<AbortController | null>(null);
-  useEffect(() => { const healthController = new AbortController(); fetch("/api/mira", { cache: "no-store", signal: healthController.signal }).then(async response => { const data: unknown = await response.json(); if (!response.ok || !data || typeof data !== "object" || !("reachable" in data) || !("configured" in data) || typeof data.reachable !== "boolean" || typeof data.configured !== "boolean" || !("modelReady" in data) || typeof data.modelReady !== "boolean") throw new Error("health"); setConnection({ reachable: data.reachable, configured: data.configured, modelReady: data.modelReady }); setConnectionError(""); }).catch(() => { if (!healthController.signal.aborted) { setConnection(null); setConnectionError("Status koneksi belum dapat diperiksa."); } }); return () => healthController.abort(); }, [refresh]);
+  useEffect(() => { const healthController = new AbortController(); fetch("/api/mira", { cache: "no-store", signal: healthController.signal }).then(async response => { const data: unknown = await response.json(); if (!response.ok || !data || typeof data !== "object" || !("reachable" in data) || !("configured" in data) || typeof data.reachable !== "boolean" || typeof data.configured !== "boolean" || !("modelReady" in data) || typeof data.modelReady !== "boolean") throw new Error("health"); setConnection({ reachable: data.reachable, configured: data.configured, modelReady: data.modelReady, groundingReady: "groundingReady" in data && data.groundingReady === true }); setConnectionError(""); }).catch(() => { if (!healthController.signal.aborted) { setConnection(null); setConnectionError("Status koneksi belum dapat diperiksa."); } }); return () => healthController.abort(); }, [refresh]);
   useEffect(() => () => controller.current?.abort(), []);
   function update(next: CaseState) { setCase(next); setAnalysis(null); setError(""); }
   async function analyze() {
-    if (busy || !synthetic || !validCase(caseData) || !connection?.configured || !connection.modelReady) return;
+    if (busy || !synthetic || !validCase(caseData) || !connection?.configured || !connection.modelReady || !connection.groundingReady) return;
     if (containsIdentity(JSON.stringify(caseData))) { setError("Hapus pola identitas dari input. Gunakan kasus fiktif tanpa nama, nomor identitas, kontak atau alamat."); return; }
     const snapshot = structuredClone(caseData);
     const abort = new AbortController(); controller.current = abort; setBusy(true); setError(""); setAnalysis(null);
     try {
-      const response = await fetch("/api/mira", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ case: snapshot, synthetic: true }), signal: abort.signal });
-      const data: unknown = await response.json();
-      if (!response.ok) { const message = data && typeof data === "object" && "error" in data && data.error && typeof data.error === "object" && "message" in data.error && typeof data.error.message === "string" ? data.error.message : "Analisis belum tersedia."; throw new Error(message); }
-      if (!data || typeof data !== "object" || !("result" in data) || !validResult(data.result) || data.result.status !== "ok" || !("traceId" in data) || typeof data.traceId !== "string" || !("createdAt" in data) || typeof data.createdAt !== "string" || !Number.isFinite(Date.parse(data.createdAt))) throw new Error("Respons analisis tidak dapat diverifikasi.");
+      const next = await requestMiraAnalysis(snapshot, { synthetic, signal: abort.signal });
       if (abort.signal.aborted) return;
-      const next = { case: snapshot, result: data.result, traceId: data.traceId, createdAt: data.createdAt };
       if (saveOnSuccess) onSave(next); else setAnalysis(next);
     } catch (reason) { if (!abort.signal.aborted) setError(reason instanceof Error ? reason.message : "Analisis belum tersedia."); }
     finally { if (!abort.signal.aborted) setBusy(false); }
   }
   return <div className="mira-form">
-    <div className="notice"><span><strong>{connection ? connection.reachable ? "Layanan analisis merespons" : "Layanan analisis belum tersedia" : "Memeriksa koneksi analisis…"}</strong><p>{connection === null ? "Status konfigurasi belum tersedia." : connection.configured ? "Koneksi server dikonfigurasi. Pemeriksaan koneksi tidak menjalankan analisis." : "Token koneksi belum dikonfigurasi. Analisis belum dapat dijalankan."}</p>{connection && !connection.modelReady && <p>Layanan analisis belum siap. Tidak ada analisis dijalankan.</p>}{connectionError && <p>{connectionError}</p>}</span><button type="button" className="text-button" onClick={() => setRefresh(n => n + 1)}>Periksa lagi</button></div>
+    <div className="notice"><span><strong>{connection ? connection.reachable ? "Layanan analisis merespons" : "Layanan analisis belum tersedia" : "Memeriksa koneksi analisis…"}</strong><p>{connection === null ? "Status konfigurasi belum tersedia." : connection.configured ? "Koneksi server dikonfigurasi. Pemeriksaan koneksi tidak menjalankan analisis." : "Token koneksi belum dikonfigurasi. Analisis belum dapat dijalankan."}</p>{connection && !connection.modelReady && <p>Layanan analisis belum siap. Tidak ada analisis dijalankan.</p>}{connection && !connection.groundingReady && <p>Referensi Oracle II belum siap pada layanan analisis.</p>}{connectionError && <p>{connectionError}</p>}</span><button type="button" className="text-button" onClick={() => setRefresh(n => n + 1)}>Periksa lagi</button></div>
     <p className="panel-caption">{initialCase ? "Kasus dari kolom utama dimuat untuk ditinjau. Keluhan, usia, jenis kelamin dan konteks yang tercatat ditampilkan; nama dan ID Pasien tidak disertakan. Periksa dan hapus identitas dari narasi sebelum mengonfirmasi data fiktif." : "Isi data kasus fiktif secara eksplisit. Identitas dan catatan Pasien tidak disalin otomatis."} Kolom kosong berarti belum diberikan. Anggaran layanan US$0,10 per analisis dan US$1 per hari; biaya aktual tercatat pada hasil. Hasil belum tervalidasi klinis.</p>
     <form onSubmit={event => { event.preventDefault(); void analyze(); }}>
       <fieldset disabled={busy} className="workflow-form mira-fields">
@@ -57,9 +54,9 @@ export function MiraCaseForm({ initialCase, saveOnSuccess = false, onSave }: { i
         </details>
         <label className="mira-confirm"><input type="checkbox" checked={synthetic} onChange={e => { setSynthetic(e.target.checked); setAnalysis(null); }}/>Saya menggunakan data fiktif tanpa identitas pribadi.</label>
       </fieldset>
-      <div className="workflow-actions"><button className="button primary" disabled={busy || !synthetic || !validCase(caseData) || !connection?.configured || !connection.reachable || !connection.modelReady}>{saveOnSuccess ? "Analisis dan tambahkan draf" : "Analisis kasus"}</button>{busy && <><PixelLoader label="Sedang menganalisis kasus…"/><button type="button" className="button" onClick={() => { controller.current?.abort(); setBusy(false); setError("Analisis dibatalkan. Tidak ada hasil disimpan."); }}>Batalkan analisis</button></>}</div>
+      <div className="workflow-actions"><button className="button primary" disabled={busy || !synthetic || !validCase(caseData) || !connection?.configured || !connection.reachable || !connection.modelReady || !connection.groundingReady}>{saveOnSuccess ? "Analisis dan tambahkan draf" : "Analisis kasus"}</button>{busy && <><PixelLoader label="Sedang menganalisis kasus…"/><button type="button" className="button" onClick={() => { controller.current?.abort(); setBusy(false); setError("Analisis dibatalkan. Tidak ada hasil disimpan."); }}>Batalkan analisis</button></>}</div>
     </form>
     {error && <p className="form-warning" role="alert">{error}</p>}
-    {analysis && <section className="mira-result"><h3>Hasil analisis · belum ditinjau</h3><p className="panel-caption">Tingkat keyakinan berasal dari model. Kutipan halaman PNPK belum tersedia. Pertimbangan rujukan perlu dinilai klinisi.</p><pre>{miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case)}</pre><button className="button primary" onClick={() => onSave(analysis)}>Simpan sebagai draf untuk ditinjau</button></section>}
+    {analysis && <section className="mira-result"><h3>Hasil analisis · belum ditinjau</h3><p className="panel-caption">Tingkat keyakinan berasal dari model. Referensi Oracle II yang dipilih tersedia di bawah hasil. Pertimbangan rujukan perlu dinilai klinisi.</p><pre>{miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case) + oracleCitations(analysis.grounding)}</pre><button className="button primary" onClick={() => onSave(analysis)}>Simpan sebagai draf untuk ditinjau</button></section>}
   </div>;
 }

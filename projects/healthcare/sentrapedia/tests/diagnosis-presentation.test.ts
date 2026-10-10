@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { emptyCase, type MiraResult } from "../src/lib/mira/contract";
-import { diagnosisContent, diagnosisSectionTitles, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay } from "../src/lib/mira/presentation";
+import { diagnosisContent, diagnosisSectionTitles, icd10SectionTitle, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay } from "../src/lib/mira/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
 import { oracleDiseases, relatedDiseases } from "../src/lib/oracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
+import { oracleSourceLinks } from "../src/lib/mira/presentation";
+import { retrieveOracleGrounding } from "../src/lib/oracle-grounding";
+import { restoreWorkspace, initialWorkspace, workspaceReducer } from "../src/lib/workspace";
 
 const analysis = {
   case: { ...emptyCase(), chiefComplaint: "Keluhan sintetis", anamnesis: { freeText: "Gejala sintetis" }, currentMedications: ["Obat tercatat"], results: [{ name: "Tes sintetis", value: 3, unit: "unit" }] },
@@ -12,6 +15,30 @@ const analysis = {
 };
 const section = (content: string, title: string) => documentSections(content).find(s => s.title === title)!.body.trim();
 const withDifferential = (differential: MiraResult["differential"]) => ({ ...analysis, result: { ...analysis.result, differential } });
+
+describe("Oracle II citation persistence", () => {
+  it("retains the exact retrieval snapshot through edits, reload and untouched regeneration", () => {
+    const grounding = retrieveOracleGrounding({ ...emptyCase(), chiefComplaint: "malaria demam" });
+    const message = miraMessage({ ...analysis, grounding });
+    expect(message.content).toContain("## Referensi Oracle II");
+    expect(diagnosisContent(message)).toBe(message.content);
+    expect(JSON.parse(sourceForDisplay(message)!).grounding).toEqual(grounding);
+    expect(oracleSourceLinks(message)[0]).toEqual({ id: grounding.evidence[0].evidenceId, label: `${grounding.evidence[0].source.filename}, halaman PDF ${grounding.evidence[0].source.pdfPage}`, url: grounding.evidence[0].source.driveUrl });
+    const state = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [message] }] };
+    const edited = workspaceReducer(state, { type: "message.edit", encounterId: state.encounters[0].id, messageId: message.id, content: message.content + "\nCatatan dokter" });
+    const restored = restoreWorkspace(JSON.stringify(edited));
+    const saved = restored!.encounters[0].messages[0];
+    expect(saved.sourceText).toBe(message.sourceText);
+    expect(diagnosisContent(saved)).toContain("Catatan dokter");
+    expect(JSON.parse(saved.sourceText!).grounding).toEqual(grounding);
+  });
+  it("leaves legacy drafts readable without invented Oracle II provenance", () => {
+    const message = miraMessage(analysis);
+    expect(oracleSourceLinks(message)).toEqual([]);
+    expect(diagnosisContent(message)).toBe(message.content);
+    expect(sourceForDisplay(message)).not.toContain("grounding");
+  });
+});
 
 describe("six-section diagnosis presentation", () => {
   it("orders the requested sections and preserves recorded facts, uncertainty and provenance", () => {
@@ -181,6 +208,19 @@ describe("focus modes", () => {
     expect(body).toContain("Keluhan sintetis");
     expect(body).toContain("Usulan tes sintetis");
     expect(section(miraMessage(analysis, undefined, "refer").content, referralSectionTitle)).not.toContain("Keputusan");
+  });
+  it("puts the ICD-10 codes first for icd10, grouped as the analysis returned them", () => {
+    const icd10 = miraMessage(analysis, undefined, "icd10");
+    expect(icd10.mode).toBe("icd10");
+    expect(titles(icd10.content)).toEqual([icd10SectionTitle, ...diagnosisSectionTitles]);
+    expect(section(icd10.content, icd10SectionTitle)).toBe("Diagnosis kerja\nJ00 — Diagnosis sintetis\n\nJangan terlewat\nX00 — Jangan terlewat sintetis");
+    expect(titles(diagnosisContent(icd10))[0]).toBe(icd10SectionTitle);
+  });
+  it("lists several codes in a group as bullets and says so when no code was returned", () => {
+    const two = withDifferential({ likely: [{ icd10: "J00", label: "Diagnosis sintetis", confidenceTier: "low" }, { icd10: "J02.9", label: "Diagnosis sintetis dua", confidenceTier: "low" }], alternatives: [], cannotMiss: [] });
+    expect(section(miraMessage(two, undefined, "icd10").content, icd10SectionTitle)).toBe("Diagnosis kerja\n- J00 — Diagnosis sintetis\n- J02.9 — Diagnosis sintetis dua");
+    const none = withDifferential({ likely: [], alternatives: [], cannotMiss: [] });
+    expect(section(miraMessage(none, undefined, "icd10").content, icd10SectionTitle)).toBe("Belum ada kode diagnosis dari data yang ada.");
   });
   it("re-renders untouched focus drafts in focus order and leaves edited ones alone", () => {
     const refer = miraMessage(analysis, undefined, "refer");

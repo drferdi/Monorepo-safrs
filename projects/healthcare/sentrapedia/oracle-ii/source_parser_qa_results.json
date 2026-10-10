@@ -1,0 +1,308 @@
+{
+  "tests": [
+    {
+      "disease": "malaria",
+      "query": "malaria",
+      "matched_source_candidates": 14,
+      "pass": true
+    },
+    {
+      "disease": "stroke",
+      "query": "stroke",
+      "matched_source_candidates": 14,
+      "pass": true
+    },
+    {
+      "disease": "kanker-paru",
+      "query": "kanker",
+      "matched_source_candidates": 15,
+      "pass": true
+    },
+    {
+      "disease": "tuberkolosis",
+      "query": "tuberk",
+      "matched_source_candidates": 12,
+      "pass": true
+    },
+    {
+      "disease": "epilepsi-pada-anak",
+      "query": "epilepsi",
+      "matched_source_candidates": 13,
+      "pass": true
+    },
+    {
+      "disease": "pneumonia-pada-dewasa",
+      "query": "pneumonia",
+      "matched_source_candidates": 14,
+      "pass": true
+    },
+    {
+      "disease": "hiperbilirubinemia",
+      "query": "bilirubin",
+      "matched_source_candidates": 1,
+      "pass": true
+    },
+    {
+      "disease": "glaukoma",
+      "query": "glaukoma",
+      "matched_source_candidates": 14,
+      "pass": true
+    },
+    {
+      "disease": "penyakit-ginjal-kronik",
+      "query": "ginjal",
+      "matched_source_candidates": 14,
+      "pass": true
+    },
+    {
+      "disease": "hepatitis-b",
+      "query": "hepatitis",
+      "matched_source_candidates": 13,
+      "pass": true
+    }
+  ],
+  "database_integrity": "PASS",
+  "foreign_keys": "PASS",
+  "source_anchor_all_exact": "PASS",
+  "preserved_eight_curated_sources": "PASS",
+  "source_documents": 72,
+  "indexed_pages": 8332,
+  "machine_candidates": 904,
+  "issues": {
+    "pdfs_matched": 72,
+    "definition_anchor_documents": 70,
+    "no_symptom_candidate_documents": 3
+  },
+  "image_only_page_counts": {
+    "004": [],
+    "028": [],
+    "018": [],
+    "048": [
+      48,
+      67,
+      68,
+      69,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82
+    ],
+    "031": [],
+    "051": [],
+    "027": [],
+    "046": [],
+    "076": [
+      51
+    ],
+    "038": [],
+    "037": [
+      106
+    ],
+    "019": [],
+    "017": [
+      119,
+      120,
+      121,
+      122
+    ],
+    "036": [],
+    "063": [
+      95
+    ],
+    "064": [],
+    "062": [
+      32,
+      58,
+      83
+    ],
+    "050": [
+      30,
+      32,
+      60,
+      68,
+      122,
+      123,
+      220
+    ],
+    "026": [],
+    "077": [
+      21,
+      33,
+      35,
+      37,
+      39,
+      54,
+      57,
+      64
+    ],
+    "012": [],
+    "073": [
+      91,
+      107,
+      116
+    ],
+    "057": [
+      50,
+      51,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74
+    ],
+    "021": [],
+    "065": [
+      40,
+      49,
+      57,
+      84,
+      85,
+      86,
+      107
+    ],
+    "072": [
+      18,
+      76
+    ],
+    "070": [
+      46,
+      47
+    ],
+    "002": [],
+    "025": [],
+    "043": [
+      30
+    ],
+    "068": [],
+    "081": [],
+    "056": [],
+    "075": [
+      56,
+      125,
+      148
+    ],
+    "008": [],
+    "052": [
+      109
+    ],
+    "059": [],
+    "061": [
+      144
+    ],
+    "060": [],
+    "007": [],
+    "006": [],
+    "015": [],
+    "054": [
+      37
+    ],
+    "067": [
+      9,
+      39,
+      68,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129
+    ],
+    "049": [],
+    "020": [],
+    "074": [
+      39,
+      41,
+      43,
+      44,
+      45,
+      52
+    ],
+    "080": [],
+    "053": [],
+    "010": [
+      53
+    ],
+    "014": [],
+    "005": [],
+    "016": [
+      9
+    ],
+    "022": [
+      113
+    ],
+    "032": [
+      52,
+      53
+    ],
+    "023": [],
+    "030": [],
+    "001": [],
+    "058": [],
+    "013": [],
+    "009": [],
+    "040": [
+      90
+    ],
+    "047": [],
+    "024": [],
+    "011": [],
+    "071": [],
+    "066": [
+      121
+    ],
+    "069": [],
+    "079": [
+      59
+    ],
+    "055": [
+      114
+    ],
+    "029": [],
+    "042": [
+      67,
+      68,
+      69,
+      129,
+      130
+    ]
+  },
+  "postcuration_safety_gate": "PASS",
+  "machine_candidates_not_promoted_into_clinical_fields": true,
+  "all_72_source_document_checksums": "PASS",
+  "all_904_candidate_quotes_page_exact": "PASS",
+  "all_144_kb_clinical_retrieval_disabled": true,
+  "suspicious_candidate_review_counts": {
+    "DEFINITION_SEMANTICS_UNCERTAIN": 77,
+    "SYMPTOM_VS_TREATMENT_MIXTURE": 37,
+    "TOPIC_ALIGNMENT_UNCONFIRMED": 161,
+    "METHODOLOGY_OR_ADMINISTRATIVE_MIXTURE": 10
+  },
+  "source_pdfs_bundled_separately": "SENTRA_PNPK_72_ORIGINAL_SOURCE_PDFS.zip",
+  "clinical_semantic_qa": "REQUIRES_HUMAN_REVIEW"
+}

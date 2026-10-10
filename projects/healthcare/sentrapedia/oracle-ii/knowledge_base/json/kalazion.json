@@ -1,0 +1,42 @@
+{
+  "id": 323,
+  "nama": "Kalazion",
+  "slug": "kalazion",
+  "kode_icd": "H00.1",
+  "kategori": "Penyakit Mata",
+  "definisi": "Kalazion adalah peradangan granulomatosa kronik non-infeksius pada kelenjar Meibom yang tersumbat, menyebabkan retensi lipid (lipogranuloma), sering berkembang dari hordeolum internum yang tidak sembuh sempurna.",
+  "gejala": [
+    "Benjolan keras tidak nyeri pada kelopak mata",
+    "Tidak ada tanda radang akut (tidak merah, tidak nyeri tekan)",
+    "Benjolan membesar lambat selama berminggu-minggu/bulan",
+    "Dapat menimbulkan astigmatisma ringan bila benjolan besar menekan kornea"
+  ],
+  "diagnosis": "Inspeksi dan palpasi: nodul keras berbatas tegas, terfiksir pada lempeng tarsus, tanpa rasa nyeri tekan. Eversi palpebra memperlihatkan lesi berwarna merah keabuan atau kekuningan di konjungtiva tarsal.",
+  "terapi": "1. Konservatif (Lesi Dini/Kecil):\n   - Kompres hangat 10-15 menit 3-4 kali sehari diikuti pemijatan lembut ke arah tepi kelopak mata.\n   - Menjaga kebersihan margo palpebra dengan sampo bayi encer (eyelid hygiene).\n2. Medikamentosa: Salep mata antibiotik-steroid kombinasi bila ada inflamasi sekitar.",
+  "rujukan": "Rujuk ke Spesialis Mata bila kalazion berukuran besar menetap > 4-6 minggu untuk tindakan bedah insisi dan kuretase kalazion dari sisi konjungtiva tarsal, atau bila berulang pada lansia (waspada karsinoma kelenjar sebasea).",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

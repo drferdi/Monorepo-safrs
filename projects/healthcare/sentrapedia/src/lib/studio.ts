@@ -5,7 +5,7 @@ import type { Encounter } from "./workspace";
 // Four needs of a doctor. `quick` are the contextual quick actions under the composer; `modes` also holds the
 // category's other templates, which stay reachable from the Mode picker. Telaah Bukti waits for a real evidence search.
 export const intentGroups: { id: string; label: string; headline: string; description: string; placeholder: string; modes: ModeId[]; quick: ModeId[] }[] = [
-  { id: "ask", label: "Analisis", headline: "01 — Analisis Klinis. Keputusan Lebih Tepat.", description: "Telaah kasus kompleks berdasarkan bukti medis.", placeholder: "Diskusikan kasus yang sedang Anda tangani.", modes: ["question", "ddx", "workup", "refer"], quick: ["question", "ddx", "workup"] },
+  { id: "ask", label: "Analisis", headline: "01 — Analisis Klinis. Keputusan Lebih Tepat.", description: "Telaah kasus kompleks berdasarkan bukti medis.", placeholder: "Diskusikan kasus yang sedang Anda tangani.", modes: ["question", "ddx", "workup", "icd10", "refer"], quick: ["question", "ddx", "workup", "icd10"] },
   { id: "document", label: "Dokumentasi", headline: "02 — Dokumentasi Rapi. Informasi Terstruktur.", description: "Susun catatan klinis yang jelas dan siap ditinjau.", placeholder: "Tuliskan anamnesis, pemeriksaan, dan temuan untuk disusun menjadi catatan.", modes: ["clinic", "hpi", "chronic", "handoff", "scribe"], quick: ["clinic", "hpi", "chronic", "handoff"] },
   { id: "plan", label: "Rencana", headline: "03 — Asesmen Jelas. Tindak Lanjut Terarah.", description: "Organisasikan masalah klinis dan rencana penanganan.", placeholder: "Tuliskan asesmen dan rencana tata laksana yang ingin Anda susun.", modes: ["ap", "tasks", "referral", "monitoring"], quick: ["ap", "tasks", "referral", "monitoring"] },
   { id: "communicate", label: "Komunikasi", headline: "04 — Komunikasi Jelas. Pasien Lebih Paham.", description: "Siapkan informasi medis yang ringkas dan mudah dipahami.", placeholder: "Tuliskan informasi yang ingin disampaikan kepada pasien atau sejawat.", modes: ["education", "avs", "telephone", "authorization"], quick: ["education", "avs", "telephone"] },
@@ -27,6 +27,16 @@ export function documentSections(content: string): DocumentSection[] {
     if (divider) end = start + divider.index;
     return { title: heading[1].trim(), start, end, body: content.slice(start, end) };
   });
+}
+// The title line above the first section, without a local draft's provenance and patient lines (shown only in copies and downloads).
+export function documentTitle(content: string): string {
+  const first = content.indexOf("## ");
+  return (first < 0 ? content : content.slice(0, first)).split(/\r?\n/).find((line) => line.startsWith("# ")) ?? "";
+}
+// A local draft's supporting sections, folded in a smaller face (Chief: "cukup drop down dan text lebih kecil").
+const supporting = ["Teks sumber (verbatim)", "Source text (verbatim)", "Konteks tambahan", "Additional context"];
+export function supportingSection(title: string): boolean {
+  return supporting.includes(title);
 }
 export function replaceSection(content: string, section: DocumentSection, body: string): string {
   return content.slice(0, section.start) + body + content.slice(section.end);

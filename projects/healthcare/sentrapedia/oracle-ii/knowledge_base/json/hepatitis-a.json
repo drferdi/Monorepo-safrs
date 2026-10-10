@@ -1,0 +1,42 @@
+{
+  "id": 298,
+  "nama": "Hepatitis A",
+  "slug": "hepatitis-a",
+  "kode_icd": "B15.9",
+  "kategori": "Penyakit Infeksi",
+  "definisi": "Hepatitis A adalah infeksi hati akut menular yang disebabkan oleh Hepatitis A Virus (HAV), ditularkan melalui rute fekal-oral melalui makanan atau air tercemar, bersifat swasirna (self-limiting) dan tidak berkembang menjadi hepatitis kronik.",
+  "gejala": [
+    "Fase prodromal: demam ringan, malaise hebat, mual, muntah, anoreksia, nyeri perut kanan atas",
+    "Fase ikterik: sklera dan kulit kuning (ikterus), urin berwarna gelap pekat seperti air teh, feses pucat (dempul)",
+    "Gatal-gatal pada kulit (pruritus)",
+    "Hepatomegali lunak dan nyeri tekan"
+  ],
+  "diagnosis": "Diagnosis ditegakkan dari gejala klinis ikterus akut didahului gejala flu-like prodromal. Pemeriksaan laboratorium FKTP: peningkatan enzim transaminase hati (SGPT/ALT dan SGOT/AST meningkat signifikan > 5-10 kali lipat batas atas normal), hiperbilirubinemia direk dan total. Diagnosis serologis konfirmasi: IgM anti-HAV positif dalam darah.",
+  "terapi": "1. Terapi bersifat suportif dan simtomatik: Tirah baring selama fase akut ikterik, asupan nutrisi tinggi kalori dan cairan adekuat, hindari makanan tinggi lemak saat mual.\n2. Medikamentosa: Antiemetik (domperidone/ondansetron) bila mual persisten, antipiretik parasetamol (dosis dikurangi maksimal 2 g/hari untuk mencegah hepatotoksisitas). Hindari obat-obatan hepatotoksik dan alkohol.\n3. Edukasi kebersihan makanan, isolasi sanitasi alat makan, dan vaksinasi kontak erat.",
+  "rujukan": "Rujuk segera ke FKRTL bila terjadi komplikasi gagal hati akut (hepatitis fulminan: ensefalopati hepatikum, pemanjangan waktu protrombin INR > 1.5, penurunan kesadaran, asteriksis), muntah persisten dengan dehidrasi berat, atau hiperbilirubinemia persisten > 4 minggu.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

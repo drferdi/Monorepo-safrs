@@ -1,0 +1,43 @@
+{
+  "id": 299,
+  "nama": "Askariasis",
+  "slug": "askariasis",
+  "kode_icd": "B77.9",
+  "kategori": "Penyakit Infeksi",
+  "definisi": "Askariasis adalah infeksi cacing usus yang disebabkan oleh cacing nematoda besar Ascaris lumbricoides, hidup di dalam lumen usus halus manusia setelah tertelannya telur infektif yang matang di tanah.",
+  "gejala": [
+    "Mayoritas asimtomatik pada infeksi ringan",
+    "Rasa tidak enak di perut, kembung, mual, nafsu makan menurun",
+    "Keluarnya cacing dewasa melalui muntah atau tinja",
+    "Sindrom Loeffler pada migrasi larva paru: batuk kering, sesak, mengi, demam ringan",
+    "Malnutrisi dan gangguan tumbuh kembang pada infeksi kronik anak"
+  ],
+  "diagnosis": "Diagnosis pasti ditegakkan dengan ditemukannya telur Ascaris lumbricoides berdinding tebal bergerigi (telur fertil/infertil) pada pemeriksaan mikroskopis feses sediaan langsung atau metode flotasi/Kato-Katz, atau visualisasi cacing dewasa utuh.",
+  "terapi": "Farmakologis Antelmintik Lini Pertama:\n- Albendazol: 400 mg oral dosis tunggal (dewasa dan anak usia > 2 tahun; 200 mg untuk anak 1-2 tahun).\n- Mebendazol: 500 mg oral dosis tunggal, atau 2 x 100 mg/hari selama 3 hari berturut-turut.\n- Pirantel Pamoat: 10-11 mg/kgBB oral dosis tunggal (maksimum 1 gram).\nEdukasi mencuci tangan sebelum makan, memotong kuku, memakai alas kaki, dan sanitasi jamban sehat.",
+  "rujukan": "Rujuk ke Spesialis Bedah / FKRTL bila terjadi komplikasi mekanik akibat bolus cacing: obstruksi mekanik usus halus (ileus obstruktif), perforasi usus, invaginasi usus, apendisitis cacing, atau migrasi cacing ke traktus biliaris/pankreas.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

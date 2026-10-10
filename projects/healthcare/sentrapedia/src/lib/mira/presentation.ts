@@ -4,6 +4,20 @@ import { oracleSource, oracleDiseases, type Disease } from "../oracle";
 import { newId, type Message } from "../workspace";
 import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
+import { validOracleGrounding } from "../oracle-grounding-types";
+
+export function oracleCitations(grounding: unknown): string {
+  if (!validOracleGrounding(grounding)) return "";
+  return "\n\n---\n\n## Referensi Oracle II\n\nReferensi yang dipilih sebelum analisis:\n\n" + grounding.evidence.map(item => `- ${item.source.filename}, halaman PDF ${item.source.pdfPage} [${item.evidenceId}]\n  ${item.text}\n  Sumber: ${item.source.driveUrl}`).join("\n\n");
+}
+
+export function oracleSourceLinks(message: Pick<Message, "sourceText">) {
+  try {
+    const source: unknown = JSON.parse(message.sourceText ?? "null");
+    if (!source || typeof source !== "object" || !("grounding" in source) || !validOracleGrounding(source.grounding)) return [];
+    return source.grounding.evidence.map(item => ({ id: item.evidenceId, label: `${item.source.filename}, halaman PDF ${item.source.pdfPage}`, url: item.source.driveUrl }));
+  } catch { return []; }
+}
 
 export function hasMiraSource(message: Pick<Message, "sourceText">): boolean {
   if (!message.sourceText) return false;
@@ -16,13 +30,14 @@ export function hasMiraSource(message: Pick<Message, "sourceText">): boolean {
 // The clinician sees the case as entered, with trace and time; engine metadata stays in the stored source.
 export function sourceForDisplay(message: Pick<Message, "sourceText">): string | undefined {
   if (!hasMiraSource(message)) return message.sourceText;
-  const source = JSON.parse(message.sourceText!) as { case?: unknown; traceId?: unknown; createdAt?: unknown };
-  return JSON.stringify({ case: source.case, traceId: source.traceId, createdAt: source.createdAt }, null, 2);
+  const source = JSON.parse(message.sourceText!) as { case?: unknown; traceId?: unknown; createdAt?: unknown; grounding?: unknown };
+  return JSON.stringify({ case: source.case, traceId: source.traceId, createdAt: source.createdAt, ...(validOracleGrounding(source.grounding) ? { grounding: source.grounding } : {}) }, null, 2);
 }
 
-export type MiraFocus = "workup" | "refer";
+export type MiraFocus = "workup" | "refer" | "icd10";
 export const referralSectionTitle = "Draft Rujukan";
-export function miraFocus(mode: ModeId): MiraFocus | undefined { return mode === "workup" || mode === "refer" ? mode : undefined; }
+export const icd10SectionTitle = "Kode ICD-10";
+export function miraFocus(mode: ModeId): MiraFocus | undefined { return mode === "workup" || mode === "refer" || mode === "icd10" ? mode : undefined; }
 
 export const diagnosisSectionTitles = ["Ringkasan Gejala", "Differential Diagnosis", "Diagnosis", "Penunjang", "Terapi Farmakologi", "Edukasi"];
 // Field labels inside the sections, rendered as small headings by the clinical document view.
@@ -82,6 +97,8 @@ export function miraDraft(result: MiraResult, traceId: string, createdAt: string
     field("Pemeriksaan yang disarankan", tests),
     narrative(primary, [["Segera kembali atau dirujuk bila", "rujukan"]]),
   ])];
+  const codes = (key: keyof MiraResult["differential"]) => points(result.differential[key].map(d => `${d.icd10} — ${d.label}`));
+  const coding: [string, string] = [icd10SectionTitle, join([field("Diagnosis kerja", codes("likely")), field("Alternatif", codes("alternatives")), field("Jangan terlewat", codes("cannotMiss"))]) || "Belum ada kode diagnosis dari data yang ada."];
 
   const parts: [string, string][] = [
     ["Ringkasan Gejala", join([
@@ -122,7 +139,7 @@ export function miraDraft(result: MiraResult, traceId: string, createdAt: string
       field("Jejak analisis", `Trace: ${traceId}\nWaktu: ${createdAt}\nBiaya (USD): ${result.meta.costUsd ?? "-"}`),
     ])],
   ];
-  return ["# Analisis kasus", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), (focus === "workup" ? [parts[3], ...parts.filter((_, i) => i !== 3)] : focus === "refer" ? [referral, ...parts] : parts).map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
+  return ["# Analisis kasus", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), (focus === "workup" ? [parts[3], ...parts.filter((_, i) => i !== 3)] : focus === "refer" ? [referral, ...parts] : focus === "icd10" ? [coding, ...parts] : parts).map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
 }
 
 export function diagnosisContent(message: Pick<Message, "content" | "originalContent" | "sourceText"> & Partial<Pick<Message, "mode">>): string {
@@ -131,11 +148,11 @@ export function diagnosisContent(message: Pick<Message, "content" | "originalCon
   try {
     const source: unknown = JSON.parse(message.sourceText!);
     if (!source || typeof source !== "object" || !("case" in source) || !("result" in source) || !("traceId" in source) || !("createdAt" in source) || !validCase(source.case) || !validResult(source.result) || typeof source.traceId !== "string" || typeof source.createdAt !== "string") return message.content;
-    return miraDraft(source.result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined);
+    return miraDraft(source.result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined) + oracleCitations("grounding" in source ? source.grounding : undefined);
   } catch { return message.content; }
 }
 
 export function miraMessage(analysis: MiraAnalysis, reviewDefaults?: ReviewItem[], mode: ModeId = "ddx"): Message {
-  const content = miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case, miraFocus(mode));
+  const content = miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case, miraFocus(mode)) + oracleCitations(analysis.grounding);
   return { id: newId(), role: "assistant", mode, content, originalContent: content, createdAt: analysis.createdAt, reviewStatus: "draft", reviewItems: freshReview(reviewDefaults), sourceText: JSON.stringify({ kind: "MIRA", contractVersion: "1", ...analysis, oracleSource, review: "belum ditinjau" }, null, 2) };
 }

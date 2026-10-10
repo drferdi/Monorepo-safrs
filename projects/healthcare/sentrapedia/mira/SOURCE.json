@@ -1,0 +1,267 @@
+{
+  "source": "MIRA local approved service",
+  "upstreamCommit": "1d19bb8a31ef10394d8cd759c86ee6073a628cc2",
+  "includesUncommittedApprovedGrounding": true,
+  "license": "MIT",
+  "files": [
+    {
+      "source": "assist/common/data_policy.py",
+      "path": "common/data_policy.py",
+      "sourceSha256": "e64b8c7ce7027cb83663ec0fa576481dc1f82d181bb42539fba98026dc1820f1",
+      "packagedSha256": "e64b8c7ce7027cb83663ec0fa576481dc1f82d181bb42539fba98026dc1820f1"
+    },
+    {
+      "source": "assist/common/guard.py",
+      "path": "common/guard.py",
+      "sourceSha256": "8c4828f2ed3ca710c4ce11ca802f3ccab5b8779f9e16328ebde5933904d6f083",
+      "packagedSha256": "8c4828f2ed3ca710c4ce11ca802f3ccab5b8779f9e16328ebde5933904d6f083"
+    },
+    {
+      "source": "assist/common/providers.py",
+      "path": "common/providers.py",
+      "sourceSha256": "fea5216d6d3617e4c4171995ede7f8c990761d502751c05bd67c85fe9444fa10",
+      "packagedSha256": "fea5216d6d3617e4c4171995ede7f8c990761d502751c05bd67c85fe9444fa10"
+    },
+    {
+      "source": "assist/common/__init__.py",
+      "path": "common/__init__.py",
+      "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packagedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "assist/service/A1_CANDIDATES_NOTES.md",
+      "path": "service/A1_CANDIDATES_NOTES.md",
+      "sourceSha256": "ee77594d8db1c8f899d5247d158a9b0be2c8aa127c3e908100bb001726b224a3",
+      "packagedSha256": "ee77594d8db1c8f899d5247d158a9b0be2c8aa127c3e908100bb001726b224a3"
+    },
+    {
+      "source": "assist/service/app.py",
+      "path": "service/app.py",
+      "sourceSha256": "991e42b7f922a2cbe269c72424827aa6f8c09415eeac3e29922b1b8a18d0f172",
+      "packagedSha256": "991e42b7f922a2cbe269c72424827aa6f8c09415eeac3e29922b1b8a18d0f172"
+    },
+    {
+      "source": "assist/service/audit.py",
+      "path": "service/audit.py",
+      "sourceSha256": "420d091968e35f3e0d4dd01201cd83b24d493f9facff683afe1931080455f14f",
+      "packagedSha256": "420d091968e35f3e0d4dd01201cd83b24d493f9facff683afe1931080455f14f"
+    },
+    {
+      "source": "assist/service/auth.py",
+      "path": "service/auth.py",
+      "sourceSha256": "d8bb68d5994cca417f487f7284c325f23d93fbd5404285cf2d1bbafdcc345431",
+      "packagedSha256": "d8bb68d5994cca417f487f7284c325f23d93fbd5404285cf2d1bbafdcc345431"
+    },
+    {
+      "source": "assist/service/contract.py",
+      "path": "service/contract.py",
+      "sourceSha256": "6c90f860db8dbbfb7bbd13803c574ee618a3e057f8dc53c6ab0aaf8d79415289",
+      "packagedSha256": "6c90f860db8dbbfb7bbd13803c574ee618a3e057f8dc53c6ab0aaf8d79415289"
+    },
+    {
+      "source": "assist/service/DESIGN.md",
+      "path": "service/DESIGN.md",
+      "sourceSha256": "d4104074baa8dd5412a7bfe61e822e55a106340ec7a595bb2329252f1f9dbff6",
+      "packagedSha256": "d4104074baa8dd5412a7bfe61e822e55a106340ec7a595bb2329252f1f9dbff6"
+    },
+    {
+      "source": "assist/service/engine.py",
+      "path": "service/engine.py",
+      "sourceSha256": "dd1b854c8c068b13f8f398cde27b94ed9239ab910f592f3fc8f9390795dbe829",
+      "packagedSha256": "dd1b854c8c068b13f8f398cde27b94ed9239ab910f592f3fc8f9390795dbe829"
+    },
+    {
+      "source": "assist/service/HANDOFF_NOTES.md",
+      "path": "service/HANDOFF_NOTES.md",
+      "sourceSha256": "d498efa6dfc33c0607b9aa628816d8e87e91566dd513b8ce712c9ecedb362b15",
+      "packagedSha256": "d498efa6dfc33c0607b9aa628816d8e87e91566dd513b8ce712c9ecedb362b15"
+    },
+    {
+      "source": "assist/service/menu.py",
+      "path": "service/menu.py",
+      "sourceSha256": "affcdcab6b8f04f42bcd4c38f42b82e2ef5e72a0fa5e9ab655c74a0a581f9187",
+      "packagedSha256": "7668067eef12799b9d4b03d1ff4de943af6e732cc485b52ea947e0cc9c547f84"
+    },
+    {
+      "source": "assist/service/postchecks.py",
+      "path": "service/postchecks.py",
+      "sourceSha256": "e0f6781b8f41ce4d668a2cb053bddfa002f71445e7d6cf082358aa9a3056c100",
+      "packagedSha256": "e0f6781b8f41ce4d668a2cb053bddfa002f71445e7d6cf082358aa9a3056c100"
+    },
+    {
+      "source": "assist/service/privacy.py",
+      "path": "service/privacy.py",
+      "sourceSha256": "ca603fea4416ac68e526d83bc6a9c8d23622d4dee8010b1ecee8272ca94f5995",
+      "packagedSha256": "ca603fea4416ac68e526d83bc6a9c8d23622d4dee8010b1ecee8272ca94f5995"
+    },
+    {
+      "source": "assist/service/prompts.py",
+      "path": "service/prompts.py",
+      "sourceSha256": "15c1e5e6960279971439ce9c3e391e0c7e3609df8a20c02176d81ace872d7c9e",
+      "packagedSha256": "15c1e5e6960279971439ce9c3e391e0c7e3609df8a20c02176d81ace872d7c9e"
+    },
+    {
+      "source": "assist/service/README.md",
+      "path": "service/README.md",
+      "sourceSha256": "9044559c9dcd6e379c7c0f8a7c83ee8fd224611b5df31d93d345b15d70374147",
+      "packagedSha256": "9044559c9dcd6e379c7c0f8a7c83ee8fd224611b5df31d93d345b15d70374147"
+    },
+    {
+      "source": "assist/service/settings.py",
+      "path": "service/settings.py",
+      "sourceSha256": "d14ed5fe12a1a3bacc2fd8b5c7ecac61050019ad0928d9534fbc016a9a461a04",
+      "packagedSha256": "d14ed5fe12a1a3bacc2fd8b5c7ecac61050019ad0928d9534fbc016a9a461a04"
+    },
+    {
+      "source": "assist/service/sim_benchmark.py",
+      "path": "service/sim_benchmark.py",
+      "sourceSha256": "c2b180547d10a044a8cb1dbdd14b176f4bbd60d82727a0b9973e597045a908b8",
+      "packagedSha256": "c2b180547d10a044a8cb1dbdd14b176f4bbd60d82727a0b9973e597045a908b8"
+    },
+    {
+      "source": "assist/service/smoke_live.py",
+      "path": "service/smoke_live.py",
+      "sourceSha256": "3c5aa2aaa9b278e1b2e3f762b4cf16a6f34bc35d1c7a1d13dc3ac7acfaa8e467",
+      "packagedSha256": "3c5aa2aaa9b278e1b2e3f762b4cf16a6f34bc35d1c7a1d13dc3ac7acfaa8e467"
+    },
+    {
+      "source": "assist/service/__init__.py",
+      "path": "service/__init__.py",
+      "sourceSha256": "bc90004d3b8dff92971fd8b3cfc3219c0b2f95e523367db480220d0dd2764efe",
+      "packagedSha256": "861e01c9c63b71eeb336cf4a7f9e95662b9a28db0b372fad5269d7ed63ee44a1"
+    },
+    {
+      "source": "assist/service/contract/mira-step-request.schema.json",
+      "path": "service/contract/mira-step-request.schema.json",
+      "sourceSha256": "7e58f2f440ce682831ac97a7894246a717ec92a86865cc4b6fa8146ee887df01",
+      "packagedSha256": "7e58f2f440ce682831ac97a7894246a717ec92a86865cc4b6fa8146ee887df01"
+    },
+    {
+      "source": "assist/service/contract/mira-step-response.schema.json",
+      "path": "service/contract/mira-step-response.schema.json",
+      "sourceSha256": "b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171",
+      "packagedSha256": "b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171"
+    },
+    {
+      "source": "assist/service/contract/SOURCE.md",
+      "path": "service/contract/SOURCE.md",
+      "sourceSha256": "7ebeb4bc4648635136fbb61893cbce6fb987d16f434a6d1385a733dc5d637932",
+      "packagedSha256": "7ebeb4bc4648635136fbb61893cbce6fb987d16f434a6d1385a733dc5d637932"
+    },
+    {
+      "source": "assist/service/data/icd10.json",
+      "path": "service/data/icd10.json",
+      "sourceSha256": "d2a3f5b0e3104ae5d6fe65179adf8f647d77e4cc85cddcb55f76cd06f1f78b10",
+      "packagedSha256": "d2a3f5b0e3104ae5d6fe65179adf8f647d77e4cc85cddcb55f76cd06f1f78b10"
+    },
+    {
+      "source": "assist/service/data/SOURCE.md",
+      "path": "service/data/SOURCE.md",
+      "sourceSha256": "c0a3e3b124961eca6aef909e19c8cdd3ec623dfff7eb3367002fe678f11966bf",
+      "packagedSha256": "c0a3e3b124961eca6aef909e19c8cdd3ec623dfff7eb3367002fe678f11966bf"
+    },
+    {
+      "source": "assist/service/rules/sex_icd_ranges.json",
+      "path": "service/rules/sex_icd_ranges.json",
+      "sourceSha256": "bbbc3bfa1735a4ab3a9af0577046ab3da0a47f7e82f8c0afe6c0e6fc2585a29b",
+      "packagedSha256": "bbbc3bfa1735a4ab3a9af0577046ab3da0a47f7e82f8c0afe6c0e6fc2585a29b"
+    },
+    {
+      "source": "assist/service/tests/conftest.py",
+      "path": "service/tests/conftest.py",
+      "sourceSha256": "55a71bf9c49832f2b9257c2e59f92aa5d291a0a1e5c9f2432a99e1ba04b1001a",
+      "packagedSha256": "55a71bf9c49832f2b9257c2e59f92aa5d291a0a1e5c9f2432a99e1ba04b1001a"
+    },
+    {
+      "source": "assist/service/tests/test_components.py",
+      "path": "service/tests/test_components.py",
+      "sourceSha256": "3a87b04111ff8e9ccca3e4c1ae9f15796c617d20fc6d36432442b7fc49644006",
+      "packagedSha256": "3a350c5fe1489520efd29884a2cabee7c5d5c548673f929cbb8a4b8be6cc3ffd"
+    },
+    {
+      "source": "assist/service/tests/test_cors.py",
+      "path": "service/tests/test_cors.py",
+      "sourceSha256": "ebe0815c757ba5b5787b3e9ee0251a72ecae947d5c9280ad8acd2e47c8ecbfed",
+      "packagedSha256": "ebe0815c757ba5b5787b3e9ee0251a72ecae947d5c9280ad8acd2e47c8ecbfed"
+    },
+    {
+      "source": "assist/service/tests/test_data_policy.py",
+      "path": "service/tests/test_data_policy.py",
+      "sourceSha256": "5880ef0c320b7e5ecc0bf869a5cc20cf379afaddb6fe0b6c8cbb239e415b7e49",
+      "packagedSha256": "bf5343c30430a5ee3f387e4b085e102ee1fd131ce66ac334e0069f6a451b8bf6"
+    },
+    {
+      "source": "assist/service/tests/test_providers.py",
+      "path": "service/tests/test_providers.py",
+      "sourceSha256": "56dff93f9ec1eff9e71a76dc3fa34d39413980eedc491ab9ba1ab67d6d565276",
+      "packagedSha256": "56dff93f9ec1eff9e71a76dc3fa34d39413980eedc491ab9ba1ab67d6d565276"
+    },
+    {
+      "source": "assist/service/tests/test_step_api.py",
+      "path": "service/tests/test_step_api.py",
+      "sourceSha256": "f099ac554aa196548f4dce77f9d695d88a081e16038eb7d96132e7a430064f2f",
+      "packagedSha256": "f099ac554aa196548f4dce77f9d695d88a081e16038eb7d96132e7a430064f2f"
+    },
+    {
+      "source": "assist/service/tests/__init__.py",
+      "path": "service/tests/__init__.py",
+      "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "packagedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "assist/service/contract/examples/mira-step-request.example.json",
+      "path": "service/contract/examples/mira-step-request.example.json",
+      "sourceSha256": "b5be590734e7cbb01be30abef776d17bf791c27b60b826849a05987e31826ba3",
+      "packagedSha256": "b5be590734e7cbb01be30abef776d17bf791c27b60b826849a05987e31826ba3"
+    },
+    {
+      "source": "assist/service/contract/examples/mira-step-response.example.json",
+      "path": "service/contract/examples/mira-step-response.example.json",
+      "sourceSha256": "787d11fbcb737faac6ddcdbb9b1bea5709b887b50bf882b73b93ad063511fadd",
+      "packagedSha256": "787d11fbcb737faac6ddcdbb9b1bea5709b887b50bf882b73b93ad063511fadd"
+    },
+    {
+      "source": "LICENSE",
+      "path": "LICENSE",
+      "sourceSha256": "e403e322eb3ad6044ae966831fab86281c5ceb35ad0ccf2414f7ad279d903f64",
+      "packagedSha256": "e403e322eb3ad6044ae966831fab86281c5ceb35ad0ccf2414f7ad279d903f64"
+    },
+    {
+      "source": "src/runs/run.py",
+      "path": "provenance/run.py.txt",
+      "sourceSha256": "650743f09937539f2e8a9a715afaf9b760b9bb51b5eea7e07d7b6099f6464285",
+      "packagedSha256": "650743f09937539f2e8a9a715afaf9b760b9bb51b5eea7e07d7b6099f6464285"
+    },
+    {
+      "source": "assist/run_one_case.py",
+      "path": "provenance/run_one_case.py.txt",
+      "sourceSha256": "a42e5274c474c7d70a37a32e4c11a5a8b153fd4072139d5a0a0c19de1f957509",
+      "packagedSha256": "a42e5274c474c7d70a37a32e4c11a5a8b153fd4072139d5a0a0c19de1f957509"
+    },
+    {
+      "source": "src/routines.py",
+      "path": "routines.py",
+      "sourceSha256": "3f3f4faa27dc828119065c54c87c2c6a32d969e407c46a90c785580891a255b0",
+      "packagedSha256": "bd2a335eab99a8f6f3059f568eeb6438a3cd1cd8db91472f87e995e833aed587"
+    },
+    {
+      "source": "src/config.py",
+      "path": "config.py",
+      "sourceSha256": "53bc81b309028c18b25224e749ba8fceb622e8d7f9ff16c346168e2bd7221b6e",
+      "packagedSha256": "ec6f003b43f64adba3f052fa8435e9b2dfc5e206bd02a38626539007db83c8be"
+    },
+    {
+      "source": "assist/cases/synthetic_appendicitis_001.json",
+      "path": "cases/synthetic_appendicitis_001.json",
+      "sourceSha256": "bf14c0c6cbf8a31aaf94b1110897ce5a9fe8ec1e3437b120126110e94f8cc548",
+      "packagedSha256": "bf14c0c6cbf8a31aaf94b1110897ce5a9fe8ec1e3437b120126110e94f8cc548"
+    }
+  ],
+  "planningMenuSha256": "034e950c275ecce072cacb9e38977211a4ded1a3e9fecbbb1e9df405dfc9cd57",
+  "routinePromptSha256": "0f4553633307194a51245c5c946e56e54dde4d50a6ae1f21b4dab87cf64ebb96",
+  "snapshotHashes": {
+    "planning-tools.json": "f1bedd3aae146a2a28d9e6c0f586880974beec3436ed39f9dff8cbd37bd21f63",
+    "routines.py": "bd2a335eab99a8f6f3059f568eeb6438a3cd1cd8db91472f87e995e833aed587",
+    "config.py": "ec6f003b43f64adba3f052fa8435e9b2dfc5e206bd02a38626539007db83c8be"
+  }
+}

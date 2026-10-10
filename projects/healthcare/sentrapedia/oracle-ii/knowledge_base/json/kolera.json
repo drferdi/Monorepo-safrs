@@ -1,0 +1,43 @@
+{
+  "id": 297,
+  "nama": "Kolera",
+  "slug": "kolera",
+  "kode_icd": "A00.9",
+  "kategori": "Penyakit Infeksi",
+  "definisi": "Kolera adalah penyakit diare sekretorik akut dan berpotensi fatal yang disebabkan oleh infeksi bakteri Vibrio cholerae serogrup O1 atau O139 yang menghasilkan enterotoksin kolera, memicu sekresi masif air dan elektrolit ke lumen usus.",
+  "gejala": [
+    "Diare cair masif tanpa rasa mulas mendadak",
+    "Tinja khas berwarna keruh keputihan seperti air cucian beras (rice water stool)",
+    "Muntah menyusul diare tanpa didahului mual hebat",
+    "Kram otot ekstremitas akibat hipokalemia/hipokalsemia",
+    "Dehidrasi berat berlangsung sangat cepat (mata sangat cekung, turgor kulit hilang, suara parau/vox cholerica, anuria, syok hipovolemik)"
+  ],
+  "diagnosis": "Kecurigaan klinis pada diare cair profus seperti air cucian beras di daerah endemis atau KLB. Pemeriksaan mikroskopis lapang gelap tinja memperlihatkan kuman batang koma dengan motilitas melesat cepat (darting motility). Baku emas: kultur tinja pada media agar TCBS (Thiosulfate Citrate Bile Salts Sucrose).",
+  "terapi": "1. Resusitasi Cairan Darurat (Penyelamat Jiwa):\n   - Dehidrasi berat: Cairan kristaloid IV Ringer Laktat 100 mL/kgBB segera (30 mL/kg dalam 30 menit pertama, dilanjutkan 70 mL/kg dalam 2.5 jam berikutnya).\n   - Lanjutkan rehidrasi oralit segera setelah pasien mampu minum.\n2. Antibiotik (Memperpendek durasi diare dan ekskresi kuman):\n   - Doksisiklin dosis tunggal 300 mg oral (dewasa).\n   - Siprofloksasin 1 gram oral dosis tunggal atau Azitromisin 1 gram oral dosis tunggal (alternatif lini pertama untuk anak dan wanita hamil).\n3. Pelaporan surveilans epidemiologi KLB dalam waktu < 24 jam.",
+  "rujukan": "Rujuk ke RS rujukan KLB bila pasien mengalami syok hipovolemik refrakter cairan, komplikasi asidosis metabolik berat, gagal ginjal akut, atau hipoglikemia berat pada anak.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

@@ -1,0 +1,43 @@
+{
+  "id": 320,
+  "nama": "Konjungtivitis Bakteri dan Viral",
+  "slug": "konjungtivitis-bakteri-dan-viral",
+  "kode_icd": "H10.9",
+  "kategori": "Penyakit Mata",
+  "definisi": "Konjungtivitis adalah peradangan selaput lendir konjungtiva bulbi dan palpebra yang disebabkan oleh infeksi bakteri (Staphylococcus, Streptococcus) atau virus (Adenovirus), ditandai dengan hiperemia konjungtiva dan sekret mata.",
+  "gejala": [
+    "Mata merah (injeksi konjungtiva)",
+    "Rasa mengganjal seperti berpasir",
+    "Sekret mukopurulen/purulen lengket kelopak mata menempel saat bangun tidur (khas bakteri)",
+    "Sekret serosa/berair dengan pembengkakan kelenjar getah bening preaurikular (khas virus)",
+    "Tidak ada penurunan tajam penglihatan (visus normal)"
+  ],
+  "diagnosis": "Ditegakkan dari pemeriksaan mata luar: visus normal, injeksi konjungtival (pembuluh darah perifer konjungtiva melebar berkelok dan memucat ke arah limbus), sekret purulen atau serosa, kornea jernih, pupil reaktif.",
+  "terapi": "1. Konjungtivitis Bakteri:\n   - Kloramfenikol tetes mata 0.5-1% 1 tetes setiap 2-4 jam atau salep mata kloramfenikol 1% sebelum tidur selama 5-7 hari.\n   - Alternatif: Tobramisin 0.3% atau Asam Fusidat tetes mata.\n2. Konjungtivitis Viral:\n   - Terapi suportif (swasirna dalam 7-14 hari): kompres dingin, air mata buatan (artificial tears) tetes mata 4-6 kali sehari.\n3. Menjaga higienitas: tidak menyentuh/mengucek mata, cuci tangan, menggunakan handuk terpisah.",
+  "rujukan": "Rujuk ke Spesialis Mata (Sp.M) bila visus menurun, ada fotofobia berat, kecurigaan ulkus kornea, sekret purulen hiperakut masif (curiga konjungtivitis gonore neonatal/dewasa yang membutuhkan terapi seftriakson sistemik), atau tidak membaik dalam 1 minggu.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

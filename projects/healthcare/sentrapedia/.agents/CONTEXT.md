@@ -1,5 +1,11 @@
 # Sentrapedia context
 
+- Current runtime (2026-10-10): MIRA is bundled under `mira/`; npm ci installs
+  the capsule-local Python environment; dev/start supervise MIRA + Next together.
+  No external MiraRoot or manual service setup. Node24+, Python3.11+, provider key.
+  Older optional/external-service descriptions below are SUPERSEDED. See
+  `docs/mira-integration.md` and latest HANDOFF for verification status.
+
 - Purpose: Sentrapedia clinical workspace with Indonesian UI and browser-local workflows in a standalone Next.js capsule.
 - Stack: Next.js 16.4.0 / React 19.3.0 / TypeScript / Lucide / Vitest.
 - UI: three-column Clinical Cockpit with collapsible navigation, rounded document canvas, and context/Timeline panel above 1200px; smaller screens use a panel dialog. Compact left-aligned home layout with four intent tabs above a reactive 180ms headline; four intent groups expose all 14 templates; slash picker, Focus Mode, and Command Center (Ctrl/Cmd+J) support navigation. Tosca (#40E0D0), Arial/Helvetica, wordmark shadow are preserved; the promotional panel has been removed at Gaffer's request. Responsive navigation drawer at 760px and below.

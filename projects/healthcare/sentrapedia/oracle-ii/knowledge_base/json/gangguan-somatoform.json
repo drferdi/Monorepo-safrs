@@ -1,0 +1,42 @@
+{
+  "id": 339,
+  "nama": "Gangguan Somatoform",
+  "slug": "gangguan-somatoform",
+  "kode_icd": "F45.9",
+  "kategori": "Penyakit Jiwa",
+  "definisi": "Gangguan somatoform adalah kelompok gangguan psikiatrik di mana pasien mengeluhkan keluhan fisik somatik berulang (seperti nyeri dada, sesak, kembung, kesemutan) yang menimbulkan distres berat, namun tidak ditemukan kelainan organik atau patologi medis yang mendasari setelah investigasi menyeluruh.",
+  "gejala": [
+    "Keluhan fisik multipel yang berpindah-pindah (nyeri kepala, dada, perut, persendian)",
+    "Pencarian konfirmasi medis berulang ke berbagai dokter (doctor shopping)",
+    "Kekhawatiran persisten bahwa dirinya menderita penyakit fisik berbahaya",
+    "Penolakan terhadap penjelasan dokter bahwa hasil pemeriksaan penunjang normal"
+  ],
+  "diagnosis": "Ditegakkan berdasarkan kriteria PPDGJ-III: adanya keluhan fisik multipel minimal 2 tahun yang tidak dapat dijelaskan secara medis, penolakan persisten terhadap bukti medis negatif, dan hendaya fungsi psikososial.",
+  "terapi": "1. Pendekatan Dokter-Pasien (Kunci Keberhasilan):\n   - Validasi penderitaan pasien (jangan mengatakan 'ini hanya ada di pikiran Anda').\n   - Jadwalkan kunjungan kontrol teratur dengan satu dokter tetap di FKTP (menghindari doctor shopping).\n   - Alihkan fokus dari keluhan fisik ke stresor emosional psikososial.\n2. Psikoterapi: CBT dan teknik relaksasi.\n3. Farmakologis: SSRI dosis rendah (Sertralin 25-50 mg/hari oral) bila disertai gejala kecemasan atau depresi penyerta. Hindari analgesik narkotik atau polifarmasi somatik.",
+  "rujukan": "Rujuk ke Spesialis Kedokteran Jiwa (Sp.KJ) bila kecemasan hipokondriakal sangat parah tidak terkendali, distres fungsi berat, atau timbul depresi berat sekunder dengan ide bunuh diri.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

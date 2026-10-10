@@ -1,0 +1,43 @@
+{
+  "id": 325,
+  "nama": "Mata Kering (Dry Eye Syndrome)",
+  "slug": "mata-kering-dry-eye-syndrome",
+  "kode_icd": "H04.1",
+  "kategori": "Penyakit Mata",
+  "definisi": "Dry eye syndrome (keratokonjungtivitis sika) adalah penyakit multifaktorial permukaan bola mata yang ditandai dengan hilangnya homeostasis lapisan air mata (tear film), disertai hiperosmolaritas, inflamasi, dan kerusakan epitel permukaan okular.",
+  "gejala": [
+    "Mata terasa kering, berpasir, dan perih terbakar",
+    "Mata merah intermiten",
+    "Sensasi ada benda asing di mata",
+    "Penglihatan buram fluktuatif yang membaik setelah berkedip",
+    "Paradoxical tearing (mata berair berlebihan akibat refleks iritasi)"
+  ],
+  "diagnosis": "Pemeriksaan klinis FKTP: Tear Break-Up Time (TBUT) dengan fluoresin < 10 detik menunjukkan instabilitas air mata, Tes Schirmer I tanpa anestesi < 5-10 mm dalam 5 menit menunjukkan defisiensi produksi air mata.",
+  "terapi": "1. Modifikasi lingkungan: Istirahatkan mata secara berkala (aturan 20-20-20 saat menatap layar komputer), hindari paparan langsung angin AC/kipas angin, gunakan kacamata pelindung.\n2. Farmakologis:\n   - Tetes mata air mata buatan (artificial tears) bebas pengawet (Carboxymethylcellulose 0.5% atau Sodium Hyaluronate 0.1%) 4-6 kali sehari atau lebih sering prn.\n   - Gel mata pelumas sebelum tidur untuk retensi air mata malam hari.\n   - Suplemen asam lemak omega-3 oral.",
+  "rujukan": "Rujuk ke Spesialis Mata bila gejala berat tidak membaik dengan air mata buatan, timbul defek epitel kornea/keratitis pungtata masif, atau dicurigai penyakit autoimun sistemik (Sjogren syndrome, Rheumatoid arthritis).",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

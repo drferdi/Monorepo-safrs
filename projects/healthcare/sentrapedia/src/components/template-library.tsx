@@ -1,25 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Star } from "lucide-react";
-import { modes } from "../lib/drafts";
+import { modes, type ModeId } from "../lib/drafts";
+import { clinicalTemplates, modeCategories, templateText } from "../lib/clinical-templates";
 import { newId, type Workspace, type WorkspaceAction } from "../lib/workspace";
 import { defaultReviewItems, freshReview, validTemplate, type PersonalTemplate } from "../lib/workflow";
 import { Dialog } from "./dialog";
 
-export function TemplateLibrary({ state, dispatch, onChoose, onClose }: { state: Workspace; dispatch: (action: WorkspaceAction) => void; onChoose: (key: string) => void; onClose: () => void }) {
+export function TemplateLibrary({ state, dispatch, onChoose, onInsert, onClose }: { state: Workspace; dispatch: (action: WorkspaceAction) => void; onChoose: (key: string) => void; onInsert: (mode: ModeId, text: string) => void; onClose: () => void }) {
   const [tab, setTab] = useState("personal");
+  const [builtin, setBuiltin] = useState<ModeId>(clinicalTemplates[0].mode);
+  // On a phone the preview sits under the list, so a pick brings it into view.
+  const preview = useRef<HTMLDivElement>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const templates = state.templates ?? [];
   const template = templates.find((item) => item.id === selected);
   const star = (key: string, name: string) => <button className="icon-button" aria-label={`Favorit ${name}`} aria-pressed={state.favorites?.includes(key) ?? false} onClick={() => dispatch({ type: "favorite.toggle", key })}><Star size={16} fill={state.favorites?.includes(key) ? "currentColor" : "none"}/></button>;
-  return <Dialog title="Templat dan favorit" subtitle="Struktur pribadi untuk draf lokal. Pilihan templat menjaga isi kolom input." wide onClose={onClose}>
+  return <Dialog title="Templat dan favorit" subtitle="Templat klinis bawaan dan struktur pribadi. Pilihan templat menjaga isi kolom input." landscape onClose={onClose}>
     <div className="workflow-tabs" role="group" aria-label="Pengelola templat">{[["personal", "Pribadi"], ["builtin", "Bawaan"], ["review", "Checklist default"]].map(([id, label]) => <button key={id} aria-pressed={tab === id} onClick={() => setTab(id)}>{label}</button>)}</div>
-    {tab === "builtin" && <div className="template-list">{modes.map((item) => <div className="template-row" key={item.id}>{star(`mode:${item.id}`, item.label)}<button className="text-button" onClick={() => onChoose(`mode:${item.id}`)}>{item.label}</button></div>)}</div>}
-    {tab === "personal" && <div className="template-columns"><div className="template-list"><button className="button" onClick={() => { setSelected(null); setDeleting(false); }}>Templat baru</button><p className="panel-caption">{templates.length} / 50 templat</p>{templates.map((item) => <div className="template-row" key={item.id}>{star(`template:${item.id}`, item.name)}<button className="text-button" aria-pressed={selected === item.id} onClick={() => { setSelected(item.id); setDeleting(false); }}>{item.name}</button><button className="text-button" onClick={() => onChoose(`template:${item.id}`)}>Gunakan</button></div>)}</div><div><TemplateEditor key={selected ?? "new"} template={template} full={templates.length >= 50 && !template} onSave={(next) => { dispatch({ type: "template.save", template: next }); setSelected(next.id); }}/>{template && <div className="workflow-actions"><button className="button" disabled={templates.length >= 50} onClick={() => { const next = { ...template, id: newId(), name: `${template.name.slice(0, 70)} salinan` }; dispatch({ type: "template.save", template: next }); setSelected(next.id); }}>Gandakan</button><button className="button danger-ghost" onClick={() => setDeleting(true)}>Hapus templat</button></div>}{deleting && template && <div className="form-warning"><p>Hapus {template.name}? Dokumen yang sudah dibuat tetap tersimpan.</p><button className="button danger" onClick={() => { dispatch({ type: "template.delete", id: template.id }); setSelected(null); setDeleting(false); }}>Konfirmasi hapus templat</button><button className="button" onClick={() => setDeleting(false)}>Batal</button></div>}</div></div>}
+    {tab === "builtin" && <div className="template-columns"><div className="template-list">{modeCategories.map((category) => <div key={category.label}><p className="template-category">{category.label}</p>{category.modes.map((id) => { const item = modes.find((entry) => entry.id === id)!; return <div className="template-row" key={id}>{star(`mode:${id}`, item.label)}<button className="text-button" aria-pressed={builtin === id} onClick={() => { setBuiltin(id); requestAnimationFrame(() => preview.current?.scrollIntoView({ block: "nearest" })); }}>{item.label}</button><button className="text-button template-use" onClick={() => onChoose(`mode:${id}`)}>Gunakan</button></div>; })}</div>)}</div><div ref={preview}><BuiltinPreview key={builtin} mode={builtin} onInsert={onInsert}/></div></div>}
+    {tab === "personal" && <div className="template-columns"><div className="template-list"><button className="button" onClick={() => { setSelected(null); setDeleting(false); }}>Templat baru</button><p className="panel-caption">{templates.length} / 50 templat</p>{templates.map((item) => <div className="template-row" key={item.id}>{star(`template:${item.id}`, item.name)}<button className="text-button" aria-pressed={selected === item.id} onClick={() => { setSelected(item.id); setDeleting(false); }}>{item.name}</button><button className="text-button template-use" onClick={() => onChoose(`template:${item.id}`)}>Gunakan</button></div>)}</div><div><TemplateEditor key={selected ?? "new"} template={template} full={templates.length >= 50 && !template} onSave={(next) => { dispatch({ type: "template.save", template: next }); setSelected(next.id); }}/>{template && <div className="workflow-actions"><button className="button" disabled={templates.length >= 50} onClick={() => { const next = { ...template, id: newId(), name: `${template.name.slice(0, 70)} salinan` }; dispatch({ type: "template.save", template: next }); setSelected(next.id); }}>Gandakan</button><button className="button danger-ghost" onClick={() => setDeleting(true)}>Hapus templat</button></div>}{deleting && template && <div className="form-warning"><p>Hapus {template.name}? Dokumen yang sudah dibuat tetap tersimpan.</p><button className="button danger" onClick={() => { dispatch({ type: "template.delete", id: template.id }); setSelected(null); setDeleting(false); }}>Konfirmasi hapus templat</button><button className="button" onClick={() => setDeleting(false)}>Batal</button></div>}</div></div>}
     {tab === "review" && <ReviewDefaults items={state.reviewDefaults ?? defaultReviewItems} onSave={(items) => dispatch({ type: "review.defaults", items })}/>}
   </Dialog>;
+}
+
+// A pack template is previewed before anything changes; inserting appends it to the composer and keeps what is typed.
+function BuiltinPreview({ mode, onInsert }: { mode: ModeId; onInsert: (mode: ModeId, text: string) => void }) {
+  const template = clinicalTemplates.find((item) => item.mode === mode)!;
+  const text = templateText(template);
+  return <div className="template-preview"><h3>{template.name}</h3><p className="panel-caption">{template.category}</p><pre>{text}</pre><p className="panel-caption">Kaidah verifikasi: {template.rule}</p><div className="workflow-actions"><button className="button primary" onClick={() => onInsert(mode, text)}>Sisipkan ke input</button></div></div>;
 }
 
 function TemplateEditor({ template, full, onSave }: { template?: PersonalTemplate; full: boolean; onSave: (template: PersonalTemplate) => void }) {

@@ -1,0 +1,42 @@
+{
+  "id": 329,
+  "nama": "Trikiasis",
+  "slug": "trikiasis",
+  "kode_icd": "H02.0",
+  "kategori": "Penyakit Mata",
+  "definisi": "Trikiasis adalah posisi bulu mata (silia) yang tumbuh melengkung ke arah dalam bola mata sehingga menggesek kornea dan konjungtiva bulbi, sering disebabkan oleh sikatriks tepi kelopak pasca-trakoma, blefaritis kronik, trauma, atau luka bakar.",
+  "gejala": [
+    "Mata terasa mengganjal dan perih terus-menerus",
+    "Mata merah dan berair",
+    "Fotofobia (silau)",
+    "Sensasi benda asing setiap kali berkedip"
+  ],
+  "diagnosis": "Pemeriksaan senter/loupe: terlihat satu atau lebih helai bulu mata yang mengarah ke dalam dan menyentuh permukaan kornea atau konjungtiva bulbi. Tes fluoresin kornea sering memperlihatkan erosi kornea pungtata.",
+  "terapi": "1. Epilasi mekanik: Mencabut bulu mata yang malposisi menggunakan pinset silia steril (solusi sementara, silia akan tumbuh kembali dalam 4-6 minggu).\n2. Medikamentosa: Salep mata antibiotik (kloramfenikol 1%) dan air mata buatan untuk mencegah infeksi dan melumasi defek epitel kornea.",
+  "rujukan": "Rujuk ke Spesialis Mata untuk terapi permanen elektrolisis, krioterapi, ablasi radiofrekuensi folikel silia, atau koreksi bedah kelopak mata bila disertai entropion sikatriks.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

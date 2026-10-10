@@ -1,0 +1,43 @@
+{
+  "id": 316,
+  "nama": "Otitis Eksterna",
+  "slug": "otitis-eksterna",
+  "kode_icd": "H60.9",
+  "kategori": "Penyakit THT",
+  "definisi": "Otitis eksterna adalah peradangan atau infeksi pada liang telinga luar (meatus akustikus eksternus) yang dapat bersifat difus (swimmer's ear, sering disebabkan Pseudomonas aeruginosa atau Staphylococcus aureus) atau sirkumskripta (furunkel liang telinga).",
+  "gejala": [
+    "Nyeri telinga hebat (otalgia) yang bertambah saat daun telinga ditarik atau tragus ditekan (tragus sign positif)",
+    "Liang telinga bengkak dan merah",
+    "Keluar sekret telinga (otorea) serosa atau purulen berbau",
+    "Pendengaran menurun bila liang telinga tertutup edema/kotoran",
+    "Gatal hebat pada liang telinga"
+  ],
+  "diagnosis": "Ditegakkan dari nyeri tekan tragus atau tarikan aurikula yang khas. Otoskopi: liang telinga edema hiperemis difus atau furunkel fokal dengan sekret purulen, membran timpani intak (bila dapat divisualisasi).",
+  "terapi": "1. Toilet telinga (membersihkan liang telinga dari kotoran/sekret secara hati-hati).\n2. Farmakologis Topikal (Lini Utama):\n   - Tetes telinga kombinasi antibiotik dan steroid: Neomisin + Polimiksin B + Deksametason atau Ofloksasin tetes telinga 0.3% 3-4 tetes 2-3 kali sehari selama 7 hari.\n   - Jika liang telinga sangat bengkak, pasang tampon pita telinga (ear wick) yang dibasahi tetes antibiotik.\n3. Analgesik oral: Parasetamol 500 mg 3x/hari atau Ibuprofen 400 mg 3x/hari.\n4. Edukasi menjaga liang telinga tetap kering, tidak berenang dan tidak mengorek telinga.",
+  "rujukan": "Rujuk ke Spesialis THT-KL bila terjadi Otitis Eksterna Maligna (nekrotikans) pada pasien lansia/diabetes (nyeri hebat menjalar ke temporal, jaringan granulasi dasar liang telinga, kelumpuhan saraf fasialis) atau furunkel yang memerlukan insisi drainase.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

@@ -1,0 +1,406 @@
+{
+  "date": "2026-10-10",
+  "scope": "Integrated MIRA installation and managed lifecycle",
+  "extractedRoot": "C:\\Users\\drfer\\AppData\\Local\\Temp\\sentrapedia-integrated-mira-1791640528616",
+  "buildId": "hFR4P0kvcVmMAlxlhcH_k",
+  "gates": {
+    "freshInstall": "PASS/0",
+    "pythonDependencyCheck": "PASS/0",
+    "typecheck": "PASS/0",
+    "lint": "PASS/0",
+    "changedScriptLint": "PASS/0",
+    "appTests": {
+      "passed": 154
+    },
+    "systemTests": {
+      "passed": 7
+    },
+    "miraTests": {
+      "passed": 157,
+      "skipped": 1,
+      "warnings": 1
+    },
+    "build": "PASS/0",
+    "deployDryRun": "PASS/0",
+    "standaloneProductionPythonInstall": "PASS/0",
+    "designatedR2Review": "PASS"
+  },
+  "sourceParity": {
+    "files": 62,
+    "mismatches": 0,
+    "filesAndHashes": [
+      {
+        "path": "package.json",
+        "sha256": "d86d9f76640366d1c8bcacb44f04b0221c05ed92e6b544cd81f69eebcf38571a",
+        "extractedSha256": "d86d9f76640366d1c8bcacb44f04b0221c05ed92e6b544cd81f69eebcf38571a"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "d840ff28df06b2bc1a07325ac386473ea45c4581618bb4ff8372fd4dac0e118f",
+        "extractedSha256": "d840ff28df06b2bc1a07325ac386473ea45c4581618bb4ff8372fd4dac0e118f"
+      },
+      {
+        "path": "project.contract.json",
+        "sha256": "e9fe270fa31180d55913285e704d0216a894bcb43fc1f338a9426ca0ca640920",
+        "extractedSha256": "e9fe270fa31180d55913285e704d0216a894bcb43fc1f338a9426ca0ca640920"
+      },
+      {
+        "path": "capsule.json",
+        "sha256": "eef0c7aef00efff2a583acd0a47f98f73bd85d29dc0636544a62d803334bbf16",
+        "extractedSha256": "eef0c7aef00efff2a583acd0a47f98f73bd85d29dc0636544a62d803334bbf16"
+      },
+      {
+        "path": "Dockerfile",
+        "sha256": "4f8cc84d637efada95207b1d4c03c03893e756f183db00438762d436382abe62",
+        "extractedSha256": "4f8cc84d637efada95207b1d4c03c03893e756f183db00438762d436382abe62"
+      },
+      {
+        "path": ".gitignore",
+        "sha256": "0b3d100eaf5836472659a8297e0df7d0e128bd376ffa76f68b898a949a3ebea6",
+        "extractedSha256": "0b3d100eaf5836472659a8297e0df7d0e128bd376ffa76f68b898a949a3ebea6"
+      },
+      {
+        "path": "scripts/mira-runtime.mjs",
+        "sha256": "2e4bc32792d8b6d44be21473612185aa29c7d9884e454b2ac43c159ff36b7b62",
+        "extractedSha256": "2e4bc32792d8b6d44be21473612185aa29c7d9884e454b2ac43c159ff36b7b62"
+      },
+      {
+        "path": "scripts/install-mira.mjs",
+        "sha256": "e11bc5510d0e4876ead2ea5370406cddc4d1a75b25789fa1c863e75832f25054",
+        "extractedSha256": "e11bc5510d0e4876ead2ea5370406cddc4d1a75b25789fa1c863e75832f25054"
+      },
+      {
+        "path": "scripts/run-system.mjs",
+        "sha256": "fe38df2191e9af59ecd357b3b65630303853041a34c88737e347a9f43de32581",
+        "extractedSha256": "fe38df2191e9af59ecd357b3b65630303853041a34c88737e347a9f43de32581"
+      },
+      {
+        "path": "scripts/build-system.mjs",
+        "sha256": "f5ac636c58941140f83a3c9231ff1e682a86d5b890092a3f87451bb048273e5d",
+        "extractedSha256": "f5ac636c58941140f83a3c9231ff1e682a86d5b890092a3f87451bb048273e5d"
+      },
+      {
+        "path": "scripts/test-mira.mjs",
+        "sha256": "aa7cd1afb8e040195aa111d110a039d657e710c6b72e1f3bb31bc17cc2ef012e",
+        "extractedSha256": "aa7cd1afb8e040195aa111d110a039d657e710c6b72e1f3bb31bc17cc2ef012e"
+      },
+      {
+        "path": "scripts/deploy-dry-run.mjs",
+        "sha256": "37afa73733141acfad91712d3541cd4ad3a5e368ae73c9d51aaf2867c5eaab1e",
+        "extractedSha256": "37afa73733141acfad91712d3541cd4ad3a5e368ae73c9d51aaf2867c5eaab1e"
+      },
+      {
+        "path": "tests/system-runtime.node-test.mjs",
+        "sha256": "cacd73b00773b2fafec88556fc38b6d640a7da3396259427fe82f4ed084f754e",
+        "extractedSha256": "cacd73b00773b2fafec88556fc38b6d640a7da3396259427fe82f4ed084f754e"
+      },
+      {
+        "path": "mira/cases/synthetic_appendicitis_001.json",
+        "sha256": "bf14c0c6cbf8a31aaf94b1110897ce5a9fe8ec1e3437b120126110e94f8cc548",
+        "extractedSha256": "bf14c0c6cbf8a31aaf94b1110897ce5a9fe8ec1e3437b120126110e94f8cc548"
+      },
+      {
+        "path": "mira/common/data_policy.py",
+        "sha256": "e64b8c7ce7027cb83663ec0fa576481dc1f82d181bb42539fba98026dc1820f1",
+        "extractedSha256": "e64b8c7ce7027cb83663ec0fa576481dc1f82d181bb42539fba98026dc1820f1"
+      },
+      {
+        "path": "mira/common/guard.py",
+        "sha256": "8c4828f2ed3ca710c4ce11ca802f3ccab5b8779f9e16328ebde5933904d6f083",
+        "extractedSha256": "8c4828f2ed3ca710c4ce11ca802f3ccab5b8779f9e16328ebde5933904d6f083"
+      },
+      {
+        "path": "mira/common/providers.py",
+        "sha256": "fea5216d6d3617e4c4171995ede7f8c990761d502751c05bd67c85fe9444fa10",
+        "extractedSha256": "fea5216d6d3617e4c4171995ede7f8c990761d502751c05bd67c85fe9444fa10"
+      },
+      {
+        "path": "mira/common/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "extractedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "mira/config.py",
+        "sha256": "ec6f003b43f64adba3f052fa8435e9b2dfc5e206bd02a38626539007db83c8be",
+        "extractedSha256": "ec6f003b43f64adba3f052fa8435e9b2dfc5e206bd02a38626539007db83c8be"
+      },
+      {
+        "path": "mira/LICENSE",
+        "sha256": "e403e322eb3ad6044ae966831fab86281c5ceb35ad0ccf2414f7ad279d903f64",
+        "extractedSha256": "e403e322eb3ad6044ae966831fab86281c5ceb35ad0ccf2414f7ad279d903f64"
+      },
+      {
+        "path": "mira/managed_child.py",
+        "sha256": "8036ec964ad326c8cd08d6b606e668e01d3d12ddd8cf695c1267d690e8a4569b",
+        "extractedSha256": "8036ec964ad326c8cd08d6b606e668e01d3d12ddd8cf695c1267d690e8a4569b"
+      },
+      {
+        "path": "mira/planning-tools.json",
+        "sha256": "f1bedd3aae146a2a28d9e6c0f586880974beec3436ed39f9dff8cbd37bd21f63",
+        "extractedSha256": "f1bedd3aae146a2a28d9e6c0f586880974beec3436ed39f9dff8cbd37bd21f63"
+      },
+      {
+        "path": "mira/provenance/run.py.txt",
+        "sha256": "650743f09937539f2e8a9a715afaf9b760b9bb51b5eea7e07d7b6099f6464285",
+        "extractedSha256": "650743f09937539f2e8a9a715afaf9b760b9bb51b5eea7e07d7b6099f6464285"
+      },
+      {
+        "path": "mira/provenance/run_one_case.py.txt",
+        "sha256": "a42e5274c474c7d70a37a32e4c11a5a8b153fd4072139d5a0a0c19de1f957509",
+        "extractedSha256": "a42e5274c474c7d70a37a32e4c11a5a8b153fd4072139d5a0a0c19de1f957509"
+      },
+      {
+        "path": "mira/requirements-test.lock",
+        "sha256": "6d778c511be7a31189ecfde98c30113b7147effd82e03246599ca684032df67a",
+        "extractedSha256": "6d778c511be7a31189ecfde98c30113b7147effd82e03246599ca684032df67a"
+      },
+      {
+        "path": "mira/requirements.lock",
+        "sha256": "266cadbcdca6f05c6f19f4360ad855ae76524864d3fa3b55fcb70ced60d1ca11",
+        "extractedSha256": "266cadbcdca6f05c6f19f4360ad855ae76524864d3fa3b55fcb70ced60d1ca11"
+      },
+      {
+        "path": "mira/routines.py",
+        "sha256": "bd2a335eab99a8f6f3059f568eeb6438a3cd1cd8db91472f87e995e833aed587",
+        "extractedSha256": "bd2a335eab99a8f6f3059f568eeb6438a3cd1cd8db91472f87e995e833aed587"
+      },
+      {
+        "path": "mira/service/A1_CANDIDATES_NOTES.md",
+        "sha256": "ee77594d8db1c8f899d5247d158a9b0be2c8aa127c3e908100bb001726b224a3",
+        "extractedSha256": "ee77594d8db1c8f899d5247d158a9b0be2c8aa127c3e908100bb001726b224a3"
+      },
+      {
+        "path": "mira/service/app.py",
+        "sha256": "991e42b7f922a2cbe269c72424827aa6f8c09415eeac3e29922b1b8a18d0f172",
+        "extractedSha256": "991e42b7f922a2cbe269c72424827aa6f8c09415eeac3e29922b1b8a18d0f172"
+      },
+      {
+        "path": "mira/service/audit.py",
+        "sha256": "420d091968e35f3e0d4dd01201cd83b24d493f9facff683afe1931080455f14f",
+        "extractedSha256": "420d091968e35f3e0d4dd01201cd83b24d493f9facff683afe1931080455f14f"
+      },
+      {
+        "path": "mira/service/auth.py",
+        "sha256": "d8bb68d5994cca417f487f7284c325f23d93fbd5404285cf2d1bbafdcc345431",
+        "extractedSha256": "d8bb68d5994cca417f487f7284c325f23d93fbd5404285cf2d1bbafdcc345431"
+      },
+      {
+        "path": "mira/service/contract/examples/mira-step-request.example.json",
+        "sha256": "b5be590734e7cbb01be30abef776d17bf791c27b60b826849a05987e31826ba3",
+        "extractedSha256": "b5be590734e7cbb01be30abef776d17bf791c27b60b826849a05987e31826ba3"
+      },
+      {
+        "path": "mira/service/contract/examples/mira-step-response.example.json",
+        "sha256": "787d11fbcb737faac6ddcdbb9b1bea5709b887b50bf882b73b93ad063511fadd",
+        "extractedSha256": "787d11fbcb737faac6ddcdbb9b1bea5709b887b50bf882b73b93ad063511fadd"
+      },
+      {
+        "path": "mira/service/contract/mira-step-request.schema.json",
+        "sha256": "7e58f2f440ce682831ac97a7894246a717ec92a86865cc4b6fa8146ee887df01",
+        "extractedSha256": "7e58f2f440ce682831ac97a7894246a717ec92a86865cc4b6fa8146ee887df01"
+      },
+      {
+        "path": "mira/service/contract/mira-step-response.schema.json",
+        "sha256": "b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171",
+        "extractedSha256": "b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171"
+      },
+      {
+        "path": "mira/service/contract/SOURCE.md",
+        "sha256": "7ebeb4bc4648635136fbb61893cbce6fb987d16f434a6d1385a733dc5d637932",
+        "extractedSha256": "7ebeb4bc4648635136fbb61893cbce6fb987d16f434a6d1385a733dc5d637932"
+      },
+      {
+        "path": "mira/service/contract.py",
+        "sha256": "6c90f860db8dbbfb7bbd13803c574ee618a3e057f8dc53c6ab0aaf8d79415289",
+        "extractedSha256": "6c90f860db8dbbfb7bbd13803c574ee618a3e057f8dc53c6ab0aaf8d79415289"
+      },
+      {
+        "path": "mira/service/data/icd10.json",
+        "sha256": "d2a3f5b0e3104ae5d6fe65179adf8f647d77e4cc85cddcb55f76cd06f1f78b10",
+        "extractedSha256": "d2a3f5b0e3104ae5d6fe65179adf8f647d77e4cc85cddcb55f76cd06f1f78b10"
+      },
+      {
+        "path": "mira/service/data/SOURCE.md",
+        "sha256": "c0a3e3b124961eca6aef909e19c8cdd3ec623dfff7eb3367002fe678f11966bf",
+        "extractedSha256": "c0a3e3b124961eca6aef909e19c8cdd3ec623dfff7eb3367002fe678f11966bf"
+      },
+      {
+        "path": "mira/service/DESIGN.md",
+        "sha256": "d4104074baa8dd5412a7bfe61e822e55a106340ec7a595bb2329252f1f9dbff6",
+        "extractedSha256": "d4104074baa8dd5412a7bfe61e822e55a106340ec7a595bb2329252f1f9dbff6"
+      },
+      {
+        "path": "mira/service/engine.py",
+        "sha256": "dd1b854c8c068b13f8f398cde27b94ed9239ab910f592f3fc8f9390795dbe829",
+        "extractedSha256": "dd1b854c8c068b13f8f398cde27b94ed9239ab910f592f3fc8f9390795dbe829"
+      },
+      {
+        "path": "mira/service/HANDOFF_NOTES.md",
+        "sha256": "d498efa6dfc33c0607b9aa628816d8e87e91566dd513b8ce712c9ecedb362b15",
+        "extractedSha256": "d498efa6dfc33c0607b9aa628816d8e87e91566dd513b8ce712c9ecedb362b15"
+      },
+      {
+        "path": "mira/service/menu.py",
+        "sha256": "7668067eef12799b9d4b03d1ff4de943af6e732cc485b52ea947e0cc9c547f84",
+        "extractedSha256": "7668067eef12799b9d4b03d1ff4de943af6e732cc485b52ea947e0cc9c547f84"
+      },
+      {
+        "path": "mira/service/postchecks.py",
+        "sha256": "e0f6781b8f41ce4d668a2cb053bddfa002f71445e7d6cf082358aa9a3056c100",
+        "extractedSha256": "e0f6781b8f41ce4d668a2cb053bddfa002f71445e7d6cf082358aa9a3056c100"
+      },
+      {
+        "path": "mira/service/privacy.py",
+        "sha256": "ca603fea4416ac68e526d83bc6a9c8d23622d4dee8010b1ecee8272ca94f5995",
+        "extractedSha256": "ca603fea4416ac68e526d83bc6a9c8d23622d4dee8010b1ecee8272ca94f5995"
+      },
+      {
+        "path": "mira/service/prompts.py",
+        "sha256": "15c1e5e6960279971439ce9c3e391e0c7e3609df8a20c02176d81ace872d7c9e",
+        "extractedSha256": "15c1e5e6960279971439ce9c3e391e0c7e3609df8a20c02176d81ace872d7c9e"
+      },
+      {
+        "path": "mira/service/README.md",
+        "sha256": "9044559c9dcd6e379c7c0f8a7c83ee8fd224611b5df31d93d345b15d70374147",
+        "extractedSha256": "9044559c9dcd6e379c7c0f8a7c83ee8fd224611b5df31d93d345b15d70374147"
+      },
+      {
+        "path": "mira/service/rules/sex_icd_ranges.json",
+        "sha256": "bbbc3bfa1735a4ab3a9af0577046ab3da0a47f7e82f8c0afe6c0e6fc2585a29b",
+        "extractedSha256": "bbbc3bfa1735a4ab3a9af0577046ab3da0a47f7e82f8c0afe6c0e6fc2585a29b"
+      },
+      {
+        "path": "mira/service/settings.py",
+        "sha256": "d14ed5fe12a1a3bacc2fd8b5c7ecac61050019ad0928d9534fbc016a9a461a04",
+        "extractedSha256": "d14ed5fe12a1a3bacc2fd8b5c7ecac61050019ad0928d9534fbc016a9a461a04"
+      },
+      {
+        "path": "mira/service/sim_benchmark.py",
+        "sha256": "c2b180547d10a044a8cb1dbdd14b176f4bbd60d82727a0b9973e597045a908b8",
+        "extractedSha256": "c2b180547d10a044a8cb1dbdd14b176f4bbd60d82727a0b9973e597045a908b8"
+      },
+      {
+        "path": "mira/service/smoke_live.py",
+        "sha256": "3c5aa2aaa9b278e1b2e3f762b4cf16a6f34bc35d1c7a1d13dc3ac7acfaa8e467",
+        "extractedSha256": "3c5aa2aaa9b278e1b2e3f762b4cf16a6f34bc35d1c7a1d13dc3ac7acfaa8e467"
+      },
+      {
+        "path": "mira/service/tests/conftest.py",
+        "sha256": "55a71bf9c49832f2b9257c2e59f92aa5d291a0a1e5c9f2432a99e1ba04b1001a",
+        "extractedSha256": "55a71bf9c49832f2b9257c2e59f92aa5d291a0a1e5c9f2432a99e1ba04b1001a"
+      },
+      {
+        "path": "mira/service/tests/test_components.py",
+        "sha256": "3a350c5fe1489520efd29884a2cabee7c5d5c548673f929cbb8a4b8be6cc3ffd",
+        "extractedSha256": "3a350c5fe1489520efd29884a2cabee7c5d5c548673f929cbb8a4b8be6cc3ffd"
+      },
+      {
+        "path": "mira/service/tests/test_cors.py",
+        "sha256": "ebe0815c757ba5b5787b3e9ee0251a72ecae947d5c9280ad8acd2e47c8ecbfed",
+        "extractedSha256": "ebe0815c757ba5b5787b3e9ee0251a72ecae947d5c9280ad8acd2e47c8ecbfed"
+      },
+      {
+        "path": "mira/service/tests/test_data_policy.py",
+        "sha256": "bf5343c30430a5ee3f387e4b085e102ee1fd131ce66ac334e0069f6a451b8bf6",
+        "extractedSha256": "bf5343c30430a5ee3f387e4b085e102ee1fd131ce66ac334e0069f6a451b8bf6"
+      },
+      {
+        "path": "mira/service/tests/test_packaging.py",
+        "sha256": "45545d8d0f2191262a0ca0d8274d77ccb16883fc0cf1465dd051d8a78d0c4677",
+        "extractedSha256": "45545d8d0f2191262a0ca0d8274d77ccb16883fc0cf1465dd051d8a78d0c4677"
+      },
+      {
+        "path": "mira/service/tests/test_providers.py",
+        "sha256": "56dff93f9ec1eff9e71a76dc3fa34d39413980eedc491ab9ba1ab67d6d565276",
+        "extractedSha256": "56dff93f9ec1eff9e71a76dc3fa34d39413980eedc491ab9ba1ab67d6d565276"
+      },
+      {
+        "path": "mira/service/tests/test_step_api.py",
+        "sha256": "f099ac554aa196548f4dce77f9d695d88a081e16038eb7d96132e7a430064f2f",
+        "extractedSha256": "f099ac554aa196548f4dce77f9d695d88a081e16038eb7d96132e7a430064f2f"
+      },
+      {
+        "path": "mira/service/tests/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "extractedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "mira/service/__init__.py",
+        "sha256": "861e01c9c63b71eeb336cf4a7f9e95662b9a28db0b372fad5269d7ed63ee44a1",
+        "extractedSha256": "861e01c9c63b71eeb336cf4a7f9e95662b9a28db0b372fad5269d7ed63ee44a1"
+      },
+      {
+        "path": "mira/SOURCE.json",
+        "sha256": "0f2418c1c1244d1d94ca3421ee4b9a0efaf46411f96525cb6626ea4036f8bcc4",
+        "extractedSha256": "0f2418c1c1244d1d94ca3421ee4b9a0efaf46411f96525cb6626ea4036f8bcc4"
+      },
+      {
+        "path": "mira/test.py",
+        "sha256": "16398d9264e211edf11428d82b6b523f41d8bc776e62444736a10eb03ea9cfc9",
+        "extractedSha256": "16398d9264e211edf11428d82b6b523f41d8bc776e62444736a10eb03ea9cfc9"
+      }
+    ]
+  },
+  "integratedStartSmoke": {
+    "extractedRoot": "C:\\Users\\drfer\\AppData\\Local\\Temp\\sentrapedia-integrated-mira-1791640528616",
+    "runtimeMode": "start",
+    "supervisorPid": 8316,
+    "health": {
+      "reachable": true,
+      "modelReady": true,
+      "groundingReady": true,
+      "configured": true,
+      "freeOnly": false,
+      "model": "google/gemini-2.5-flash",
+      "maxCostUsd": 0.1
+    },
+    "pageStatus": 200,
+    "staticStatus": 200,
+    "noMatchStatus": 422,
+    "modelCalls": 0,
+    "publicMetadataRequests": 2,
+    "forcedShutdownClosedWeb": true,
+    "forcedShutdownClosedEngine": true
+  },
+  "standaloneSmoke": {
+    "extractedRoot": "C:\\Users\\drfer\\AppData\\Local\\Temp\\sentrapedia-integrated-mira-1791640528616",
+    "runtimeMode": "standalone",
+    "supervisorPid": 21760,
+    "health": {
+      "reachable": true,
+      "modelReady": true,
+      "groundingReady": true,
+      "configured": true,
+      "freeOnly": false,
+      "model": "google/gemini-2.5-flash",
+      "maxCostUsd": 0.1
+    },
+    "pageStatus": 200,
+    "staticStatus": 200,
+    "noMatchStatus": 422,
+    "modelCalls": 0,
+    "publicMetadataRequests": 2,
+    "forcedShutdownClosedWeb": true,
+    "forcedShutdownClosedEngine": true
+  },
+  "occupiedPortSmoke": {
+    "childFailureExit": 1,
+    "engineClosed": true,
+    "existingPortOwnerPreserved": true,
+    "modelCalls": 0,
+    "publicMetadataRequests": 2
+  },
+  "oracleCorpusSha256": "4a28f3293ecff578f23c88a086bbbc27830d28f8f5d90951d8b9e4d9884da116",
+  "modelCalls": 0,
+  "publicMetadataOnly": true,
+  "limits": [
+    "Docker daemon unavailable: image build/run not performed",
+    "POSIX signal cleanup reviewed; execution observed on Windows only",
+    "No fresh paid inference or clinical accuracy claim"
+  ],
+  "corrections": [
+    "First Python suite lacked synthetic fixture; corrected, human override approved, 157 pass/1skip",
+    "Initial smoke added unsupported findings field; gateway correctly returned400; valid emptyCase yields422 before provider calls",
+    "Review P2 SIGHUP cleanup and suspended-child Job Object ownership fixed and closed"
+  ]
+}

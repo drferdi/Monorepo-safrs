@@ -1,0 +1,41 @@
+{
+  "id": 341,
+  "nama": "Dermatitis Kontak Alergika dan Iritan",
+  "slug": "dermatitis-kontak-alergika-dan-iritan",
+  "kode_icd": "L23.9",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Dermatitis kontak adalah reaksi inflamasi kulit yang timbul akibat kontak dengan substansi eksternal. Dermatitis Kontak Iritan (DKI, 80%) diakibatkan oleh kerusakan fisik/kimiawi sawar kulit tanpa sensitisasi imunologis; Dermatitis Kontak Alergika (DKA) merupakan reaksi hipersensitivitas tipe IV (cell-mediated) terhadap alergen spesifik (nikel, lateks, pewarna rambut).",
+  "gejala": [
+    "DKI: rasa pedih, terbakar, eritema, fisura, kulit kering bersisik setelah kontak dengan deterjen/zat kimia",
+    "DKA: gatal hebat yang dominan, eritema berbatas tegas sesuai bentuk kontak, vesikel, bula, eksudasi",
+    "Lokasi predileksi: tangan, pergelangan tangan (jam tangan), daun telinga (anting imitasi), dahi/leher"
+  ],
+  "diagnosis": "Penegakan diagnosis klinis dari anamnesis riwayat pekerjaan, hobi, dan kontak zat kimia/logam. Pemeriksaan fisik: morfologi lesi sesuai bentuk benda kontak. Konfirmasi DKA: uji tempel (patch test) setelah fase akut sembuh.",
+  "terapi": "1. Identifikasi dan penghentian kontak total dengan substansi pemicu (penggunaan sarung tangan pelindung).\n2. Terapi Topikal:\n   - Kompres terbuka larutan NaCl 0.9% pada lesi basah/eksudatif selama 15 menit 3 kali sehari.\n   - Kortikosteroid Topikal: Betametason dipropionat 0.05% atau Mometason furoat 0.1% krim dioleskan 1-2 kali sehari selama 1-2 minggu pada lesi kering/papular.\n   - Emolien pelembap untuk memulihkan barier kulit.\n3. Antihistamin oral bila gatal mengganggu tidur.",
+  "rujukan": "Rujuk ke Spesialis Kulit dan Kelamin (Sp.DV) bila lesi luas melibatkan > 20% luas permukaan tubuh, terjadi eritroderma, atau memerlukan patch test untuk identifikasi alergen profesional/industri.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

@@ -1,0 +1,43 @@
+{
+  "id": 310,
+  "nama": "Laringitis Akut",
+  "slug": "laringitis-akut",
+  "kode_icd": "J04.0",
+  "kategori": "Penyakit THT",
+  "definisi": "Laringitis akut adalah inflamasi akut pita suara dan mukosa laring yang berlangsung kurang dari 3 minggu, umumnya disebabkan oleh infeksi virus saluran napas atas atau penggunaan suara berlebihan (vocal abuse).",
+  "gejala": [
+    "Suara serak (hoarseness / disfonia) hingga afonia (hilang suara)",
+    "Sensasi gatal, kering, atau perih di tenggorokan",
+    "Batuk kering menggonggong",
+    "Demam ringan",
+    "Rasa sakit saat berbicara"
+  ],
+  "diagnosis": "Penegakan diagnosis klinis dari riwayat suara serak akut pasca-ISPA atau vocal abuse. Pemeriksaan fisik: faring hiperemis ringan, laringoskopi indirek (bila dapat dilakukan) menunjukkan pita suara edema dan hiperemis.",
+  "terapi": "1. Istirahat suara total (voice rest) - jangan berbisik karena meningkatkan tegangan pita suara.\n2. Inhalasi uap hangat atau humidifikasi udara.\n3. Hindari iritan: asap rokok, kafein, alkohol, makanan pedas.\n4. Simtomatik: Parasetamol 500 mg 3x/hari bila nyeri/demam.\n5. Tidak diindikasikan antibiotik kecuali terbukti infeksi bakteri sekunder.",
+  "rujukan": "Rujuk ke Spesialis THT-KL bila suara serak menetap > 2-3 minggu (evaluasi nodul pita suara, polip, atau keganasan laring), stridor inspiratorik, sesak napas, atau kecurigaan epiglotitis akut.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

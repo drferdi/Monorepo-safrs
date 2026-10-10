@@ -1,5 +1,6 @@
 import { containsIdentity, validCase, validResult, type MiraAnalysis } from "./contract";
 import type { CaseState } from "./types";
+import { validOracleGrounding } from "../oracle-grounding-types";
 
 export async function requestMiraAnalysis(caseData: CaseState, options: { synthetic: boolean; signal?: AbortSignal; fetchFn?: typeof fetch }): Promise<MiraAnalysis> {
   if (!options.synthetic) throw new Error("Konfirmasi bahwa keluhan dan konteks menggunakan data fiktif tanpa identitas pribadi.");
@@ -15,5 +16,6 @@ export async function requestMiraAnalysis(caseData: CaseState, options: { synthe
     throw new Error(message);
   }
   if (!data || typeof data !== "object" || !("result" in data) || !validResult(data.result) || data.result.status !== "ok" || !("traceId" in data) || typeof data.traceId !== "string" || !("createdAt" in data) || typeof data.createdAt !== "string" || !Number.isFinite(Date.parse(data.createdAt))) throw new Error("Respons analisis tidak dapat diverifikasi.");
-  return { case: snapshot, result: data.result, traceId: data.traceId, createdAt: data.createdAt };
+  if (!("grounding" in data) || !validOracleGrounding(data.grounding)) throw new Error("Respons analisis tidak dapat diverifikasi.");
+  return { case: snapshot, result: data.result, traceId: data.traceId, createdAt: data.createdAt, grounding: data.grounding };
 }

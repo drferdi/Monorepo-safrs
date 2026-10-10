@@ -1,0 +1,45 @@
+{
+  "id": 309,
+  "nama": "Faringitis Akut",
+  "slug": "faringitis-akut",
+  "kode_icd": "J02.9",
+  "kategori": "Penyakit THT",
+  "definisi": "Faringitis akut adalah peradangan akut mukosa faring yang dapat disebabkan oleh infeksi virus (Adenovirus, Rhinovirus, Epstein-Barr) atau bakteri (paling sering Streptococcus beta-hemolyticus grup A / GABHS).",
+  "gejala": [
+    "Nyeri tenggorokan mendadak",
+    "Nyeri saat menelan (odinofagia)",
+    "Demam",
+    "Malaise",
+    "Batuk (lebih sering pada virus)",
+    "Faring hiperemis, edema uvula, eksudat folikular pada dinding posterior faring",
+    "Limfadenopati servikal anterior yang nyeri"
+  ],
+  "diagnosis": "Menggunakan Skor Centor / McIsaac untuk membedakan etiologi bakteri GABHS dari virus:\n- Kriteria: Suhu > 38°C (1 poin), Tidak ada batuk (1 poin), Limfadenopati servikal anterior nyeri (1 poin), Eksudat tonsil/faring (1 poin), Usia 3-14 tahun (1 poin).\n- Skor 4-5 sangat mencurigakan infeksi Streptococcus grup A dan membutuhkan antibiotik.",
+  "terapi": "1. Faringitis Viral (Skor Centor 0-2): Terapi simtomatik parasetamol/ibuprofen, kumur air garam hangat atau obat kumur antiseptik, istirahat dan hidrasi cairan cukup.\n2. Faringitis Bakterial GABHS (Skor Centor >= 3):\n   - Amoksisilin: Dewasa 3 x 500 mg oral atau 1 x 1000 mg selama 10 hari; Anak 50 mg/kgBB/hari dibagi 3 dosis selama 10 hari.\n   - Alternatif (alergi penisilin): Eritromisin 4 x 250-500 mg selama 10 hari atau Azitromisin 1 x 500 mg hari 1, 1 x 250 mg hari 2-5.\n   - Benzatin Penisilin G: Dosis tunggal 1.2 juta IU IM (dewasa) atau 600.000 IU IM (anak < 27 kg).",
+  "rujukan": "Rujuk ke Dokter Spesialis THT-KL bila terdapat komplikasi abses peritonsilar (trismus, deviasi uvula), abses retrofaringeal, stridor atau distres jalan napas, atau tanda demam rematik akut pasca-infeksi.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

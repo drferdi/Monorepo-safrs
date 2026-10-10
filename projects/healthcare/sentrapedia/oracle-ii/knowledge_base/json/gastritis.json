@@ -1,0 +1,46 @@
+{
+  "id": 291,
+  "nama": "Gastritis",
+  "slug": "gastritis",
+  "kode_icd": "K29.7",
+  "kategori": "Penyakit Pencernaan",
+  "definisi": "Gastritis adalah proses inflamasi atau peradangan mukosa dan submukosa lambung yang dapat bersifat akut atau kronik, sering diakibatkan oleh ketidakseimbangan faktor defensif mukosa lambung dan faktor agresif (asam lambung, pepsin, infeksi Helicobacter pylori, penggunaan NSAID/OAINS, stres fisik, alkohol, atau merokok).",
+  "gejala": [
+    "Nyeri ulu hati (epigastrium)",
+    "Rasa terbakar di dada/ulu hati",
+    "Perut kembung (begah)",
+    "Mual",
+    "Muntah",
+    "Cepat kenyang",
+    "Sendawa berulang",
+    "Nafsu makan menurun"
+  ],
+  "diagnosis": "Penegakan diagnosis berdasarkan anamnesis keluhan rasa tidak nyaman di epigastrium yang berhubungan dengan pola makan atau konsumsi obat OAINS/jamu. Pemeriksaan fisik: nyeri tekan epigastrium tanpa tanda defans muskular. Pemeriksaan penunjang FKTP: pemeriksaan darah rutin, tes feses darah samar bila ada kecurigaan perdarahan, atau endoskopi (bila ada tanda bahaya/alarm symptoms).",
+  "terapi": "1. Non-farmakologis: Modifikasi diet makan porsi kecil tapi sering, hindari makanan pedas, asam, berlemak tinggi, kopi, alkohol, dan hentikan merokok serta penggunaan NSAID tanpa pengawasan.\n2. Farmakologis Lini Pertama:\n   - Antasida oral 3 x 1-2 tablet atau 10-15 mL (1-2 jam pasca makan dan sebelum tidur).\n   - Antagonis Reseptor H2 (H2RA): Ranitidin 2 x 150 mg/hari oral atau Famotidin 2 x 20 mg/hari oral.\n   - Proton Pump Inhibitor (PPI): Omeprazole 1-2 x 20 mg/hari oral, Lansoprazole 1-2 x 30 mg/hari oral diminum 30-60 menit sebelum makan selama 2-4 minggu.\n   - Sitoprotektor: Sukralfat suspensi 3-4 x 1 gram (15 mL) diminum 1 jam sebelum makan atau sebelum tidur.",
+  "rujukan": "Rujuk ke Spesialis Penyakit Dalam (Sp.PD) bila terdapat tanda bahaya (alarm symptoms): penurunan berat badan drastis tanpa sebab, muntah persisten, hematemesis/melena, anemia, massa abdomen, disfagia, atau gejala refrakter setelah 4-8 minggu terapi PPI optimal.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

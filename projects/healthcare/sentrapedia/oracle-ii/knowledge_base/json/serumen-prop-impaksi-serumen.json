@@ -1,0 +1,42 @@
+{
+  "id": 318,
+  "nama": "Serumen Prop (Impaksi Serumen)",
+  "slug": "serumen-prop-impaksi-serumen",
+  "kode_icd": "H61.2",
+  "kategori": "Penyakit THT",
+  "definisi": "Serumen prop adalah penumpukan dan pemadatan massa serumen (kotoran telinga) di liang telinga yang menyumbat kanalis akustikus eksternus, sering diperburuk oleh kebiasaan membersihkan telinga menggunakan cotton bud.",
+  "gejala": [
+    "Penurunan pendengaran konduktif",
+    "Telinga terasa tersumbat/penuh (terutama setelah kemasukan air/mandi)",
+    "Tinnitus (berdenging)",
+    "Rasa gatal atau nyeri tumpul di liang telinga"
+  ],
+  "diagnosis": "Ditegakkan dari pemeriksaan otoskopi liang telinga: terlihat gumpalan massa serumen berwarna kuning kecokelatan hingga hitam pekat yang menyumbat seluruh atau sebagian lumen liang telinga.",
+  "terapi": "1. Evakuasi Serumen:\n   - Serumen lunak: dikeluarkan langsung dengan sendok serumen (cerumen hook) atau kuretase hati-hati.\n   - Serumen keras padat: tetesi pelunak serumen (Karbogliserin / Gliserin 10% atau tetes telinga Natrium Dokusat 0.5%) 3 x 2-3 tetes sehari selama 3-5 hari sebelum evakuasi.\n   - Irigasi liang telinga dengan air hangat suam-suam kuku (suhu tubuh ~37°C) menggunakan spuit irigasi ke arah posterosuperior liang telinga (KONTRAINDIKASI irigasi bila ada riwayat perforasi membran timpani).",
+  "rujukan": "Rujuk ke Spesialis THT-KL bila serumen sangat keras melekat erat pada dinding kanalis yang gagal dievakuasi, pasien tidak kooperatif, atau dicurigai perforasi membran timpani bersamaan.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

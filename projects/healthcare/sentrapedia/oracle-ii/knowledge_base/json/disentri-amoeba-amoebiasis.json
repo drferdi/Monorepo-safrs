@@ -1,0 +1,43 @@
+{
+  "id": 296,
+  "nama": "Disentri Amoeba (Amoebiasis)",
+  "slug": "disentri-amoeba-amoebiasis",
+  "kode_icd": "A06.0",
+  "kategori": "Penyakit Infeksi",
+  "definisi": "Disentri amuba adalah infeksi usus besar yang disebabkan oleh protozoa parasit Entamoeba histolytica, yang menginvasi mukosa dinding kolon membentuk ulkus khas berbentuk botol (flask-shaped ulcer).",
+  "gejala": [
+    "Diare lendir darah berbau busuk khas",
+    "Tenesmus ringan hingga sedang",
+    "Nyeri perut bawah / kram abdomen",
+    "BAB berulang dengan volume tinja sedikit-sedikit",
+    "Demam ringan (subfebris)"
+  ],
+  "diagnosis": "Penegakan diagnosis melalui pemeriksaan mikroskopis tinja segar: ditemukan kista berinti 4 atau trofozoit motil Entamoeba histolytica yang memfagositosis sel darah merah (eritrofagositosit).",
+  "terapi": "1. Rehidrasi adekuat.\n2. Farmakologis Amebisid Jaringan:\n   - Metronidazol: Dewasa 3 x 750 mg oral per hari selama 7-10 hari; Anak 35-50 mg/kgBB/hari dibagi 3 dosis selama 7-10 hari.\n   - Alternatif: Tinidazol 1 x 2 gram oral per hari selama 3 hari.\n3. Edukasi sanitasi air bersih, kebersihan mencuci tangan dengan sabun, dan memasak makanan hingga matang.",
+  "rujukan": "Rujuk ke FKRTL bila dicurigai komplikasi ekstraintestinal seperti abses hati amuba (nyeri perut kuadran kanan atas, hepatomegali nyeri, demam septik), perforasi usus, atau peritonitis amuba.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

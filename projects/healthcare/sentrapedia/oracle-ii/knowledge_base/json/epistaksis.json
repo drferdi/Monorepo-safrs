@@ -1,0 +1,41 @@
+{
+  "id": 315,
+  "nama": "Epistaksis",
+  "slug": "epistaksis",
+  "kode_icd": "R04.0",
+  "kategori": "Penyakit THT",
+  "definisi": "Epistaksis adalah perdarahan akut dari rongga hidung yang paling sering berasal dari pleksus Kiesselbach di septum anterior (epistaksis anterior, 90%) atau arteri sfenopalatina di posterior (epistaksis posterior, sering pada lansia/hipertensi).",
+  "gejala": [
+    "Keluarnya darah segar dari salah satu atau kedua lubang hidung",
+    "Darah tertelan mengalir ke tenggorokan (post-nasal drip darah)",
+    "Riwayat mengorek hidung, trauma wajah, udara kering, atau hipertensi"
+  ],
+  "diagnosis": "Penegakan diagnosis sumber perdarahan dengan rinoskopi anterior pasca evakuasi bekuan darah menggunakan lampu kepala. Pengukuran tekanan darah dan tanda vital wajib dilakukan.",
+  "terapi": "1. Penanganan Segera Metode Trotter:\n   - Pasien duduk tegak condong ke depan (jangan menengadah agar darah tidak tertelan/teraspirasi).\n   - Menekan cuping hidung selama 10-15 menit sambil bernapas melalui mulut.\n2. Jika Perdarahan Berlanjut:\n   - Pasang tampon anterior kapas yang dibasahi vasokonstriktor (Adrenalin 1:10.000 atau Oksimetazolin) + Lidokain 2% selama 10-15 menit.\n   - Kauterisasi kimiawi lidi kapas Perak Nitrat (AgNO3) 20-30% pada titik perdarahan yang teridentifikasi.\n   - Jika masih berdarah: pasang tampon hidung anterior rol kasa vaselin-antibiotik selama 2 x 24 jam.\n3. Kontrol tekanan darah bila ada krisis hipertensi.",
+  "rujukan": "Rujuk CITO ke IGD RS / Spesialis THT bila perdarahan berasal dari posterior yang memerlukan tampon Bellocq (tampon posterior), perdarahan masif refrakter, hemodinamik tidak stabil, atau dicurigai gangguan koagulopati/keganasan nasofaring.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}

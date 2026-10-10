@@ -1,0 +1,43 @@
+{
+  "id": 353,
+  "nama": "Erisipelas dan Selulitis",
+  "slug": "erisipelas-dan-selulitis",
+  "kode_icd": "L03.9",
+  "kategori": "Penyakit Kulit dan Kelamin",
+  "definisi": "Infeksi bakteri akut pada kulit. Erisipelas adalah infeksi superfisial dermis atas dan pembuluh limfatik (paling sering Streptococcus pyogenes) dengan batas lesi sangat tegas dan meninggi; Selulitis adalah infeksi supuratif difus pada dermis dalam dan jaringan subkutan (Streptococcus pyogenes atau Staphylococcus aureus) dengan batas lesi tidak tegas.",
+  "gejala": [
+    "Plak eritematosa merah cerah, edema, hangat, dan sangat nyeri pada ekstremitas (tungkai bawah) atau wajah",
+    "Erisipelas: tepi lesi meninggi dengan batas tegas tegas nyata dari kulit normal",
+    "Selulitis: pembengkakan difus dengan batas tidak tegas yang meluas cepat",
+    "Demam tinggi mendadak, menggigil, malaise",
+    "Limfadenitis regional dan pembesaran kelenjar getah bening"
+  ],
+  "diagnosis": "Ditegakkan dari inspeksi klinis tanda kardinal radang akut (rubor, calor, dolor, tumor) dengan batas tegas (erisipelas) atau tidak tegas (selulitis). Batas lesi ditandai dengan spidol permanen untuk memantau progresi perluasan lesi.",
+  "terapi": "1. Non-farmakologis: Elevasi tungkai yang terkena lebih tinggi dari jantung untuk mengurangi edema; tirah baring; kompres dingin/terbuka larutan fisiologis.\n2. Antibiotik Sistemik Oral (Kasus Ringan Tanpa Gejala Sistemik Berat):\n   - Amoksisilin-Klavulanat 3 x 625 mg oral, atau Kloksasilin 4 x 500 mg oral, atau Sefadroksil 2 x 500 mg oral selama 10-14 hari.\n   - Klindamisin 3-4 x 300 mg oral (pada alergi penisilin).\n3. Kasus Sedang-Berat: Antibiotik intravena (Seftriakson 1-2 g/hari IV atau Ampisilin-Sulbaktam 1.5 g/6 jam IV).\n4. Analgesik antipiretik parasetamol 500 mg 3x/hari.",
+  "rujukan": "Rujuk CITO ke RS bila terdapat tanda selulitis fasial/periorbita, kecurigaan Fasiitis Nekrotikans (nyeri hebat melampaui temuan klinis, krepitasi subkutan, bula hemoragik, anestesi fokal), atau selulitis pada pasien immunocompromised/sepsis.",
+  "sumber": [
+    {
+      "source": "Permenkes No. 5 Tahun 2014",
+      "type": "Permenkes",
+      "year": "2014"
+    },
+    {
+      "source": "KMK No. HK.01.07/MENKES/1186/2022",
+      "type": "KMK",
+      "year": "2022"
+    }
+  ],
+  "metadata": {
+    "standar_kompetensi": "SKDI 4A / PNPK Kemenkes RI",
+    "is_complete": false,
+    "verified_clinical_kb": false,
+    "schema_version": "2.0",
+    "clinical_qa_status": "UNVERIFIED_NON_PNPK_CANDIDATE",
+    "clinical_approval": "NOT_PERFORMED",
+    "parser_repaired": false,
+    "origin_type": "NON_PNPK",
+    "original_data_quarantined": true,
+    "clinical_retrieval_allowed": false
+  },
+  "clinical_evidence": []
+}
