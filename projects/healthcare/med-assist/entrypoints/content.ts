@@ -162,7 +162,7 @@ export default defineContentScript({
 
           if (payload.type === 'diagnosa') {
             // Use direct handler for diagnosa/ICD-10 - DO NOT require currentPage match
-            contentLog.warn('Diagnosa fill request received');
+            contentLog.debug('Diagnosa fill request received');
             contentLog.debug('[SentraContent] Routing to fillDiagnosaForm');
             debug('Using Diagnosa handler with DAS integration');
             const result = await fillDiagnosaForm(

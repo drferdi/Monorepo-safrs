@@ -177,7 +177,7 @@ async function runPoll(): Promise<void> {
       (error instanceof BridgeApiError && (error.status === 401 || error.status === 403));
 
     if (isAuthError) {
-      log.error(
+      log.warn(
         '[BridgePoller] Auth error detected — stopping poller. Cek: Settings → Bridge Automation Token harus sama dengan CREW_ACCESS_AUTOMATION_TOKEN pada backend Crew.'
       );
       await stopBridgePoller();
@@ -191,7 +191,7 @@ async function runPoll(): Promise<void> {
         MAX_BACKOFF_MS
       );
       backoffUntilMs = Date.now() + backoffMs;
-      log.warn(
+      log.debug(
         `[BridgePoller] Poll failed (attempt ${consecutiveNetworkErrors}) — backoff ${Math.round(backoffMs / 1000)}s:`,
         error
       );

@@ -16,6 +16,10 @@
  * Logs are retained for 10 years per Sentra governance.
  */
 
+import { createLogger } from '~/utils/logger';
+
+const log = createLogger('AuditLogger');
+
 // =============================================================================
 // AUDIT TYPES
 // =============================================================================
@@ -146,7 +150,7 @@ class CDSSAuditLogger {
       }
 
       this.initialized = true;
-      console.warn(`[AuditLogger] Initialized with ${this.cache.length} entries`);
+      log.debug(`Initialized with ${this.cache.length} entries`);
     } catch (error) {
       console.error('[AuditLogger] Failed to initialize:', error);
       this.cache = [];
@@ -207,7 +211,7 @@ class CDSSAuditLogger {
     // Persist to storage
     await this.persist();
 
-    console.warn(`[AuditLogger] Logged: ${action} (${entry.id.substring(0, 8)}...)`);
+    log.debug(`Logged: ${action} (${entry.id.substring(0, 8)}...)`);
   }
 
   /**
@@ -336,7 +340,7 @@ class CDSSAuditLogger {
 
     if (removed > 0) {
       await this.persist();
-      console.warn(`[AuditLogger] Cleared ${removed} old entries`);
+      log.debug(`Cleared ${removed} old entries`);
     }
 
     return removed;

@@ -271,12 +271,12 @@ export async function authedFetch<T>(path: string, options: RequestInit = {}): P
     });
   } catch (e) {
     if (e instanceof Error && e.name === 'AbortError') {
-      log.error('[AuthedFetch] Request timeout (30s):', url);
+      log.debug('[AuthedFetch] Request timeout (30s):', url);
       throw new Error(
         'Request timeout (30 detik). Server tidak merespons — coba lagi atau cek koneksi.'
       );
     }
-    log.error('[AuthedFetch] Network error:', e);
+    log.debug('[AuthedFetch] Network error:', e);
     throw new Error('Tidak dapat terhubung ke server. Periksa koneksi internet.');
   } finally {
     clearTimeout(timeoutId);
@@ -288,7 +288,7 @@ export async function authedFetch<T>(path: string, options: RequestInit = {}): P
   if (response.status === 401) {
     if (authContext.mode === 'automation-token') {
       const errorBody = await response.text().catch(() => '');
-      log.error(`[AuthedFetch] FAIL ${response.status}: ${errorBody.slice(0, 200)}`, {
+      log.debug(`[AuthedFetch] FAIL ${response.status}: ${errorBody.slice(0, 200)}`, {
         correlationId,
       });
       throw new BridgeApiError(
@@ -327,7 +327,7 @@ export async function authedFetch<T>(path: string, options: RequestInit = {}): P
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => '');
-    log.error(`[AuthedFetch] FAIL ${response.status}: ${errorBody.slice(0, 200)}`, {
+    log.debug(`[AuthedFetch] FAIL ${response.status}: ${errorBody.slice(0, 200)}`, {
       correlationId,
     });
     throw new BridgeApiError(response.status, errorBody);
@@ -373,12 +373,12 @@ export async function authedUpload<T>(
     });
   } catch (e) {
     if (e instanceof Error && e.name === 'AbortError') {
-      log.error('[AuthedFetch] Upload timeout (60s):', url);
+      log.debug('[AuthedFetch] Upload timeout (60s):', url);
       throw new Error(
         'Upload timeout (60 detik). Server tidak merespons — coba lagi atau cek koneksi.'
       );
     }
-    log.error('[AuthedFetch] Upload network error:', e);
+    log.debug('[AuthedFetch] Upload network error:', e);
     throw new Error('Tidak dapat mengupload file ke server. Periksa koneksi internet.');
   } finally {
     clearTimeout(timeoutId);
@@ -425,7 +425,7 @@ export async function authedUpload<T>(
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => '');
-    log.error(`[AuthedFetch] FAIL ${response.status}: ${errorBody.slice(0, 200)}`, {
+    log.debug(`[AuthedFetch] FAIL ${response.status}: ${errorBody.slice(0, 200)}`, {
       correlationId,
     });
     throw new BridgeApiError(response.status, errorBody);

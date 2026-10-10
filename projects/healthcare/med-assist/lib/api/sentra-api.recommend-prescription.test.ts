@@ -35,6 +35,53 @@ describe('SentraAPI recommendPrescription fail-closed contract', () => {
     expect(result.data?.meta?.is_local).toBe(true);
   });
 
+  // Chief, 2026-10-01: with no prescription service, propose the knowledge base's therapy only.
+  describe('without a prescription service (VITE_SENTRA_API_URL unset)', () => {
+    const rag = (details: unknown[], others: unknown[] = []) => ({
+      getICD10Details: vi.fn().mockResolvedValue(details),
+      searchICD10: vi.fn().mockResolvedValue(others.map((entry) => ({ entry }))),
+      searchForDiagnosisSuggestions: vi.fn().mockResolvedValue(others.map((entry) => ({ entry }))),
+      ensureICD10DataLoaded: vi.fn().mockResolvedValue(undefined),
+    });
+
+    beforeEach(() => {
+      vi.stubEnv('VITE_USE_MOCK', 'false');
+      vi.stubEnv('VITE_SENTRA_API_URL', '');
+      vi.stubGlobal('fetch', vi.fn());
+    });
+
+    it("proposes exactly the knowledge base's therapy for the diagnosis, with its dose", async () => {
+      vi.doMock('@/lib/rag', () =>
+        rag([{ code: 'B77', name_id: 'Askariasis', terapi: [{ obat: 'Albendazol', dosis: '400 mg', frek: 'dosis tunggal' }] }])
+      );
+      const { SentraAPI } = await import('./sentra-api');
+
+      const result = await SentraAPI.recommendPrescription(context({ icd_x: 'B77', selected_diagnosis_name: 'Askariasis' }));
+
+      expect(result.success).toBe(true);
+      expect(result.data?.medication_recommendations.map((m) => [m.nama_obat, m.dosis])).toEqual([
+        ['Albendazol', '400 mg dosis tunggal'],
+      ]);
+      expect(result.data?.meta?.is_mock).toBe(false);
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    it("never proposes another disease's therapy when the diagnosis has none", async () => {
+      vi.doMock('@/lib/rag', () =>
+        rag([], [{ code: 'T00', name_id: 'Vulnus laseratum', terapi: [{ obat: 'Amoksisilin', dosis: '500 mg', frek: '3x sehari' }] }])
+      );
+      const { SentraAPI } = await import('./sentra-api');
+
+      const result = await SentraAPI.recommendPrescription(
+        context({ icd_x: 'Z48', selected_diagnosis_name: 'Other surgical follow-up care', keluhan_utama: 'rawat jahitan' })
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.data?.medication_recommendations).toEqual([]);
+      expect(fetch).not.toHaveBeenCalled();
+    });
+  });
+
   it('keeps feature-disabled response ahead of mock fail-closed handling', async () => {
     vi.stubEnv('VITE_FEATURE_PRESCRIPTION_AI', 'false');
     const { SentraAPI } = await import('./sentra-api');

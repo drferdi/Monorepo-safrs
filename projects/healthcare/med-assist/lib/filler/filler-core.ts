@@ -229,7 +229,7 @@ export async function fillTextField(
     }
 
     if (isFieldReadonly(element)) {
-      fillerLog.warn(`[Filler] Skipped readonly: ${selector}`);
+      fillerLog.debug(`[Filler] Skipped readonly: ${selector}`);
       return {
         success: false,
         field,
@@ -240,7 +240,7 @@ export async function fillTextField(
     }
 
     if (isFieldCsrf(element)) {
-      fillerLog.warn(`[Filler] Skipped CSRF field: ${selector}`);
+      fillerLog.debug(`[Filler] Skipped CSRF field: ${selector}`);
       return {
         success: false,
         field,
@@ -300,7 +300,7 @@ export async function fillNumberField(selector: string, value: number): Promise<
     const element = await waitForElement(selector, 3000);
 
     if (!element || !(element instanceof HTMLInputElement)) {
-      fillerLog.warn(`[Filler] Element NOT FOUND for: ${selector}`);
+      fillerLog.debug(`[Filler] Element NOT FOUND for: ${selector}`);
       return {
         success: false,
         field,
@@ -616,7 +616,7 @@ export async function fillAutocomplete(
       if (!dropdown) {
         if (requireDropdownSelection || requireExactMatch) {
           if (attempt < retries) {
-            fillerLog.warn(
+            fillerLog.debug(
               `[Filler] Dropdown required but missing, retry ${attempt + 1}/${retries}...`
             );
             await sleep(300);
@@ -643,7 +643,7 @@ export async function fillAutocomplete(
         }
 
         if (attempt < retries) {
-          fillerLog.warn(`[Filler] Dropdown not appeared, retry ${attempt + 1}/${retries}...`);
+          fillerLog.debug(`[Filler] Dropdown not appeared, retry ${attempt + 1}/${retries}...`);
           await sleep(300);
           continue;
         }
@@ -681,7 +681,7 @@ export async function fillAutocomplete(
 
       if (!matchedItem) {
         if (attempt < retries) {
-          fillerLog.warn(`[Filler] No matching dropdown item, retry ${attempt + 1}/${retries}...`);
+          fillerLog.debug(`[Filler] No matching dropdown item, retry ${attempt + 1}/${retries}...`);
           await sleep(250);
           continue;
         }

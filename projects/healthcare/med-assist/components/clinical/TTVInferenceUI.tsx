@@ -2992,6 +2992,7 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
               const isAuthOrFormat =
                 errName === 'AuthRequiredError' ||
                 errName === 'BridgeResponseFormatError' ||
+                errName === 'CanonicalEngineUnavailableError' ||
                 errMsg.includes('halaman HTML') ||
                 errMsg.includes('Belum login') ||
                 errMsg.includes('Login diperlukan');

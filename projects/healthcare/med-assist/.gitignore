@@ -52,3 +52,5 @@ docs/api/
 
 # ── Generated codebase dumps ─────────────────────────────────────────────
 repomix-output.xml
+# Scratch runtime verification specs (never committed)
+tests/e2e/zz-*.spec.ts

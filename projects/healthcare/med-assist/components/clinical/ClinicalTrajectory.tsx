@@ -37,6 +37,9 @@ import {
   type TrajectoryVisualizationViewModel,
 } from '@/lib/iskandar-diagnosis-engine/trajectory-visualization-view-model';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
+import { createLogger } from '@/utils/logger';
+
+const trajectoryLog = createLogger('Trajectory', 'content');
 
 /**
  * ClinicalTrajectoryProps interface
@@ -259,7 +262,7 @@ export const ClinicalTrajectory: React.FC<ClinicalTrajectoryProps> = ({
     let cancelled = false;
 
     const loadTrajectory = async () => {
-      console.warn('[Trajectory] Loading visit history...');
+      trajectoryLog.debug('Loading visit history...');
       setPhase('loading');
       setHybridTrajectoryResult(null);
       setCanonicalError('');
@@ -309,8 +312,8 @@ export const ClinicalTrajectory: React.FC<ClinicalTrajectoryProps> = ({
           diagLines.push('No diagnostics returned — pipeline may have failed silently');
         }
         setScrapeLog(diagLines);
-        console.warn('[Trajectory] Diagnostics:\n' + diagLines.join('\n'));
-        console.warn(`[Trajectory] RECV: ${result.visits?.length ?? 0} visits`);
+        trajectoryLog.debug('Diagnostics:\n' + diagLines.join('\n'));
+        trajectoryLog.debug(`RECV: ${result.visits?.length ?? 0} visits`);
 
         const visitRows = (result.visits || []) as VisitHistoryRow[];
         const pastVisits: VisitRecord[] = visitRows.map((v) => ({
@@ -343,7 +346,7 @@ export const ClinicalTrajectory: React.FC<ClinicalTrajectoryProps> = ({
           (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         );
 
-        console.warn(`[Trajectory] Analyzing ${allVisits.length} unique visits`);
+        trajectoryLog.debug(`Analyzing ${allVisits.length} unique visits`);
         setVisitCount(allVisits.length);
 
         if (allVisits.length < 2) {
@@ -375,11 +378,11 @@ export const ClinicalTrajectory: React.FC<ClinicalTrajectoryProps> = ({
 
         if (useHybridTrajectory && isTrajectoryCompareModeEnabled()) {
           const comparison = compareTrajectoryEngines(hybridInput);
-          console.warn('[Trajectory][Compare]\n' + comparison.evaluationReport.join('\n'));
+          trajectoryLog.debug('[Compare]\n' + comparison.evaluationReport.join('\n'));
         }
 
-        console.warn(
-          `[Trajectory] ANALYZED: trend=${trajectoryAnalysis.overallTrend}, risk=${trajectoryAnalysis.overallRisk}`
+        trajectoryLog.debug(
+          `ANALYZED: trend=${trajectoryAnalysis.overallTrend}, risk=${trajectoryAnalysis.overallRisk}`
         );
 
         setAnalysis(trajectoryAnalysis);
@@ -423,8 +426,8 @@ export const ClinicalTrajectory: React.FC<ClinicalTrajectoryProps> = ({
         } catch (error) {
           if (!cancelled) {
             // Canonical engine optional; keep UI fallback generic and non-sensitive.
-            console.warn(
-              '[Trajectory] Canonical engine fallback to local:',
+            trajectoryLog.debug(
+              'Canonical engine fallback to local:',
               error instanceof Error ? error.name : 'Unavailable'
             );
             setCanonicalError(

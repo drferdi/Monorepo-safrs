@@ -3,6 +3,8 @@ import {
   CANONICAL_CLINICAL_ENGINE_OUTPUT_SCHEMA,
   CANONICAL_DIFFERENTIAL_OUTPUT_SCHEMA,
   BRIDGE_AUTH_REQUIRED_HINT,
+  CanonicalEngineUnavailableError,
+  evaluateCanonicalClinicalEngine,
   filterDoctorsForDisplay,
   getBridgeRuntimeStatus,
   getOnlineDoctors,
@@ -56,6 +58,16 @@ beforeEach(() => {
 function isUUIDv4(str: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(str);
 }
+
+describe('evaluateCanonicalClinicalEngine', () => {
+  it('rejects without sending anything while the canonical engine is disabled', async () => {
+    await expect(
+      evaluateCanonicalClinicalEngine({} as Parameters<typeof evaluateCanonicalClinicalEngine>[0])
+    ).rejects.toBeInstanceOf(CanonicalEngineUnavailableError);
+
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
 
 describe('event_id generation', () => {
   it('crypto.randomUUID() produces valid UUID v4', () => {

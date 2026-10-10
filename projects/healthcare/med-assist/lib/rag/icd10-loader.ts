@@ -24,6 +24,10 @@ import type {
 } from './types';
 import { SYMPTOM_KEYWORDS } from './types';
 
+import { createLogger } from '~/utils/logger';
+
+const log = createLogger('ICD10-Loader', 'background');
+
 // =============================================================================
 // CONSTANTS
 // =============================================================================
@@ -162,7 +166,7 @@ export class ICD10Loader {
         total_items: inserted,
       });
 
-      console.warn(`[ICD10-Loader] Loaded ${inserted} entries from 144 Penyakit Puskesmas`);
+      log.debug(`Loaded ${inserted} entries from 144 Penyakit Puskesmas`);
 
       return inserted;
     } catch (error) {
@@ -273,7 +277,7 @@ export class ICD10Loader {
     // 1. Keywords from Indonesian name
     this.extractWordsFromText(penyakit.nama).forEach((w) => keywords.add(w));
 
-    // 2. Keywords from gejala_klinis (symptoms) — IMPORTANT!
+    // 2. Keywords from gejala_klinis (symptoms) â€” IMPORTANT!
     if (penyakit.gejala_klinis && Array.isArray(penyakit.gejala_klinis)) {
       for (const gejala of penyakit.gejala_klinis) {
         this.extractWordsFromText(gejala).forEach((w) => keywords.add(w));
@@ -405,9 +409,9 @@ export async function ensureICD10DataLoaded(onProgress?: LoaderProgressCallback)
   const needs = await needsDataLoad();
 
   if (needs) {
-    console.warn('[ICD10-Loader] Database needs loading, starting...');
+    log.debug('Database needs loading, starting...');
     await loadICD10Data(onProgress);
   } else {
-    console.warn('[ICD10-Loader] Database already loaded (144 Penyakit Puskesmas)');
+    log.debug('Database already loaded (144 Penyakit Puskesmas)');
   }
 }

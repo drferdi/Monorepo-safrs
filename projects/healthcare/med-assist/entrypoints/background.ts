@@ -1374,7 +1374,11 @@ export default defineBackground(() => {
     try {
       await sendMessage('pageReady', info);
     } catch (error) {
-      bgLog.warn('Failed to forward pageReady to panel:', error);
+      if (classifyTabMessageError(error) === 'NO_RECEIVER') {
+        bgLog.debug('pageReady not forwarded: side panel closed');
+      } else {
+        bgLog.warn('Failed to forward pageReady to panel:', error);
+      }
     }
 
     const senderTabId =
@@ -2422,7 +2426,11 @@ export default defineBackground(() => {
       await sendMessage('visitHistoryScraped', data);
       bgLog.debug('visitHistoryScraped forwarded to panel');
     } catch (error) {
-      bgLog.error('Failed to forward visitHistoryScraped:', error);
+      if (classifyTabMessageError(error) === 'NO_RECEIVER') {
+        bgLog.debug('visitHistoryScraped not forwarded: side panel closed');
+      } else {
+        bgLog.error('Failed to forward visitHistoryScraped:', error);
+      }
     }
   });
 

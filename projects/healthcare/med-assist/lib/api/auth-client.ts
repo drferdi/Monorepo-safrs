@@ -294,7 +294,7 @@ async function authFetch<T>(
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unknown error');
-      log.error(`[AuthFetch] ${response.status}: ${errorText}`, { correlationId });
+      log.debug(`[AuthFetch] ${response.status}: ${errorText}`, { correlationId });
 
       return {
         success: false,
@@ -308,7 +308,7 @@ async function authFetch<T>(
     const data = await response.json();
     return { success: true, data };
   } catch (error) {
-    log.error('[AuthFetch] Network error:', error);
+    log.debug('[AuthFetch] Network error:', error);
     return {
       success: false,
       error: {

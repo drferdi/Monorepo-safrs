@@ -35,7 +35,7 @@ import {
   generatePharmacotherapyPlan,
   type PharmacotherapyPlan,
 } from '@/lib/iskandar-diagnosis-engine/pharmacotherapy-reasoner';
-import { getICD10Details, searchForDiagnosisSuggestions, searchICD10 } from '@/lib/rag';
+import { ensureICD10DataLoaded, getICD10Details, searchForDiagnosisSuggestions, searchICD10 } from '@/lib/rag';
 import type {
   AllergyCheckRequest,
   APIError,
@@ -57,6 +57,8 @@ import { createLogger } from '@/utils/logger';
 // =============================================================================
 
 const API_BASE = import.meta.env.VITE_SENTRA_API_URL || 'https://api.sentra.local';
+// Without a configured prescription service the knowledge base proposes the therapy (Chief, 2026-10-01).
+const PRESCRIPTION_API_CONFIGURED = Boolean(import.meta.env.VITE_SENTRA_API_URL);
 const API_KEY = import.meta.env.VITE_SENTRA_API_KEY || '';
 const FACILITY_ID = import.meta.env.VITE_FACILITY_ID || 'PUSKESMAS_DEFAULT';
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
@@ -220,12 +222,22 @@ async function buildKnowledgePrescriptionResponse(
   if (!detail?.terapi || detail.terapi.length === 0) {
     return null;
   }
+  // Only this diagnosis's own therapy: a narrative search may return another disease.
+  const base3 = code.includes('.') ? code.split('.')[0] : code.substring(0, 3);
+  const detailCode = detail.code.toUpperCase();
+  if (!detailCode.startsWith(base3) && !buildKnowledgeCandidateCodes(code).includes(detailCode)) {
+    return null;
+  }
 
-  const medications = detail.terapi.slice(0, 6).map((item) => ({
+  const unique = detail.terapi.filter(
+    (item, index, all) =>
+      all.findIndex((other) => normalizeDrugName(other.obat) === normalizeDrugName(item.obat)) === index
+  );
+  const medications = unique.slice(0, 6).map((item) => ({
     nama_obat: item.obat,
-    dosis: item.frek || item.dosis || '-',
+    dosis: [item.dosis, item.frek].filter((part) => part && part !== '-').join(' ') || '-',
     aturan_pakai: deriveAturanPakai(item.obat),
-    durasi: '3-5 hari',
+    durasi: '',
     rationale: `Terapi farmakologi awal berbasis knowledge ICD (${detail.code}).`,
     safety_check: 'safe' as const,
     contraindications: [] as string[],
@@ -246,7 +258,8 @@ async function buildKnowledgePrescriptionResponse(
       processing_time_ms: 200,
       model_version: 'knowledge-db-v1',
       timestamp: new Date().toISOString(),
-      is_mock: true,
+      is_mock: false,
+      is_local: true,
     },
   };
 }
@@ -938,6 +951,33 @@ export const SentraAPI = {
         'Farmakoterapi Mock Diblok',
         'Runtime masih berada pada mock mode. Sistem menahan farmakoterapi otomatis agar tidak memakai template atau placeholder.'
       );
+    }
+
+    // No prescription service: the knowledge base's therapy for this diagnosis only - no reasoner,
+    // no template regimen, no added triad components (Chief, 2026-10-01).
+    if (!PRESCRIPTION_API_CONFIGURED) {
+      // The first request after install can arrive while the knowledge base is still being seeded.
+      await ensureICD10DataLoaded();
+      const knowledge = await buildKnowledgePrescriptionResponse(context);
+      const safety = applyMedicationSafetyFilter(knowledge?.medication_recommendations ?? [], context);
+      return {
+        success: true,
+        data: {
+          diagnosis_suggestions: [],
+          medication_recommendations: safety.filtered,
+          alerts: combineAndSortAlerts([...(knowledge?.alerts ?? []), ...safety.alerts]),
+          clinical_guidelines: knowledge?.clinical_guidelines ?? [
+            'Basis pengetahuan belum mencatat terapi untuk diagnosis ini.',
+          ],
+          meta: {
+            processing_time_ms: 0,
+            model_version: 'knowledge-db-v1',
+            timestamp: new Date().toISOString(),
+            is_mock: false,
+            is_local: true,
+          },
+        },
+      };
     }
 
     // Use mock if enabled

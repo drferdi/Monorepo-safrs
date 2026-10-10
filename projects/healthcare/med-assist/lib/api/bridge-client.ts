@@ -1229,9 +1229,21 @@ export async function sendConsultToDoctor(
  * Auto-generated on 2026-04-15
  */
 
+export class CanonicalEngineUnavailableError extends Error {
+  constructor() {
+    super('Canonical clinical engine is disabled');
+    this.name = 'CanonicalEngineUnavailableError';
+  }
+}
+
+// MedBoard serves no /api/clinical/engine/evaluate yet, and CanonicalTriageInput still carries
+// patient identity (rm, name, dob) that the PII guard rejects. Enable after both are resolved.
+const CANONICAL_CLINICAL_ENGINE_ENABLED = false;
+
 export async function evaluateCanonicalClinicalEngine(
   payload: CanonicalTriageInput
 ): Promise<CanonicalClinicalEngineOutput> {
+  if (!CANONICAL_CLINICAL_ENGINE_ENABLED) throw new CanonicalEngineUnavailableError();
   const res = await bridgeFetch<CanonicalEngineResponse>('/api/clinical/engine/evaluate', {
     method: 'POST',
     body: JSON.stringify(payload),

@@ -10,6 +10,10 @@
 
 import { storage } from '@wxt-dev/storage';
 
+import { createLogger } from '~/utils/logger';
+
+const log = createLogger('AuditService', 'background');
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -87,7 +91,7 @@ class AuditService {
       }
 
       this.initialized = true;
-      console.warn(`[AuditService] Initialized. ${this.memoryCache.length} entries loaded.`);
+      log.debug(`Initialized. ${this.memoryCache.length} entries loaded.`);
     } catch (e) {
       console.error('[AuditService] Failed to initialize:', e);
       this.memoryCache = []; // Start fresh on critical failure (or safe mode)

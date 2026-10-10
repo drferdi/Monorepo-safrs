@@ -187,4 +187,39 @@ describe('bridge poller', () => {
 
     expect(client.fetchPendingEntries).toHaveBeenCalledTimes(1);
   });
+
+  // chrome://extensions lists every console error or warning of the service worker; a server that
+  // is down is retried with backoff and must not add one every poll.
+  it('backs off without a console error or warning when the server is unreachable', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { attachBridgeAlarmListener } = await loadPoller();
+    client.fetchPendingEntries.mockRejectedValue(new Error('Tidak dapat terhubung ke server.'));
+    attachBridgeAlarmListener();
+
+    fireAlarm();
+    await vi.waitFor(() => expect(client.getBridgeConfig).toHaveBeenCalled());
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(errorSpy).not.toHaveBeenCalled();
+    expect(warnSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+    warnSpy.mockRestore();
+  });
+
+  it('warns once and stops polling when the bridge token is rejected', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { attachBridgeAlarmListener } = await loadPoller();
+    const { BridgeApiError } = await import('./authed-fetch');
+    client.fetchPendingEntries.mockRejectedValue(new BridgeApiError(401, 'invalid token'));
+    attachBridgeAlarmListener();
+
+    fireAlarm();
+    await vi.waitFor(() => expect(warnSpy).toHaveBeenCalledTimes(1));
+
+    expect(errorSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+    warnSpy.mockRestore();
+  });
 });

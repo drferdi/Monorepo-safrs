@@ -14,6 +14,10 @@
 
 import type { ICD10Entry, RAGDatabaseStats, RAGDatabaseStatus } from './types';
 
+import { createLogger } from '~/utils/logger';
+
+const log = createLogger('ICD10-DB', 'background');
+
 // =============================================================================
 // CONSTANTS
 // =============================================================================
@@ -60,13 +64,13 @@ class ICD10Database {
       request.onsuccess = () => {
         this.db = request.result;
         this.isInitialized = true;
-        console.warn('[ICD10-DB] Database opened successfully');
+        log.debug('Database opened successfully');
         resolve();
       };
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        console.warn('[ICD10-DB] Upgrading database schema...');
+        log.debug('Upgrading database schema...');
 
         // Create main ICD-10 entries store
         if (!db.objectStoreNames.contains(STORE_NAME)) {
@@ -78,13 +82,13 @@ class ICD10Database {
           store.createIndex('is_leaf', 'is_leaf', { unique: false });
           store.createIndex('keywords', 'keywords', { unique: false, multiEntry: true });
 
-          console.warn('[ICD10-DB] Created icd10_entries store with indices');
+          log.debug('Created icd10_entries store with indices');
         }
 
         // Create metadata store
         if (!db.objectStoreNames.contains(META_STORE)) {
           db.createObjectStore(META_STORE, { keyPath: 'key' });
-          console.warn('[ICD10-DB] Created metadata store');
+          log.debug('Created metadata store');
         }
       };
     });
@@ -301,7 +305,7 @@ class ICD10Database {
       });
 
       tx.oncomplete = () => {
-        console.warn(`[ICD10-DB] Bulk put completed: ${successCount} entries`);
+        log.debug(`Bulk put completed: ${successCount} entries`);
         resolve(successCount);
       };
 
@@ -324,7 +328,7 @@ class ICD10Database {
       const request = store.clear();
 
       request.onsuccess = () => {
-        console.warn('[ICD10-DB] Store cleared');
+        log.debug('Store cleared');
         resolve();
       };
       request.onerror = () => reject(request.error);
@@ -482,7 +486,7 @@ class ICD10Database {
       this.db = null;
       this.isInitialized = false;
       this.initPromise = null;
-      console.warn('[ICD10-DB] Database closed');
+      log.debug('Database closed');
     }
   }
 
@@ -496,7 +500,7 @@ class ICD10Database {
       const request = indexedDB.deleteDatabase(DB_NAME);
 
       request.onsuccess = () => {
-        console.warn('[ICD10-DB] Database deleted');
+        log.debug('Database deleted');
         resolve();
       };
 
