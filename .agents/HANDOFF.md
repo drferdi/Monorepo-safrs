@@ -40,16 +40,20 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Work in flight
 
-- The old `tools/jev` folder is still on disk because three running Jev servers (this Claude
-  session and two Droid sessions) hold its files. It is hidden by a temporary line in
-  `.git/info/exclude`. After those agents restart, delete `tools/jev` and remove that line.
+- 2026-10-11: the old `tools/jev` folder is deleted (its two log lines not yet copied were
+  merged first) and the temporary `.git/info/exclude` line is gone. `tools/typesafe-jev` is the
+  only Jev on disk. All seven agents (Claude, Codex, Antigravity, Grok, Factory Droid, Cursor,
+  OpenCode) point at it; each configured server answered an MCP handshake with `jev_route`.
+  Actual calls in the last two days: Claude 14 and Codex 28; the other five had none yet.
+  Cursor's `jev-intent.ps1` hook still calls api.typesafe.ai directly, not the playbook.
+  The synced claude.ai skill `audit-monorepo-agent` still names `.kilo/jev`; fix it at the source.
 - MyPrompt (`projects/internal/prompt`, own repo `drferdi/Myprompt`, published by
   `git subtree split --prefix=projects/internal/prompt`) may move to `tools/` too. Waiting for
   Gaffer, because the subtree prefix changes.
 
 ## Blockers
 
-- Push: Gaffer ordered it (repo is public, contribution to the community). The pre-publish scan
+- Push (done 2026-10-11): Gaffer ordered it (repo is public, contribution to the community). The pre-publish scan
   of all 804 outgoing commits (`origin/main..HEAD`, single root shared with origin, so the
   pre-redaction lineage is not reachable) found no real secret and no patient data. Only
   synthetic test values, SHA256 hashes, journal DOIs, localhost database URLs, two public
@@ -61,8 +65,10 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Next action
 
-- Gaffer: decide the push (remote, and both gates) and the MyPrompt move.
-- Restart agents, then delete the old `tools/jev` folder.
+- Pushed: `origin/codex/oracle-ii-grounding` matched `4facfd13` (2026-10-11); Gaffer ran it after
+  the agent uploaded the 531 Git LFS objects, which the husky pre-push hook skips.
+- Gaffer: decide the MyPrompt move, and whether `.husky/pre-push` should also run
+  `git lfs pre-push`.
 - Gaffer: audit actions A-2..A-7 and A-11..A-19 are not approved yet. A-1 (key rotation) is
   Gaffer's own job.
 - `.codex/agents` still say "Chief", and two agents share the name `security-reviewer`.
