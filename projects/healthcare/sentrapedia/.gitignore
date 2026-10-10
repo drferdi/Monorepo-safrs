@@ -10,3 +10,8 @@ __pycache__/
 .pytest_cache/
 *.sqlite-wal
 *.sqlite-shm
+# Local agent and verification output (also ignored by the monorepo root)
+verify-report/
+.superpowers/
+docs/superpowers/
+.claude/
