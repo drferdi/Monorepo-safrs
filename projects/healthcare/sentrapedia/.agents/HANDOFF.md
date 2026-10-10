@@ -1,5 +1,55 @@
 # Sentrapedia handoff
 
+## Design audit fixes — 2026-10-11 03:05 Asia/Jakarta
+
+Status: implemented and locally verified, uncommitted on branch `codex/oracle-ii-grounding`
+(HEAD `60be368d`). Risk R1: reversible capsule UI/CSS changes; no dependency, data, API or
+MIRA engine change. Source: `docs/DESIGN-AUDIT.md`. Gaffer ordered "Laksanakan perbaikan
+tersebut" and chose the judgment items on 2026-10-11 (see DECISIONS).
+
+Done (32 of 35 audit points): contrast tokens (S-01, S-04, C-01, D-03, E-02, Y-03, panel
+caption/footnote), 24px targets (S-02, D-02, footer, reuse-prompt), Encounter titles in id-ID
+24-hour WIB (S-03, new Encounters only; stored titles untouched), header title width below
+900px (S-05), Indonesian chrome labels (S-06), disabled Send state (H-01), mic as tool icon
+(H-02), "Templat lain" picker on home (H-03), composer follows the headline (H-04), task
+headlines without numbering or claims (H-05), sentence-case labels (H-06), chat composer
+without tabs/chips below 1200px (D-01), Encounter title as chat-view `h1` + brand aria (D-04),
+empty sections as one "Belum diisi" line of editor links (D-05), option semantics in the
+slash picker and Pusat perintah (E-01, E-07), Pasien form "Wajib" + blur/submit validation
+(E-03), 3.25:1 field border token `--workspace-control-border` (E-04), no backdrop blur
+(E-05), compact queue cards (E-06), panel empty-context action (C-02), toast tone with alert
+glyph and no duplicate of the storage banner (Y-01), Indonesian `not-found.tsx` (Y-02),
+`src/app/icon.png` from the existing logomark (Y-04), thinking-card list semantics (M-01),
+"Coba lagi" on analysis errors (M-03).
+
+Not done, by decision or scope: M-02 thinking-card timed steps (Gaffer kept them), M-04 (no
+action needed after D-01), S-07 dark mode (out of scope), type-scale/spacing token refactor
+from the consistency table (not one of the 35 points).
+
+Gates: typecheck exit 0; lint exit 0; `vitest tests/studio.test.ts tests/workspace.test.ts`
+90/90 (4 new tests: id-ID title, empty-section detection). Lighthouse 12.8.2 on `next dev`:
+mobile 100/100, desktop 100/100 (was 100/96 and 91/96). axe-core 4.10.3 over 82 captured
+states at 390/768/1440: 1 rule left, `scrollable-region-focusable` ×3 on the slash picker
+(combobox listbox; arrows move `aria-activedescendant` and scroll, focus stays in the
+textarea). Interaction checks: 16 PASS, 2 FAIL
+(`verify-report/design-fixes/interaction-checks.txt`); both FAILs are script errors
+(quick-mode choice; seed Encounter), confirmed manually (screenshot 46; new Encounter "Encounter (11 Okt,
+02.59 WIB)"). Evidence: `verify-report/design-fixes/` (gitignored).
+
+Limits: MIRA result view not re-captured; the recorded fixture lacks the new `grounding`
+bundle, so D-01/D-04/D-05 were verified on local drafts only. Full `npm test`, `npm run
+build` and extraction were not run (single-file rule). `next dev` rewrote `next-env.d.ts`;
+restored with `git restore`.
+
+Next: Gaffer reviews the diff and decides on commit. Optional follow-ups: slash picker
+scroll rule, type-scale/spacing tokens, dark mode.
+
+Laporan Orkestrasi
+- Orchestrator: Claude Opus 5.5 (reasoning effort not exposed)
+- Worker: SOLO - no worker dispatched
+- Result: SUCCESS
+- Suggested remediation: None - all required work is complete
+
 
 ## Integrated MIRA system — 2026-10-10 21:15 Asia/Jakarta
 

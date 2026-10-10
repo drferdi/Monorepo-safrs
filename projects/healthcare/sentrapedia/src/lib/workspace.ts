@@ -107,5 +107,5 @@ export function newId(): string { return crypto.randomUUID(); }
 
 export function newEncounter(patientId: string | null = null): Encounter {
   const now = new Date();
-  return { id: newId(), patientId, title: `Encounter (${now.toLocaleDateString("en-US", { month: "2-digit", day: "2-digit", timeZone: "Asia/Jakarta" })} ${now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" })})`, createdAt: now.toISOString(), messages: [], context: "" };
+  return { id: newId(), patientId, title: `Encounter (${new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Asia/Jakarta" }).format(now)} WIB)`, createdAt: now.toISOString(), messages: [], context: "" };
 }

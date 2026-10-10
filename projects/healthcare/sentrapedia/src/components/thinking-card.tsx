@@ -15,9 +15,9 @@ export function ThinkingCard({ onCancel }: { onCancel: () => void }) {
   }, []);
   return <article className="assistant-message thinking-card" aria-busy="true">
     <header className="message-header"><Brand compact/><strong>Analisis kasus</strong></header>
-    <ol className="thinking-steps" role="status">
+    <div role="status"><ol className="thinking-steps">
       {thinkingSteps.slice(0, step + 1).map((label, index) => <li key={label} data-done={index < step} style={{ "--item-order": index } as CSSProperties}>{index < step ? <Check size={12} aria-hidden="true"/> : <span className="thinking-dot" aria-hidden="true"/>}<span>{label}{index < step ? "" : "…"}</span></li>)}
-    </ol>
+    </ol></div>
     <button type="button" className="text-button" onClick={onCancel}>Batalkan analisis</button>
   </article>;
 }

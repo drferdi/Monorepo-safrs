@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../src/lib/studio";
+import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../src/lib/studio";
 import { defaultReviewItems } from "../src/lib/workflow";
 import { createDraft, modeIds, modes } from "../src/lib/drafts";
 import { clinicalTemplates, insertTemplate, modeCategories, templateText } from "../src/lib/clinical-templates";
@@ -176,5 +176,22 @@ KLARIFIKASI
   it("adds the structure after what is already typed and never replaces it", () => {
     expect(insertTemplate("Keluhan: batuk sintetis 3 hari\n", "STRUKTUR")).toBe("Keluhan: batuk sintetis 3 hari\n\nSTRUKTUR");
     expect(insertTemplate("  ", "STRUKTUR")).toBe("STRUKTUR");
+  });
+});
+
+describe("empty document sections", () => {
+  it("recognises the untouched placeholder in both draft languages", () => {
+    expect(emptySection("Belum tersedia — lengkapi dan verifikasi oleh klinisi.\n")).toBe(true);
+    expect(emptySection("Belum tersedia — lengkapi dan verifikasi oleh klinisi")).toBe(true);
+    expect(emptySection("\nNot provided — complete and verify with the clinician.\n\n")).toBe(true);
+  });
+  it("keeps any section a clinician or the input has filled", () => {
+    expect(emptySection("Batuk 3 hari.\nBelum tersedia — lengkapi dan verifikasi oleh klinisi.")).toBe(false);
+    expect(emptySection("")).toBe(false);
+  });
+  it("matches what createDraft writes for a section without input", () => {
+    const sections = documentSections(createDraft({ mode: "clinic", prompt: "Keluhan: batuk 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" }));
+    expect(sections.filter((section) => emptySection(section.body)).length).toBeGreaterThan(0);
+    expect(emptySection(sections[0].body)).toBe(false);
   });
 });

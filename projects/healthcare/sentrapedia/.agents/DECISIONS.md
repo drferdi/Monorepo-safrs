@@ -123,3 +123,16 @@
   gates and existing audit/budget path. Windows job ownership precedes child execution.
 - Fresh extraction and packaged standalone passed; R2 review PASS. No paid inference
   or Docker image execution claimed. Gaffer approved corrected verification override.
+
+## 2026-10-11 — Design audit fixes
+- Gaffer approved the `docs/DESIGN-AUDIT.md` judgment items. The mic becomes a plain tool icon,
+  superseding the earlier Chief note "yg mic biarkan".
+- Task headlines carry no numbering or claims ("Analisis kasus klinis.").
+- Chrome labels are in Indonesian (Mode suara, Pusat perintah, Kokpit klinis, Jenis kelamin,
+  footer), and labels use sentence case, not uppercase.
+- On home, a quick-action mode hides the Mode trigger behind "Templat lain" after the chips;
+  the trigger returns in the composer for non-quick templates and in chat.
+- Empty draft sections collapse into one "Belum diisi" line of editor links. Queue cards show
+  patient, date and counts; status and tasks sit under "Status dan tugas".
+- The thinking card keeps its timed steps (M-02 declined). Dark mode and the type-scale refactor
+  are out of scope.

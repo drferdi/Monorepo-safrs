@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { initialWorkspace, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
+import { describe, expect, it, vi } from "vitest";
+import { initialWorkspace, newEncounter, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
 import { createDraft, modes } from "../src/lib/drafts";
 import { greeting } from "../src/lib/ui-labels";
 
@@ -105,5 +105,13 @@ describe("greeting", () => {
   it("greets without a name until one is saved", () => {
     expect(greeting(19, "")).toBe("Selamat malam");
     expect(greeting(19, "   ")).toBe("Selamat malam");
+  });
+});
+
+describe("new Encounter title", () => {
+  it("uses an Indonesian date with a 24-hour WIB time, so day and month cannot swap", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-08T14:03:00Z"));
+    try { expect(newEncounter().title).toBe("Encounter (8 Okt, 21.03 WIB)"); } finally { vi.useRealTimers(); }
   });
 });

@@ -45,10 +45,10 @@ export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSele
           <button onClick={() => { if (mobile) onToggle(); onDialog("queue"); }}><ListPlus/><span>Antrean kerja</span></button>
           <button onClick={() => { if (mobile) onToggle(); onDialog("templates"); }}><SquarePen/><span>Templat dan favorit</span></button>
           <button onClick={() => { if (mobile) onToggle(); onDialog("knowledge"); }}><BookOpen/><span>Pustaka Klinis</span></button>
-          <button onClick={() => onDialog("scribe")}><AudioLines/><span>Voice mode</span></button>
+          <button onClick={() => onDialog("scribe")}><AudioLines/><span>Mode suara</span></button>
         </div>
         <div className="nav-group" role="group" aria-labelledby="nav-group-system"><span className="nav-group-title" id="nav-group-system">Sistem</span>
-          <button onClick={() => { if (mobile) onToggle(); onDialog("commands"); }}><Command/><span>Command Center</span><kbd>⌘ J</kbd></button>
+          <button onClick={() => { if (mobile) onToggle(); onDialog("commands"); }}><Command/><span>Pusat perintah</span><kbd>⌘ J</kbd></button>
           <button onClick={() => onDialog("search")}><Search/><span>Cari</span><kbd>⌘ /</kbd></button>
           <button onClick={() => onDialog("settings")}><SlidersHorizontal/><span>Pengaturan Agent</span></button>
         </div>

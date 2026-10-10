@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { Fragment, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Pencil } from "lucide-react";
-import { documentSections, documentTitle, replaceSection, supportingSection } from "../lib/studio";
+import { documentSections, documentTitle, emptySection, replaceSection, supportingSection } from "../lib/studio";
 import { diagnosisReferenceMarker } from "../lib/mira/presentation";
 import { revealAt } from "../lib/typing";
 
@@ -20,6 +20,8 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
   const typingNow = !progress.done;
   const typingSection = Math.max(0, progress.active - 1);
   const current = typingNow ? typingSection : selected;
+  // Sections still holding only the draft placeholder collapse into one line of links once the text is complete.
+  const empty = parts.flatMap((part, index) => !typingNow && emptySection(part.body) ? [index] : []);
 
   useEffect(() => {
     if (!typing) return;
@@ -38,11 +40,11 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
     onSelect(index);
     setArrived(index);
     requestAnimationFrame(() => {
-      const target = root.current?.querySelectorAll<HTMLElement>("[data-diagnosis-section]")[index];
+      const target = root.current?.querySelector<HTMLElement>(`[id="${id}-${index}"]`);
       const folded = target?.querySelector<HTMLDetailsElement>(":scope > .diagnosis-supporting");
       if (folded) folded.open = true;
       target?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-      target?.querySelector<HTMLElement>("h3")?.focus({ preventScroll: true });
+      (target?.matches("button") ? target : target?.querySelector<HTMLElement>("h3"))?.focus({ preventScroll: true });
     });
   };
   return <div className="diagnosis-document" ref={root} aria-busy={typingNow}>
@@ -56,7 +58,7 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
     <div className="diagnosis-sections">
       {renderContent(showMeta ? prefix.slice(0, progress.visible[0]) : documentTitle(content), () => undefined)}
       {parts.map(({ section, split, body }, index) => {
-        if (typingNow && index > typingSection) return null;
+        if ((typingNow && index > typingSection) || empty.includes(index)) return null;
         const editable = !typingNow;
         const heading = <h3 id={`${id}-heading-${index}`} tabIndex={-1}>{section.title}</h3>;
         const edit = editable && onEditSection && <button type="button" className="text-button" aria-label={`Edit bagian ${section.title}`} onClick={() => onEditSection(index)}><Pencil size={12}/> Edit</button>;
@@ -70,6 +72,7 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
             : <><div className="diagnosis-section-heading">{heading}{edit}</div>{sectionBody}</>}
         </section>;
       })}
+      {empty.length > 0 && <p className="empty-sections">Belum diisi: {empty.map((index, order) => <Fragment key={index}>{order > 0 && ", "}<button type="button" id={`${id}-${index}`} data-empty-section={index} className="text-button" aria-label={`Isi bagian ${sections[index].title}`} onClick={() => onEditSection ? onEditSection(index) : navigate(index)}>{sections[index].title}</button></Fragment>)}</p>}
     </div>
   </div>;
 }

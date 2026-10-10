@@ -12,7 +12,7 @@ import type { PersonalTemplate } from "../lib/workflow";
 import type { Settings } from "../lib/workspace";
 import { useDictation } from "./use-dictation";
 
-interface Props { prompt: string; onPrompt: (value: string) => void; mode: ModeId; onMode: (mode: ModeId) => void; settings: Settings; onModel: (model: Settings["model"]) => void; context: string; onContext: () => void; patientName?: string; templates: PersonalTemplate[]; favorites: string[]; templateKey: string | null; onTemplate: (key: string) => void; onSubmit: () => void; busy: boolean; miraEnabled?: boolean; analysisError?: string; onCancelAnalysis?: () => void }
+interface Props { prompt: string; onPrompt: (value: string) => void; mode: ModeId; onMode: (mode: ModeId) => void; settings: Settings; onModel: (model: Settings["model"]) => void; context: string; onContext: () => void; patientName?: string; templates: PersonalTemplate[]; favorites: string[]; templateKey: string | null; onTemplate: (key: string) => void; onSubmit: () => void; busy: boolean; miraEnabled?: boolean; analysisError?: string; onCancelAnalysis?: () => void; inChat?: boolean }
 
 export function IntentTabs({ mode, onMode }: { mode: ModeId; onMode: (mode: ModeId) => void }) {
   const group = intentGroups.find((item) => item.modes.includes(mode))!;
@@ -24,7 +24,7 @@ const modeLabel = (id: ModeId) => modes.find((item) => item.id === id)!.label;
 /** One picker for every template: favourites first, then the six clinical categories of Chief's template pack, then personal templates.
  *  A select-only combobox: focus stays on the trigger, arrows/Home/End move, Enter or Space picks, Escape closes.
  *  The menu opens towards the side with room (upward when the composer sits at the bottom of the chat). */
-function ModePicker({ mode, templates, favorites, templateKey, onTemplate }: Pick<Props, "mode" | "templates" | "favorites" | "templateKey" | "onTemplate">) {
+function ModePicker({ mode, templates, favorites, templateKey, onTemplate, quiet = false }: Pick<Props, "mode" | "templates" | "favorites" | "templateKey" | "onTemplate"> & { quiet?: boolean }) {
   const [open, setOpen] = useState(false);
   const [upward, setUpward] = useState(false);
   const [maxHeight, setMaxHeight] = useState(320);
@@ -77,9 +77,9 @@ function ModePicker({ mode, templates, favorites, templateKey, onTemplate }: Pic
     if (next !== null) { event.preventDefault(); setActive(next); setRevealed(next); }
   }
   let index = -1;
-  return <div ref={root} className="composer-mode" data-open={open} data-placement={upward ? "up" : "down"}>
+  return <div ref={root} className="composer-mode" data-open={open} data-quiet={quiet} data-placement={upward ? "up" : "down"}>
     <button type="button" role="combobox" className="mode-trigger" aria-label="Mode atau templat" aria-haspopup="listbox" aria-expanded={open} aria-controls={`${id}-list`} aria-activedescendant={open ? `${id}-${active}` : undefined} onClick={() => open ? setOpen(false) : show()} onKeyDown={onKeyDown}>
-      <span>{templateKey ? "Templat:" : "Mode:"}</span><strong>{name(value) ?? modeLabel(mode)}</strong><ChevronDown size={14}/>
+      {quiet ? <strong>Templat lain</strong> : <><span>{templateKey ? "Templat:" : "Mode:"}</span><strong>{name(value) ?? modeLabel(mode)}</strong></>}<ChevronDown size={14}/>
     </button>
     <div id={`${id}-list`} role="listbox" aria-label="Mode atau templat" className="mode-menu" style={{ maxHeight }}>
       {groups.map((group) => <div key={group.id} role="group" aria-labelledby={`${id}-${group.id}`} className="mode-menu-group"><span id={`${id}-${group.id}`} className="mode-menu-label">{group.label}</span>
@@ -98,12 +98,15 @@ export function Composer(props: Props) {
   const command = props.prompt.match(/^\/([^\s]*)$/);
   const matches = command ? modes.filter((item) => `${item.id} ${item.label}`.toLowerCase().includes(command[1].toLowerCase())) : [];
   const slashOpen = Boolean(command && !slashClosed);
+  // On the home screen the quick actions carry the choice; the full picker waits behind "Templat lain" until a template outside them is chosen.
+  const quietPicker = !props.inChat && !props.templateKey && group.quick.includes(props.mode);
+  const picker = <ModePicker quiet={quietPicker} mode={props.mode} templates={props.templates} favorites={props.favorites} templateKey={props.templateKey} onTemplate={props.onTemplate}/>;
   // Dictation adds each phrase to what is already written; switching mode never clears the text.
   const dictation = useDictation(props.settings.language, (text) => props.onPrompt(`${props.prompt}${props.prompt && !/\s$/.test(props.prompt) ? " " : ""}${text}`));
   function chooseMode(id: ModeId) { props.onMode(id); props.onPrompt(props.prompt.replace(/^\/[^\s]*\s?/, "")); setSlashClosed(true); }
 
   return <div className="composer-area"><IntentTabs mode={props.mode} onMode={props.onMode}/><form className={`composer ${props.busy ? "is-busy" : ""}`} aria-busy={props.busy} onSubmit={(event) => { event.preventDefault(); if (slashOpen) { if (matches[slashIndex]) chooseMode(matches[slashIndex].id); } else props.onSubmit(); }}>
-    <ModePicker mode={props.mode} templates={props.templates} favorites={props.favorites} templateKey={props.templateKey} onTemplate={props.onTemplate}/>
+    {!quietPicker && picker}
     <textarea aria-label="Pertanyaan atau catatan klinis" placeholder={composerPlaceholder(props.mode)} value={props.prompt} onChange={(e) => { props.onPrompt(e.target.value); setSlashClosed(false); setSlashIndex(0); }} aria-controls={slashOpen ? pickerId : undefined} aria-activedescendant={slashOpen && matches[slashIndex] ? `${pickerId}-${matches[slashIndex].id}` : undefined} rows={2} maxLength={30000} onKeyDown={(e) => { if (e.nativeEvent.isComposing) return; if (slashOpen) { if (e.key === "Escape") { e.preventDefault(); setSlashClosed(true); return; } if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); const next = Math.max(0, Math.min(matches.length - 1, slashIndex + (e.key === "ArrowDown" ? 1 : -1))); setSlashIndex(next); document.getElementById(`${pickerId}-${matches[next]?.id}`)?.scrollIntoView({ block: "nearest" }); return; } if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (matches[slashIndex]) chooseMode(matches[slashIndex].id); return; } } if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (props.prompt.trim()) props.onSubmit(); } }}/>
     <div className="composer-toolbar"><div className="composer-tools-left">
       <button type="button" className="icon-tool mic-button" data-state={dictation.recording ? "listening" : "idle"} aria-pressed={dictation.recording} disabled={dictation.starting} aria-label={dictation.recording ? "Hentikan dikte" : "Dikte ke kolom teks"} title={dictation.recording ? "Mendengarkan · klik untuk berhenti" : "Dikte ke kolom teks (layanan speech browser)"} onClick={dictation.toggle}><Mic size={16}/></button>
@@ -115,8 +118,9 @@ export function Composer(props: Props) {
     </div></div>
   </form>
     {dictation.error && <div className="composer-analysis"><p className="form-warning" role="alert">{dictation.error}</p></div>}
-    {props.miraEnabled && props.analysisError && <div className="composer-analysis"><p className="form-warning" role="alert">{props.analysisError}</p></div>}
-    {slashOpen && <div className="slash-picker" id={pickerId} role="listbox" aria-label="Pilih templat">{matches.map((item, index) => <div role="option" aria-selected={slashIndex === index} id={`${pickerId}-${item.id}`} key={item.id}><button type="button" onClick={() => chooseMode(item.id)}><strong>{item.label}</strong><span>/{item.id}</span></button></div>)}{!matches.length && <p>Tidak ada templat yang cocok.</p>}</div>}
-    <div className="quick-actions"><span className="quick-label" id={quickId}>TINDAKAN CEPAT</span><div className="intent-modes" role="group" aria-labelledby={quickId}>{group.quick.map((id) => { const item = modes.find((entry) => entry.id === id)!; return <button type="button" className={`action-chip ${props.mode === id ? "active" : ""}`} key={id} onClick={() => props.onMode(id)} title={item.description} aria-pressed={props.mode === id}>{item.label}</button>; })}</div></div>
+    {props.miraEnabled && props.analysisError && <div className="composer-analysis"><p className="form-warning" role="alert">{props.analysisError} {props.prompt.trim() && !props.busy && <button type="button" className="text-button" onClick={props.onSubmit}>Coba lagi</button>}</p></div>}
+    {/* Options are the rows themselves: focus stays in the textarea, which points at the active row. */}
+    {slashOpen && <div className="slash-picker" id={pickerId} role="listbox" aria-label="Pilih templat">{matches.map((item, index) => <div role="option" aria-selected={slashIndex === index} id={`${pickerId}-${item.id}`} key={item.id} onPointerDown={(event) => event.preventDefault()} onClick={() => chooseMode(item.id)}><strong>{item.label}</strong><span>/{item.id}</span></div>)}{!matches.length && <p>Tidak ada templat yang cocok.</p>}</div>}
+    <div className="quick-actions"><span className="quick-label" id={quickId}>Tindakan cepat</span><div className="intent-modes" role="group" aria-labelledby={quickId}>{group.quick.map((id) => { const item = modes.find((entry) => entry.id === id)!; return <button type="button" className={`action-chip ${props.mode === id ? "active" : ""}`} key={id} onClick={() => props.onMode(id)} title={item.description} aria-pressed={props.mode === id}>{item.label}</button>; })}{quietPicker && picker}</div></div>
   </div>;
 }

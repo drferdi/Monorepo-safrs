@@ -5,10 +5,10 @@ import type { Encounter } from "./workspace";
 // Four needs of a doctor. `quick` are the contextual quick actions under the composer; `modes` also holds the
 // category's other templates, which stay reachable from the Mode picker. Telaah Bukti waits for a real evidence search.
 export const intentGroups: { id: string; label: string; headline: string; description: string; placeholder: string; modes: ModeId[]; quick: ModeId[] }[] = [
-  { id: "ask", label: "Analisis", headline: "01 — Analisis Klinis. Keputusan Lebih Tepat.", description: "Telaah kasus kompleks berdasarkan bukti medis.", placeholder: "Diskusikan kasus yang sedang Anda tangani.", modes: ["question", "ddx", "workup", "icd10", "refer"], quick: ["question", "ddx", "workup", "icd10"] },
-  { id: "document", label: "Dokumentasi", headline: "02 — Dokumentasi Rapi. Informasi Terstruktur.", description: "Susun catatan klinis yang jelas dan siap ditinjau.", placeholder: "Tuliskan anamnesis, pemeriksaan, dan temuan untuk disusun menjadi catatan.", modes: ["clinic", "hpi", "chronic", "handoff", "scribe"], quick: ["clinic", "hpi", "chronic", "handoff"] },
-  { id: "plan", label: "Rencana", headline: "03 — Asesmen Jelas. Tindak Lanjut Terarah.", description: "Organisasikan masalah klinis dan rencana penanganan.", placeholder: "Tuliskan asesmen dan rencana tata laksana yang ingin Anda susun.", modes: ["ap", "tasks", "referral", "monitoring"], quick: ["ap", "tasks", "referral", "monitoring"] },
-  { id: "communicate", label: "Komunikasi", headline: "04 — Komunikasi Jelas. Pasien Lebih Paham.", description: "Siapkan informasi medis yang ringkas dan mudah dipahami.", placeholder: "Tuliskan informasi yang ingin disampaikan kepada pasien atau sejawat.", modes: ["education", "avs", "telephone", "authorization"], quick: ["education", "avs", "telephone"] },
+  { id: "ask", label: "Analisis", headline: "Analisis kasus klinis.", description: "Telaah kasus kompleks berdasarkan bukti medis.", placeholder: "Diskusikan kasus yang sedang Anda tangani.", modes: ["question", "ddx", "workup", "icd10", "refer"], quick: ["question", "ddx", "workup", "icd10"] },
+  { id: "document", label: "Dokumentasi", headline: "Susun dokumentasi klinis.", description: "Susun catatan klinis yang jelas dan siap ditinjau.", placeholder: "Tuliskan anamnesis, pemeriksaan, dan temuan untuk disusun menjadi catatan.", modes: ["clinic", "hpi", "chronic", "handoff", "scribe"], quick: ["clinic", "hpi", "chronic", "handoff"] },
+  { id: "plan", label: "Rencana", headline: "Rencanakan asesmen dan tindak lanjut.", description: "Organisasikan masalah klinis dan rencana penanganan.", placeholder: "Tuliskan asesmen dan rencana tata laksana yang ingin Anda susun.", modes: ["ap", "tasks", "referral", "monitoring"], quick: ["ap", "tasks", "referral", "monitoring"] },
+  { id: "communicate", label: "Komunikasi", headline: "Siapkan komunikasi untuk pasien dan sejawat.", description: "Siapkan informasi medis yang ringkas dan mudah dipahami.", placeholder: "Tuliskan informasi yang ingin disampaikan kepada pasien atau sejawat.", modes: ["education", "avs", "telephone", "authorization"], quick: ["education", "avs", "telephone"] },
 ];
 
 // A tab's own hint shows on its default mode; the other chips keep their specific hint.
@@ -46,6 +46,11 @@ export function encounterTimeline(encounters: Encounter[], current: Encounter | 
   return encounters.filter((item) => current.patientId ? item.patientId === current.patientId : item.id === current.id)
     .sort((a, b) => (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0));
 }
+/** A section still holding only the draft placeholder (createDraft writes it when the input has no matching label). */
+export function emptySection(body: string): boolean {
+  return ["Belum tersedia — lengkapi dan verifikasi oleh klinisi", "Not provided — complete and verify with the clinician"].includes(body.trim().replace(/\.$/, ""));
+}
+
 export function workspaceDate(value: string): string {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? "Tanggal belum tersedia" : new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).format(date) + " WIB";
