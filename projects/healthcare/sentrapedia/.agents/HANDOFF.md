@@ -1,5 +1,16 @@
 # Sentrapedia handoff
 
+## Legacy theoracle/ inventory read — 2026-10-11 Asia/Jakarta
+
+Read-only (copy in session scratchpad, pylance 12.0.0 + pyarrow 25.0.1 in a scratchpad venv
+approved by Gaffer; nothing added to the capsule). `theoracle/` = AnythingLLM LanceDB, 20,322
+chunks, 768-dim Gemini vectors, 144 documents: 100 disease markdowns (all from
+`oracle-ii/knowledge_base/markdown`, 236 chunks; the 44 from `penyakit-paru-obstruktif` to
+`vertigo` are missing) and 44 PDFs (20,086 chunks; 15 match Oracle II PNPK by topic/year,
+29 are other references e.g. FAA, ESC, AHA, GOLD, FORNAS, PERDOSKI, UNAIR). No source PDFs left
+in AnythingLLM storage; treat `theoracle/` as the only copy. Branch now `feat/oracle-vector-only`
+at checkpoint `20b15b2e`.
+
 ## TheOracle vector-only with local EmbeddingGemma — 2026-10-11 Asia/Jakarta
 
 Status: committed on `feat/oracle-vector-only` (worktree `D:\DEV\monorepo.worktrees\oracle-vector-only`):
@@ -520,3 +531,17 @@ Lanjutan (2026-10-09 20:39, R1): tiga koreksi beranda dari Gaffer.
 - Lanjutan 20:47: footer beranda "jadikan hanya 2 baris line": `components/workspace.tsx` judul footer kini "Sentrapedia — Clinical Workspace." (titik), `.footer-brand` dari grid tiga baris jadi flex wrap gap 0 5px. Bukti desktop 1385 px: kalimat identitas satu baris (y 830), tautan satu baris (y 855), tinggi footer 56 px. Di 375 px tetap terlipat (identitas 2 baris + tautan 2 baris) karena lebarnya tidak cukup; tanpa overflow (scrollWidth 375). tsc 0, eslint 0, vitest 142/142. Belum commit.
 - Lanjutan 20:48: Tindakan Cepat biru langit ditolak ("warnanya jelek, text jadi gak jelas"). `app/globals.css`: tombol kini netral: latar putih, garis `--color-border-subtle`, teks tinta #232326 12 px 500 (dulu biru #0d5c80 11 px 400 di atas biru muda); hover latar surface; terpilih = garis tinta #232326; transisi 160 ms. Token `--chip-sky-*` dihapus (tidak dipakai lagi). Bukti: computed 4 tombol 12px 500 rgb(35,35,38) di putih, terpilih bergaris rgb(35,35,38), satu baris tanpa terpotong; klik DDx lalu PICO -> transisi warna garis berjalan dan status aktif berpindah. tsc 0, eslint 0, vitest 142/142. Belum commit.
 - Lanjutan 20:50: "section atas dorong lebih mepet ke atas". `app/globals.css` `@container canvas (min-width: 1060px)`: di beranda header (hanya ikon kanan) jadi `position: absolute` + `pointer-events: none` (ikon tetap aktif), `.home-content` margin-top 20px. Di bawah 1060 px header tetap di alur dan garis tetap di y 60, karena di lebar itu kolom 780 px bertabrakan dengan ikon. Bukti: kanvas 1141 px -> garis y 20 (dulu 60), h1 y 64 (dulu 104), ikon x 1250-1358 y 12-44 tidak bertumpuk dengan garis (kanan 1200), titik di ikon mengenai "Buka Command Center"; kanvas 956 px (viewport 1200) -> header static, garis y 60, tanpa overflow; viewport dikembalikan. tsc 0, eslint 0, vitest 142/142. Belum commit.
+
+Lanjutan (2026-10-11 08:35, Antigravity): Integrasi Dify Cloud / Self-hosted API Client & Server Gateway end-to-end.
+- Target: Menghubungkan Dify Knowledge Base dan Dify Agent ke arsitektur aplikasi secara aman (token isolation pada Next.js backend), mendukung SSE streaming real-time, thought tracking (agent tool calling), retriever citations, dan message feedback.
+- File baru:
+  - `src/lib/dify/types.ts`: Definisi type Dify event stream (`message`, `agent_thought`, `message_end`), payloads, metadata usage, dan retriever citations.
+  - `src/lib/dify/sse-parser.ts`: Parser Server-Sent Events (SSE) toleran terhadap fragmentasi chunk buffer dan decoding UTF-8.
+  - `src/lib/dify/gateway.ts`: Server-side proxy gateway menjaga kerahasiaan `DIFY_API_KEY`, memvalidasi input, mengalirkan streaming via `text/event-stream`, dan menangani timeout/abort/error.
+  - `src/lib/dify/client.ts`: Isomorphic/browser client dengan callback hooks (`onChunk`, `onThought`, `onResource`, `onEnd`, `onError`) dan pengiriman feedback.
+  - `src/app/api/dify/chat/route.ts`: Endpoint API streaming (`GET` health, `POST` chat completion).
+  - `src/app/api/dify/feedback/route.ts`: Endpoint API feedback (`POST` message rating).
+  - `tests/dify-sse-parser.test.ts`, `tests/dify-gateway.test.ts`, `tests/dify-client.test.ts`: Test suite 13 unit tests baru.
+  - `.env.example`: Ditambahkan entri `DIFY_API_KEY` dan `DIFY_API_URL`.
+- Bukti Gate: `tsc --noEmit` 0 error, `eslint` 0 error, `vitest` 171/171 passed (15 test files), `node --test tests/system-runtime.node-test.mjs` 7/7 passed, `node scripts/test-mira.mjs` 157 passed, `npm run build` sukses 0 error (termasuk static & dynamic routes `/api/dify/chat` dan `/api/dify/feedback`).
+
