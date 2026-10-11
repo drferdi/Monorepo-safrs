@@ -110,6 +110,12 @@ A route, duration or note with an unsupported number used to be blanked whole. I
 
 Replay, same 122 replies: of 295 filled fields, one changes. budesonid for asthma, duration "" → "Hari pertama maks 10 mL perhari (sebagian belum terverifikasi)", verbatim from FORNAS. Dose statuses and safety items are unchanged.
 
+### Stripped drug names are clean (commits `3c80e08b`, `4685276f`)
+
+When a dose is not verified, its strength is removed from the drug name. The removal now also takes a glued frequency ("3x500 mg"), the D of "D5%", "per kg" tails, and a bracket that is left empty or holds only a limit word ("Isoniazid (maks 300 mg)" → "Isoniazid"). It repeats until nothing changes, so a removal can never join a leftover number and unit into a new dose.
+
+Replay, same 122 replies: no change. Only one real drug name carried a strength, and it was already clean.
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.

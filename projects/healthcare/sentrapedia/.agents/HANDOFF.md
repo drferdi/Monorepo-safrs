@@ -1,5 +1,29 @@
 # Sentrapedia handoff
 
+## Evidence gate: stripped drug names are clean (#11) - 2026-10-12 Asia/Jakarta
+
+- Gaffer asked for #11 (cosmetic leftovers after a strength is removed) and approved the bounded design with one Opus review.
+- `3c80e08b` (R2), `unstrength` only, so dose verification is untouched:
+  - A frequency glued to a strength goes with it: "3x500 mg", "500mg x 3", "3x1 tablet", "x 3 hari".
+  - "per kg", "kg BB", "kilogram" and "berat badan" are per-unit tails.
+  - A bracket left empty or holding only a limit word (max/maks/maksimal/hingga/sampai/s.d./s/d) is removed.
+  - Punctuation is tidied ("Amoksisilin, 3 kali sehari", "Lidokain-adrenalin").
+- The Opus review returned "with fixes".
+  - Critical: a removal could join a leftover number to a leftover unit and show a new dose. Examples: "Amoksisilin 3 (500 mg) kapsul" became "Amoksisilin 3 kapsul", and "Obat 2 D5% tablet" became "Obat 2 tablet". The review found 19 such names.
+  - Important: "Vitamin E400 IU" became "Vitamin".
+- Fixed in `4685276f`:
+  - `unstrength` repeats until the text stops changing. Its pattern contains STRENGTH, so the fixed point holds no strength.
+  - Only the D of "D5%" is taken with a strength.
+  - The remaining minor leftovers are tidied: "(maks,)", "(s/d)", "[]", "x 3 hari", "x 3.5 mg".
+- Verified:
+  - RED first (both rounds; the review's leaking names are now a test).
+  - Gate tests 67/67, `npm test` 257/257, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies against `9bc97db2`: no output change. Only one real name carried a strength ("Permetrin krim 5%"), and it already stripped cleanly.
+- Known limits:
+  - A bare frequency number can remain ("Parasetamol 1-2 x 500 mg" -> "Parasetamol 1"). It carries no unit, so it is not a dose.
+  - Unicode minus ranges ("4−8 mL") are still not read as ranges; that is a separate small fix.
+- Not pushed.
+
 ## Open items A (#1, #2, #4, #5, #6) - 2026-10-11 Asia/Jakarta
 
 - Gaffer asked to work through A #1, #2, #4, #5, #6 one by one, choosing the best option without questions. Hard rules still hold: no push, no paid calls, no loss of uncommitted work.
