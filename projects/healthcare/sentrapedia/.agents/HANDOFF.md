@@ -1,5 +1,30 @@
 # Sentrapedia handoff
 
+## Evidence gate: a field keeps its supported leading part (#10) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for #10 (a whole route/duration/note blanked for one unsupported number) and approved the bounded design with one Opus review.
+- `4d9de82c` (R2), `src/lib/theoracle-evidence-gate.ts` `shown()`: fields split into clauses at ";", a newline, a non-decimal ",", or a sentence-ending "."; unsupported clauses are dropped instead of the whole field.
+- The Opus review returned "with fixes". The dose invariant held, but dropping clauses could change clinical meaning:
+  - "Hindari bila CrCl <30 ml/menit, kurangi dosis" became "kurangi dosis".
+  - "jangan diberikan, kecuali 2 g dosis tunggal" became "jangan diberikan".
+  - Clauses could also be supported by different passages.
+- Fixed in `0496cac6`:
+  - Only a trailing run of clauses is dropped. If the first unsupported clause is the first clause, the field is blanked.
+  - The kept part must be carried by one passage and have balanced brackets.
+  - If any dropped clause starts with kecuali/bila/jika/apabila/hanya, the field is blanked.
+  - A cut field ends with "(sebagian belum terverifikasi)".
+  - "maks. 4 g" and decimals are not split.
+- Verified:
+  - RED first (both rounds; 6 tests failed on `4d9de82c`); gate tests 59/59, `npm test` 248/248, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies against `955232f7`: one field changes. budesonid (asthma) duration "" -> "Hari pertama maks 10 mL perhari (sebagian belum terverifikasi)", which is verbatim in FORNAS 2023/2025.
+  - No dose status, safety item, or other field changes.
+- Known limits:
+  - FORNAS writes ranges with U+2212 ("4−8 mL"); the strength regex reads only "-" and "–", so that budesonid clause is still dropped. A small follow-up.
+  - A condition word in the middle of a dropped clause ("pada anak bila ...") is not detected; only a leading one is.
+  - A "." followed by a lowercase word does not split, so such fields are blanked whole (fail-safe).
+  - Browser preview not run: the change is in the gate, and the replay exercises it; the UI renders the field text as is.
+- Local `main` fast-forwarded. Not pushed.
+
 ## Evidence gate: per kg is decided for each strength (#9) - 2026-10-11 Asia/Jakarta
 
 - Gaffer asked for #9 (correct per-kg doses blanked) and approved the bounded design with one Opus review.

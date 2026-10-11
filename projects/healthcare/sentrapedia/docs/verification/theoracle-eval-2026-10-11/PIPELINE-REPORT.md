@@ -104,6 +104,12 @@ A dose that mixes a per-kg amount and a plain cap ("10 mg/kgBB, maks 500 mg") no
 
 Replay, same 122 replies: no change (legacy 41, targeted 40 verified). No audited reply had this kind of dose, so the gain applies to future replies.
 
+### A field keeps its supported leading part (commits `4d9de82c`, `0496cac6`)
+
+A route, duration or note with an unsupported number used to be blanked whole. It now keeps its leading clauses up to the first unsupported one, marked "(sebagian belum terverifikasi)", when one passage for the diagnosis carries every number kept. The field is still blanked when the unsupported clause comes first, or when a dropped clause is a condition or exception ("bila", "kecuali", "hanya"). This way, cutting a field never turns a conditional instruction into an unconditional one.
+
+Replay, same 122 replies: of 295 filled fields, one changes. budesonid for asthma, duration "" → "Hari pertama maks 10 mL perhari (sebagian belum terverifikasi)", verbatim from FORNAS. Dose statuses and safety items are unchanged.
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.
