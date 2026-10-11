@@ -2,14 +2,15 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
-  Sparkles,
   X,
   Send,
   Square,
   RotateCcw,
-  Bot,
+  ChevronLeft,
   ChevronDown,
-  BookOpen,
+  MoreVertical,
+  Smile,
+  MessageSquareText,
   ThumbsUp,
   ThumbsDown,
   AlertCircle,
@@ -31,7 +32,7 @@ interface ChatMessage {
 const INITIAL_MESSAGE: ChatMessage = {
   id: "vera-intro",
   sender: "assistant",
-  text: "Halo! Saya **Vera**, asisten AI resmi Sentraverse & Sentrapedia. Ada kasus, pedoman klinis, atau referensi knowledge base yang ingin Anda telaah hari ini?",
+  text: "Halo! Saya Vera, asisten AI resmi Sentraverse & Sentrapedia. Ada kasus, pedoman klinis, atau referensi knowledge base yang ingin Anda telaah hari ini?",
   timestamp: "Sekarang",
 };
 
@@ -56,6 +57,7 @@ export function VeraWidget() {
   const [conversationId, setConversationId] = useState<string | undefined>(undefined);
   const [expandedSourceId, setExpandedSourceId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -92,6 +94,7 @@ export function VeraWidget() {
     setErrorMessage(null);
     setInput("");
     setLoading(false);
+    setMenuOpen(false);
   };
 
   const handleStopGenerating = () => {
@@ -218,368 +221,152 @@ export function VeraWidget() {
     }
   };
 
+  const typing = messages.some((m) => m.isStreaming && !m.text);
+
   return (
     <div className="vera-widget-root">
-      {/* CHAT WINDOW */}
       {isOpen && (
-        <div role="dialog" aria-label="Vera AI Chat Assistant" className="vera-widget-panel">
-          {/* Header */}
-          <div className="vera-panel-header">
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div className="vera-icon-badge">
-                <Sparkles size={14} />
-                <span className="vera-pulse-dot" />
-              </div>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{ fontWeight: 600, fontSize: "14px", letterSpacing: "0.2px" }}>
-                    Vera
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "10px",
-                      padding: "2px 6px",
-                      borderRadius: "10px",
-                      background: "rgba(64, 224, 208, 0.2)",
-                      color: "#40e0d0",
-                      fontWeight: 500,
-                    }}
-                  >
-                    AI Assistant
-                  </span>
-                </div>
-                <div style={{ fontSize: "11px", color: "#a4aec0", marginTop: "2px" }}>
-                  Dify Cloud KB Connected
-                </div>
-              </div>
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <button
-                type="button"
-                onClick={handleResetChat}
-                title="Reset Percakapan"
-                style={{ padding: "6px", color: "#a4aec0", borderRadius: "6px" }}
-              >
-                <RotateCcw size={15} />
+        <div role="dialog" aria-label="Chat Vera" className="vera-widget-panel">
+          <header className="vera-panel-header">
+            <button type="button" className="vera-icon-button" onClick={() => setIsOpen(false)} aria-label="Tutup chat Vera">
+              <ChevronLeft size={22} />
+            </button>
+            <span className="vera-avatar" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2c.8 6.5 3.5 9.2 10 10-6.5.8-9.2 3.5-10 10-.8-6.5-3.5-9.2-10-10 6.5-.8 9.2-3.5 10-10Z" fill="currentColor" /></svg>
+            </span>
+            <span className="vera-title">
+              <strong>Vera</strong>
+              <small>Asisten pengetahuan Sentra</small>
+            </span>
+            <span className="vera-menu">
+              <button type="button" className="vera-icon-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu chat" aria-expanded={menuOpen}>
+                <MoreVertical size={20} />
               </button>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                title="Tutup Widget"
-                style={{ padding: "6px", color: "#a4aec0", borderRadius: "6px" }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-          </div>
+              {menuOpen && (
+                <span className="vera-menu-list" role="menu">
+                  <button type="button" role="menuitem" onClick={handleResetChat}>
+                    <RotateCcw size={14} /> Mulai ulang percakapan
+                  </button>
+                </span>
+              )}
+            </span>
+          </header>
 
-          {/* Error Banner */}
-          {errorMessage && (
-            <div
-              style={{
-                padding: "8px 14px",
-                background: "#fef2f2",
-                borderBottom: "1px solid #fee2e2",
-                color: "#b91c1c",
-                fontSize: "12px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <AlertCircle size={14} style={{ flexShrink: 0, color: "#ef4444" }} />
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {errorMessage}
-              </span>
-            </div>
-          )}
+          <div className="vera-sheet">
+            {errorMessage && (
+              <div className="vera-error" role="alert">
+                <AlertCircle size={14} />
+                <span>{errorMessage}</span>
+              </div>
+            )}
 
-          {/* Messages Body */}
-          <div className="vera-panel-body">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`vera-msg-row ${msg.sender}`}>
-                <div className={`vera-bubble ${msg.sender}`}>
-                  {msg.sender === "assistant" && (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginBottom: "4px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#086b61",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                        <Bot size={13} />
-                        <span>Vera</span>
-                      </div>
-                      <span style={{ fontSize: "10px", color: "#a4aec0", fontWeight: 400 }}>
-                        {msg.timestamp}
-                      </span>
-                    </div>
-                  )}
-
-                  <div style={{ fontSize: "13px" }}>{msg.text}</div>
-
-                  {msg.isStreaming && (
-                    <span
-                      style={{
-                        display: "inline-block",
-                        width: "6px",
-                        height: "12px",
-                        marginLeft: "4px",
-                        background: "#40e0d0",
-                        animation: "fade-in 0.8s infinite alternate",
-                        verticalAlign: "middle",
-                      }}
-                    />
-                  )}
-                </div>
-
-                {/* Assistant Feedback & Citations */}
-                {msg.sender === "assistant" && !msg.isStreaming && msg.id !== "vera-intro" && (
-                  <div
-                    style={{
-                      marginTop: "4px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      fontSize: "10px",
-                      color: "#667085",
-                      padding: "0 4px",
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleFeedback(msg.id, "like")}
-                      style={{
-                        color: msg.feedback === "like" ? "#086b61" : "#667085",
-                        cursor: "pointer",
-                      }}
-                      title="Sesuai / Membantu"
-                    >
-                      <ThumbsUp size={11} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleFeedback(msg.id, "dislike")}
-                      style={{
-                        color: msg.feedback === "dislike" ? "#b91c1c" : "#667085",
-                        cursor: "pointer",
-                      }}
-                      title="Kurang Akurat"
-                    >
-                      <ThumbsDown size={11} />
-                    </button>
+            <div className="vera-panel-body">
+              <span className="vera-day">Hari ini</span>
+              {messages.filter((m) => !(m.isStreaming && !m.text)).map((msg) => (
+                <div key={msg.id} className={`vera-msg-row ${msg.sender}`}>
+                  <div className={`vera-bubble ${msg.sender}`}>
+                    {msg.text}
+                    {msg.isStreaming && <span className="vera-caret" aria-hidden="true" />}
                   </div>
-                )}
-
-                {/* Sources / Citations */}
-                {msg.resources && msg.resources.length > 0 && (
-                  <div style={{ marginTop: "6px", maxWidth: "86%", textAlign: "left" }}>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setExpandedSourceId(expandedSourceId === msg.id ? null : msg.id)
-                      }
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        fontSize: "11px",
-                        color: "#086b61",
-                        cursor: "pointer",
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                      }}
-                    >
-                      <FileText size={12} />
-                      <span>{msg.resources.length} Sumber Referensi Terverifikasi</span>
-                      <ChevronDown
-                        size={12}
-                        style={{
-                          transform: expandedSourceId === msg.id ? "rotate(180deg)" : "none",
-                          transition: "transform 0.15s ease",
-                        }}
-                      />
-                    </button>
-
-                    {expandedSourceId === msg.id && (
-                      <div
-                        style={{
-                          marginTop: "6px",
-                          padding: "8px",
-                          background: "#f4f4f5",
-                          border: "1px solid #e4e4e7",
-                          borderRadius: "8px",
-                          fontSize: "11px",
-                        }}
-                      >
-                        {msg.resources.map((res, i) => (
-                          <div
-                            key={i}
-                            style={{
-                              borderBottom:
-                                i === (msg.resources?.length ?? 1) - 1 ? "none" : "1px solid #e4e4e7",
-                              paddingBottom: "6px",
-                              marginBottom: "6px",
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontWeight: 500,
-                                color: "#232326",
-                                display: "flex",
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <span
-                                style={{
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {res.document_name || res.dataset_name || "Dokumen Resmi"}
-                              </span>
-                              {res.score && (
-                                <span style={{ fontSize: "10px", color: "#086b61", marginLeft: "8px" }}>
-                                  {(res.score * 100).toFixed(0)}% relevan
-                                </span>
-                              )}
-                            </div>
-                            {res.content && (
-                              <p
-                                style={{
-                                  fontSize: "10px",
-                                  color: "#53565b",
-                                  marginTop: "3px",
-                                  lineHeight: 1.4,
-                                }}
-                              >
-                                {res.content}
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                  <div className="vera-meta">
+                    <span>{msg.timestamp}</span>
+                    {msg.sender === "assistant" && !msg.isStreaming && msg.id !== "vera-intro" && (
+                      <>
+                        <button type="button" onClick={() => handleFeedback(msg.id, "like")} data-active={msg.feedback === "like"} aria-label="Sesuai / membantu">
+                          <ThumbsUp size={12} />
+                        </button>
+                        <button type="button" onClick={() => handleFeedback(msg.id, "dislike")} data-active={msg.feedback === "dislike"} aria-label="Kurang akurat">
+                          <ThumbsDown size={12} />
+                        </button>
+                      </>
+                    )}
+                    {msg.resources && msg.resources.length > 0 && (
+                      <button type="button" className="vera-sources-toggle" onClick={() => setExpandedSourceId(expandedSourceId === msg.id ? null : msg.id)} aria-expanded={expandedSourceId === msg.id}>
+                        <FileText size={12} /> {msg.resources.length} sumber
+                        <ChevronDown size={12} data-open={expandedSourceId === msg.id} />
+                      </button>
                     )}
                   </div>
-                )}
-              </div>
-            ))}
+                  {msg.resources && expandedSourceId === msg.id && (
+                    <ul className="vera-sources">
+                      {msg.resources.map((res, i) => (
+                        <li key={i}>
+                          <strong>{res.document_name || res.dataset_name || "Dokumen resmi"}</strong>
+                          {res.score ? <em>{(res.score * 100).toFixed(0)}% relevan</em> : null}
+                          {res.content && <p>{res.content}</p>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
 
-            {/* Quick Prompts */}
-            {messages.length === 1 && !loading && (
-              <div style={{ paddingTop: "8px" }}>
-                <p
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: 500,
-                    color: "#667085",
-                    marginBottom: "6px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                  }}
-                >
-                  <BookOpen size={12} />
-                  <span>Pertanyaan Cepat:</span>
-                </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  {QUICK_PROMPTS.map((prompt, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => handleSend(prompt)}
-                      style={{
-                        textAlign: "left",
-                        fontSize: "12px",
-                        padding: "8px 12px",
-                        borderRadius: "10px",
-                        background: "#ffffff",
-                        border: "1px solid #e4e4e7",
-                        color: "#53565b",
-                        cursor: "pointer",
-                        transition: "background 0.15s ease",
-                      }}
-                    >
+              {typing && (
+                <div className="vera-msg-row assistant">
+                  <div className="vera-bubble assistant vera-typing" role="status" aria-label="Vera sedang mengetik">
+                    <i /><i /><i />
+                  </div>
+                  <div className="vera-meta"><span>Vera mengetik…</span></div>
+                </div>
+              )}
+
+              {messages.length === 1 && !loading && (
+                <div className="vera-prompts">
+                  {QUICK_PROMPTS.map((prompt) => (
+                    <button key={prompt} type="button" onClick={() => handleSend(prompt)}>
                       {prompt}
                     </button>
                   ))}
                 </div>
-              </div>
-            )}
+              )}
 
-            <div ref={messagesEndRef} />
-          </div>
+              <div ref={messagesEndRef} />
+            </div>
 
-          {/* Input Bar */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
-            className="vera-panel-footer"
-          >
-            <div className="vera-input-wrap">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Tanya Vera seputar pedoman klinis..."
-                disabled={loading}
-              />
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSend();
+              }}
+              className="vera-panel-footer"
+            >
+              <label className="vera-input-wrap">
+                <Smile size={22} aria-hidden="true" />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Pesan"
+                  aria-label="Pesan untuk Vera"
+                  disabled={loading}
+                />
+              </label>
               {loading ? (
-                <button
-                  type="button"
-                  onClick={handleStopGenerating}
-                  title="Hentikan Jawaban"
-                  className="vera-send-btn"
-                  style={{ background: "#8a8f98" }}
-                >
-                  <Square size={13} />
+                <button type="button" onClick={handleStopGenerating} aria-label="Hentikan jawaban" className="vera-send-btn">
+                  <Square size={16} />
                 </button>
               ) : (
-                <button
-                  type="submit"
-                  disabled={!input.trim()}
-                  aria-label="Kirim Pesan"
-                  className="vera-send-btn"
-                >
-                  <Send size={13} />
+                <button type="submit" disabled={!input.trim()} aria-label="Kirim pesan" className="vera-send-btn">
+                  <Send size={17} />
                 </button>
               )}
-            </div>
-            <div style={{ marginTop: "6px", textAlign: "center" }}>
-              <span style={{ fontSize: "10px", color: "#8a8f98" }}>
-                Vera AI Agent • Sentraverse Official Intelligence
-              </span>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       )}
 
-      {/* FLOATING TRIGGER BUTTON */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? "Tutup chat Vera" : "Buka chat Vera Agent"}
+        aria-label={isOpen ? "Tutup chat Vera" : "Buka chat Vera"}
         className="vera-widget-trigger"
         data-open={isOpen}
       >
         <span className="vera-launcher-mark" aria-hidden="true">
-          {isOpen ? <X size={15} /> : <Sparkles size={15} />}
+          {isOpen ? <X size={18} /> : <MessageSquareText size={18} />}
         </span>
-        <span className="vera-launcher-text">
-          <strong>{isOpen ? "Tutup" : "Tanya Vera"}</strong>
-          {!isOpen && <small>Asisten pengetahuan Sentra</small>}
-        </span>
+        <span className="vera-launcher-text">{isOpen ? "Tutup" : "Tanya Vera"}</span>
       </button>
     </div>
   );

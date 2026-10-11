@@ -844,221 +844,206 @@ h1 span { white-space: normal; }
 .not-found p { margin: 0; font-size: 15px; color: var(--color-text-secondary); }
 .not-found a { color: var(--workspace-accent-ink); font-size: 14px; min-height: 24px; display: inline-flex; align-items: center; }
 
-/* Vera Floating AI Assistant Widget */
+/* Vera chat widget (Dify). Charcoal frame, white sheet, cream assistant bubbles, grey user bubbles. */
 .vera-widget-root {
+  --vera-ink: #1f1f1f;
+  --vera-frame: #202020;
+  --vera-cream: #fff3d4;
+  --vera-cream-strong: #fde2ad;
+  --vera-grey: #f1f1f1;
+  --vera-field: #ececec;
+  --vera-muted: #9b9b9b;
+  --vera-taupe: #7d6e5a;
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 999999;
-  font-family: var(--font-body);
-}
-
-/* Closed launcher: dark glass capsule in Sentrapedia tosca, slow aurora ring on the mark. */
-.vera-widget-trigger {
-  --vera-ring: conic-gradient(from var(--vera-angle, 0deg), #40e0d0, #086b61 30%, #a7f3eb 55%, #086b61 80%, #40e0d0);
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  padding: 6px 16px 6px 6px;
-  border: 1px solid rgba(64, 224, 208, 0.22);
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(22, 34, 33, 0.94), rgba(10, 16, 15, 0.96));
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  backdrop-filter: blur(14px) saturate(160%);
-  color: #fff;
-  cursor: pointer;
-  text-align: left;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 2px 6px rgba(0, 0, 0, 0.18), 0 14px 32px -12px rgba(8, 107, 97, 0.55);
-  transition: transform 220ms cubic-bezier(.23, 1, .32, 1), box-shadow 220ms ease, border-color 220ms ease;
-  animation: vera-launcher-in 420ms cubic-bezier(.23, 1, .32, 1) both;
-}
-.vera-widget-trigger:hover {
-  transform: translateY(-2px);
-  border-color: rgba(64, 224, 208, 0.45);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 4px 10px rgba(0, 0, 0, 0.2), 0 20px 40px -12px rgba(8, 107, 97, 0.7);
-}
-.vera-widget-trigger:active { transform: translateY(0) scale(.98); }
-.vera-widget-trigger:focus-visible { outline: 2px solid #40e0d0; outline-offset: 3px; }
-.vera-launcher-mark {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  color: #40e0d0;
-  background: #0c1312;
-  isolation: isolate;
-}
-.vera-launcher-mark::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  z-index: -1;
-  border-radius: 11px;
-  padding: 1px;
-  background: var(--vera-ring);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: vera-ring-spin 6s linear infinite;
-}
-.vera-launcher-mark::after {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(64, 224, 208, 0.35), transparent 70%);
-  filter: blur(4px);
-}
-.vera-launcher-text { display: flex; flex-direction: column; gap: 1px; line-height: 1.15; }
-.vera-launcher-text strong { font-size: 13px; font-weight: 600; letter-spacing: -0.01em; }
-.vera-launcher-text small { font-size: 10.5px; color: rgba(255, 255, 255, 0.56); letter-spacing: 0.01em; }
-.vera-widget-trigger[data-open="true"] { padding-right: 14px; }
-.vera-widget-trigger[data-open="true"] .vera-launcher-mark::before { animation-play-state: paused; opacity: .6; }
-@property --vera-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-@keyframes vera-ring-spin { to { --vera-angle: 360deg; } }
-@keyframes vera-launcher-in { from { opacity: 0; transform: translateY(10px) scale(.96); } }
-@media (max-width: 640px) {
-  .vera-widget-trigger { padding: 6px; border-radius: 14px; }
-  .vera-launcher-text { display: none; }
-  .vera-launcher-mark { width: 40px; height: 40px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .vera-widget-trigger { animation: none; transition: none; }
-  .vera-launcher-mark::before { animation: none; }
+  font-family: var(--font-jakarta), var(--font-body);
+  color: var(--vera-ink);
 }
 
 .vera-widget-panel {
   position: fixed;
-  bottom: 76px;
+  bottom: 92px;
   right: 24px;
-  width: min(420px, calc(100vw - 32px));
-  height: min(580px, calc(100dvh - 100px));
-  background: #ffffff;
-  border: 1px solid #d4d4d8;
-  border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  width: min(380px, calc(100vw - 24px));
+  height: min(660px, calc(100dvh - 116px));
   display: flex;
   flex-direction: column;
+  padding: 0 7px 7px;
+  background: var(--vera-frame);
+  border-radius: 34px;
+  box-shadow: 0 28px 60px -18px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.6);
   overflow: hidden;
-  z-index: 999999;
-  animation: fade-in 160ms ease-out;
+  animation: vera-panel-in 260ms cubic-bezier(.23, 1, .32, 1) both;
+  transform-origin: bottom right;
 }
 
 .vera-panel-header {
-  padding: 12px 16px;
-  background: #131313;
-  color: #ffffff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #282828;
+  gap: 12px;
+  padding: 18px 10px 16px 8px;
+  color: #fff;
 }
+.vera-icon-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #fff;
+  flex-shrink: 0;
+}
+.vera-icon-button:hover { background: rgba(255, 255, 255, 0.08); }
+.vera-icon-button:focus-visible, .vera-send-btn:focus-visible, .vera-widget-trigger:focus-visible { outline: 2px solid var(--vera-cream-strong); outline-offset: 2px; }
+.vera-avatar {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--vera-cream);
+  color: var(--vera-taupe);
+  flex-shrink: 0;
+}
+.vera-title { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+.vera-title strong { font-size: 19px; font-weight: 500; line-height: 1.1; letter-spacing: 0; }
+.vera-title small { font-size: 13px; color: rgba(255, 255, 255, 0.82); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vera-menu { position: relative; }
+.vera-menu-list {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 2;
+  padding: 6px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+.vera-menu-list button { display: flex; align-items: center; gap: 8px; white-space: nowrap; padding: 9px 12px; border-radius: 10px; font-size: 13px; color: var(--vera-ink); }
+.vera-menu-list button:hover { background: var(--vera-grey); }
+
+.vera-sheet {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 28px;
+  overflow: hidden;
+}
+.vera-error { display: flex; align-items: center; gap: 8px; margin: 12px 12px 0; padding: 8px 12px; border-radius: 14px; background: #fdecec; color: #b42318; font-size: 12px; }
+.vera-error span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .vera-panel-body {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
-  background: #fcfcfc;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  font-size: 13px;
+  gap: 4px;
+  padding: 16px 10px 12px;
+  scrollbar-width: thin;
 }
+.vera-day { align-self: center; margin-bottom: 12px; padding: 6px 22px; border-radius: 999px; background: var(--vera-cream); font-size: 14px; font-weight: 500; }
 
-.vera-msg-row {
-  display: flex;
-  flex-direction: column;
-}
-
-.vera-msg-row.user {
-  align-items: flex-end;
-}
-
-.vera-msg-row.assistant {
-  align-items: flex-start;
-}
-
+.vera-msg-row { display: flex; flex-direction: column; max-width: 84%; animation: vera-bubble-in 220ms ease-out both; }
+.vera-msg-row.assistant { align-self: flex-start; align-items: flex-start; }
+.vera-msg-row.user { align-self: flex-end; align-items: flex-end; }
 .vera-bubble {
-  max-width: 86%;
-  padding: 10px 14px;
-  border-radius: 14px;
-  line-height: 1.55;
+  padding: 12px 20px;
+  border-radius: 20px;
+  font-size: 13.5px;
+  line-height: 1.32;
   white-space: pre-wrap;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
+.vera-bubble.assistant { background: var(--vera-cream); }
+.vera-bubble.user { background: var(--vera-grey); }
+.vera-caret { display: inline-block; width: 6px; height: 13px; margin-left: 3px; vertical-align: -2px; border-radius: 1px; background: var(--vera-taupe); animation: vera-blink 900ms steps(1) infinite; }
 
-.vera-bubble.user {
-  background: #e8faf7;
-  color: #073b36;
-  border: 1px solid #b2e8df;
-  border-bottom-right-radius: 2px;
-}
+.vera-meta { display: flex; align-items: center; gap: 8px; min-height: 22px; margin: 6px 2px 10px; font-size: 13px; color: var(--vera-muted); }
+.vera-meta button { display: inline-flex; align-items: center; gap: 4px; color: var(--vera-muted); font-size: 12px; }
+.vera-meta button:hover, .vera-meta button[data-active="true"] { color: var(--vera-ink); }
+.vera-sources-toggle svg[data-open="true"] { transform: rotate(180deg); }
+.vera-sources { list-style: none; margin: -4px 0 12px; padding: 4px; display: grid; gap: 4px; width: 100%; }
+.vera-sources li { padding: 10px 12px; border-radius: 14px; background: var(--vera-grey); font-size: 12px; }
+.vera-sources strong { font-weight: 600; }
+.vera-sources em { margin-left: 6px; font-style: normal; color: var(--vera-taupe); }
+.vera-sources p { margin: 4px 0 0; color: #555; line-height: 1.4; }
 
-.vera-bubble.assistant {
-  background: #ffffff;
-  color: #232326;
-  border: 1px solid #e4e4e7;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border-bottom-left-radius: 2px;
-}
+.vera-typing { display: inline-flex; gap: 5px; padding: 18px 22px; }
+.vera-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--vera-ink); animation: vera-dot 1.1s ease-in-out infinite; }
+.vera-typing i:nth-child(2) { animation-delay: .15s; }
+.vera-typing i:nth-child(3) { animation-delay: .3s; }
 
-.vera-panel-footer {
-  padding: 12px 16px;
-  background: #ffffff;
-  border-top: 1px solid #e4e4e7;
-}
+.vera-prompts { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; margin-top: 4px; }
+.vera-prompts button { max-width: 84%; padding: 10px 16px; border-radius: 20px; background: #fff; border: 1px solid var(--vera-field); font-size: 13px; text-align: left; color: var(--vera-ink); transition: background 150ms ease; }
+.vera-prompts button:hover { background: var(--vera-grey); }
 
+.vera-panel-footer { display: flex; align-items: center; gap: 8px; padding: 8px 8px 10px; }
 .vera-input-wrap {
-  position: relative;
+  flex: 1;
   display: flex;
   align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 18px 0 14px;
+  border-radius: 999px;
+  background: var(--vera-field);
+  color: #3a3a3a;
 }
-
-.vera-input-wrap input {
-  width: 100%;
-  padding: 10px 42px 10px 14px;
-  background: #f4f4f5;
-  border: 1px solid #d4d4d8;
-  border-radius: 12px;
-  font-size: 13px;
-  color: #232326;
-  outline: none;
-}
-
-.vera-input-wrap input:focus {
-  border-color: #40e0d0;
-  box-shadow: 0 0 0 2px rgba(64, 224, 208, 0.25);
-}
-
+.vera-input-wrap input { flex: 1; min-width: 0; height: 100%; border: 0; outline: none; background: transparent; font: inherit; font-size: 16px; color: var(--vera-ink); }
+.vera-input-wrap input::placeholder { color: #3a3a3a; }
+.vera-input-wrap:focus-within { background: #e3e3e3; }
 .vera-send-btn {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: #086b61;
-  color: #ffffff;
-  display: flex;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--vera-cream-strong);
+  color: var(--vera-ink);
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+.vera-send-btn:hover:not(:disabled) { transform: scale(1.05); }
+.vera-send-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+/* Closed launcher: the mockup's black nav pill with the cream active circle. */
+.vera-widget-trigger {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  transition: background 0.15s ease;
+  gap: 12px;
+  height: 60px;
+  padding: 0 24px 0 8px;
+  border-radius: 999px;
+  background: #000;
+  color: #fff;
+  box-shadow: 0 16px 34px -12px rgba(0, 0, 0, 0.55);
+  transition: transform 200ms cubic-bezier(.23, 1, .32, 1), box-shadow 200ms ease;
+  animation: vera-launcher-in 420ms cubic-bezier(.23, 1, .32, 1) both;
 }
+.vera-widget-trigger:hover { transform: translateY(-2px); box-shadow: 0 22px 40px -12px rgba(0, 0, 0, 0.6); }
+.vera-widget-trigger:active { transform: scale(.97); }
+.vera-launcher-mark { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--vera-cream); color: var(--vera-ink); }
+.vera-launcher-text { font-size: 15px; font-weight: 500; }
+.vera-widget-trigger[data-open="true"] { padding-right: 20px; }
 
-.vera-send-btn:hover {
-  background: #07534b;
+@keyframes vera-panel-in { from { opacity: 0; transform: translateY(12px) scale(.97); } }
+@keyframes vera-bubble-in { from { opacity: 0; transform: translateY(4px); } }
+@keyframes vera-launcher-in { from { opacity: 0; transform: translateY(10px) scale(.96); } }
+@keyframes vera-dot { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-3px); opacity: 1; } }
+@keyframes vera-blink { 50% { opacity: 0; } }
+
+@media (max-width: 640px) {
+  .vera-widget-root { bottom: 16px; right: 16px; }
+  .vera-widget-panel { inset: 8px 8px 84px; width: auto; height: auto; }
+  .vera-widget-trigger { width: 60px; padding: 0; justify-content: center; }
+  .vera-widget-trigger[data-open="true"] { padding: 0; }
+  .vera-launcher-text { display: none; }
 }
-
-.vera-send-btn:disabled {
-  background: #e4e4e7;
-  color: #a4aec0;
-  cursor: not-allowed;
+@media (prefers-reduced-motion: reduce) {
+  .vera-widget-panel, .vera-msg-row, .vera-widget-trigger { animation: none; transition: none; }
+  .vera-typing i, .vera-caret { animation: none; }
 }
-
