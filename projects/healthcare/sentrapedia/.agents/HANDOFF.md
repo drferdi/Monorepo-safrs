@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## MIRA R4 + R5 (architecture overview) — 2026-10-11 Asia/Jakarta
+
+- Gaffer chose R4 + R5 from `docs/architecture-overview-2026-10-11.md`.
+- R4: removed the legacy free-model path (`src/lib/mira/free-profile.ts`, `freeModel` branches and the `freeOnly` health field in `gateway.ts`, `tests/mira-free.test.ts`, `config/mira-free.env.example`, `scripts/run-mira-free.ps1`). `route.ts` never passed `freeModel`, so runtime behaviour is unchanged.
+- R5: one profile file `scripts/mira-profile.json` (model, per-step budget, engine step deadline, gateway margin) read by `model-profile.ts`, `route.ts` and `scripts/mira-runtime.mjs`. Gateway timeout is now derived: (20 s deadline + 25 s margin) = 45 s, was a hard-coded 135 s left from the old 120 s deadline. `build-system.mjs` and the `Dockerfile` copy the JSON next to the launcher.
+- Verified: new tests RED first (profile file missing), then typecheck 0, eslint on touched files 0, `vitest tests/mira` 20/20, `test:system` 8/8. Not run: `npm run build`, Docker build, a live MIRA analysis (paid; not approved). Python engine defaults in `mira/service/settings.py` are untouched (env from the launcher overrides them).
+- Docs `docs/architecture.md` still list the removed free-model files as historical.
+
 ## Dependency security pass — 2026-10-11 Asia/Jakarta
 
 - MIRA: `starlette` 0.41.3 had 14 known advisories (pip-audit). Pins bumped in `mira/requirements.lock`: fastapi 0.115.4 -> 0.141.1, starlette 0.41.3 -> 1.7.0, new `annotated-doc==0.0.5` (required by FastAPI >= 0.120). FastAPI 0.142+ was skipped because it adds `opentelemetry-api`.

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { selectedMiraModel, miraServiceVersion } from "../src/lib/mira/model-profile";
+import { selectedMiraModel, miraServiceVersion, miraStepBudgetUsd, miraGatewayTimeoutMs } from "../src/lib/mira/model-profile";
+import miraProfile from "../scripts/mira-profile.json";
 import { createMiraGateway } from "../src/lib/mira/gateway";
 import { emptyCase } from "../src/lib/mira/contract";
 import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
@@ -57,9 +58,14 @@ describe("approved Gemini Flash profile", () => {
     expect(miraServiceVersion(version(), selectedMiraModel)).toBe(true);
     for (const value of [version("other/model"), version(selectedMiraModel, "other/model"), version().replace("synthetic-only", "openrouter-zdr"), version().replace("provider=openrouter", "provider=openai"), `${version()}+assess=${selectedMiraModel}`, "unknown"]) expect(miraServiceVersion(value, selectedMiraModel)).toBe(false);
   });
+  it("derives model, budget and gateway timeout from the shared profile", () => {
+    expect(selectedMiraModel).toBe(miraProfile.model);
+    expect(miraStepBudgetUsd).toBe(miraProfile.stepBudgetUsd);
+    expect(miraGatewayTimeoutMs).toBe((miraProfile.stepDeadlineS + miraProfile.gatewayMarginS) * 1000);
+  });
   it("reports the selected paid profile and its configured response cost limit", async () => {
     const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async () => Response.json({ status: "ok", contractVersion: "1", version: version() }) });
-    expect(await (await gateway.health()).json()).toMatchObject({ modelReady: true, configured: true, freeOnly: false, model: selectedMiraModel, maxCostUsd: 0.1 });
+    expect(await (await gateway.health()).json()).toMatchObject({ modelReady: true, configured: true, model: selectedMiraModel, maxCostUsd: 0.1 });
   });
   it("blocks mixed, old or unknown profiles before forwarding a case", async () => {
     for (const value of [version("apodex/apodex-1.1-mini:free"), version("deepseek/deepseek-v4.1-flash", "deepseek/deepseek-v4.1-flash"), version(selectedMiraModel, "other/model"), "unknown"]) {

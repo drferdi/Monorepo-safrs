@@ -1,5 +1,9 @@
-export const selectedMiraModel = "google/gemini-2.5-flash";
-export const miraStepBudgetUsd = 0.1;
+import profile from "../../../scripts/mira-profile.json";
+
+export const selectedMiraModel = profile.model;
+export const miraStepBudgetUsd = profile.stepBudgetUsd;
+// The engine stops a step at its own deadline; the margin covers the health check and TheOracle grounding.
+export const miraGatewayTimeoutMs = (profile.stepDeadlineS + profile.gatewayMarginS) * 1000;
 
 export function miraServiceVersion(version: unknown, model: string): boolean {
   if (!/^[a-z0-9._-]+\/[a-z0-9._-]+(?::[a-z0-9._-]+)?$/i.test(model) || typeof version !== "string" || !version.startsWith("mira-service/")) return false;

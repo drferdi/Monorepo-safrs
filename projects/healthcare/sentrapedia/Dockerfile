@@ -2,7 +2,7 @@ FROM node:24-bookworm-slim AS dependencies
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json .npmrc ./
-COPY scripts/install-mira.mjs scripts/mira-runtime.mjs scripts/theoracle-model.mjs scripts/install-theoracle-model.mjs ./scripts/
+COPY scripts/install-mira.mjs scripts/mira-runtime.mjs scripts/mira-profile.json scripts/theoracle-model.mjs scripts/install-theoracle-model.mjs ./scripts/
 COPY mira/requirements.lock mira/requirements-test.lock ./mira/
 RUN npm ci --workspaces=false
 

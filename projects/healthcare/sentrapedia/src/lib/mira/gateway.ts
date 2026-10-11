@@ -1,10 +1,9 @@
 import { containsIdentity, validCase, validResult } from "./contract";
-import { freeServiceVersion } from "./free-profile";
 import { miraServiceVersion } from "./model-profile";
 import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
 import type { CaseState } from "./types";
 
-type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; freeModel?: string; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => Promise<TheOracleGroundingBundle> };
+type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => Promise<TheOracleGroundingBundle> };
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const failure = (code: string, message: string, status: number) => reply({ error: { code, message } }, status);
 async function boundedBody(response: Response | Request, limit: number): Promise<string> {
@@ -18,9 +17,9 @@ async function boundedBody(response: Response | Request, limit: number): Promise
 export function createMiraGateway(options: Options = {}) {
   const fetchFn = options.fetchFn ?? fetch;
   const token = options.token?.trim() ?? "";
-  const selectedModel = options.model ?? options.freeModel;
-  const maxCostUsd = options.freeModel ? 0 : options.maxCostUsd ?? 0.1;
-  const profileMatches = (version: unknown) => options.freeModel ? freeServiceVersion(version, options.freeModel) : !!selectedModel && miraServiceVersion(version, selectedModel);
+  const selectedModel = options.model;
+  const maxCostUsd = options.maxCostUsd ?? 0.1;
+  const profileMatches = (version: unknown) => !!selectedModel && miraServiceVersion(version, selectedModel);
   let base = "";
   try { const url = new URL(options.baseUrl ?? "http://127.0.0.1:8787"); if (url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname) && !url.username && !url.password && !url.search && !url.hash && url.pathname === "/") base = url.origin; } catch { /* Invalid configuration stays unavailable. */ }
   let active = false;
@@ -36,7 +35,7 @@ export function createMiraGateway(options: Options = {}) {
     async health(): Promise<Response> {
       let status = { reachable: false, modelReady: false, groundingReady: false };
       if (base) try { status = await serviceHealth(AbortSignal.timeout(2500)); } catch { /* Health never triggers inference. */ }
-      return reply({ ...status, configured: !!base && !!token, freeOnly: !!options.freeModel, model: selectedModel ?? null, maxCostUsd: selectedModel ? maxCostUsd : null });
+      return reply({ ...status, configured: !!base && !!token, model: selectedModel ?? null, maxCostUsd: selectedModel ? maxCostUsd : null });
     },
     async step(request: Request): Promise<Response> {
       const caller = new URL(request.url);
@@ -65,7 +64,7 @@ export function createMiraGateway(options: Options = {}) {
       try {
         if (selectedModel || options.retrieveGrounding) {
           const health = await serviceHealth(controller.signal);
-          if (selectedModel && !health.modelReady) return failure(options.freeModel ? "FREE_MODEL_REQUIRED" : "MODEL_REQUIRED", "Perencanaan dan asesmen harus memakai profil OpenRouter yang dipilih. Tidak ada analisis dijalankan.", 503);
+          if (selectedModel && !health.modelReady) return failure("MODEL_REQUIRED", "Perencanaan dan asesmen harus memakai profil OpenRouter yang dipilih. Tidak ada analisis dijalankan.", 503);
           if (options.retrieveGrounding && !health.groundingReady) return failure("GROUNDING_REQUIRED", "Layanan analisis belum mendukung referensi TheOracle. Muat ulang layanan setelah pembaruan.", 503);
         }
         const grounding = await options.retrieveGrounding?.(payload.case);
@@ -79,7 +78,7 @@ export function createMiraGateway(options: Options = {}) {
         if (token.length > 8 && raw.includes(token)) return failure("RESPONSE", "Respons layanan tidak dapat ditampilkan.", 502);
         const result: unknown = JSON.parse(raw);
         if (!validResult(result)) return failure("CONTRACT", "Respons layanan analisis tidak sesuai kontrak. Tidak ada hasil yang digunakan.", 502);
-        if (selectedModel && (!profileMatches(result.meta.version) || result.meta.model !== `${selectedModel}+${selectedModel}` || typeof result.meta.costUsd !== "number" || !Number.isFinite(result.meta.costUsd) || result.meta.costUsd < 0 || !Number.isFinite(maxCostUsd) || maxCostUsd < 0 || result.meta.costUsd > maxCostUsd)) return failure(options.freeModel ? "FREE_MODEL_RESPONSE" : "MODEL_RESPONSE", "Profil model atau biaya respons tidak sesuai batas yang dipilih. Hasil tidak digunakan.", 502);
+        if (selectedModel && (!profileMatches(result.meta.version) || result.meta.model !== `${selectedModel}+${selectedModel}` || typeof result.meta.costUsd !== "number" || !Number.isFinite(result.meta.costUsd) || result.meta.costUsd < 0 || !Number.isFinite(maxCostUsd) || maxCostUsd < 0 || result.meta.costUsd > maxCostUsd)) return failure("MODEL_RESPONSE", "Profil model atau biaya respons tidak sesuai batas yang dipilih. Hasil tidak digunakan.", 502);
         if (result.status !== "ok") {
           const reasons: Record<string, { status: number; message: string }> = {
             TIMEOUT: { status: 504, message: "Analisis melewati batas waktu layanan. Pertanyaan tetap tersedia; coba kembali beberapa saat lagi." },
