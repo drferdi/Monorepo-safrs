@@ -1,5 +1,16 @@
 # Sentrapedia handoff
 
+## TheOracle dose retrieval + ICD-10 postchecks — 2026-10-11 Asia/Jakarta
+
+- Root cause (retrieval, not missing knowledge): grounding is queried with the complaint only, so it returned symptom passages. Doses sit in treatment passages, mostly in other guidelines: `fasyankes-primer-idi-2017.pdf` (133 dose chunks), `fktp-kmk-2022.pdf`, `fornas-2023/2025.pdf`, PERDOSKI. The 144 disease markdowns carry doses in only 52 cases.
+- `8e1d5604` (R2) `src/lib/theoracle-grounding.ts`: second local query (complaint + "penatalaksanaan terapi dosis obat") over the whole corpus; the best passage that states a drug amount (regex, not lab values such as mg/dL) replaces the lowest-ranked match. Evidence count stays at most 6, so contract, gateway, engine and the number of MIRA calls are unchanged.
+- `ffc74272` (R2) ported the `postchecks.py` ICD-10 fix from the keyword copy (code repaired from the diagnosis label when unambiguous, otherwise kept with an audit note) and updated the `SOURCE.json` hashes.
+- Measured, `node scripts/benchmark-theoracle-grounding.mjs` (88-query draft eval set, local CPU), files `docs/verification/theoracle-eval-2026-10-11/dose-recall-{before,after}.json`: dose recall (a dose-bearing chunk from a gold doc, or one naming the gold disease, reaches the model) 0.508 -> 0.754 (31 -> 46 of 61); recall@5 0.841 -> 0.864; drug_dose 0.50 -> 0.625; ICD-10 retrieval row unchanged at 0.50 (code strings; the fix is the postcheck); warm latency median 35 -> 73 ms; index unchanged. One query lost (DBD, whose treatment is fluids). Fornas fills 14 of 61 treatment slots, 9 of them hits.
+- First attempt (treatment passage from the same document only) gave 24 -> 26 of 61 and lowered recall@5; discarded.
+- `diseases-dose-coverage.json`: 10 of 144 disease docs have no dose chunk naming them anywhere in TheOracle (asfiksia, epistaksis, impaksi gigi, infeksi intraabdominal, osteosarkoma, Hirschsprung, pterigium, pulpa periradikuler, sarkopenia, serumen). Lexical check; HIV, TB and cedera otak were false negatives and are corrected in the file.
+- Verified: vitest `tests/theoracle-grounding.test.ts` 8/8 (includes the real index), tsc 0, eslint 0 on touched files, `npm run test:mira` 173 passed / 1 skipped (Windows, repo script).
+- Not done: end-to-end dose accuracy (does the therapy part copy the right dose from the excerpt) needs live MIRA model calls, which are paid; awaiting Gaffer. `_complete_therapy` still prefers a complete regimen; check it in that run. Eval gold labels are still draft. Not pushed. The keyword copy (`D:\DEV\monorepo`) still holds the uncommitted ICD change; Gaffer decides whether to keep it.
+
 ## MIRA R4 + R5 (architecture overview) — 2026-10-11 Asia/Jakarta
 
 - Gaffer chose R4 + R5 from `docs/architecture-overview-2026-10-11.md`.
