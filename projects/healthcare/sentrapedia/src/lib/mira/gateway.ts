@@ -4,10 +4,11 @@ import { miraServiceVersion } from "./model-profile";
 import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
 import type { CaseState } from "./types";
 
-type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => Promise<TheOracleGroundingBundle>; retrieveTherapyGrounding?: (caseData: CaseState, diagnosis: { icd10: string; label: string }) => Promise<TheOracleGroundingBundle>; targetedTherapy?: boolean; log?: (entry: StageLog) => void };
+type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => Promise<TheOracleGroundingBundle>; retrieveTherapyGrounding?: (caseData: CaseState, diagnosis: { icd10: string; label: string }) => Promise<TheOracleGroundingBundle>; targetedTherapy?: boolean; retrievalTimeoutMs?: number; log?: (entry: StageLog) => void };
 export interface StageLog { traceId: string; stage: string; ms: number; ok: boolean; code?: string }
 class ServiceFailure extends Error { constructor(readonly code: string) { super(code); } }
-const RETRIEVAL_TIMEOUT_MS = 5000;
+// Targeted retrieval limit: a cold start loads the index and hashes the model files (measured 2.5-3 s).
+const RETRIEVAL_TIMEOUT_MS = 15000;
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const failure = (code: string, message: string, status: number) => reply({ error: { code, message } }, status);
 async function boundedBody(response: Response | Request, limit: number): Promise<string> {
@@ -79,7 +80,7 @@ export function createMiraGateway(options: Options = {}) {
           record(stage, started, true);
           return value;
         } catch (error) {
-          record(stage, started, false, error instanceof TheOracleGroundingError ? error.code : error instanceof ServiceFailure ? error.code : timedOut ? "TIMEOUT" : "ERROR");
+          record(stage, started, false, error instanceof TheOracleGroundingError ? error.code : error instanceof ServiceFailure ? error.code : timedOut ? "TIMEOUT" : controller.signal.aborted ? "ABORTED" : "ERROR");
           throw error;
         } finally { clearTimeout(timer); }
       };
@@ -102,7 +103,9 @@ export function createMiraGateway(options: Options = {}) {
         }
         const targeted = !!options.targetedTherapy && !!options.retrieveTherapyGrounding && targetedReady;
         if (options.targetedTherapy && !targeted) record("route", performance.now(), false, "TARGETED_UNAVAILABLE");
-        const grounding = options.retrieveGrounding ? await timed("retrieve_dx", () => options.retrieveGrounding!(caseData), RETRIEVAL_TIMEOUT_MS) : undefined;
+        const retrievalLimitMs = options.retrievalTimeoutMs ?? RETRIEVAL_TIMEOUT_MS;
+        // The flag-off path keeps its original behaviour: no retrieval time limit beyond the overall request timer.
+        const grounding = options.retrieveGrounding ? await timed("retrieve_dx", () => options.retrieveGrounding!(caseData), targeted ? retrievalLimitMs : undefined) : undefined;
         if (options.retrieveGrounding && !validTheOracleGrounding(grounding)) throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Referensi TheOracle tidak dapat diverifikasi.");
         controller.signal.throwIfAborted();
         let result: unknown;
@@ -131,19 +134,19 @@ export function createMiraGateway(options: Options = {}) {
         if (targeted && diagnosis) {
           try {
             const target = { icd10: diagnosis.icd10, label: diagnosis.label };
-            therapyGrounding = await timed("retrieve_tx", () => options.retrieveTherapyGrounding!(caseData, target), RETRIEVAL_TIMEOUT_MS);
+            therapyGrounding = await timed("retrieve_tx", () => options.retrieveTherapyGrounding!(caseData, target), retrievalLimitMs);
             if (!validTheOracleGrounding(therapyGrounding)) throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Referensi terapi tidak dapat diverifikasi.");
             const bundle = therapyGrounding;
-            const body = await timed("mira_tx", async () => {
+            const base = final;
+            final = await timed("mira_tx", async () => {
               const value = await postService("/v1/therapy/step", { contractVersion: "1", traceId, case: caseData, diagnosis: target, grounding: bundle });
               if (!value || typeof value !== "object" || !("status" in value) || value.status !== "ok") throw new ServiceFailure(value && typeof value === "object" && "error" in value && value.error && typeof value.error === "object" && "code" in value.error && typeof value.error.code === "string" ? value.error.code : "UNAVAILABLE");
               if (!("therapy" in value)) throw new ServiceFailure("CONTRACT");
-              return value;
+              const merged = { ...base, therapy: value.therapy };
+              const cost = "meta" in value && value.meta && typeof value.meta === "object" && "costUsd" in value.meta ? value.meta.costUsd : null;
+              if (!validResult(merged) || typeof cost !== "number" || !Number.isFinite(cost) || cost < 0 || cost > maxCostUsd) throw new ServiceFailure("CONTRACT");
+              return merged;
             });
-            const merged = { ...result, therapy: body.therapy };
-            const cost = "meta" in body && body.meta && typeof body.meta === "object" && "costUsd" in body.meta ? body.meta.costUsd : null;
-            if (validResult(merged) && typeof cost === "number" && Number.isFinite(cost) && cost >= 0 && cost <= maxCostUsd) final = merged;
-            else record("mira_tx_contract", performance.now(), false, "CONTRACT");
           } catch (error) {
             // A stage failure leaves the diagnosis without therapy; an overall timeout or cancel still ends the request.
             if (controller.signal.aborted) throw error;
@@ -160,7 +163,7 @@ export function createMiraGateway(options: Options = {}) {
         }
         return reply({ result: final, traceId, createdAt, ...(grounding ? { grounding } : {}), ...(therapyGrounding ? { therapyGrounding } : {}), ...(evidenceGate ? { evidenceGate } : {}), pipeline: { path: targeted ? "targeted" : "legacy", stages } });
       } catch (error) {
-        if (error instanceof TheOracleGroundingError) return failure(error.code, error.message, error.code === "THEORACLE_UNAVAILABLE" ? 503 : 422);
+        if (!timedOut && !controller.signal.aborted && error instanceof TheOracleGroundingError) return failure(error.code, error.message, error.code === "THEORACLE_UNAVAILABLE" ? 503 : 422);
         return failure(timedOut ? "TIMEOUT" : controller.signal.aborted ? "ABORTED" : "NETWORK", timedOut ? "Analisis melewati batas waktu. Tidak ada hasil yang disimpan." : controller.signal.aborted ? "Analisis dibatalkan." : "Layanan analisis tidak dapat dihubungi atau respons tidak dapat dibaca.", timedOut ? 504 : controller.signal.aborted ? 499 : 502);
       }
       finally { clearTimeout(timer); request.signal.removeEventListener("abort", cancel); active = false; }

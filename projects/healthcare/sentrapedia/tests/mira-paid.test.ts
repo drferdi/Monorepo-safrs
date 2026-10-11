@@ -13,7 +13,7 @@ const grounding: TheOracleGroundingBundle = { version: THEORACLE_GROUNDING_CAPAB
 describe("approved Gemini Flash profile", () => {
   it("requires advertised grounding capability before retrieval or inference", async () => {
     let retrievals = 0;
-    const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", retrieveGrounding: async () => { retrievals++; return grounding; }, fetchFn: async () => Response.json({ status: "ok", contractVersion: "1", version: version(), capabilities: [] }) });
+    const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", retrieveGrounding: async () => { retrievals++; return grounding; }, fetchFn: async () => Response.json({ status: "ok", contractVersion: "1", version: version(), capabilities: [] }) });
     const response = await gateway.step(input());
     expect(response.status).toBe(503);
     expect(await response.json()).toMatchObject({ error: { code: "GROUNDING_REQUIRED" } });
@@ -22,7 +22,7 @@ describe("approved Gemini Flash profile", () => {
   it("retrieves before inference and forwards the exact bundle separately from the unchanged case", async () => {
     const events: string[] = [];
     let posted: RequestInit | undefined;
-    const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", retrieveGrounding: async caseData => { events.push("retrieve"); expect(caseData.chiefComplaint).toBe("Kasus fiktif untuk uji"); return grounding; }, fetchFn: async (url, init) => {
+    const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", retrieveGrounding: async caseData => { events.push("retrieve"); expect(caseData.chiefComplaint).toBe("Kasus fiktif untuk uji"); return grounding; }, fetchFn: async (url, init) => {
       if (String(url).endsWith("healthz")) return Response.json({ status: "ok", contractVersion: "1", version: version(), capabilities: [THEORACLE_GROUNDING_CAPABILITY] });
       events.push("inference"); posted = init; return Response.json(result);
     } });
@@ -35,7 +35,7 @@ describe("approved Gemini Flash profile", () => {
   });
   it("reports an actionable TheOracle no-match and makes no inference call", async () => {
     let calls = 0;
-    const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", retrieveGrounding: () => { throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "TheOracle tidak menemukan referensi untuk keluhan ini. Analisis tidak dijalankan."); }, fetchFn: async () => { calls++; return Response.json({ status: "ok", contractVersion: "1", version: version(), capabilities: [THEORACLE_GROUNDING_CAPABILITY] }); } });
+    const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", retrieveGrounding: () => { throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "TheOracle tidak menemukan referensi untuk keluhan ini. Analisis tidak dijalankan."); }, fetchFn: async () => { calls++; return Response.json({ status: "ok", contractVersion: "1", version: version(), capabilities: [THEORACLE_GROUNDING_CAPABILITY] }); } });
     const response = await gateway.step(input());
     expect(response.status).toBe(422);
     expect(await response.json()).toMatchObject({ error: { code: "THEORACLE_NO_MATCH" } });
@@ -43,7 +43,7 @@ describe("approved Gemini Flash profile", () => {
   });
   it("distinguishes upstream timeout, budget and policy errors without exposing raw messages", async () => {
     for (const [code, status] of [["TIMEOUT", 504], ["BUDGET_EXHAUSTED", 429], ["STEP_BUDGET_EXCEEDED", 429], ["PROVIDER_POLICY", 503], ["MODEL_ERROR", 502], ["MODEL_OUTPUT_INVALID", 502], ["CONTRACT_MISMATCH", 502], ["API_ERRORS", 503], ["UNKNOWN", 503]] as const) {
-      const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, status: "unavailable", error: { code, message: "private raw provider message" } }) });
+      const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, status: "unavailable", error: { code, message: "private raw provider message" } }) });
       const response = await gateway.step(input());
       const body = await response.json();
       expect(response.status).toBe(status);
@@ -64,20 +64,20 @@ describe("approved Gemini Flash profile", () => {
     expect(miraGatewayTimeoutMs).toBe((miraProfile.stepDeadlineS + miraProfile.gatewayMarginS) * 1000);
   });
   it("reports the selected paid profile and its configured response cost limit", async () => {
-    const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async () => Response.json({ status: "ok", contractVersion: "1", version: version() }) });
+    const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async () => Response.json({ status: "ok", contractVersion: "1", version: version() }) });
     expect(await (await gateway.health()).json()).toMatchObject({ modelReady: true, configured: true, model: selectedMiraModel, maxCostUsd: 0.1 });
   });
   it("blocks mixed, old or unknown profiles before forwarding a case", async () => {
     for (const value of [version("apodex/apodex-1.1-mini:free"), version("deepseek/deepseek-v4.1-flash", "deepseek/deepseek-v4.1-flash"), version(selectedMiraModel, "other/model"), "unknown"]) {
       let calls = 0;
-      const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async () => { calls++; return Response.json({ status: "ok", contractVersion: "1", version: value }); } });
+      const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async () => { calls++; return Response.json({ status: "ok", contractVersion: "1", version: value }); } });
       expect((await gateway.step(input())).status).toBe(503);
       expect(calls).toBe(1);
     }
   });
   it("accepts a validated paid result without a client model override", async () => {
     let posted: RequestInit | undefined;
-    const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async (url, init) => { if (String(url).endsWith("healthz")) return Response.json({ status: "ok", contractVersion: "1", version: version() }); posted = init; return Response.json(result); } });
+    const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async (url, init) => { if (String(url).endsWith("healthz")) return Response.json({ status: "ok", contractVersion: "1", version: version() }); posted = init; return Response.json(result); } });
     const response = await gateway.step(input());
     expect(response.status).toBe(200);
     expect((await response.json()).result.meta.costUsd).toBe(0.006);
@@ -86,7 +86,7 @@ describe("approved Gemini Flash profile", () => {
   });
   it("rejects missing, negative or over-limit cost and inconsistent result models", async () => {
     for (const meta of [{ ...result.meta, costUsd: null }, { ...result.meta, costUsd: -0.1 }, { ...result.meta, costUsd: 0.11 }, { ...result.meta, model: "other/model+other/model" }, { ...result.meta, version: version("other/model") }]) {
-      const gateway = createMiraGateway({ model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, meta }) });
+      const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, meta }) });
       const response = await gateway.step(input());
       expect(response.status).toBe(502);
       expect(await response.json()).not.toHaveProperty("result");

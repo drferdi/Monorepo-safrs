@@ -100,4 +100,48 @@ describe("targeted therapy pipeline", () => {
     expect(body.evidenceGate).toBeUndefined();
     expect(logs.find(l => l.stage === "mira_tx")).toMatchObject({ ok: false, code: "CONTRACT" });
   });
+  it("records a contract failure once in mira_tx when the therapy cost exceeds the limit", async () => {
+    const { fetchFn: base } = service();
+    const fetchFn: typeof fetch = async (url, init) => new URL(String(url)).pathname === "/v1/therapy/step" ? Response.json({ contractVersion: "1", status: "ok", therapy, meta: { ...meta, costUsd: 5 } }) : base(url, init);
+    const { gateway, logs } = gatewayWith(fetchFn);
+    const body = await (await gateway.step(input())).json();
+    expect(body.result.therapy).toBeUndefined();
+    expect(body.therapyGrounding).toBeUndefined();
+    expect(logs.find(l => l.stage === "mira_tx")).toMatchObject({ ok: false, code: "CONTRACT" });
+    expect(logs.map(l => l.stage)).toEqual(["retrieve_dx", "mira_dx", "retrieve_tx", "mira_tx"]);
+  });
+  it("records a targeted retrieval that exceeds the limit and returns the diagnosis without therapy", async () => {
+    const { fetchFn, posts } = service();
+    const { gateway, logs } = gatewayWith(fetchFn, { retrievalTimeoutMs: 20, retrieveTherapyGrounding: () => new Promise<never>(() => undefined) });
+    const response = await gateway.step(input());
+    const body = await response.json();
+    expect(response.status).toBe(200);
+    expect(posts.map(p => p.path)).toEqual(["/v1/diagnosis/step"]);
+    expect(body.result.therapy).toBeUndefined();
+    expect(logs.find(l => l.stage === "retrieve_tx")).toMatchObject({ ok: false, code: "THEORACLE_UNAVAILABLE" });
+  });
+  it("applies no retrieval time limit on the legacy path", async () => {
+    const { fetchFn } = service();
+    const { gateway, logs } = gatewayWith(fetchFn, { targetedTherapy: false, retrievalTimeoutMs: 5, retrieveGrounding: async () => { await new Promise(resolve => setTimeout(resolve, 60)); return bundle("Batuk dan demam."); } });
+    const response = await gateway.step(input());
+    expect(response.status).toBe(200);
+    expect(logs.find(l => l.stage === "retrieve_dx")).toMatchObject({ ok: true });
+  });
+  it("answers ABORTED (499) when the request is aborted, even if a pending retrieval then rejects with a grounding error", async () => {
+    const { fetchFn } = service();
+    const abort = new AbortController();
+    let rejectRetrieval: (error: Error) => void = () => undefined;
+    const pending = new Promise<never>((_, reject) => { rejectRetrieval = reject; });
+    let started: () => void = () => undefined;
+    const retrievalStarted = new Promise<void>(resolve => { started = resolve; });
+    const { gateway } = gatewayWith(fetchFn, { retrieveTherapyGrounding: () => { started(); return pending; } });
+    const request = new Request("http://127.0.0.1:3104/api/mira", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Batuk demam fiktif" }, synthetic: true }), signal: abort.signal });
+    const responsePromise = gateway.step(request);
+    await retrievalStarted;
+    abort.abort();
+    rejectRetrieval(new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "x"));
+    const response = await responsePromise;
+    expect(response.status).toBe(499);
+    expect((await response.json()).error.code).toBe("ABORTED");
+  });
 });
