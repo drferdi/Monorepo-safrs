@@ -1,5 +1,15 @@
 # Sentrapedia handoff
 
+## TheOracle pipeline evaluation, legacy vs targeted (Task 7) - 2026-10-11 Asia/Jakarta
+
+- Ran the paid end-to-end evaluation (approved by Gaffer): 61 gold cases on each path through the real `POST /api/mira`, `google/gemini-2.5-flash`. Script `scripts/eval-theoracle-pipeline.mjs`; rows and summaries in `docs/verification/theoracle-eval-2026-10-11/pipeline-2026-10-11-{legacy,targeted}.json`; report `PIPELINE-REPORT.md` (same folder).
+- Result, legacy -> targeted: latency p50 2.50 -> 4.55 s (p95 2.87 -> 5.55 s); ICD-10 top-1 vs draft gold 98.4% both; verified doses 36 -> 41, dose removed 20 -> 28, drug removed 9 -> 2; cases with a verified dose 27 -> 31; therapy retrieval 61/61, no fallback; cost (audit) $0.8945 -> $0.8401. Total spend of the evaluation $1.73.
+- Spot-check of 10 verified doses: 8 yes, 1 no (fluconazole 50 mg cited from an unrelated azole list for pityriasis versicolor), 1 unclear (diosmin 450 mg is tablet content, regimen is 3 x 2 tablets). The lexical gate cannot catch either kind.
+- Default of `MIRA_TARGETED_THERAPY` stays OFF; no default, env file or budget was changed. Gaffer decides from the report.
+- Verified: `npx eslint scripts/eval-theoracle-pipeline.mjs` 0, `npx tsc --noEmit` 0. Servers started for the runs were stopped; `next-env.d.ts` touched by `next dev` was restored.
+- Open risks: gold labels still draft; one-line fictional cases (no age, so adult/child is unknowable); gate is lexical (wrong-disease and tablet-content cases pass); spot-check is 10 rows by one reader; the script's "supported" rate is a loose substring check and overstates support (use `verified`). Not pushed.
+- Next steps: Gaffer decides whether to turn on `MIRA_TARGETED_THERAPY`; if yes, consider a disease-title check in the gate (cited passage must name the diagnosis) and tablet-content handling for combination products.
+
 ## TheOracle dose retrieval + ICD-10 postchecks — 2026-10-11 Asia/Jakarta
 
 - Root cause (retrieval, not missing knowledge): grounding is queried with the complaint only, so it returned symptom passages. Doses sit in treatment passages, mostly in other guidelines: `fasyankes-primer-idi-2017.pdf` (133 dose chunks), `fktp-kmk-2022.pdf`, `fornas-2023/2025.pdf`, PERDOSKI. The 144 disease markdowns carry doses in only 52 cases.

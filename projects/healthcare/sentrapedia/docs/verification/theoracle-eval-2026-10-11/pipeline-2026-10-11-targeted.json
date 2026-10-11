@@ -1,0 +1,3800 @@
+{
+  "summary": {
+    "label": "targeted",
+    "measuredAt": "2026-10-11T13:39:47.496Z",
+    "cases": 61,
+    "ok": 61,
+    "latencyMs": {
+      "p50": 4553,
+      "p95": 5553,
+      "stages": {
+        "retrieve_dx": {
+          "p50": 78,
+          "p95": 94
+        },
+        "mira_dx": {
+          "p50": 2522,
+          "p95": 2949
+        },
+        "retrieve_tx": {
+          "p50": 43,
+          "p95": 47
+        },
+        "mira_tx": {
+          "p50": 1879,
+          "p95": 2512
+        },
+        "gate": {
+          "p50": 1,
+          "p95": 1
+        }
+      }
+    },
+    "icd10": {
+      "valid": 1,
+      "correctTop1VsDraftGold": 0.9836065573770492
+    },
+    "dose": {
+      "written": 71,
+      "supportedByPassages": 69,
+      "supportedRate": 0.971830985915493,
+      "displayed": 41,
+      "verified": 41,
+      "doseRemoved": 28,
+      "removed": 2
+    },
+    "retrievalSuccess": 1,
+    "costUsd": 0.6009
+  },
+  "rows": [
+    {
+      "id": "lay_terms-01",
+      "ok": true,
+      "ms": 7226,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "7dfde4b4-e931-4639-9a32-6eb58355ddcb",
+          "stage": "retrieve_dx",
+          "ms": 2997,
+          "ok": true
+        },
+        {
+          "traceId": "7dfde4b4-e931-4639-9a32-6eb58355ddcb",
+          "stage": "mira_dx",
+          "ms": 2122,
+          "ok": true
+        },
+        {
+          "traceId": "7dfde4b4-e931-4639-9a32-6eb58355ddcb",
+          "stage": "retrieve_tx",
+          "ms": 48,
+          "ok": true
+        },
+        {
+          "traceId": "7dfde4b4-e931-4639-9a32-6eb58355ddcb",
+          "stage": "mira_tx",
+          "ms": 2012,
+          "ok": true
+        },
+        {
+          "traceId": "7dfde4b4-e931-4639-9a32-6eb58355ddcb",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "B80",
+      "diagnosis": "Enterobiasis",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.011247,
+      "verifiedEvidence": [
+        {
+          "drug": "Pirantel pamoat",
+          "dose": "1x10mg/kgBB",
+          "passages": [
+            {
+              "id": "c8a0b634-008e-4366-b848-c984dfeb8805",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "Diagnosis Banding: jenis kecacingan lainnya Komplikasi: anemia defisiensi besi Penatalaksanaan Komprehensif (Plan) Penatalaksanaan 1. Memberi pengetahuan kepada masyarakat akan pentingnya kebersihan diri dan lingkungan, antara lain: a. Kebiasaan mencuci tangan dengan sabun dan air mengalir b. Menutup makanan c. Masing-masing keluarga memiliki jamban keluarga d. Tidak menggunakan tinja sebagai pupuk e. Kondisi rumah dan lingkungan dijaga agar tetap bersih dan tidak lembab. 2. Farmakologis a. Pirantel pamoat 10 mg/kg BB/hari, dosis tunggal, atau b. Mebendazol, dosis 100 mg, dua kali sehari, dibe"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-02",
+      "ok": true,
+      "ms": 4316,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "f2e45736-af63-405b-a2f4-1ed4ba9d1e8f",
+          "stage": "retrieve_dx",
+          "ms": 80,
+          "ok": true
+        },
+        {
+          "traceId": "f2e45736-af63-405b-a2f4-1ed4ba9d1e8f",
+          "stage": "mira_dx",
+          "ms": 2284,
+          "ok": true
+        },
+        {
+          "traceId": "f2e45736-af63-405b-a2f4-1ed4ba9d1e8f",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "f2e45736-af63-405b-a2f4-1ed4ba9d1e8f",
+          "stage": "mira_tx",
+          "ms": 1891,
+          "ok": true
+        },
+        {
+          "traceId": "f2e45736-af63-405b-a2f4-1ed4ba9d1e8f",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "B86",
+      "diagnosis": "Scabies",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.010383,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "lay_terms-03",
+      "ok": true,
+      "ms": 4031,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "8c345ae6-0c1e-4ed0-a919-2b331efa2b39",
+          "stage": "retrieve_dx",
+          "ms": 86,
+          "ok": true
+        },
+        {
+          "traceId": "8c345ae6-0c1e-4ed0-a919-2b331efa2b39",
+          "stage": "mira_dx",
+          "ms": 2265,
+          "ok": true
+        },
+        {
+          "traceId": "8c345ae6-0c1e-4ed0-a919-2b331efa2b39",
+          "stage": "retrieve_tx",
+          "ms": 46,
+          "ok": true
+        },
+        {
+          "traceId": "8c345ae6-0c1e-4ed0-a919-2b331efa2b39",
+          "stage": "mira_tx",
+          "ms": 1623,
+          "ok": true
+        },
+        {
+          "traceId": "8c345ae6-0c1e-4ed0-a919-2b331efa2b39",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "B36.0",
+      "diagnosis": "Pityriasis versicolor",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.008661,
+      "verifiedEvidence": [
+        {
+          "drug": "Flukonazol",
+          "dose": "1x50mg",
+          "passages": [
+            {
+              "id": "78d5ab7b-03e8-4345-a6fd-d6ea69b2f7a0",
+              "title": "dermatovenereologi-perdoski-2021.pdf",
+              "text": "3 • Triazol 2 o Flukonazol oral dengan dosis 50-100 mg per hari selama 14-30 hari. 3 o Itrakonazol oral dengan dosis 100-200 mg perhari. 3,14 o Varikonazol oral dengan dosis 400 mg. 2 o Posakonazol oral dengan dosis 400 mg/12 jam. 2 Alternatif • Amfoterisin B dapat diberikan dalam sediaan suspensi dengan dosis 1 mL dari 100 mg/mL peroral selama 14-21 hari. 23,24 • Obat anti-fungal dari golongan ekinokandin seperti kaspofungin dapat diberikan dengan dosis 50 mg melalui intravena secara perlahan perhari. 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-04",
+      "ok": true,
+      "ms": 4186,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "3dbe634e-afeb-42f2-9fac-340024be29ce",
+          "stage": "retrieve_dx",
+          "ms": 90,
+          "ok": true
+        },
+        {
+          "traceId": "3dbe634e-afeb-42f2-9fac-340024be29ce",
+          "stage": "mira_dx",
+          "ms": 2300,
+          "ok": true
+        },
+        {
+          "traceId": "3dbe634e-afeb-42f2-9fac-340024be29ce",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "3dbe634e-afeb-42f2-9fac-340024be29ce",
+          "stage": "mira_tx",
+          "ms": 1743,
+          "ok": true
+        },
+        {
+          "traceId": "3dbe634e-afeb-42f2-9fac-340024be29ce",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "H00.0",
+      "diagnosis": "Hordeolum",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 1,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.009768,
+      "verifiedEvidence": [
+        {
+          "drug": "Parasetamol",
+          "dose": "1x500mg",
+          "passages": [
+            {
+              "id": "4135a345-be9f-45f7-891f-2ce758d50d62",
+              "title": "hordeolum-bintitan.md",
+              "text": "# Hordeolum (Bintitan) ## Definisi Hordeolum adalah infeksi supuratif akut fokal pada kelenjar di kelopak mata, paling sering disebabkan oleh bakteri Staphylococcus aureus. Hordeolum internum mengenai kelenjar Meibom; hordeolum eksternum mengenai kelenjar Zeiss atau Moll. ## Gejala - Bintil kemerahan yang nyeri pada kelopak mata - Nyeri berdenyut saat kelopak mata disentuh atau berkedip - Edema dan eritema fokal palpebra - Titik nanah kuning (pointing) di pangkal bulu mata atau konjungtiva tarsal ## Diagnosis Ditegakkan secara inspeksi dan palpasi kelopak mata: benjolan fokal eritematosa yang "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-05",
+      "ok": true,
+      "ms": 4133,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "b34bd0f8-e058-45cd-9841-78a85602d0f6",
+          "stage": "retrieve_dx",
+          "ms": 78,
+          "ok": true
+        },
+        {
+          "traceId": "b34bd0f8-e058-45cd-9841-78a85602d0f6",
+          "stage": "mira_dx",
+          "ms": 2383,
+          "ok": true
+        },
+        {
+          "traceId": "b34bd0f8-e058-45cd-9841-78a85602d0f6",
+          "stage": "retrieve_tx",
+          "ms": 47,
+          "ok": true
+        },
+        {
+          "traceId": "b34bd0f8-e058-45cd-9841-78a85602d0f6",
+          "stage": "mira_tx",
+          "ms": 1614,
+          "ok": true
+        },
+        {
+          "traceId": "b34bd0f8-e058-45cd-9841-78a85602d0f6",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "H81.1",
+      "diagnosis": "Benign paroxysmal positional vertigo (BPPV)",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.010287,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "lay_terms-06",
+      "ok": true,
+      "ms": 4393,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "06f13c03-25fe-4957-9c0d-cf383e71ad93",
+          "stage": "retrieve_dx",
+          "ms": 82,
+          "ok": true
+        },
+        {
+          "traceId": "06f13c03-25fe-4957-9c0d-cf383e71ad93",
+          "stage": "mira_dx",
+          "ms": 2496,
+          "ok": true
+        },
+        {
+          "traceId": "06f13c03-25fe-4957-9c0d-cf383e71ad93",
+          "stage": "retrieve_tx",
+          "ms": 38,
+          "ok": true
+        },
+        {
+          "traceId": "06f13c03-25fe-4957-9c0d-cf383e71ad93",
+          "stage": "mira_tx",
+          "ms": 1768,
+          "ok": true
+        },
+        {
+          "traceId": "06f13c03-25fe-4957-9c0d-cf383e71ad93",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "G44.2",
+      "diagnosis": "Tension-type headache",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.012534,
+      "verifiedEvidence": [
+        {
+          "drug": "Parasetamol",
+          "dose": "1x1000mg",
+          "passages": [
+            {
+              "id": "b9d52dcf-ed9d-43f9-8cb3-8553cbde7956",
+              "title": "patologi-klinik-anatomik-unair.pdf",
+              "text": "342 merupakan suatu gold standard evaluasi serangan, frekuensi, lama, beratnya serangan, disabilitas, dan respons obat. Terapi Farmakologis Tension-type headache (4,5,9) Obat Dosis harian Level Rekomendasi Akut Ibuprofen 200–800 mg A Ketoprofen 25 mg A Aspirin 500–1000 mg A Diklofenak 12,5–100 mg A Parasetamol 1000 mg (oral) A Kombinasi kafein 65–200 mg B Profilaksis Amitriptyline 10-100 mg A Nortriptyline 10-100 mg A Terapi Farmakologis Akut Migrain (4,5,10,11) Tipe Terapi Akut (Abortif) Lini pertama Ibuprofen 400 mg, ASA 1000 mg, Sodium naproksen 500- 550 mg, Asetaminofen 1000 mg, Sodium dan"
+            },
+            {
+              "id": "ba4110d9-6fb9-4baa-b4f8-181f3f7933cd",
+              "title": "tension-type-headache-tth.md",
+              "text": "# Tension-Type Headache (TTH) ## Definisi Tension-Type Headache (nyeri kepala tegang) adalah bentuk nyeri kepala primer tersering, ditandai dengan nyeri kepala bilateral seperti diikat tali kencang atau ditekan beban berat di dahi/oksipital, berhubungan erat dengan stres psikologis, kelelahan, dan ketegangan otot perikranial. ## Gejala - Nyeri kepala bilateral tumpul menekan atau mengikat (tight band-like) - Intensitas ringan hingga sedang - Nyeri tidak berdenyut dan tidak diperberat aktivitas fisik rutin (berjalan/naik tangga) - Nyeri tekan pada otot perikranial (trapezius, leher, oksipital) "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-07",
+      "ok": true,
+      "ms": 3974,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "37117653-4022-44c4-8686-ab539a65a0d4",
+          "stage": "retrieve_dx",
+          "ms": 80,
+          "ok": true
+        },
+        {
+          "traceId": "37117653-4022-44c4-8686-ab539a65a0d4",
+          "stage": "mira_dx",
+          "ms": 2153,
+          "ok": true
+        },
+        {
+          "traceId": "37117653-4022-44c4-8686-ab539a65a0d4",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "37117653-4022-44c4-8686-ab539a65a0d4",
+          "stage": "mira_tx",
+          "ms": 1690,
+          "ok": true
+        },
+        {
+          "traceId": "37117653-4022-44c4-8686-ab539a65a0d4",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "H61.2",
+      "diagnosis": "Impacted cerumen",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.005907,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "lay_terms-08",
+      "ok": true,
+      "ms": 4281,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "c8c8b2f5-1295-4954-9572-6f8a9372a15d",
+          "stage": "retrieve_dx",
+          "ms": 74,
+          "ok": true
+        },
+        {
+          "traceId": "c8c8b2f5-1295-4954-9572-6f8a9372a15d",
+          "stage": "mira_dx",
+          "ms": 2265,
+          "ok": true
+        },
+        {
+          "traceId": "c8c8b2f5-1295-4954-9572-6f8a9372a15d",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "c8c8b2f5-1295-4954-9572-6f8a9372a15d",
+          "stage": "mira_tx",
+          "ms": 1892,
+          "ok": true
+        },
+        {
+          "traceId": "c8c8b2f5-1295-4954-9572-6f8a9372a15d",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "L50",
+      "diagnosis": "Urticaria",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.01053,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "lay_terms-09",
+      "ok": true,
+      "ms": 5204,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "333c6d91-910a-4061-b63d-5aa853d59798",
+          "stage": "retrieve_dx",
+          "ms": 84,
+          "ok": true
+        },
+        {
+          "traceId": "333c6d91-910a-4061-b63d-5aa853d59798",
+          "stage": "mira_dx",
+          "ms": 2707,
+          "ok": true
+        },
+        {
+          "traceId": "333c6d91-910a-4061-b63d-5aa853d59798",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "333c6d91-910a-4061-b63d-5aa853d59798",
+          "stage": "mira_tx",
+          "ms": 2359,
+          "ok": true
+        },
+        {
+          "traceId": "333c6d91-910a-4061-b63d-5aa853d59798",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "B01.9",
+      "diagnosis": "Varicella without complication",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 3,
+      "dosesWritten": 3,
+      "dosesSupported": 3,
+      "verified": 1,
+      "doseRemoved": 2,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.00837,
+      "verifiedEvidence": [
+        {
+          "drug": "Asiklovir",
+          "dose": "4x20mg/kgBB/kali",
+          "passages": [
+            {
+              "id": "ddc721b5-a5e9-461d-b5c0-edb69933e43c",
+              "title": "varisela-cacar-air.md",
+              "text": "# Varisela (Cacar Air) ## Definisi Varisela (cacar air / chickenpox) adalah infeksi primer akut yang sangat menular yang disebabkan oleh Varicella-Zoster Virus (VZV), ditandai dengan erupsi vesikular generalisata polimorfik yang menyebar secara sentrifugal. ## Gejala - Fase prodromal: demam subfebris, malaise, anoreksia, nyeri kepala 1-2 hari - Erupsi kulit polimorfik simultan: makula eritematosa berkembang cepat menjadi papul, vesikel berdinding tipis seperti tetesan embun di atas kelopak mawar (dew drops on a rose petal), pustul, dan krusta - Gatal hebat - Penyebaran sentrifugal: lesi mulai "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-10",
+      "ok": true,
+      "ms": 4505,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "238a288d-97ff-4c16-9d52-6cbb005e479b",
+          "stage": "retrieve_dx",
+          "ms": 81,
+          "ok": true
+        },
+        {
+          "traceId": "238a288d-97ff-4c16-9d52-6cbb005e479b",
+          "stage": "mira_dx",
+          "ms": 2519,
+          "ok": true
+        },
+        {
+          "traceId": "238a288d-97ff-4c16-9d52-6cbb005e479b",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "238a288d-97ff-4c16-9d52-6cbb005e479b",
+          "stage": "mira_tx",
+          "ms": 1853,
+          "ok": true
+        },
+        {
+          "traceId": "238a288d-97ff-4c16-9d52-6cbb005e479b",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "K12.0",
+      "diagnosis": "Recurrent oral aphthae",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 0,
+      "doseRemoved": 2,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.006417,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "lay_terms-11",
+      "ok": true,
+      "ms": 4553,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "f19f3ae6-ef9a-4cdc-8f83-ab04f480c5ae",
+          "stage": "retrieve_dx",
+          "ms": 87,
+          "ok": true
+        },
+        {
+          "traceId": "f19f3ae6-ef9a-4cdc-8f83-ab04f480c5ae",
+          "stage": "mira_dx",
+          "ms": 2611,
+          "ok": true
+        },
+        {
+          "traceId": "f19f3ae6-ef9a-4cdc-8f83-ab04f480c5ae",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "f19f3ae6-ef9a-4cdc-8f83-ab04f480c5ae",
+          "stage": "mira_tx",
+          "ms": 1802,
+          "ok": true
+        },
+        {
+          "traceId": "f19f3ae6-ef9a-4cdc-8f83-ab04f480c5ae",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "A37.9",
+      "diagnosis": "Pertussis, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 2,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 2,
+      "costUsd": 0.009384,
+      "verifiedEvidence": [
+        {
+          "drug": "Azitromisin",
+          "dose": "1x10mg/kgBB",
+          "passages": [
+            {
+              "id": "5971d838-26cf-4fd0-9b65-840d166b6996",
+              "title": "pertusis-batuk-rejan.md",
+              "text": "# Pertusis (Batuk Rejan) ## Definisi Pertusis (whooping cough / batuk seratus hari) adalah infeksi bakteri akut saluran napas yang sangat menular yang disebabkan oleh Bordetella pertussis, ditandai dengan serangan batuk paroksismal hebat diakhiri suara tarikan napas melengking (whoop). ## Gejala - Stadium kataral (1-2 minggu): batuk ringan, pilek, bersin, demam subfebris - Stadium paroksismal (2-6 minggu): batuk paroksismal beruntun (staccato cough) 5-15 kali tanpa henti, tarikan napas dalam bernada tinggi (whoop), muntah pasca-batuk (post-tussive emesis), sianosis perioral saat batuk - Stadiu"
+            }
+          ]
+        },
+        {
+          "drug": "Azitromisin",
+          "dose": "1x5mg/kgBB",
+          "passages": [
+            {
+              "id": "5971d838-26cf-4fd0-9b65-840d166b6996",
+              "title": "pertusis-batuk-rejan.md",
+              "text": "# Pertusis (Batuk Rejan) ## Definisi Pertusis (whooping cough / batuk seratus hari) adalah infeksi bakteri akut saluran napas yang sangat menular yang disebabkan oleh Bordetella pertussis, ditandai dengan serangan batuk paroksismal hebat diakhiri suara tarikan napas melengking (whoop). ## Gejala - Stadium kataral (1-2 minggu): batuk ringan, pilek, bersin, demam subfebris - Stadium paroksismal (2-6 minggu): batuk paroksismal beruntun (staccato cough) 5-15 kali tanpa henti, tarikan napas dalam bernada tinggi (whoop), muntah pasca-batuk (post-tussive emesis), sianosis perioral saat batuk - Stadiu"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-12",
+      "ok": true,
+      "ms": 4175,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "ec6d6965-a4fc-4aa2-8f7c-95c3c605abe8",
+          "stage": "retrieve_dx",
+          "ms": 81,
+          "ok": true
+        },
+        {
+          "traceId": "ec6d6965-a4fc-4aa2-8f7c-95c3c605abe8",
+          "stage": "mira_dx",
+          "ms": 2516,
+          "ok": true
+        },
+        {
+          "traceId": "ec6d6965-a4fc-4aa2-8f7c-95c3c605abe8",
+          "stage": "retrieve_tx",
+          "ms": 46,
+          "ok": true
+        },
+        {
+          "traceId": "ec6d6965-a4fc-4aa2-8f7c-95c3c605abe8",
+          "stage": "mira_tx",
+          "ms": 1523,
+          "ok": true
+        },
+        {
+          "traceId": "ec6d6965-a4fc-4aa2-8f7c-95c3c605abe8",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "B26",
+      "diagnosis": "Mumps",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.007353,
+      "verifiedEvidence": [
+        {
+          "drug": "Paracetamol",
+          "dose": "3-4x500mg",
+          "passages": [
+            {
+              "id": "c583dc17-67f6-4494-9d4e-312a2ac19480",
+              "title": "parotitis-epidemika-gondongan-mumps.md",
+              "text": "# Parotitis Epidemika (Gondongan / Mumps) ## Definisi Parotitis epidemika adalah penyakit infeksi virus menular akut yang disebabkan oleh Paramyxovirus, ditandai dengan pembengkakan dan nyeri pada satu atau kedua kelenjar saliva parotis, ditularkan melalui droplet respirasi atau kontak langsung saliva. ## Gejala - Demam subfebris, malaise, nyeri kepala, anoreksia - Pembengkakan kelenjar parotis di depan dan bawah telinga (unilateral lalu bilateral) - Nyeri saat membuka mulut, mengunyah, atau menelan makanan asam - Eritema pada orifisium duktus Stensen ## Diagnosis Penegakan diagnosis klinis be"
+            },
+            {
+              "id": "467c40e9-e5b3-4cc8-a152-1a3fb548f34a",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "247 PANDUAN PRAKTIK KLINIS BAGI DOKTER DI FASILITAS PELAYANAN KESEHATAN TINGKAT PERTAMA 5. Pemberian obat oral sistemik a. Tonsilitis viral. Istirahat, minum cukup, analgetika / antipiretik (misalnya, Paracetamol), dan antivirus diberikan bila gejala berat. Antivirus Metisoprinol diberikan pada infeksi virus dengan dosis 60-100 mg/ kgBB dibagi dalam 4-6 kali pemberian/ hari pada orang dewasa dan pada anak < 5 tahun diberikan 50 mg/kgBB dibagi dalam 4-6 kali pemberian/hari. b. Tonsilitis bakteri Bila diduga penyebabnya Streptococcus group A, diberikan antibiotik yaitu Penisilin G Benzatin 50.00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-13",
+      "ok": true,
+      "ms": 4614,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+          "stage": "retrieve_dx",
+          "ms": 83,
+          "ok": true
+        },
+        {
+          "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+          "stage": "mira_dx",
+          "ms": 2704,
+          "ok": true
+        },
+        {
+          "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+          "stage": "retrieve_tx",
+          "ms": 45,
+          "ok": true
+        },
+        {
+          "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+          "stage": "mira_tx",
+          "ms": 1774,
+          "ok": true
+        },
+        {
+          "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "I84.9",
+      "diagnosis": "Haemorrhoids, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 4,
+      "dosesWritten": 4,
+      "dosesSupported": 4,
+      "verified": 4,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 4,
+      "costUsd": 0.012642,
+      "verifiedEvidence": [
+        {
+          "drug": "Diosmin",
+          "dose": "3x450mg",
+          "passages": [
+            {
+              "id": "536a6d46-8499-4266-a286-023c2ce4e4a0",
+              "title": "hemoroid-eksterna-dan-interna-derajat-1-2.md",
+              "text": "# Hemoroid Eksterna dan Interna Derajat 1-2 ## Definisi Hemoroid adalah pelebaran dan peradangan pleksus vaskular submukosa anorektal (bantalan vaskular anus). Derajat 1: perdarahan tanpa prolaps; Derajat 2: prolaps saat mengejan namun masuk kembali secara spontan. ## Gejala - Perdarahan segar menetes pasca-defekasi (hematochezia segar tanpa nyeri pada interna) - Rasa mengganjal di anus - Gatal pada area perianal (pruritus ani) - Nyeri tajam mendadak pada hemoroid eksterna bila terjadi trombosis ## Diagnosis Diagnosis klinis berdasarkan inspeksi anal (massa trombosis eksterna atau prolaps inte"
+            }
+          ]
+        },
+        {
+          "drug": "Hesperidin",
+          "dose": "3x50mg",
+          "passages": [
+            {
+              "id": "536a6d46-8499-4266-a286-023c2ce4e4a0",
+              "title": "hemoroid-eksterna-dan-interna-derajat-1-2.md",
+              "text": "# Hemoroid Eksterna dan Interna Derajat 1-2 ## Definisi Hemoroid adalah pelebaran dan peradangan pleksus vaskular submukosa anorektal (bantalan vaskular anus). Derajat 1: perdarahan tanpa prolaps; Derajat 2: prolaps saat mengejan namun masuk kembali secara spontan. ## Gejala - Perdarahan segar menetes pasca-defekasi (hematochezia segar tanpa nyeri pada interna) - Rasa mengganjal di anus - Gatal pada area perianal (pruritus ani) - Nyeri tajam mendadak pada hemoroid eksterna bila terjadi trombosis ## Diagnosis Diagnosis klinis berdasarkan inspeksi anal (massa trombosis eksterna atau prolaps inte"
+            }
+          ]
+        },
+        {
+          "drug": "Diosmin",
+          "dose": "2x450mg",
+          "passages": [
+            {
+              "id": "536a6d46-8499-4266-a286-023c2ce4e4a0",
+              "title": "hemoroid-eksterna-dan-interna-derajat-1-2.md",
+              "text": "# Hemoroid Eksterna dan Interna Derajat 1-2 ## Definisi Hemoroid adalah pelebaran dan peradangan pleksus vaskular submukosa anorektal (bantalan vaskular anus). Derajat 1: perdarahan tanpa prolaps; Derajat 2: prolaps saat mengejan namun masuk kembali secara spontan. ## Gejala - Perdarahan segar menetes pasca-defekasi (hematochezia segar tanpa nyeri pada interna) - Rasa mengganjal di anus - Gatal pada area perianal (pruritus ani) - Nyeri tajam mendadak pada hemoroid eksterna bila terjadi trombosis ## Diagnosis Diagnosis klinis berdasarkan inspeksi anal (massa trombosis eksterna atau prolaps inte"
+            }
+          ]
+        },
+        {
+          "drug": "Hesperidin",
+          "dose": "2x50mg",
+          "passages": [
+            {
+              "id": "536a6d46-8499-4266-a286-023c2ce4e4a0",
+              "title": "hemoroid-eksterna-dan-interna-derajat-1-2.md",
+              "text": "# Hemoroid Eksterna dan Interna Derajat 1-2 ## Definisi Hemoroid adalah pelebaran dan peradangan pleksus vaskular submukosa anorektal (bantalan vaskular anus). Derajat 1: perdarahan tanpa prolaps; Derajat 2: prolaps saat mengejan namun masuk kembali secara spontan. ## Gejala - Perdarahan segar menetes pasca-defekasi (hematochezia segar tanpa nyeri pada interna) - Rasa mengganjal di anus - Gatal pada area perianal (pruritus ani) - Nyeri tajam mendadak pada hemoroid eksterna bila terjadi trombosis ## Diagnosis Diagnosis klinis berdasarkan inspeksi anal (massa trombosis eksterna atau prolaps inte"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-14",
+      "ok": true,
+      "ms": 4536,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "9d27f267-17ee-48f4-8ddf-3bfa7e7a88ee",
+          "stage": "retrieve_dx",
+          "ms": 85,
+          "ok": true
+        },
+        {
+          "traceId": "9d27f267-17ee-48f4-8ddf-3bfa7e7a88ee",
+          "stage": "mira_dx",
+          "ms": 2265,
+          "ok": true
+        },
+        {
+          "traceId": "9d27f267-17ee-48f4-8ddf-3bfa7e7a88ee",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "9d27f267-17ee-48f4-8ddf-3bfa7e7a88ee",
+          "stage": "mira_tx",
+          "ms": 2134,
+          "ok": true
+        },
+        {
+          "traceId": "9d27f267-17ee-48f4-8ddf-3bfa7e7a88ee",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "K29.7",
+      "diagnosis": "Gastritis, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 1,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.01134,
+      "verifiedEvidence": [
+        {
+          "drug": "Omeprazole",
+          "dose": "1x20mg",
+          "passages": [
+            {
+              "id": "5e3d4749-ff5b-4cf2-bd7e-3501533acfea",
+              "title": "gastritis.md",
+              "text": "# Gastritis ## Definisi Gastritis adalah proses inflamasi atau peradangan mukosa dan submukosa lambung yang dapat bersifat akut atau kronik, sering diakibatkan oleh ketidakseimbangan faktor defensif mukosa lambung dan faktor agresif (asam lambung, pepsin, infeksi Helicobacter pylori, penggunaan NSAID/OAINS, stres fisik, alkohol, atau merokok). ## Gejala - Nyeri ulu hati (epigastrium) - Rasa terbakar di dada/ulu hati - Perut kembung (begah) - Mual - Muntah - Cepat kenyang - Sendawa berulang - Nafsu makan menurun ## Diagnosis Penegakan diagnosis berdasarkan anamnesis keluhan rasa tidak nyaman di"
+            },
+            {
+              "id": "8b7314d9-165a-4e5a-b3f7-e30a96c22c4a",
+              "title": "fornas-2023.pdf",
+              "text": "- 184 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL 3 esomeprazol 1. serb inj 40 mg (i.v.)  1 amp/hari maks 3 hari. 4 lansoprazol 1. kaps 30 mg  30 kaps/bulan. a) Untuk terapi jangka pendek pada kasus tukak lambung, tukak duodenum dan refluks esofagitis. b) Diberikan 1 jam sebelum makan. 2. serb inj 30 mg  1−3 amp/hari maks 3 hari. Untuk pasien IGD atau rawat inap dengan riwayat perdarahan saluran cerna. 5 omeprazol 1. kaps 20 mg   30 kaps/bulan.  a) Untuk terapi jangka pendek pada"
+            },
+            {
+              "id": "c05cb5e8-33e5-4633-a25e-3765e3b66104",
+              "title": "fornas-2025.pdf",
+              "text": "- 189 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL saluran cerna. 5 omeprazol 1. kaps 20 mg   30 kaps/bulan.  a) Untuk terapi jangka pendek pada kasus tukak lambung, tukak duodenum dan refluks esofagitis. b) Diberikan 1 jam sebelum makan. 2. inj 40 mg   1−3 amp/hari maks 3 hari.  Untuk pasien IGD atau rawat inap dengan riwayat perdarahan saluran cerna. 6 ranitidin 1. tab 150 mg   30 tab/bulan.  2. inj 25 mg/mL  2 amp/hari. 7 sukralfat 1. tab 500 mg  60 tab/bulan.  2. susp 50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-15",
+      "ok": true,
+      "ms": 4402,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "4428e952-ac1d-4fba-8ba7-1bed6374be88",
+          "stage": "retrieve_dx",
+          "ms": 77,
+          "ok": true
+        },
+        {
+          "traceId": "4428e952-ac1d-4fba-8ba7-1bed6374be88",
+          "stage": "mira_dx",
+          "ms": 2695,
+          "ok": true
+        },
+        {
+          "traceId": "4428e952-ac1d-4fba-8ba7-1bed6374be88",
+          "stage": "retrieve_tx",
+          "ms": 38,
+          "ok": true
+        },
+        {
+          "traceId": "4428e952-ac1d-4fba-8ba7-1bed6374be88",
+          "stage": "mira_tx",
+          "ms": 1583,
+          "ok": true
+        },
+        {
+          "traceId": "4428e952-ac1d-4fba-8ba7-1bed6374be88",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "E45",
+      "diagnosis": "Stunting",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.008679,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "lay_terms-16",
+      "ok": true,
+      "ms": 4281,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "048c185d-faaf-4384-b5d3-268a7222f166",
+          "stage": "retrieve_dx",
+          "ms": 86,
+          "ok": true
+        },
+        {
+          "traceId": "048c185d-faaf-4384-b5d3-268a7222f166",
+          "stage": "mira_dx",
+          "ms": 2554,
+          "ok": true
+        },
+        {
+          "traceId": "048c185d-faaf-4384-b5d3-268a7222f166",
+          "stage": "retrieve_tx",
+          "ms": 45,
+          "ok": true
+        },
+        {
+          "traceId": "048c185d-faaf-4384-b5d3-268a7222f166",
+          "stage": "mira_tx",
+          "ms": 1587,
+          "ok": true
+        },
+        {
+          "traceId": "048c185d-faaf-4384-b5d3-268a7222f166",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "L74.3",
+      "diagnosis": "Miliaria, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.00918,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "abbreviations-01",
+      "ok": true,
+      "ms": 4782,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+          "stage": "retrieve_dx",
+          "ms": 77,
+          "ok": true
+        },
+        {
+          "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+          "stage": "mira_dx",
+          "ms": 2158,
+          "ok": true
+        },
+        {
+          "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+          "stage": "retrieve_tx",
+          "ms": 46,
+          "ok": true
+        },
+        {
+          "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+          "stage": "mira_tx",
+          "ms": 2492,
+          "ok": true
+        },
+        {
+          "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "J44.1",
+      "diagnosis": "Chronic obstructive pulmonary disease with acute exacerbation",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 4,
+      "dosesWritten": 4,
+      "dosesSupported": 4,
+      "verified": 0,
+      "doseRemoved": 3,
+      "removed": 1,
+      "displayedDoses": 0,
+      "costUsd": 0.010074,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "abbreviations-02",
+      "ok": true,
+      "ms": 4099,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "4753829c-be56-489e-b5c3-d51ccc078e21",
+          "stage": "retrieve_dx",
+          "ms": 69,
+          "ok": true
+        },
+        {
+          "traceId": "4753829c-be56-489e-b5c3-d51ccc078e21",
+          "stage": "mira_dx",
+          "ms": 2451,
+          "ok": true
+        },
+        {
+          "traceId": "4753829c-be56-489e-b5c3-d51ccc078e21",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "4753829c-be56-489e-b5c3-d51ccc078e21",
+          "stage": "mira_tx",
+          "ms": 1526,
+          "ok": true
+        },
+        {
+          "traceId": "4753829c-be56-489e-b5c3-d51ccc078e21",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "A91",
+      "diagnosis": "Dengue haemorrhagic fever",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.013227,
+      "verifiedEvidence": [
+        {
+          "drug": "Parasetamol",
+          "dose": "3x500-1000mg",
+          "passages": [
+            {
+              "id": "ccf3393b-1db7-47c6-90b5-f483114546a9",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "karena memerlukan teknologi yang canggih dan prosedur yang rumit pemeriksaan ini bukan merupakan pemeriksaan yang rutin dilakukan. Diagnosis Banding 1. Demam karena infeksi virus (influenza, chikungunya, dan lain- lain) 2. Idiopathic thrombocytopenic purpura 3. Demam tifoid Komplikasi Dengue Shock Syndrome (DSS), ensefalopati, gagal ginjal, gagal hati Penatalaksanaan komprehensif (Plan) Penatalaksanaan pada Pasien Dewasa 1. Terapi simptomatik dengan analgetik antipiretik (Parasetamol 3x500-1000 mg). 2. Pemeliharaan volume cairan sirkulasi - Alur penanganan pasien dengan demam dengue/demam berd"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abbreviations-03",
+      "ok": true,
+      "ms": 4066,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "d412c90f-7858-4e11-b9a6-b05d48fe5abb",
+          "stage": "retrieve_dx",
+          "ms": 79,
+          "ok": true
+        },
+        {
+          "traceId": "d412c90f-7858-4e11-b9a6-b05d48fe5abb",
+          "stage": "mira_dx",
+          "ms": 2210,
+          "ok": true
+        },
+        {
+          "traceId": "d412c90f-7858-4e11-b9a6-b05d48fe5abb",
+          "stage": "retrieve_tx",
+          "ms": 47,
+          "ok": true
+        },
+        {
+          "traceId": "d412c90f-7858-4e11-b9a6-b05d48fe5abb",
+          "stage": "mira_tx",
+          "ms": 1722,
+          "ok": true
+        },
+        {
+          "traceId": "d412c90f-7858-4e11-b9a6-b05d48fe5abb",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "N39.0",
+      "diagnosis": "Infeksi Saluran Kemih, lokasi tidak spesifik",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.009954,
+      "verifiedEvidence": [
+        {
+          "drug": "fosfomisin trometamol",
+          "dose": "1x3g",
+          "passages": [
+            {
+              "id": "99f2ba68-a310-4527-a4f1-93a12a7b490d",
+              "title": "fornas-2025.pdf",
+              "text": "- 49 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL 1. serb inj 1.000 mg   - 15 mg/kgBB maks 2 bulan pertama pemberian setiap hari. - Untuk TB RO: 12−18 mg/kgBB, maks 8 bulan. 6.3.4 Antiseptik Saluran kemih 1 asam pipemidat 1. kaps 400 mg  28 kaps/kasus. 2 fosfomisin trometamol Untuk sistitis non komplikata pada wanita atau profilaksis pada tindakan Transrectal Prostat Biopsy (TR-PB) 1. granula 3 g  3 metenamin mandelat (heksamin mandelat) 1. tab sal enterik 500 mg   6.4 ANTIFUNGI 6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abbreviations-04",
+      "ok": true,
+      "ms": 4293,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "b1021933-670f-4271-b8de-ed2b605f5359",
+          "stage": "retrieve_dx",
+          "ms": 80,
+          "ok": true
+        },
+        {
+          "traceId": "b1021933-670f-4271-b8de-ed2b605f5359",
+          "stage": "mira_dx",
+          "ms": 2133,
+          "ok": true
+        },
+        {
+          "traceId": "b1021933-670f-4271-b8de-ed2b605f5359",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "b1021933-670f-4271-b8de-ed2b605f5359",
+          "stage": "mira_tx",
+          "ms": 2030,
+          "ok": true
+        },
+        {
+          "traceId": "b1021933-670f-4271-b8de-ed2b605f5359",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "H66.9",
+      "diagnosis": "Otitis media akut, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.010317,
+      "verifiedEvidence": [
+        {
+          "drug": "Amoksisilin",
+          "dose": "2x250mg",
+          "passages": [
+            {
+              "id": "1d231bad-51dd-4946-87b9-c9e1fe0e920c",
+              "title": "tonsilitis-2018.pdf",
+              "text": "-31- per oral, 2-3 kali sehari. Dosis dewasa ialah 4x250 mg perhari, atau 2x500 mg perhari. (level bukti I, derajat rekomendasi A) Pemberian penisilin V memberikan hasil yang baik untuk mengeradikasi bakteri, serta mengurangi risiko terjadinya komplikasi demam rematik dan glomerulonefritis . (level bukti II, derajat rekomendasi B) Literatur dari luar negeri menjadikan penisilin sebagai terapi lini pertama. Di Indonesia, penisilin V sulit didapat sehingga lebih lazim menggunakan amoksisilin. Pada pasien dengan kemungkinan kepatuhan kurang terhadap terapi penisilin oral selama 10 hari, dapat dib"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abbreviations-05",
+      "ok": true,
+      "ms": 4367,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "7d02c151-aa43-43c0-a9b1-7893f9582f25",
+          "stage": "retrieve_dx",
+          "ms": 78,
+          "ok": true
+        },
+        {
+          "traceId": "7d02c151-aa43-43c0-a9b1-7893f9582f25",
+          "stage": "mira_dx",
+          "ms": 2356,
+          "ok": true
+        },
+        {
+          "traceId": "7d02c151-aa43-43c0-a9b1-7893f9582f25",
+          "stage": "retrieve_tx",
+          "ms": 45,
+          "ok": true
+        },
+        {
+          "traceId": "7d02c151-aa43-43c0-a9b1-7893f9582f25",
+          "stage": "mira_tx",
+          "ms": 1879,
+          "ok": true
+        },
+        {
+          "traceId": "7d02c151-aa43-43c0-a9b1-7893f9582f25",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "H66.3",
+      "diagnosis": "Chronic suppurative otitis media",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 1,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.009459,
+      "verifiedEvidence": [
+        {
+          "drug": "Amoxicillin",
+          "dose": "3x500mg",
+          "passages": [
+            {
+              "id": "e8c24a60-9225-44c1-aad6-a4b1b654e0db",
+              "title": "otitis-media-akut-oma.md",
+              "text": "# Otitis Media Akut (OMA) ## Definisi Otitis media akut adalah infeksi bakteri atau virus akut pada rongga telinga tengah yang berlangsung kurang dari 3 minggu, sering didahului oleh ISPA yang memicu disfungsi tuba Eustachius, umum terjadi pada bayi dan balita. ## Gejala - Stadium Oklusi: rasa penuh/pekak di telinga, retraksi membran timpani - Stadium Hiperemis (Presupurasi): otalgia hebat, demam tinggi, membran timpani hiperemis edema - Stadium Supurasi: nyeri telinga sangat hebat, gelisah, membran timpani menonjol keluar (bulging) dengan eksudat purulen - Stadium Perforasi: keluar cairan/nan"
+            },
+            {
+              "id": "1ba6fd9b-882a-491e-a99f-4c4974700538",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "148 PANDUAN PRAKTIK KLINIS BAGI DOKTER DI FASILITAS PELAYANAN KESEHATAN TINGKAT PERTAMA Penatalaksanaan Komprehensif (Plan) 1. Non-Medikamentos Membersihkan dan mengeringkan saluran telinga dengan kapas lidi atau cotton bud. Obat cuci telinga dapat berupa NaCl 0,9%, Asam Asetat 2%, atau Hidrogen Peroksida 3%. 2. Medikamentosa a. Antibiotik topikal golongan Ofloxacin, 2 x 4 tetes per hari di telinga yang sakit b. Antibiotik oral: Dewasa: Lini pertama : Amoxicillin 3 x 500 mg per hariselama 7 hari, atauAmoxicillin- Asam clavulanat 3 x 500 mg per hari selama 7 hari, atauCiprofloxacin 2 x 500 mg s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abbreviations-06",
+      "ok": true,
+      "ms": 4379,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "34b1442c-fcfe-4e32-a9f8-0f2ec2bb7c62",
+          "stage": "retrieve_dx",
+          "ms": 77,
+          "ok": true
+        },
+        {
+          "traceId": "34b1442c-fcfe-4e32-a9f8-0f2ec2bb7c62",
+          "stage": "mira_dx",
+          "ms": 2253,
+          "ok": true
+        },
+        {
+          "traceId": "34b1442c-fcfe-4e32-a9f8-0f2ec2bb7c62",
+          "stage": "retrieve_tx",
+          "ms": 40,
+          "ok": true
+        },
+        {
+          "traceId": "34b1442c-fcfe-4e32-a9f8-0f2ec2bb7c62",
+          "stage": "mira_tx",
+          "ms": 2001,
+          "ok": true
+        },
+        {
+          "traceId": "34b1442c-fcfe-4e32-a9f8-0f2ec2bb7c62",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "I21.0",
+      "diagnosis": "STEMI of anterior wall",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.008214,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "abbreviations-07",
+      "ok": true,
+      "ms": 4872,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "1cca9331-a3e9-4696-9291-df4ada846fca",
+          "stage": "retrieve_dx",
+          "ms": 78,
+          "ok": true
+        },
+        {
+          "traceId": "1cca9331-a3e9-4696-9291-df4ada846fca",
+          "stage": "mira_dx",
+          "ms": 2231,
+          "ok": true
+        },
+        {
+          "traceId": "1cca9331-a3e9-4696-9291-df4ada846fca",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "1cca9331-a3e9-4696-9291-df4ada846fca",
+          "stage": "mira_tx",
+          "ms": 2512,
+          "ok": true
+        },
+        {
+          "traceId": "1cca9331-a3e9-4696-9291-df4ada846fca",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "A15.0",
+      "diagnosis": "Pulmonary tuberculosis, bacteriologically confirmed",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 4,
+      "dosesWritten": 4,
+      "dosesSupported": 3,
+      "verified": 4,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 4,
+      "costUsd": 0.008451,
+      "verifiedEvidence": [
+        {
+          "drug": "Isoniazid",
+          "dose": "1x300mg",
+          "passages": [
+            {
+              "id": "3fdbba9e-56be-45e4-812e-c507f7766a0a",
+              "title": "tuberkulosis-2019.pdf",
+              "text": "- 62 - Tabel 6.1. Dosis yang direkomendasikan untuk pasien dewasa dengan penurunan fungsi ginjal dan untuk pasien dewasa dengan hemodialisis Obat Gagal Ginjal Kronik Stadium 1-3 Gagal Ginjal Kronik Stadium 4-5 Penerima transpantasi ginjal Isoniazid 300 mg sekali sehari 300 mg sekali sehari atau 15 mg/kgBB, maksimal 900 mg 3x/minggu 300 mg sekali sehari Rifampisin < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari Pyrazinamide < 50 kg : 1,5 g sekali sehari > 50 "
+            },
+            {
+              "id": "f55f62cf-4023-41e3-b5c2-c6d8342d9aa9",
+              "title": "tuberkulosis-2019.pdf",
+              "text": "- 48 - a. Dosis OAT pada paduan standar jangka pendek Dosis obat berdasarkan pengelompokan berat badan dapat dilihat pada tabel berikut: Tabel 2. Dosis OAT berdasarkan berat badan Nama Obat Dosis berdasarkan kelompok berat badan <33 kg 33 – 50 kg >50 – 70 kg >70 kg Kanamisin* 0,5 g 0,75 g 0,75 g 1 g Moxifloxacin 400 mg 400 mg 400 mg 400 mg Clofazimin 50 mg # 100 mg 100 mg 100 mg Etambutol 600 mg 800 mg 1000 mg 1200 mg Pirazinamid 750 mg 1500 mg 2000 mg 2000 mg Isoniazid DT 300 mg **450 mg **600 mg 600 mg 600 mg Etionamid 500 mg 500 mg 750 mg 1000 mg Protionamid 500 mg 500 mg 750 mg 1000 mg * )"
+            }
+          ]
+        },
+        {
+          "drug": "Rifampisin",
+          "dose": "1x450mg",
+          "passages": [
+            {
+              "id": "3fdbba9e-56be-45e4-812e-c507f7766a0a",
+              "title": "tuberkulosis-2019.pdf",
+              "text": "- 62 - Tabel 6.1. Dosis yang direkomendasikan untuk pasien dewasa dengan penurunan fungsi ginjal dan untuk pasien dewasa dengan hemodialisis Obat Gagal Ginjal Kronik Stadium 1-3 Gagal Ginjal Kronik Stadium 4-5 Penerima transpantasi ginjal Isoniazid 300 mg sekali sehari 300 mg sekali sehari atau 15 mg/kgBB, maksimal 900 mg 3x/minggu 300 mg sekali sehari Rifampisin < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari Pyrazinamide < 50 kg : 1,5 g sekali sehari > 50 "
+            }
+          ]
+        },
+        {
+          "drug": "Pirazinamid",
+          "dose": "1x1.5g",
+          "passages": [
+            {
+              "id": "3fdbba9e-56be-45e4-812e-c507f7766a0a",
+              "title": "tuberkulosis-2019.pdf",
+              "text": "- 62 - Tabel 6.1. Dosis yang direkomendasikan untuk pasien dewasa dengan penurunan fungsi ginjal dan untuk pasien dewasa dengan hemodialisis Obat Gagal Ginjal Kronik Stadium 1-3 Gagal Ginjal Kronik Stadium 4-5 Penerima transpantasi ginjal Isoniazid 300 mg sekali sehari 300 mg sekali sehari atau 15 mg/kgBB, maksimal 900 mg 3x/minggu 300 mg sekali sehari Rifampisin < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari < 50 kg : 450 mg sekali sehari > 50 kg : 600 mg sekali sehari Pyrazinamide < 50 kg : 1,5 g sekali sehari > 50 "
+            }
+          ]
+        },
+        {
+          "drug": "Ethambutol",
+          "dose": "1x800mg",
+          "passages": [
+            {
+              "id": "f55f62cf-4023-41e3-b5c2-c6d8342d9aa9",
+              "title": "tuberkulosis-2019.pdf",
+              "text": "- 48 - a. Dosis OAT pada paduan standar jangka pendek Dosis obat berdasarkan pengelompokan berat badan dapat dilihat pada tabel berikut: Tabel 2. Dosis OAT berdasarkan berat badan Nama Obat Dosis berdasarkan kelompok berat badan <33 kg 33 – 50 kg >50 – 70 kg >70 kg Kanamisin* 0,5 g 0,75 g 0,75 g 1 g Moxifloxacin 400 mg 400 mg 400 mg 400 mg Clofazimin 50 mg # 100 mg 100 mg 100 mg Etambutol 600 mg 800 mg 1000 mg 1200 mg Pirazinamid 750 mg 1500 mg 2000 mg 2000 mg Isoniazid DT 300 mg **450 mg **600 mg 600 mg 600 mg Etionamid 500 mg 500 mg 750 mg 1000 mg Protionamid 500 mg 500 mg 750 mg 1000 mg * )"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abbreviations-08",
+      "ok": true,
+      "ms": 4200,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "31d1f7ed-6ec3-41f8-a26d-d0fedeedf9b8",
+          "stage": "retrieve_dx",
+          "ms": 75,
+          "ok": true
+        },
+        {
+          "traceId": "31d1f7ed-6ec3-41f8-a26d-d0fedeedf9b8",
+          "stage": "mira_dx",
+          "ms": 2593,
+          "ok": true
+        },
+        {
+          "traceId": "31d1f7ed-6ec3-41f8-a26d-d0fedeedf9b8",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "31d1f7ed-6ec3-41f8-a26d-d0fedeedf9b8",
+          "stage": "mira_tx",
+          "ms": 1483,
+          "ok": true
+        },
+        {
+          "traceId": "31d1f7ed-6ec3-41f8-a26d-d0fedeedf9b8",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "E11",
+      "diagnosis": "Diabetes mellitus tipe 2",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.011541,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "abbreviations-09",
+      "ok": true,
+      "ms": 4085,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "bc1a16b0-2bcc-4969-8fb1-80cb27bee4ee",
+          "stage": "retrieve_dx",
+          "ms": 78,
+          "ok": true
+        },
+        {
+          "traceId": "bc1a16b0-2bcc-4969-8fb1-80cb27bee4ee",
+          "stage": "mira_dx",
+          "ms": 2301,
+          "ok": true
+        },
+        {
+          "traceId": "bc1a16b0-2bcc-4969-8fb1-80cb27bee4ee",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "bc1a16b0-2bcc-4969-8fb1-80cb27bee4ee",
+          "stage": "mira_tx",
+          "ms": 1657,
+          "ok": true
+        },
+        {
+          "traceId": "bc1a16b0-2bcc-4969-8fb1-80cb27bee4ee",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "N18.5",
+      "diagnosis": "Chronic kidney disease, stage 5",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.00963,
+      "verifiedEvidence": [
+        {
+          "drug": "kalsium polistiren sulfonat",
+          "dose": "15-30g/hari",
+          "passages": [
+            {
+              "id": "5e645f85-07d5-4b4b-a25c-67494b87d4bb",
+              "title": "fornas-2023.pdf",
+              "text": "- 211 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL kontraindikasi. c) Bila 3 kali pemberian tidak memberikan respons klinis signifikan, maka terapi dihentikan. 1. inj 10 mg/mL  Diberikan 1 vial/pre- filled syringe per minggu. Maks 5 vial/pre-filled syringe per kasus. 32. LAIN–LAIN 1 larutan kardioplegia 1. inj  2 kalsium polistiren sulfonat 1. serb 5 g  15−30 gram/hari dibagi dalam 2−3 kali pemberian. Maks selama 5 hari sampai dengan dialisis dilakukan. 3 sevelamer karbonat Hanya unt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abbreviations-10",
+      "ok": true,
+      "ms": 4425,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "239f801c-55d1-40c2-9193-5c8fd3ab7f60",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "239f801c-55d1-40c2-9193-5c8fd3ab7f60",
+          "stage": "mira_dx",
+          "ms": 2782,
+          "ok": true
+        },
+        {
+          "traceId": "239f801c-55d1-40c2-9193-5c8fd3ab7f60",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "239f801c-55d1-40c2-9193-5c8fd3ab7f60",
+          "stage": "mira_tx",
+          "ms": 1515,
+          "ok": true
+        },
+        {
+          "traceId": "239f801c-55d1-40c2-9193-5c8fd3ab7f60",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "P21.0",
+      "diagnosis": "Severe birth asphyxia",
+      "icdValid": true,
+      "icdCorrect": false,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.007755,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "abbreviations-11",
+      "ok": true,
+      "ms": 4335,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "15de99fe-e4ee-475b-acf8-09779873cb33",
+          "stage": "retrieve_dx",
+          "ms": 68,
+          "ok": true
+        },
+        {
+          "traceId": "15de99fe-e4ee-475b-acf8-09779873cb33",
+          "stage": "mira_dx",
+          "ms": 2213,
+          "ok": true
+        },
+        {
+          "traceId": "15de99fe-e4ee-475b-acf8-09779873cb33",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "15de99fe-e4ee-475b-acf8-09779873cb33",
+          "stage": "mira_tx",
+          "ms": 2003,
+          "ok": true
+        },
+        {
+          "traceId": "15de99fe-e4ee-475b-acf8-09779873cb33",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "F41.1",
+      "diagnosis": "Generalized anxiety disorder",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 1,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.00921,
+      "verifiedEvidence": [
+        {
+          "drug": "Diazepam",
+          "dose": "1x2mg",
+          "passages": [
+            {
+              "id": "a47f8c58-dcb2-441d-974a-2ae5f90a37e2",
+              "title": "fornas-2023.pdf",
+              "text": "- 174 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL 2. inj 0,2 mg/mL    2 oksitosin 1. inj 10 IU/mL    23. PSIKOFARMAKA 23.1 ANTIANSIETAS 1 alprazolam a) Diresepkan oleh dokter yang memiliki kompetensi di bidang ilmu kedokteran jiwa atau penyakit dalam. b) Hanya untuk kasus: - Panic attack - Panic disorder 1. tab 0,25 mg  Maks 2 minggu/kasus, 30 tab/bulan. 2. tab 0,5 mg  Maks 2 minggu/kasus, 30 tab/bulan. 3. tab 1 mg  Maks 2 minggu/kasus, 30 tab/bulan. 2 diazepam 1. tab 2 mg  "
+            },
+            {
+              "id": "5764a73c-61a2-4f43-bf75-4a2f0ee3f937",
+              "title": "fornas-2025.pdf",
+              "text": "- 179 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL 1 metilergometrin 1. tab 0,125 mg    2. inj 0,2 mg/mL    2 oksitosin 1. inj 10 IU/mL    23. PSIKOFARMAKA 23.1 ANTIANSIETAS 1 alprazolam a) Diresepkan oleh dokter yang memiliki kompetensi di bidang ilmu kedokteran jiwa atau penyakit dalam. b) Hanya untuk kasus: - Panic attack - Panic disorder 1. tab 0,25 mg  Maks 2 minggu/kasus, 30 tab/bulan. 2. tab 0,5 mg  Maks 2 minggu/kasus, 30 tab/bulan. 3. tab 1 mg  Maks 2 minggu/kasus, "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abbreviations-12",
+      "ok": true,
+      "ms": 4645,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "954885d9-0559-4f57-985d-0ed50522447d",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "954885d9-0559-4f57-985d-0ed50522447d",
+          "stage": "mira_dx",
+          "ms": 2575,
+          "ok": true
+        },
+        {
+          "traceId": "954885d9-0559-4f57-985d-0ed50522447d",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "954885d9-0559-4f57-985d-0ed50522447d",
+          "stage": "mira_tx",
+          "ms": 1942,
+          "ok": true
+        },
+        {
+          "traceId": "954885d9-0559-4f57-985d-0ed50522447d",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "G44.2",
+      "diagnosis": "Tension-type headache",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.009282,
+      "verifiedEvidence": [
+        {
+          "drug": "Parasetamol",
+          "dose": "1x1000mg",
+          "passages": [
+            {
+              "id": "b9d52dcf-ed9d-43f9-8cb3-8553cbde7956",
+              "title": "patologi-klinik-anatomik-unair.pdf",
+              "text": "342 merupakan suatu gold standard evaluasi serangan, frekuensi, lama, beratnya serangan, disabilitas, dan respons obat. Terapi Farmakologis Tension-type headache (4,5,9) Obat Dosis harian Level Rekomendasi Akut Ibuprofen 200–800 mg A Ketoprofen 25 mg A Aspirin 500–1000 mg A Diklofenak 12,5–100 mg A Parasetamol 1000 mg (oral) A Kombinasi kafein 65–200 mg B Profilaksis Amitriptyline 10-100 mg A Nortriptyline 10-100 mg A Terapi Farmakologis Akut Migrain (4,5,10,11) Tipe Terapi Akut (Abortif) Lini pertama Ibuprofen 400 mg, ASA 1000 mg, Sodium naproksen 500- 550 mg, Asetaminofen 1000 mg, Sodium dan"
+            },
+            {
+              "id": "ba4110d9-6fb9-4baa-b4f8-181f3f7933cd",
+              "title": "tension-type-headache-tth.md",
+              "text": "# Tension-Type Headache (TTH) ## Definisi Tension-Type Headache (nyeri kepala tegang) adalah bentuk nyeri kepala primer tersering, ditandai dengan nyeri kepala bilateral seperti diikat tali kencang atau ditekan beban berat di dahi/oksipital, berhubungan erat dengan stres psikologis, kelelahan, dan ketegangan otot perikranial. ## Gejala - Nyeri kepala bilateral tumpul menekan atau mengikat (tight band-like) - Intensitas ringan hingga sedang - Nyeri tidak berdenyut dan tidak diperberat aktivitas fisik rutin (berjalan/naik tangga) - Nyeri tekan pada otot perikranial (trapezius, leher, oksipital) "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "abbreviations-13",
+      "ok": true,
+      "ms": 4040,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "93930213-046c-4544-af0d-29efe2eadbc2",
+          "stage": "retrieve_dx",
+          "ms": 77,
+          "ok": true
+        },
+        {
+          "traceId": "93930213-046c-4544-af0d-29efe2eadbc2",
+          "stage": "mira_dx",
+          "ms": 2367,
+          "ok": true
+        },
+        {
+          "traceId": "93930213-046c-4544-af0d-29efe2eadbc2",
+          "stage": "retrieve_tx",
+          "ms": 45,
+          "ok": true
+        },
+        {
+          "traceId": "93930213-046c-4544-af0d-29efe2eadbc2",
+          "stage": "mira_tx",
+          "ms": 1543,
+          "ok": true
+        },
+        {
+          "traceId": "93930213-046c-4544-af0d-29efe2eadbc2",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "H81.1",
+      "diagnosis": "Benign paroxysmal positional vertigo",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.010839,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "abbreviations-14",
+      "ok": true,
+      "ms": 4144,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "65d1c5c4-341f-4185-bcb7-7bf73d435a15",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "65d1c5c4-341f-4185-bcb7-7bf73d435a15",
+          "stage": "mira_dx",
+          "ms": 2217,
+          "ok": true
+        },
+        {
+          "traceId": "65d1c5c4-341f-4185-bcb7-7bf73d435a15",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "65d1c5c4-341f-4185-bcb7-7bf73d435a15",
+          "stage": "mira_tx",
+          "ms": 1801,
+          "ok": true
+        },
+        {
+          "traceId": "65d1c5c4-341f-4185-bcb7-7bf73d435a15",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "C91.0",
+      "diagnosis": "Acute lymphoblastic leukaemia",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.010053,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "abbreviations-15",
+      "ok": true,
+      "ms": 4041,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "e037388d-af3c-48c5-b219-66ca1103f540",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "e037388d-af3c-48c5-b219-66ca1103f540",
+          "stage": "mira_dx",
+          "ms": 2361,
+          "ok": true
+        },
+        {
+          "traceId": "e037388d-af3c-48c5-b219-66ca1103f540",
+          "stage": "retrieve_tx",
+          "ms": 48,
+          "ok": true
+        },
+        {
+          "traceId": "e037388d-af3c-48c5-b219-66ca1103f540",
+          "stage": "mira_tx",
+          "ms": 1548,
+          "ok": true
+        },
+        {
+          "traceId": "e037388d-af3c-48c5-b219-66ca1103f540",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "K21.9",
+      "diagnosis": "Gastro-oesophageal reflux disease without oesophagitis",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.008298,
+      "verifiedEvidence": [
+        {
+          "drug": "Omeprazole",
+          "dose": "2x20mg",
+          "passages": [
+            {
+              "id": "173c8703-f910-4545-aa66-2cc992f14eea",
+              "title": "gastroesophageal-reflux-disease-gerd.md",
+              "text": "# Gastroesophageal Reflux Disease (GERD) ## Definisi GERD adalah kondisi refluks isi lambung ke dalam esofagus yang menimbulkan gejala mengganggu (heartburn dan regurgitasi) dan/atau komplikasi mukosa esofagus, diakibatkan oleh inkompetensi sfingter esofagus bawah (lower esophageal sphincter / LES). ## Gejala - Heartburn (rasa panas terbakar di retrosternal dada) - Regurgitasi asam (asam/pahit naik ke rongga mulut) - Disfagia intermiten - Batuk kronik malam hari - Suara serak (laringitis refluks) - Sensasi globus (mengganjal di tenggorokan) ## Diagnosis Diagnosis ditegakkan secara klinis denga"
+            },
+            {
+              "id": "c05cb5e8-33e5-4633-a25e-3765e3b66104",
+              "title": "fornas-2025.pdf",
+              "text": "- 189 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL saluran cerna. 5 omeprazol 1. kaps 20 mg   30 kaps/bulan.  a) Untuk terapi jangka pendek pada kasus tukak lambung, tukak duodenum dan refluks esofagitis. b) Diberikan 1 jam sebelum makan. 2. inj 40 mg   1−3 amp/hari maks 3 hari.  Untuk pasien IGD atau rawat inap dengan riwayat perdarahan saluran cerna. 6 ranitidin 1. tab 150 mg   30 tab/bulan.  2. inj 25 mg/mL  2 amp/hari. 7 sukralfat 1. tab 500 mg  60 tab/bulan.  2. susp 50"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mixed_id_en-01",
+      "ok": true,
+      "ms": 4757,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "9af32c8b-88a3-4f92-9498-44cdd5146b76",
+          "stage": "retrieve_dx",
+          "ms": 94,
+          "ok": true
+        },
+        {
+          "traceId": "9af32c8b-88a3-4f92-9498-44cdd5146b76",
+          "stage": "mira_dx",
+          "ms": 2907,
+          "ok": true
+        },
+        {
+          "traceId": "9af32c8b-88a3-4f92-9498-44cdd5146b76",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "9af32c8b-88a3-4f92-9498-44cdd5146b76",
+          "stage": "mira_tx",
+          "ms": 1702,
+          "ok": true
+        },
+        {
+          "traceId": "9af32c8b-88a3-4f92-9498-44cdd5146b76",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "J18.9",
+      "diagnosis": "Pneumonia, unspecified organism",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.011388,
+      "verifiedEvidence": [
+        {
+          "drug": "amoksisilin",
+          "dose": "3x1g",
+          "passages": [
+            {
+              "id": "061e7a88-59a9-419a-9c10-a942bad25fa9",
+              "title": "penyakit-dalam-papdi-2024.pdf",
+              "text": "2. Terapi farmakologi: a. Terapi simtomatis sesuai kondisi pasien b. Terapi Antibiotik empirik untuk kuman pneumonia komunitas: Pasien dewasa rawat jalan yang sehat tanpa komorbiditas yang atau faktor risiko untuk patogen resisten antibiotik. 1. amoksisilin 1 g tiga kali sehari, atau doksisiklin 100 mg dua kali sehari, atau makrolida (azitromisin 500 mg 1x sehari atau klaritromisin 500 mg dua kali sehari) Pasien dewasa rawat jalan dengan komorbiditas seperti jantung kronis, paru- paru, hati, atau penyakit ginjal; diabetes mellitus; alkoholisme; keganasan; atau splenia: Terapi kombinasi: 1. amo"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mixed_id_en-02",
+      "ok": true,
+      "ms": 4500,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "c3b7569b-f18a-4fb1-8277-7985192ccf49",
+          "stage": "retrieve_dx",
+          "ms": 65,
+          "ok": true
+        },
+        {
+          "traceId": "c3b7569b-f18a-4fb1-8277-7985192ccf49",
+          "stage": "mira_dx",
+          "ms": 2250,
+          "ok": true
+        },
+        {
+          "traceId": "c3b7569b-f18a-4fb1-8277-7985192ccf49",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "c3b7569b-f18a-4fb1-8277-7985192ccf49",
+          "stage": "mira_tx",
+          "ms": 2135,
+          "ok": true
+        },
+        {
+          "traceId": "c3b7569b-f18a-4fb1-8277-7985192ccf49",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "I50.0",
+      "diagnosis": "Congestive heart failure",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 2,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 2,
+      "costUsd": 0.009783,
+      "verifiedEvidence": [
+        {
+          "drug": "Furosemid",
+          "dose": "1x20-40mg",
+          "passages": [
+            {
+              "id": "b04e626a-a8e3-4518-81b8-57b8c21eabf6",
+              "title": "fktp-kmk-2022.pdf",
+              "text": "- 119 - 1) Pada kondisi akut berat: tirah baring 2) Pada kondisi sedang atau ringan:batasi beban kerja sampai 60% hingga 80% dari denyut nadi maksimal (220/umur) c. Penatalaksanaan farmakologi Pada gagal jantung akut: a. Terapi oksigen 2-4 liter per menit b. Pemasangan iv line untuk akses dilanjutkan dengan pemberian furosemid injeksi 20 s/d 40 mg bolus dapat diulang tiap jam sampai dosis maksimal 600 mg/hari. c. Segera rujuk. Pada gagal jantung kronik: a. Diuretik: diutamakan loop diuretic (furosemid) bila perlu dapat dikombinasikan Thiazid, bila dalam 24 jam tidak ada respon rujuk ke layanan"
+            },
+            {
+              "id": "c0bd34b4-a9b3-4834-baaf-8765d7bb8133",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "furosemid injeksi 20 s/d 40 mg bolus dapat diulang tiap jam sampai dosis maksimal 600 mg/hari. c. Segera rujuk. Pada gagal jantung kronik: a. Diuretik: diutamakan loop diuretic (furosemid) bila perlu dapat dikombinasikan Thiazid, bila dalam 24 jam tidak ada respon rujuk ke layanan sekunder. b. ACE Inhibitor (ACE-I) atau Angiotensine II receptor blocker (ARB) mulai dari dosis terkecil dan titrasi dosis sampai tercapai dosis yang efektif dalam beberapa minggu. Bila pengobatan sudah mencapai dosis maksimal dan target tidak tercapai segera dirujuk. c. Digoksin diberikan bila ditemukan takikardi un"
+            }
+          ]
+        },
+        {
+          "drug": "Ramipril",
+          "dose": "1x2.5mg",
+          "passages": [
+            {
+              "id": "081b0289-dd30-4dfe-b38f-cc54b6122ed8",
+              "title": "penyakit-dalam-papdi-2024.pdf",
+              "text": "27 Ramipril 2.5mg, 5mg, 10mg 1x sehari Candesartan 8mg, 16 mg 1x sehari Telmisartan 40mg, 80mg 1x sehari 3. Beta blocker Bisoprolol 2,5 mg, 5mg 1xsehari Carvedilol 3,125mg, 6,25mg 2x sehari 4. Antagonis aldosteron Spironolacton 25mg, 50mg 1x sehari Terapi ARNI, ivabradine, diberikan sesuai kondisi pasien 9 Edukasi Edukasi tentang 1. Definisi gagal jantung 2. Terapi farmakologi 3. Diet: rendah garam, diet sesuai factor risiko dan penyakit co morbid misal DM, alcohol, merokok 4. Latihan: pastikan kembali olahraga yang nyaman untuk pasien. 5. Imunisasi influenza dan pneumococcal. 10 Prognosis Pro"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mixed_id_en-03",
+      "ok": true,
+      "ms": 4296,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "8ab08dc5-c24b-4b32-b9b7-e8115eec73de",
+          "stage": "retrieve_dx",
+          "ms": 66,
+          "ok": true
+        },
+        {
+          "traceId": "8ab08dc5-c24b-4b32-b9b7-e8115eec73de",
+          "stage": "mira_dx",
+          "ms": 2613,
+          "ok": true
+        },
+        {
+          "traceId": "8ab08dc5-c24b-4b32-b9b7-e8115eec73de",
+          "stage": "retrieve_tx",
+          "ms": 36,
+          "ok": true
+        },
+        {
+          "traceId": "8ab08dc5-c24b-4b32-b9b7-e8115eec73de",
+          "stage": "mira_tx",
+          "ms": 1573,
+          "ok": true
+        },
+        {
+          "traceId": "8ab08dc5-c24b-4b32-b9b7-e8115eec73de",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "N18.9",
+      "diagnosis": "Chronic kidney disease, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.011469,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "mixed_id_en-04",
+      "ok": true,
+      "ms": 4803,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "065a8a70-ce9c-4854-811c-44f3e2501098",
+          "stage": "retrieve_dx",
+          "ms": 82,
+          "ok": true
+        },
+        {
+          "traceId": "065a8a70-ce9c-4854-811c-44f3e2501098",
+          "stage": "mira_dx",
+          "ms": 2314,
+          "ok": true
+        },
+        {
+          "traceId": "065a8a70-ce9c-4854-811c-44f3e2501098",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "065a8a70-ce9c-4854-811c-44f3e2501098",
+          "stage": "mira_tx",
+          "ms": 2356,
+          "ok": true
+        },
+        {
+          "traceId": "065a8a70-ce9c-4854-811c-44f3e2501098",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "I63.9",
+      "diagnosis": "Cerebral infarction, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.011241,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "mixed_id_en-05",
+      "ok": true,
+      "ms": 4605,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "61beb42b-3977-4f16-93ab-93779033e91d",
+          "stage": "retrieve_dx",
+          "ms": 75,
+          "ok": true
+        },
+        {
+          "traceId": "61beb42b-3977-4f16-93ab-93779033e91d",
+          "stage": "mira_dx",
+          "ms": 2514,
+          "ok": true
+        },
+        {
+          "traceId": "61beb42b-3977-4f16-93ab-93779033e91d",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "61beb42b-3977-4f16-93ab-93779033e91d",
+          "stage": "mira_tx",
+          "ms": 1963,
+          "ok": true
+        },
+        {
+          "traceId": "61beb42b-3977-4f16-93ab-93779033e91d",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "A91",
+      "diagnosis": "Dengue fever with warning signs",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.008475,
+      "verifiedEvidence": [
+        {
+          "drug": "Parasetamol",
+          "dose": "1x10-15mg/kgBB",
+          "passages": [
+            {
+              "id": "c2ddf79a-db7c-4e57-9bee-e62b1e1dbdc2",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "kebutuhan untuk dehidrasi sedang sesuai dengan dosis yang telah dijelaskan di atas. 3. Lakukan pemantauan: tanda vital dan diuresis setiap jam, laboratorium (DPL) per 4-6 jam. a. Bila terjadi penurunan hematokrit dan perbaikan klinis, turunkan jumlah cairan secara bertahap sampai keadaan klinis stabil. b. Bila terjadi perburukan klinis, lakukan penatalaksanaan DBD dengan syok. 4. Bila anak demam, berikan antipiretik (Parasetamol 10-15 mg/kgBB/kali) per oral. Hindari Ibuprofen dan Asetosal. 5. Pengobatan suportif lain sesuai indikasi. Demam berdarah dengue (DBD) dengan syok 1. Kondisi ini merup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mixed_id_en-06",
+      "ok": true,
+      "ms": 4891,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "d982f64e-5669-476d-b647-f8d08e9eae98",
+          "stage": "retrieve_dx",
+          "ms": 73,
+          "ok": true
+        },
+        {
+          "traceId": "d982f64e-5669-476d-b647-f8d08e9eae98",
+          "stage": "mira_dx",
+          "ms": 2398,
+          "ok": true
+        },
+        {
+          "traceId": "d982f64e-5669-476d-b647-f8d08e9eae98",
+          "stage": "retrieve_tx",
+          "ms": 39,
+          "ok": true
+        },
+        {
+          "traceId": "d982f64e-5669-476d-b647-f8d08e9eae98",
+          "stage": "mira_tx",
+          "ms": 2373,
+          "ok": true
+        },
+        {
+          "traceId": "d982f64e-5669-476d-b647-f8d08e9eae98",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "L20.8",
+      "diagnosis": "Other atopic dermatitis",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 3,
+      "dosesWritten": 3,
+      "dosesSupported": 3,
+      "verified": 0,
+      "doseRemoved": 2,
+      "removed": 1,
+      "displayedDoses": 0,
+      "costUsd": 0.009087,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "mixed_id_en-07",
+      "ok": true,
+      "ms": 4622,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "cf3024e3-6e30-403e-9f55-e55d8c27f257",
+          "stage": "retrieve_dx",
+          "ms": 66,
+          "ok": true
+        },
+        {
+          "traceId": "cf3024e3-6e30-403e-9f55-e55d8c27f257",
+          "stage": "mira_dx",
+          "ms": 2711,
+          "ok": true
+        },
+        {
+          "traceId": "cf3024e3-6e30-403e-9f55-e55d8c27f257",
+          "stage": "retrieve_tx",
+          "ms": 37,
+          "ok": true
+        },
+        {
+          "traceId": "cf3024e3-6e30-403e-9f55-e55d8c27f257",
+          "stage": "mira_tx",
+          "ms": 1800,
+          "ok": true
+        },
+        {
+          "traceId": "cf3024e3-6e30-403e-9f55-e55d8c27f257",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "I10",
+      "diagnosis": "Essential (primary) hypertension",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.00978,
+      "verifiedEvidence": [
+        {
+          "drug": "Captopril",
+          "dose": "3x12.5mg",
+          "passages": [
+            {
+              "id": "b73e5c66-24b1-4072-9502-b7b1e73d0c0f",
+              "title": "penyakit-dalam-papdi-2024.pdf",
+              "text": "29 6 Diagnosa Kerja 1. Hipertensi stage 1 2. Hipertensi stage 2 7 Diagnosa Banding Hipertensi sekunder 8 Terapi 1. Terapi non farmakologi: a. Diet rendah garam b. Batasi intake cairan c. Hentikan rokok, alcohol d. Banyak makan sayur dan buah 2. Terapi farmakologi: a. ACEI (Angiotensin Converting Enzyme Inhibitors) 1) Captopril 12,5mg, 25mg, 50mh, 3x sehari atau 2) Lisinopril 5mg, 10mg 1x sehari atau 3) Ramipril 2.5mg, 5mg, 10mg 1x sehari atau b. ARB ( Angiotensin II Receptor Blocker) 1) Candesartan 8mg, 16 mg 1x sehari atau 2) Telmisartan 40mg, 80mg 1x sehari c. Calcium chanel blocker 1) Amloi"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mixed_id_en-08",
+      "ok": true,
+      "ms": 4893,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "79b37efb-ab50-4b6f-9b1f-2c56e8366a32",
+          "stage": "retrieve_dx",
+          "ms": 73,
+          "ok": true
+        },
+        {
+          "traceId": "79b37efb-ab50-4b6f-9b1f-2c56e8366a32",
+          "stage": "mira_dx",
+          "ms": 2567,
+          "ok": true
+        },
+        {
+          "traceId": "79b37efb-ab50-4b6f-9b1f-2c56e8366a32",
+          "stage": "retrieve_tx",
+          "ms": 45,
+          "ok": true
+        },
+        {
+          "traceId": "79b37efb-ab50-4b6f-9b1f-2c56e8366a32",
+          "stage": "mira_tx",
+          "ms": 2200,
+          "ok": true
+        },
+        {
+          "traceId": "79b37efb-ab50-4b6f-9b1f-2c56e8366a32",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "H60.3",
+      "diagnosis": "Otitis externa, other infective",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 1,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.010395,
+      "verifiedEvidence": [
+        {
+          "drug": "Parasetamol",
+          "dose": "3x500mg",
+          "passages": [
+            {
+              "id": "c8630ad8-ad75-42cd-a6bb-03f370b6dac4",
+              "title": "otitis-eksterna.md",
+              "text": "# Otitis Eksterna ## Definisi Otitis eksterna adalah peradangan atau infeksi pada liang telinga luar (meatus akustikus eksternus) yang dapat bersifat difus (swimmer's ear, sering disebabkan Pseudomonas aeruginosa atau Staphylococcus aureus) atau sirkumskripta (furunkel liang telinga). ## Gejala - Nyeri telinga hebat (otalgia) yang bertambah saat daun telinga ditarik atau tragus ditekan (tragus sign positif) - Liang telinga bengkak dan merah - Keluar sekret telinga (otorea) serosa atau purulen berbau - Pendengaran menurun bila liang telinga tertutup edema/kotoran - Gatal hebat pada liang teling"
+            },
+            {
+              "id": "e8c24a60-9225-44c1-aad6-a4b1b654e0db",
+              "title": "otitis-media-akut-oma.md",
+              "text": "# Otitis Media Akut (OMA) ## Definisi Otitis media akut adalah infeksi bakteri atau virus akut pada rongga telinga tengah yang berlangsung kurang dari 3 minggu, sering didahului oleh ISPA yang memicu disfungsi tuba Eustachius, umum terjadi pada bayi dan balita. ## Gejala - Stadium Oklusi: rasa penuh/pekak di telinga, retraksi membran timpani - Stadium Hiperemis (Presupurasi): otalgia hebat, demam tinggi, membran timpani hiperemis edema - Stadium Supurasi: nyeri telinga sangat hebat, gelisah, membran timpani menonjol keluar (bulging) dengan eksudat purulen - Stadium Perforasi: keluar cairan/nan"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mixed_id_en-09",
+      "ok": true,
+      "ms": 4542,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "79f9aaf1-9355-432b-ada6-5607f02b7be8",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "79f9aaf1-9355-432b-ada6-5607f02b7be8",
+          "stage": "mira_dx",
+          "ms": 2736,
+          "ok": true
+        },
+        {
+          "traceId": "79f9aaf1-9355-432b-ada6-5607f02b7be8",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "79f9aaf1-9355-432b-ada6-5607f02b7be8",
+          "stage": "mira_tx",
+          "ms": 1680,
+          "ok": true
+        },
+        {
+          "traceId": "79f9aaf1-9355-432b-ada6-5607f02b7be8",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "A41.9",
+      "diagnosis": "Sepsis, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.009531,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "mixed_id_en-10",
+      "ok": true,
+      "ms": 4425,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "e12aa9ff-4b7c-404e-af18-29d8911df447",
+          "stage": "retrieve_dx",
+          "ms": 78,
+          "ok": true
+        },
+        {
+          "traceId": "e12aa9ff-4b7c-404e-af18-29d8911df447",
+          "stage": "mira_dx",
+          "ms": 2522,
+          "ok": true
+        },
+        {
+          "traceId": "e12aa9ff-4b7c-404e-af18-29d8911df447",
+          "stage": "retrieve_tx",
+          "ms": 45,
+          "ok": true
+        },
+        {
+          "traceId": "e12aa9ff-4b7c-404e-af18-29d8911df447",
+          "stage": "mira_tx",
+          "ms": 1771,
+          "ok": true
+        },
+        {
+          "traceId": "e12aa9ff-4b7c-404e-af18-29d8911df447",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "H40.1",
+      "diagnosis": "Primary open-angle glaucoma",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.012081,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "mixed_id_en-11",
+      "ok": true,
+      "ms": 4755,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "576a07a4-544f-4878-99df-b1a46d9fe51a",
+          "stage": "retrieve_dx",
+          "ms": 72,
+          "ok": true
+        },
+        {
+          "traceId": "576a07a4-544f-4878-99df-b1a46d9fe51a",
+          "stage": "mira_dx",
+          "ms": 2692,
+          "ok": true
+        },
+        {
+          "traceId": "576a07a4-544f-4878-99df-b1a46d9fe51a",
+          "stage": "retrieve_tx",
+          "ms": 37,
+          "ok": true
+        },
+        {
+          "traceId": "576a07a4-544f-4878-99df-b1a46d9fe51a",
+          "stage": "mira_tx",
+          "ms": 1945,
+          "ok": true
+        },
+        {
+          "traceId": "576a07a4-544f-4878-99df-b1a46d9fe51a",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "Q12.0",
+      "diagnosis": "Congenital cataract",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.012138,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "mixed_id_en-12",
+      "ok": true,
+      "ms": 5553,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "75e470ff-d750-4bf8-84cb-4323bb9da002",
+          "stage": "retrieve_dx",
+          "ms": 73,
+          "ok": true
+        },
+        {
+          "traceId": "75e470ff-d750-4bf8-84cb-4323bb9da002",
+          "stage": "mira_dx",
+          "ms": 3558,
+          "ok": true
+        },
+        {
+          "traceId": "75e470ff-d750-4bf8-84cb-4323bb9da002",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "75e470ff-d750-4bf8-84cb-4323bb9da002",
+          "stage": "mira_tx",
+          "ms": 1870,
+          "ok": true
+        },
+        {
+          "traceId": "75e470ff-d750-4bf8-84cb-4323bb9da002",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "B18.1",
+      "diagnosis": "Chronic viral hepatitis B with delta-agent",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.013863,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "mixed_id_en-13",
+      "ok": true,
+      "ms": 5435,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "b3bbd9ea-7c22-46d6-9165-63cc16ac9e52",
+          "stage": "retrieve_dx",
+          "ms": 69,
+          "ok": true
+        },
+        {
+          "traceId": "b3bbd9ea-7c22-46d6-9165-63cc16ac9e52",
+          "stage": "mira_dx",
+          "ms": 2629,
+          "ok": true
+        },
+        {
+          "traceId": "b3bbd9ea-7c22-46d6-9165-63cc16ac9e52",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "b3bbd9ea-7c22-46d6-9165-63cc16ac9e52",
+          "stage": "mira_tx",
+          "ms": 2685,
+          "ok": true
+        },
+        {
+          "traceId": "b3bbd9ea-7c22-46d6-9165-63cc16ac9e52",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "Z21",
+      "diagnosis": "Asymptomatic human immunodeficiency virus [HIV] infection status",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 3,
+      "dosesWritten": 3,
+      "dosesSupported": 3,
+      "verified": 3,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 3,
+      "costUsd": 0.00948,
+      "verifiedEvidence": [
+        {
+          "drug": "Tenofovir disoproksil fumarat",
+          "dose": "1x300mg",
+          "passages": [
+            {
+              "id": "70ca7378-1b5b-4284-9510-c2484aaee6ce",
+              "title": "fornas-2025.pdf",
+              "text": "- 59 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL b) Diberikan bersama dengan Zidovudin. 6.6.3.3 Nucleoside Reverse Transcriptase Inhibitor (NRTI)+Non-Nucleoside Reverse Transcriptase Inhibitor (NNRTI) Catatan: Disediakan oleh Program Kemenkes. 1 kombinasi KDT/FDC mengandung: [P] a. tenofovir disoproksil fumarat 300 mg b. lamivudin 300 mg c. efavirenz 600 mg Dapat diberikan oleh FPKTP yang memiliki kemampuan pengobatan antiretroviral dengan persyaratan memiliki SK Penunjukan sebagai uni"
+            }
+          ]
+        },
+        {
+          "drug": "Lamivudin",
+          "dose": "1x300mg",
+          "passages": [
+            {
+              "id": "8570e22a-c8ba-4f5e-9ad0-48c81bc43fd6",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "57 PANDUAN PRAKTIK KLINIS BAGI DOKTER DI FASILITAS PELAYANAN KESEHATAN TINGKAT PERTAMA BAB II : DAFTAR PANDUAN PRAKTIK KLINIS BERDASARKAN MASALAH DAN PENYAKIT Tabel. 2.3. Dosis antiretroviral untuk ODHA dewasa Gologan/obatDosis Nucleoside RTI Lamivudine (3TC)150 mg setiap 12 jam atau 300 mg sekali sehari 40 mg setiap 12 jam Stavudine (d4T)(30 mg setiap 12 jam bila BB <60 kg) 300 mg setiap 12 jam Zidovudine (ZDV atau AZT) Nucleotide RTI Tenofovir (TDF)300 mg sekali sehari, (Catatan: interaksi obat dengan ddI perlu mengurangi dosis ddI) Non-nucleoside RTIs Efavirenz (EFV)600 mg sekali sehari Nev"
+            },
+            {
+              "id": "70ca7378-1b5b-4284-9510-c2484aaee6ce",
+              "title": "fornas-2025.pdf",
+              "text": "- 59 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL b) Diberikan bersama dengan Zidovudin. 6.6.3.3 Nucleoside Reverse Transcriptase Inhibitor (NRTI)+Non-Nucleoside Reverse Transcriptase Inhibitor (NNRTI) Catatan: Disediakan oleh Program Kemenkes. 1 kombinasi KDT/FDC mengandung: [P] a. tenofovir disoproksil fumarat 300 mg b. lamivudin 300 mg c. efavirenz 600 mg Dapat diberikan oleh FPKTP yang memiliki kemampuan pengobatan antiretroviral dengan persyaratan memiliki SK Penunjukan sebagai uni"
+            },
+            {
+              "id": "b21db485-cd8e-4b6e-b3ca-8085a347ab8f",
+              "title": "fornas-2025.pdf",
+              "text": "- 56 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL memberikan obat ARV dari Dinas Kesehatan setempat dan sudah mendapatkan pelatihan PrEP. 1. tab    5 kombinasi KDT/FDC mengandung: [P] a. zidovudin 60 mg b. lamivudin 30 mg a) Dapat digunakan untuk pengobatan HIV pada anak. b) Dapat diberikan oleh FPKTP yang memiliki kemampuan pengobatan antiretroviral dengan persyaratan memiliki SK Penunjukan sebagai unit pelayanan yang berhak memberikan obat ARV dari Dinas Kesehatan setempat. 1. tab "
+            },
+            {
+              "id": "48fe2376-76cf-41a5-b41b-cccac527ff18",
+              "title": "fornas-2023.pdf",
+              "text": "- 54 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL pengobatan HIV pada anak. b) Dapat diberikan oleh FPKTP yang memiliki kemampuan pengobatan antiretroviral dengan persyaratan memiliki SK Penunjukan sebagai unit pelayanan yang berhak memberikan obat ARV dari Dinas Kesehatan setempat. 1. tab dispersible   3 kombinasi KDT/FDC mengandung: [P] a. zidovudin 60 mg b. lamivudin 30 mg a) Dapat digunakan untuk pengobatan HIV pada anak. b) Dapat diberikan oleh FPKTP yang memiliki kemampuan pengo"
+            }
+          ]
+        },
+        {
+          "drug": "Efavirenz",
+          "dose": "1x600mg",
+          "passages": [
+            {
+              "id": "8570e22a-c8ba-4f5e-9ad0-48c81bc43fd6",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "57 PANDUAN PRAKTIK KLINIS BAGI DOKTER DI FASILITAS PELAYANAN KESEHATAN TINGKAT PERTAMA BAB II : DAFTAR PANDUAN PRAKTIK KLINIS BERDASARKAN MASALAH DAN PENYAKIT Tabel. 2.3. Dosis antiretroviral untuk ODHA dewasa Gologan/obatDosis Nucleoside RTI Lamivudine (3TC)150 mg setiap 12 jam atau 300 mg sekali sehari 40 mg setiap 12 jam Stavudine (d4T)(30 mg setiap 12 jam bila BB <60 kg) 300 mg setiap 12 jam Zidovudine (ZDV atau AZT) Nucleotide RTI Tenofovir (TDF)300 mg sekali sehari, (Catatan: interaksi obat dengan ddI perlu mengurangi dosis ddI) Non-nucleoside RTIs Efavirenz (EFV)600 mg sekali sehari Nev"
+            },
+            {
+              "id": "70ca7378-1b5b-4284-9510-c2484aaee6ce",
+              "title": "fornas-2025.pdf",
+              "text": "- 59 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL b) Diberikan bersama dengan Zidovudin. 6.6.3.3 Nucleoside Reverse Transcriptase Inhibitor (NRTI)+Non-Nucleoside Reverse Transcriptase Inhibitor (NNRTI) Catatan: Disediakan oleh Program Kemenkes. 1 kombinasi KDT/FDC mengandung: [P] a. tenofovir disoproksil fumarat 300 mg b. lamivudin 300 mg c. efavirenz 600 mg Dapat diberikan oleh FPKTP yang memiliki kemampuan pengobatan antiretroviral dengan persyaratan memiliki SK Penunjukan sebagai uni"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mixed_id_en-14",
+      "ok": true,
+      "ms": 4580,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "f3ac8fc1-34b0-47dd-a05f-9bad7bc3561a",
+          "stage": "retrieve_dx",
+          "ms": 107,
+          "ok": true
+        },
+        {
+          "traceId": "f3ac8fc1-34b0-47dd-a05f-9bad7bc3561a",
+          "stage": "mira_dx",
+          "ms": 2741,
+          "ok": true
+        },
+        {
+          "traceId": "f3ac8fc1-34b0-47dd-a05f-9bad7bc3561a",
+          "stage": "retrieve_tx",
+          "ms": 46,
+          "ok": true
+        },
+        {
+          "traceId": "f3ac8fc1-34b0-47dd-a05f-9bad7bc3561a",
+          "stage": "mira_tx",
+          "ms": 1675,
+          "ok": true
+        },
+        {
+          "traceId": "f3ac8fc1-34b0-47dd-a05f-9bad7bc3561a",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "B50.0",
+      "diagnosis": "Malaria falciparum with cerebral complications",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.00843,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "mixed_id_en-15",
+      "ok": true,
+      "ms": 4398,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "732507c1-dbe2-4759-9fe8-90ffa6c78377",
+          "stage": "retrieve_dx",
+          "ms": 75,
+          "ok": true
+        },
+        {
+          "traceId": "732507c1-dbe2-4759-9fe8-90ffa6c78377",
+          "stage": "mira_dx",
+          "ms": 2373,
+          "ok": true
+        },
+        {
+          "traceId": "732507c1-dbe2-4759-9fe8-90ffa6c78377",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "732507c1-dbe2-4759-9fe8-90ffa6c78377",
+          "stage": "mira_tx",
+          "ms": 1900,
+          "ok": true
+        },
+        {
+          "traceId": "732507c1-dbe2-4759-9fe8-90ffa6c78377",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "Z12.3",
+      "diagnosis": "Special screening examination for malignant neoplasm of breast",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.01236,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-01",
+      "ok": true,
+      "ms": 5496,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "9a72137c-280f-4387-a1eb-0b9f9b3a6d1d",
+          "stage": "retrieve_dx",
+          "ms": 83,
+          "ok": true
+        },
+        {
+          "traceId": "9a72137c-280f-4387-a1eb-0b9f9b3a6d1d",
+          "stage": "mira_dx",
+          "ms": 2684,
+          "ok": true
+        },
+        {
+          "traceId": "9a72137c-280f-4387-a1eb-0b9f9b3a6d1d",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "9a72137c-280f-4387-a1eb-0b9f9b3a6d1d",
+          "stage": "mira_tx",
+          "ms": 2679,
+          "ok": true
+        },
+        {
+          "traceId": "9a72137c-280f-4387-a1eb-0b9f9b3a6d1d",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "A15.0",
+      "diagnosis": "Pulmonary tuberculosis",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.010869,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-02",
+      "ok": true,
+      "ms": 4682,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "9b60deb2-72bc-4bb9-9146-76f4412a2ee2",
+          "stage": "retrieve_dx",
+          "ms": 77,
+          "ok": true
+        },
+        {
+          "traceId": "9b60deb2-72bc-4bb9-9146-76f4412a2ee2",
+          "stage": "mira_dx",
+          "ms": 2689,
+          "ok": true
+        },
+        {
+          "traceId": "9b60deb2-72bc-4bb9-9146-76f4412a2ee2",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "9b60deb2-72bc-4bb9-9146-76f4412a2ee2",
+          "stage": "mira_tx",
+          "ms": 1867,
+          "ok": true
+        },
+        {
+          "traceId": "9b60deb2-72bc-4bb9-9146-76f4412a2ee2",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "I10",
+      "diagnosis": "Essential (primary) hypertension",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.011118,
+      "verifiedEvidence": [
+        {
+          "drug": "Captopril",
+          "dose": "3x12.5mg",
+          "passages": [
+            {
+              "id": "b73e5c66-24b1-4072-9502-b7b1e73d0c0f",
+              "title": "penyakit-dalam-papdi-2024.pdf",
+              "text": "29 6 Diagnosa Kerja 1. Hipertensi stage 1 2. Hipertensi stage 2 7 Diagnosa Banding Hipertensi sekunder 8 Terapi 1. Terapi non farmakologi: a. Diet rendah garam b. Batasi intake cairan c. Hentikan rokok, alcohol d. Banyak makan sayur dan buah 2. Terapi farmakologi: a. ACEI (Angiotensin Converting Enzyme Inhibitors) 1) Captopril 12,5mg, 25mg, 50mh, 3x sehari atau 2) Lisinopril 5mg, 10mg 1x sehari atau 3) Ramipril 2.5mg, 5mg, 10mg 1x sehari atau b. ARB ( Angiotensin II Receptor Blocker) 1) Candesartan 8mg, 16 mg 1x sehari atau 2) Telmisartan 40mg, 80mg 1x sehari c. Calcium chanel blocker 1) Amloi"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "typos-03",
+      "ok": true,
+      "ms": 4637,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "8d291556-bab0-4087-a005-c6b102736a3a",
+          "stage": "retrieve_dx",
+          "ms": 78,
+          "ok": true
+        },
+        {
+          "traceId": "8d291556-bab0-4087-a005-c6b102736a3a",
+          "stage": "mira_dx",
+          "ms": 2821,
+          "ok": true
+        },
+        {
+          "traceId": "8d291556-bab0-4087-a005-c6b102736a3a",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "8d291556-bab0-4087-a005-c6b102736a3a",
+          "stage": "mira_tx",
+          "ms": 1686,
+          "ok": true
+        },
+        {
+          "traceId": "8d291556-bab0-4087-a005-c6b102736a3a",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "E11.9",
+      "diagnosis": "Diabetes mellitus type 2 without complications",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.010608,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-04",
+      "ok": true,
+      "ms": 5711,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "dd636e52-4ea1-4ff8-8f93-d0bed021463d",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "dd636e52-4ea1-4ff8-8f93-d0bed021463d",
+          "stage": "mira_dx",
+          "ms": 3306,
+          "ok": true
+        },
+        {
+          "traceId": "dd636e52-4ea1-4ff8-8f93-d0bed021463d",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "dd636e52-4ea1-4ff8-8f93-d0bed021463d",
+          "stage": "mira_tx",
+          "ms": 2277,
+          "ok": true
+        },
+        {
+          "traceId": "dd636e52-4ea1-4ff8-8f93-d0bed021463d",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "J18.9",
+      "diagnosis": "Pneumonia, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.009387,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-05",
+      "ok": true,
+      "ms": 4701,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "e7bf094e-e644-4059-b7ac-2456f395bcd1",
+          "stage": "retrieve_dx",
+          "ms": 77,
+          "ok": true
+        },
+        {
+          "traceId": "e7bf094e-e644-4059-b7ac-2456f395bcd1",
+          "stage": "mira_dx",
+          "ms": 2508,
+          "ok": true
+        },
+        {
+          "traceId": "e7bf094e-e644-4059-b7ac-2456f395bcd1",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "e7bf094e-e644-4059-b7ac-2456f395bcd1",
+          "stage": "mira_tx",
+          "ms": 2065,
+          "ok": true
+        },
+        {
+          "traceId": "e7bf094e-e644-4059-b7ac-2456f395bcd1",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "J45.9",
+      "diagnosis": "Asthma, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 0,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.009777,
+      "verifiedEvidence": [
+        {
+          "drug": "budesonid",
+          "dose": "1x0.25mg/mL",
+          "passages": [
+            {
+              "id": "e62bdfce-a4da-46d6-9dac-fcff9afd233d",
+              "title": "fornas-2025.pdf",
+              "text": "- 195 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL hari. 26. OBAT untuk SALURAN NAPAS 26.1 ANTIASMA 1 aminofilin 1. tab 150 mg   2. tab 200 mg   3. inj 24 mg/mL  PP  2 budesonid 1. serb ih 200 mcg/dosis*   Asma persisten berat: 2 tbg/bulan. Untuk rumatan asma (tidak untuk serangan asma akut). 2. cairan ih 0,25 mg/mL   Hari pertama maks 10 mL perhari, selanjutnya 4−8 mL perhari selama 5 hari.  Hanya untuk serangan asma akut. 3. cairan ih 0,5 mg/mL   Hari pertama maks 10 mL "
+            },
+            {
+              "id": "245ef8ff-7608-4d30-91ef-61dd8e85c64d",
+              "title": "fornas-2023.pdf",
+              "text": "- 190 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL 1. inj 3 mg  2 amp/hari, maks 5 hari. 26. OBAT untuk SALURAN NAPAS 26.1 ANTIASMA 1 aminofilin 1. tab 150 mg   2. tab 200 mg   3. inj 24 mg/mL  PP  2 budesonid 1. serb ih 200 mcg/dosis*   Asma persisten berat: 2 tbg/bulan. Untuk rumatan asma (tidak untuk serangan asma akut). 2. cairan ih 0,25 mg/mL   Hari pertama maks 10 mL perhari, selanjutnya 4−8 mL perhari selama 5 hari.  Hanya untuk serangan asma akut. 3. cairan ih 0,5 m"
+            },
+            {
+              "id": "633f4e48-abd9-43b6-bc5b-09719203ae4f",
+              "title": "penyakit-dalam-papdi-2024.pdf",
+              "text": "39 Macam macam terapi asma (Pemilihan disesuaikan dengan tingkat terkontrolnya asma): 1. Budesonide inhaler 100mcg, 200mcg/dosis 2. Budesonide 0,25mg dan 0,5mg /ml 3. Fluticasone propionat 0,5mg/dosis 4. Prokaterol 10mcg 5. Salbutamol tab 2mg, 4 mg 6. Salbutamol sirup 2mg/5ml 7. Salbutamol nebule 0,1 % 2,5 ml 8. Prokaterol sirup 5mcg/ml 9. Fenoterol 100mcg/puff 10. Terbutalin tab 2,5mg 11. Terbutalin inhalasi 2,5mg/ml 12. Ipratropium Bromide 13. Tiotropium bromide 14. Montelucast Kombinasi: 1. Budesonid dan Formoterol 2. Ipratropium bromida 0,5 mg + Salbutamol 2,5 mg 3. Salmeterol 50 mcg, Flut"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "typos-06",
+      "ok": true,
+      "ms": 5044,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "434c358c-06b5-4d29-9858-11f571792d95",
+          "stage": "retrieve_dx",
+          "ms": 79,
+          "ok": true
+        },
+        {
+          "traceId": "434c358c-06b5-4d29-9858-11f571792d95",
+          "stage": "mira_dx",
+          "ms": 2857,
+          "ok": true
+        },
+        {
+          "traceId": "434c358c-06b5-4d29-9858-11f571792d95",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "434c358c-06b5-4d29-9858-11f571792d95",
+          "stage": "mira_tx",
+          "ms": 2058,
+          "ok": true
+        },
+        {
+          "traceId": "434c358c-06b5-4d29-9858-11f571792d95",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "A01.0",
+      "diagnosis": "Typhoid fever",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.010884,
+      "verifiedEvidence": [
+        {
+          "drug": "Tiamfenikol",
+          "dose": "4x500mg",
+          "passages": [
+            {
+              "id": "ad8909de-e9a1-4cac-8a72-8f8fe685c1f1",
+              "title": "demam-tifoid.md",
+              "text": "# Demam Tifoid ## Definisi Demam tifoid adalah penyakit infeksi sistemik akut yang disebabkan oleh bakteri Salmonella enterica serovar Typhi (Salmonella typhi), ditularkan secara fekal-oral melalui makanan atau minuman yang terkontaminasi. ## Gejala - Demam remiten meningkat bertahap (step-ladder pattern) terutama sore-malam hari > 7 hari - Nyeri kepala frontal - Lidah kotor dengan tepi hiperemis dan tremor (typhoid tongue) - Konstipasi pada dewasa atau diare pada anak - Meteorismus (perut kembung) - Bradikardia relatif - Hepatomegali / splenomegali - Apatis / tifoid ensefalopati pada kasus be"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "typos-07",
+      "ok": true,
+      "ms": 5738,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "a641c0f6-68a2-40ec-98e1-b4f2562294a6",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "a641c0f6-68a2-40ec-98e1-b4f2562294a6",
+          "stage": "mira_dx",
+          "ms": 2949,
+          "ok": true
+        },
+        {
+          "traceId": "a641c0f6-68a2-40ec-98e1-b4f2562294a6",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "a641c0f6-68a2-40ec-98e1-b4f2562294a6",
+          "stage": "mira_tx",
+          "ms": 2664,
+          "ok": true
+        },
+        {
+          "traceId": "a641c0f6-68a2-40ec-98e1-b4f2562294a6",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "B86",
+      "diagnosis": "Scabies",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.010425,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-08",
+      "ok": true,
+      "ms": 4885,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "d2f6d78d-5f1d-4cb3-99c4-e99a045b773b",
+          "stage": "retrieve_dx",
+          "ms": 84,
+          "ok": true
+        },
+        {
+          "traceId": "d2f6d78d-5f1d-4cb3-99c4-e99a045b773b",
+          "stage": "mira_dx",
+          "ms": 2745,
+          "ok": true
+        },
+        {
+          "traceId": "d2f6d78d-5f1d-4cb3-99c4-e99a045b773b",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "d2f6d78d-5f1d-4cb3-99c4-e99a045b773b",
+          "stage": "mira_tx",
+          "ms": 2004,
+          "ok": true
+        },
+        {
+          "traceId": "d2f6d78d-5f1d-4cb3-99c4-e99a045b773b",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "H10.9",
+      "diagnosis": "Conjunctivitis, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.012048,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-09",
+      "ok": true,
+      "ms": 4546,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "3463a8e1-5bee-4dd2-8bfc-0b286c5c44c5",
+          "stage": "retrieve_dx",
+          "ms": 74,
+          "ok": true
+        },
+        {
+          "traceId": "3463a8e1-5bee-4dd2-8bfc-0b286c5c44c5",
+          "stage": "mira_dx",
+          "ms": 2697,
+          "ok": true
+        },
+        {
+          "traceId": "3463a8e1-5bee-4dd2-8bfc-0b286c5c44c5",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "3463a8e1-5bee-4dd2-8bfc-0b286c5c44c5",
+          "stage": "mira_tx",
+          "ms": 1724,
+          "ok": true
+        },
+        {
+          "traceId": "3463a8e1-5bee-4dd2-8bfc-0b286c5c44c5",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "A09.9",
+      "diagnosis": "Gastroenteritis and colitis of unspecified origin",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.008248,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-10",
+      "ok": true,
+      "ms": 4983,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "0b9baefb-a423-4176-a11f-c7fbdfb8096e",
+          "stage": "retrieve_dx",
+          "ms": 123,
+          "ok": true
+        },
+        {
+          "traceId": "0b9baefb-a423-4176-a11f-c7fbdfb8096e",
+          "stage": "mira_dx",
+          "ms": 2766,
+          "ok": true
+        },
+        {
+          "traceId": "0b9baefb-a423-4176-a11f-c7fbdfb8096e",
+          "stage": "retrieve_tx",
+          "ms": 44,
+          "ok": true
+        },
+        {
+          "traceId": "0b9baefb-a423-4176-a11f-c7fbdfb8096e",
+          "stage": "mira_tx",
+          "ms": 2042,
+          "ok": true
+        },
+        {
+          "traceId": "0b9baefb-a423-4176-a11f-c7fbdfb8096e",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "G43.0",
+      "diagnosis": "Migraine without aura",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.008599,
+      "verifiedEvidence": [
+        {
+          "drug": "Parasetamol",
+          "dose": "1x1000mg",
+          "passages": [
+            {
+              "id": "87521e0a-846b-4e58-9262-1b076c362d2c",
+              "title": "migren-tanpa-aura.md",
+              "text": "# Migren Tanpa Aura ## Definisi Migren tanpa aura adalah nyeri kepala primer neurovaskular berulang dengan serangan berdurasi 4 hingga 72 jam, khas unilateral, berdenyut, intensitas sedang-berat, diperberat oleh aktivitas fisik rutin, dan disertai mual, fotofobia, serta fonofobia. ## Gejala - Nyeri kepala unilateral berdenyut (pulsating) - Intensitas sedang hingga berat (mengganggu aktivitas) - Diperberat oleh aktivitas fisik rutin (berjalan atau naik tangga) - Mual dan/atau muntah - Fotofobia (silau cahaya) dan fonofobia (sensitif suara bising) - Pencetus: kurang tidur, stres, telat makan, ke"
+            },
+            {
+              "id": "b9d52dcf-ed9d-43f9-8cb3-8553cbde7956",
+              "title": "patologi-klinik-anatomik-unair.pdf",
+              "text": "342 merupakan suatu gold standard evaluasi serangan, frekuensi, lama, beratnya serangan, disabilitas, dan respons obat. Terapi Farmakologis Tension-type headache (4,5,9) Obat Dosis harian Level Rekomendasi Akut Ibuprofen 200–800 mg A Ketoprofen 25 mg A Aspirin 500–1000 mg A Diklofenak 12,5–100 mg A Parasetamol 1000 mg (oral) A Kombinasi kafein 65–200 mg B Profilaksis Amitriptyline 10-100 mg A Nortriptyline 10-100 mg A Terapi Farmakologis Akut Migrain (4,5,10,11) Tipe Terapi Akut (Abortif) Lini pertama Ibuprofen 400 mg, ASA 1000 mg, Sodium naproksen 500- 550 mg, Asetaminofen 1000 mg, Sodium dan"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "typos-11",
+      "ok": true,
+      "ms": 4858,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "da49ce4f-5e25-46c0-81cd-09e3b93cefc7",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "da49ce4f-5e25-46c0-81cd-09e3b93cefc7",
+          "stage": "mira_dx",
+          "ms": 2539,
+          "ok": true
+        },
+        {
+          "traceId": "da49ce4f-5e25-46c0-81cd-09e3b93cefc7",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "da49ce4f-5e25-46c0-81cd-09e3b93cefc7",
+          "stage": "mira_tx",
+          "ms": 2193,
+          "ok": true
+        },
+        {
+          "traceId": "da49ce4f-5e25-46c0-81cd-09e3b93cefc7",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "D56.1",
+      "diagnosis": "Beta thalassemia",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 1,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.009455,
+      "verifiedEvidence": [
+        {
+          "drug": "Deferipron",
+          "dose": "3x500mg",
+          "passages": [
+            {
+              "id": "dc2ba3ea-388c-40c2-9afc-bb98355fdad3",
+              "title": "fornas-2023.pdf",
+              "text": "- 114 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL kompetensi di bidang ilmu hematologi anak atau hematologi dewasa. 1. tab dispersible 250 mg  Maks 40 mg/kgBB/ hari. 2. tab dispersible 500 mg  3. tab sal selaput 180 mg  4. tab sal selaput 360 mg  2 deferipron 1. tab sal selaput 500 mg  50−75 mg/kgBB/hari. a) Untuk terapi kelasi besi. b) Terapi awal harus ditentukan oleh dokter yang memiliki kompetensi di bidang ilmu hematologi anak atau hematologi dewasa. 2. sir 100 mg/mL  50−75 "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "typos-12",
+      "ok": true,
+      "ms": 5051,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "9bab130e-579d-4731-ac64-29fc9717608d",
+          "stage": "retrieve_dx",
+          "ms": 80,
+          "ok": true
+        },
+        {
+          "traceId": "9bab130e-579d-4731-ac64-29fc9717608d",
+          "stage": "mira_dx",
+          "ms": 2952,
+          "ok": true
+        },
+        {
+          "traceId": "9bab130e-579d-4731-ac64-29fc9717608d",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "9bab130e-579d-4731-ac64-29fc9717608d",
+          "stage": "mira_tx",
+          "ms": 1969,
+          "ok": true
+        },
+        {
+          "traceId": "9bab130e-579d-4731-ac64-29fc9717608d",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "M19.9",
+      "diagnosis": "Osteoarthrosis, unspecified",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 0,
+      "dosesWritten": 0,
+      "dosesSupported": 0,
+      "verified": 0,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.008294,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-13",
+      "ok": true,
+      "ms": 4716,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "c0c7c505-1bf6-4890-a30f-3ef8e588b244",
+          "stage": "retrieve_dx",
+          "ms": 82,
+          "ok": true
+        },
+        {
+          "traceId": "c0c7c505-1bf6-4890-a30f-3ef8e588b244",
+          "stage": "mira_dx",
+          "ms": 2728,
+          "ok": true
+        },
+        {
+          "traceId": "c0c7c505-1bf6-4890-a30f-3ef8e588b244",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "c0c7c505-1bf6-4890-a30f-3ef8e588b244",
+          "stage": "mira_tx",
+          "ms": 1857,
+          "ok": true
+        },
+        {
+          "traceId": "c0c7c505-1bf6-4890-a30f-3ef8e588b244",
+          "stage": "gate",
+          "ms": 1,
+          "ok": true
+        }
+      ],
+      "icd10": "F20",
+      "diagnosis": "Schizophrenia",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.008142,
+      "verifiedEvidence": [
+        {
+          "drug": "Olanzapin",
+          "dose": "1x5mg",
+          "passages": [
+            {
+              "id": "a9972881-853d-4657-8287-c3453c132380",
+              "title": "fornas-2025.pdf",
+              "text": "- 183 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL 1. tab 25 mg  60 tab/bulan.  2. tab 100 mg*   90 tab/bulan.  a) Hanya untuk skizofrenia yang resistan/intoleran. b) Lakukan cek leukosit secara berkala (hati-hati agranulositosis). 7 olanzapin Diresepkan oleh dokter yang memiliki kompetensi dibidang ilmu kedokteran jiwa. 1. tab sal selaput 5 mg*   60 tab/bulan. a) Untuk skizofrenia. atau b) Adjunctive treatment pada kasus bipolar yang tidak memberikan respons dengan pemberian l"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "typos-14",
+      "ok": true,
+      "ms": 4891,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "647c62d8-f232-47e4-9f5b-7929efa812c1",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "647c62d8-f232-47e4-9f5b-7929efa812c1",
+          "stage": "mira_dx",
+          "ms": 2776,
+          "ok": true
+        },
+        {
+          "traceId": "647c62d8-f232-47e4-9f5b-7929efa812c1",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "647c62d8-f232-47e4-9f5b-7929efa812c1",
+          "stage": "mira_tx",
+          "ms": 1988,
+          "ok": true
+        },
+        {
+          "traceId": "647c62d8-f232-47e4-9f5b-7929efa812c1",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "R04.0",
+      "diagnosis": "Epistaxis",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 0,
+      "doseRemoved": 2,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.007539,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "typos-15",
+      "ok": true,
+      "ms": 4642,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "bf7eadf0-eb29-47d5-86f1-fbd379b012e1",
+          "stage": "retrieve_dx",
+          "ms": 81,
+          "ok": true
+        },
+        {
+          "traceId": "bf7eadf0-eb29-47d5-86f1-fbd379b012e1",
+          "stage": "mira_dx",
+          "ms": 2433,
+          "ok": true
+        },
+        {
+          "traceId": "bf7eadf0-eb29-47d5-86f1-fbd379b012e1",
+          "stage": "retrieve_tx",
+          "ms": 41,
+          "ok": true
+        },
+        {
+          "traceId": "bf7eadf0-eb29-47d5-86f1-fbd379b012e1",
+          "stage": "mira_tx",
+          "ms": 2079,
+          "ok": true
+        },
+        {
+          "traceId": "bf7eadf0-eb29-47d5-86f1-fbd379b012e1",
+          "stage": "gate",
+          "ms": 0,
+          "ok": true
+        }
+      ],
+      "icd10": "L01.0",
+      "diagnosis": "Impetigo",
+      "icdValid": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 1,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.007062,
+      "verifiedEvidence": [
+        {
+          "drug": "Amoxicillin dan asam klavulanat",
+          "dose": "3x250-500mg",
+          "passages": [
+            {
+              "id": "44cb9bc6-df85-47cf-8b1d-e4724b7adfd0",
+              "title": "dermatovenereologi-perdoski-2017.pdf",
+              "text": "2% (A,1). Dioleskan 2-3 kali sehari, selama 7-10 hari. 2. Sistemik: minimal selama 7 hari Lini pertama:  Kloksasilin/dikloksasilin**: dewasa 4x250-500 mg/hari per oral; anak-anak 25-50 mg/kgBB/hari terbagi dalam 4 dosis (A,1)  Amoksisilin dan asam klavulanat: dewasa 3x250-500 mg/hari; anak-anak 25 mg/kgBB/hari terbagi dalam 3 dosis (A,2)  Sefaleksin: 25-50 mg/kgBB/hari terbagi dalam 4 dosis. (A,2) Lini kedua:  Azitromisin 1x500 mg/hari (hari 1), dilanjutkan 1x250 mg (hari 2-5) (D,5)  Klindamisin 15 mg/kgBB/hari terbagi 3 dosis. (A,2)  Eritromisin: dewasa 4x250-500 mg/hari; anak-anak 20-5"
+            },
+            {
+              "id": "05f8e3c7-016c-48f3-80bb-905bb22dcbb5",
+              "title": "dermatovenereologi-perdoski-2021.pdf",
+              "text": "kali sehari masing-masing ½-1 jam selama keadaan akut. (2C) • Bila tidak tertutup pus atau krusta: salep/krim asam fusidat 2%, mupirosin 2% (1A). Dioleskan 2-3 kali sehari, selama 7-10 hari. 2. Sistemik: minimal selama 7 hari Lini pertama: • Kloksasilin/dikloksasilin**: dewasa 4x250-500 mg/hari per oral; anak-anak 25-50 mg/kgBB/hari terbagi dalam 4 dosis (1A) • Amoksisilin dan asam klavulanat: dewasa 3x250-500 mg/hari; anak-anak 25 mg/kgBB/hari terbagi dalam 3 dosis (1A) • Sefaleksin: 25-50 mg/kgBB/hari terbagi dalam 4 dosis. (1A) Lini kedua: • Azitromisin 1x500 mg/hari (hari 1), dilanjutkan 1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
