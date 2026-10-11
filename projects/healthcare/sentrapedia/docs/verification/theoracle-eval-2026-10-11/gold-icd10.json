@@ -1,0 +1,219 @@
+{
+  "status": "draft - written by Claude from the gold document titles; awaits Gaffer review",
+  "created": "2026-10-11",
+  "rule": "likely[0] is correct when its first three characters are in the list",
+  "labels": {
+    "lay_terms-01": [
+      "B80"
+    ],
+    "lay_terms-02": [
+      "B86"
+    ],
+    "lay_terms-03": [
+      "B36"
+    ],
+    "lay_terms-04": [
+      "H00"
+    ],
+    "lay_terms-05": [
+      "H81"
+    ],
+    "lay_terms-06": [
+      "G44"
+    ],
+    "lay_terms-07": [
+      "H61"
+    ],
+    "lay_terms-08": [
+      "L50"
+    ],
+    "lay_terms-09": [
+      "B01"
+    ],
+    "lay_terms-10": [
+      "K12"
+    ],
+    "lay_terms-11": [
+      "A37"
+    ],
+    "lay_terms-12": [
+      "B26"
+    ],
+    "lay_terms-13": [
+      "I84"
+    ],
+    "lay_terms-14": [
+      "K29",
+      "K21"
+    ],
+    "lay_terms-15": [
+      "E45",
+      "E34",
+      "R62"
+    ],
+    "lay_terms-16": [
+      "L74"
+    ],
+    "abbreviations-01": [
+      "J44"
+    ],
+    "abbreviations-02": [
+      "A90",
+      "A91"
+    ],
+    "abbreviations-03": [
+      "N39",
+      "N30"
+    ],
+    "abbreviations-04": [
+      "H66",
+      "H65"
+    ],
+    "abbreviations-05": [
+      "H66"
+    ],
+    "abbreviations-06": [
+      "I21",
+      "I20",
+      "I24"
+    ],
+    "abbreviations-07": [
+      "A15",
+      "A16"
+    ],
+    "abbreviations-08": [
+      "E11"
+    ],
+    "abbreviations-09": [
+      "N18"
+    ],
+    "abbreviations-10": [
+      "P07"
+    ],
+    "abbreviations-11": [
+      "F41"
+    ],
+    "abbreviations-12": [
+      "G44"
+    ],
+    "abbreviations-13": [
+      "H81"
+    ],
+    "abbreviations-14": [
+      "C91"
+    ],
+    "abbreviations-15": [
+      "K21"
+    ],
+    "mixed_id_en-01": [
+      "J13",
+      "J14",
+      "J15",
+      "J18"
+    ],
+    "mixed_id_en-02": [
+      "I50"
+    ],
+    "mixed_id_en-03": [
+      "D63",
+      "N18"
+    ],
+    "mixed_id_en-04": [
+      "I63",
+      "I64"
+    ],
+    "mixed_id_en-05": [
+      "A90",
+      "A91"
+    ],
+    "mixed_id_en-06": [
+      "L20"
+    ],
+    "mixed_id_en-07": [
+      "I10"
+    ],
+    "mixed_id_en-08": [
+      "H60"
+    ],
+    "mixed_id_en-09": [
+      "A41",
+      "R65"
+    ],
+    "mixed_id_en-10": [
+      "H40"
+    ],
+    "mixed_id_en-11": [
+      "Q12",
+      "H26"
+    ],
+    "mixed_id_en-12": [
+      "B18",
+      "Z22"
+    ],
+    "mixed_id_en-13": [
+      "B20",
+      "B24",
+      "Z21"
+    ],
+    "mixed_id_en-14": [
+      "B50"
+    ],
+    "mixed_id_en-15": [
+      "C50",
+      "Z12"
+    ],
+    "typos-01": [
+      "A15",
+      "A16"
+    ],
+    "typos-02": [
+      "I10"
+    ],
+    "typos-03": [
+      "E11"
+    ],
+    "typos-04": [
+      "J13",
+      "J14",
+      "J15",
+      "J18"
+    ],
+    "typos-05": [
+      "J45",
+      "J46"
+    ],
+    "typos-06": [
+      "A01"
+    ],
+    "typos-07": [
+      "B86"
+    ],
+    "typos-08": [
+      "H10"
+    ],
+    "typos-09": [
+      "A09",
+      "A08"
+    ],
+    "typos-10": [
+      "G43"
+    ],
+    "typos-11": [
+      "D56"
+    ],
+    "typos-12": [
+      "M17",
+      "M19",
+      "M15"
+    ],
+    "typos-13": [
+      "F20"
+    ],
+    "typos-14": [
+      "R04"
+    ],
+    "typos-15": [
+      "L01"
+    ]
+  }
+}
