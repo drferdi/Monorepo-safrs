@@ -24,7 +24,7 @@ const NUMBER = String.raw`(?:\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(
 // A strength, or a pair such as 5-40 mg (range) or 875/125 mg (combination) whose numbers share one unit.
 const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\s*(tablets?|tabs?|kaplets?|kapsul|kaps|capsules?|mikrogram|miligram|mililiter|semprotan|semprot|spray|puff|tetes|gtt|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g|u|%)(?:(?<=%)|\b)`, "gi");
 // Per-unit tails such as "/5 ml", "/kg/24 jam" or "/m2"; a drug name after a slash is not one of them.
-const PER = String.raw`(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:(?:ml|dl|l|vial|ampul|amp|tablet|tab|kapsul|kaps|kgbb|kg|m2|hari|dosis|kali|jam|menit|mnt|detik)\b|m²))*`;
+const PER = String.raw`(?:\s*(?:\/|\bper\b)\s*(?:\d[\d.,]*\s*)?(?:(?:ml|dl|l|vial|ampul|amp|tablet|tab|kapsul|kaps|kg\s*bb|kgbb|kilogram|kg|m2|hari|dosis|kali|jam|menit|mnt|detik)\b|m²))*(?:\s*(?:bb|berat\s*badan)\b)?`;
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;
 // Two or more tablets per dose ("3 x 2 tablet", "2 tablet, 3 kali", "3 kali sehari 2 tablet", "2 kapsul sekaligus"): a strength just before it is tablet content, not a dose.
 const TABLETS = String.raw`(?:1\s*-\s*)?[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)s?\b`;
@@ -70,7 +70,13 @@ const CLAUSE = /((?:[;\n]|(?<!\d),|,(?!\d)|\.(?=\s*(?:[A-Z]|$)))\s*)/;
 const CONDITION = /^(?:kecuali|bila|jika|apabila|hanya)\b/i;
 const PARTIAL = " (sebagian belum terverifikasi)";
 // Strips every strength with its per-unit tails; "Amoxicillin 500 mg/clavulanate 125 mg" -> "Amoxicillin/clavulanate".
-export const unstrength = (text: string) => text.replace(new RegExp(STRENGTH.source + PER, "gi"), "").replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ").trim();
+// A frequency or a single letter glued to a strength goes with it ("3x500 mg", "500mg x 3", "D5%"), and a bracket
+// left empty or holding only a limit word goes too ("Isoniazid (maks 300 mg)" -> "Isoniazid").
+const GLUED = String.raw`(?:\d+\s*[x×]\s*|(?<![a-z])[a-wyz](?=\d))?`;
+export const unstrength = (text: string) => text.replace(new RegExp(GLUED + STRENGTH.source + PER + String.raw`(?:\s*[x×]\s*\d+\b)?`, "gi"), "")
+  .replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ")
+  .replace(/\(\s*(?:(?:max|maks|maksimal|maximum|hingga|sampai|s\.?d)\.?\s*)?\)/gi, "").replace(/\(\s+/g, "(").replace(/\s+([,;:)])/g, "$1").replace(/\s+-(?=\p{L})/gu, "-")
+  .replace(/\s+/g, " ").replace(/^[\s,;:\-–—/]+|[\s,;:\-–—/]+$/g, "");
 
 export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBundle | undefined, diagnosis: { icd10: string; label: string } | undefined): { therapy: MiraTherapy | undefined; report: EvidenceGateReport } {
   const forDiagnosis = therapy.forDiagnosis;

@@ -360,3 +360,23 @@ describe("clinical evidence gate: a field drops only its unsupported clauses", (
     expect(amox({ note: "PO, setelah makan. 1 g bila berat." })?.note).toBe("PO, setelah makan. 1 g bila berat.");
   });
 });
+
+describe("unstrength leaves a clean drug name", () => {
+  it("drops brackets left empty or holding only a limit word, and tidies the rest", () => {
+    expect(["Isoniazid (max 300 mg)", "Isoniazid 5 mg/kgBB (maks 300 mg/hari)", "Seftriakson (1 g)", "Prednison 1-2 mg/kgBB/hari (maks 60 mg)", "Salep mupirosin 2% (tube 5 g)"].map(unstrength))
+      .toEqual(["Isoniazid", "Isoniazid", "Seftriakson", "Prednison", "Salep mupirosin (tube)"]);
+  });
+  it("drops a frequency glued to a stripped strength", () => {
+    expect(["Parasetamol 3x500 mg", "Parasetamol 500mg x 3", "Parasetamol 500 mg 3x1 tablet", "Amoxicillin 2 x 500 mg"].map(unstrength)).toEqual(["Parasetamol", "Parasetamol", "Parasetamol", "Amoxicillin"]);
+  });
+  it("reads 'per kg', 'kg BB' and 'berat badan' as part of the strength", () => {
+    expect(["Paracetamol 10 mg per kg", "Paracetamol 10 mg per kilogram berat badan", "Paracetamol 10 mg/kg BB", "Parasetamol 500 mg per hari"].map(unstrength)).toEqual(["Paracetamol", "Paracetamol", "Paracetamol", "Parasetamol"]);
+  });
+  it("tidies punctuation and a letter glued to the strength", () => {
+    expect(["Amoksisilin 500 mg, 3 kali sehari", "Lidokain 2%-adrenalin", "Dekstrosa D5%", "Amoksisilin 500 mg -"].map(unstrength)).toEqual(["Amoksisilin, 3 kali sehari", "Lidokain-adrenalin", "Dekstrosa", "Amoksisilin"]);
+  });
+  it("keeps names without a strength, and letters that are not glued to one", () => {
+    expect(["Vit. B12 1000 mcg", "Vitamin D 1000 IU", "Amoksisilin 500 mg per oral", "Antihistamin H1 generasi kedua (non-sedatif)", "Metronidazol (oral)", "Metronidazol 500 mg — 3x sehari"].map(unstrength))
+      .toEqual(["Vit. B12", "Vitamin D", "Amoksisilin per oral", "Antihistamin H1 generasi kedua (non-sedatif)", "Metronidazol (oral)", "Metronidazol — 3x sehari"]);
+  });
+});
