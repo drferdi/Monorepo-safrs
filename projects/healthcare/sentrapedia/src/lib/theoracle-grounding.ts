@@ -159,3 +159,52 @@ export async function retrieveTheOracleGrounding(caseData: CaseState, options: R
     evidence: evidence.map((item, index) => ({ ...item, retrievalRank: index + 1 })),
   });
 }
+
+const THERAPY_DOSE_EVIDENCE = 4;
+
+function therapyQuery(caseData: CaseState, diagnosis: { icd10: string; label: string }): string {
+  const { ageYears, sex, pregnant } = caseData.demographics;
+  const patient = [ageYears === null ? "" : `${ageYears} tahun`, sex === "M" ? "laki-laki" : sex === "F" ? "perempuan" : "", pregnant ? "hamil" : ""].filter(Boolean).join(", ");
+  return [
+    diagnosis.icd10 ? `${diagnosis.label} (${diagnosis.icd10})` : diagnosis.label,
+    THERAPY_QUERY.trim(),
+    patient,
+    caseData.knownConditions.length ? `Kondisi: ${caseData.knownConditions.join(", ")}` : "",
+    caseData.currentMedications.length ? `Obat rutin: ${caseData.currentMedications.join(", ")}` : "",
+  ].filter(Boolean).join("\n");
+}
+
+// Therapy is retrieved for the diagnosis the diagnosis step chose, so its treatment and dose passages reach the therapy step.
+export async function retrieveTheOracleTherapyGrounding(caseData: CaseState, diagnosis: { icd10: string; label: string }, options: RetrieveOptions = {}): Promise<TheOracleGroundingBundle> {
+  const query = therapyQuery(caseData, diagnosis);
+  const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");
+  const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
+  if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
+  const { manifest, chunks, vectors, embed } = await loaded.get(indexDir)!;
+  let q: Float32Array;
+  try { q = await embed(manifest.prefixes.query + query); } catch { throw unavailable("Embedding lokal TheOracle gagal. Analisis tidak dijalankan."); }
+  const dims = manifest.model.dims;
+  const scores = new Float32Array(chunks.length);
+  for (let i = 0; i < chunks.length; i++) { let s = 0; const offset = i * dims; for (let k = 0; k < dims; k++) s += q[k] * vectors[offset + k]; scores[i] = s; }
+  const ranked = [...scores.keys()].sort((a, b) => scores[b] - scores[a]);
+  const selected: Omit<TheOracleGroundingEvidence, "retrievalRank">[] = [];
+  const perDocument = new Map<string, number>();
+  for (const wantDose of [true, false]) {
+    for (const i of ranked) {
+      if (selected.length >= (wantDose ? THERAPY_DOSE_EVIDENCE : MAX_EVIDENCE)) break;
+      const chunk = chunks[i];
+      if (DOSE.test(chunk.text) !== wantDose || (perDocument.get(chunk.title) ?? 0) >= MAX_PER_DOCUMENT) continue;
+      const item = { evidenceId: chunk.id, text: evidenceText(chunk.text), similarity: Math.round(scores[i] * 10_000) / 10_000, source: { title: chunk.title, docSource: chunk.docSource, origin: chunk.origin, textSha256: chunk.textSha256 } };
+      if (!item.text || sourceTriggersMiraPrivacy(item)) continue;
+      perDocument.set(chunk.title, (perDocument.get(chunk.title) ?? 0) + 1);
+      selected.push(item);
+    }
+  }
+  if (!selected.length) throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "TheOracle tidak menemukan referensi terapi untuk diagnosis ini.");
+  return freezeBundle({
+    version: THEORACLE_GROUNDING_CAPABILITY,
+    corpus: { name: "TheOracle", indexSha256: manifest.indexSha256, embeddingModel: { id: manifest.model.id, revision: manifest.model.revision, dtype: manifest.model.dtype, dims }, retrievedAt: (options.now ?? (() => new Date()))().toISOString(), reviewProvenance: REVIEW_PROVENANCE },
+    queryDigest: sha256(query),
+    evidence: selected.map((item, index) => ({ ...item, retrievalRank: index + 1 })),
+  });
+}

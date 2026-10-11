@@ -9,6 +9,7 @@ import {
   THEORACLE_GROUNDING_CAPABILITY,
   TheOracleGroundingError,
   retrieveTheOracleGrounding,
+  retrieveTheOracleTherapyGrounding,
   type TheOracleManifest,
 } from "../src/lib/theoracle-grounding";
 
@@ -84,6 +85,15 @@ describe("TheOracle vector grounding", () => {
     expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1", "D1"]);
     expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3, 4]);
     expect((await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: therapyEmbedder, limit: 3 })).evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "D1"]);
+  });
+
+  it("retrieves therapy for a diagnosis: dose passages first, then others, with patient context in the query", async () => {
+    const calls: string[] = [];
+    const embedder = async () => async (text: string) => { calls.push(text); return Float32Array.from([0, 0, 1]); };
+    const bundle = await retrieveTheOracleTherapyGrounding({ ...caseFor("batuk"), demographics: { ageYears: 30, sex: "F", pregnant: true }, currentMedications: ["warfarin"] }, { icd10: "J18.9", label: "Pneumonia" }, { indexDir: fixtureIndex(), embedder });
+    expect(validTheOracleGrounding(bundle)).toBe(true);
+    expect(calls).toEqual(["task: search result | query: Pneumonia (J18.9)\npenatalaksanaan terapi dosis obat\n30 tahun, perempuan, hamil\nObat rutin: warfarin"]);
+    expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["D1", "A2", "A1", "B1"]);
   });
 
   it("clamps the evidence limit", async () => {
