@@ -129,7 +129,7 @@ Invoke via Agent/Task delegation or by name.
 Install from Cursor marketplace / plugin UI (not vendored in-repo):
 
 1. **frontend-design** — composition help; must still obey `@sentra/token` / `07-ui-tokens` rule (no off-token palettes).
-2. **commit-commands** (or equivalent commit/PR pack) — Conventional Commits + `gh` flow; still **no commit unless Chief asks**.
+2. **commit-commands** (or equivalent commit/PR pack) — Conventional Commits + `gh` flow; still **no commit unless Gaffer asks**.
 
 ## MCP hygiene
 

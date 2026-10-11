@@ -147,7 +147,7 @@ Content-Type: application/json
 | `NOT_FOUND` | 404 | Resource does not exist | Verify resource ID |
 | `CONFLICT` | 409 | Resource already exists or state conflict | Resolve conflict or use idempotency key |
 | `RATE_LIMITED` | 429 | Too many requests | Implement exponential backoff |
-| `INTERNAL_ERROR` | 500 | Server-side unexpected error | Report to Chief with request ID |
+| `INTERNAL_ERROR` | 500 | Server-side unexpected error | Report to Gaffer with request ID |
 | `SERVICE_UNAVAILABLE` | 503 | Temporary service degradation | Retry with exponential backoff |
 
 ### Idempotency

@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-20
-- Deciders: Chief (drferdii)
+- Deciders: Gaffer (drferdii)
 - Spec: `docs/superpowers/specs/2026-08-20-smartboard-migration-design.md`
 - Plan: `docs/plans/active/2026-08-20-smartboard-migration.md`
 
@@ -39,7 +39,7 @@ gate design token, dan kontrak capsule.
    karena berpotensi membawa secret lama secara permanen.
 6. `raw_data/**` repo lama (data pribadi siswa/tentor/gaji) diklasifikasi R3
    dan dikarantina permanen; tidak masuk repo ini dalam bentuk apa pun tanpa
-   konfirmasi tertulis Chief. Semua `.env*` repo lama ikut dikarantina.
+   konfirmasi tertulis Gaffer. Semua `.env*` repo lama ikut dikarantina.
 
 ## Consequences
 

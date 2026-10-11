@@ -993,7 +993,7 @@ Working on this repository as an agent (or with one) starts at
 
 | Capsule | Current state | Entry point |
 | --- | --- | --- |
-| <sub>`golden-path`</sub> | <sub>Pending standalone migration; outside the root workspace, and the root has no demonstrator (Chief, 2026-09-25)</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
+| <sub>`golden-path`</sub> | <sub>Pending standalone migration; outside the root workspace, and the root has no demonstrator (Gaffer, 2026-09-25)</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
 | <sub>`control-center`</sub> | <sub>Implemented local, read-only operator dashboard; remains usable when Docker or the database is unavailable</sub> | <sub>`projects/internal/control-center/apps/web`</sub> |
 | <sub>`academic-smartboard`</sub> | <sub>Sovereign curriculum, Kayyisa AI knowledge package, and Next.js application surfaces (Subphases 1–5 completed)</sub> | <sub>`projects/academic/academic-smartboard`</sub> |
 | <sub>`kediri-history`</sub> | <sub>Sovereign standalone capsule; digital heritage storytelling, historical archives, and GSAP scenes</sub> | <sub>`projects/product/kediri-history`</sub> |
@@ -1018,7 +1018,7 @@ Working on this repository as an agent (or with one) starts at
 ### Automation control plane
 
 Phases 1–5 of the SAFRS Full Automation Control Plane are implemented and merged.
-Phases 6–8 are deliberately parked: Chief resolved the activation decisions on
+Phases 6–8 are deliberately parked: Gaffer resolved the activation decisions on
 2026-08-18, but no autonomous runner has been named. Canonical behavior lives in
 [`SAFRS_AUTOMATION.md`](docs/governance/SAFRS_AUTOMATION.md),
 [`SAFRS_APPROVALS.md`](docs/governance/SAFRS_APPROVALS.md), and
@@ -1046,7 +1046,7 @@ Two properties are worth knowing before relying on it:
 
 Vendor adapters (Codex, Claude, Cursor) are thin translators into the shared
 guard, so all three reach the same verdict for the same behavior. Droid
-remains `read_only_disabled`; Chief resolved on 2026-08-18 that no unattended
+remains `read_only_disabled`; Gaffer resolved on 2026-08-18 that no unattended
 Droid workflow will be introduced without a separately reviewed artifact and
 installer.
 
@@ -1055,7 +1055,7 @@ installer.
 | Capability | Status | Command | Requires |
 | --- | --- | --- | --- |
 | <sub>Single-command local bootstrap</sub> | <sub>Verified</sub> | <sub>`pnpm dev`</sub> | <sub>Docker (Postgres)</sub> |
-| <sub>Renovate</sub> | <sub>Patch, minor, pin, digest, and lockfile updates auto-merge only after tests pass; major updates wait for Chief</sub> | <sub>—</sub> | <sub>Dependency dashboard enabled; GitHub-native auto-merge is disabled</sub> |
+| <sub>Renovate</sub> | <sub>Patch, minor, pin, digest, and lockfile updates auto-merge only after tests pass; major updates wait for Gaffer</sub> | <sub>—</sub> | <sub>Dependency dashboard enabled; GitHub-native auto-merge is disabled</sub> |
 | <sub>GitHub security</sub> | <sub>Secret scanning, push protection, Dependabot alerts and security updates, and dependency graph enabled</sub> | <sub>—</sub> | <sub>Live GitHub API check on 2026-08-20; continuous drift audit is not implemented</sub> |
 | <sub>CODEOWNERS R2/R3 enforcement</sub> | <sub>Declared, **not yet enforced**</sub> | <sub>—</sub> | <sub>Branch protection on `main` (checklist in [`PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md))</sub> |
 | <sub>Publisher auto-merge</sub> | <sub>Evaluation-only</sub> | <sub>—</sub> | <sub>`SAFRS_PUBLISHER_ENABLED` stays false until Phase 6 activates the required identity and controls</sub> |
@@ -1063,7 +1063,7 @@ installer.
 > [!IMPORTANT]
 > `main` currently has **no branch protection**, so the eight gates above are
 > published but not required. Requiring them, together with creating the
-> auditor and publisher identities, is parked Phase 6 work. Chief resolved the
+> auditor and publisher identities, is parked Phase 6 work. Gaffer resolved the
 > activation policy on 2026-08-18; activation waits for a named runner and the
 > Phase 6 reviewed change.
 

@@ -1,6 +1,6 @@
 ---
 name: 06-release-communicator
-description: Turn a diff or PR into a human summary and test plan for the Chief. Use before opening a PR, writing release notes, or explaining a change set.
+description: Turn a diff or PR into a human summary and test plan for the Gaffer. Use before opening a PR, writing release notes, or explaining a change set.
 ---
 
 # Release communicator
@@ -15,7 +15,7 @@ Read-only. Summarize; do not mutate files, commit, or push.
 
 ## Procedure
 
-1. Identify audience (Chief note vs PR body).
+1. Identify audience (Gaffer note vs PR body).
 2. Summarize why the change exists (not only what files moved).
 3. List risk tier hints (R1/R2/R3) without claiming auditor authority.
 4. Draft a test plan checklist.

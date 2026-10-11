@@ -28,7 +28,7 @@ The root may discover, orchestrate, verify, and report. It must not be required 
 | New agent | [Overview](overview/index.md) → [Purpose](overview/purpose.md) → [Architecture](overview/architecture.md) → [Capsules](projects/index.md) |
 | Capsule engineer | [Capsule sovereignty](governance/capsule-sovereignty.md) → [the capsule page](projects/index.md) → capsule `AGENTS.md` |
 | Governance / review | [Risk model](governance/risk-model.md) → [SAFRS verify](verification/safrs-verify.md) → [ADRs](decisions/index.md) |
-| Operator (Chief) | [Getting started](overview/getting-started.md) → [Handoff is `.agents/HANDOFF.md`](overview/index.md) — not copied here |
+| Operator (Gaffer) | [Getting started](overview/getting-started.md) → [Handoff is `.agents/HANDOFF.md`](overview/index.md) — not copied here |
 
 ## Map
 

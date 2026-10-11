@@ -24,7 +24,7 @@ Hybrid writer for onboarding. Produce a bootstrap briefing in chat. Write `.agen
 
 ## Procedure
 
-1. Detect audience: new agent / reinstall / human Chief.
+1. Detect audience: new agent / reinstall / human Gaffer.
 2. Emit a bootstrap briefing: mission, topology (`projects/` vs `packages/` vs `tools/`), MUST-read list, current HANDOFF snapshot, risk tiers one-liner, how to invoke `/safrs-session` and `/verify`.
 3. Draft `CONTEXT_BOOTSTRAP.md` content in chat (pointers + current state bullets).
 4. Wait for apply before writing.

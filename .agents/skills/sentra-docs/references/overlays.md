@@ -1,6 +1,6 @@
 # Overlays
 
-Activate from **evidence**, not from the parent folder name alone. Chief may force overlays with `--overlay`.
+Activate from **evidence**, not from the parent folder name alone. Gaffer may force overlays with `--overlay`.
 
 ## AI (`material_ai`)
 
@@ -20,7 +20,7 @@ If there is a single agent, `multi_agent_protocol.md` is Not applicable with tha
 
 ## Healthcare (`healthcare_overlay`)
 
-Write H01–H10 **even when the product is not a device**, if Chief asked for the full set or the capsule sits in a health domain. In the non-device case, H01 states **intended medical use: none**, and H05 states **IEC 62304 not applicable**. Do not self-assign Class A/B/C as a workaround.
+Write H01–H10 **even when the product is not a device**, if Gaffer asked for the full set or the capsule sits in a health domain. In the non-device case, H01 states **intended medical use: none**, and H05 states **IEC 62304 not applicable**. Do not self-assign Class A/B/C as a workaround.
 
 If the product **is** health software / SaMD / medical device, fill H01–H10 as a real overlay (ISO 13485, ISO 14971, IEC 62304, applicable health-software cybersecurity). Do not pretend a QMS exists if it does not.
 

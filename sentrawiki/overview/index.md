@@ -1,6 +1,6 @@
 # SAFRS Monorepo overview
 
-The SAFRS Monorepo lets one human Chief operate many software projects through autonomous AI engineering with machine-enforced constraints.
+The SAFRS Monorepo lets one human Gaffer operate many software projects through autonomous AI engineering with machine-enforced constraints.
 
 **Canonical purpose:** `docs/architecture/MONOREPO_PURPOSE.md`.
 **Canonical specification:** `SAFRS_SPEC.md`.
@@ -12,11 +12,11 @@ Wiki home: [README](../README.md).
 
 **Human-Governed · Agent-Executed · Machine-Enforced**
 
-- Chief defines objectives, policy, authority boundaries, and genuine high-impact decisions.
+- Gaffer defines objectives, policy, authority boundaries, and genuine high-impact decisions.
 - Agents execute engineering inside that envelope.
 - Machines enforce topology, verification, isolation, and evidence.
 
-The monorepo succeeds only when it reduces Chief's operational burden. It must not turn Chief into a terminal operator or per-command approval service.
+The monorepo succeeds only when it reduces Gaffer's operational burden. It must not turn Gaffer into a terminal operator or per-command approval service.
 
 ## Two layers (do not collapse them)
 
