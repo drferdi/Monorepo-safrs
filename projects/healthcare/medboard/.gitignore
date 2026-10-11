@@ -63,13 +63,12 @@ Desktop.ini
 *~
 
 # ── Internal working files (kept locally, not part of the project) ──
-# Agent instructions, session notes, plans and AI-tool settings.
-AGENTS.md
+# Session notes, plans and AI-tool settings. AGENTS.md and .agents/ stay tracked:
+# the monorepo topology requires them in every capsule.
 AGENTS.override.md
 CLAUDE.md
 GEMINI.md
 QWEN.md
-.agents/
 .agent/
 .claude/
 .codex/
