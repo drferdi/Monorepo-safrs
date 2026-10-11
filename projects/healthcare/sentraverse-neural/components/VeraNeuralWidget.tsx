@@ -3,6 +3,7 @@
 // Architected and built by Drferdi.
 // Sentraverse Neural - Vera Floating AI Assistant Chat Widget
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import Image from "next/image";
 
 interface CitationSource {
   position?: number;
@@ -131,6 +132,8 @@ export function VeraNeuralWidget() {
   const [conversationId, setConversationId] = useState<string | undefined>(undefined);
   const [expandedSourceId, setExpandedSourceId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [greeting, setGreeting] = useState("Welcome");
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -254,337 +257,182 @@ export function VeraNeuralWidget() {
     }
   };
 
+  const typing = messages.some((m) => m.isStreaming && !m.text);
+  const fresh = messages.length === 1;
+  const suggesting = input.startsWith("/");
+  const suggestions = QUICK_PROMPTS.filter((p) => p.toLowerCase().includes(input.slice(1).trim().toLowerCase()));
+
+  const toggleOpen = () => {
+    if (!isOpen) setGreeting(greetingFor(new Date().getHours()));
+    setIsOpen(!isOpen);
+  };
+
+  const copyAnswer = async (msg: ChatMessage) => {
+    try {
+      await navigator.clipboard.writeText(msg.text);
+      setCopiedId(msg.id);
+      setTimeout(() => setCopiedId(null), 1500);
+    } catch {
+      // Clipboard can be unavailable (permissions); the answer stays selectable.
+    }
+  };
+
   return (
-    <div className="neural-vera-widget-root">
-      {/* CHAT WINDOW */}
+    <div className="vera-widget-root">
       {isOpen && (
-        <div role="dialog" aria-label="Vera AI Chat Assistant" className="neural-vera-widget-panel">
-          {/* Header */}
-          <div className="neural-vera-panel-header">
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <div className="neural-vera-icon-badge">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-                </svg>
-                <span className="neural-vera-pulse-dot" />
+        <div role="dialog" aria-label="Vera chat" className="vera-widget-panel">
+          <header className="vera-panel-header">
+            <button type="button" className="vera-icon-button" onClick={handleResetChat} aria-label="Restart conversation" title="Restart conversation">
+              <Icon size={15}><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></Icon>
+            </button>
+            <span className="vera-plan">Vera · <b>Sentraverse</b></span>
+            <button type="button" className="vera-icon-button" onClick={() => setIsOpen(false)} aria-label="Close Vera chat" title="Close">
+              <Icon size={17}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></Icon>
+            </button>
+          </header>
+
+          <div className="vera-panel-body" data-fresh={fresh}>
+            {fresh ? (
+              <div className="vera-hero">
+                <Image className="vera-hero-logo" src="/brand/sentraverse-logo.png" alt="" width={60} height={47} />
+                <h2>{greeting}</h2>
+                <p>I&apos;m Vera. How can I help you?</p>
               </div>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{ fontWeight: 600, fontSize: "14px", letterSpacing: "0.3px", color: "#ffffff" }}>
-                    Vera
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "10px",
-                      padding: "2px 6px",
-                      borderRadius: "10px",
-                      background: "rgba(0, 229, 255, 0.18)",
-                      color: "#00e5ff",
-                      fontWeight: 500,
-                      border: "1px solid rgba(0, 229, 255, 0.3)",
-                    }}
-                  >
-                    Neural AI
-                  </span>
-                </div>
-                <div style={{ fontSize: "11px", color: "#8ea2b8", marginTop: "2px" }}>
-                  Dify Cloud KB Connected
-                </div>
-              </div>
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-              <button
-                type="button"
-                onClick={handleResetChat}
-                title="Reset Conversation"
-                style={{ padding: "6px", color: "#8ea2b8", borderRadius: "6px", background: "none", border: "none", cursor: "pointer" }}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                  <path d="M3 3v5h5" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                title="Close Widget"
-                style={{ padding: "6px", color: "#8ea2b8", borderRadius: "6px", background: "none", border: "none", cursor: "pointer" }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Error Banner */}
-          {errorMessage && (
-            <div
-              style={{
-                padding: "8px 14px",
-                background: "rgba(185, 28, 28, 0.2)",
-                borderBottom: "1px solid rgba(239, 68, 68, 0.3)",
-                color: "#fca5a5",
-                fontSize: "12px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {errorMessage}
-              </span>
-            </div>
-          )}
-
-          {/* Messages Body */}
-          <div className="neural-vera-panel-body">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`neural-vera-msg-row ${msg.sender}`}>
-                <div className={`neural-vera-bubble ${msg.sender}`}>
-                  {msg.sender === "assistant" && (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginBottom: "4px",
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        color: "#00e5ff",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                        <span>Vera</span>
-                      </div>
-                      <span style={{ fontSize: "10px", color: "#6e8399", fontWeight: 400 }}>
-                        {msg.timestamp}
-                      </span>
+            ) : (
+              messages.filter((m) => m.id !== INITIAL_MESSAGE.id && !(m.isStreaming && !m.text)).map((msg) =>
+                msg.sender === "user" ? (
+                  <p key={msg.id} className="vera-question">{msg.text}</p>
+                ) : (
+                  <div key={msg.id} className="vera-answer">
+                    <div className="vera-reply">
+                      {msg.text}
+                      {msg.isStreaming && <span className="vera-caret" aria-hidden="true" />}
                     </div>
-                  )}
-
-                  <div style={{ fontSize: "13px" }}>{msg.text}</div>
-
-                  {msg.isStreaming && (
-                    <span
-                      style={{
-                        display: "inline-block",
-                        width: "6px",
-                        height: "12px",
-                        marginLeft: "4px",
-                        background: "#00e5ff",
-                        animation: "neural-fade-in 0.8s infinite alternate",
-                        verticalAlign: "middle",
-                      }}
-                    />
-                  )}
-                </div>
-
-                {/* Sources / Citations */}
-                {msg.sources && msg.sources.length > 0 && (
-                  <div style={{ marginTop: "6px", maxWidth: "86%", textAlign: "left" }}>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setExpandedSourceId(expandedSourceId === msg.id ? null : msg.id)
-                      }
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        fontSize: "11px",
-                        color: "#00e5ff",
-                        cursor: "pointer",
-                        background: "none",
-                        border: "none",
-                        padding: 0,
-                      }}
-                    >
-                      <span>📚 {msg.sources.length} Verified Sources</span>
-                    </button>
-
-                    {expandedSourceId === msg.id && (
-                      <div
-                        style={{
-                          marginTop: "6px",
-                          padding: "8px 10px",
-                          background: "rgba(18, 26, 38, 0.95)",
-                          border: "1px solid rgba(0, 229, 255, 0.2)",
-                          borderRadius: "8px",
-                          fontSize: "11px",
-                        }}
-                      >
-                        {msg.sources.map((res, i) => (
-                          <div
-                            key={i}
-                            style={{
-                              borderBottom:
-                                i === (msg.sources?.length ?? 1) - 1 ? "none" : "1px solid rgba(255, 255, 255, 0.08)",
-                              paddingBottom: "6px",
-                              marginBottom: "6px",
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontWeight: 500,
-                                color: "#e5e9ee",
-                                display: "flex",
-                                justifyContent: "space-between",
-                              }}
-                            >
-                              <span
-                                style={{
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {res.document_name || res.dataset_name || "Official Knowledge"}
-                              </span>
-                              {res.score && (
-                                <span style={{ fontSize: "10px", color: "#00e5ff", marginLeft: "8px" }}>
-                                  {(res.score * 100).toFixed(0)}% match
-                                </span>
-                              )}
-                            </div>
-                            {res.content && (
-                              <p
-                                style={{
-                                  fontSize: "10px",
-                                  color: "#8ea2b8",
-                                  marginTop: "3px",
-                                  lineHeight: 1.4,
-                                }}
-                              >
-                                {res.content}
-                              </p>
-                            )}
-                          </div>
-                        ))}
+                    {!msg.isStreaming && (
+                      <div className="vera-meta">
+                        <button type="button" onClick={() => copyAnswer(msg)} aria-label="Copy answer" title="Copy">
+                          {copiedId === msg.id
+                            ? <Icon size={14}><path d="M20 6 9 17l-5-5" /></Icon>
+                            : <Icon size={14}><rect width="14" height="14" x="8" y="8" rx="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></Icon>}
+                        </button>
+                        {msg.sources && msg.sources.length > 0 && (
+                          <button type="button" className="vera-sources-toggle" onClick={() => setExpandedSourceId(expandedSourceId === msg.id ? null : msg.id)} aria-expanded={expandedSourceId === msg.id}>
+                            <span className="vera-count">{msg.sources.length}</span> Sources
+                            <span className="vera-chevron" data-open={expandedSourceId === msg.id}><Icon size={13}><path d="m6 9 6 6 6-6" /></Icon></span>
+                          </button>
+                        )}
                       </div>
                     )}
+                    {msg.sources && expandedSourceId === msg.id && (
+                      <ul className="vera-sources">
+                        {msg.sources.map((res, i) => (
+                          <li key={i}>
+                            <strong>{res.document_name || res.dataset_name || "Official document"}</strong>
+                            {res.score ? <em>{(res.score * 100).toFixed(0)}% relevant</em> : null}
+                            {res.content && <p>{res.content}</p>}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
+                )
+              )
+            )}
 
-            {/* Quick Prompts */}
-            {messages.length === 1 && !loading && (
-              <div style={{ paddingTop: "8px" }}>
-                <p
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: 500,
-                    color: "#8ea2b8",
-                    marginBottom: "6px",
-                  }}
-                >
-                  Explore Topics:
-                </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  {QUICK_PROMPTS.map((prompt, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => handleSend(prompt)}
-                      style={{
-                        textAlign: "left",
-                        fontSize: "12px",
-                        padding: "8px 12px",
-                        borderRadius: "10px",
-                        background: "rgba(18, 26, 38, 0.7)",
-                        border: "1px solid rgba(255, 255, 255, 0.1)",
-                        color: "#c2d1e0",
-                        cursor: "pointer",
-                        transition: "all 0.15s ease",
-                      }}
-                    >
-                      {prompt}
-                    </button>
-                  ))}
-                </div>
+            {typing && (
+              <div className="vera-typing" role="status" aria-label="Vera is typing">
+                <i /><i /><i />
               </div>
+            )}
+
+            {errorMessage && (
+              <p className="vera-error" role="alert">
+                <Icon size={13}><circle cx="12" cy="12" r="10" /><path d="M12 8v4" /><path d="M12 16h.01" /></Icon> {errorMessage}
+              </p>
             )}
 
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Bar */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              if (suggesting) {
+                if (suggestions[0]) handleSend(suggestions[0]);
+                return;
+              }
               handleSend();
             }}
-            className="neural-vera-panel-footer"
+            className="vera-panel-footer"
           >
-            <div className="neural-vera-input-wrap">
+            {suggesting && (
+              <ul className="vera-suggestions" role="listbox" aria-label="Suggested questions">
+                {suggestions.length ? suggestions.map((prompt) => (
+                  <li key={prompt}>
+                    <button type="button" role="option" aria-selected="false" onClick={() => handleSend(prompt)}>{prompt}</button>
+                  </li>
+                )) : <li className="vera-suggestions-empty">No matching suggestions</li>}
+              </ul>
+            )}
+            <div className="vera-composer">
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask Vera about the neural ecosystem..."
+                onKeyDown={(e) => { if (e.key === "Escape" && suggesting) { e.stopPropagation(); setInput(""); } }}
+                placeholder="Ask about the Sentraverse ecosystem…"
+                aria-label="Message for Vera"
                 disabled={loading}
               />
-              {loading ? (
-                <button
-                  type="button"
-                  onClick={handleStopGenerating}
-                  title="Stop Response"
-                  className="neural-vera-send-btn"
-                  style={{ background: "#475569", color: "#ffffff" }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="4" y="4" width="16" height="16" rx="2" />
-                  </svg>
+              <div className="vera-composer-row">
+                <button type="button" className="vera-round-btn" onClick={() => { setInput("/"); inputRef.current?.focus(); }} aria-label="Show suggested questions" title="Suggestions" disabled={loading}>
+                  <Icon size={15}><path d="M5 12h14" /><path d="M12 5v14" /></Icon>
                 </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={!input.trim()}
-                  aria-label="Send Message"
-                  className="neural-vera-send-btn"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13" />
-                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                  </svg>
-                </button>
-              )}
-            </div>
-            <div style={{ marginTop: "6px", textAlign: "center" }}>
-              <span style={{ fontSize: "10px", color: "#64748b" }}>
-                Vera AI Agent • Sentraverse Official Neural Intelligence
-              </span>
+                <span className="vera-hint">Type <kbd>/</kbd> for suggestions</span>
+                {loading ? (
+                  <button type="button" onClick={handleStopGenerating} className="vera-send-btn" aria-label="Stop answer" title="Stop">
+                    <Icon size={11}><rect x="6" y="6" width="12" height="12" rx="1" /></Icon>
+                  </button>
+                ) : (
+                  <button type="submit" disabled={!input.trim() || (suggesting && !suggestions.length)} className="vera-send-btn" aria-label="Send question" title="Send">
+                    <Icon size={16}><path d="m5 12 7-7 7 7" /><path d="M12 19V5" /></Icon>
+                  </button>
+                )}
+              </div>
             </div>
           </form>
         </div>
       )}
 
-      {/* FLOATING TRIGGER BUTTON */}
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleOpen}
         aria-label={isOpen ? "Close Vera chat" : "Open Vera chat"}
-        className="neural-vera-widget-trigger"
+        className="vera-widget-trigger"
+        data-open={isOpen}
       >
-        <div className="neural-vera-icon-badge">
-          {isOpen ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
-            </svg>
-          )}
-          {!isOpen && <span className="neural-vera-pulse-dot" />}
-        </div>
-        <span>{isOpen ? "Close Vera" : "Ask Vera"}</span>
+        <span className="vera-launcher-mark" aria-hidden="true">
+          {isOpen
+            ? <Icon size={14}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></Icon>
+            : <Image src="/brand/sentraverse-logo.png" alt="" width={28} height={22} />}
+        </span>
+        <span className="vera-launcher-text">{isOpen ? "Close" : "Ask Vera"}</span>
       </button>
     </div>
+  );
+}
+
+function greetingFor(hour: number): string {
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
+function Icon({ size, children }: { size: number; children: React.ReactNode }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {children}
+    </svg>
   );
 }
