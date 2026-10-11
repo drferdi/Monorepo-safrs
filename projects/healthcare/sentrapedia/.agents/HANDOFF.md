@@ -514,3 +514,10 @@ Lanjutan (2026-10-11 08:35, Antigravity): Integrasi Dify Cloud / Self-hosted API
   - `.env.example`: Ditambahkan entri `DIFY_API_KEY` dan `DIFY_API_URL`.
 - Bukti Gate: `tsc --noEmit` 0 error, `eslint` 0 error, `vitest` 171/171 passed (15 test files), `node --test tests/system-runtime.node-test.mjs` 7/7 passed, `node scripts/test-mira.mjs` 157 passed, `npm run build` sukses 0 error (termasuk static & dynamic routes `/api/dify/chat` dan `/api/dify/feedback`).
 
+Lanjutan (2026-10-11 08:54, Antigravity): Wiring Sentrapedia README Grounding langsung ke Dify Gateway & Composer Utama.
+- File baru: `src/lib/dify/sentrapedia-context.ts` (Grounding kanonikal misi, arsitektur Workspace+Oracle+MIRA, dan prinsip "A clinician in control").
+- Modifikasi:
+  - `src/lib/dify/gateway.ts`: Menyuntikkan grounding kanonikal secara otomatis pada setiap request streaming maupun blocking, memastikan Agent Dify selalu memahami identitas dan fungsi Sentrapedia. Memastikan payload selalu menyediakan `inputs: {}` bawaan untuk mencegah Pydantic validation error dari Dify.
+  - `src/components/workspace.tsx`: Menyambungkan `analyzeMain` langsung ke Dify Streaming Agent dengan update real-time dan fallback ke MIRA.
+- Bukti Gate: `tsc --noEmit` 0 error, `vitest` 171/171 passed, live streaming `/api/dify/chat` terverifikasi menghasilkan jawaban akurat tentang Sentrapedia dengan status 200 SSE.
+
