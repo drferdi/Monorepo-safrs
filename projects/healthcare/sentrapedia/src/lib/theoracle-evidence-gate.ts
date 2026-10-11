@@ -65,8 +65,10 @@ const strengths = (dose: string, percent = true) => {
     return [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}${m[3] === "%" ? "" : "\\b"}${tail}`, "i"));
   });
 };
-// Clauses end at ";" or at "," / "." that is not a decimal mark ("0,9%" stays whole).
-const CLAUSE = /((?:;|(?<!\d)[,.]|[,.](?!\d))\s*)/;
+// Clauses end at ";", a newline, a "," that is not a decimal mark ("0,9%" stays whole) or a "." that ends a sentence ("maks. 4 g" stays whole).
+const CLAUSE = /((?:[;\n]|(?<!\d),|,(?!\d)|\.(?=\s*(?:[A-Z]|$)))\s*)/;
+const CONDITION = /^(?:kecuali|bila|jika|apabila|hanya)\b/i;
+const PARTIAL = " (sebagian belum terverifikasi)";
 // Strips every strength with its per-unit tails; "Amoxicillin 500 mg/clavulanate 125 mg" -> "Amoxicillin/clavulanate".
 export const unstrength = (text: string) => text.replace(new RegExp(STRENGTH.source + PER, "gi"), "").replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ").trim();
 
@@ -91,12 +93,17 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
   });
   const kept = therapy.regimen.filter((_, i) => drugs[i].status !== "removed");
   const shown = (r: MiraTherapy["regimen"][number]) => {
-    // A field keeps each clause whose strengths one passage carries: "IV, 1 g dalam 100 ml" keeps "IV" when 1 g is unsupported.
+    // A field keeps its leading clauses up to the first unsupported one: "IV, 1 g dalam 100 ml" keeps "IV" when 1 g is unsupported.
+    // It is blanked when that would cut a condition loose or drop an exception ("Hindari bila CrCl <30 ml/menit, kurangi dosis").
     const named = dosingFor(r.drug);
     const text = (field: string) => {
       const parts = field.split(CLAUSE);
-      const clauses = parts.flatMap((part, i) => i % 2 || !carried(part, named) ? [] : [part + (parts[i + 1] ?? "")]);
-      return clauses.length === (parts.length + 1) / 2 ? field : clauses.join("").replace(/[\s;,.]+$/, "");
+      const clauses = parts.filter((_, i) => i % 2 === 0);
+      const cut = clauses.findIndex(clause => !carried(clause, named));
+      if (cut < 0) return carried(field, named) ? field : "";
+      const kept = parts.slice(0, 2 * cut).join("").replace(/[\s;,.]+$/, "");
+      const balanced = (kept.match(/\(/g) ?? []).length === (kept.match(/\)/g) ?? []).length;
+      return cut && balanced && carried(kept, named) && !clauses.slice(cut).some(clause => CONDITION.test(clause.trim())) ? kept + PARTIAL : "";
     };
     return { ...(drugs[therapy.regimen.indexOf(r)].status === "verified" ? r : { ...r, drug: unstrength(r.drug), dose: "" }), route: text(r.route), duration: text(r.duration), note: text(r.note) };
   };

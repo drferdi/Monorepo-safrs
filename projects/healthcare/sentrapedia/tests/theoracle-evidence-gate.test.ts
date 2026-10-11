@@ -322,13 +322,35 @@ describe("clinical evidence gate: per-kg is decided for each strength", () => {
 
 describe("clinical evidence gate: a field drops only its unsupported clauses", () => {
   const amox = (fields: Partial<MiraTherapy["regimen"][number]>, text = "Amoksisilin 500 mg 3 kali sehari, 1 g bila berat.") => gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), ...fields }]), bundle(text), pneumonia).therapy?.regimen[0];
-  it("keeps the route when only a strength clause is unsupported", () => {
-    expect(amox({ route: "IV, 1 g dalam 100 ml NaCl" })?.route).toBe("IV");
-    expect(amox({ route: "2 g dalam 100 ml; IV" })?.route).toBe("IV");
+  const PARTIAL = " (sebagian belum terverifikasi)";
+  it("keeps the route when only a trailing strength clause is unsupported, and marks the cut", () => {
+    expect(amox({ route: "IV, 1 g dalam 100 ml NaCl" })?.route).toBe("IV" + PARTIAL);
+    expect(amox({ route: "IV\n2 g sehari" })?.route).toBe("IV" + PARTIAL);
   });
-  it("keeps a supported clause and drops an unsupported one", () => {
-    expect(amox({ note: "1 g bila berat, maks 4 g/hari" })?.note).toBe("1 g bila berat");
-    expect(amox({ duration: "5 hari. Lanjut 250 mg 3 hari" })?.duration).toBe("5 hari");
+  it("keeps supported leading clauses and drops the unsupported tail", () => {
+    expect(amox({ note: "1 g bila berat, maks 4 g/hari" })?.note).toBe("1 g bila berat" + PARTIAL);
+    expect(amox({ duration: "5 hari. Lanjut 250 mg 3 hari" })?.duration).toBe("5 hari" + PARTIAL);
+    expect(amox({ note: "1 g tiap 8 jam, maks. 4 g/hari" })?.note).toBe("1 g tiap 8 jam" + PARTIAL);
+  });
+  it("blanks a field when an unsupported clause comes first, so nothing is cut loose from it", () => {
+    expect(amox({ route: "2 g dalam 100 ml; IV" })?.route).toBe("");
+    expect(amox({ note: "Hindari bila CrCl <30 ml/menit, kurangi dosis" })?.note).toBe("");
+    expect(amox({ note: "Anak 125 mg, 3 kali sehari; dewasa 500 mg" })?.note).toBe("");
+  });
+  it("blanks a field when a dropped clause is a condition or an exception", () => {
+    expect(amox({ note: "jangan diberikan, kecuali 2 g dosis tunggal" })?.note).toBe("");
+    expect(amox({ note: "1 g tiap 8 jam, maks 4 g/hari, hanya dewasa" })?.note).toBe("");
+  });
+  it("needs one passage for every strength shown, across clauses", () => {
+    const twoPassages = gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), note: "500 mg, 2 tablet" }]), bundle("Amoksisilin 500 mg 3 kali sehari.", "Amoksisilin 2 tablet."), pneumonia);
+    expect(twoPassages.therapy?.regimen[0].note).toBe("");
+    expect(amox({ note: "IV (1 g, lalu 2 g)" })?.note).toBe("");
+    expect(amox({ note: "500 mg (maks. 4 g/hari)" })?.note).toBe("");
+  });
+  it("keeps the FORNAS budesonid first-day limit when the follow-on range is not matched", () => {
+    const budesonid = { drug: "budesonid", dose: "", route: "inhalasi", duration: "Hari pertama maks 10 mL perhari, selanjutnya 4–8 mL perhari selama 5 hari.", note: "" };
+    const fornas = "budesonid cairan ih 0,25 mg/mL Hari pertama maks 10 mL perhari, selanjutnya 4−8 mL perhari selama 5 hari. Pneumonia.";
+    expect(gateTherapy(therapy([budesonid]), bundle(fornas), pneumonia).therapy?.regimen[0].duration).toBe("Hari pertama maks 10 mL perhari" + PARTIAL);
   });
   it("does not split a decimal comma or point", () => {
     expect(amox({ route: "IV dalam NaCl 0,9%" })?.route).toBe("");
