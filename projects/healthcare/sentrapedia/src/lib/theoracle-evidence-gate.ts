@@ -65,6 +65,8 @@ const strengths = (dose: string, percent = true) => {
     return [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}${m[3] === "%" ? "" : "\\b"}${tail}`, "i"));
   });
 };
+// Clauses end at ";" or at "," / "." that is not a decimal mark ("0,9%" stays whole).
+const CLAUSE = /((?:;|(?<!\d)[,.]|[,.](?!\d))\s*)/;
 // Strips every strength with its per-unit tails; "Amoxicillin 500 mg/clavulanate 125 mg" -> "Amoxicillin/clavulanate".
 export const unstrength = (text: string) => text.replace(new RegExp(STRENGTH.source + PER, "gi"), "").replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ").trim();
 
@@ -89,7 +91,13 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
   });
   const kept = therapy.regimen.filter((_, i) => drugs[i].status !== "removed");
   const shown = (r: MiraTherapy["regimen"][number]) => {
-    const named = dosingFor(r.drug); const text = (field: string) => carried(field, named) ? field : "";
+    // A field keeps each clause whose strengths one passage carries: "IV, 1 g dalam 100 ml" keeps "IV" when 1 g is unsupported.
+    const named = dosingFor(r.drug);
+    const text = (field: string) => {
+      const parts = field.split(CLAUSE);
+      const clauses = parts.flatMap((part, i) => i % 2 || !carried(part, named) ? [] : [part + (parts[i + 1] ?? "")]);
+      return clauses.length === (parts.length + 1) / 2 ? field : clauses.join("").replace(/[\s;,.]+$/, "");
+    };
     return { ...(drugs[therapy.regimen.indexOf(r)].status === "verified" ? r : { ...r, drug: unstrength(r.drug), dose: "" }), route: text(r.route), duration: text(r.duration), note: text(r.note) };
   };
   const safety = (items: string[]) => items.flatMap(item => {

@@ -319,3 +319,22 @@ describe("clinical evidence gate: per-kg is decided for each strength", () => {
     expect(gateTherapy(therapy([drug("Azithromycin 500 mg", "10 mg/kgBB")]), bundle("Azitromisin 500 mg tablet; anak 10 mg/kgBB."), pneumonia).report.drugs[0].status).toBe("verified");
   });
 });
+
+describe("clinical evidence gate: a field drops only its unsupported clauses", () => {
+  const amox = (fields: Partial<MiraTherapy["regimen"][number]>, text = "Amoksisilin 500 mg 3 kali sehari, 1 g bila berat.") => gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), ...fields }]), bundle(text), pneumonia).therapy?.regimen[0];
+  it("keeps the route when only a strength clause is unsupported", () => {
+    expect(amox({ route: "IV, 1 g dalam 100 ml NaCl" })?.route).toBe("IV");
+    expect(amox({ route: "2 g dalam 100 ml; IV" })?.route).toBe("IV");
+  });
+  it("keeps a supported clause and drops an unsupported one", () => {
+    expect(amox({ note: "1 g bila berat, maks 4 g/hari" })?.note).toBe("1 g bila berat");
+    expect(amox({ duration: "5 hari. Lanjut 250 mg 3 hari" })?.duration).toBe("5 hari");
+  });
+  it("does not split a decimal comma or point", () => {
+    expect(amox({ route: "IV dalam NaCl 0,9%" })?.route).toBe("");
+    expect(amox({ route: "IV dalam NaCl 0.9%" }, "Amoksisilin 500 mg 3 kali sehari dalam NaCl 0,9%.")?.route).toBe("IV dalam NaCl 0.9%");
+  });
+  it("keeps a supported field exactly as written", () => {
+    expect(amox({ note: "PO, setelah makan. 1 g bila berat." })?.note).toBe("PO, setelah makan. 1 g bila berat.");
+  });
+});
