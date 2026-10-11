@@ -10,6 +10,18 @@
   - Referral criteria and asfiksia monitoring match standard practice and the cited guidelines.
   - The named sources are real guidelines: NRP/AAP, PNPK Asfiksia 2019, AAO-HNS Epistaxis 2020 and Cerumen 2017, ADA 2019 antibiotic guideline, SIS/IDSA cIAI with STOP-IT, NCI PDQ Osteosarcoma, APSA HAEC 2017, AAO EyeWiki, EWGSOP2/ICFSR/PROT-AGE.
   - The documents are unchanged. Clinical sign-off stays with Gaffer, who already approved the dose content.
+- **#2 `MIRA_TARGETED_THERAPY` is now on by default** (`d799f6b0`, R2).
+  - The spec said "default on once evaluation passes".
+  - The replay with the final gate supports it:
+    - drugs removed for the wrong diagnosis 9 -> 2;
+    - cases with a verified dose 30 -> 31;
+    - verified doses 41 legacy vs 40 targeted;
+    - audit cost $0.89 -> $0.84;
+    - p50 latency 2.5 -> 4.6 s.
+  - `MIRA_TARGETED_THERAPY=false` keeps the legacy path, as documented in `.env.example`. The MIRA service always advertises `theoracle-targeted-therapy-v1`; without it, the gateway falls back to legacy.
+  - M10 fixed in the same commit: `mira_tx` now ends 1 s before the overall timer (65 s), so a slow therapy step drops only the therapy and keeps the diagnosis. Before, the whole reply failed with TIMEOUT. A timeout on a non-retrieval stage is logged as `TIMEOUT`, not `THEORACLE_UNAVAILABLE`.
+  - Verified: RED first (new pipeline test); `npm test` 249/249, `tsc` 0, `eslint` 0.
+  - Takes effect only after a deploy, which needs Gaffer. No env file, deployment or budget was changed.
 
 ## Evidence gate: a field keeps its supported leading part (#10) - 2026-10-11 Asia/Jakarta
 
