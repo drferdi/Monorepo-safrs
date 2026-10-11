@@ -243,3 +243,22 @@ describe("clinical evidence gate: tablet content is not a dose", () => {
     expect(status("Paracetamol", "3x500mg", "Parasetamol tablet 500 mg, 2 tablet 3 kali sehari pada dewasa; anak 500 mg dosis tunggal.")).toBe("verified");
   });
 });
+
+describe("clinical evidence gate: tablet and capsule counts are doses", () => {
+  const status = (name: string, dose: string, text: string) => gateTherapy(therapy([drug(name, dose)]), bundle(text), pneumonia).report.drugs[0].status;
+  const mpff = "Flebotropik oral: MPFF (Diosmin 450 mg + Hesperidin 50 mg) 3 x 2 tablet selama 4 hari pertama, lalu 2 x 2 tablet selama 3 hari berikutnya.";
+  it("verifies a tablet count, including a range, against a passage that carries it", () => {
+    expect(status("Antasida", "3x1-2 tablet", "Antasida oral 3 x 1-2 tablet atau 10-15 mL.")).toBe("verified");
+    expect(status("Diosmin", "3x2tablet", mpff)).toBe("verified");
+    expect(status("Diosmin", "3x450mg", mpff)).toBe("doseRemoved");
+  });
+  it("does not verify another count or another dosage form", () => {
+    expect(status("Antasida", "3x2 tablet", "Antasida oral 3 x 1 tablet.")).toBe("doseRemoved");
+    expect(status("Omeprazole", "1x1 kapsul", "Omeprazol 1 x 1 tablet sebelum makan.")).toBe("doseRemoved");
+    expect(status("Parasetamol 500 mg", "3x2 tablet", "Parasetamol 500 mg 3 kali sehari.")).toBe("doseRemoved");
+  });
+  it("blanks a note with a tablet count no passage carries", () => {
+    const { therapy: out } = gateTherapy(therapy([{ ...drug("Antasida", "3x1-2 tablet"), note: "maksimal 8 tablet sehari" }]), bundle("Antasida oral 3 x 1-2 tablet."), pneumonia);
+    expect(out?.regimen[0]).toMatchObject({ dose: "3x1-2 tablet", note: "" });
+  });
+});

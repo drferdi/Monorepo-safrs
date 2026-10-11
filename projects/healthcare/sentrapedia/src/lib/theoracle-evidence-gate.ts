@@ -15,21 +15,23 @@ export function validGate(value: unknown): value is EvidenceGateReport {
 }
 
 const UNVERIFIED = " (belum terverifikasi)";
-const UNITS = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|μg|ug|mikrogram)", g: "(?:g|gram)", iu: "(?:iu|ui|units?)", ml: "(?:ml|mililiter)", meq: "(?:meq)", mmol: "(?:mmol)", tetes: "(?:tetes|gtt)", semprotan: "(?:semprotan|semprot|spray)", puff: "(?:puff)" };
-// Drop, spray and puff counts are doses too: "1-2 semprotan" must appear in the passage like "500 mg".
-const UNIT: Record<string, string> = { ...UNITS, gtt: UNITS.tetes, semprot: UNITS.semprotan, spray: UNITS.semprotan, "µg": UNITS.mcg, "μg": UNITS.mcg, ug: UNITS.mcg, mikrogram: UNITS.mcg, miligram: UNITS.mg, gram: UNITS.g, ui: UNITS.iu, unit: UNITS.iu, units: UNITS.iu, mililiter: UNITS.ml };
+const UNITS = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|μg|ug|mikrogram)", g: "(?:g|gram)", iu: "(?:iu|ui|units?)", ml: "(?:ml|mililiter)", meq: "(?:meq)", mmol: "(?:mmol)", tetes: "(?:tetes|gtt)", semprotan: "(?:semprotan|semprot|spray)", puff: "(?:puff)", tablet: "(?:tablets?|tabs?|kaplets?)", kapsul: "(?:kapsul|kaps|capsules?)" };
+// Drop, spray, puff, tablet and capsule counts are doses too: "1-2 semprotan" or "2 tablet" must appear in the passage like "500 mg".
+const UNIT: Record<string, string> = { ...UNITS, gtt: UNITS.tetes, semprot: UNITS.semprotan, spray: UNITS.semprotan, "µg": UNITS.mcg, "μg": UNITS.mcg, ug: UNITS.mcg, mikrogram: UNITS.mcg, miligram: UNITS.mg, gram: UNITS.g, ui: UNITS.iu, unit: UNITS.iu, units: UNITS.iu, mililiter: UNITS.ml, tablets: UNITS.tablet, tab: UNITS.tablet, tabs: UNITS.tablet, kaplet: UNITS.tablet, kaplets: UNITS.tablet, kaps: UNITS.kapsul, capsule: UNITS.kapsul, capsules: UNITS.kapsul };
 // 1.200.000 and 1,200,000 are one number (thousands separators); "2,4 juta IU" keeps its multiplier.
 const NUMBER = String.raw`(?:\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(?:\s*(?:juta|ribu|million))?`;
 // A strength, or a pair such as 5-40 mg (range) or 875/125 mg (combination) whose numbers share one unit.
-const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\s*(mikrogram|miligram|mililiter|semprotan|semprot|spray|puff|tetes|gtt|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g)\b`, "gi");
+const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\s*(tablets?|tabs?|kaplets?|kapsul|kaps|capsules?|mikrogram|miligram|mililiter|semprotan|semprot|spray|puff|tetes|gtt|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g)\b`, "gi");
 // Per-unit tails such as "/5 ml", "/kg/24 jam" or "/m2"; a drug name after a slash is not one of them.
 const PER = String.raw`(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:(?:ml|dl|l|vial|ampul|amp|tablet|tab|kapsul|kaps|kgbb|kg|m2|hari|dosis|kali|jam|menit|mnt|detik)\b|m²))*`;
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;
 // Two or more tablets per dose ("3 x 2 tablet", "2 tablet, 3 kali", "3 kali sehari 2 tablet", "2 kapsul sekaligus"): a strength just before it is tablet content, not a dose.
 const TABLETS = String.raw`(?:1\s*-\s*)?[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)s?\b`;
 const UNITS_PER_DOSE = new RegExp(String.raw`\d+\s*[x×]\s*${TABLETS}|(?:^|[^\d.,/])${TABLETS}[\s,;]*(?:\d+\s*(?:[x×]|kali)|sekaligus|sekali|per\s*kali|tiap\s*kali)|\d+\s*kali\s*sehari[\s,;]*${TABLETS}`, "i");
-// A passage doses with a strength when one of its occurrences is not followed, within 80 characters, by a multi-tablet dose.
-const doses = (pattern: RegExp, text: string) => [...text.matchAll(new RegExp(pattern.source, "gi"))].some(m => !UNITS_PER_DOSE.test(text.slice(m.index + m[0].length, m.index + m[0].length + 80)));
+// A passage doses with a strength when one of its occurrences is not followed, within 80 characters, by a multi-tablet dose;
+// a tablet or capsule count is itself the dose.
+const COUNTED = /(?:tablets?|tabs?|kaplets?|kapsul|kaps|capsules?)$/i;
+const doses = (pattern: RegExp, text: string) => [...text.matchAll(new RegExp(pattern.source, "gi"))].some(m => COUNTED.test(m[0]) || !UNITS_PER_DOSE.test(text.slice(m.index + m[0].length, m.index + m[0].length + 80)));
 
 // English and Indonesian spellings of generic names converge: amoxicillin and amoksisilin -> amoksisilin.
 function spell(word: string): string {
@@ -49,9 +51,11 @@ const diagnosisWords = (diagnosis: { icd10: string; label: string }) => new Set(
   .filter(word => !GENERIC.has(word)));
 const number = (value: string) => value.replace(/[.,]/g, "[.,]").replace(/\s+/g, "\\s*");
 // Each number of a pair needs its own match: the first stands alone or opens the same pair.
+// One tablet or capsule next to a strength such as 500 mg adds nothing to check: the 500 mg is the dose.
 const strengths = (dose: string) => {
   const tail = /\/\s*kg/.test(dose.toLowerCase()) ? "(?=\\s*\\/\\s*kg)" : "(?!\\s*\\/\\s*kg)";
-  return [...dose.toLowerCase().matchAll(STRENGTH)].flatMap(m => [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}\\b${tail}`, "i")));
+  const found = [...dose.toLowerCase().matchAll(STRENGTH)];
+  return found.filter(m => !(COUNTED.test(m[3]) && !m[1] && m[2] === "1" && found.some(o => !COUNTED.test(o[3])))).flatMap(m => [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}\\b${tail}`, "i")));
 };
 // Strips every strength with its per-unit tails; "Amoxicillin 500 mg/clavulanate 125 mg" -> "Amoxicillin/clavulanate".
 export const unstrength = (text: string) => text.replace(new RegExp(STRENGTH.source + PER, "gi"), "").replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ").trim();
