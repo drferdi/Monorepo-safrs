@@ -3,23 +3,15 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   X,
-  Send,
   Square,
   RotateCcw,
-  ChevronLeft,
-  ChevronDown,
-  MoreVertical,
   Maximize2,
-  Smile,
-  MessageSquareText,
-  ArrowUpRight,
-  BookOpen,
-  Library,
-  Quote,
+  ChevronDown,
+  Copy,
+  Check,
   ThumbsUp,
   ThumbsDown,
   AlertCircle,
-  FileText,
 } from "lucide-react";
 import { sendDifyChatMessage, sendDifyMessageFeedback } from "../lib/dify/client";
 import type { DifyRetrieverResource } from "../lib/dify/types";
@@ -37,7 +29,7 @@ interface ChatMessage {
 const INITIAL_MESSAGE: ChatMessage = {
   id: "vera-intro",
   sender: "assistant",
-  text: "Halo! Saya Vera, asisten AI resmi Sentraverse & Sentrapedia. Ada kasus, pedoman klinis, atau referensi knowledge base yang ingin Anda telaah hari ini?",
+  text: "Halo \u{1F44B} Saya Vera. Tanyakan apa saja seputar pedoman klinis dan knowledge base Sentra.",
   timestamp: "Sekarang",
 };
 
@@ -62,7 +54,7 @@ export function VeraWidget() {
   const [conversationId, setConversationId] = useState<string | undefined>(undefined);
   const [expandedSourceId, setExpandedSourceId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -99,7 +91,6 @@ export function VeraWidget() {
     setErrorMessage(null);
     setInput("");
     setLoading(false);
-    setMenuOpen(false);
   };
 
   const handleStopGenerating = () => {
@@ -227,90 +218,72 @@ export function VeraWidget() {
   };
 
   const typing = messages.some((m) => m.isStreaming && !m.text);
-  const fresh = messages.length === 1 && !loading;
+  const suggesting = input.startsWith("/");
+  const suggestions = QUICK_PROMPTS.filter((p) => p.toLowerCase().includes(input.slice(1).trim().toLowerCase()));
+
+  const copyAnswer = async (msg: ChatMessage) => {
+    try {
+      await navigator.clipboard.writeText(msg.text);
+      setCopiedId(msg.id);
+      setTimeout(() => setCopiedId(null), 1500);
+    } catch {
+      // Clipboard can be unavailable (permissions); the answer stays selectable.
+    }
+  };
 
   return (
     <div className="vera-widget-root">
       {isOpen && (
         <div role="dialog" aria-label="Chat Vera" className="vera-widget-panel">
           <header className="vera-panel-header">
-            <button type="button" className="vera-icon-button" onClick={() => setIsOpen(false)} aria-label="Tutup chat Vera">
-              <ChevronLeft size={20} />
-            </button>
             <span className="vera-avatar" aria-hidden="true">
-              <VeraMark size={19} />
+              <VeraMark size={11} />
             </span>
-            <span className="vera-title">
-              <strong>Vera</strong>
-              <small>Asisten pengetahuan Sentra</small>
-            </span>
-            <span className="vera-menu">
-              <button type="button" className="vera-icon-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu chat" aria-expanded={menuOpen}>
-                <MoreVertical size={18} />
-              </button>
-              {menuOpen && (
-                <span className="vera-menu-list" role="menu">
-                  <button type="button" role="menuitem" onClick={handleResetChat}>
-                    <RotateCcw size={14} /> Mulai ulang percakapan
-                  </button>
-                  <a role="menuitem" href="/dify">
-                    <Maximize2 size={14} /> Buka layar penuh
-                  </a>
-                </span>
-              )}
-            </span>
+            <strong className="vera-title">Vera</strong>
+            <button type="button" className="vera-icon-button" onClick={handleResetChat} aria-label="Mulai ulang percakapan" title="Mulai ulang percakapan">
+              <RotateCcw size={16} />
+            </button>
+            <a className="vera-icon-button" href="/dify" aria-label="Buka layar penuh" title="Buka layar penuh">
+              <Maximize2 size={16} />
+            </a>
+            <button type="button" className="vera-icon-button" onClick={() => setIsOpen(false)} aria-label="Tutup chat Vera" title="Tutup">
+              <X size={18} />
+            </button>
           </header>
 
-          <div className="vera-sheet">
-            {errorMessage && (
-              <div className="vera-error" role="alert">
-                <AlertCircle size={14} />
-                <span>{errorMessage}</span>
-              </div>
-            )}
-
-            <div className="vera-panel-body">
-              {fresh && (
-                <section className="vera-hero" aria-label="Tentang Vera">
-                  <span className="vera-hero-mark" aria-hidden="true">
-                    <VeraMark size={26} />
-                  </span>
-                  <strong>Tanya Vera</strong>
-                  <p>Pedoman klinis, referensi, dan sitasi dari knowledge base Sentra.</p>
-                  <span className="vera-hero-tags">
-                    <span><BookOpen size={12} /> Pedoman</span>
-                    <span><Library size={12} /> Referensi</span>
-                    <span><Quote size={12} /> Sitasi</span>
-                  </span>
-                </section>
-              )}
-
-              <span className="vera-day">Hari ini</span>
-              {messages.filter((m) => !(m.isStreaming && !m.text)).map((msg) => (
-                <div key={msg.id} className={`vera-msg-row ${msg.sender}`}>
-                  <div className={`vera-bubble ${msg.sender}`}>
+          <div className="vera-panel-body">
+            {messages.filter((m) => !(m.isStreaming && !m.text)).map((msg) =>
+              msg.sender === "user" ? (
+                <p key={msg.id} className="vera-question">{msg.text}</p>
+              ) : (
+                <div key={msg.id} className="vera-answer">
+                  <div className="vera-bubble">
                     {msg.text}
                     {msg.isStreaming && <span className="vera-caret" aria-hidden="true" />}
                   </div>
-                  <div className="vera-meta">
-                    <span>{msg.timestamp}</span>
-                    {msg.sender === "assistant" && !msg.isStreaming && msg.id !== "vera-intro" && (
-                      <>
-                        <button type="button" onClick={() => handleFeedback(msg.id, "like")} data-active={msg.feedback === "like"} aria-label="Sesuai / membantu">
-                          <ThumbsUp size={12} />
+                  {msg.id !== "vera-intro" && !msg.isStreaming && (
+                    <div className="vera-meta">
+                      {msg.resources && msg.resources.length > 0 ? (
+                        <button type="button" className="vera-sources-toggle" onClick={() => setExpandedSourceId(expandedSourceId === msg.id ? null : msg.id)} aria-expanded={expandedSourceId === msg.id}>
+                          <span className="vera-count">{msg.resources.length}</span> Sumber
+                          <ChevronDown size={13} data-open={expandedSourceId === msg.id} />
                         </button>
-                        <button type="button" onClick={() => handleFeedback(msg.id, "dislike")} data-active={msg.feedback === "dislike"} aria-label="Kurang akurat">
-                          <ThumbsDown size={12} />
+                      ) : (
+                        <span />
+                      )}
+                      <span className="vera-actions">
+                        <button type="button" onClick={() => copyAnswer(msg)} aria-label="Salin jawaban" title="Salin">
+                          {copiedId === msg.id ? <Check size={14} /> : <Copy size={14} />}
                         </button>
-                      </>
-                    )}
-                    {msg.resources && msg.resources.length > 0 && (
-                      <button type="button" className="vera-sources-toggle" onClick={() => setExpandedSourceId(expandedSourceId === msg.id ? null : msg.id)} aria-expanded={expandedSourceId === msg.id}>
-                        <FileText size={12} /> {msg.resources.length} sumber
-                        <ChevronDown size={12} data-open={expandedSourceId === msg.id} />
-                      </button>
-                    )}
-                  </div>
+                        <button type="button" onClick={() => handleFeedback(msg.id, "like")} data-active={msg.feedback === "like"} aria-label="Sesuai / membantu" title="Membantu">
+                          <ThumbsUp size={14} />
+                        </button>
+                        <button type="button" onClick={() => handleFeedback(msg.id, "dislike")} data-active={msg.feedback === "dislike"} aria-label="Kurang akurat" title="Kurang akurat">
+                          <ThumbsDown size={14} />
+                        </button>
+                      </span>
+                    </div>
+                  )}
                   {msg.resources && expandedSourceId === msg.id && (
                     <ul className="vera-sources">
                       {msg.resources.map((res, i) => (
@@ -323,65 +296,72 @@ export function VeraWidget() {
                     </ul>
                   )}
                 </div>
-              ))}
+              )
+            )}
 
-              {typing && (
-                <div className="vera-msg-row assistant">
-                  <div className="vera-bubble assistant vera-typing" role="status" aria-label="Vera sedang mengetik">
-                    <i /><i /><i />
-                  </div>
-                  <div className="vera-meta"><span>Vera mengetik…</span></div>
+            {typing && (
+              <div className="vera-answer">
+                <div className="vera-bubble vera-typing" role="status" aria-label="Vera sedang mengetik">
+                  <i /><i /><i />
                 </div>
-              )}
+              </div>
+            )}
 
-              {fresh && (
-                <div className="vera-prompts">
-                  <span className="vera-prompts-label">Coba tanyakan</span>
-                  {QUICK_PROMPTS.map((prompt) => (
-                    <button key={prompt} type="button" onClick={() => handleSend(prompt)}>
-                      <span>{prompt}</span>
-                      <ArrowUpRight size={14} aria-hidden="true" />
-                    </button>
-                  ))}
-                </div>
-              )}
+            {errorMessage && (
+              <p className="vera-error" role="alert">
+                <AlertCircle size={13} /> {errorMessage}
+              </p>
+            )}
 
-              <div ref={messagesEndRef} />
-            </div>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSend();
-              }}
-              className="vera-panel-footer"
-            >
-              <span className="vera-composer">
-                <label className="vera-input-wrap">
-                  <Smile size={19} aria-hidden="true" />
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Pesan"
-                    aria-label="Pesan untuk Vera"
-                    disabled={loading}
-                  />
-                </label>
-                {loading ? (
-                  <button type="button" onClick={handleStopGenerating} aria-label="Hentikan jawaban" className="vera-send-btn">
-                    <Square size={14} />
-                  </button>
-                ) : (
-                  <button type="submit" disabled={!input.trim()} aria-label="Kirim pesan" className="vera-send-btn">
-                    <Send size={15} />
-                  </button>
-                )}
-              </span>
-              <small className="vera-footnote">Vera bisa keliru, periksa sumbernya · Enter untuk kirim</small>
-            </form>
+            <div ref={messagesEndRef} />
           </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (suggesting) {
+                if (suggestions[0]) handleSend(suggestions[0]);
+                return;
+              }
+              handleSend();
+            }}
+            className="vera-panel-footer"
+          >
+            {suggesting && (
+              <ul className="vera-suggestions" role="listbox" aria-label="Saran pertanyaan">
+                {suggestions.length ? suggestions.map((prompt) => (
+                  <li key={prompt}>
+                    <button type="button" role="option" aria-selected="false" onClick={() => handleSend(prompt)}>{prompt}</button>
+                  </li>
+                )) : <li className="vera-suggestions-empty">Tidak ada saran yang cocok</li>}
+              </ul>
+            )}
+            <label className="vera-input-wrap">
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Escape" && suggesting) { e.stopPropagation(); setInput(""); } }}
+                aria-label="Pesan untuk Vera"
+                disabled={loading}
+              />
+              {!input && (
+                <span className="vera-hint" aria-hidden="true">
+                  Ketik <kbd>/</kbd> untuk saran
+                </span>
+              )}
+            </label>
+            {loading ? (
+              <button type="button" onClick={handleStopGenerating} className="vera-send-btn">
+                <Square size={11} /> Stop
+              </button>
+            ) : (
+              <button type="submit" disabled={!input.trim() || (suggesting && !suggestions.length)} className="vera-send-btn">
+                Tanya
+              </button>
+            )}
+          </form>
         </div>
       )}
 
@@ -393,7 +373,7 @@ export function VeraWidget() {
         data-open={isOpen}
       >
         <span className="vera-launcher-mark" aria-hidden="true">
-          {isOpen ? <X size={16} /> : <MessageSquareText size={16} />}
+          {isOpen ? <X size={14} /> : <VeraMark size={12} />}
         </span>
         <span className="vera-launcher-text">{isOpen ? "Tutup" : "Tanya Vera"}</span>
       </button>
