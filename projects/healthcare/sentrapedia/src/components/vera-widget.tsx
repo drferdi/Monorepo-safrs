@@ -9,8 +9,13 @@ import {
   ChevronLeft,
   ChevronDown,
   MoreVertical,
+  Maximize2,
   Smile,
   MessageSquareText,
+  ArrowUpRight,
+  BookOpen,
+  Library,
+  Quote,
   ThumbsUp,
   ThumbsDown,
   AlertCircle,
@@ -69,7 +74,7 @@ export function VeraWidget() {
 
   useEffect(() => {
     if (isOpen) {
-      scrollToBottom();
+      if (messages.length > 1) scrollToBottom();
       setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [isOpen, messages, scrollToBottom]);
@@ -222,6 +227,7 @@ export function VeraWidget() {
   };
 
   const typing = messages.some((m) => m.isStreaming && !m.text);
+  const fresh = messages.length === 1 && !loading;
 
   return (
     <div className="vera-widget-root">
@@ -229,10 +235,10 @@ export function VeraWidget() {
         <div role="dialog" aria-label="Chat Vera" className="vera-widget-panel">
           <header className="vera-panel-header">
             <button type="button" className="vera-icon-button" onClick={() => setIsOpen(false)} aria-label="Tutup chat Vera">
-              <ChevronLeft size={22} />
+              <ChevronLeft size={20} />
             </button>
             <span className="vera-avatar" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2c.8 6.5 3.5 9.2 10 10-6.5.8-9.2 3.5-10 10-.8-6.5-3.5-9.2-10-10 6.5-.8 9.2-3.5 10-10Z" fill="currentColor" /></svg>
+              <VeraMark size={19} />
             </span>
             <span className="vera-title">
               <strong>Vera</strong>
@@ -240,13 +246,16 @@ export function VeraWidget() {
             </span>
             <span className="vera-menu">
               <button type="button" className="vera-icon-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu chat" aria-expanded={menuOpen}>
-                <MoreVertical size={20} />
+                <MoreVertical size={18} />
               </button>
               {menuOpen && (
                 <span className="vera-menu-list" role="menu">
                   <button type="button" role="menuitem" onClick={handleResetChat}>
                     <RotateCcw size={14} /> Mulai ulang percakapan
                   </button>
+                  <a role="menuitem" href="/dify">
+                    <Maximize2 size={14} /> Buka layar penuh
+                  </a>
                 </span>
               )}
             </span>
@@ -261,6 +270,21 @@ export function VeraWidget() {
             )}
 
             <div className="vera-panel-body">
+              {fresh && (
+                <section className="vera-hero" aria-label="Tentang Vera">
+                  <span className="vera-hero-mark" aria-hidden="true">
+                    <VeraMark size={26} />
+                  </span>
+                  <strong>Tanya Vera</strong>
+                  <p>Pedoman klinis, referensi, dan sitasi dari knowledge base Sentra.</p>
+                  <span className="vera-hero-tags">
+                    <span><BookOpen size={12} /> Pedoman</span>
+                    <span><Library size={12} /> Referensi</span>
+                    <span><Quote size={12} /> Sitasi</span>
+                  </span>
+                </section>
+              )}
+
               <span className="vera-day">Hari ini</span>
               {messages.filter((m) => !(m.isStreaming && !m.text)).map((msg) => (
                 <div key={msg.id} className={`vera-msg-row ${msg.sender}`}>
@@ -310,11 +334,13 @@ export function VeraWidget() {
                 </div>
               )}
 
-              {messages.length === 1 && !loading && (
+              {fresh && (
                 <div className="vera-prompts">
+                  <span className="vera-prompts-label">Coba tanyakan</span>
                   {QUICK_PROMPTS.map((prompt) => (
                     <button key={prompt} type="button" onClick={() => handleSend(prompt)}>
-                      {prompt}
+                      <span>{prompt}</span>
+                      <ArrowUpRight size={14} aria-hidden="true" />
                     </button>
                   ))}
                 </div>
@@ -330,27 +356,30 @@ export function VeraWidget() {
               }}
               className="vera-panel-footer"
             >
-              <label className="vera-input-wrap">
-                <Smile size={22} aria-hidden="true" />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Pesan"
-                  aria-label="Pesan untuk Vera"
-                  disabled={loading}
-                />
-              </label>
-              {loading ? (
-                <button type="button" onClick={handleStopGenerating} aria-label="Hentikan jawaban" className="vera-send-btn">
-                  <Square size={16} />
-                </button>
-              ) : (
-                <button type="submit" disabled={!input.trim()} aria-label="Kirim pesan" className="vera-send-btn">
-                  <Send size={17} />
-                </button>
-              )}
+              <span className="vera-composer">
+                <label className="vera-input-wrap">
+                  <Smile size={19} aria-hidden="true" />
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Pesan"
+                    aria-label="Pesan untuk Vera"
+                    disabled={loading}
+                  />
+                </label>
+                {loading ? (
+                  <button type="button" onClick={handleStopGenerating} aria-label="Hentikan jawaban" className="vera-send-btn">
+                    <Square size={14} />
+                  </button>
+                ) : (
+                  <button type="submit" disabled={!input.trim()} aria-label="Kirim pesan" className="vera-send-btn">
+                    <Send size={15} />
+                  </button>
+                )}
+              </span>
+              <small className="vera-footnote">Vera bisa keliru, periksa sumbernya · Enter untuk kirim</small>
             </form>
           </div>
         </div>
@@ -364,10 +393,18 @@ export function VeraWidget() {
         data-open={isOpen}
       >
         <span className="vera-launcher-mark" aria-hidden="true">
-          {isOpen ? <X size={18} /> : <MessageSquareText size={18} />}
+          {isOpen ? <X size={16} /> : <MessageSquareText size={16} />}
         </span>
         <span className="vera-launcher-text">{isOpen ? "Tutup" : "Tanya Vera"}</span>
       </button>
     </div>
+  );
+}
+
+function VeraMark({ size }: { size: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size}>
+      <path d="M12 2c.8 6.5 3.5 9.2 10 10-6.5.8-9.2 3.5-10 10-.8-6.5-3.5-9.2-10-10 6.5-.8 9.2-3.5 10-10Z" fill="currentColor" />
+    </svg>
   );
 }
