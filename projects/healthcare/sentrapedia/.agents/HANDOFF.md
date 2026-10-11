@@ -1,5 +1,25 @@
 # Sentrapedia handoff
 
+## Evidence gate: tablet content is not a dose (#8) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for #8 and approved the bounded design.
+- `8240ad93` + `4a94afa5` (R2), `src/lib/theoracle-evidence-gate.ts`, new `UNITS_PER_DOSE` and `doses()`:
+  - A strength occurrence followed within 80 characters by two or more tablets/capsules per dose does not verify the dose. Matched phrasings: "3 x 2 tablet", "2 tablet, 3 kali", "3 kali sehari 2 tablet", "2 kapsul sekaligus", "sekali minum", "tabs", "3 x 1-2 tablet".
+  - Another occurrence of the same strength written as a dose still verifies.
+  - FORNAS "30 tab/bulan", "3 x 1 tablet" and "kemasan 12 tablet" are not per-dose counts.
+  - The rule is fail-safe: drug kept, dose blanked.
+- Verified:
+  - RED first (2 rounds); gate tests 39/39, `npm test` 228/228, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies: 0 changes on the current gate (35 legacy / 32 targeted verified). On the pre-#7 gate, exactly the 4 diosmin/hesperidin rows flip, nothing else.
+  - One Opus review: "Yes". Its cheap phrasing gaps were fixed in `4a94afa5`.
+- Known limits:
+  - A tablet count written before the strength ("3 x 2 tablet parasetamol 500 mg") is not detected.
+  - A count more than 80 characters after the strength is missed.
+  - The window can reach into the next drug's text; this only blanks, so it errs on the safe side.
+  - Spoon/sachet counts ("120 mg/5 ml 3 x 2 sendok takar") are not covered.
+  - A correct dose written in tablets is still blanked (#12, tablet counts are not strengths).
+- Not pushed.
+
 ## Evidence gate: dose passage must name the diagnosis (#7); pre-gate drafts gated at render (#3) - 2026-10-11 Asia/Jakarta
 
 - Gaffer picked #7 and #3 from the open list ("Please fix" on #3) and approved the bounded design; edited pre-gate drafts stay as written (Gaffer).

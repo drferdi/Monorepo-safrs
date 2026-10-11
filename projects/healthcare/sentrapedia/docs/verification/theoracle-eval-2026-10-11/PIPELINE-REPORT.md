@@ -72,6 +72,15 @@ All 14 changed rows were read by hand:
   - amoksisilin-klavulanat, from a PERDOSKI pyoderma chunk without the word impetigo;
   - diosmin and hesperidin (x4), where the English label "Haemorrhoids" does not match "hemoroid" and the catalog lists hemoroid under K64, not I84. Diosmin was "unclear" in the spot-check anyway (tablet content).
 
+### Tablet content is not a dose (commits `8240ad93`, `4a94afa5`)
+
+A strength no longer verifies a dose when the 80 characters after it give two or more tablets or capsules per dose. Examples: "3 x 2 tablet", "2 tablet, 3 kali", "3 kali sehari 2 tablet", "2 kapsul sekaligus", "3 x 1-2 tablet". This is spot-check #8: "Diosmin 450 mg + Hesperidin 50 mg 3 x 2 tablet" verified "Diosmin 3x450mg", but one dose is 2 tablets.
+
+Offline replay, same 122 replies:
+- On the current gate, nothing changes; the four diosmin/hesperidin rows were already blanked by the diagnosis check.
+- On the gate before the diagnosis check, exactly those four rows flip to dose removed, and no other row changes.
+- FORNAS monthly quantities ("tab 2 mg 30 tab/bulan") and "3 x 1 tablet" still verify.
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.
