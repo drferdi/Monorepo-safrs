@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { gateTherapy } from "../src/lib/theoracle-evidence-gate";
+import { gateTherapy, unstrength } from "../src/lib/theoracle-evidence-gate";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import type { MiraTherapy } from "../src/lib/mira/contract";
 
@@ -145,6 +145,22 @@ describe("clinical evidence gate final fix", () => {
     expect(blanked.therapy?.contraindications).toEqual([]);
     expect(gateTherapy(therapy([kalium]), bundle("Kalium klorida maksimal 20 mEq/jam per infus."), pneumonia).therapy?.regimen[0].note).toBe("maksimal 20 mEq/jam");
     expect(gateTherapy(therapy([{ ...kcl, drug: "Kalium klorida" }]), bundle("Kalium klorida, tekanan darah 120 mmHg."), pneumonia).therapy?.regimen[0].note).toBe("");
+    expect(gateTherapy(therapy([{ ...kalium, note: "pantau bila TD di bawah 120 mmHg" }]), bundle("Kalium klorida per infus."), pneumonia).therapy?.regimen[0].note).toBe("pantau bila TD di bawah 120 mmHg");
+  });
+  it("reads thousands separators, so 1.200.000 IU is not verified by 200.000 IU", () => {
+    const benzatin = drug("Benzatin penisilin", "1.200.000 IU IM");
+    expect(gateTherapy(therapy([benzatin]), bundle("Benzatin penisilin 200.000 IU IM."), pneumonia).report.drugs[0].status).toBe("doseRemoved");
+    expect(gateTherapy(therapy([benzatin]), bundle("Benzatin penisilin 400,000 IU atau 1.200.000 IU IM."), pneumonia).report.drugs[0].status).toBe("verified");
+    expect(gateTherapy(therapy([benzatin]), bundle("Benzatin penisilin 1,200,000 IU IM."), pneumonia).report.drugs[0].status).toBe("verified");
+  });
+  it("gates ug and units strengths in notes", () => {
+    const fentanil = { drug: "Fentanil", dose: "", route: "IV", duration: "", note: "maksimal 50 ug/jam" };
+    expect(gateTherapy(therapy([fentanil]), bundle("Fentanil untuk nyeri berat."), pneumonia).therapy?.regimen[0].note).toBe("");
+    expect(gateTherapy(therapy([{ ...fentanil, drug: "Insulin", note: "tambah 10 units" }]), bundle("Insulin subkutan."), pneumonia).therapy?.regimen[0].note).toBe("");
+  });
+  it("strips every strength and its per-unit tails but keeps the drug names", () => {
+    expect(["Benzatin penisilin 1.200.000 IU", "Ceftriaxone 50 mg/kg/24 jam", "Furosemid 40 mg/m2", "Dobutamin 5 mcg/kg/menit", "Amoxicillin 500 mg/clavulanate 125 mg", "Trimetoprim 80 mg/sulfametoksazol 400 mg tablet"].map(unstrength))
+      .toEqual(["Benzatin penisilin", "Ceftriaxone", "Furosemid", "Dobutamin", "Amoxicillin/clavulanate", "Trimetoprim/sulfametoksazol tablet"]);
   });
   it("treats juta and ribu as part of a strength", () => {
     const benzatin = drug("Benzatin penisilin G 2,4 juta IU", "dosis tunggal IM");
