@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { containsIdentity, emptyCase, validCase, type MiraAnalysis } from "../lib/mira/contract";
 import type { CaseState } from "../lib/mira/types";
 import { requestMiraAnalysis } from "../lib/mira/client";
-import { miraDraft, oracleCitations } from "../lib/mira/presentation";
+import { miraDraft, theOracleCitations } from "../lib/mira/presentation";
 import { PixelLoader } from "./pixel-loader";
 
 
@@ -39,7 +39,7 @@ export function MiraCaseForm({ initialCase, saveOnSuccess = false, onSave }: { i
     finally { if (!abort.signal.aborted) setBusy(false); }
   }
   return <div className="mira-form">
-    <div className="notice"><span><strong>{connection ? connection.reachable ? "Layanan analisis merespons" : "Layanan analisis belum tersedia" : "Memeriksa koneksi analisis…"}</strong><p>{connection === null ? "Status konfigurasi belum tersedia." : connection.configured ? "Koneksi server dikonfigurasi. Pemeriksaan koneksi tidak menjalankan analisis." : "Token koneksi belum dikonfigurasi. Analisis belum dapat dijalankan."}</p>{connection && !connection.modelReady && <p>Layanan analisis belum siap. Tidak ada analisis dijalankan.</p>}{connection && !connection.groundingReady && <p>Referensi Oracle II belum siap pada layanan analisis.</p>}{connectionError && <p>{connectionError}</p>}</span><button type="button" className="text-button" onClick={() => setRefresh(n => n + 1)}>Periksa lagi</button></div>
+    <div className="notice"><span><strong>{connection ? connection.reachable ? "Layanan analisis merespons" : "Layanan analisis belum tersedia" : "Memeriksa koneksi analisis…"}</strong><p>{connection === null ? "Status konfigurasi belum tersedia." : connection.configured ? "Koneksi server dikonfigurasi. Pemeriksaan koneksi tidak menjalankan analisis." : "Token koneksi belum dikonfigurasi. Analisis belum dapat dijalankan."}</p>{connection && !connection.modelReady && <p>Layanan analisis belum siap. Tidak ada analisis dijalankan.</p>}{connection && !connection.groundingReady && <p>Referensi TheOracle belum siap pada layanan analisis.</p>}{connectionError && <p>{connectionError}</p>}</span><button type="button" className="text-button" onClick={() => setRefresh(n => n + 1)}>Periksa lagi</button></div>
     <p className="panel-caption">{initialCase ? "Kasus dari kolom utama dimuat untuk ditinjau. Keluhan, usia, jenis kelamin dan konteks yang tercatat ditampilkan; nama dan ID Pasien tidak disertakan. Periksa dan hapus identitas dari narasi sebelum mengonfirmasi data fiktif." : "Isi data kasus fiktif secara eksplisit. Identitas dan catatan Pasien tidak disalin otomatis."} Kolom kosong berarti belum diberikan. Anggaran layanan US$0,10 per analisis dan US$1 per hari; biaya aktual tercatat pada hasil. Hasil belum tervalidasi klinis.</p>
     <form onSubmit={event => { event.preventDefault(); void analyze(); }}>
       <fieldset disabled={busy} className="workflow-form mira-fields">
@@ -57,6 +57,6 @@ export function MiraCaseForm({ initialCase, saveOnSuccess = false, onSave }: { i
       <div className="workflow-actions"><button className="button primary" disabled={busy || !synthetic || !validCase(caseData) || !connection?.configured || !connection.reachable || !connection.modelReady || !connection.groundingReady}>{saveOnSuccess ? "Analisis dan tambahkan draf" : "Analisis kasus"}</button>{busy && <><PixelLoader label="Sedang menganalisis kasus…"/><button type="button" className="button" onClick={() => { controller.current?.abort(); setBusy(false); setError("Analisis dibatalkan. Tidak ada hasil disimpan."); }}>Batalkan analisis</button></>}</div>
     </form>
     {error && <p className="form-warning" role="alert">{error}</p>}
-    {analysis && <section className="mira-result"><h3>Hasil analisis · belum ditinjau</h3><p className="panel-caption">Tingkat keyakinan berasal dari model. Referensi Oracle II yang dipilih tersedia di bawah hasil. Pertimbangan rujukan perlu dinilai klinisi.</p><pre>{miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case) + oracleCitations(analysis.grounding)}</pre><button className="button primary" onClick={() => onSave(analysis)}>Simpan sebagai draf untuk ditinjau</button></section>}
+    {analysis && <section className="mira-result"><h3>Hasil analisis · belum ditinjau</h3><p className="panel-caption">Tingkat keyakinan berasal dari model. Referensi TheOracle yang dipilih tersedia di bawah hasil. Pertimbangan rujukan perlu dinilai klinisi.</p><pre>{miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case) + theOracleCitations(analysis.grounding)}</pre><button className="button primary" onClick={() => onSave(analysis)}>Simpan sebagai draf untuk ditinjau</button></section>}
   </div>;
 }

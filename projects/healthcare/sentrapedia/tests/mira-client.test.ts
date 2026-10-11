@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { requestMiraAnalysis } from "../src/lib/mira/client";
 import { emptyCase } from "../src/lib/mira/contract";
-import { ORACLE_GROUNDING_CAPABILITY } from "../src/lib/oracle-grounding-types";
+import { THEORACLE_GROUNDING_CAPABILITY } from "../src/lib/theoracle-grounding-types";
 
 const caseData = { ...emptyCase(), chiefComplaint: "Kasus fiktif untuk pengujian" };
-const grounding = { version: ORACLE_GROUNDING_CAPABILITY, corpus: { name: "Oracle II", databaseSha256: "a".repeat(64), retrievedAt: "2026-10-10T12:00:00.000Z", reviewProvenance: "Gaffer stated session-level review provenance." }, queryDigest: "b".repeat(64), evidence: [{ evidenceId: "P001-001", text: "Kutipan Oracle II", retrievalKind: "candidate", retrievalRank: 1, source: { fileNo: "001", filename: "001_PNPK.pdf", documentSha256: "c".repeat(64), pdfPage: 17, pageTextSha256: "d".repeat(64), driveUrl: "https://example.test/source" }, extraction: { candidateId: "P001-001", category: "diagnosis", sourceCharOffset: 10, sourceCharEnd: 28, reviewStatus: "SOURCE_TEXT_EXACT_SEMANTIC_REVIEW_REQUIRED", requiresVisualReview: false } }] } as const;
+const grounding = { version: THEORACLE_GROUNDING_CAPABILITY, corpus: { name: "TheOracle", databaseSha256: "a".repeat(64), retrievedAt: "2026-10-10T12:00:00.000Z", reviewProvenance: "Gaffer stated session-level review provenance." }, queryDigest: "b".repeat(64), evidence: [{ evidenceId: "P001-001", text: "Kutipan TheOracle", retrievalKind: "candidate", retrievalRank: 1, source: { fileNo: "001", filename: "001_PNPK.pdf", documentSha256: "c".repeat(64), pdfPage: 17, pageTextSha256: "d".repeat(64), driveUrl: "https://example.test/source" }, extraction: { candidateId: "P001-001", category: "diagnosis", sourceCharOffset: 10, sourceCharEnd: 28, reviewStatus: "SOURCE_TEXT_EXACT_SEMANTIC_REVIEW_REQUIRED", requiresVisualReview: false } }] } as const;
 const response = { traceId: "test-trace", createdAt: "2026-10-09T00:00:00Z", grounding, result: { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "R51", label: "Hipotesis uji fiktif", confidenceTier: "low" }], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: ["Tanda vital belum tersedia"], nextBestActions: [], disposition: null, unfilled: [], meta: { version: "test", model: "test", costUsd: 0.01 } } };
 
 describe("direct main-composer analysis", () => {

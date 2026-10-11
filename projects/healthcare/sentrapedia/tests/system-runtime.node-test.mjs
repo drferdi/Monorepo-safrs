@@ -25,7 +25,7 @@ test("startup requires a provider key without exposing values", () => {
 });
 
 test("workspace waits for grounded matching engine rather than old separate services", () => {
-  const health = { status: "ok", contractVersion: "1", capabilities: ["oracle-grounding-v1"], version: `mira-service/0.1.0+contract=1+provider=openrouter+data=synthetic-only+plan=${model}+assess=${model}+experimental+ddx=provisional+assessment=fast+therapy=fast` };
+  const health = { status: "ok", contractVersion: "1", capabilities: ["theoracle-grounding-v1"], version: `mira-service/0.1.0+contract=1+provider=openrouter+data=synthetic-only+plan=${model}+assess=${model}+experimental+ddx=provisional+assessment=fast+therapy=fast` };
   assert.equal(engineReady(health), true);
   for (const changed of [{ capabilities: [] }, { contractVersion: "2" }, { status: "unavailable" }, { version: health.version.replace(model, "other") }, { version: health.version.replace("+therapy=fast", "") }]) assert.equal(engineReady({ ...health, ...changed }), false);
 });

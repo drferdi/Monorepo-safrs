@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { oracleCategories, oracleDiseases, oracleSource, searchDiseases, relatedDiseases } from "../src/lib/oracle";
+import { theOracleCategories, theOracleDiseases, theOracleSource, searchDiseases, relatedDiseases } from "../src/lib/theoracle";
 import { createMiraGateway } from "../src/lib/mira/gateway";
 import { containsIdentity, validCase, validResult, type MiraResult } from "../src/lib/mira/contract";
 import { miraDraft, miraMessage } from "../src/lib/mira/presentation";
@@ -11,14 +11,14 @@ import responseSchema from "../src/lib/mira/response.schema.json";
 import { SUPPORTED_KEYWORDS, type JsonSchema } from "../src/lib/mira/validate-json";
 
 const caseData = { demographics: { ageYears: 30, sex: "unknown" }, chiefComplaint: "Keluhan fiktif untuk uji integrasi", anamnesis: { freeText: "Contoh sintetis" }, vitals: {}, physicalExam: [], results: [], currentMedications: [], knownConditions: [], allergies: [], facilityCapabilities: [] };
-const result: MiraResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "J00", label: "Nama keluaran uji", confidenceTier: "low" }], alternatives: [], cannotMiss: [{ icd10: "C92.0", label: "Kondisi di luar Oracle", confidenceTier: "unknown" }] }, evidence: [{ icd10: "J00", supporting: ["Alasan dari layanan"], opposing: ["Data belum lengkap"] }], missingInformation: ["Pemfis belum tersedia"], nextBestActions: [{ kind: "exam", item: "Lengkapi pemfis", reason: "Data kurang" }], disposition: null, unfilled: [{ field: "disposition", reason: "Belum cukup data" }], meta: { version: "test-only", model: "mock", costUsd: 0 } };
+const result: MiraResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "J00", label: "Nama keluaran uji", confidenceTier: "low" }], alternatives: [], cannotMiss: [{ icd10: "C92.0", label: "Kondisi di luar TheOracle", confidenceTier: "unknown" }] }, evidence: [{ icd10: "J00", supporting: ["Alasan dari layanan"], opposing: ["Data belum lengkap"] }], missingInformation: ["Pemfis belum tersedia"], nextBestActions: [{ kind: "exam", item: "Lengkapi pemfis", reason: "Data kurang" }], disposition: null, unfilled: [{ field: "disposition", reason: "Belum cukup data" }], meta: { version: "test-only", model: "mock", costUsd: 0 } };
 const therapy = { forDiagnosis: { icd10: "J00", label: "Nama keluaran uji" }, regimen: [{ drug: "Ceftriaxone", dose: "1x500mg", route: "IM", duration: "dosis tunggal", note: "1g bila >=150kg" }, { drug: "Azithromycin", dose: "1x1g", route: "PO", duration: "dosis tunggal", note: "" }], interactions: ["Azithromycin dengan warfarin: risiko perdarahan"], contraindications: ["Ceftriaxone: alergi sefalosporin"] };
 const request = (body: unknown = { case: caseData, synthetic: true }, origin = "http://localhost:3104") => new Request("http://localhost:3104/api/mira", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
-describe("Oracle local catalog", () => {
-  it("ties provenance to the exact original source bytes", () => { expect(createHash("sha256").update(readFileSync("oracle/sentrapedia.json")).digest("hex")).toBe(oracleSource.hash); });
-  it("uses all actual categories and preserves repeated codes", () => { expect(oracleDiseases).toHaveLength(144); expect(oracleCategories).toHaveLength(15); expect(oracleCategories).toContain("Pernapasan Bawah"); expect(relatedDiseases("A09")).toHaveLength(2); expect(relatedDiseases("C92.0")).toEqual([]); });
-  it("searches name, code and category with no clinical ranking", () => { expect(searchDiseases("pneumonia", "all").length).toBeGreaterThan(0); expect(searchDiseases("J00", "all")[0].id).toBe(1); expect(searchDiseases("", "Saluran Cerna").every(d => d.kategori === "Saluran Cerna")).toBe(true); expect(searchDiseases("zzzz", "all")).toEqual([]); expect(oracleSource.hash).toHaveLength(64); });
+describe("TheOracle local catalog", () => {
+  it("ties provenance to the exact original source bytes", () => { expect(createHash("sha256").update(readFileSync("oracle/sentrapedia.json")).digest("hex")).toBe(theOracleSource.hash); });
+  it("uses all actual categories and preserves repeated codes", () => { expect(theOracleDiseases).toHaveLength(144); expect(theOracleCategories).toHaveLength(15); expect(theOracleCategories).toContain("Pernapasan Bawah"); expect(relatedDiseases("A09")).toHaveLength(2); expect(relatedDiseases("C92.0")).toEqual([]); });
+  it("searches name, code and category with no clinical ranking", () => { expect(searchDiseases("pneumonia", "all").length).toBeGreaterThan(0); expect(searchDiseases("J00", "all")[0].id).toBe(1); expect(searchDiseases("", "Saluran Cerna").every(d => d.kategori === "Saluran Cerna")).toBe(true); expect(searchDiseases("zzzz", "all")).toEqual([]); expect(theOracleSource.hash).toHaveLength(64); });
 });
 describe("MIRA contract and presentation", () => {
   it("supports every keyword of the localized contract snapshots", () => {

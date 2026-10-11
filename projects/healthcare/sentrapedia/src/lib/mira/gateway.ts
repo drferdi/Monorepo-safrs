@@ -1,10 +1,10 @@
 import { containsIdentity, validCase, validResult } from "./contract";
 import { freeServiceVersion } from "./free-profile";
 import { miraServiceVersion } from "./model-profile";
-import { ORACLE_GROUNDING_CAPABILITY, OracleGroundingError, validOracleGrounding, type OracleGroundingBundle } from "../oracle-grounding-types";
+import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
 import type { CaseState } from "./types";
 
-type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; freeModel?: string; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => OracleGroundingBundle };
+type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; freeModel?: string; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => TheOracleGroundingBundle };
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const failure = (code: string, message: string, status: number) => reply({ error: { code, message } }, status);
 async function boundedBody(response: Response | Request, limit: number): Promise<string> {
@@ -29,7 +29,7 @@ export function createMiraGateway(options: Options = {}) {
     const body: unknown = JSON.parse(await boundedBody(response, 4096));
     const reachable = response.ok && !!body && typeof body === "object" && "status" in body && body.status === "ok" && "contractVersion" in body && body.contractVersion === "1";
     const modelReady = reachable && (!selectedModel || (!!body && typeof body === "object" && "version" in body && profileMatches(body.version)));
-    const groundingReady = reachable && !!body && typeof body === "object" && "capabilities" in body && Array.isArray(body.capabilities) && body.capabilities.includes(ORACLE_GROUNDING_CAPABILITY);
+    const groundingReady = reachable && !!body && typeof body === "object" && "capabilities" in body && Array.isArray(body.capabilities) && body.capabilities.includes(THEORACLE_GROUNDING_CAPABILITY);
     return { reachable, modelReady, groundingReady };
   }
   return {
@@ -66,10 +66,10 @@ export function createMiraGateway(options: Options = {}) {
         if (selectedModel || options.retrieveGrounding) {
           const health = await serviceHealth(controller.signal);
           if (selectedModel && !health.modelReady) return failure(options.freeModel ? "FREE_MODEL_REQUIRED" : "MODEL_REQUIRED", "Perencanaan dan asesmen harus memakai profil OpenRouter yang dipilih. Tidak ada analisis dijalankan.", 503);
-          if (options.retrieveGrounding && !health.groundingReady) return failure("GROUNDING_REQUIRED", "Layanan analisis belum mendukung referensi Oracle II. Muat ulang layanan setelah pembaruan.", 503);
+          if (options.retrieveGrounding && !health.groundingReady) return failure("GROUNDING_REQUIRED", "Layanan analisis belum mendukung referensi TheOracle. Muat ulang layanan setelah pembaruan.", 503);
         }
         const grounding = options.retrieveGrounding?.(payload.case);
-        if (options.retrieveGrounding && !validOracleGrounding(grounding)) throw new OracleGroundingError("ORACLE_UNAVAILABLE", "Referensi Oracle II tidak dapat diverifikasi.");
+        if (options.retrieveGrounding && !validTheOracleGrounding(grounding)) throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Referensi TheOracle tidak dapat diverifikasi.");
         controller.signal.throwIfAborted();
         const serviceBody = JSON.stringify({ contractVersion: "1", traceId, case: payload.case, ...(grounding ? { grounding } : {}) });
         if (new TextEncoder().encode(serviceBody).length > 65536) return failure("INPUT", "Kasus dan referensi melebihi batas layanan.", 413);
@@ -97,7 +97,7 @@ export function createMiraGateway(options: Options = {}) {
         }
         return reply({ result, traceId, createdAt, ...(grounding ? { grounding } : {}) });
       } catch (error) {
-        if (error instanceof OracleGroundingError) return failure(error.code, error.message, error.code === "ORACLE_UNAVAILABLE" ? 503 : 422);
+        if (error instanceof TheOracleGroundingError) return failure(error.code, error.message, error.code === "THEORACLE_UNAVAILABLE" ? 503 : 422);
         return failure(timedOut ? "TIMEOUT" : controller.signal.aborted ? "ABORTED" : "NETWORK", timedOut ? "Analisis melewati batas waktu. Tidak ada hasil yang disimpan." : controller.signal.aborted ? "Analisis dibatalkan." : "Layanan analisis tidak dapat dihubungi atau respons tidak dapat dibaca.", timedOut ? 504 : controller.signal.aborted ? 499 : 502);
       }
       finally { clearTimeout(timer); request.signal.removeEventListener("abort", cancel); active = false; }

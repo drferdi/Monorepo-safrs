@@ -10,24 +10,24 @@
     "contractVersion": { "const": "1" },
     "traceId": { "type": "string", "minLength": 1 },
     "case": { "$ref": "#/$defs/caseState" },
-    "grounding": { "$ref": "#/$defs/oracleGrounding" }
+    "grounding": { "$ref": "#/$defs/theOracleGrounding" }
   },
   "$defs": {
     "stringList": { "type": "array", "items": { "type": "string" } },
     "optionalNumber": { "type": "number" },
     "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-    "oracleGrounding": {
+    "theOracleGrounding": {
       "type": "object",
       "required": ["version", "corpus", "queryDigest", "evidence"],
       "additionalProperties": false,
       "properties": {
-        "version": { "const": "oracle-grounding-v1" },
+        "version": { "const": "theoracle-grounding-v1" },
         "corpus": {
           "type": "object",
           "required": ["name", "databaseSha256", "retrievedAt", "reviewProvenance"],
           "additionalProperties": false,
           "properties": {
-            "name": { "const": "Oracle II" },
+            "name": { "const": "TheOracle" },
             "databaseSha256": { "$ref": "#/$defs/sha256" },
             "retrievedAt": { "type": "string", "minLength": 1, "maxLength": 64 },
             "reviewProvenance": { "type": "string", "minLength": 1, "maxLength": 500 }

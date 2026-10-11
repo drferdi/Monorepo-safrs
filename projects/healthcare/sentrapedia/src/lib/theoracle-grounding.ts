@@ -4,14 +4,14 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import type { CaseState } from "./mira/types";
 import {
-  ORACLE_GROUNDING_CAPABILITY,
-  OracleGroundingError,
-  type OracleGroundingBundle,
-  type OracleGroundingEvidence,
-} from "./oracle-grounding-types";
+  THEORACLE_GROUNDING_CAPABILITY,
+  TheOracleGroundingError,
+  type TheOracleGroundingBundle,
+  type TheOracleGroundingEvidence,
+} from "./theoracle-grounding-types";
 
-export { ORACLE_GROUNDING_CAPABILITY, OracleGroundingError } from "./oracle-grounding-types";
-export type { OracleCitationExtraction, OracleCitationSource, OracleGroundingBundle, OracleGroundingEvidence } from "./oracle-grounding-types";
+export { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError } from "./theoracle-grounding-types";
+export type { TheOracleCitationExtraction, TheOracleCitationSource, TheOracleGroundingBundle, TheOracleGroundingEvidence } from "./theoracle-grounding-types";
 const DEFAULT_DATABASE = path.join(process.cwd(), "oracle-ii", "sentra_clinical_core_source_reparsed.sqlite");
 const MAX_EVIDENCE = 6;
 const MAX_TEXT_LENGTH = 1_600;
@@ -91,7 +91,7 @@ function pageRow(value: unknown): value is PageRow {
 }
 function checkedRows<T>(rows: unknown[], valid: (row: unknown) => row is T): T[] {
   return rows.map(row => {
-    if (!valid(row)) throw new OracleGroundingError("ORACLE_UNAVAILABLE", "Format sumber Oracle II tidak dapat diverifikasi.");
+    if (!valid(row)) throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Format sumber TheOracle tidak dapat diverifikasi.");
     return row;
   });
 }
@@ -99,7 +99,7 @@ function checkedRows<T>(rows: unknown[], valid: (row: unknown) => row is T): T[]
 const checksumCache = new Map<string, { key: string; value: string }>();
 
 // Match the local MIRA privacy guard; public-source matches are skipped, not rewritten.
-function sourceTriggersMiraPrivacy(item: Omit<OracleGroundingEvidence, "retrievalRank">): boolean {
+function sourceTriggersMiraPrivacy(item: Omit<TheOracleGroundingEvidence, "retrievalRank">): boolean {
   const value = JSON.stringify(item);
   if ([/\b\d{16}\b/, /\b\d{13}\b/, /\b08\d{8,11}\b/, /\+?62\d{9,12}\b/, /\b(?:\+62|62|0)[\s.-]?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{3,4}\b/, /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/].some(pattern => pattern.test(value))) return true;
   return [...value.matchAll(/\b(?:tn\.|ny\.|nn\.|an\.|sdr\.|sdri\.|bpk\.|bapak|ibu|dr\.)\s*([a-z]+)/gi)].some(match => /^[A-Z][a-z]+/.test(match[1]));
@@ -155,7 +155,7 @@ function tableExists(db: DatabaseSync, name: string): boolean {
   return !!db.prepare("SELECT 1 FROM sqlite_master WHERE type IN ('table','view') AND name = ?").get(name);
 }
 
-function candidateEvidence(row: CandidateRow): Omit<OracleGroundingEvidence, "retrievalRank"> | null {
+function candidateEvidence(row: CandidateRow): Omit<TheOracleGroundingEvidence, "retrievalRank"> | null {
   if (sha256(row.page_text) !== row.page_text_sha256) return null;
   if (row.page_text.slice(row.source_char_offset, row.source_char_end) !== row.evidence_quote) return null;
   const text = row.evidence_quote.slice(0, MAX_TEXT_LENGTH);
@@ -182,9 +182,9 @@ function candidateEvidence(row: CandidateRow): Omit<OracleGroundingEvidence, "re
   };
 }
 
-function factEvidence(row: FactRow): Omit<OracleGroundingEvidence, "retrievalRank"> | null {
+function factEvidence(row: FactRow): Omit<TheOracleGroundingEvidence, "retrievalRank"> | null {
   if (row.page_text_sha256 && (!row.page_text || sha256(row.page_text) !== row.page_text_sha256)) {
-    throw new OracleGroundingError("ORACLE_UNAVAILABLE", "Integritas halaman Oracle II tidak dapat diverifikasi. Analisis tidak dijalankan.");
+    throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Integritas halaman TheOracle tidak dapat diverifikasi. Analisis tidak dijalankan.");
   }
   if (!row.page_text || !row.evidence_quote) return null;
   const sourceOffset = row.page_text.indexOf(row.evidence_quote);
@@ -213,7 +213,7 @@ function factEvidence(row: FactRow): Omit<OracleGroundingEvidence, "retrievalRan
   };
 }
 
-function pageEvidence(row: PageRow, terms: string[]): Omit<OracleGroundingEvidence, "retrievalRank"> | null {
+function pageEvidence(row: PageRow, terms: string[]): Omit<TheOracleGroundingEvidence, "retrievalRank"> | null {
   if (sha256(row.text_search) !== row.text_sha256) return null;
   return {
     evidenceId: `page:${row.file_no}:${row.pdf_page}`,
@@ -238,7 +238,7 @@ function pageEvidence(row: PageRow, terms: string[]): Omit<OracleGroundingEviden
   };
 }
 
-function freezeBundle(bundle: OracleGroundingBundle): OracleGroundingBundle {
+function freezeBundle(bundle: TheOracleGroundingBundle): TheOracleGroundingBundle {
   for (const item of bundle.evidence) {
     Object.freeze(item.source);
     Object.freeze(item.extraction);
@@ -249,9 +249,9 @@ function freezeBundle(bundle: OracleGroundingBundle): OracleGroundingBundle {
   return Object.freeze(bundle);
 }
 
-export function retrieveOracleGrounding(caseData: CaseState, options: RetrieveOptions = {}): OracleGroundingBundle {
+export function retrieveTheOracleGrounding(caseData: CaseState, options: RetrieveOptions = {}): TheOracleGroundingBundle {
   const terms = queryTerms(caseData);
-  if (!terms.length) throw new OracleGroundingError("ORACLE_QUERY_EMPTY", "Keluhan belum memiliki istilah klinis yang dapat dicari di Oracle II.");
+  if (!terms.length) throw new TheOracleGroundingError("THEORACLE_QUERY_EMPTY", "Keluhan belum memiliki istilah klinis yang dapat dicari di TheOracle.");
   const databasePath = options.databasePath ?? DEFAULT_DATABASE;
   const limit = Math.max(1, Math.min(Math.trunc(options.limit ?? MAX_EVIDENCE), MAX_EVIDENCE));
   let db: DatabaseSync | undefined;
@@ -292,10 +292,10 @@ export function retrieveOracleGrounding(caseData: CaseState, options: RetrieveOp
       `).all(match), factRow);
     }
 
-    const selected: Omit<OracleGroundingEvidence, "retrievalRank">[] = [];
+    const selected: Omit<TheOracleGroundingEvidence, "retrievalRank">[] = [];
     const pages = new Set<string>();
     const perDocument = new Map<string, number>();
-    const add = (item: Omit<OracleGroundingEvidence, "retrievalRank">) => {
+    const add = (item: Omit<TheOracleGroundingEvidence, "retrievalRank">) => {
       if (sourceTriggersMiraPrivacy(item)) return;
       const pageKey = `${item.source.fileNo}:${item.source.pdfPage}`;
       if (pages.has(pageKey) || (perDocument.get(item.source.fileNo) ?? 0) >= 2 || selected.length >= limit) return;
@@ -303,8 +303,8 @@ export function retrieveOracleGrounding(caseData: CaseState, options: RetrieveOp
       perDocument.set(item.source.fileNo, (perDocument.get(item.source.fileNo) ?? 0) + 1);
       selected.push(item);
     };
-    const candidates = candidateRows.map(candidateEvidence).filter((item): item is Omit<OracleGroundingEvidence, "retrievalRank"> => !!item);
-    const facts = factRows.map(factEvidence).filter((item): item is Omit<OracleGroundingEvidence, "retrievalRank"> => !!item);
+    const candidates = candidateRows.map(candidateEvidence).filter((item): item is Omit<TheOracleGroundingEvidence, "retrievalRank"> => !!item);
+    const facts = factRows.map(factEvidence).filter((item): item is Omit<TheOracleGroundingEvidence, "retrievalRank"> => !!item);
     for (let index = 0; index < Math.max(candidates.length, facts.length) && selected.length < limit; index++) {
       if (candidates[index]) add(candidates[index]);
       if (facts[index]) add(facts[index]);
@@ -335,12 +335,12 @@ export function retrieveOracleGrounding(caseData: CaseState, options: RetrieveOp
       }
     }
 
-    if (!selected.length) throw new OracleGroundingError("ORACLE_NO_MATCH", "Oracle II tidak menemukan referensi leksikal untuk keluhan ini. Analisis tidak dijalankan.");
+    if (!selected.length) throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "TheOracle tidak menemukan referensi leksikal untuk keluhan ini. Analisis tidak dijalankan.");
     const evidence = selected.map((item, index) => ({ ...item, retrievalRank: index + 1 }));
     return freezeBundle({
-      version: ORACLE_GROUNDING_CAPABILITY,
+      version: THEORACLE_GROUNDING_CAPABILITY,
       corpus: {
-        name: "Oracle II",
+        name: "TheOracle",
         databaseSha256: databaseSha256(databasePath),
         retrievedAt: (options.now ?? (() => new Date()))().toISOString(),
         reviewProvenance: REVIEW_PROVENANCE,
@@ -349,8 +349,8 @@ export function retrieveOracleGrounding(caseData: CaseState, options: RetrieveOp
       evidence,
     });
   } catch (error) {
-    if (error instanceof OracleGroundingError) throw error;
-    throw new OracleGroundingError("ORACLE_UNAVAILABLE", "Oracle II tidak dapat dibuka atau dibaca. Analisis tidak dijalankan.");
+    if (error instanceof TheOracleGroundingError) throw error;
+    throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "TheOracle tidak dapat dibuka atau dibaca. Analisis tidak dijalankan.");
   } finally {
     db?.close();
   }

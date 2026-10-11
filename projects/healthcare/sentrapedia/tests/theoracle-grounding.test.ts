@@ -5,19 +5,19 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { afterEach, describe, expect, it } from "vitest";
 import { emptyCase } from "../src/lib/mira/contract";
-import { validOracleGrounding } from "../src/lib/oracle-grounding-types";
+import { validTheOracleGrounding } from "../src/lib/theoracle-grounding-types";
 import {
-  ORACLE_GROUNDING_CAPABILITY,
-  OracleGroundingError,
-  retrieveOracleGrounding,
-} from "../src/lib/oracle-grounding";
+  THEORACLE_GROUNDING_CAPABILITY,
+  TheOracleGroundingError,
+  retrieveTheOracleGrounding,
+} from "../src/lib/theoracle-grounding";
 
 const scratch: string[] = [];
 
 function fixtureDatabase(): string {
-  const directory = mkdtempSync(path.join(tmpdir(), "sentrapedia-oracle-"));
+  const directory = mkdtempSync(path.join(tmpdir(), "sentrapedia-theoracle-"));
   scratch.push(directory);
-  const databasePath = path.join(directory, "oracle.sqlite");
+  const databasePath = path.join(directory, "theoracle.sqlite");
   const db = new DatabaseSync(databasePath);
   db.exec(`
     CREATE TABLE source_documents_v2(file_no TEXT PRIMARY KEY, disease_slug TEXT NOT NULL, filename TEXT NOT NULL, sha256 TEXT NOT NULL, drive_url TEXT NOT NULL, page_count INTEGER NOT NULL, regulatory_status TEXT NOT NULL, clinical_review_status TEXT NOT NULL);
@@ -56,17 +56,17 @@ afterEach(() => {
   while (scratch.length) rmSync(scratch.pop()!, { recursive: true, force: true });
 });
 
-describe("Oracle II grounding retrieval", () => {
+describe("TheOracle grounding retrieval", () => {
   it("returns frozen, bounded candidate-first citations with exact source and page provenance", () => {
     const databasePath = fixtureDatabase();
-    const bundle = retrieveOracleGrounding(caseFor("batuk demam pneumonia"), {
+    const bundle = retrieveTheOracleGrounding(caseFor("batuk demam pneumonia"), {
       databasePath,
       limit: 2,
       now: () => new Date("2026-10-10T12:00:00.000Z"),
     });
 
-    expect(bundle.version).toBe(ORACLE_GROUNDING_CAPABILITY);
-    expect(validOracleGrounding(bundle)).toBe(true);
+    expect(bundle.version).toBe(THEORACLE_GROUNDING_CAPABILITY);
+    expect(validTheOracleGrounding(bundle)).toBe(true);
     expect(bundle.evidence).toHaveLength(2);
     expect(bundle.evidence[0]).toMatchObject({
       evidenceId: "P001-001",
@@ -99,7 +99,7 @@ describe("Oracle II grounding retrieval", () => {
 
   it("returns at most six distinct pages and uses full-page fallback only after candidates", () => {
     const databasePath = fixtureDatabase();
-    const bundle = retrieveOracleGrounding(caseFor("batuk pneumonia"), { databasePath, limit: 99 });
+    const bundle = retrieveTheOracleGrounding(caseFor("batuk pneumonia"), { databasePath, limit: 99 });
     expect(bundle.evidence.length).toBeLessThanOrEqual(6);
     expect(new Set(bundle.evidence.map(item => `${item.source.fileNo}:${item.source.pdfPage}`)).size).toBe(bundle.evidence.length);
     expect(bundle.evidence[0].retrievalKind).toBe("candidate");
@@ -114,17 +114,17 @@ describe("Oracle II grounding retrieval", () => {
     db.prepare("INSERT INTO clinical_facts VALUES(?,?,?,?,?,?,?)").run(1, "doc-1", 1, "diagnosis", quote, 21, "SOURCE_REVIEWED");
     db.prepare("INSERT INTO clinical_facts_fts(rowid,concept,evidence_quote,search_aliases) VALUES(?,?,?,?)").run(1, "pneumonia", quote, "batuk demam");
     db.close();
-    const bundle = retrieveOracleGrounding(caseFor("batuk demam pneumonia"), { databasePath, limit: 1 });
+    const bundle = retrieveTheOracleGrounding(caseFor("batuk demam pneumonia"), { databasePath, limit: 1 });
     expect(bundle.evidence[0]).toMatchObject({ retrievalKind: "clinical_fact", text: quote, extraction: { sourceCharOffset: 21, sourceCharEnd: 21 + quote.length } });
-    expect(validOracleGrounding(bundle)).toBe(true);
+    expect(validTheOracleGrounding(bundle)).toBe(true);
   });
 
   it("fails explicitly for an unusable query or lexical no-match", () => {
     const databasePath = fixtureDatabase();
     for (const complaint of ["...", "xylophone quasar"]) {
-      expect(() => retrieveOracleGrounding(caseFor(complaint), { databasePath })).toThrow(OracleGroundingError);
-      try { retrieveOracleGrounding(caseFor(complaint), { databasePath }); }
-      catch (error) { expect((error as OracleGroundingError).code).toMatch(/^ORACLE_(QUERY_EMPTY|NO_MATCH)$/); }
+      expect(() => retrieveTheOracleGrounding(caseFor(complaint), { databasePath })).toThrow(TheOracleGroundingError);
+      try { retrieveTheOracleGrounding(caseFor(complaint), { databasePath }); }
+      catch (error) { expect((error as TheOracleGroundingError).code).toMatch(/^THEORACLE_(QUERY_EMPTY|NO_MATCH)$/); }
     }
   });
 
@@ -134,30 +134,30 @@ describe("Oracle II grounding retrieval", () => {
     db.prepare("UPDATE source_candidates_v2 SET evidence_quote = ?, source_char_end = source_char_end + 1 WHERE candidate_id = ?").run("tampered quote", "P001-001");
     db.close();
 
-    const bundle = retrieveOracleGrounding(caseFor("batuk demam pneumonia"), { databasePath, limit: 2 });
+    const bundle = retrieveTheOracleGrounding(caseFor("batuk demam pneumonia"), { databasePath, limit: 2 });
     expect(bundle.evidence.some(item => item.retrievalKind === "candidate")).toBe(false);
     expect(bundle.evidence.every(item => item.retrievalKind === "page")).toBe(true);
   });
 
-  it("does not mutate the real Oracle II database", () => {
+  it("does not mutate the real TheOracle database", () => {
     const databasePath = path.join(process.cwd(), "oracle-ii", "sentra_clinical_core_source_reparsed.sqlite");
     const before = createHash("sha256").update(readFileSync(databasePath)).digest("hex");
-    const bundle = retrieveOracleGrounding(caseFor("malaria demam"), { databasePath, limit: 2 });
+    const bundle = retrieveTheOracleGrounding(caseFor("malaria demam"), { databasePath, limit: 2 });
     const after = createHash("sha256").update(readFileSync(databasePath)).digest("hex");
     expect(bundle.evidence.length).toBeGreaterThan(0);
-    expect(validOracleGrounding(bundle)).toBe(true);
+    expect(validTheOracleGrounding(bundle)).toBe(true);
     expect(after).toBe(before);
   });
 
   it("skips public-source quotations that trigger the MIRA PII guard without weakening it", () => {
     for (const complaint of ["whooping cough", "maksilofasial"]) {
       try {
-        const bundle = retrieveOracleGrounding(caseFor(complaint));
+        const bundle = retrieveTheOracleGrounding(caseFor(complaint));
         expect(bundle.evidence.map(item => item.evidenceId)).not.toContain(complaint === "whooping cough" ? "P005-002" : "P079-009");
-        expect(validOracleGrounding(bundle)).toBe(true);
+        expect(validTheOracleGrounding(bundle)).toBe(true);
       } catch (error) {
-        expect(error).toBeInstanceOf(OracleGroundingError);
-        if (error instanceof OracleGroundingError) expect(error.code).toBe("ORACLE_NO_MATCH");
+        expect(error).toBeInstanceOf(TheOracleGroundingError);
+        if (error instanceof TheOracleGroundingError) expect(error.code).toBe("THEORACLE_NO_MATCH");
       }
     }
   });

@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { emptyCase, type MiraResult } from "../src/lib/mira/contract";
 import { diagnosisContent, diagnosisSectionTitles, icd10SectionTitle, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay } from "../src/lib/mira/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
-import { oracleDiseases, relatedDiseases } from "../src/lib/oracle";
+import { theOracleDiseases, relatedDiseases } from "../src/lib/theoracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
-import { oracleSourceLinks } from "../src/lib/mira/presentation";
-import { retrieveOracleGrounding } from "../src/lib/oracle-grounding";
+import { theOracleSourceLinks } from "../src/lib/mira/presentation";
+import { retrieveTheOracleGrounding } from "../src/lib/theoracle-grounding";
 import { restoreWorkspace, initialWorkspace, workspaceReducer } from "../src/lib/workspace";
 
 const analysis = {
@@ -16,14 +16,14 @@ const analysis = {
 const section = (content: string, title: string) => documentSections(content).find(s => s.title === title)!.body.trim();
 const withDifferential = (differential: MiraResult["differential"]) => ({ ...analysis, result: { ...analysis.result, differential } });
 
-describe("Oracle II citation persistence", () => {
+describe("TheOracle citation persistence", () => {
   it("retains the exact retrieval snapshot through edits, reload and untouched regeneration", () => {
-    const grounding = retrieveOracleGrounding({ ...emptyCase(), chiefComplaint: "malaria demam" });
+    const grounding = retrieveTheOracleGrounding({ ...emptyCase(), chiefComplaint: "malaria demam" });
     const message = miraMessage({ ...analysis, grounding });
-    expect(message.content).toContain("## Referensi Oracle II");
+    expect(message.content).toContain("## Referensi TheOracle");
     expect(diagnosisContent(message)).toBe(message.content);
     expect(JSON.parse(sourceForDisplay(message)!).grounding).toEqual(grounding);
-    expect(oracleSourceLinks(message)[0]).toEqual({ id: grounding.evidence[0].evidenceId, label: `${grounding.evidence[0].source.filename}, halaman PDF ${grounding.evidence[0].source.pdfPage}`, url: grounding.evidence[0].source.driveUrl });
+    expect(theOracleSourceLinks(message)[0]).toEqual({ id: grounding.evidence[0].evidenceId, label: `${grounding.evidence[0].source.filename}, halaman PDF ${grounding.evidence[0].source.pdfPage}`, url: grounding.evidence[0].source.driveUrl, text: grounding.evidence[0].text });
     const state = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [message] }] };
     const edited = workspaceReducer(state, { type: "message.edit", encounterId: state.encounters[0].id, messageId: message.id, content: message.content + "\nCatatan dokter" });
     const restored = restoreWorkspace(JSON.stringify(edited));
@@ -32,9 +32,9 @@ describe("Oracle II citation persistence", () => {
     expect(diagnosisContent(saved)).toContain("Catatan dokter");
     expect(JSON.parse(saved.sourceText!).grounding).toEqual(grounding);
   });
-  it("leaves legacy drafts readable without invented Oracle II provenance", () => {
+  it("leaves legacy drafts readable without invented TheOracle provenance", () => {
     const message = miraMessage(analysis);
-    expect(oracleSourceLinks(message)).toEqual([]);
+    expect(theOracleSourceLinks(message)).toEqual([]);
     expect(diagnosisContent(message)).toBe(message.content);
     expect(sourceForDisplay(message)).not.toContain("grounding");
   });
@@ -80,7 +80,7 @@ describe("six-section diagnosis presentation", () => {
     const input = withDifferential({ likely: [{ icd10: "R10.3", label: "Nyeri perut bawah", confidenceTier: "low" }], alternatives: [{ icd10: "K35.8", label: "Appendicitis", confidenceTier: "low" }], cannotMiss: [{ icd10: "A06.0", label: "Amoebic dysentery", confidenceTier: "low" }] });
     expect(relatedDiseases("R10.3")).toHaveLength(0);
     const content = miraMessage(input).content;
-    const appendicitis = oracleDiseases.find(d => d.kode === "K35")!, dysentery = oracleDiseases.find(d => d.kode === "A03-A09")!;
+    const appendicitis = theOracleDiseases.find(d => d.kode === "K35")!, dysentery = theOracleDiseases.find(d => d.kode === "A03-A09")!;
     expect(section(content, "Diagnosis")).toContain(appendicitis.definisi);
     expect(section(content, "Diagnosis")).not.toContain(dysentery.definisi);
     expect(section(content, "Terapi Farmakologi")).not.toContain(dysentery.terapi);
@@ -104,7 +104,7 @@ describe("six-section diagnosis presentation", () => {
     for (const [code, sourceCode] of [["J02.9", "J02-J03"], ["J00.1", "J00"], ["R42", "H81-H83, R42"], ["G47.0", "G47.0, F51.0"]]) {
       const input = withDifferential({ likely: [{ icd10: code, label: "Kandidat sintetis", confidenceTier: "low" }], alternatives: [], cannotMiss: [] });
       const content = miraMessage(input).content;
-      const reference = oracleDiseases.find(d => d.kode === sourceCode)!;
+      const reference = theOracleDiseases.find(d => d.kode === sourceCode)!;
       expect(content).toContain(`(${sourceCode}) · kode hasil analisis: ${code} · oracle/sentrapedia.json record ${reference.id}`);
       expect(section(content, "Terapi Farmakologi")).toContain(reference.terapi);
       expect(JSON.parse(miraMessage(input).sourceText!).result.differential.likely[0].icd10).toBe(code);
@@ -181,7 +181,7 @@ describe("typing reveal", () => {
 
 describe("thinking steps", () => {
   it("lists the clinical steps in order and stops on the last one until the answer arrives", () => {
-    expect(thinkingSteps).toEqual(["Permintaan klinis diterima", "Intensi klinis teridentifikasi", "Sentra Oracle aktif", "Konteks klinis pasien dihimpun", "Dokumen medis ditelaah", "Literatur dan pedoman klinis ditelusuri", "Temuan klinis dikorelasikan", "Bukti ilmiah sedang disintesis"]);
+    expect(thinkingSteps).toEqual(["Permintaan klinis diterima", "Intensi klinis teridentifikasi", "TheOracle aktif", "Konteks klinis pasien dihimpun", "Dokumen medis ditelaah", "Literatur dan pedoman klinis ditelusuri", "Temuan klinis dikorelasikan", "Bukti ilmiah sedang disintesis"]);
     expect(thinkingStepAt(0)).toBe(0);
     expect(thinkingStepAt(thinkingStepMs * 3 + 1)).toBe(3);
     expect(thinkingStepAt(60000)).toBe(thinkingSteps.length - 1);

@@ -1,5 +1,84 @@
 # Sentrapedia handoff
 
+## TheOracle is the knowledge SSOT; contract renamed — 2026-10-11 Asia/Jakarta
+
+Status: Phase A done in place on `codex/oracle-ii-grounding`, uncommitted. Gaffer decided
+TheOracle is the single source of truth for Sentra knowledge and that MIRA and other systems
+follow it; name "TheOracle" in every layer. Supersedes the "Pustaka" rename entry below
+(only the pre-existing label "Pustaka Klinis" remains). R2: engine contract change.
+
+Contract: `oracle-grounding-v1` → `theoracle-grounding-v1`, corpus `Oracle II` → `TheOracle`,
+schema `$defs/oracleGrounding` → `theOracleGrounding`, prompt text "TheOracle guideline
+excerpts". Changed together in `src/lib/theoracle-grounding-types.ts`, `theoracle-grounding.ts`,
+`scripts/mira-runtime.mjs` (engineReady), `mira/service/app.py`, `prompts.py`,
+`contract/mira-step-request.schema.json`, `tests/test_step_api.py`, TS/Node tests.
+Divergence recorded through the existing mechanisms: `mira/SOURCE.json` packagedSha256 for the
+five changed engine files, their paths added to the allow-list in `test_packaging.py`, schema hash
+and a dated note in `mira/service/contract/SOURCE.md`. sourceSha256 (upstream) left unchanged.
+
+Code: files `src/lib/theoracle{,-grounding,-grounding-types}.ts`, `tests/theoracle-*.test.ts`,
+`scripts/benchmark-theoracle-grounding.mjs`; npm script restored to `benchmark:oracle`;
+`TheOracle*` types, `theOracle*` values, `THEORACLE_*` codes, `.theoracle-*` CSS; display
+"TheOracle". Stored draft key is now `theOracleSource` (no reader). Data folders `oracle/`,
+`oracle-ii/` unchanged for now.
+
+Behaviour: MIRA drafts saved before this change no longer validate their grounding, so they
+re-render without the "Referensi" section; content is intact (fictional dev data).
+
+Gates: typecheck 0; lint 0; vitest 7 touched files 95/95; `npm run test:system` 7/7;
+`npm run test:mira` 157 passed 1 skipped (first run failed 2 hash tests, fixed via the
+mechanisms above); `npm run benchmark:oracle` exit 0. Build/dry-run not run.
+
+Next (Phase B, awaiting Gaffer): local embedding runtime + model approval, rebuild TheOracle
+inside `theoracle/` with ID/hash/page provenance, branch/commit strategy, move the AnythingLLM
+Lance export to `_to_delete/`.
+
+## Oracle renamed to Pustaka (display + TypeScript) — 2026-10-11 Asia/Jakarta
+
+Status: done in place on `codex/oracle-ii-grounding`, uncommitted. Gaffer chose the name
+"Pustaka" and scope "display + TypeScript code". R1. Codex's uncommitted edits in
+`presentation.ts`, `document-studio.tsx`, `globals.css`, `README.md` and
+`diagnosis-presentation.test.ts` are mixed with this rename in the same files; Codex's
+pre-rename diff is saved in the session scratchpad (`pre-rename.diff`).
+
+Renamed files: `src/lib/{oracle,oracle-grounding,oracle-grounding-types}.ts` →
+`pustaka*.ts`; `tests/oracle-{grounding,mira}.test.ts` → `pustaka-*`;
+`scripts/benchmark-oracle-grounding.mjs` → `benchmark-pustaka-grounding.mjs`; npm script
+`benchmark:oracle` → `benchmark:pustaka`. Identifiers `Oracle*`/`oracle*` → `Pustaka*`/`pustaka*`,
+error codes `ORACLE_*` → `PUSTAKA_*`, CSS `.oracle-*` → `.pustaka-*`, visible text "Oracle II" →
+"Pustaka". Current-state docs updated (README, CONTEXT, mira-integration, testing, data);
+dated reports left as written.
+
+Kept on purpose (leave the TS process): capability string `"oracle-grounding-v1"`,
+`corpus.name: "Oracle II"` (const in `mira/service/contract/mira-step-request.schema.json`),
+stored JSON key `oracleSource` in MIRA drafts, folders `oracle/` and `oracle-ii/`, Python
+prompt text. Untouched drafts re-render with heading "Referensi Pustaka"; edited drafts keep
+their text.
+
+Gates: typecheck 0, lint 0, vitest (7 touched files) 95/95, `npm run benchmark:pustaka` exit 0.
+Full suite, build and deploy dry run not run.
+
+Open: the vector-only migration stays blocked on its three Phase 0 questions (Codex merge,
+cloud-only `gemini-embedding-001` index in `theoracle/`, keep Oracle II source tables).
+
+## Architecture overview written — 2026-10-11 Asia/Jakarta
+
+Status: new read-only report `docs/architecture-overview-2026-10-11.md` (R0, docs only; no code
+changed, nothing committed). Examined `2d71a200` plus the uncommitted working tree; `theoracle/`
+not analyzed. Report corrects brief premises: 18 modes (5 MIRA-backed), two Oracle stores, and
+OpenRouter is a required network dependency at startup and inference.
+
+Key findings: audit JSONL stores full request/response without retention (`mira/service/app.py`);
+`/api/mira` is header-based loopback only; three divergent PII detectors; synchronous Oracle II
+retrieval with per-request DB open and an unindexed `LIKE` page fallback; up to 9 parallel model
+calls per analysis (`FAST_COPIES=3`); gateway timeout 135 s vs engine deadline 20 s.
+
+Gates: none run (documentation only; typecheck/lint/test not applicable). `docs/architecture.md`
+(2026-10-09) is partly stale and was left unchanged.
+
+Next: Gaffer to choose which of R1–R6 to implement; R4 (remove `freeModel`) and R5 (one profile
+constant) are the low-risk starting points.
+
 ## Standalone repository published — 2026-10-11 04:30 Asia/Jakarta
 
 Status: Sentrapedia now has its own repository, https://github.com/drferdi/Sentrapedia (private),

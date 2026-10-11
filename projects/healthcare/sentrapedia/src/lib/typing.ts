@@ -29,7 +29,7 @@ export function revealAt(lengths: number[], elapsed: number): { visible: number[
 }
 
 /** What the answer card shows while the analysis runs, one step after another. */
-export const thinkingSteps = ["Permintaan klinis diterima", "Intensi klinis teridentifikasi", "Sentra Oracle aktif", "Konteks klinis pasien dihimpun", "Dokumen medis ditelaah", "Literatur dan pedoman klinis ditelusuri", "Temuan klinis dikorelasikan", "Bukti ilmiah sedang disintesis"];
+export const thinkingSteps = ["Permintaan klinis diterima", "Intensi klinis teridentifikasi", "TheOracle aktif", "Konteks klinis pasien dihimpun", "Dokumen medis ditelaah", "Literatur dan pedoman klinis ditelusuri", "Temuan klinis dikorelasikan", "Bukti ilmiah sedang disintesis"];
 export const thinkingStepMs = 340;
 
 /** The step in progress `elapsed` ms after the question was sent; the last step holds until the answer. */

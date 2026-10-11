@@ -30,7 +30,7 @@ log = logging.getLogger("mira_service")
 # Optional per-step planning model, chosen by a developer or admin in Med Assist; checked
 # against Settings.plan_model_choices. The request contract (owned by Med Assist) is unchanged.
 PLAN_MODEL_HEADER = "X-MIRA-Plan-Model"
-GROUNDING_CAPABILITY = "oracle-grounding-v1"
+GROUNDING_CAPABILITY = "theoracle-grounding-v1"
 
 
 def create_app(settings: Settings | None = None, client=None) -> FastAPI:

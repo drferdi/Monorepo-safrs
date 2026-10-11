@@ -16,7 +16,7 @@
     "test:mira": "node scripts/test-mira.mjs",
     "test:all": "npm test && npm run test:system && npm run test:mira",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs",
-    "benchmark:oracle": "node scripts/benchmark-oracle-grounding.mjs"
+    "benchmark:oracle": "node scripts/benchmark-theoracle-grounding.mjs"
   },
   "dependencies": {
     "lucide-react": "1.53.0",

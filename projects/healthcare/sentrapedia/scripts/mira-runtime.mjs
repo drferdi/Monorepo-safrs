@@ -49,7 +49,7 @@ export function engineEnvironment(root, environment, token) {
 }
 export function engineReady(health) {
   return health?.status === "ok" && health.contractVersion === "1" &&
-    health.capabilities?.includes("oracle-grounding-v1") &&
+    health.capabilities?.includes("theoracle-grounding-v1") &&
     health.version?.includes(`+contract=1+provider=openrouter+data=synthetic-only+plan=${model}+assess=${model}`) &&
     health.version?.endsWith("+ddx=provisional+assessment=fast+therapy=fast");
 }

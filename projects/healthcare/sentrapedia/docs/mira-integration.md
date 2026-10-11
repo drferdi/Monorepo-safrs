@@ -29,7 +29,7 @@ installation. `scripts/run-system.mjs` owns startup, ephemeral loopback port,
 per-run token, readiness and shutdown. Windows child guardians use Job Objects
 and parent monitoring; POSIX cleanup handles INT/TERM/HUP process groups.
 `scripts/build-system.mjs` stages engine, launcher and static assets into the
-standalone output. `src/lib/oracle-grounding.ts` owns readonly Oracle II retrieval.
+standalone output. `src/lib/theoracle-grounding.ts` owns readonly Oracle II retrieval.
 
 The internal engine is a Python process managed by the application lifecycle.
 No external `MiraRoot`, source checkout, shared service, manually supplied service

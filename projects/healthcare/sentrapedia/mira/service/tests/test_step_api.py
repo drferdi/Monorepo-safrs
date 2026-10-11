@@ -21,11 +21,11 @@ def post(client, request, headers=AUTH):
     return client.post(STEP, content=json.dumps(request), headers=headers)
 
 
-def oracle_grounding() -> dict:
+def theoracle_grounding() -> dict:
     return {
-        "version": "oracle-grounding-v1",
+        "version": "theoracle-grounding-v1",
         "corpus": {
-            "name": "Oracle II",
+            "name": "TheOracle",
             "databaseSha256": "a" * 64,
             "retrievedAt": "2026-10-10T12:00:00.000Z",
             "reviewProvenance": "Gaffer stated the Kemenkes corpus was personally reviewed in the 2026-10-10 session.",
@@ -34,7 +34,7 @@ def oracle_grounding() -> dict:
         "evidence": [
             {
                 "evidenceId": "P001-001",
-                "text": "ORACLE_QUOTE pneumonia guidance exact source passage",
+                "text": "THEORACLE_QUOTE pneumonia guidance exact source passage",
                 "retrievalKind": "candidate",
                 "retrievalRank": 1,
                 "source": {
@@ -315,7 +315,7 @@ def test_healthz_needs_no_token(make_client):
     client, _ = make_client([])
     body = client.get("/healthz").json()
     assert body["status"] == "ok" and body["contractVersion"] == "1"
-    assert "oracle-grounding-v1" in body["capabilities"]
+    assert "theoracle-grounding-v1" in body["capabilities"]
 
 
 def test_grounding_is_optional_for_legacy_v1_clients(make_client, example_request):
@@ -324,11 +324,11 @@ def test_grounding_is_optional_for_legacy_v1_clients(make_client, example_reques
     body = post(client, example_request).json()
     assert body["status"] == "ok"
     assert example_request == original
-    assert all("ORACLE_QUOTE" not in message["content"] for call in fake.calls for message in call["messages"])
+    assert all("THEORACLE_QUOTE" not in message["content"] for call in fake.calls for message in call["messages"])
 
 
 def test_grounded_full_assessment_keeps_case_unchanged_and_supplies_every_call(make_client, example_request, settings):
-    request = {**example_request, "grounding": oracle_grounding()}
+    request = {**example_request, "grounding": theoracle_grounding()}
     original_case = json.loads(json.dumps(request["case"]))
     client, fake = make_client(model_outputs())
     body = post(client, request).json()
@@ -339,7 +339,7 @@ def test_grounded_full_assessment_keeps_case_unchanged_and_supplies_every_call(m
     for call in fake.calls:
         prompt = "\n".join(message["content"] for message in call["messages"])
         assert request["case"]["chiefComplaint"] in prompt
-        assert "ORACLE_QUOTE pneumonia guidance exact source passage" in prompt
+        assert "THEORACLE_QUOTE pneumonia guidance exact source passage" in prompt
         assert "separate from patient facts" in prompt
     [record] = audit_lines(settings)
     assert record["request"]["case"] == original_case
@@ -347,7 +347,7 @@ def test_grounded_full_assessment_keeps_case_unchanged_and_supplies_every_call(m
 
 
 def test_invalid_grounding_is_refused_before_model_calls(make_client, example_request):
-    grounding = oracle_grounding()
+    grounding = theoracle_grounding()
     grounding["evidence"][0]["unexpected"] = "not allowed"
     client, fake = make_client(model_outputs())
     response = post(client, {**example_request, "grounding": grounding})
@@ -599,7 +599,7 @@ def test_grounding_reaches_fast_diagnosis_workup_and_therapy_prompts(make_client
         *fast_outputs([completion(diagnosis_part(), "gpt-4o")], [completion(workup_part(), "gpt-4o")]),
         completion(therapy_part(), "gpt-4o"), 5.0, 5.0,
     ][: 3 * FAST_COPIES]
-    request = {**example_request, "grounding": oracle_grounding()}
+    request = {**example_request, "grounding": theoracle_grounding()}
     original_case = json.loads(json.dumps(request["case"]))
     client, fake = make_client(outputs, fast_assessment=True, fast_therapy=True)
     body = post(client, request).json()
@@ -612,14 +612,14 @@ def test_grounding_reaches_fast_diagnosis_workup_and_therapy_prompts(make_client
     for call in fake.calls:
         prompt = "\n".join(message["content"] for message in call["messages"])
         assert request["case"]["chiefComplaint"] in prompt
-        assert "ORACLE_QUOTE pneumonia guidance exact source passage" in prompt
+        assert "THEORACLE_QUOTE pneumonia guidance exact source passage" in prompt
         assert "separate from patient facts" in prompt
 
 
 def test_grounding_constraints_have_system_priority_and_preserve_legacy_prompts(example_request):
     from service.prompts import assessment_messages, fast_assessment_messages, planning_messages
 
-    grounding = oracle_grounding()
+    grounding = theoracle_grounding()
     case = example_request["case"]
     for messages in [
         planning_messages(case, "menu", grounding),
