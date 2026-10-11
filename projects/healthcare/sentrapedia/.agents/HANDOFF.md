@@ -50,6 +50,122 @@
     - `$env:CHIEF_PUSH_OK=1; git push sentrapedia sentrapedia-publish:refs/heads/main; Remove-Item Env:CHIEF_PUSH_OK`
   - The GitHub README edits (logo, editorial hero, referral terminology) exist only on the Sentrapedia remote; the monorepo copy of `README.md` is older.
 
+## Ported notes from the main checkout - 2026-10-11 Asia/Jakarta
+
+- The four sections below were written by another session in `D:\DEV\monorepo` (branch `chore/tools-closeout`) and existed only as an uncommitted edit there. Copied verbatim for #6; the original is kept in `refs/backup/chore-tools-closeout-2026-10-11`.
+
+### ISO gap fill — 2026-10-11 19:00 Asia/Jakarta
+
+Status: data work only. New file `.runtime/dose-inventory/iso_gap_fill.json` (gitignored).
+Gaffer's ruling: ISO is a reference and is to be used as one, with citation (source and page).
+
+Source: ISO Indonesia Vol. 53 (2021), 536 pages, supplied by Gaffer. Product monographs parsed
+mechanically from `pdftotext` (brand, composition, In, Ds, KI, IO): 1,087 usable entries, 477 generics.
+Gap fill for the groups still without a numeric dose: (a) drugs named in a store narrative get the
+ISO dose for that generic, (b) ISO entries whose indication names the disease (hand-written keyword
+list). Result: 19 groups, 120 rows, each with ISO page, brand and the matching basis. These are
+general per-drug doses, not disease-specific first-line regimens. Keyword matching is noisy: 12
+clearly unrelated rows were removed by hand (fracture, acute kidney injury, scrofuloderma, parts of
+cerebral palsy, corneal ulcer, vitamin deficiency); the rest is not clinician reviewed.
+
+Inventory now (about 296 groups): 160 store, 41 PNPK, 17 PPK, 19 ISO, 24 PPK-only diseases,
+35 without a numeric dose (almost all non-drug: refraction, hernia, lipoma, cleft lip, stunting).
+
+Other files received and NOT used: "MIMS Digital Guide 2023-2024" is MIMS Pharmacy Philippines
+(wrong country); "Kumpulan Resep" is a 2017 OSCE cheat sheet with errors; "Obat Generik dan Nama
+Dagang" has no dose data; Formularium RSSA 2017 is superseded by Fornas 2025. MIMS Petunjuk Konsultasi
+Indonesia 2021/2022 and Fornas 2025 are usable and not yet processed.
+
+### PPK FKTP dose extraction — 2026-10-11 18:45 Asia/Jakarta
+
+Status: data work only, no engine or app code changed. New file
+`.runtime/dose-inventory/ppk_doses_verified.json` (gitignored).
+
+Sources, both taken from Gaffer's Google Drive via the Drive connector (full PDF bytes):
+`PPK_FKTP_KMK_1936_2022.pdf` (300 pages) and `PPK_Fasyankes_Primer_IDI_2017.pdf` (478 pages).
+KMK 1936/2022 only amends named chapters of KMK 1186/2022 (TB, TB-HIV, lepra, HIV, MI, heart failure,
+hypertension, stroke, psychiatry, PPOK, DM2, normal pregnancy; adds COVID-19, depression, schizophrenia,
+yaws, diabetic nephropathy). The base KMK 1186/2022 is NOT available (not in Drive; the Kemenkes
+regulation site refuses agent fetches), so PPK IDI 2017 stands in for unchanged chapters and every row
+carries its source document.
+
+Result: 757 drug-dose statements over about 130 disease sections, each with PDF page and verbatim
+quote. Independent check: every quote is an exact substring of the `pdftotext` page text and contains
+the dose numbers (0 rejected); 12 rows lack the drug name inside the quote; 6 pages skipped (unreadable
+tables, e.g. TB-RO weight-band grids, OAT KDT table). `icd10` is re-derived from each section's
+"No ICD-10" line and kept only if the code exists in the BPJS list (716 rows); the extractor's own
+value is in `icd10_agent` and is often an ICPC-2 code, do not use it.
+
+Inventory after merge (about 296 groups): 160 already had a dose in a store (68 of them now have PPK
+evidence to compare against, comparison not run), 41 filled from PNPK, 17 filled from PPK, 24 diseases
+present in PPK but in no store, 54 still without a numeric dose (many non-drug conditions). Source
+typos are copied verbatim and need clinician eyes (e.g. MgSO4 IM "5mg", "2 x 500-100 mg" cefadroxil).
+
+Also received, not processed: Fornas 2025 (KMK 1199/2025, 224 pages) and KMK 1818/2024 (amendment of
+Fornas 2023). Fornas is a drug/strength/facility-level list, not dosing per diagnosis; intended use is
+the identity layer of the dose gate.
+
+### Dose inventory and PNPK dose extraction — 2026-10-11 18:10 Asia/Jakarta
+
+Status: data work only, no engine or app code changed. Steps 2/3 of the ICD/dose review (therapy
+after diagnosis, dose gate) are NOT implemented: Gaffer chose to complete the dose data first.
+Working files in `.runtime/dose-inventory/` (gitignored): `build_inventory.py`, `inventory.json`,
+`pnpk_doses_verified.json`, plus copies of Gaffer's legacy `penyakit.json` and `drug_mapping.json`.
+
+Inventory: 432 records from three stores (`oracle/sentrapedia.json`, `oracle-ii/knowledge_base`,
+legacy `penyakit.json`) group into about 272 disease groups (automatic name/ICD matching, approximate).
+160 have a numeric dose in at least one store (124 of them in one store only), 112 did not.
+No store has a per-record clinician review mark. `penyakit.json` ICD codes are wrong for some
+diseases (burn = R12, tinea versicolor = B85); do not use it as a code reference.
+
+PNPK extraction: for 45 groups without a dose, the 610 dose-bearing pages of their PNPK PDFs
+(`source_pages_v2`) were read by parallel extraction agents. Result: 1,491 drug-dose statements
+for 41 groups, each with PDF page and a verbatim quote. Independent check: every quote is an exact
+substring of the stored page text and contains the dose numbers (0 rejected); 8 items lack the drug
+name inside the quote and are flagged `drug_in_quote: false`. 30 pages skipped as unreadable tables.
+4 groups yielded nothing (Karies Gigi, Akupunktur Medik, Retinopati Diabetika, Karsinoma Sel Hati).
+These are copies of guideline text, not curated first-line regimens, and not clinician reviewed.
+
+Open: 71 groups still without a dose (mostly KKI primary-care diseases). Official source is
+PPK Dokter FKTP, KMK HK.01.07/MENKES/1186/2022; the Kemenkes regulation site could not be fetched
+from the agent side, Gaffer to supply the PDF. Dose-source decision for the gate is still Gaffer's
+(supersedes nothing yet: the 2026-10-09 rule "Oracle narratives never generate regimens" stands).
+
+### ICD-10 code checked against its label — 2026-10-11 17:30 Asia/Jakarta
+
+Status: done in place, uncommitted. Gaffer approved step 1 of the ICD/dose accuracy review
+("Silahkan") and supplied the ministry list `PUBLIC_ICD-10_e-klaim.xlsx - ICD10.csv`. R2: engine
+post-check change, no prompt, contract or schema change.
+
+Finding (198 audit records, fictional cases): the post-check only tested that a code exists.
+Valid codes naming another disease passed (Chikungunya as A98.4 = Ebola; Machupo as A96.0 13x;
+torsion of ovary as N83.2), and a diagnosis with an unknown code was removed (acute appendicitis
+K35.0 dropped from cannotMiss 7x).
+
+Change: `mira/service/postchecks.py` adds `resolve_code` / `code_for_label`. A valid code is
+replaced only when the label is the exact official name of another code, or shares no word with
+its own name and identifies one code unambiguously (same category, then chapter, then list).
+An unknown code is recovered from the label, then from its three-character category, before it
+is removed. Unrepairable mismatches keep the code and add an audit note. Therapy `forDiagnosis`
+uses the same check. Replay over the 1,030 logged diagnoses: 22 repaired, 14 kept with a note.
+
+Data: the ministry CSV (18,542 rows, all `ICD10_2010`, SHA-256 `f2c18a09…c4bf7a`) matches
+`mira/service/data/icd10.json` except that the JSON also has `N18.0` and four M99.1x names carry
+a leading space in the CSV. `icd10.json` left unchanged; the CSV is not in the capsule.
+
+Divergence recorded: `mira/SOURCE.json` packagedSha256 for `service/postchecks.py` and
+`service/tests/test_components.py`; `service/postchecks.py` added to the allow-list in
+`test_packaging.py`. 16 new cases in `test_components.py`.
+
+Gates: MIRA pytest 173 passed 1 skipped, run in a Linux Python 3.12 venv outside the capsule
+with the pinned lock versions (the Windows venv was not used). `npm run test:mira`, typecheck,
+lint, vitest, build and dry run not run; no TypeScript changed. `.next/standalone` still holds
+the old engine until the next build.
+
+Open (awaiting Gaffer): step 2 therapy after diagnosis with retrieval by diagnosis, step 3 dose
+gate; whether kept-with-note mismatches should be shown to the clinician; `N18.0` in the JSON
+but not in the ministry list.
+
 ## Evidence gate: a field keeps its supported leading part (#10) - 2026-10-11 Asia/Jakarta
 
 - Gaffer asked for #10 (a whole route/duration/note blanked for one unsupported number) and approved the bounded design with one Opus review.
