@@ -22,6 +22,8 @@ const fixtureChunks = [
   chunk("A3", "PNPK Pneumonia.md", "Bagian ketiga yang tidak boleh lolos.", [0.85, 0.15, 0]),
   chunk("C1", "Kontak.md", "Hubungi 081234567890 untuk konsultasi.", [0.95, 0.05, 0]),
   chunk("B1", "PNPK Tuberkulosis.md", "Batuk lebih dari dua minggu.", [0.2, 0.98, 0]),
+  chunk("D1", "PPK Fasyankes Primer.pdf", "Penatalaksanaan pneumonia: amoksisilin 3 x 500 mg.", [0, 0.3, 1]),
+  chunk("D2", "PPK Fasyankes Primer.pdf", "Terapi 500 mg, hubungi 081234567890.", [0, 0, 1]),
 ];
 
 function fixtureIndex(tamper = false): string {
@@ -60,7 +62,7 @@ describe("TheOracle vector grounding", () => {
     expect(validTheOracleGrounding(bundle)).toBe(true);
     expect(bundle.version).toBe(THEORACLE_GROUNDING_CAPABILITY);
     expect(bundle.corpus).toMatchObject({ name: "TheOracle", indexSha256: "d".repeat(64), embeddingModel: { id: "fixture/model", revision: "f".repeat(40), dtype: "fp32", dims: 3 }, retrievedAt: "2026-10-11T00:00:00.000Z" });
-    expect(calls).toEqual(["task: search result | query: batuk demam"]);
+    expect(calls).toEqual(["task: search result | query: batuk demam", "task: search result | query: batuk demam\npenatalaksanaan terapi dosis obat"]);
     expect(bundle.queryDigest).toBe(sha256("batuk demam"));
     expect(bundle.evidence[0]).toEqual({ evidenceId: "A1", text: "Batuk dan demam pada pneumonia.", retrievalRank: 1, similarity: 1, source: { title: "PNPK Pneumonia.md", docSource: "Kemenkes uji", origin: "oracle-ii-knowledge-base", textSha256: fixtureChunks[0].textSha256 } });
     expect(bundle.evidence[1].text).toBe("Amoksisilin 3 x 500 mg selama 5 hari.");
@@ -70,8 +72,18 @@ describe("TheOracle vector grounding", () => {
 
   it("keeps at most two passages per document and skips sources that trip the MIRA privacy guard", async () => {
     const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: fakeEmbedder([]) });
-    expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1"]);
-    expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3]);
+    expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1", "D1"]);
+    expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("adds the best treatment passage that states a dose, from any guideline, in place of the lowest-ranked match", async () => {
+    const therapyEmbedder = async () => async (text: string) => Float32Array.from(text.endsWith("dosis obat") ? [0, 0, 1] : [1, 0, 0]);
+    const indexDir = fixtureIndex();
+    const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: therapyEmbedder });
+    expect(validTheOracleGrounding(bundle)).toBe(true);
+    expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1", "D1"]);
+    expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3, 4]);
+    expect((await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: therapyEmbedder, limit: 3 })).evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "D1"]);
   });
 
   it("clamps the evidence limit", async () => {

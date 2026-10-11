@@ -27,13 +27,23 @@ try {
   const first = await retrieveTheOracleGrounding(caseFor("malaria demam"), { indexDir });
   const coldStartMs = Math.round(performance.now() - coldStart);
   const { queries } = JSON.parse(readFileSync(evalSet, "utf8"));
-  const rows = [], latency = [];
+  const rows = [], latency = [], doseRows = [];
+  const DOSE = /\d+(?:[.,]\d+)?\s?(?:mg|mcg|g|iu)\b(?!\s*\/\s*(?:dl|l)\b)/i; // a drug amount, not a lab value such as 126 mg/dL
+  const STEM_FILLER = new Set(["dewasa", "remaja", "infeksi", "penyakit", "tahap", "akhir", "kronik", "tanpa", "dengan", "stadium", "tindakan", "perdoski", "dermatovenereologi"]);
   for (const item of queries) {
     const tick = performance.now();
     const bundle = await retrieveTheOracleGrounding(caseFor(item.query), { indexDir, limit: 5 });
     latency.push(performance.now() - tick);
     const hit = item.term ? bundle.evidence.some(e => e.text.toLowerCase().includes(item.term.toLowerCase())) : bundle.evidence.some(e => item.gold.includes(e.source.title));
     rows.push({ category: item.category, subtype: item.subtype, hit });
+    // Dose recall: with the production evidence limit, does a chunk that states a dose for the gold disease reach the
+    // model? The disease markdowns carry no doses, so a dose chunk from any guideline counts when it names the disease.
+    if (item.gold?.length && !item.term) {
+      const full = await retrieveTheOracleGrounding(caseFor(item.query), { indexDir });
+      const stems = item.gold.flatMap(title => title.replace(/\.\w+$/, "").split("-")).filter(word => word.length >= 5 && !STEM_FILLER.has(word));
+      const dose = full.evidence.filter(e => DOSE.test(e.text));
+      doseRows.push({ id: item.id, hit: dose.some(e => item.gold.includes(e.source.title) || stems.some(stem => e.text.toLowerCase().includes(stem))), doseTitles: dose.map(e => e.source.title) });
+    }
   }
   const recall = {};
   for (const key of [...new Set(rows.map(r => r.category)), ...new Set(rows.filter(r => r.subtype).map(r => `exact_terms.${r.subtype}`)), "overall"]) {
@@ -49,6 +59,7 @@ try {
     coldStartMs, rssGrowthMb: Math.round((process.memoryUsage().rss - rssBefore) / 1048576),
     warmLatencyMs: { median: pct(latency, 0.5), p95: pct(latency, 0.95), max: pct(latency, 1) },
     recallAt5: recall,
+    doseRecall: { hits: doseRows.filter(r => r.hit).length, total: doseRows.length, rate: Math.round(doseRows.filter(r => r.hit).length / doseRows.length * 1000) / 1000, rows: doseRows },
   }, null, 2));
 } finally {
   rmSync(scratch, { recursive: true, force: true });

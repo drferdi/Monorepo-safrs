@@ -15,6 +15,10 @@ export type { TheOracleCitationSource, TheOracleEmbeddingModel, TheOracleGroundi
 const MAX_EVIDENCE = 6;
 const MAX_PER_DOCUMENT = 2;
 const MAX_TEXT_LENGTH = 2_400;
+const THERAPY_EVIDENCE = 1;
+const THERAPY_QUERY = "\npenatalaksanaan terapi dosis obat";
+// A drug amount such as 500 mg or 1 g, not a laboratory value such as 126 mg/dL.
+const DOSE = /\d+(?:[.,]\d+)?\s?(?:mg|mcg|g|iu)\b(?!\s*\/\s*(?:dl|l)\b)/i;
 const REVIEW_PROVENANCE = "Gaffer stated on 2026-10-11 that Gaffer reviewed and approved the TheOracle corpus; per-chunk review fields are not recorded.";
 
 export interface TheOracleManifest {
@@ -124,6 +128,24 @@ export async function retrieveTheOracleGrounding(caseData: CaseState, options: R
     selected.push(item);
   }
   if (!selected.length) throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "TheOracle tidak menemukan referensi untuk keluhan ini. Analisis tidak dijalankan.");
+  // A complaint matches symptom passages; doses sit in treatment passages, often of another guideline (PPK, Fornas).
+  // Search the whole corpus again for treatment and add the best passage that states a dose, in place of the lowest match.
+  const therapy: typeof selected = [];
+  if (limit > 1) {
+    let t: Float32Array;
+    try { t = await embed(manifest.prefixes.query + query + THERAPY_QUERY); } catch { throw unavailable("Embedding lokal TheOracle gagal. Analisis tidak dijalankan."); }
+    const therapyScores = new Float32Array(chunks.length);
+    for (let i = 0; i < chunks.length; i++) { let s = 0; const offset = i * dims; for (let k = 0; k < dims; k++) s += t[k] * vectors[offset + k]; therapyScores[i] = s; }
+    for (const i of [...therapyScores.keys()].sort((a, b) => therapyScores[b] - therapyScores[a])) {
+      if (therapy.length >= THERAPY_EVIDENCE) break;
+      const chunk = chunks[i];
+      if (!DOSE.test(chunk.text) || selected.some(item => item.evidenceId === chunk.id)) continue;
+      const item = { evidenceId: chunk.id, text: evidenceText(chunk.text), similarity: Math.round(therapyScores[i] * 10_000) / 10_000, source: { title: chunk.title, docSource: chunk.docSource, origin: chunk.origin, textSha256: chunk.textSha256 } };
+      if (!item.text || sourceTriggersMiraPrivacy(item)) continue;
+      therapy.push(item);
+    }
+  }
+  const evidence = [...selected.slice(0, limit - therapy.length), ...therapy];
   return freezeBundle({
     version: THEORACLE_GROUNDING_CAPABILITY,
     corpus: {
@@ -134,6 +156,6 @@ export async function retrieveTheOracleGrounding(caseData: CaseState, options: R
       reviewProvenance: REVIEW_PROVENANCE,
     },
     queryDigest: sha256(query),
-    evidence: selected.map((item, index) => ({ ...item, retrievalRank: index + 1 })),
+    evidence: evidence.map((item, index) => ({ ...item, retrievalRank: index + 1 })),
   });
 }

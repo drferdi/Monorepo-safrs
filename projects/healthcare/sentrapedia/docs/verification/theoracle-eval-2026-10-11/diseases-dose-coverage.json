@@ -1,0 +1,1946 @@
+{
+ "method": "lexical: a dose-bearing chunk (drug amount regex) anywhere in TheOracle that contains a disease stem from the markdown title",
+ "diseases": 144,
+ "withoutDose": [
+  "asfiksia.md",
+  "epistaksis.md",
+  "impaksi-gigi.md",
+  "infeksi-intraabdominal.md",
+  "osteosarkoma.md",
+  "penyakit-hirschprung.md",
+  "pterigium.md",
+  "pulpa-periradikuler.md",
+  "sarkopenia.md",
+  "serumen-prop-impaksi-serumen.md"
+ ],
+ "rows": [
+  {
+   "disease": "akne-vulgaris-jerawat.md",
+   "stems": [
+    "vulgaris",
+    "jerawat"
+   ],
+   "doseChunks": 6,
+   "sources": [
+    "akne-vulgaris-jerawat.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "akupunktur-medik.md",
+   "stems": [
+    "akupunktur",
+    "medik"
+   ],
+   "doseChunks": 77,
+   "sources": [
+    "benda-asing-konjungtiva.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "episkleritis.md",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "anestesiologi-dan-terapi-intensif.md",
+   "stems": [
+    "anestesiologi",
+    "terapi",
+    "intensif"
+   ],
+   "doseChunks": 773,
+   "sources": [
+    "akne-vulgaris-jerawat.md",
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "askariasis.md",
+    "asma-bronkiale.md",
+    "bell-s-palsy.md"
+   ]
+  },
+  {
+   "disease": "angina-pectoris-stabil.md",
+   "stems": [
+    "angina",
+    "pectoris",
+    "stabil"
+   ],
+   "doseChunks": 58,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "esc-cvd-diabetes-2023.pdf",
+    "faa-aviation-medical-examiners.pdf"
+   ]
+  },
+  {
+   "disease": "ankilostomiasis-infeksi-cacing-tambang.md",
+   "stems": [
+    "ankilostomiasis",
+    "cacing",
+    "tambang"
+   ],
+   "doseChunks": 11,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "askariasis.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "asfiksia.md",
+   "stems": [
+    "asfiksia"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "askariasis.md",
+   "stems": [
+    "askariasis"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "askariasis.md"
+   ]
+  },
+  {
+   "disease": "asma-bronkiale.md",
+   "stems": [
+    "bronkiale"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "asma-bronkiale.md"
+   ]
+  },
+  {
+   "disease": "batu-saluran-kemih.md",
+   "stems": [
+    "saluran",
+    "kemih"
+   ],
+   "doseChunks": 48,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "asma-bronkiale.md",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ]
+  },
+  {
+   "disease": "bell-s-palsy.md",
+   "stems": [
+    "palsy"
+   ],
+   "doseChunks": 4,
+   "sources": [
+    "bell-s-palsy.md",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "benda-asing-konjungtiva.md",
+   "stems": [
+    "benda",
+    "asing",
+    "konjungtiva"
+   ],
+   "doseChunks": 71,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "askariasis.md",
+    "bedah-toraks-2020.pdf",
+    "benda-asing-konjungtiva.md",
+    "dermatovenereologi-perdoski-2017.pdf"
+   ]
+  },
+  {
+   "disease": "bibir-sumbing.md",
+   "stems": [
+    "bibir",
+    "sumbing"
+   ],
+   "doseChunks": 4,
+   "sources": [
+    "bell-s-palsy.md",
+    "folikulitis-furunkel-dan-karbunkel.md",
+    "gastroenteritis-akut-diare-akut.md",
+    "urtikaria-akut.md"
+   ]
+  },
+  {
+   "disease": "blefaritis.md",
+   "stems": [
+    "blefaritis"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "blefaritis.md"
+   ]
+  },
+  {
+   "disease": "bronkitis-akut.md",
+   "stems": [
+    "bronkitis"
+   ],
+   "doseChunks": 4,
+   "sources": [
+    "bronkitis-akut.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "cidera-otak-traumatik.md",
+   "stems": [
+    "cidera",
+    "traumatik"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "demam-tifoid.md",
+   "stems": [
+    "demam",
+    "tifoid"
+   ],
+   "doseChunks": 47,
+   "sources": [
+    "askariasis.md",
+    "bronkitis-akut.md",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ]
+  },
+  {
+   "disease": "dermatitis-atopik.md",
+   "stems": [
+    "dermatitis",
+    "atopik"
+   ],
+   "doseChunks": 18,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "dermatitis-kontak-alergika-dan-iritan.md",
+   "stems": [
+    "dermatitis",
+    "kontak",
+    "alergika",
+    "iritan"
+   ],
+   "doseChunks": 44,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "dermatitis-seboroik.md",
+   "stems": [
+    "dermatitis",
+    "seboroik"
+   ],
+   "doseChunks": 19,
+   "sources": [
+    "blefaritis.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "diabetes-melitus-pada-anak.md",
+   "stems": [
+    "diabetes",
+    "melitus"
+   ],
+   "doseChunks": 89,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "esc-cvd-diabetes-2023.pdf"
+   ]
+  },
+  {
+   "disease": "diabetes-melitus-tipe-2-dewasa.md",
+   "stems": [
+    "diabetes",
+    "melitus"
+   ],
+   "doseChunks": 89,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "esc-cvd-diabetes-2023.pdf"
+   ]
+  },
+  {
+   "disease": "disentri-amoeba-amoebiasis.md",
+   "stems": [
+    "disentri",
+    "amoeba",
+    "amoebiasis"
+   ],
+   "doseChunks": 5,
+   "sources": [
+    "disentri-amoeba-amoebiasis.md",
+    "disentri-basiler-shigellosis.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "gastroenteritis-akut-diare-akut.md"
+   ]
+  },
+  {
+   "disease": "disentri-basiler-shigellosis.md",
+   "stems": [
+    "disentri",
+    "basiler",
+    "shigellosis"
+   ],
+   "doseChunks": 11,
+   "sources": [
+    "disentri-amoeba-amoebiasis.md",
+    "disentri-basiler-shigellosis.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "epilepsi-pada-anak.md",
+   "stems": [
+    "epilepsi"
+   ],
+   "doseChunks": 12,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "patologi-klinik-anatomik-unair.pdf",
+    "stroke-2019.pdf"
+   ]
+  },
+  {
+   "disease": "episkleritis.md",
+   "stems": [
+    "episkleritis"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "episkleritis.md"
+   ]
+  },
+  {
+   "disease": "epistaksis.md",
+   "stems": [
+    "epistaksis"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "erisipelas-dan-selulitis.md",
+   "stems": [
+    "erisipelas",
+    "selulitis"
+   ],
+   "doseChunks": 5,
+   "sources": [
+    "erisipelas-dan-selulitis.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "hordeolum-bintitan.md",
+    "oksiuriasis-enterobiasis-cacing-kremi.md"
+   ]
+  },
+  {
+   "disease": "faringitis-akut.md",
+   "stems": [
+    "faringitis"
+   ],
+   "doseChunks": 5,
+   "sources": [
+    "faringitis-akut.md",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "folikulitis-furunkel-dan-karbunkel.md",
+   "stems": [
+    "folikulitis",
+    "furunkel",
+    "karbunkel"
+   ],
+   "doseChunks": 9,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "folikulitis-furunkel-dan-karbunkel.md",
+    "otitis-eksterna.md"
+   ]
+  },
+  {
+   "disease": "fraktur-kraniomaksilofasial.md",
+   "stems": [
+    "fraktur",
+    "kraniomaksilofasial"
+   ],
+   "doseChunks": 5,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "gizi-olahraga-pdsko.pdf"
+   ]
+  },
+  {
+   "disease": "gagal-jantung-pada-anak.md",
+   "stems": [
+    "gagal",
+    "jantung"
+   ],
+   "doseChunks": 108,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "erisipelas-dan-selulitis.md"
+   ]
+  },
+  {
+   "disease": "gagal-jantung.md",
+   "stems": [
+    "gagal",
+    "jantung"
+   ],
+   "doseChunks": 108,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "erisipelas-dan-selulitis.md"
+   ]
+  },
+  {
+   "disease": "gangguan-cemas-menyeluruh-gad.md",
+   "stems": [
+    "gangguan",
+    "cemas",
+    "menyeluruh"
+   ],
+   "doseChunks": 101,
+   "sources": [
+    "askariasis.md",
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "gangguan-somatoform.md",
+   "stems": [
+    "gangguan",
+    "somatoform"
+   ],
+   "doseChunks": 97,
+   "sources": [
+    "askariasis.md",
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "gastritis.md",
+   "stems": [
+    "gastritis"
+   ],
+   "doseChunks": 3,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "gastritis.md",
+    "ppk-bedah-umum.pdf"
+   ]
+  },
+  {
+   "disease": "gastroenteritis-akut-diare-akut.md",
+   "stems": [
+    "gastroenteritis",
+    "diare"
+   ],
+   "doseChunks": 20,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "disentri-amoeba-amoebiasis.md"
+   ]
+  },
+  {
+   "disease": "gastroesophageal-reflux-disease-gerd.md",
+   "stems": [
+    "gastroesophageal",
+    "reflux",
+    "disease"
+   ],
+   "doseChunks": 62,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "esc-cvd-diabetes-2023.pdf"
+   ]
+  },
+  {
+   "disease": "glaukoma.md",
+   "stems": [
+    "glaukoma"
+   ],
+   "doseChunks": 9,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "patologi-klinik-anatomik-unair.pdf"
+   ]
+  },
+  {
+   "disease": "hemofilia.md",
+   "stems": [
+    "hemofilia"
+   ],
+   "doseChunks": 4,
+   "sources": [
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "hemoroid-eksterna-dan-interna-derajat-1-2.md",
+   "stems": [
+    "hemoroid",
+    "eksterna",
+    "interna",
+    "derajat"
+   ],
+   "doseChunks": 59,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "akne-vulgaris-jerawat.md",
+    "bedah-toraks-2020.pdf",
+    "benda-asing-konjungtiva.md",
+    "dermatovenereologi-perdoski-2017.pdf"
+   ]
+  },
+  {
+   "disease": "hepatitis-a.md",
+   "stems": [
+    "hepatitis"
+   ],
+   "doseChunks": 27,
+   "sources": [
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-cvd-diabetes-2023.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "hepatitis-b.md",
+   "stems": [
+    "hepatitis"
+   ],
+   "doseChunks": 27,
+   "sources": [
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-cvd-diabetes-2023.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "hepatitis-c.md",
+   "stems": [
+    "hepatitis"
+   ],
+   "doseChunks": 27,
+   "sources": [
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-cvd-diabetes-2023.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "hiperbilirubinemia.md",
+   "stems": [
+    "hiperbilirubinemia"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "hepatitis-a.md"
+   ]
+  },
+  {
+   "disease": "hipertensi-dewasa.md",
+   "stems": [
+    "hipertensi"
+   ],
+   "doseChunks": 52,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "hipertensi-pada-anak.md",
+   "stems": [
+    "hipertensi"
+   ],
+   "doseChunks": 52,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "hiv.md",
+   "stems": [],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "hordeolum-bintitan.md",
+   "stems": [
+    "hordeolum",
+    "bintitan"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "hordeolum-bintitan.md"
+   ]
+  },
+  {
+   "disease": "impaksi-gigi.md",
+   "stems": [
+    "impaksi"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "impetigo-krustosa-dan-bulosa.md",
+   "stems": [
+    "impetigo",
+    "krustosa",
+    "bulosa"
+   ],
+   "doseChunks": 6,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "impetigo-krustosa-dan-bulosa.md"
+   ]
+  },
+  {
+   "disease": "infeksi-dengue-anak-dan-remaja.md",
+   "stems": [
+    "dengue"
+   ],
+   "doseChunks": 2,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "infeksi-dengue-pada-dewasa.md",
+   "stems": [
+    "dengue"
+   ],
+   "doseChunks": 2,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "infeksi-intraabdominal.md",
+   "stems": [
+    "intraabdominal"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "infeksi-saluran-kemih.md",
+   "stems": [
+    "saluran",
+    "kemih"
+   ],
+   "doseChunks": 48,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "asma-bronkiale.md",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ]
+  },
+  {
+   "disease": "influenza.md",
+   "stems": [
+    "influenza"
+   ],
+   "doseChunks": 5,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "influenza.md",
+    "penyakit-dalam-papdi-2024.pdf",
+    "sirosis-hati-dewasa-2025.pdf"
+   ]
+  },
+  {
+   "disease": "insomnia-primer.md",
+   "stems": [
+    "insomnia",
+    "primer"
+   ],
+   "doseChunks": 167,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "kalazion.md",
+   "stems": [
+    "kalazion"
+   ],
+   "doseChunks": 2,
+   "sources": [
+    "blefaritis.md",
+    "hordeolum-bintitan.md"
+   ]
+  },
+  {
+   "disease": "kandidiasis-kutis.md",
+   "stems": [
+    "kandidiasis",
+    "kutis"
+   ],
+   "doseChunks": 26,
+   "sources": [
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "kandidiasis-mulut-oral-thrush.md",
+   "stems": [
+    "kandidiasis",
+    "mulut",
+    "thrush"
+   ],
+   "doseChunks": 33,
+   "sources": [
+    "bell-s-palsy.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "kanker-kolorektal.md",
+   "stems": [
+    "kanker",
+    "kolorektal"
+   ],
+   "doseChunks": 52,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "penyakit-dalam-papdi-2024.pdf",
+    "tumor-otak-2020.pdf"
+   ]
+  },
+  {
+   "disease": "kanker-nasofaring.md",
+   "stems": [
+    "kanker",
+    "nasofaring"
+   ],
+   "doseChunks": 54,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "influenza.md",
+    "penyakit-dalam-papdi-2024.pdf"
+   ]
+  },
+  {
+   "disease": "kanker-paru.md",
+   "stems": [
+    "kanker"
+   ],
+   "doseChunks": 52,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "penyakit-dalam-papdi-2024.pdf",
+    "tumor-otak-2020.pdf"
+   ]
+  },
+  {
+   "disease": "kanker-payudara.md",
+   "stems": [
+    "kanker",
+    "payudara"
+   ],
+   "doseChunks": 54,
+   "sources": [
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "penyakit-dalam-papdi-2024.pdf"
+   ]
+  },
+  {
+   "disease": "kanker-prostat.md",
+   "stems": [
+    "kanker",
+    "prostat"
+   ],
+   "doseChunks": 59,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "kanker-serviks.md",
+   "stems": [
+    "kanker",
+    "serviks"
+   ],
+   "doseChunks": 57,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "karies-gigi.md",
+   "stems": [
+    "karies"
+   ],
+   "doseChunks": 2,
+   "sources": [
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "karsinoma-sel-hati.md",
+   "stems": [
+    "karsinoma"
+   ],
+   "doseChunks": 11,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "sirosis-hati-dewasa-2025.pdf",
+    "stunting-2022.pdf"
+   ]
+  },
+  {
+   "disease": "katarak-pada-anak.md",
+   "stems": [
+    "katarak"
+   ],
+   "doseChunks": 6,
+   "sources": [
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "retinopati-diabetika-2023.pdf"
+   ]
+  },
+  {
+   "disease": "katarak-pada-dewasa.md",
+   "stems": [
+    "katarak"
+   ],
+   "doseChunks": 6,
+   "sources": [
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "retinopati-diabetika-2023.pdf"
+   ]
+  },
+  {
+   "disease": "kedokteran-jiwa.md",
+   "stems": [
+    "kedokteran"
+   ],
+   "doseChunks": 32,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "gangguan-cemas-menyeluruh-gad.md"
+   ]
+  },
+  {
+   "disease": "kejang-demam-sederhana.md",
+   "stems": [
+    "kejang",
+    "demam",
+    "sederhana"
+   ],
+   "doseChunks": 87,
+   "sources": [
+    "askariasis.md",
+    "bronkitis-akut.md",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ]
+  },
+  {
+   "disease": "kolera.md",
+   "stems": [
+    "kolera"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "kolera.md"
+   ]
+  },
+  {
+   "disease": "konjungtivitis-alergi.md",
+   "stems": [
+    "konjungtivitis",
+    "alergi"
+   ],
+   "doseChunks": 43,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "erisipelas-dan-selulitis.md",
+    "faringitis-akut.md",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "konjungtivitis-bakteri-dan-viral.md",
+   "stems": [
+    "konjungtivitis",
+    "bakteri",
+    "viral"
+   ],
+   "doseChunks": 76,
+   "sources": [
+    "akne-vulgaris-jerawat.md",
+    "bell-s-palsy.md",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ]
+  },
+  {
+   "disease": "kusta.md",
+   "stems": [
+    "kusta"
+   ],
+   "doseChunks": 23,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "lakasana-komplikasi-kehamilan.md",
+   "stems": [
+    "lakasana",
+    "komplikasi",
+    "kehamilan"
+   ],
+   "doseChunks": 120,
+   "sources": [
+    "askariasis.md",
+    "blefaritis.md",
+    "bronkitis-akut.md",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf"
+   ]
+  },
+  {
+   "disease": "laringitis-akut.md",
+   "stems": [
+    "laringitis"
+   ],
+   "doseChunks": 4,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "gastroesophageal-reflux-disease-gerd.md",
+    "laringitis-akut.md"
+   ]
+  },
+  {
+   "disease": "leukemia-limfoblastik-akut-pada-anak.md",
+   "stems": [
+    "leukemia",
+    "limfoblastik"
+   ],
+   "doseChunks": 15,
+   "sources": [
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "tumor-otak-2020.pdf"
+   ]
+  },
+  {
+   "disease": "luka-bakar.md",
+   "stems": [
+    "bakar"
+   ],
+   "doseChunks": 13,
+   "sources": [
+    "blefaritis.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "mabuk-perjalanan-motion-sickness.md",
+   "stems": [
+    "mabuk",
+    "perjalanan",
+    "motion",
+    "sickness"
+   ],
+   "doseChunks": 14,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "hepatitis-b.md"
+   ]
+  },
+  {
+   "disease": "malaria.md",
+   "stems": [
+    "malaria"
+   ],
+   "doseChunks": 16,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "malnutrisi-pada-dewasa.md",
+   "stems": [
+    "malnutrisi"
+   ],
+   "doseChunks": 4,
+   "sources": [
+    "askariasis.md",
+    "disentri-basiler-shigellosis.md",
+    "penyakit-paru-obstruktif-2019.pdf",
+    "sirosis-hati-dewasa-2025.pdf"
+   ]
+  },
+  {
+   "disease": "mata-kering-dry-eye-syndrome.md",
+   "stems": [
+    "kering",
+    "syndrome"
+   ],
+   "doseChunks": 124,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "askariasis.md",
+    "bell-s-palsy.md",
+    "blefaritis.md",
+    "bronkitis-akut.md"
+   ]
+  },
+  {
+   "disease": "migren-tanpa-aura.md",
+   "stems": [
+    "migren"
+   ],
+   "doseChunks": 7,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "migren-tanpa-aura.md",
+    "patologi-klinik-anatomik-unair.pdf"
+   ]
+  },
+  {
+   "disease": "miliaria-biang-keringat.md",
+   "stems": [
+    "miliaria",
+    "biang",
+    "keringat"
+   ],
+   "doseChunks": 16,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "gangguan-cemas-menyeluruh-gad.md",
+    "gizi-olahraga-pdsko.pdf"
+   ]
+  },
+  {
+   "disease": "nyeri.md",
+   "stems": [
+    "nyeri"
+   ],
+   "doseChunks": 87,
+   "sources": [
+    "akne-vulgaris-jerawat.md",
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "bell-s-palsy.md",
+    "benda-asing-konjungtiva.md",
+    "demam-tifoid.md"
+   ]
+  },
+  {
+   "disease": "obesitas-dewasa.md",
+   "stems": [
+    "obesitas"
+   ],
+   "doseChunks": 8,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "sirosis-hati-dewasa-2025.pdf"
+   ]
+  },
+  {
+   "disease": "oksiuriasis-enterobiasis-cacing-kremi.md",
+   "stems": [
+    "oksiuriasis",
+    "enterobiasis",
+    "cacing",
+    "kremi"
+   ],
+   "doseChunks": 11,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "askariasis.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "osteoartritis.md",
+   "stems": [
+    "osteoartritis"
+   ],
+   "doseChunks": 4,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "osteoporosis.md",
+   "stems": [
+    "osteoporosis"
+   ],
+   "doseChunks": 8,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "thalasemia-2018.pdf"
+   ]
+  },
+  {
+   "disease": "osteosarkoma.md",
+   "stems": [
+    "osteosarkoma"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "otitis-eksterna.md",
+   "stems": [
+    "otitis",
+    "eksterna"
+   ],
+   "doseChunks": 10,
+   "sources": [
+    "benda-asing-konjungtiva.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "gawat-darurat-medis-bedah-unair.pdf",
+    "hemoroid-eksterna-dan-interna-derajat-1-2.md",
+    "laringitis-akut.md"
+   ]
+  },
+  {
+   "disease": "otitis-media-akut-oma.md",
+   "stems": [
+    "otitis",
+    "media"
+   ],
+   "doseChunks": 49,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "esc-chronic-coronary-syndromes-2024.pdf"
+   ]
+  },
+  {
+   "disease": "otitis-media-supuratif-kronik.md",
+   "stems": [
+    "otitis",
+    "media",
+    "supuratif"
+   ],
+   "doseChunks": 52,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "erisipelas-dan-selulitis.md"
+   ]
+  },
+  {
+   "disease": "parotitis-epidemika-gondongan-mumps.md",
+   "stems": [
+    "parotitis",
+    "epidemika",
+    "gondongan",
+    "mumps"
+   ],
+   "doseChunks": 2,
+   "sources": [
+    "parotitis-epidemika-gondongan-mumps.md",
+    "sirosis-hati-dewasa-2025.pdf"
+   ]
+  },
+  {
+   "disease": "pedikulosis-kapitis-dan-pubis.md",
+   "stems": [
+    "pedikulosis",
+    "kapitis",
+    "pubis"
+   ],
+   "doseChunks": 5,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ]
+  },
+  {
+   "disease": "penatalaksanaan-fraktur.md",
+   "stems": [
+    "penatalaksanaan",
+    "fraktur"
+   ],
+   "doseChunks": 103,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "penyakit-ginjal-kronik.md",
+   "stems": [
+    "ginjal"
+   ],
+   "doseChunks": 70,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "penyakit-ginjal-tahap-akhir.md",
+   "stems": [
+    "ginjal"
+   ],
+   "doseChunks": 70,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "penyakit-hirschprung.md",
+   "stems": [
+    "hirschprung"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "penyakit-paru-obstruktif.md",
+   "stems": [
+    "obstruktif"
+   ],
+   "doseChunks": 7,
+   "sources": [
+    "askariasis.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "penyakit-paru-obstruktif-2019.pdf"
+   ]
+  },
+  {
+   "disease": "penyakit-periodontal.md",
+   "stems": [
+    "periodontal"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "perdarahan-saluran-cerna.md",
+   "stems": [
+    "perdarahan",
+    "saluran",
+    "cerna"
+   ],
+   "doseChunks": 110,
+   "sources": [
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "asma-bronkiale.md",
+    "bedah-toraks-2020.pdf",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf"
+   ]
+  },
+  {
+   "disease": "perdarahan-subkonjungtiva.md",
+   "stems": [
+    "perdarahan",
+    "subkonjungtiva"
+   ],
+   "doseChunks": 71,
+   "sources": [
+    "bedah-toraks-2020.pdf",
+    "demam-tifoid.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "pertusis-batuk-rejan.md",
+   "stems": [
+    "pertusis",
+    "batuk",
+    "rejan"
+   ],
+   "doseChunks": 17,
+   "sources": [
+    "askariasis.md",
+    "asma-bronkiale.md",
+    "bronkitis-akut.md",
+    "faringitis-akut.md",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "pitiriasis-rosea.md",
+   "stems": [
+    "pitiriasis",
+    "rosea"
+   ],
+   "doseChunks": 5,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "pitiriasis-rosea.md",
+    "tinea-versikolor-pitiriasis-versikolor-panu.md"
+   ]
+  },
+  {
+   "disease": "pneumonia-pada-dewasa.md",
+   "stems": [
+    "pneumonia"
+   ],
+   "doseChunks": 34,
+   "sources": [
+    "bronkitis-akut.md",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "gawat-darurat-medis-bedah-unair.pdf"
+   ]
+  },
+  {
+   "disease": "pneumonia.md",
+   "stems": [
+    "pneumonia"
+   ],
+   "doseChunks": 34,
+   "sources": [
+    "bronkitis-akut.md",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fktp-kmk-2022.pdf",
+    "gawat-darurat-medis-bedah-unair.pdf"
+   ]
+  },
+  {
+   "disease": "pterigium.md",
+   "stems": [
+    "pterigium"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "pulpa-periradikuler.md",
+   "stems": [
+    "pulpa",
+    "periradikuler"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "retinoblastoma.md",
+   "stems": [
+    "retinoblastoma"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "retinopati-diabetika.md",
+   "stems": [
+    "retinopati",
+    "diabetika"
+   ],
+   "doseChunks": 12,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "retinopati-diabetika-2023.pdf"
+   ]
+  },
+  {
+   "disease": "rinitis-alergika.md",
+   "stems": [
+    "rinitis",
+    "alergika"
+   ],
+   "doseChunks": 2,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "rinitis-alergika.md"
+   ]
+  },
+  {
+   "disease": "rinitis-vasomotor.md",
+   "stems": [
+    "rinitis",
+    "vasomotor"
+   ],
+   "doseChunks": 2,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "rinitis-alergika.md"
+   ]
+  },
+  {
+   "disease": "rinosinusitis-kronik.md",
+   "stems": [
+    "rinosinusitis"
+   ],
+   "doseChunks": 6,
+   "sources": [
+    "rinitis-alergika.md",
+    "rinosinusitis-kronik-2022.pdf"
+   ]
+  },
+  {
+   "disease": "sarkopenia.md",
+   "stems": [
+    "sarkopenia"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "sepsis-pada-anak.md",
+   "stems": [
+    "sepsis"
+   ],
+   "doseChunks": 25,
+   "sources": [
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "erisipelas-dan-selulitis.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "sepsis.md",
+   "stems": [
+    "sepsis"
+   ],
+   "doseChunks": 25,
+   "sources": [
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "erisipelas-dan-selulitis.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "serumen-prop-impaksi-serumen.md",
+   "stems": [
+    "serumen",
+    "impaksi",
+    "serumen"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "sindroma-koroner-akut.md",
+   "stems": [
+    "sindroma",
+    "koroner"
+   ],
+   "doseChunks": 17,
+   "sources": [
+    "bedah-toraks-2020.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "gawat-darurat-medis-bedah-unair.pdf"
+   ]
+  },
+  {
+   "disease": "sirosis-hati-pada-dewasa.md",
+   "stems": [
+    "sirosis"
+   ],
+   "doseChunks": 57,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "hepatitis-b.md",
+    "penyakit-dalam-papdi-2024.pdf"
+   ]
+  },
+  {
+   "disease": "skabies-kudis.md",
+   "stems": [
+    "skabies",
+    "kudis"
+   ],
+   "doseChunks": 3,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ]
+  },
+  {
+   "disease": "skizofrenia.md",
+   "stems": [
+    "skizofrenia"
+   ],
+   "doseChunks": 44,
+   "sources": [
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "skizofrenia-2025.pdf"
+   ]
+  },
+  {
+   "disease": "skoliosis-idiopatik-remaja.md",
+   "stems": [
+    "skoliosis",
+    "idiopatik"
+   ],
+   "doseChunks": 9,
+   "sources": [
+    "bell-s-palsy.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "episkleritis.md",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "stroke.md",
+   "stems": [
+    "stroke"
+   ],
+   "doseChunks": 77,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "bell-s-palsy.md",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "esc-cvd-diabetes-2023.pdf",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  },
+  {
+   "disease": "stunting.md",
+   "stems": [
+    "stunting"
+   ],
+   "doseChunks": 5,
+   "sources": [
+    "stunting-2022.pdf"
+   ]
+  },
+  {
+   "disease": "taeniasis.md",
+   "stems": [
+    "taeniasis"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "taeniasis.md"
+   ]
+  },
+  {
+   "disease": "tatalaksana-ulkus-kornea-bakteri.md",
+   "stems": [
+    "tatalaksana",
+    "ulkus",
+    "kornea",
+    "bakteri"
+   ],
+   "doseChunks": 96,
+   "sources": [
+    "akne-vulgaris-jerawat.md",
+    "asma-bronkiale.md",
+    "benda-asing-konjungtiva.md",
+    "blefaritis.md",
+    "demam-tifoid.md"
+   ]
+  },
+  {
+   "disease": "tension-type-headache-tth.md",
+   "stems": [
+    "tension",
+    "headache"
+   ],
+   "doseChunks": 15,
+   "sources": [
+    "aha-asa-stroke-primary-prevention-2024.pdf",
+    "esc-chronic-coronary-syndromes-2024.pdf",
+    "esc-cvd-diabetes-2023.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "tetanus.md",
+   "stems": [
+    "tetanus"
+   ],
+   "doseChunks": 13,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf",
+    "sirosis-hati-dewasa-2025.pdf",
+    "tetanus.md"
+   ]
+  },
+  {
+   "disease": "thalasemia.md",
+   "stems": [
+    "thalasemia"
+   ],
+   "doseChunks": 13,
+   "sources": [
+    "thalasemia-2018.pdf"
+   ]
+  },
+  {
+   "disease": "tindakan-resusitasi-stabilitasi-dan-tranpor-bayi-berat-lahir-r.md",
+   "stems": [
+    "resusitasi",
+    "stabilitasi",
+    "tranpor",
+    "berat",
+    "lahir"
+   ],
+   "doseChunks": 279,
+   "sources": [
+    "akne-vulgaris-jerawat.md",
+    "ankilostomiasis-infeksi-cacing-tambang.md",
+    "asma-bronkiale.md",
+    "bell-s-palsy.md",
+    "demam-tifoid.md"
+   ]
+  },
+  {
+   "disease": "tinea-korporis-dan-tinea-kruris.md",
+   "stems": [
+    "tinea",
+    "korporis",
+    "tinea",
+    "kruris"
+   ],
+   "doseChunks": 15,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "pitiriasis-rosea.md",
+    "tinea-korporis-dan-tinea-kruris.md"
+   ]
+  },
+  {
+   "disease": "tinea-versikolor-pitiriasis-versikolor-panu.md",
+   "stems": [
+    "tinea",
+    "versikolor",
+    "pitiriasis",
+    "versikolor"
+   ],
+   "doseChunks": 17,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "tonsilitis.md",
+   "stems": [
+    "tonsilitis"
+   ],
+   "doseChunks": 11,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "tonsilitis-2018.pdf"
+   ]
+  },
+  {
+   "disease": "trauma.md",
+   "stems": [
+    "trauma"
+   ],
+   "doseChunks": 11,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2025.pdf",
+    "gawat-darurat-medis-bedah-unair.pdf"
+   ]
+  },
+  {
+   "disease": "trikiasis.md",
+   "stems": [
+    "trikiasis"
+   ],
+   "doseChunks": 1,
+   "sources": [
+    "blefaritis.md"
+   ]
+  },
+  {
+   "disease": "tuberkolosis.md",
+   "stems": [
+    "tuberkolosis"
+   ],
+   "doseChunks": 0,
+   "sources": []
+  },
+  {
+   "disease": "tuli-sensorineural-kongenital.md",
+   "stems": [
+    "sensorineural",
+    "kongenital"
+   ],
+   "doseChunks": 3,
+   "sources": [
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "tumor-otak.md",
+   "stems": [
+    "tumor"
+   ],
+   "doseChunks": 57,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "erisipelas-dan-selulitis.md",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf"
+   ]
+  },
+  {
+   "disease": "ulkus-mulut-stomatitis-aftosa-rekuren.md",
+   "stems": [
+    "ulkus",
+    "mulut",
+    "stomatitis",
+    "aftosa",
+    "rekuren"
+   ],
+   "doseChunks": 81,
+   "sources": [
+    "bell-s-palsy.md",
+    "benda-asing-konjungtiva.md",
+    "blefaritis.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ]
+  },
+  {
+   "disease": "urtikaria-akut.md",
+   "stems": [
+    "urtikaria"
+   ],
+   "doseChunks": 16,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "fasyankes-primer-idi-2017.pdf",
+    "fornas-2023.pdf",
+    "fornas-2025.pdf"
+   ]
+  },
+  {
+   "disease": "varisela-cacar-air.md",
+   "stems": [
+    "varisela",
+    "cacar"
+   ],
+   "doseChunks": 8,
+   "sources": [
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "sirosis-hati-dewasa-2025.pdf",
+    "varisela-cacar-air.md"
+   ]
+  },
+  {
+   "disease": "vertigo-posisi-paroksismal-jinak-bppv.md",
+   "stems": [
+    "vertigo",
+    "posisi",
+    "paroksismal",
+    "jinak"
+   ],
+   "doseChunks": 31,
+   "sources": [
+    "bedah-toraks-2020.pdf",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf",
+    "episkleritis.md",
+    "fasyankes-primer-idi-2017.pdf"
+   ]
+  }
+ ],
+ "manualCorrections": {
+  "hiv.md": "55 dose chunks mention HIV/antiretroviral (PPK IDI 2017, FKTP 2022, PERDOSKI)",
+  "tuberkolosis.md": "46 dose chunks mention tuberkulosis/OAT (title is misspelled)",
+  "cidera-otak-traumatik.md": "2 Fornas dose chunks mention cedera kepala/otak (title spells 'cidera')"
+ }
+}
