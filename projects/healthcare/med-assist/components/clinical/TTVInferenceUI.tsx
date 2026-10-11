@@ -3739,6 +3739,8 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
             }
             aria-label="Uplink"
             aria-pressed={uplinkState === 'completed'}
+            aria-busy={uplinkState === 'processing' ? true : undefined}
+            data-action-state={uplinkState}
             data-sound="button5.mp3"
           >
             <span
@@ -3770,9 +3772,12 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
             disabled={sendDoctorState === 'processing' || vitalGuardrails.hasHardStop}
             aria-label="Doctor"
             aria-pressed={sendDoctorState === 'completed'}
+            aria-busy={sendDoctorState === 'processing' ? true : undefined}
+            data-action-state={sendDoctorState}
             data-sound="button5.mp3"
           >
             Doctor
+            {sendDoctorState === 'completed' ? <span aria-hidden="true"> ✓</span> : null}
           </button>
           <button
             type="button"
@@ -3788,6 +3793,7 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
             onClick={onNavigateToTrajectory}
             disabled={!onNavigateToTrajectory}
             aria-label="Trajectory"
+            data-action-state="idle"
             data-sound="button5.mp3"
           >
             Trajectory
