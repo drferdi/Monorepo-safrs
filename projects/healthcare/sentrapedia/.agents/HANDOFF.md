@@ -1,5 +1,32 @@
 # Sentrapedia handoff
 
+## Evidence gate: dose passage must name the diagnosis (#7); pre-gate drafts gated at render (#3) - 2026-10-11 Asia/Jakarta
+
+- Gaffer picked #7 and #3 from the open list ("Please fix" on #3) and approved the bounded design; edited pre-gate drafts stay as written (Gaffer).
+- `24c0dc8b` (R2):
+  - `src/lib/theoracle-evidence-gate.ts`: a dose is verified only from a passage (title or text) that names the working diagnosis.
+    - The diagnosis is named by one distinctive word of its label or of a TheOracle catalog name for its ICD-10 code.
+    - Words in 3+ catalog names and qualifier/function words do not count; capitals such as HIV do.
+    - Otherwise the drug stays with the dose blanked; strengths in route/duration/note follow the same passages. Safety items unchanged.
+  - `src/lib/mira/presentation.ts` `diagnosisContent`: an untouched draft without `evidenceGate` but with therapy is gated at render, against `therapyGrounding` or else `grounding`, exactly like the gateway. With no bundle, therapy is hidden with the reason.
+  - `src/components/workspace.tsx`: encounter export uses the rendered (gated) text. The edit box was already seeded from it.
+  - `referenceIncludes` moved to `src/lib/theoracle.ts`.
+- Verified:
+  - RED first for both: 4 gate tests, then 1 parity test (`diagnosisContent(old draft) === miraMessage(gated).content`). The generic-word test was added after the rule change, as a regression guard.
+  - `npm test` 224/224, `npx tsc --noEmit` 0, `npx eslint` on touched files 0.
+  - `test:mira` not run (no Python change). No browser check: the change is a pure render function covered by the parity test.
+- Offline replay, 61 + 61 eval replies, old gate reproduces the report exactly:
+  - verified 38 -> 35 legacy, 43 -> 32 targeted;
+  - cases with a verified dose 28 -> 25 and 32 -> 26;
+  - 14 changed rows read by hand: 6 correctly blocked (incl. flukonazol PV), 8 correct doses now blanked (fail-safe).
+  - Details in `PIPELINE-REPORT.md`, "Re-scored with the diagnosis check".
+- A stricter rule (every distinctive word of one name) gave 43 -> 23. It lost TB, cerumen, urticaria and asthma doses because English labels do not match Indonesian text, so it was rejected.
+- Known limits:
+  - English labels vs Indonesian text (Haemorrhoids/hemoroid) and catalog code eras (I84 vs K64, Z21 vs B20-B24) cost true doses.
+  - Synonyms such as ODHA for HIV are not known.
+  - A shared organ word (otitis, telinga) still links otitis media and eksterna.
+- Not pushed. Open items from the previous list are unchanged (#1, #2, #4-#6, #8-#20).
+
 ## TheOracle: 10 tatalaksana documents added to the index - 2026-10-11 Asia/Jakarta
 
 - Ten markdown documents with Gaffer-approved content are now in `theoracle/sources/tatalaksana/`: asfiksia neonatus, epistaksis, impaksi gigi, infeksi intraabdominal, osteosarkoma, Hirschsprung, pterigium, pulpa-periradikuler, sarkopenia and serumen prop. They carry Gaffer's two corrections: PPV 40-60/menit, and pip-tazo 3,375 g/6 jam nonberat vs 4,5 g berat.

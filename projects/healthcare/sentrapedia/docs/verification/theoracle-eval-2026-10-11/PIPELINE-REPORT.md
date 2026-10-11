@@ -48,6 +48,30 @@ The gate was replayed over the same 122 model replies stored in the MIRA audit l
 
 Headline with the shipped gate: verified doses **38 → 43** (legacy → targeted), drug removals 9 → 2. Counted with drop, spray and puff counts as strengths (last gate change). That change verified 7 more drops, each against a passage for the same disease: ofloksasin 2 x 4 tetes (OMSK), kloramfenikol 1 tetes (konjungtivitis), karbogliserin (serumen), ofloksasin (otitis eksterna). Before it, the counts were 35 → 39. Latency, ICD-10 and cost are unchanged; the gate takes about 1 ms.
 
+### Re-scored with the diagnosis check (commit `24c0dc8b`)
+
+The gate now verifies a dose only from a passage whose title or text names the working diagnosis. "Names" means at least one distinctive word of the diagnosis label or of a TheOracle catalog name for its ICD-10 code. Words found in 3+ catalog names (demam, akut, jantung) and qualifier or function words (pada, dewasa, unspecified, disorder) do not count. Same offline replay, the 61 + 61 eval replies only:
+
+| Gate counts (drugs) | Legacy | Targeted |
+|---|---|---|
+| Verified, previous gate → diagnosis check | 38 → 35 | 43 → 32 |
+| Dose removed | 18 → 21 | 26 → 37 |
+| Drug removed | 9 → 9 | 2 → 2 |
+| Cases with at least one verified dose | 28 → 25 | 32 → 26 |
+
+All 14 changed rows were read by hand:
+- **Correctly blocked (6):**
+  - flukonazol for pityriasis versicolor, cited from a PERDOSKI azole list (spot-check #2);
+  - parasetamol for varicella, cited from the kejang demam note;
+  - amoksisilin for OMA, cited from the tonsilitis guideline;
+  - diazepam for GAD, cited from FORNAS strength lists (x2);
+  - deferipron for beta thalassemia, cited from a FORNAS iron-chelation entry that does not name the disease.
+- **Correct doses now blanked (8), fail-safe** (the drug stays, "dosis: cek pedoman"):
+  - metformin, from a PAPDI chunk that says only "anti diabetik";
+  - efavirenz and tenofovir, from chunks that say "ODHA", not "HIV";
+  - amoksisilin-klavulanat, from a PERDOSKI pyoderma chunk without the word impetigo;
+  - diosmin and hesperidin (x4), where the English label "Haemorrhoids" does not match "hemoroid" and the catalog lists hemoroid under K64, not I84. Diosmin was "unclear" in the spot-check anyway (tablet content).
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.
