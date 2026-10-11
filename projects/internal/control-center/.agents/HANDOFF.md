@@ -1,5 +1,11 @@
 # HANDOFF — Control Center
 
+## 2026-10-11 - Prompt catalog path relocation (Codex)
+
+- Updated only Prompt entry-point, evidence, and documentation paths in `apps/web/src/lib/repo/catalog.ts` from `projects/internal/prompt` to `tools/prompt`, following Gaffer's relocation order.
+- Focused repo-root and library tests: PASS, 8/8, exit 0. Root diff check: PASS, exit 0. Lint: unavailable for this file under the inherited root Biome exclusions; invocation processed zero files and exited 1. Control Center typecheck was not run after the root circuit breaker; Prompt typechecks and desktop smoke passed.
+- Risks / next: root governance failed on missing active ownership for `docs/features-named.md`; record ownership before rerunning. No runtime logic changed, no publication.
+
 Migrated from root `.agents/HANDOFF.md` by ADR 0007 WP-G on 2026-09-25; content unchanged.
 
 Last updated: 2026-09-21 (Papan pekerjaan — FAIL → WARN end-to-end)

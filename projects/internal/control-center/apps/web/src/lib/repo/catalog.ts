@@ -632,20 +632,20 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
     userValue:
       "Lingkungan prompt lokal dengan IPC dan data pengguna — tanpa bergantung workspace root.",
     whenToUse: "Saat mengerjakan aplikasi Prompt.",
-    entryPoint: "projects/internal/prompt",
+    entryPoint: "tools/prompt",
     evidence: [
       {
-        path: "projects/internal/prompt/project.contract.json",
+        path: "tools/prompt/project.contract.json",
         proves: "Kontrak lifecycle",
       },
       {
-        path: "projects/internal/prompt/AGENTS.md",
+        path: "tools/prompt/AGENTS.md",
         proves: "Router kapsul",
       },
     ],
     risk: "R2",
     actionIds: [],
-    docs: ["projects/internal/prompt/AGENTS.md"],
+    docs: ["tools/prompt/AGENTS.md"],
   },
   {
     id: "capsule-unicom",
