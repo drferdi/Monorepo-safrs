@@ -15,13 +15,14 @@ export function validGate(value: unknown): value is EvidenceGateReport {
 }
 
 const UNVERIFIED = " (belum terverifikasi)";
-const UNITS = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|μg|ug|mikrogram)", g: "(?:g|gram)", iu: "(?:iu|ui|units?)", ml: "(?:ml|mililiter)", meq: "(?:meq)", mmol: "(?:mmol)", tetes: "(?:tetes|gtt)", semprotan: "(?:semprotan|semprot|spray)", puff: "(?:puff)", tablet: "(?:tablets?|tabs?|kaplets?)", kapsul: "(?:kapsul|kaps|capsules?)" };
+const UNITS = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|μg|ug|mikrogram)", g: "(?:g|gram)", iu: "(?:iu|ui|units?|u)", ml: "(?:ml|mililiter)", meq: "(?:meq)", mmol: "(?:mmol)", tetes: "(?:tetes|gtt)", semprotan: "(?:semprotan|semprot|spray)", puff: "(?:puff)", tablet: "(?:tablets?|tabs?|kaplets?)", kapsul: "(?:kapsul|kaps|capsules?)", "%": "%" };
 // Drop, spray, puff, tablet and capsule counts are doses too: "1-2 semprotan" or "2 tablet" must appear in the passage like "500 mg".
-const UNIT: Record<string, string> = { ...UNITS, gtt: UNITS.tetes, semprot: UNITS.semprotan, spray: UNITS.semprotan, "µg": UNITS.mcg, "μg": UNITS.mcg, ug: UNITS.mcg, mikrogram: UNITS.mcg, miligram: UNITS.mg, gram: UNITS.g, ui: UNITS.iu, unit: UNITS.iu, units: UNITS.iu, mililiter: UNITS.ml, tablets: UNITS.tablet, tab: UNITS.tablet, tabs: UNITS.tablet, kaplet: UNITS.tablet, kaplets: UNITS.tablet, kaps: UNITS.kapsul, capsule: UNITS.kapsul, capsules: UNITS.kapsul };
+// So are percent concentrations ("krim 5%") and a bare U, read as IU ("10 U" matches "10 IU" or "10 unit").
+const UNIT: Record<string, string> = { ...UNITS, gtt: UNITS.tetes, semprot: UNITS.semprotan, spray: UNITS.semprotan, "µg": UNITS.mcg, "μg": UNITS.mcg, ug: UNITS.mcg, mikrogram: UNITS.mcg, miligram: UNITS.mg, gram: UNITS.g, ui: UNITS.iu, unit: UNITS.iu, units: UNITS.iu, u: UNITS.iu, mililiter: UNITS.ml, tablets: UNITS.tablet, tab: UNITS.tablet, tabs: UNITS.tablet, kaplet: UNITS.tablet, kaplets: UNITS.tablet, kaps: UNITS.kapsul, capsule: UNITS.kapsul, capsules: UNITS.kapsul };
 // 1.200.000 and 1,200,000 are one number (thousands separators); "2,4 juta IU" keeps its multiplier.
 const NUMBER = String.raw`(?:\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(?:\s*(?:juta|ribu|million))?`;
 // A strength, or a pair such as 5-40 mg (range) or 875/125 mg (combination) whose numbers share one unit.
-const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\s*(tablets?|tabs?|kaplets?|kapsul|kaps|capsules?|mikrogram|miligram|mililiter|semprotan|semprot|spray|puff|tetes|gtt|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g)\b`, "gi");
+const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\s*(tablets?|tabs?|kaplets?|kapsul|kaps|capsules?|mikrogram|miligram|mililiter|semprotan|semprot|spray|puff|tetes|gtt|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g|u|%)(?:(?<=%)|\b)`, "gi");
 // Per-unit tails such as "/5 ml", "/kg/24 jam" or "/m2"; a drug name after a slash is not one of them.
 const PER = String.raw`(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:(?:ml|dl|l|vial|ampul|amp|tablet|tab|kapsul|kaps|kgbb|kg|m2|hari|dosis|kali|jam|menit|mnt|detik)\b|m²))*`;
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;
@@ -55,7 +56,7 @@ const number = (value: string) => value.replace(/[.,]/g, "[.,]").replace(/\s+/g,
 const strengths = (dose: string) => {
   const tail = /\/\s*kg/.test(dose.toLowerCase()) ? "(?=\\s*\\/\\s*kg)" : "(?!\\s*\\/\\s*kg)";
   const found = [...dose.toLowerCase().matchAll(STRENGTH)];
-  return found.filter(m => !(COUNTED.test(m[3]) && !m[1] && m[2] === "1" && found.some(o => !COUNTED.test(o[3])))).flatMap(m => [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}\\b${tail}`, "i")));
+  return found.filter(m => !(COUNTED.test(m[3]) && !m[1] && m[2] === "1" && found.some(o => !COUNTED.test(o[3])))).flatMap(m => [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}${m[3] === "%" ? "" : "\\b"}${tail}`, "i")));
 };
 // Strips every strength with its per-unit tails; "Amoxicillin 500 mg/clavulanate 125 mg" -> "Amoxicillin/clavulanate".
 export const unstrength = (text: string) => text.replace(new RegExp(STRENGTH.source + PER, "gi"), "").replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ").trim();

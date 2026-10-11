@@ -262,3 +262,24 @@ describe("clinical evidence gate: tablet and capsule counts are doses", () => {
     expect(out?.regimen[0]).toMatchObject({ dose: "3x1-2 tablet", note: "" });
   });
 });
+
+describe("clinical evidence gate: percent and bare U are strengths", () => {
+  const status = (name: string, dose: string, text: string) => gateTherapy(therapy([drug(name, dose)]), bundle(text), pneumonia).report.drugs[0].status;
+  it("verifies a percent concentration, a percent range and a decimal written either way", () => {
+    expect(status("Permetrin", "1x5%", "Permetrin krim 5% dioleskan ke seluruh tubuh.")).toBe("verified");
+    expect(status("Permetrin", "1x5%", "Permetrin krim 1% dioleskan ke seluruh tubuh.")).toBe("doseRemoved");
+    expect(status("Hydrocortisone", "1-2.5%", "Hidrokortison krim 1-2,5% dua kali sehari.")).toBe("verified");
+    expect(status("Hydrocortisone", "1-2.5%", "Hidrokortison krim 1% dua kali sehari.")).toBe("doseRemoved");
+    expect(status("Triamcinolone", "2-3x0.1%", "Triamsinolon pasta oral 0,1% 2-3 kali sehari.")).toBe("verified");
+  });
+  it("strips an unverified percent from the drug name and blanks it in a note", () => {
+    const { therapy: out } = gateTherapy(therapy([{ ...drug("Permetrin krim 5%", "1x"), note: "ulang dengan krim 2,5% bila iritasi" }]), bundle("Permetrin krim untuk skabies."), pneumonia);
+    expect(out?.regimen[0]).toMatchObject({ drug: "Permetrin krim", dose: "", note: "" });
+    expect(unstrength("Lidokain gel 2%")).toBe("Lidokain gel");
+  });
+  it("reads a bare U as a unit like IU, but not a word starting with u", () => {
+    expect(status("Insulin", "10 U", "Insulin basal mulai 10 IU malam hari.")).toBe("verified");
+    expect(status("Insulin", "10 U", "Insulin basal mulai 8 unit malam hari.")).toBe("doseRemoved");
+    expect(unstrength("Parasetamol 5 untuk anak")).toBe("Parasetamol 5 untuk anak");
+  });
+});
