@@ -2,6 +2,9 @@
 
 ## Final review fixes: evidence gate closes strength leaks - 2026-10-11 Asia/Jakarta
 
+- **Merged into local `main`** (Gaffer's choice). `main` was merged into the branch first (`fcd385e1`, no sentrapedia changes from main), then `main` was fast-forwarded. On the merged tree: `npm test` 216/216, `tsc` 0, `test:mira` 178 passed / 1 skipped. Not pushed.
+- **Open for Gaffer:** local `main` has diverged from `origin/main` (879 ahead, 40 behind) since before this work. `git pull` was not run. The branch and worktree are kept for the 10 tatalaksana documents.
+
 - The whole-branch review (opus, range `ffc74272~1..c67639e6`) found that the gate blanked only `dose`. Strengths in `note`, `duration`, `route`, the drug name and safety items reached the UI. A live case on the default legacy path: a crystalloid note "dapat diulang sampai 40ml/kg dalam 1 jam" was shown after the dose was blanked.
 - Fixes (R2), commits `5dea8cd7`, `7e182f81`, `f166ce72`, `c07272cf` and the number-parsing fix after it:
   - **Strengths in other fields.** A strength in `route`/`duration`/`note` is shown only when one passage naming the drug carries it; otherwise the field is blanked. A drug-name strength is part of dose verification and is stripped from the name when the drug is not verified, both in the regimen and in "Verifikasi terapi". A safety item with an unsupported strength is dropped.
