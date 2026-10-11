@@ -34,7 +34,13 @@
   - A shared organ word (otitis, telinga) still links otitis media and eksterna.
   - 4 of 144 catalog names have no distinctive word (Sinusitis Akut, Sinusitis Kronik, Diare Kronik, Diare Akut pada Anak). Their doses verify only through the model's label.
   - A long chunk covering several diseases still verifies when it names the diagnosis anywhere.
-- Not pushed. Open items from the previous list are unchanged (#1, #2, #4-#6, #8-#20).
+- Local `main` fast-forwarded to `79643cd1` (Gaffer chose "merge locally"), without `git pull`; local `main` still diverges from `origin/main`. Branch and worktree kept. Not pushed.
+- Open items from the previous list are unchanged (#1, #2, #4-#6, #8-#20). Next, for Gaffer: whether to turn on `MIRA_TARGETED_THERAPY` (#2), now with 32 verified targeted doses vs 35 legacy on the replay.
+- Laporan Orkestrasi:
+  - Orchestrator: Opus 5.5 (claude-opus-5-5) (reasoning effort not exposed)
+  - Worker: SOLO - no implementation worker dispatched. One reviewer: Claude Opus (subagent model "opus"; exact version and reasoning effort not exposed).
+  - Result: SUCCESS
+  - Suggested remediation: None - all required work is complete
 
 ## TheOracle: 10 tatalaksana documents added to the index - 2026-10-11 Asia/Jakarta
 
