@@ -158,6 +158,17 @@
       "review_status": "APPROVED"
     },
     {
+      "id": "myprompt-desktop",
+      "owner": "Gaffer",
+      "purpose": "Standalone MyPrompt prompt-authoring desktop tool in tools/prompt; own repository drferdi/Myprompt",
+      "allowed_operations": ["local-prompt-authoring", "operator-requested-provider-evaluation"],
+      "data_scope": "operator-selected prompts and local workspace; provider requests only when explicitly requested",
+      "authentication": "operator-owned provider credentials; never included in repository or verification output",
+      "network_endpoints": ["operator-configured LLM endpoints", "configured Supabase, Resend, and Xendit services"],
+      "provenance": "tools/prompt/project.contract.json and capsule-local capabilities.json",
+      "review_status": "RESTRICTED"
+    },
+    {
       "id": "sequential-thinking-mcp",
       "owner": "repository-maintainers",
       "purpose": "Structured multi-step reasoning assist for complex local tasks",

@@ -19,7 +19,9 @@ must not become lifecycle or standalone-verification dependencies.
   on one GSAP master timeline scrubbed by the scroll, ending on the founder's film. Split out of
   `sentraverse` on 2026-10-09.
 - Human owner: Gaffer (dr. Ferdi Iskandar)
-- Default risk: `R1`. No patient data, no credentials, no environment variables, no API.
+- Default risk: `R2`. No patient data. One server route, `POST /api/vera/chat`, proxies the Vera
+  chat to Dify with the server-only `DIFY_API_KEY` (optional `DIFY_API_URL`); each visitor IP gets
+  10 messages per 24 hours (in-memory, best-effort) and questions are capped at 1,000 characters.
 
 ## Standalone contract
 

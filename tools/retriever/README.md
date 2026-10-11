@@ -30,12 +30,13 @@ Jalankan shortcut **Retriever** di Desktop atau double click [Run-Retriever.bat]
 ### Cara 2: Melalui Terminal (Desktop App)
 ```powershell
 cd D:\DEV\monorepo\tools\retriever
-pnpm run desktop:start
+node --run start
 ```
 
 ### Cara 3: Melalui CLI Parameter
 ```powershell
-pnpm start -- -u https://fastapi.tiangolo.com/ -p tech-docs -d 3 -o ./data/scrapes/fastapi
+node --run build
+node ./dist/index.js -u https://fastapi.tiangolo.com/ -p tech-docs -d 3 -o ./data/scrapes/fastapi
 ```
 
 ---
@@ -45,6 +46,17 @@ pnpm start -- -u https://fastapi.tiangolo.com/ -p tech-docs -d 3 -o ./data/scrap
 # Jalankan smoke test
 pnpm run desktop:smoke
 
-# Validasi kemandirian SAFRS
-python D:\DEV\monorepo\tools\safrs\check_project_independence.py --root D:\DEV\monorepo
+# Pemeriksaan lokal (tidak perlu root Monorepo)
+node --run typecheck
+node --run lint
+node --run test
+node --run build
+node --run deploy:dry-run
 ```
+
+Manifest, lockfile, source, build, dan pemeriksaan di atas dimiliki folder ini.
+HTTrack adalah prerequisite host untuk scraping; tidak ada import ke root Monorepo.
+Lint lokal memeriksa syntax, `debugger`, dan dynamic code execution memakai TypeScript yang sudah terpasang; tidak mencakup style formatting.
+`deploy:dry-run` memvalidasi artefak lokal tanpa menerbitkan aplikasi. Smoke tidak menjalankan scraping.
+Untuk membuka hasil archive melalui local HTTP server: `node ./dist/index.js --preview <folder>`.
+Integrasi SAFRS bersifat opsional; dari root framework jalankan `pnpm project:status tools/retriever` atau `pnpm project:verify tools/retriever`.

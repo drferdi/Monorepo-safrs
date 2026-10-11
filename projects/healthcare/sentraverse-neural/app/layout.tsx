@@ -2,6 +2,7 @@
 import type { Metadata } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import type { ReactNode } from 'react'
+import { VeraNeuralWidget } from '@/components/VeraNeuralWidget'
 import './globals.css'
 
 // The journey's stylesheets read these two font variables (`journey.module.css`).
@@ -23,7 +24,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${plusJakartaSans.variable} ${inter.variable}`}>{children}</body>
+      <body className={`${plusJakartaSans.variable} ${inter.variable}`}>
+        {children}
+        <VeraNeuralWidget />
+      </body>
     </html>
   )
 }

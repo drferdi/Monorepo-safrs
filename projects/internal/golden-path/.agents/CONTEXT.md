@@ -2,7 +2,7 @@
 
 - Purpose: prove the SAFRS typed Database → API → Web flow with one safe demo record
   (`AGENTS.md` objective).
-- Human owner: Chief. Default risk: R1; dependency, shared-package, API, database, or architecture
+- Human owner: Gaffer. Default risk: R1; dependency, shared-package, API, database, or architecture
   changes are R2 (`AGENTS.md`).
 - Stack: Next.js on the Node runtime with the Hono adapter, capsule-local snapshots of `@safrs/api`,
   `@safrs/env`, `@safrs/ui` (and their closure) under `packages/`, and local PostgreSQL through

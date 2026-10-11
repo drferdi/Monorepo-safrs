@@ -270,7 +270,7 @@ Ini adalah feature di dalam Monorepo yang menjadi konfigurasi terversi agen Herm
 Ini adalah feature di dalam Monorepo yang menjadi workspace desktop prompt-engineering.
 
 - Id: `capsule-prompt`
-- Lokasi: `projects/internal/prompt`
+- Lokasi: `tools/prompt`
 
 ---
 

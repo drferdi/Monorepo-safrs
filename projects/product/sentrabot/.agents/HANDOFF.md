@@ -1,6 +1,6 @@
 # HANDOFF — Sentra Bot overrides consolidation
 
-Last updated: 2026-09-26 (Cursor, branch `fix/sentrabot-overrides`, worktree
+Last updated: 2026-10-11 (Claude Code, local `main`, task `TASK-20261011-GAFFER-ADDRESS`)
 `D:\DEV\Monorepo.worktrees\fix\sentrabot-overrides`, task `TASK-20260926-SENTRABOT-OVERRIDES`, state REVIEW)
 
 The WhatsApp Business Bridge public beta handoff (worktree `codex-whatsapp-bridge`) is unchanged in git
@@ -8,6 +8,7 @@ history; its open items still apply.
 
 ## Done in this branch
 
+- 2026-10-11 (Claude Code, task `TASK-20261011-GAFFER-ADDRESS`, R1): docs in this capsule now address the owner as "Gaffer" instead of "Chief" (wording only; no code, config or behaviour change).
 - The `react`, `react-dom`, `better-auth` overrides moved from `pnpm-workspace.yaml` (ignored by pnpm 9.15.0)
   to `package.json` `pnpm.overrides`, next to the security overrides. All overrides now live in one place.
 - Lockfile: no resolved version changed (2833 package entries before and after); only specifiers and peer

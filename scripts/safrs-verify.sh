@@ -16,6 +16,7 @@ fi
 "$PYTHON" tools/safrs/check_tool_inventory.py
 "$PYTHON" tools/safrs/check_topology.py
 "$PYTHON" tools/safrs/check_project_independence.py
+"$PYTHON" tools/safrs/check_tool_independence.py
 "$PYTHON" tools/safrs/check_actions_pinning.py
 "$PYTHON" tools/safrs/check_automation_policy.py
 "$PYTHON" tools/safrs/check_task_contract.py
@@ -32,5 +33,6 @@ fi
 "$PYTHON" tests/governance/test_automation_approvals.py
 "$PYTHON" tests/governance/test_handoff_scope.py
 "$PYTHON" tests/architecture/test_project_independence.py
+"$PYTHON" tests/architecture/test_tool_independence.py
 "$PYTHON" tests/architecture/test_verifier_parity.py
 printf 'SAFRS local governance verification: PASS\n'

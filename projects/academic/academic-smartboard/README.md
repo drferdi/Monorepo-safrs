@@ -10,7 +10,7 @@ Status: Draft governance capsule — implementation is not created by this wizar
 
 - In scope: `governance capsule for the web app binding `apps/web`; capabilities: ai`
 - Out of scope: `application implementation, deployment, credentials, purchases, messages, and production changes`
-- Human owner: `Chief`
+- Human owner: `Gaffer`
 
 ## Interfaces
 

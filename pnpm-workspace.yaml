@@ -21,6 +21,7 @@ packages:
   - tools/*
   # retriever punya workspace dan lockfile sendiri (rencananya repo sendiri).
   - '!tools/retriever'
+  - '!tools/prompt/**'
 
 allowBuilds:
   '@prisma/engines': true

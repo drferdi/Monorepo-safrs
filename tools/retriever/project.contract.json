@@ -15,7 +15,7 @@
   "commands": {
     "install": {
       "program": "pnpm",
-      "args": ["install", "--ignore-workspace"]
+      "args": ["install", "--frozen-lockfile"]
     },
     "lint": {
       "program": "pnpm",
@@ -44,13 +44,16 @@
   },
   "smoke": {
     "kind": "none",
-    "notApplicableReason": "CLI and interactive terminal suite; smoke verified via native smoke runner"
+    "notApplicableReason": "Electron desktop app; run builds and checks startup in smoke mode without scraping."
   },
   "artifacts": [
     "dist/index.js",
     "dist-electron/desktop/bootstrap.js",
     "dist-electron/desktop/renderer/index.html"
   ],
-  "externalDependencies": [],
-  "mutableStatePaths": []
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "host-tool", "name": "HTTrack", "locator": "httrack executable installed on host", "required": true }
+  ],
+  "mutableStatePaths": ["data"]
 }

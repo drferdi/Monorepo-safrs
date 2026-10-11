@@ -8,7 +8,7 @@ markup. There is no API, database, or shared-package runtime. Decision index:
 
 | Boundary | CURRENT | TARGET |
 | --- | --- | --- |
-| Site root | `index.html` + `src/app.js` + `server.js` | Same unless Chief asks |
+| Site root | `index.html` + `src/app.js` + `server.js` | Same unless Gaffer asks |
 | Build | `scripts/build.mjs` creates deterministic `dist/` + hashes | Keep capsule-owned |
 | Deployment | Pinned multi-stage `Dockerfile`; local validation dry-run | No production side effect |
 | Scroll owner | `.framer-bpy7lj` (`overflow: auto`, `height: 100vh`) | Lenis stays on this node |
@@ -50,7 +50,7 @@ pointer/wheel events.
 
 Do not import `@safrs/api`, `@safrs/database`, `@sentra/token`, or Next.js.
 This is a captured marketing/portfolio surface. Token rules apply only if
-Chief asks for a new UI that is not the Framer original.
+Gaffer asks for a new UI that is not the Framer original.
 
 This project intentionally has no package dependencies or lockfile. Any future project-local
 workspace/package architecture must remain inside this capsule and requires an explicit decision;

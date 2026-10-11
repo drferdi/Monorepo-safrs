@@ -13,17 +13,18 @@
     "retriever": "./bin/retriever.js"
   },
   "scripts": {
-    "build": "tsc && pnpm run desktop:build",
+    "build": "tsc && node --run desktop:build",
     "desktop:build": "tsc -p tsconfig.desktop.json && powershell -NoProfile -Command \"New-Item -ItemType Directory -Force dist-electron/desktop/renderer | Out-Null; Set-Content dist-electron/package.json '{\\\"type\\\":\\\"commonjs\\\"}'; Copy-Item desktop/renderer/index.html dist-electron/desktop/renderer/index.html -Force; Copy-Item desktop/renderer/index.css dist-electron/desktop/renderer/index.css -Force\"",
-    "desktop:dev": "pnpm run desktop:build && electron ./dist-electron/desktop/bootstrap.js",
-    "desktop:smoke": "pnpm run desktop:build && powershell -NoProfile -Command \"$env:SENTRA_DESKTOP_SMOKE='1'; & .\\node_modules\\.bin\\electron.cmd .\\dist-electron\\desktop\\bootstrap.js\"",
-    "start": "pnpm run desktop:dev",
-    "lint": "node -e \"console.log('retriever lint ok')\"",
+    "desktop:dev": "node --run desktop:build && electron ./dist-electron/desktop/bootstrap.js",
+    "desktop:smoke": "node --run desktop:build && powershell -NoProfile -Command \"$env:SENTRA_DESKTOP_SMOKE='1'; & .\\node_modules\\.bin\\electron.cmd .\\dist-electron\\desktop\\bootstrap.js; exit $LASTEXITCODE\"",
+    "start": "node --run desktop:dev",
+    "lint": "node scripts/lint.mjs",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.desktop.json --noEmit",
-    "test": "node --test tests/engine.test.mjs",
+    "test": "tsc && node --test tests/*.test.mjs",
+    "cli": "node ./dist/index.js",
     "preview": "node ./dist/index.js --preview",
-    "smoke": "pnpm run desktop:smoke",
-    "deploy:dry-run": "node -e \"console.log('retriever dry-run ready')\""
+    "smoke": "node --run desktop:smoke",
+    "deploy:dry-run": "node scripts/deploy-dry-run.mjs"
   },
   "dependencies": {
     "cheerio": "^1.0.0",

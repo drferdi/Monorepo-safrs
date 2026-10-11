@@ -1,7 +1,7 @@
 # CONTEXT
 
 - Purpose: NOVIA STUDIO portfolio site for Dr. Novia Anggraini (`AGENTS.md` "Owned scope").
-- Human owner: Chief (dr. Ferdi Iskandar). Default risk: R1 (`project.contract.json`).
+- Human owner: Gaffer (dr. Ferdi Iskandar). Default risk: R1 (`project.contract.json`).
 - Stack: Node.js 24, static React 18 with vendored Lenis 1.3.26, no package manager or lockfile;
   served on `http://127.0.0.1:4173`.
 - Contract and commands: `project.contract.json`; exact commands are in `AGENTS.md` "Exact

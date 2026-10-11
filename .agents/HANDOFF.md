@@ -1,5 +1,29 @@
 # HANDOFF — Monorepo control plane
 
+## 2026-10-11 - Local main integration (Claude)
+
+- Gaffer approved a LOCAL-only integration (BOUNDARIES: "integrate to main means LOCAL merge only") and, after seeing the R3 result, explicitly approved fast-forwarding local `main`. Branch `integrate/monorepo-sync` = `chore/tools-closeout` + merge of `feat/sentrapedia-dify-theoracle` (Sentrapedia capsule taken whole from the published branch; Oracle II SQLite removed as superseded) + medboard agent files tracked again (`935db235`, topology rule).
+- A trial merge of `origin/main` was started and aborted before commit: BOUNDARIES forbids pulling origin into local work; no origin content is in any local branch. Not pushed anywhere.
+- Gates: `node --run governance` 13/14 stages OK (policy, registry, routing, inventory, topology, project independence 17 capsules, tool independence, Actions pinning, automation policy, task contracts, ownership, lifecycle 171/616, approvals). FAIL at sensitive-change classification: R3, verification controls and implementation in one change set; independent integrity review required.
+- Sanitation (`git log -S'@g.us'`): 5 local commits from the 2026-08-24/25 PII incident and governance fixes, so local history must not be pushed as is.
+- Next: publish to origin only through a filtered export (control-plane only, no `projects/**`, PII-scanned) on top of `origin/main`, with ~20 governance/security conflicts to resolve (guard hooks, CI, AGENTS.md, verification-integrity.json, provider-codex, lockfile) and an independent integrity review. Codex was active in `tools/retriever` during this work; its uncommitted changes in the main checkout were not touched.
+
+## 2026-10-11 - Tools governance closeout (Codex)
+
+- Gaffer approved stale-claim takeover and registry/handoff cleanup. Superseded `TASK-20260922-BIOME-ROOT-EXCLUDE-PROJECTS` and `INDEPENDENCE-SKIP-GIT-IGNORED`; the latter belonged to an unregistered worktree. Used validated shared storage and a lease transition event. New owner: `TASK-20261011-TOOLS-CLOSEOUT` for this handoff, `biome.jsonc`, and `tools/standalone-tools.json`.
+- Added the standalone Prompt exclusion to root Biome; Prompt retains its local ESLint gate. Tools alignment details and prior local passing gates are in `tools/.agents/HANDOFF.md`. No changes to the existing project independence checker.
+- Updated Sentraverse Neural's own handoff to describe pre-existing Vera widget/API changes without editing application code or claiming runtime validation. Its existing healthcare registry owner remains intact.
+- Verification for this closeout: ownership, lifecycle (171 chains / 606 events), handoff, Biome lint of the configuration, and diff whitespace check PASS / exit 0. Full `node --run governance` FAIL / exit 1 at sensitive-change classification: integrity review evidence is stale, and the 1,982-file branch change set combines verification and implementation changes (R3 overall). Earlier policy, docs, routing, inventory, topology, independence, pinning, automation, task contracts, ownership, lifecycle and approval/evidence stages passed. No dependency installs, paid inference, migrations, commit or publication.
+- Remaining risks / next tasks: fresh extraction/install is not approved. Independent integrity review is still required where implementation and verification controls change together. Existing healthcare source changes remain outside this task's implementation scope.
+
+## 2026-10-11 - Prompt relocation (Codex)
+
+- Gaffer authorized moving `projects/internal/prompt` to `tools/prompt`. Moved the complete directory, including ignored local state, without copying or reading environment values.
+- Updated `pnpm-workspace.yaml` to exclude the standalone tool, `docs/features-named.md`, Control Center catalog paths, Prompt repository-prefix documentation, and the external Desktop launcher `C:/Users/drfer/Documents/script/Run-Sentra-Prompt.bat`.
+- Local verification: structural check, TypeScript checks, desktop compilation, 61 desktop tests, 8 focused Control Center tests, isolated-profile Electron smoke, deploy dry-run, and diff check passed (exit 0). All 2,603 dependency links remain valid and tool-local. Generated bin shims and pnpm virtual-store metadata now use the relocated directory.
+- Root doctor failed (exit 1): Docker/PostgreSQL unavailable. Governance failed (exit 1): `docs/features-named.md` has no active task owner. Earlier governance stages, including topology and independence, passed. Circuit breaker stopped further root checks. Catalog lint did not process the file because root Biome ignores it (exit 1).
+- Remaining risks / next tasks: record an active ownership claim before rerunning governance; restore local services when needed; resolve the existing lint configuration exclusion. Fresh extraction/install and a full lifecycle build were not run. No provider requests, data migrations, commit, or publication.
+
 Last updated: 2026-10-11 (Claude, Jev coverage fixes on `codex/oracle-ii-grounding`)
 Previous body: `git show 8d898739:.agents/HANDOFF.md`
 
@@ -59,9 +83,8 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
     OpenCode TUI.
   - Skill `audit-monorepo-agent`: corrected copy in `~/Downloads/audit-monorepo-agent.zip`;
     Gaffer uploads it in claude.ai Settings → Skills.
-- MyPrompt (`projects/internal/prompt`, own repo `drferdi/Myprompt`, published by
-  `git subtree split --prefix=projects/internal/prompt`) may move to `tools/` too. Waiting for
-  Gaffer, because the subtree prefix changes.
+- MyPrompt now lives at `tools/prompt` on Gaffer's order (2026-10-11). Its own repository remains
+  `drferdi/Myprompt`; future capsule publication uses `git subtree split --prefix=tools/prompt`.
 
 ## Blockers
 

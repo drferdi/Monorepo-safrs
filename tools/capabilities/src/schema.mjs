@@ -69,7 +69,7 @@ export function validateManifest(value) {
 }
 
 export function safeProjectSlug(value) {
-  if (typeof value !== "string" || !/^[a-z0-9][a-z0-9-]*$/u.test(value)) {
+  if (typeof value !== "string" || !/^[a-z0-9][a-z0-9-]*(?:\/[a-z0-9][a-z0-9-]*)?$/u.test(value)) {
     throw new TypeError("project must be a safe project slug.");
   }
   return value;

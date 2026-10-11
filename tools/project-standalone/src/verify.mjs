@@ -164,14 +164,18 @@ async function capsuleAt(projectsRoot, domain, name) {
 export async function resolveCapsules(root, selector, { collectInvalid = false } = {}) {
   const canonicalRoot = await assertRealDirectory(root, "Repository root");
   const projectsRoot = path.join(canonicalRoot, "projects");
-  await assertRealDirectory(projectsRoot, "Projects root");
+  const projectInfo = await lstat(projectsRoot).catch((error) => {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  });
+  if (projectInfo) await assertRealDirectory(projectsRoot, "Projects root");
   if (selector) {
     const [domain, name] = parseSelector(selector);
-    return [await capsuleAt(projectsRoot, domain, name)];
+    return [await capsuleAt(domain === "tools" ? canonicalRoot : projectsRoot, domain, name)];
   }
 
   const capsules = [];
-  const domains = await readdir(projectsRoot, { withFileTypes: true });
+  const domains = projectInfo ? await readdir(projectsRoot, { withFileTypes: true }) : [];
   for (const domain of domains.sort((first, second) =>
     first.name.localeCompare(second.name),
   )) {
@@ -217,6 +221,32 @@ export async function resolveCapsules(root, selector, { collectInvalid = false }
       }
     }
   }
+  const toolsRoot = path.join(canonicalRoot, "tools");
+  const toolsInfo = await lstat(toolsRoot).catch((error) => {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  });
+  if (toolsInfo) {
+    await assertRealDirectory(toolsRoot, "Tools root");
+    const candidates = await readdir(toolsRoot, { withFileTypes: true });
+    for (const candidate of candidates.sort((first, second) => first.name.localeCompare(second.name))) {
+      if (candidate.isSymbolicLink()) {
+        throw new ContractError(`Tool capsule ${candidate.name} must not be a symbolic link.`);
+      }
+      if (!candidate.isDirectory() || candidate.name.startsWith(".")) continue;
+      const info = await lstat(path.join(toolsRoot, candidate.name, "project.contract.json")).catch((error) => {
+        if (error.code === "ENOENT") return null;
+        throw error;
+      });
+      if (!info) continue;
+      try {
+        capsules.push(await capsuleAt(canonicalRoot, "tools", candidate.name));
+      } catch (error) {
+        if (!collectInvalid || !(error instanceof ContractError)) throw error;
+        capsules.push({ id: `tools/${candidate.name}`, error: error.message });
+      }
+    }
+  }
   return capsules;
 }
 
@@ -235,6 +265,15 @@ async function structuralReadiness(root, checkerPath) {
     throw new ContractError(
       `Structural independence check failed${boundedOutput(result) ? `:\n${boundedOutput(result)}` : "."}`,
     );
+  }
+  if (path.basename(checkerPath) !== "check_tool_independence.py") {
+    const toolsInfo = await lstat(path.join(root, "tools")).catch((error) => {
+      if (error.code === "ENOENT") return null;
+      throw error;
+    });
+    if (toolsInfo) {
+      await structuralReadiness(root, path.join(path.dirname(checkerPath), "check_tool_independence.py"));
+    }
   }
 }
 

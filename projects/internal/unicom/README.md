@@ -10,7 +10,7 @@ UNICOM is a Next.js multi-agent communication room migrated from `D:\Devops\abys
 
 - In scope: the web interface, `POST /api/chat`, `POST /api/webhooks`, and in-memory chat state.
 - Out of scope: Slack, Discord, Teams, persistent state, streaming, and provider-specific agent enhancements.
-- Human owner: Chief.
+- Human owner: Gaffer.
 
 ## Interfaces
 

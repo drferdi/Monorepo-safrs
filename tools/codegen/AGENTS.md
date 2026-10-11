@@ -1,7 +1,7 @@
 # AGENTS.md — tools/codegen (@safrs/codegen)
 
-Read the root [AGENTS.md](../AGENTS.md), [SAFRS_SPEC.md](../SAFRS_SPEC.md), and
-[SECURITY.md](../SECURITY.md) first. They are canonical.
+Read the root [AGENTS.md](../../AGENTS.md), [SAFRS_SPEC.md](../../SAFRS_SPEC.md), and
+[SECURITY.md](../../SECURITY.md) first. They are canonical.
 
 ## Scope
 
@@ -23,5 +23,5 @@ from `@safrs/schemas` and produces:
 
 ## Commands
 
-From repository root: `node tools/codegen/src/cli.mjs --schema <entry> --api <entry> --out <dir> [--openapi|--mock|--client]`.
+From repository root: `node tools/codegen/src/cli.mjs --schema <entry> --out <dir> [--openapi|--mock|--client]`.
 Run `node --test tools/codegen/test/*.test.mjs` for focused tests.

@@ -18,6 +18,7 @@
       "!!projects",
       // Fasilitas mandiri di tools/ (toolchain sendiri, rencananya repo sendiri).
       "!!tools/retriever",
+      "!!tools/prompt",
       // Sisa pengecualian di bawah ini dilacak Git tetapi bukan sumber kanonik.
       // Kontrol plane SAFRS dan cache Turbo: dihasilkan mesin.
       "!!**/.safrs",

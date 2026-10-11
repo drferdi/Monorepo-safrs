@@ -1,6 +1,6 @@
 # Support
 
-Portfolio is an inner-source capsule owned by **Chief** (dr. Ferdi Iskandar).
+Portfolio is an inner-source capsule owned by **Gaffer** (dr. Ferdi Iskandar).
 There is no public Discord, Slack, forum, or community mailing list for this
 project. Do not invent those channels.
 
@@ -19,18 +19,18 @@ flowchart TD
   Q["Question"] --> Kind{"Kind"}
   Kind -->|how do I run it| QS["docs/quickstart.md"]
   Kind -->|how does it work| OV["docs/overview.md"]
-  Kind -->|security incident| SEC["private disclosure to Chief"]
+  Kind -->|security incident| SEC["private disclosure to Gaffer"]
   Kind -->|scroll feels wrong| ARC["docs/architecture.md — Lenis wrapper"]
-  Kind -->|code change| AG["AGENTS.md then Chief"]
+  Kind -->|code change| AG["AGENTS.md then Gaffer"]
 ```
 
 ## Owner
 
-Human owner: **Chief**. Agents do not authorize R2/R3 work or production
+Human owner: **Gaffer**. Agents do not authorize R2/R3 work or production
 access.
 
 ## What support cannot do
 
-- Publish a production URL without Chief.
+- Publish a production URL without Gaffer.
 - Redesign the Framer layout as “polish”.
 - Replace root verification (`bash scripts/safrs-verify.sh`).

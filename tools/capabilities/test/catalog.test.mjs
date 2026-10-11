@@ -78,6 +78,25 @@ test("root workspace does not install optional runtime dependencies", async () =
   }
 });
 
+test("nested projects and standalone tools accept capability selectors", async () => {
+  const root = await fixtureRoot();
+  try {
+    for (const selector of ["internal/prompt", "tools/prompt"]) {
+      const directory = selector.startsWith("tools/") ? join(root, selector) : join(root, "projects", selector);
+      await mkdir(directory, { recursive: true });
+      const preview = await capabilityPreview({ capabilityId: "electron", project: selector, repoRoot: root });
+      const relative = selector.startsWith("tools/") ? selector : `projects/${selector}`;
+      assert.ok(preview.includes(`Files that will change: ${relative}/capabilities.json`));
+      await applyCapability({ capabilityId: "electron", project: selector, repoRoot: root, confirmation: `ENABLE electron FOR ${selector}` });
+      const result = JSON.parse(await readFile(join(directory, "capabilities.json"), "utf8"));
+      assert.equal(result.capabilities[0].id, "electron");
+    }
+    await assert.rejects(capabilityPreview({ capabilityId: "electron", project: "tools/../prompt", repoRoot: root }), /slug|selector/u);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("preview is write-free and lists the complete capability contract", async () => {
   const root = await fixtureRoot();
   try {

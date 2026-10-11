@@ -15,7 +15,7 @@
     "start": "next start --hostname 127.0.0.1 --port 4346",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node --test \"components/**/*.test.mjs\"",
+    "test": "node --test \"components/**/*.test.mjs\" \"app/**/*.test.mjs\"",
     "test:e2e": "playwright test",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs"
   },

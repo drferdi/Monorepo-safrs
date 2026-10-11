@@ -14,20 +14,20 @@ pushd "%CAPSULE%"
 :: Rebuild bila belum ada build
 if not exist "dist-electron\desktop\bootstrap.js" (
   echo Mengompilasi Retriever Desktop...
-  call pnpm run desktop:build
+  node --run desktop:build
   if errorlevel 1 goto :failure
 )
-
-:: Bersihkan instance electron lama jika ada
-powershell -NoProfile -Command "Get-Process electron -ErrorAction SilentlyContinue | Where-Object { $_.Path -like '*retriever*' } | Stop-Process -Force"
 
 :: Jalankan langsung native electron.exe (pure GUI, zero hanging cmd window)
 set "ELECTRON_EXE=%CAPSULE%\node_modules\electron\dist\electron.exe"
 if not exist "%ELECTRON_EXE%" (
-  set "ELECTRON_EXE=electron"
+  echo Menyiapkan Electron lokal Retriever...
+  node "%CAPSULE%\node_modules\electron\install.js"
+  if errorlevel 1 goto :failure
 )
 
 start "" "%ELECTRON_EXE%" "%CAPSULE%\dist-electron\desktop\bootstrap.js"
+if errorlevel 1 goto :failure
 
 popd
 exit /b 0

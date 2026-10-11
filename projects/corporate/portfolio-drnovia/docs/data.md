@@ -7,10 +7,10 @@ site is static files plus in-browser React. HTTP mapping does not exist.
 
 | Topic | CURRENT | TARGET |
 | --- | --- | --- |
-| Persistence | None | None unless Chief asks |
+| Persistence | None | None unless Gaffer asks |
 | Secrets | None required to run | Keep fail-closed: no `.env` |
-| Copy | Indonesian strings in markup | Change only on Chief request |
-| Images | Local `assets/` plus some Framer CDN URLs | Image-swap when Chief asks |
+| Copy | Indonesian strings in markup | Change only on Gaffer request |
+| Images | Local `assets/` plus some Framer CDN URLs | Image-swap when Gaffer asks |
 | PII | Public portfolio identity (name, GitHub) | Do not add NIK, phone dumps, or private CVs |
 
 ```mermaid

@@ -1,7 +1,7 @@
 # AGENTS.md — tools/deps-graph (@safrs/deps-graph)
 
-Read the root [AGENTS.md](../AGENTS.md), [SAFRS_SPEC.md](../SAFRS_SPEC.md), and
-[SECURITY.md](../SECURITY.md) first. They are canonical.
+Read the root [AGENTS.md](../../AGENTS.md), [SAFRS_SPEC.md](../../SAFRS_SPEC.md), and
+[SECURITY.md](../../SECURITY.md) first. They are canonical.
 
 ## Scope
 

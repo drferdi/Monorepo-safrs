@@ -1,6 +1,6 @@
 # Sentra Bot WhatsApp Bridge — Design
 
-**Status:** Proposed for Chief review  
+**Status:** Proposed for Gaffer review  
 **Date:** 2026-09-01  
 **Scope:** Public beta, hosted server, self-service multi-business onboarding
 

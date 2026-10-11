@@ -126,7 +126,7 @@ Istilah produk teknis yang dipertahankan: Sentra Bot, BYOK, Brief, LLM, sandbox,
 
 ## Wave 11 — Fitur 9 bot Sentra, fokus Indonesia (2026-09-01)
 
-Instruksi Chief: landing page harus mencerminkan produk sebenarnya — 9 bot production-ready
+Instruksi Gaffer: landing page harus mencerminkan produk sebenarnya — 9 bot production-ready
 (37 file, masing-masing dengan `SYSTEM_PROMPT.md`, `manifest.json`, contoh tugas nyata, alur
 first-run terawasi, aturan memori, batas cakupan, gerbang verifikasi, rekomendasi integrasi,
 kandidat rutinitas, dan profil izin) — dirancang untuk budaya dan kebutuhan orang Indonesia.
@@ -161,7 +161,7 @@ tanpa diberi cap. Rincian per persona tetap tersedia di tiga item FAQ.
 
 ## Wave 12 — UI demo dibangun ulang: iPad + antarmuka gelap (2026-09-01)
 
-**Ini perubahan design pertama yang disetujui Chief secara eksplisit.** Aturan "jangan ubah
+**Ini perubahan design pertama yang disetujui Gaffer secara eksplisit.** Aturan "jangan ubah
 design" masih berlaku untuk seluruh halaman lain; izin ini terbatas pada satu elemen: kartu
 putih berisi 7 baris gambar di seksi demo.
 
@@ -272,7 +272,7 @@ dengan pengguna nyata berikut izin tertulis, atau nonaktifkan seksi ini. Menayan
 endorsement fiktif adalah risiko hukum dan reputasi — lihat juga catatan risiko di
 `IMAGE-SWAP.md`.
 
-### Pergeseran audiens (keputusan Chief, 2026-09-01)
+### Pergeseran audiens (keputusan Gaffer, 2026-09-01)
 
 Audit kosakata seluruh halaman menemukan ketimpangan: bahasa korporat/B2B warisan layout
 aslinya (Pendiri 30×, rutinitas 25×, workspace 15×, infra 13×, operasional 11×, "Lead produk"
@@ -345,7 +345,7 @@ utama memakai path **relatif** (`assets/...`), di URL `/privasi/` semuanya menun
 `privasi.html` dan `ketentuan.html`, yang bekerja sama baiknya di dev maupun hasil build.
 
 **Sisa yang perlu dibersihkan manual:** folder `public/privasi/` dan `public/ketentuan/` dari
-percobaan pertama masih ada — mount tidak mengizinkan saya menghapus direktori. Mohon Chief
+percobaan pertama masih ada — mount tidak mengizinkan saya menghapus direktori. Mohon Gaffer
 hapus keduanya agar tidak membingungkan.
 
 ### Isi halaman
@@ -390,7 +390,7 @@ salah satu dari hanya dua kartu fitur. Kini diganti visual yang berfungsi.
 Daftar sembilan nama bot hilang dari kartu ini, tapi tetap tampil di sidebar iPad (seksi demo)
 dan satu butir FAQ khusus — berpindah, bukan hilang.
 
-### Revisi: iPad besar tiga tahap (permintaan Chief)
+### Revisi: iPad besar tiga tahap (permintaan Gaffer)
 
 Dua panel kecil di dalam kartu diganti **satu iPad lebar** (`dt:dr-w-915`, 915×644 px pada
 viewport 1440) yang berganti tahap sendiri:
@@ -459,8 +459,8 @@ yang terjaga.
 
 ## Wave 13 — Harga Rupiah empat paket + posisi Managed AI (2026-09-01)
 
-Harga dolar diganti struktur Rupiah dari Chief. **Perubahan design kedua yang disetujui
-Chief secara eksplisit** (empat kartu sejajar).
+Harga dolar diganti struktur Rupiah dari Gaffer. **Perubahan design kedua yang disetujui
+Gaffer secara eksplisit** (empat kartu sejajar).
 
 | Paket | Bulanan | Tahunan (−20%) |
 |---|---|---|
@@ -470,10 +470,10 @@ Chief secara eksplisit** (empat kartu sejajar).
 | Business | Rp499.000 | Rp399.000/bln · Rp4.788.000/thn |
 | Top-up | Rp25rb–250rb | disebut di subteks |
 
-**Harga tahunan diturunkan, bukan diberikan Chief.** Tab-nya sendiri sudah berbunyi "Tahunan
+**Harga tahunan diturunkan, bukan diberikan Gaffer.** Tab-nya sendiri sudah berbunyi "Tahunan
 (hemat 20%)", jadi angka tahunan = harga bulanan dikurangi 20%, dibulatkan ke ribuan terdekat,
 dengan total setahun ditulis lengkap agar diskonnya bisa diperiksa pembaca, bukan sekadar
-diklaim. **Mohon Chief konfirmasi angka ini sebelum tayang.**
+diklaim. **Mohon Gaffer konfirmasi angka ini sebelum tayang.**
 
 ### Perubahan design
 
@@ -488,13 +488,13 @@ diklaim. **Mohon Chief konfirmasi angka ini sebelum tayang.**
 - `usePricingTabs.js` — `PLANS` diperluas dari 2 ke 4 entri. Hook-nya sendiri sudah generik
   (memetakan `PLANS[index]` ke `cards[index]`), jadi tidak ada perubahan logika.
 
-### Posisi Managed AI vs BYOK (keputusan Chief)
+### Posisi Managed AI vs BYOK (keputusan Gaffer)
 
-Tabel Chief mencantumkan "Managed AI: Included", sementara seluruh halaman menjanjikan
+Tabel Gaffer mencantumkan "Managed AI: Included", sementara seluruh halaman menjanjikan
 "jalan di komputer Anda sendiri, bukan di server kami" dan BYOK. Itu kontradiksi yang akan
 tertangkap pembaca tepat di bagian harga.
 
-Keputusan Chief: **Managed AI jadi default, BYOK jadi opsi.** Garis ceritanya sekarang —
+Keputusan Gaffer: **Managed AI jadi default, BYOK jadi opsi.** Garis ceritanya sekarang —
 *berkas dan riwayat tetap lokal; yang dikirim keluar hanya potongan yang perlu dibaca model;
 kuota AI sudah termasuk, atau pakai kunci sendiri lewat BYOK agar panggilan model pun tidak
 lewat Sentra.*
@@ -521,7 +521,7 @@ sticky yang masing-masing terikat pada satu visual. Menambah slot ketiga akan me
 bergulir tanpa visual pasangan — itu perubahan design, yang di luar remit. Secara editorial
 seksi persona tersendiri lebih tepat; ini kompromi sadar, bukan pilihan terbaik.
 
-**Istilah pelaku yang dibakukan (keputusan Chief, 2026-09-01):** gunakan **"agen"** (ejaan
+**Istilah pelaku yang dibakukan (keputusan Gaffer, 2026-09-01):** gunakan **"agen"** (ejaan
 Indonesia), bukan "bot" maupun "Agent". "Sentra Bot" tetap dipakai sebagai nama produk, dan
 "9 bot" / "sembilan bot" tetap dipakai sebagai hitungan kesembilan bot — keduanya bukan
 istilah pelaku, jadi tidak terkena aturan ini.

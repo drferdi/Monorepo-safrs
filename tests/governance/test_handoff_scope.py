@@ -41,10 +41,13 @@ class HandoffScopeTests(unittest.TestCase):
         (directory / 'tools/safrs').mkdir(parents=True)
         shutil.copy2(ROOT / CHECKER, directory / CHECKER)
         shutil.copy2(ROOT / SHARED, directory / SHARED)
+        shutil.copy2(ROOT / 'tools/standalone-tools.json', directory / 'tools/standalone-tools.json')
         # Importing memory_files writes __pycache__/, which the real repository ignores.
         write(directory, '.gitignore', '__pycache__/\n')
         write(directory, ROOT_HANDOFF, '# root handoff\n')
         write(directory, 'tools/example.py', 'baseline\n')
+        write(directory, 'tools/prompt/.agents/HANDOFF.md', '# prompt handoff\n')
+        write(directory, 'tools/prompt/desktop/main.ts', 'baseline\n')
         if with_projects:
             write(directory, UNICOM_HANDOFF, '# unicom handoff\n')
             write(directory, f'{UNICOM}/src/page.tsx', 'baseline\n')
@@ -74,6 +77,13 @@ class HandoffScopeTests(unittest.TestCase):
         write(repository, 'tools/example.py')
         self.assertFailsNaming(repository, ROOT_HANDOFF)
         write(repository, ROOT_HANDOFF, '# updated\n')
+        self.assertPasses(repository)
+
+    def test_standalone_tool_requires_its_own_handoff(self):
+        repository = self.repository()
+        write(repository, 'tools/prompt/desktop/main.ts')
+        self.assertFailsNaming(repository, 'tools/prompt/.agents/HANDOFF.md')
+        write(repository, 'tools/prompt/.agents/HANDOFF.md', '# updated\n')
         self.assertPasses(repository)
 
     def test_capsule_only_work_requires_the_capsule_handoff_not_the_root(self):
