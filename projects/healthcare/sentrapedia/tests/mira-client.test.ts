@@ -51,5 +51,6 @@ describe("direct main-composer analysis", () => {
     expect(ok.therapyGrounding).toEqual(grounding);
     expect(ok.evidenceGate).toEqual(gate);
     await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => Response.json({ ...response, therapyGrounding: { bad: true } }) })).rejects.toThrow("Respons analisis tidak dapat diverifikasi.");
+    for (const evidenceGate of [{ bad: true }, null, { ...gate, drugs: "x" }, { ...gate, drugs: [{ drug: "A", dose: "", status: "unknown", evidenceIds: [] }] }]) await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => Response.json({ ...response, evidenceGate }) })).rejects.toThrow("Respons analisis tidak dapat diverifikasi.");
   });
 });

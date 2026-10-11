@@ -261,6 +261,18 @@ describe("therapy verification presentation", () => {
     expect(theOracleCitations(grounding)).toBe(theOracleCitations(grounding, undefined, undefined));
     expect(theOracleCitations(grounding)).not.toContain("Verifikasi terapi");
   });
+  it("explains inside the therapy section why therapy was removed, and leaves gate-less drafts unchanged", () => {
+    const gate = { forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, therapyRemoved: true, reason: "Tidak ada obat yang indikasinya terverifikasi di TheOracle.", drugs: [{ drug: "Levofloxacin", dose: "1x750mg", status: "removed" as const, evidenceIds: [] }] };
+    const withGate = miraDraft(analysis.result, "trace", "2026-10-11T00:00:00.000Z", undefined, undefined, gate);
+    const body = section(withGate, "Terapi Farmakologi");
+    expect(body).toContain("Terapi tidak ditampilkan: Tidak ada obat yang indikasinya terverifikasi di TheOracle.");
+    expect(body).not.toContain("Belum ada data terapi");
+    const without = miraDraft(analysis.result, "trace", "2026-10-11T00:00:00.000Z");
+    expect(section(without, "Terapi Farmakologi")).not.toContain("Terapi tidak ditampilkan");
+    expect(without).toBe(miraDraft(analysis.result, "trace", "2026-10-11T00:00:00.000Z", undefined, undefined, undefined));
+    const message = miraMessage({ ...analysis, grounding, evidenceGate: gate });
+    expect(section(diagnosisContent(message), "Terapi Farmakologi")).toContain("Terapi tidak ditampilkan: Tidak ada obat");
+  });
   it("keeps the therapy grounding in the saved source and its links", () => {
     const therapyGrounding = { ...grounding, evidence: [{ ...grounding.evidence[0], evidenceId: "T1", text: "Terapi pneumonia." }] };
     const message = miraMessage({ ...analysis, grounding, therapyGrounding });

@@ -20,6 +20,7 @@ export async function requestMiraAnalysis(caseData: CaseState, options: { synthe
   if (!("grounding" in data) || !validTheOracleGrounding(data.grounding)) throw new Error("Respons analisis tidak dapat diverifikasi.");
   const therapyGrounding = "therapyGrounding" in data ? data.therapyGrounding : undefined;
   if (therapyGrounding !== undefined && !validTheOracleGrounding(therapyGrounding)) throw new Error("Respons analisis tidak dapat diverifikasi.");
-  const evidenceGate = "evidenceGate" in data && validGate(data.evidenceGate) ? data.evidenceGate : undefined;
+  const evidenceGate = "evidenceGate" in data ? data.evidenceGate : undefined;
+  if (evidenceGate !== undefined && !validGate(evidenceGate)) throw new Error("Respons analisis tidak dapat diverifikasi.");
   return { case: snapshot, result: data.result, traceId: data.traceId, createdAt: data.createdAt, grounding: data.grounding, ...(therapyGrounding ? { therapyGrounding } : {}), ...(evidenceGate ? { evidenceGate } : {}) };
 }

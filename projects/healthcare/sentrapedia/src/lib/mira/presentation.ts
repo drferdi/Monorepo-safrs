@@ -5,9 +5,9 @@ import { newId, type Message } from "../workspace";
 import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
-import { validGate } from "../theoracle-evidence-gate";
+import { validGate, type EvidenceGateReport, type GateStatus } from "../theoracle-evidence-gate";
 
-const gateLine: Record<string, string> = { verified: "dosis terverifikasi", doseRemoved: "dosis tidak ditemukan di TheOracle, cek pedoman", removed: "tidak ditampilkan, indikasi tidak terverifikasi di TheOracle" };
+const gateLine: Record<GateStatus, string> = { verified: "dosis terverifikasi", doseRemoved: "dosis tidak ditemukan di TheOracle, cek pedoman", removed: "tidak ditampilkan, indikasi tidak terverifikasi di TheOracle" };
 const passages = (bundle: TheOracleGroundingBundle) => bundle.evidence.map(item => `- ${item.source.title} [${item.evidenceId}] · kemiripan ${item.similarity}\n  ${item.text}`).join("\n\n");
 
 export function theOracleCitations(grounding: unknown, therapyGrounding?: unknown, gate?: unknown): string {
@@ -63,7 +63,7 @@ function referenceIncludes(sourceCode: string, code: string): boolean {
   });
 }
 
-export function miraDraft(result: MiraResult, traceId: string, createdAt: string, caseData?: CaseState, focus?: MiraFocus): string {
+export function miraDraft(result: MiraResult, traceId: string, createdAt: string, caseData?: CaseState, focus?: MiraFocus, gate?: EvidenceGateReport): string {
   // Bullets only where there are several points; a single point stays a plain line.
   const points = (items: string[], indent = "") => items.length > 1 ? items.map(item => `${indent}- ${item}`).join("\n") : items.length ? `${indent}${items[0]}` : "";
   const list = (items: string[] | undefined) => points((items ?? []).map(item => recorded(item).trimStart()));
@@ -134,7 +134,7 @@ export function miraDraft(result: MiraResult, traceId: string, createdAt: string
       field("Pemeriksaan fisik yang disarankan", actions(["exam"])),
       field("Kemampuan fasilitas", list(caseData?.facilityCapabilities)),
     ])],
-    ["Terapi Farmakologi", regimen || narrative(primary, [["Terapi", "terapi"]]) || "Belum ada data terapi untuk diagnosis ini."],
+    ["Terapi Farmakologi", gate?.therapyRemoved ? join([`Terapi tidak ditampilkan: ${gate.reason}`, regimen || narrative(primary, [["Terapi", "terapi"]])]) : regimen || narrative(primary, [["Terapi", "terapi"]]) || "Belum ada data terapi untuk diagnosis ini."],
     ["Edukasi", join([
       narrative(primary, [["Segera kembali atau dirujuk bila", "rujukan"]]) || "Belum ada data edukasi untuk diagnosis ini.",
       diagnosisReferenceMarker,
@@ -155,11 +155,12 @@ export function diagnosisContent(message: Pick<Message, "content" | "originalCon
   try {
     const source: unknown = JSON.parse(message.sourceText!);
     if (!source || typeof source !== "object" || !("case" in source) || !("result" in source) || !("traceId" in source) || !("createdAt" in source) || !validCase(source.case) || !validResult(source.result) || typeof source.traceId !== "string" || typeof source.createdAt !== "string") return message.content;
-    return miraDraft(source.result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined) + theOracleCitations("grounding" in source ? source.grounding : undefined, "therapyGrounding" in source ? source.therapyGrounding : undefined, "evidenceGate" in source ? source.evidenceGate : undefined);
+    const gate = "evidenceGate" in source && validGate(source.evidenceGate) ? source.evidenceGate : undefined;
+    return miraDraft(source.result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined, gate) + theOracleCitations("grounding" in source ? source.grounding : undefined, "therapyGrounding" in source ? source.therapyGrounding : undefined, gate);
   } catch { return message.content; }
 }
 
 export function miraMessage(analysis: MiraAnalysis, reviewDefaults?: ReviewItem[], mode: ModeId = "ddx"): Message {
-  const content = miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case, miraFocus(mode)) + theOracleCitations(analysis.grounding, analysis.therapyGrounding, analysis.evidenceGate);
+  const content = miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case, miraFocus(mode), analysis.evidenceGate) + theOracleCitations(analysis.grounding, analysis.therapyGrounding, analysis.evidenceGate);
   return { id: newId(), role: "assistant", mode, content, originalContent: content, createdAt: analysis.createdAt, reviewStatus: "draft", reviewItems: freshReview(reviewDefaults), sourceText: JSON.stringify({ kind: "MIRA", contractVersion: "1", ...analysis, theOracleSource, review: "belum ditinjau" }, null, 2) };
 }
