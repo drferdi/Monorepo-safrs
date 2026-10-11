@@ -17,8 +17,8 @@ const defaultChecker = path.join(
 function usage() {
   return [
     "Usage:",
-    "  node tools/project-standalone/src/cli.mjs status [domain/capsule]",
-    "  node tools/project-standalone/src/cli.mjs verify <domain/capsule>",
+    "  node tools/project-standalone/src/cli.mjs status [domain/capsule|tools/name]",
+    "  node tools/project-standalone/src/cli.mjs verify <domain/capsule|tools/name>",
   ].join("\n");
 }
 

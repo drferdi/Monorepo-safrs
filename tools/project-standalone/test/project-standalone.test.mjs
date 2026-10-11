@@ -3,6 +3,7 @@ import {
   mkdir,
   mkdtemp,
   readFile,
+  rename,
   rm,
   symlink,
   writeFile,
@@ -15,13 +16,14 @@ import { fileURLToPath } from "node:url";
 
 import { runCli } from "../src/cli.mjs";
 import {
+  ContractError,
   loadAndValidateContract,
   safeRelativePath,
   validateContract,
 } from "../src/contract.mjs";
 import { assertSafeTree, copyCapsule } from "../src/extraction.mjs";
 import { createSanitizedEnvironment, runCommand } from "../src/process.mjs";
-import { statusCapsules, verifyCapsule } from "../src/verify.mjs";
+import { resolveCapsules, statusCapsules, verifyCapsule } from "../src/verify.mjs";
 
 const toolRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const repositoryRoot = path.resolve(toolRoot, "../..");
@@ -147,6 +149,37 @@ async function createRepository(projectContract = contract()) {
   await writeFile(path.join(root, "root-sentinel.txt"), "root-only\n");
   return { root, capsule };
 }
+
+test("tool capsules are discovered and selected without a projects directory", async () => {
+  const { root, capsule } = await createRepository(contract({ id: "tools/example" }));
+  try {
+    await mkdir(path.join(root, "tools"));
+    await rename(capsule, path.join(root, "tools", "example"));
+    await rm(path.join(root, "projects"), { recursive: true, force: true });
+    assert.deepEqual((await resolveCapsules(root)).map((item) => item.id), ["tools/example"]);
+    assert.equal((await resolveCapsules(root, "tools/example"))[0].id, "tools/example");
+    assert.equal((await statusCapsules({ root, selector: "tools/example", checkerPath }))[0].structural, "PASS");
+    await writeFile(path.join(root, "tools", "example", "package.json"), JSON.stringify({ dependencies: { bad: "workspace:*" } }));
+    await assert.rejects(statusCapsules({ root, selector: "tools/example", checkerPath }), /independence|structural/iu);
+    await assert.rejects(resolveCapsules(root, "tools/../example"), ContractError);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("tool capsule discovery rejects symbolic directories and contracts", async () => {
+  const { root } = await createRepository();
+  const outside = await temporaryDirectory();
+  try {
+    await mkdir(path.join(root, "tools"));
+    await symlink(outside, path.join(root, "tools", "escape"), process.platform === "win32" ? "junction" : "dir");
+    await assert.rejects(resolveCapsules(root, "tools/escape"), /real directory|symbolic link/u);
+    await assert.rejects(resolveCapsules(root), /symbolic link/u);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
+  }
+});
 
 test("contract validation reports precise fields and rejects unsafe argv", async () => {
   assert.deepEqual(validateContract(contract()), []);

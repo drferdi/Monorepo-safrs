@@ -40,11 +40,16 @@ async function canonicalDirectory(directory, label) {
 async function projectDirectory(repoRoot, project) {
   const slug = safeProjectSlug(project);
   const canonicalRoot = await canonicalDirectory(repoRoot, "Repository root");
+  const isTool = slug.startsWith("tools/");
   const projectsRoot = await canonicalDirectory(
-    path.join(canonicalRoot, "projects"),
-    "projects directory",
+    path.join(canonicalRoot, isTool ? "tools" : "projects"),
+    isTool ? "tools directory" : "projects directory",
   );
-  const target = path.join(projectsRoot, slug);
+  const relative = isTool ? slug.slice("tools/".length) : slug;
+  if (!isTool && relative.includes("/")) {
+    await canonicalDirectory(path.join(projectsRoot, relative.split("/")[0]), "Project domain");
+  }
+  const target = path.join(projectsRoot, relative);
   const info = await lstat(target);
   if (!info.isDirectory() || info.isSymbolicLink()) {
     throw new Error(
@@ -114,7 +119,7 @@ export async function capabilityPreview({
     `Capability: ${manifest.label} (${manifest.id})`,
     `Project: ${project}`,
     `Risk: ${manifest.risk}`,
-    `Files that will change: projects/${project}/capabilities.json`,
+    `Files that will change: ${project.startsWith("tools/") ? project : `projects/${project}`}/capabilities.json`,
     `Dependencies: ${manifest.dependencies.join(", ") || "none"}`,
     `Environment: ${manifest.environment.join(", ") || "none"}`,
     `Commands: ${manifest.commands.join(", ") || "none"}`,
