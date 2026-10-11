@@ -1,5 +1,12 @@
 # Sentrapedia handoff
 
+## Vera (Dify) widget redesign — 2026-10-11 Asia/Jakarta
+
+- Dify moved out of the sidebar into a floating `VeraWidget` (`src/components/vera-widget.tsx`, rendered in `src/app/layout.tsx`); `/dify` stays as the full-screen view.
+- Current design (commit d852c68c, per Gaffer's mockup): dark neumorphic panel 330x440 (mobile: full width, max 480px tall), top bar (reset, "Vera · TheOracle" pill, expand, close), opening state with the official Sentra neuron logo (`src/assets/sentra-official-logo.png`, LFS, cropped from Gaffer's attachment) and a time-based greeting, right-aligned user bubbles, plain assistant replies with copy/like/dislike/sources, raised composer card with `+` suggestions and a round send button.
+- Verified: typecheck 0, lint 0 on the widget, build 0, deploy:dry-run PASS, browser check desktop + mobile on port 3105 (opening view, `+` suggestions, send button enables). No real Dify message was sent, so the conversation view was not exercised live. No unit test covers the widget.
+- Open: not pushed to drferdi/Sentrapedia yet (needs Gaffer's approval; LFS object for the logo must be pushed explicitly). The launcher still uses the four-point star mark, not the official logo.
+
 ## Legacy theoracle/ inventory read — 2026-10-11 Asia/Jakarta
 
 Read-only (copy in session scratchpad, pylance 12.0.0 + pyarrow 25.0.1 in a scratchpad venv
