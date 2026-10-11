@@ -53,9 +53,10 @@ const diagnosisWords = (diagnosis: { icd10: string; label: string }) => new Set(
 const number = (value: string) => value.replace(/[.,]/g, "[.,]").replace(/\s+/g, "\\s*");
 // Each number of a pair needs its own match: the first stands alone or opens the same pair.
 // One tablet or capsule next to a strength such as 500 mg adds nothing to check: the 500 mg is the dose.
-const strengths = (dose: string) => {
+// Without `percent`, a percent is not a strength (a safety item's "eGFR turun >50%" is a threshold).
+const strengths = (dose: string, percent = true) => {
   const tail = /\/\s*kg/.test(dose.toLowerCase()) ? "(?=\\s*\\/\\s*kg)" : "(?!\\s*\\/\\s*kg)";
-  const found = [...dose.toLowerCase().matchAll(STRENGTH)];
+  const found = [...dose.toLowerCase().matchAll(STRENGTH)].filter(m => percent || m[3] !== "%");
   return found.filter(m => !(COUNTED.test(m[3]) && !m[1] && m[2] === "1" && found.some(o => !COUNTED.test(o[3])))).flatMap(m => [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}${m[3] === "%" ? "" : "\\b"}${tail}`, "i")));
 };
 // Strips every strength with its per-unit tails; "Amoxicillin 500 mg/clavulanate 125 mg" -> "Amoxicillin/clavulanate".
@@ -72,7 +73,7 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
   // A strength counts only from a passage about the diagnosis: an azole list for cryptococcosis does not dose pityriasis versicolor.
   const dosingFor = (drug: string) => naming(drug).filter(p => p.about);
   // A strength outside `dose` is shown only when one passage naming the drug carries all of it.
-  const carried = (text: string, among: { text: string }[]) => { const patterns = strengths(text); return !patterns.length || among.some(p => patterns.every(pattern => pattern.test(p.text))); };
+  const carried = (text: string, among: { text: string }[], percent = true) => { const patterns = strengths(text, percent); return !patterns.length || among.some(p => patterns.every(pattern => pattern.test(p.text))); };
   const drugs = therapy.regimen.map((r): GateDrug => {
     const named = naming(r.drug);
     if (!named.length) return { drug: r.drug, dose: r.dose, status: "removed", evidenceIds: [] };
@@ -90,7 +91,7 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
     const named = therapy.regimen.filter(r => mentions(words, r.drug));
     const keptNamed = kept.filter(r => named.includes(r));
     if (named.length && !keptNamed.length) return [];
-    if (!carried(item, passages.filter(p => (keptNamed.length ? keptNamed : kept).some(r => mentions(p.words, r.drug))))) return [];
+    if (!carried(item, passages.filter(p => (keptNamed.length ? keptNamed : kept).some(r => mentions(p.words, r.drug))), false)) return [];
     const specific = words.filter(w => w.length >= 5 && !named.some(r => tokens(r.drug).includes(w)));
     const supported = keptNamed.length > 0 && passages.some(p => keptNamed.every(r => mentions(p.words, r.drug)) && SAFETY_TERM.test(p.text.toLowerCase()) && specific.some(w => p.words.includes(w)));
     return [supported ? item : item + UNVERIFIED];

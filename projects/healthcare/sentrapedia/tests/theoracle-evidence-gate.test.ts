@@ -281,5 +281,12 @@ describe("clinical evidence gate: percent and bare U are strengths", () => {
     expect(status("Insulin", "10 U", "Insulin basal mulai 10 IU malam hari.")).toBe("verified");
     expect(status("Insulin", "10 U", "Insulin basal mulai 8 unit malam hari.")).toBe("doseRemoved");
     expect(unstrength("Parasetamol 5 untuk anak")).toBe("Parasetamol 5 untuk anak");
+    expect(status("Insulin", "10 U", "Insulin basal mulai 10 ug malam hari.")).toBe("doseRemoved");
+    expect(status("Permetrin", "1x5 %", "Permetrin krim 5 % dioleskan ke seluruh tubuh.")).toBe("verified");
+  });
+  it("keeps a safety item whose percent is a threshold, marked unverified", () => {
+    const { therapy: out } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg")], { contraindications: ["Amoxicillin: hindari bila eGFR turun >50%"], interactions: ["Hindari pada luka bakar >20% luas permukaan tubuh"] }), bundle("Amoksisilin 500 mg 3 kali sehari."), pneumonia);
+    expect(out?.contraindications).toEqual(["Amoxicillin: hindari bila eGFR turun >50% (belum terverifikasi)"]);
+    expect(out?.interactions).toEqual(["Hindari pada luka bakar >20% luas permukaan tubuh (belum terverifikasi)"]);
   });
 });
