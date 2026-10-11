@@ -961,7 +961,8 @@ h1 span { white-space: normal; }
 }
 .vera-widget-trigger:hover { transform: translateY(-1px); background: #232329; }
 .vera-widget-trigger:active { transform: scale(.97); }
-.vera-launcher-mark { display: grid; place-items: center; width: 20px; height: 22px; border-radius: 6px; background: linear-gradient(180deg, var(--vera-accent), #1fb3a4); color: #06312d; }
+.vera-launcher-mark { display: grid; place-items: center; width: 26px; height: 22px; color: var(--vera-text); }
+.vera-launcher-mark img { width: 26px; height: auto; }
 .vera-launcher-text { font-size: 13px; font-weight: 600; }
 
 @keyframes vera-panel-in { from { opacity: 0; transform: translateY(8px) scale(.98); } }

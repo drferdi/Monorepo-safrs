@@ -389,7 +389,7 @@ export function VeraWidget() {
         data-open={isOpen}
       >
         <span className="vera-launcher-mark" aria-hidden="true">
-          {isOpen ? <X size={14} /> : <VeraMark size={12} />}
+          {isOpen ? <X size={14} /> : <Image src={officialLogo} alt="" width={26} height={20} unoptimized />}
         </span>
         <span className="vera-launcher-text">{isOpen ? "Tutup" : "Tanya Vera"}</span>
       </button>
@@ -402,12 +402,4 @@ function greetingFor(hour: number): string {
   if (hour < 15) return "Selamat siang";
   if (hour < 18) return "Selamat sore";
   return "Selamat malam";
-}
-
-function VeraMark({ size }: { size: number }) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size}>
-      <path d="M12 2c.8 6.5 3.5 9.2 10 10-6.5.8-9.2 3.5-10 10-.8-6.5-3.5-9.2-10-10 6.5-.8 9.2-3.5 10-10Z" fill="currentColor" />
-    </svg>
-  );
 }
