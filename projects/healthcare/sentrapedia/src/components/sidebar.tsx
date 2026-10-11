@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ChevronRight, Ellipsis, ListPlus, PanelLeft, Plus, Search, SlidersHorizontal, SquarePen, UserRoundPlus, AudioLines, Command, BookOpen } from "lucide-react";
+import { ArrowRight, ChevronRight, Ellipsis, ListPlus, PanelLeft, Plus, Search, SlidersHorizontal, SquarePen, UserRoundPlus, AudioLines, Command, BookOpen, Bot } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Brand } from "./brand";
 import { SidebarSubmenu } from "./sidebar-submenu";
@@ -45,6 +45,7 @@ export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSele
           <button onClick={() => { if (mobile) onToggle(); onDialog("queue"); }}><ListPlus/><span>Antrean kerja</span></button>
           <button onClick={() => { if (mobile) onToggle(); onDialog("templates"); }}><SquarePen/><span>Templat dan favorit</span></button>
           <button onClick={() => { if (mobile) onToggle(); onDialog("knowledge"); }}><BookOpen/><span>Pustaka Klinis</span></button>
+          <button onClick={() => { window.location.href = "/dify"; }}><Bot/><span>Dify AI Agent</span></button>
           <button onClick={() => onDialog("scribe")}><AudioLines/><span>Mode suara</span></button>
         </div>
         <div className="nav-group" role="group" aria-labelledby="nav-group-system"><span className="nav-group-title" id="nav-group-system">Sistem</span>
