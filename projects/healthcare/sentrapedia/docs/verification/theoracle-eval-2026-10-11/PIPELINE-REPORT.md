@@ -81,6 +81,12 @@ Offline replay, same 122 replies:
 - On the gate before the diagnosis check, exactly those four rows flip to dose removed, and no other row changes.
 - FORNAS monthly quantities ("tab 2 mg 30 tab/bulan") and "3 x 1 tablet" still verify.
 
+### Tablet and capsule counts are doses (commit `5cb691b9`)
+
+A dose written as a count ("3 x 1-2 tablet", "1 kapsul") now verifies when a passage that names the drug and the diagnosis carries the same count, like drops and puffs. Before this change, such a dose was always blanked.
+
+Replay, same 122 replies: targeted verified 32 → 33, legacy unchanged at 35. The one new verification is antasida 3x1-2 tablet for gastritis, cited from `gastritis.md`: "Antasida oral 3 x 1-2 tablet".
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.

@@ -1,5 +1,25 @@
 # Sentrapedia handoff
 
+## Evidence gate: tablet and capsule counts are doses - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for "#12 jumlah tablet dihitung sebagai dosis". Note: Gaffer's original #12 is "persen dan U tunggal"; I had mislabelled tablet counts as #12 in the #8 report. Percent and bare "U" are still open.
+- Gaffer approved the bounded design without an Opus review.
+- `5cb691b9` (R2), `src/lib/theoracle-evidence-gate.ts`:
+  - Tablet/tab/kaplet and kapsul/kaps (and English tablets/capsules) are strength units. "3 x 2 tablet" or "1-2 kapsul" verifies only from a passage that names the drug and the diagnosis and carries the same count. Both ends of a range are checked.
+  - Tablet and capsule do not match each other.
+  - A count of one next to a mass strength ("Parasetamol 500 mg, 3x1 tablet") is not checked separately; existing test c2 relies on this.
+  - A tablet count is itself the dose, so the #8 tablet-content rule skips it.
+  - Counts in route/duration/note need the same support or the field is blanked.
+- Verified:
+  - RED first; gate tests 42/42, `npm test` 231/231, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies: targeted verified 32 -> 33. The only change is antasida "3x1-2 tablet" for gastritis, from `gastritis.md` "Antasida oral 3 x 1-2 tablet" (correct). Legacy stays at 35.
+- Known limits:
+  - Frequency ("3x") is not checked, same as mg doses.
+  - "1 tablet" is common and can match another drug's line in the same chunk (the chunk must still name the drug and the diagnosis).
+  - "½ tablet", spoons and sachets are not covered.
+  - A model dose of "Diosmin 450 mg 3x2 tablet" is still blanked, because the #8 rule treats the 450 mg as tablet content.
+- Not pushed.
+
 ## Evidence gate: tablet content is not a dose (#8) - 2026-10-11 Asia/Jakarta
 
 - Gaffer asked for #8 and approved the bounded design.
