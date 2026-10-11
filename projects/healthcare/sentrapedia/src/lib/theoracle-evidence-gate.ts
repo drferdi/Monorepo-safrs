@@ -25,6 +25,10 @@ const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\
 // Per-unit tails such as "/5 ml", "/kg/24 jam" or "/m2"; a drug name after a slash is not one of them.
 const PER = String.raw`(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:(?:ml|dl|l|vial|ampul|amp|tablet|tab|kapsul|kaps|kgbb|kg|m2|hari|dosis|kali|jam|menit|mnt|detik)\b|m²))*`;
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;
+// Two or more tablets per dose ("3 x 2 tablet", "2 tablet 3 kali", "2 kapsul sekaligus"): a strength just before it is tablet content, not a dose.
+const UNITS_PER_DOSE = /\d+\s*[x×]\s*[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)\b|(?:^|[^\d.,/])[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)\s*(?:\d+\s*(?:[x×]|kali)|sekaligus|per\s*kali|tiap\s*kali)/i;
+// A passage doses with a strength when one of its occurrences is not followed, within 80 characters, by a multi-tablet dose.
+const doses = (pattern: RegExp, text: string) => [...text.matchAll(new RegExp(pattern.source, "gi"))].some(m => !UNITS_PER_DOSE.test(text.slice(m.index + m[0].length, m.index + m[0].length + 80)));
 
 // English and Indonesian spellings of generic names converge: amoxicillin and amoksisilin -> amoksisilin.
 function spell(word: string): string {
@@ -67,7 +71,7 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
     const named = naming(r.drug);
     if (!named.length) return { drug: r.drug, dose: r.dose, status: "removed", evidenceIds: [] };
     const patterns = strengths(r.dose + " " + r.drug);
-    const dosing = patterns.length ? dosingFor(r.drug).filter(p => patterns.every(pattern => pattern.test(p.text))) : [];
+    const dosing = patterns.length ? dosingFor(r.drug).filter(p => patterns.every(pattern => doses(pattern, p.text))) : [];
     return dosing.length ? { drug: r.drug, dose: r.dose, status: "verified", evidenceIds: dosing.map(p => p.id) } : { drug: r.drug, dose: r.dose, status: "doseRemoved", evidenceIds: named.map(p => p.id) };
   });
   const kept = therapy.regimen.filter((_, i) => drugs[i].status !== "removed");

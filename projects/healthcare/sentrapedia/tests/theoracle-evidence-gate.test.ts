@@ -226,3 +226,18 @@ describe("clinical evidence gate: the dose passage names the diagnosis", () => {
     expect(out?.regimen[0].note).toBe("");
   });
 });
+
+describe("clinical evidence gate: tablet content is not a dose", () => {
+  const status = (name: string, dose: string, text: string) => gateTherapy(therapy([drug(name, dose)]), bundle(text), pneumonia).report.drugs[0].status;
+  it("does not verify a per-tablet strength when the passage gives two or more tablets per dose", () => {
+    const mpff = "Flebotropik oral: MPFF (Diosmin 450 mg + Hesperidin 50 mg) 3 x 2 tablet selama 4 hari pertama, lalu 2 x 2 tablet selama 3 hari berikutnya.";
+    expect(status("Diosmin", "3x450mg", mpff)).toBe("doseRemoved");
+    expect(status("Hesperidin", "3x50mg", mpff)).toBe("doseRemoved");
+    expect(status("Paracetamol", "3x500mg", "Parasetamol 500 mg, 2 tablet 3 kali sehari.")).toBe("doseRemoved");
+  });
+  it("keeps verifying one tablet per dose, a monthly quantity, or a strength also written as a dose", () => {
+    expect(status("Amoxicillin", "3x500mg", "Amoksisilin 500 mg 3 x 1 tablet selama 5 hari.")).toBe("verified");
+    expect(status("Diazepam", "1x2mg", "diazepam 1. tab 2 mg 30 tab/bulan. 2. tab 5 mg 30 tab/bulan.")).toBe("verified");
+    expect(status("Paracetamol", "3x500mg", "Parasetamol tablet 500 mg, 2 tablet 3 kali sehari pada dewasa; anak 500 mg dosis tunggal.")).toBe("verified");
+  });
+});
