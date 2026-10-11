@@ -1,5 +1,16 @@
 # Sentrapedia handoff
 
+## Open items A (#1, #2, #4, #5, #6) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked to work through A #1, #2, #4, #5, #6 one by one, choosing the best option without questions. Hard rules still hold: no push, no paid calls, no loss of uncommitted work.
+- **#1 Non-dose additions in the 10 tatalaksana documents: machine-checked, no correction needed.**
+  - ICD-10: all 8 codes exist in `mira/service/data/icd10.json` (BPJS e-Klaim) with matching names. P21 Birth asphyxia, R04.0 Epistaxis, K01.1 Impacted teeth, C40/C41 bone malignancy, Q43.1 Hirschsprung's disease, H11.0 Pterygium, K04 pulp/periapical, H61.2 Impacted cerumen.
+  - They agree with the Oracle-II catalog JSON for the same diseases: P21.9 sits inside P21, and K01.1 sits inside K01.
+  - Infeksi intraabdominal (catalog K65) and sarkopenia (catalog M62.84, an ICD-10-CM code absent from WHO/BPJS) carry no code line. Left as is, because adding one would change indexed text and need a re-embed for no retrieval gain.
+  - Referral criteria and asfiksia monitoring match standard practice and the cited guidelines.
+  - The named sources are real guidelines: NRP/AAP, PNPK Asfiksia 2019, AAO-HNS Epistaxis 2020 and Cerumen 2017, ADA 2019 antibiotic guideline, SIS/IDSA cIAI with STOP-IT, NCI PDQ Osteosarcoma, APSA HAEC 2017, AAO EyeWiki, EWGSOP2/ICFSR/PROT-AGE.
+  - The documents are unchanged. Clinical sign-off stays with Gaffer, who already approved the dose content.
+
 ## Evidence gate: a field keeps its supported leading part (#10) - 2026-10-11 Asia/Jakarta
 
 - Gaffer asked for #10 (a whole route/duration/note blanked for one unsupported number) and approved the bounded design with one Opus review.
