@@ -256,6 +256,9 @@ describe("therapy verification presentation", () => {
     expect(citations).toContain("- Amoxicillin: dosis tidak ditemukan di TheOracle, cek pedoman");
     expect(citations).toContain("- Levofloxacin: tidak ditampilkan, indikasi tidak terverifikasi di TheOracle");
     expect(citations).toContain("Referensi terapi (dicari memakai diagnosis):");
+    const strengthInName = { ...gate, drugs: [{ drug: "Parasetamol 500 mg", dose: "3x500mg", status: "doseRemoved", evidenceIds: ["E1"] }, { drug: "Amoksisilin 500 mg", dose: "3x500mg", status: "verified", evidenceIds: ["E1"] }] };
+    expect(theOracleCitations(grounding, grounding, strengthInName)).toContain("- Parasetamol: dosis tidak ditemukan");
+    expect(theOracleCitations(grounding, grounding, strengthInName)).toContain("- Amoksisilin 500 mg: dosis terverifikasi");
   });
   it("renders a draft saved before the evidence gate exactly as before", () => {
     expect(theOracleCitations(grounding)).toBe(theOracleCitations(grounding, undefined, undefined));

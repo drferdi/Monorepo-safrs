@@ -5,7 +5,7 @@ import { newId, type Message } from "../workspace";
 import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
-import { validGate, type EvidenceGateReport, type GateStatus } from "../theoracle-evidence-gate";
+import { unstrength, validGate, type EvidenceGateReport, type GateStatus } from "../theoracle-evidence-gate";
 
 const gateLine: Record<GateStatus, string> = { verified: "dosis terverifikasi", doseRemoved: "dosis tidak ditemukan di TheOracle, cek pedoman", removed: "tidak ditampilkan, indikasi tidak terverifikasi di TheOracle" };
 const passages = (bundle: TheOracleGroundingBundle) => bundle.evidence.map(item => `- ${item.source.title} [${item.evidenceId}] · kemiripan ${item.similarity}\n  ${item.text}`).join("\n\n");
@@ -13,7 +13,7 @@ const passages = (bundle: TheOracleGroundingBundle) => bundle.evidence.map(item 
 export function theOracleCitations(grounding: unknown, therapyGrounding?: unknown, gate?: unknown): string {
   if (!validTheOracleGrounding(grounding)) return "";
   const therapy = validTheOracleGrounding(therapyGrounding) ? "\n\nReferensi terapi (dicari memakai diagnosis):\n\n" + passages(therapyGrounding) : "";
-  const verification = validGate(gate) ? "\n\n## Verifikasi terapi\n\n" + [gate.reason, ...gate.drugs.map(d => `- ${d.drug}: ${gateLine[d.status]}${d.status === "verified" && d.evidenceIds.length ? ` [${d.evidenceIds.join(", ")}]` : ""}`)].filter(Boolean).join("\n") : "";
+  const verification = validGate(gate) ? "\n\n## Verifikasi terapi\n\n" + [gate.reason, ...gate.drugs.map(d => `- ${d.status === "verified" ? d.drug : unstrength(d.drug)}: ${gateLine[d.status]}${d.status === "verified" && d.evidenceIds.length ? ` [${d.evidenceIds.join(", ")}]` : ""}`)].filter(Boolean).join("\n") : "";
   return "\n\n---\n\n## Referensi TheOracle\n\nReferensi yang dipilih sebelum analisis:\n\n" + passages(grounding) + therapy + verification;
 }
 

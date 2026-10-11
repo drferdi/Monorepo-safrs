@@ -137,4 +137,25 @@ describe("clinical evidence gate final fix", () => {
     expect(partial.therapy?.regimen[0].drug).toBe("Amoxicillin-clavulanate");
     expect(gateTherapy(therapy([item("Amoxicillin-clavulanate", "2x875/125mg")]), bundle("Amoksisilin-klavulanat 875/125 mg 2 kali sehari."), pneumonia).report.drugs[0].status).toBe("verified");
   });
+  it("gates mEq and mmol strengths in notes and safety items", () => {
+    const kcl = { drug: "KCl", dose: "", route: "IV", duration: "", note: "maksimal 20 mEq/jam, 40 mmol/hari" };
+    const kalium = { drug: "Kalium klorida", dose: "", route: "IV", duration: "", note: "maksimal 20 mEq/jam" };
+    const blanked = gateTherapy(therapy([kalium], { contraindications: ["Kalium klorida: lebih dari 10 mEq/jam tanpa monitor"] }), bundle("Kalium klorida diberikan per infus pada hipokalemia."), pneumonia);
+    expect(blanked.therapy?.regimen[0].note).toBe("");
+    expect(blanked.therapy?.contraindications).toEqual([]);
+    expect(gateTherapy(therapy([kalium]), bundle("Kalium klorida maksimal 20 mEq/jam per infus."), pneumonia).therapy?.regimen[0].note).toBe("maksimal 20 mEq/jam");
+    expect(gateTherapy(therapy([{ ...kcl, drug: "Kalium klorida" }]), bundle("Kalium klorida, tekanan darah 120 mmHg."), pneumonia).therapy?.regimen[0].note).toBe("");
+  });
+  it("treats juta and ribu as part of a strength", () => {
+    const benzatin = drug("Benzatin penisilin G 2,4 juta IU", "dosis tunggal IM");
+    const wrong = gateTherapy(therapy([benzatin]), bundle("Benzatin penisilin G 1,2 juta unit IM."), pneumonia);
+    expect(wrong.report.drugs[0].status).toBe("doseRemoved");
+    expect(wrong.therapy?.regimen[0].drug).toBe("Benzatin penisilin G");
+    expect(gateTherapy(therapy([benzatin]), bundle("Benzatin penisilin G 2,4  juta IU IM dosis tunggal."), pneumonia).report.drugs[0].status).toBe("verified");
+  });
+  it("verifies Greek mu micrograms and strips a strength without a dangling slash", () => {
+    expect(gateTherapy(therapy([drug("Fentanil", "50 μg")]), bundle("Fentanil 50 mcg IV."), pneumonia).report.drugs[0].status).toBe("verified");
+    const names = ["Parasetamol 120 mg/5 ml sirup", "Ceftriaxone 1 g/vial", "Ondansetron 4 mg / 8 mg"].map(name => gateTherapy(therapy([drug(name, "")]), bundle("Parasetamol sirup, ceftriaxone vial dan ondansetron tersedia."), pneumonia).therapy?.regimen[0].drug);
+    expect(names).toEqual(["Parasetamol sirup", "Ceftriaxone", "Ondansetron"]);
+  });
 });
