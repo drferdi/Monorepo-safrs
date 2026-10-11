@@ -19,7 +19,7 @@ from openai import APITimeoutError
 
 from . import SERVICE_VERSION, postchecks
 from .audit import DailyBudget
-from .contract import CONTRACT_VERSION, RESPONSE, errors, unavailable_response
+from .contract import CONTRACT_VERSION, RESPONSE, THERAPY_RESPONSE, errors, unavailable_response
 from .menu import planning_menu_text
 from .prompts import (
     ASSESSMENT_RESPONSE_FORMAT,
@@ -29,6 +29,7 @@ from .prompts import (
     assessment_messages,
     fast_assessment_messages,
     planning_messages,
+    targeted_therapy_messages,
 )
 from .settings import Settings
 
@@ -194,7 +195,9 @@ class StepEngine:
                 task.cancel()
             await asyncio.gather(*tasks, return_exceptions=True)
 
-    async def _fast_assessment(self, guard: ApiGuard, case: dict, deadline: float, grounding: dict | None = None) -> dict:
+    async def _fast_assessment(
+        self, guard: ApiGuard, case: dict, deadline: float, grounding: dict | None = None, therapy: bool = True
+    ) -> dict:
         """Diagnosis and workup (and therapy, when enabled) in parallel, merged into one assessment
         for the post-checks. A failed therapy part leaves the assessment without therapy."""
         s = self.settings
@@ -208,14 +211,14 @@ class StepEngine:
             )
 
         parts = [race("diagnosis", DIAGNOSIS_RESPONSE_FORMAT, messages), race("workup", WORKUP_RESPONSE_FORMAT, messages)]
-        if s.fast_therapy:
+        if therapy:
             therapy_messages = fast_assessment_messages(case, s.provisional_differential, therapy=True, grounding=grounding)
             # The shortest copy is often an empty regimen; a complete one wins unless no copy has one.
             parts.append(race("therapy", THERAPY_RESPONSE_FORMAT, therapy_messages, _complete_therapy))
         try:
             diagnosis, workup = await asyncio.gather(*parts[:2])
             assessment = {**diagnosis, **workup, "unfilled": diagnosis["unfilled"] + workup["unfilled"]}
-            if s.fast_therapy:
+            if therapy:
                 try:
                     assessment.update(await parts[2])
                 except StepFailed:
@@ -225,9 +228,12 @@ class StepEngine:
             for part in parts:
                 part.cancel()
 
-    async def run(self, case: dict, grounding: dict | None = None) -> tuple[dict, ApiGuard, list[str]]:
+    async def run(
+        self, case: dict, grounding: dict | None = None, omit_therapy: bool = False
+    ) -> tuple[dict, ApiGuard, list[str]]:
         s = self.settings
-        max_calls = (3 if s.fast_therapy else 2) * FAST_COPIES if s.fast_assessment else MAX_CALLS_PER_STEP
+        therapy = s.fast_therapy and not omit_therapy
+        max_calls = (3 if therapy else 2) * FAST_COPIES if s.fast_assessment else MAX_CALLS_PER_STEP
         guard = ApiGuard(max_calls=max_calls, max_usd=s.max_usd_per_step, provider=s.llm_provider)
         if self.budget.exhausted():
             return self.unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
@@ -238,7 +244,7 @@ class StepEngine:
         try:
             async with asyncio.timeout(s.step_deadline_s):
                 if s.fast_assessment:
-                    assessment = await self._fast_assessment(guard, case, deadline, grounding)
+                    assessment = await self._fast_assessment(guard, case, deadline, grounding, therapy)
                 else:
                     plan = await self._call(
                         guard, "plan", s.plan_model, deadline,
@@ -273,6 +279,58 @@ class StepEngine:
         problems = errors(RESPONSE, response)
         if problems:
             return self._spent(self.unavailable("CONTRACT_MISMATCH", "; ".join(problems[:5]), guard), guard)
+        self.budget.add(guard.cost_usd)
+        return response, guard, notes
+
+    def therapy_unavailable(self, code: str, message: str, guard: ApiGuard | None = None) -> dict:
+        cost = round(guard.cost_usd, 6) if guard else 0.0
+        return {"contractVersion": CONTRACT_VERSION, "status": "unavailable", "error": {"code": code, "message": message},
+                "meta": {"version": self.version, "model": self.model, "costUsd": cost}}
+
+    async def run_therapy(self, case: dict, diagnosis: dict, grounding: dict) -> tuple[dict, ApiGuard, list[str]]:
+        """Therapy for a diagnosis chosen by an earlier step, grounded on excerpts retrieved for it."""
+        s = self.settings
+        guard = ApiGuard(max_calls=FAST_COPIES, max_usd=s.max_usd_per_step, provider=s.llm_provider)
+        if self.budget.exhausted():
+            return self.therapy_unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
+        if self.breaker.is_open():
+            return self.therapy_unavailable("API_ERRORS", "Model calls paused after repeated API errors."), guard, []
+        deadline = time.monotonic() + s.step_deadline_s
+        notes: list[str] = []
+        try:
+            async with asyncio.timeout(s.step_deadline_s):
+                content = await self._race(
+                    guard, "therapy", deadline, _complete_therapy,
+                    messages=targeted_therapy_messages(case, diagnosis, s.provisional_differential, grounding),
+                    response_format=THERAPY_RESPONSE_FORMAT, temperature=s.assess_temperature,
+                )
+            therapy = content["therapy"]
+            target = therapy["forDiagnosis"]
+            code, note = postchecks.resolve_code(target["icd10"], target["label"], postchecks.icd_codes())
+            if note:
+                notes.append(f"therapy: {note}")
+            therapy = {**therapy, "forDiagnosis": {**target, "icd10": code or target["icd10"]}}
+        except TimeoutError:
+            response = self.therapy_unavailable("TIMEOUT", f"Step deadline of {s.step_deadline_s:g} s reached.", guard)
+            self.budget.add(guard.cost_usd)
+            return response, guard, []
+        except RunAborted as exc:
+            response = self.therapy_unavailable("STEP_BUDGET_EXCEEDED", str(exc), guard)
+            self.budget.add(guard.cost_usd)
+            return response, guard, []
+        except StepFailed as exc:
+            response = self.therapy_unavailable(exc.code, exc.message, guard)
+            self.budget.add(guard.cost_usd)
+            return response, guard, []
+        except (KeyError, TypeError) as exc:
+            response = self.therapy_unavailable("MODEL_OUTPUT_INVALID", type(exc).__name__, guard)
+            self.budget.add(guard.cost_usd)
+            return response, guard, []
+        response = {"contractVersion": CONTRACT_VERSION, "status": "ok", "therapy": therapy,
+                    "meta": {"version": self.version, "model": self.model, "costUsd": round(guard.cost_usd, 6)}}
+        problems = errors(THERAPY_RESPONSE, response)
+        if problems:
+            response = self.therapy_unavailable("CONTRACT_MISMATCH", "; ".join(problems[:5]), guard)
         self.budget.add(guard.cost_usd)
         return response, guard, notes
 

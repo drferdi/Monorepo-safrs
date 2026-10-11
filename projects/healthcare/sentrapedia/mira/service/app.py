@@ -20,7 +20,7 @@ from common.providers import OPENROUTER_BASE_URL, OPENROUTER_HEADERS, model_id
 from . import SERVICE_VERSION
 from .audit import AuditLog, DailyBudget
 from .auth import DevTokenVerifier, RateLimiter, bearer_token
-from .contract import CONTRACT_VERSION, REQUEST, errors
+from .contract import CONTRACT_VERSION, REQUEST, THERAPY_REQUEST, errors
 from .engine import ApiErrorBreaker, StepEngine
 from .privacy import pii_kinds
 from .settings import Settings, check_startup, load_settings
@@ -31,6 +31,7 @@ log = logging.getLogger("mira_service")
 # against Settings.plan_model_choices. The request contract (owned by Med Assist) is unchanged.
 PLAN_MODEL_HEADER = "X-MIRA-Plan-Model"
 GROUNDING_CAPABILITY = "theoracle-grounding-v2"
+TARGETED_THERAPY_CAPABILITY = "theoracle-targeted-therapy-v1"
 
 
 def create_app(settings: Settings | None = None, client=None) -> FastAPI:
@@ -73,11 +74,10 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
             "status": "ok",
             "version": engine.version,
             "contractVersion": CONTRACT_VERSION,
-            "capabilities": [GROUNDING_CAPABILITY],
+            "capabilities": [GROUNDING_CAPABILITY, TARGETED_THERAPY_CAPABILITY],
         }
 
-    @app.post("/v1/diagnosis/step")
-    async def step(request: Request) -> JSONResponse:
+    async def handle(request: Request, validator, run) -> JSONResponse:
         principal = verifier.verify(bearer_token(request.headers.get("authorization")))
         if principal is None:
             return JSONResponse({"detail": "unauthorized"}, status_code=401)
@@ -90,7 +90,7 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
             payload = json.loads(body)
         except (json.JSONDecodeError, UnicodeDecodeError):
             return JSONResponse({"detail": "invalid JSON"}, status_code=400)
-        problems = errors(REQUEST, payload)
+        problems = errors(validator, payload)
         if problems:
             return JSONResponse({"detail": "invalid request", "errors": problems}, status_code=400)
 
@@ -123,7 +123,7 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
             step_engine = engine.with_plan_model(plan_model)
 
         try:
-            response, guard, notes = await step_engine.run(payload["case"], payload.get("grounding"))
+            response, guard, notes = await run(step_engine, payload)
             calls = guard.calls
         except Exception as exc:  # any internal failure is an 'unavailable' answer, never a 500
             log.warning("step failed internally: %s", type(exc).__name__)
@@ -147,5 +147,13 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
             }
         )
         return JSONResponse(response)
+
+    @app.post("/v1/diagnosis/step")
+    async def step(request: Request) -> JSONResponse:
+        return await handle(request, REQUEST, lambda e, p: e.run(p["case"], p.get("grounding"), p.get("omitTherapy", False)))
+
+    @app.post("/v1/therapy/step")
+    async def therapy_step(request: Request) -> JSONResponse:
+        return await handle(request, THERAPY_REQUEST, lambda e, p: e.run_therapy(p["case"], p["diagnosis"], p["grounding"]))
 
     return app

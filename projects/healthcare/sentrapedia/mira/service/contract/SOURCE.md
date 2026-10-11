@@ -12,7 +12,7 @@ here and update this table. `tests/test_contract.py` compares the copies with th
 
 | File | SHA-256 |
 | --- | --- |
-| `mira-step-request.schema.json` | `efd15f70ee4f9741404df05cfd97e86f78660c6e4ff0ee28fdd1cd0eaecc59f2` |
+| `mira-step-request.schema.json` | `2ac36fce2b3de99584cee8837ac6361e920e7268724fdf210c829272ab13d86c` |
 | `mira-step-response.schema.json` | `b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171` |
 | `examples/mira-step-request.example.json` | `b5be590734e7cbb01be30abef776d17bf791c27b60b826849a05987e31826ba3` |
 | `examples/mira-step-response.example.json` | `787d11fbcb737faac6ddcdbb9b1bea5709b887b50bf882b73b93ad063511fadd` |
@@ -36,3 +36,4 @@ On 2026-10-11 Gaffer approved the vector-only TheOracle (local EmbeddingGemma-30
 envelope is now `theoracle-grounding-v2`. The corpus carries `indexSha256` and `embeddingModel`
 (id, revision, dtype, dims); each evidence item carries `similarity` and a `source` of `title`,
 `docSource`, `origin` and `textSha256`. PDF page, Drive URL and extraction fields were removed.
+On 2026-10-11 the request gained the optional boolean `omitTherapy` (Sentrapedia extension): the step skips its therapy part, and therapy is requested from `/v1/therapy/step`, whose request is built from this schema in `contract.py`.

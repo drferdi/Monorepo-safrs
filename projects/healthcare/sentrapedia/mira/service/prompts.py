@@ -211,6 +211,16 @@ def fast_assessment_messages(
     ]
 
 
+def targeted_therapy_messages(case: dict, diagnosis: dict, provisional_differential: bool, grounding: dict) -> list[dict]:
+    """Therapy for the diagnosis the diagnosis step chose, from excerpts retrieved for that diagnosis."""
+    messages = fast_assessment_messages(case, provisional_differential, therapy=True, grounding=grounding)
+    messages[1]["content"] += (
+        f"\n\nDiagnosis to treat: {diagnosis['label']} ({diagnosis['icd10']}). It was chosen by the diagnosis step; "
+        "write therapy for this diagnosis only and set forDiagnosis to it."
+    )
+    return messages
+
+
 def assessment_messages(
     case: dict, plan_text: str, provisional_differential: bool = False, grounding: dict | None = None
 ) -> list[dict]:

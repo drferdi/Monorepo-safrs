@@ -629,3 +629,56 @@ def test_grounding_constraints_have_system_priority_and_preserve_legacy_prompts(
     assert planning_messages(case, "menu")[0]["role"] == "user"
     for messages in [assessment_messages(case, "plan", True), fast_assessment_messages(case, True, True)]:
         assert "take precedence over mandatory regimen" not in messages[0]["content"]
+
+
+THERAPY = "/v1/therapy/step"
+
+
+def therapy_request(example_request: dict, **overrides) -> dict:
+    return {"contractVersion": "1", "traceId": "t-therapy", "case": example_request["case"],
+            "diagnosis": {"icd10": "K35.8", "label": "Acute appendicitis"}, "grounding": theoracle_grounding(), **overrides}
+
+
+def test_step_can_omit_therapy(make_client, example_request):
+    client, fake = make_client(fast_outputs([completion(diagnosis_part(), "gpt-4o")], [completion(workup_part(), "gpt-4o")]),
+                               fast_assessment=True, fast_therapy=True)
+    body = post(client, {**example_request, "omitTherapy": True}).json()
+    assert body["status"] == "ok"
+    assert "therapy" not in body
+    assert [c["response_format"]["json_schema"]["name"] for c in fake.calls].count("step_therapy") == 0
+
+
+def test_therapy_step_writes_therapy_for_the_given_diagnosis(make_client, example_request, settings):
+    client, fake = make_client([completion(therapy_part(), "gpt-4o")] * FAST_COPIES, fast_assessment=True, fast_therapy=True)
+    response = client.post(THERAPY, content=json.dumps(therapy_request(example_request)), headers=AUTH)
+    body = response.json()
+    assert response.status_code == 200
+    assert body["status"] == "ok"
+    assert body["therapy"]["forDiagnosis"]["icd10"] == "K35.8"
+    assert body["meta"]["costUsd"] > 0
+    user = fake.calls[0]["messages"][1]["content"]
+    assert "Diagnosis to treat: Acute appendicitis (K35.8)" in user
+    assert "THEORACLE_QUOTE" in user
+    [record] = audit_lines(settings)
+    assert {c["role"] for c in record["calls"]} == {"therapy"}
+
+
+def test_therapy_step_requires_grounding_and_diagnosis(make_client, example_request):
+    client, fake = make_client([])
+    for missing in ("grounding", "diagnosis"):
+        request = therapy_request(example_request)
+        del request[missing]
+        assert client.post(THERAPY, content=json.dumps(request), headers=AUTH).status_code == 400
+    assert fake.calls == []
+
+
+def test_therapy_step_failure_is_unavailable(make_client, example_request):
+    client, _ = make_client([RuntimeError("down")] * FAST_COPIES, fast_assessment=True, fast_therapy=True)
+    body = client.post(THERAPY, content=json.dumps(therapy_request(example_request)), headers=AUTH).json()
+    assert body["status"] == "unavailable"
+    assert "therapy" not in body
+
+
+def test_healthz_advertises_targeted_therapy(make_client):
+    client, _ = make_client([])
+    assert "theoracle-targeted-therapy-v1" in client.get("/healthz").json()["capabilities"]

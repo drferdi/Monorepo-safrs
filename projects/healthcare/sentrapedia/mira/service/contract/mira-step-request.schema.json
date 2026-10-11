@@ -10,7 +10,8 @@
     "contractVersion": { "const": "1" },
     "traceId": { "type": "string", "minLength": 1 },
     "case": { "$ref": "#/$defs/caseState" },
-    "grounding": { "$ref": "#/$defs/theOracleGrounding" }
+    "grounding": { "$ref": "#/$defs/theOracleGrounding" },
+    "omitTherapy": { "type": "boolean", "description": "Sentrapedia: skip the therapy part; therapy is requested separately from /v1/therapy/step." }
   },
   "$defs": {
     "stringList": { "type": "array", "items": { "type": "string" } },
