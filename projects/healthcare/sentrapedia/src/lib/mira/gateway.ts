@@ -9,6 +9,8 @@ export interface StageLog { traceId: string; stage: string; ms: number; ok: bool
 class ServiceFailure extends Error { constructor(readonly code: string) { super(code); } }
 // Targeted retrieval limit: a cold start loads the index and hashes the model files (measured 2.5-3 s).
 const RETRIEVAL_TIMEOUT_MS = 15000;
+// The therapy step ends this long before the overall timer, so a slow therapy loses only the therapy, not the diagnosis.
+const THERAPY_RESERVE_MS = 1000;
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const failure = (code: string, message: string, status: number) => reply({ error: { code, message } }, status);
 async function boundedBody(response: Response | Request, limit: number): Promise<string> {
@@ -67,6 +69,7 @@ export function createMiraGateway(options: Options = {}) {
       active = true;
       const controller = new AbortController(); let timedOut = false;
       const cancel = () => controller.abort(); request.signal.addEventListener("abort", cancel, { once: true });
+      const deadline = performance.now() + (options.timeoutMs ?? 20000);
       const timer = setTimeout(() => { timedOut = true; controller.abort(); }, options.timeoutMs ?? 20000);
       const traceId = crypto.randomUUID(); const createdAt = new Date().toISOString();
       const stages: StageLog[] = [];
@@ -76,7 +79,7 @@ export function createMiraGateway(options: Options = {}) {
         const started = performance.now();
         let timer: ReturnType<typeof setTimeout> | undefined;
         try {
-          const value = await (limitMs ? Promise.race([run(), new Promise<never>((_, fail) => { timer = setTimeout(() => fail(new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Pencarian TheOracle melewati batas waktu.")), limitMs); })]) : run());
+          const value = await (limitMs ? Promise.race([run(), new Promise<never>((_, fail) => { timer = setTimeout(() => fail(stage.startsWith("retrieve") ? new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Pencarian TheOracle melewati batas waktu.") : new ServiceFailure("TIMEOUT")), limitMs); })]) : run());
           record(stage, started, true);
           return value;
         } catch (error) {
@@ -149,7 +152,7 @@ export function createMiraGateway(options: Options = {}) {
               const cost = "meta" in value && value.meta && typeof value.meta === "object" && "costUsd" in value.meta ? value.meta.costUsd : null;
               if (!validResult(merged) || typeof cost !== "number" || !Number.isFinite(cost) || cost < 0 || cost > maxCostUsd) throw new ServiceFailure("CONTRACT");
               return merged;
-            });
+            }, Math.max(1, deadline - performance.now() - THERAPY_RESERVE_MS));
           } catch (error) {
             // A stage failure leaves the diagnosis without therapy; an overall timeout or cancel still ends the request.
             if (controller.signal.aborted) throw error;

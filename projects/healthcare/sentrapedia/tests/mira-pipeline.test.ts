@@ -127,6 +127,18 @@ describe("targeted therapy pipeline", () => {
     expect(body.evidenceGate).toEqual(absent());
     expect(logs.find(l => l.stage === "retrieve_tx")).toMatchObject({ ok: false, code: "THEORACLE_UNAVAILABLE" });
   });
+  it("keeps the diagnosis when the therapy step would outlast the overall timer", async () => {
+    const { fetchFn: serve } = service();
+    const fetchFn: typeof fetch = async (url, init) => { if (new URL(String(url)).pathname === "/v1/therapy/step") await new Promise(resolve => setTimeout(resolve, 3000)); return serve(url, init); };
+    const { gateway, logs } = gatewayWith(fetchFn, { timeoutMs: 1500 });
+    const response = await gateway.step(input());
+    const body = await response.json();
+    expect(response.status).toBe(200);
+    expect(body.result.differential.likely[0].icd10).toBe("J18.9");
+    expect(body.result.therapy).toBeUndefined();
+    expect(body.evidenceGate).toEqual(absent());
+    expect(logs.find(l => l.stage === "mira_tx")).toMatchObject({ ok: false, code: "TIMEOUT" });
+  });
   it("applies no retrieval time limit on the legacy path", async () => {
     const { fetchFn } = service();
     const { gateway, logs } = gatewayWith(fetchFn, { targetedTherapy: false, retrievalTimeoutMs: 5, retrieveGrounding: async () => { await new Promise(resolve => setTimeout(resolve, 60)); return bundle("Batuk dan demam."); } });
