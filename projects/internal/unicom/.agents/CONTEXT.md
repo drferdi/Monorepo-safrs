@@ -3,7 +3,7 @@
 - Purpose: UNICOM, the legacy multi-agent communication room as a standalone Next.js capsule
   (`AGENTS.md` objective): web interface, `POST /api/chat`, `POST /api/webhooks`, and in-memory
   chat state (`README.md`).
-- Human owner: Chief. Default risk: R1; provider credentials, production platform adapters, and
+- Human owner: Gaffer. Default risk: R1; provider credentials, production platform adapters, and
   persistent-state changes need separate authorization.
 - Stack: Node.js 24.18.0, pnpm 11.21.0, Next.js; the HTTP smoke probe is `127.0.0.1:4330`
   (`project.contract.json`).

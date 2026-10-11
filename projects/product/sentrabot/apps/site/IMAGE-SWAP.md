@@ -104,7 +104,7 @@ Stempel Sentra Bot ditempatkan di pojok kiri atas, menggantikan badge "cora".
 |---|---|---|---|
 | `3b088bdb031e.webp` | 1440×12467 | Langit biru → padang gandum keemasan | Langit + awan tetap utuh; pedesaan direkolorisasi jadi hamparan hijau tropis Indonesia |
 
-Instruksi Chief: karakter gambar **sama**, tapi bernuansa Indonesia — pedesaan, bukan gradasi.
+Instruksi Gaffer: karakter gambar **sama**, tapi bernuansa Indonesia — pedesaan, bukan gradasi.
 
 ### Pendekatan
 

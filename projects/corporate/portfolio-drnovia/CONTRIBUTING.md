@@ -7,7 +7,7 @@ governance).
 
 ## Who this is for
 
-- **Chief** — sole human owner and merger of sensitive work.
+- **Gaffer** — sole human owner and merger of sensitive work.
 - **Agents** — follow [AGENTS.md](AGENTS.md) first; this file is the human
   counterpart.
 - **Inner-source readers** — propose capsule-scoped documentation or tests
@@ -23,9 +23,9 @@ governance).
 ```mermaid
 flowchart TD
   Idea["Change idea"] --> Scope{"Inside projects/corporate/portfolio-drnovia?"}
-  Scope -->|no| Stop["Stop — ask Chief for scope expansion"]
+  Scope -->|no| Stop["Stop — ask Gaffer for scope expansion"]
   Scope -->|yes| Risk{"R2 or R3 surface?"}
-  Risk -->|R3| Gate["Prepare only — Chief must authorize"]
+  Risk -->|R3| Gate["Prepare only — Gaffer must authorize"]
   Risk -->|R2| Review["Designated review before merge"]
   Risk -->|R1| Work["Smallest viable patch"]
   Work --> Verify["node --test + bash scripts/safrs-verify.sh"]

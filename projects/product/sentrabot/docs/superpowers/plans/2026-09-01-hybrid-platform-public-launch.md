@@ -19,7 +19,7 @@
 - Existing Permission Broker and sandbox isolation remain mandatory.
 - Free includes 3 computer-agent sessions/month and a 7-calendar-day payment grace period.
 - No Pro Cloud Runtime, CRDT, offline command queue, default file sync, or active multi-provider routing.
-- Do not commit, deploy, or mutate production data without separate Chief authorization.
+- Do not commit, deploy, or mutate production data without separate Gaffer authorization.
 
 ## FACT-TO-FIX
 

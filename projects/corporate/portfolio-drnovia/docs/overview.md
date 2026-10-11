@@ -10,7 +10,7 @@ This is explanation, not a runbook. How to run CURRENT:
 ## Who it is for
 
 - **Visitors** of the local or later-hosted portfolio page.
-- **Chief** as the only human who can authorize redesign, copy swap, deploy,
+- **Gaffer** as the only human who can authorize redesign, copy swap, deploy,
   or R2/R3 expansion.
 - **Agents** working inside `projects/corporate/portfolio-drnovia/**`.
 
@@ -33,14 +33,14 @@ and agents one map for the runnable static site.
 
 | Capability | CURRENT | TARGET |
 | --- | --- | --- |
-| Site | React 18 + static server | Same stack unless Chief asks |
+| Site | React 18 + static server | Same stack unless Gaffer asks |
 | Scroll | Lenis 1.3.26 on `.framer-bpy7lj` | Keep wrapper binding |
 | Docs | Diátaxis + community files | Keep honest; no badge claims |
 
 ```mermaid
 C4Context
   title Portfolio context — CURRENT local site
-  Person(chief, "Chief", "Owns copy, design, deploy gates")
+  Person(chief, "Gaffer", "Owns copy, design, deploy gates")
   Person(visitor, "Visitor", "Reads the portfolio")
   System(site, "NOVIA STUDIO", "Static React 18 + Lenis")
   Rel(chief, site, "Edits capsule")

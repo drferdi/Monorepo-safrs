@@ -16,7 +16,7 @@
 - No mass refactors; split files only at a proven responsibility boundary (Directive §13).
 - Preserve the `@sentrabot/*` namespace; `@rakazo/*` and `@safrs/*` do not exist in this capsule (verified by grep; also recorded in `docs/superpowers/plans/2026-09-01-hybrid-platform-public-launch.md` Global Constraints).
 - Every code change follows FACT → DEVIATION → MINIMUM FIX → TEST → VERIFY; write the failing test first (Directive §21, §18).
-- Do not commit, deploy, or mutate production data without Chief's explicit request.
+- Do not commit, deploy, or mutate production data without Gaffer's explicit request.
 - Stop and report on: incompatible persistent data models, data-loss migrations, unknown credential ownership, security behavior contradicting documented user authority, unresolvable production semantics (Directive §26).
 - Documentation in this repository is written in English.
 
@@ -103,12 +103,12 @@ Working tree for `apps/api`, `apps/worker`, `packages/adapters` was clean, so al
 | # | Area | Intended (Directive) | Actual (verified) | Evidence | Severity | Required fix |
 |---|---|---|---|---|---|---|
 | 1 | Harness `127.0.0.1:8799` vs API `:3100` | One harness server on 8799 owning commands, SSE, permissions, supervisor, sandbox orchestration | No harness process exists. `apps/api` already owns all of those responsibilities on `127.0.0.1:3100`. The port is hard-coded in `.env.example`, mobile tests, desktop setup tests. | `apps/api/src/env.ts:144`; grep `8799` → only the directive and `docs/plans/whatsapp-mvp-spec.md:32` | Medium (decision + docs, no code) | **Model A**: declare `apps/api` the harness/public runtime boundary; keep 3100; record decision; align README/self-host docs (Task 1) |
-| 2 | Competing control planes | One explicit answer for the role of `apps/api`; no second runtime/control plane | Two approved directions coexist: (a) server-owned execution (API + worker, mature, tested); (b) the 2026-09-01 hybrid design ("Desktop Runtime owns execution; Control Plane relays ciphertext") with 4 of 32 plan steps done, its spec header still saying "implementation has not started", schema tables `Device`, `Runtime`, `KeyEnvelope`, `SyncObjectIndex`, `RuntimeLease`, `OutboxEvent` (no application writer for `OutboxEvent`), platform routes mounted unconditionally, and the desktop lease loop. | `docs/superpowers/specs/2026-09-01-sentrabot-hybrid-platform-design.md:3`; `docs/superpowers/plans/2026-09-01-hybrid-platform-public-launch.md` (checkbox count 4/32); `apps/api/src/app.ts:400-530`; grep `outboxEvent.` → generated client only | High (architectural ambiguity) — **decision required from Chief** (Directive §26) | Freeze (b) as experimental behind an explicit flag until the golden path passes, or continue (b) as the target. Task 4 implements the freeze if chosen. Record `OutboxEvent` as debt; never drop tables. |
-| 3 | Single SSE model | One canonical client activity stream | Two: `threads.subscribe` (durable, replayable) and relay `/v1/events` + `/v1/relay/events` (transient, no replay, no consumers, tests failing since today). | `apps/api/src/relay-routes.ts:50-73`; consumer grep empty; `relay-routes.test.ts` fixtures | High | Task 3 (repair time-bomb tests) always; Task 4 (do not mount relay routes unless `SENTRABOT_CONTROL_PLANE_RELAY=enabled`) if Chief freezes the hybrid path |
+| 2 | Competing control planes | One explicit answer for the role of `apps/api`; no second runtime/control plane | Two approved directions coexist: (a) server-owned execution (API + worker, mature, tested); (b) the 2026-09-01 hybrid design ("Desktop Runtime owns execution; Control Plane relays ciphertext") with 4 of 32 plan steps done, its spec header still saying "implementation has not started", schema tables `Device`, `Runtime`, `KeyEnvelope`, `SyncObjectIndex`, `RuntimeLease`, `OutboxEvent` (no application writer for `OutboxEvent`), platform routes mounted unconditionally, and the desktop lease loop. | `docs/superpowers/specs/2026-09-01-sentrabot-hybrid-platform-design.md:3`; `docs/superpowers/plans/2026-09-01-hybrid-platform-public-launch.md` (checkbox count 4/32); `apps/api/src/app.ts:400-530`; grep `outboxEvent.` → generated client only | High (architectural ambiguity) — **decision required from Gaffer** (Directive §26) | Freeze (b) as experimental behind an explicit flag until the golden path passes, or continue (b) as the target. Task 4 implements the freeze if chosen. Record `OutboxEvent` as debt; never drop tables. |
+| 3 | Single SSE model | One canonical client activity stream | Two: `threads.subscribe` (durable, replayable) and relay `/v1/events` + `/v1/relay/events` (transient, no replay, no consumers, tests failing since today). | `apps/api/src/relay-routes.ts:50-73`; consumer grep empty; `relay-routes.test.ts` fixtures | High | Task 3 (repair time-bomb tests) always; Task 4 (do not mount relay routes unless `SENTRABOT_CONTROL_PLANE_RELAY=enabled`) if Gaffer freezes the hybrid path |
 | 4 | Composition ownership | Agent process ownership explicit; one runtime composition | `app.ts` and `worker/index.ts` hand-copy the same 25-dependency composition and diverge: the worker never constructs `WhatsAppMessagingProvider`, passes no `whatsappMessaging`/`phoneLocale` to `createBackgroundJobHandlers`, and only wires the phone context loader for SendBlue. In the production topology (`WAKEUP_DRIVER=graphile`) `run.continue` and `phone.deliver` execute in the worker, where `primaryMessaging()` is `undefined` for WhatsApp-only deployments, so the handler returns before `deliverPhoneOutbound`. **Suspected outbound-WhatsApp loss in production; confirmed only when the failing test in Task 2 runs.** | `apps/worker/src/index.ts` (no `whatsapp` symbol); `apps/api/src/app.ts:234-245, 318-334`; `packages/adapters/src/background-job-handlers.ts:36-70` | High (runtime correctness) | Task 2: extract `workerMessagingFromEnv()` using the same helpers the API uses, wire it, add the worker's first test. Shared composition helper for both processes is P1. |
-| 5 | Sandbox vs trusted host execution | Host execution labeled, opt-in, separate security class, never called sandbox isolation | Opt-in already holds: `computerHost` defaults `null`, only the deployment owner may set `this-mac`, `HostComputerPrompt` asks once, `this-mac` is refused unless `SANDBOX_PROVIDER=docker` (journey 14). Gaps: `HostAwareSandbox.describe()` reports the Docker provider even while routing to the host; `/health` reports `sandbox: docker`; docs call it "Desktop provider"; `SANDBOX_PROVIDER=desktop` (no prompt) is a first-class value; the builtin exemption list (`shell`, `write_file`, `launch_app`, `open_path`) is identical on the host; **on Windows the host provider's path containment fails 13 tests (see A.4)**. *Resolved 2026-09-02 (batch 2): the failures came from the msvcrt fd bridge, now replaced; the adapters suite is green on Windows.* | `packages/adapters/src/host-aware-sandbox.ts:56-58`; `apps/api/src/router.ts:398-405, 3521-3529`; `packages/core/src/action-approval.ts:3-20`; `docs/self-host.md:138-142` | High (security truthfulness) | Task 5: label host execution "experimental / trusted host, not isolation, unsupported on Windows until containment tests pass" in docs and `.env.example`; add the DENY invariant test (host never reached when `computerHost` is not `this-mac`). **Whether host-affecting tools (`shell`, `write_file`, `launch_app`, `open_path`) should become ASK on a `desktop` computer is a policy decision for Chief** (Directive §7 lists host-when-disabled as DENY, not host-when-enabled as ASK). |
+| 5 | Sandbox vs trusted host execution | Host execution labeled, opt-in, separate security class, never called sandbox isolation | Opt-in already holds: `computerHost` defaults `null`, only the deployment owner may set `this-mac`, `HostComputerPrompt` asks once, `this-mac` is refused unless `SANDBOX_PROVIDER=docker` (journey 14). Gaps: `HostAwareSandbox.describe()` reports the Docker provider even while routing to the host; `/health` reports `sandbox: docker`; docs call it "Desktop provider"; `SANDBOX_PROVIDER=desktop` (no prompt) is a first-class value; the builtin exemption list (`shell`, `write_file`, `launch_app`, `open_path`) is identical on the host; **on Windows the host provider's path containment fails 13 tests (see A.4)**. *Resolved 2026-09-02 (batch 2): the failures came from the msvcrt fd bridge, now replaced; the adapters suite is green on Windows.* | `packages/adapters/src/host-aware-sandbox.ts:56-58`; `apps/api/src/router.ts:398-405, 3521-3529`; `packages/core/src/action-approval.ts:3-20`; `docs/self-host.md:138-142` | High (security truthfulness) | Task 5: label host execution "experimental / trusted host, not isolation, unsupported on Windows until containment tests pass" in docs and `.env.example`; add the DENY invariant test (host never reached when `computerHost` is not `this-mac`). **Whether host-affecting tools (`shell`, `write_file`, `launch_app`, `open_path`) should become ASK on a `desktop` computer is a policy decision for Gaffer** (Directive §7 lists host-when-disabled as DENY, not host-when-enabled as ASK). |
 | 6 | Permission broker model | USER POLICY → CAPABILITY GRANT → ACTION → RISK CHECK → ALLOW / ASK / DENY | ALLOW/ASK exist with deterministic rule precedence and a fail-closed judge. DENY is implicit: workspace isolation via `requireMembership`/`resolveThreadTarget`, path containment in sandboxes, `this-mac` refusal. No cross-workspace or unauthorized-credential case reaches the tool gate as an explicit DENY decision. | `packages/core/src/action-approval.ts:110-175`; `apps/api/src/app.ts:533-545`; `apps/api/src/thread-target.ts` | Medium | Document the mapping (Task 1 architecture doc). No engine change in P0. |
-| 7 | Local-first trust boundary | Truthful disclosure of what optional remote providers receive | Product copy states "Data tinggal di tempat Anda … Kami tidak punya pintu belakang" while optional providers (model providers, E2B/Daytona/Box, Composio, Pipedream, Supermemory, managed OpenAI, PostHog, SendBlue/WhatsApp Cloud API, Xendit) receive data when configured. `SECURITY.md` scopes them out; no single disclosure table exists. Root `README.md` describes only the landing site; `docs/self-host.md:7` points to a "README quick start" that does not exist in this capsule (the pre-rebrand README was the SAFRS governance page). | `apps/site/public/tentang.html:58-59`; `apps/api/src/env.ts` key list; `README.md`; `git show f05e7a9:README.md` | Medium (docs) | Task 1: one provider disclosure table in `docs/architecture.md`, README pointer. Marketing copy change is flagged for Chief, not edited here. |
+| 7 | Local-first trust boundary | Truthful disclosure of what optional remote providers receive | Product copy states "Data tinggal di tempat Anda … Kami tidak punya pintu belakang" while optional providers (model providers, E2B/Daytona/Box, Composio, Pipedream, Supermemory, managed OpenAI, PostHog, SendBlue/WhatsApp Cloud API, Xendit) receive data when configured. `SECURITY.md` scopes them out; no single disclosure table exists. Root `README.md` describes only the landing site; `docs/self-host.md:7` points to a "README quick start" that does not exist in this capsule (the pre-rebrand README was the SAFRS governance page). | `apps/site/public/tentang.html:58-59`; `apps/api/src/env.ts` key list; `README.md`; `git show f05e7a9:README.md` | Medium (docs) | Task 1: one provider disclosure table in `docs/architecture.md`, README pointer. Marketing copy change is flagged for Gaffer, not edited here. |
 | 8 | Routines / background execution | Schedule survives restart; exactly one execution per occurrence; retries do not duplicate side effects | Verified: transactional `nextRunAt` CAS claim, keyed wakeup job, reconciler lookahead, tests 5/5b/21/22/23 and reconciler unit tests. Gap: the "routine survives restart and fires once" invariant is proven only with fakes, not on Postgres. | `packages/adapters/src/executor.ts:495-640`; `packages/adapters/src/job-reconciler.test.ts:42` (fakes) | Low (verify) | Task 6 adds the Postgres-backed test |
 | 9 | Recovery / idempotency | Worker restart keeps durable state; duplicate job does not duplicate action; permission wait survives restart | Verified on Postgres: single claim, expired-lease reclaim with higher fence, no replay of interrupted effects, fenced terminal commit, atomic rollback (`executor-lifecycle.test.ts`); retry of a completed effect does not duplicate (journey 8); SSE reconnect from cursor (journey 3). Gap: "waiting permission survives restart" has no direct test. | `packages/testkit/src/executor-lifecycle.test.ts:38-260`; `packages/testkit/src/journeys.test.ts:463, 1140` | Low (verify) | Task 6 adds the test |
 | 10 | Client-side transports | Client → HTTP commands; Client ← one SSE stream | Verified compliant for web and mobile. The only other browser transport is the noVNC screen iframe, which the web server proxies (`/novnc/*`) with a signed, expiring path — server-owned. | `apps/web/src/lib/rpc.ts`; `apps/web/vite.config.ts:20-40`; `apps/web/src/screen-proxy.ts` | None | — |
@@ -116,7 +116,7 @@ Working tree for `apps/api`, `apps/worker`, `packages/adapters` was clean, so al
 | 12 | Observability | Correlation across workspace/bot/thread/run/job/tool/permission/sandbox | Present: `runId`, `attempt.fence`, `ExternalEffect.idempotencyKey`, `AdapterContext.operationId/traceId`, events `agent.tool.called`, `effect.recorded`, 21 `redactSecrets` sites in the executor. Logs are unstructured `console.error`. | `packages/contracts/src/events.ts`; `packages/adapters/src/executor.ts` | P1 | Deferred: structured run log helper after golden path |
 | 13 | Monolithic files | Split only at proven boundaries | `router.ts` 3870, `Shell.tsx` 6489, `executor.ts` 3404 lines. No fix in this phase requires a split. | `wc -l` | P1 | Deferred |
 | 14 | Stale config | — | `vitest.config.ts` and `biome.json` reference `apps/www`, which does not exist. | `ls apps/www` → missing | P2 | Task 7 |
-| 15 | Desktop runtime loop | No client-owned orchestration | Desktop registers device/runtime and heartbeats a lease every 15 s against the control plane on every launch, creating rows with no consumer of the lease. | `apps/desktop/src/main.ts:114-184` | Medium (tied to #2) | Follows Chief's decision on #2; untouched in P0 otherwise |
+| 15 | Desktop runtime loop | No client-owned orchestration | Desktop registers device/runtime and heartbeats a lease every 15 s against the control plane on every launch, creating rows with no consumer of the lease. | `apps/desktop/src/main.ts:114-184` | Medium (tied to #2) | Follows Gaffer's decision on #2; untouched in P0 otherwise |
 
 ---
 
@@ -133,7 +133,7 @@ Working tree for `apps/api`, `apps/worker`, `packages/adapters` was clean, so al
 
 ## Execution status (2026-09-02)
 
-Decisions taken by Chief: solo implementation; hybrid Control Plane / Desktop Runtime **frozen as
+Decisions taken by Gaffer: solo implementation; hybrid Control Plane / Desktop Runtime **frozen as
 experimental** (Task 4 applied); host-tool policy **unchanged** (Task 5 labels only).
 
 | Task | Status | Verification evidence |
@@ -146,7 +146,7 @@ experimental** (Task 4 applied); host-tool policy **unchanged** (Task 5 labels o
 | 6 Restart invariants on Postgres | done | Two tests added to `packages/testkit/src/executor-lifecycle.test.ts`. `pnpm test:integration` (testcontainer `postgres:16-alpine`): 10 files, 68 tests pass, exit 0. Verbose re-run of the lifecycle file alone: 10/10 pass, including "a due routine survives a restart and fires exactly once" and "a run waiting for permission is untouched by restart reconciliation". |
 | 7 Stale `apps/www` references | done | `vitest.config.ts`, `biome.json`, `docs/self-host.md` |
 
-### Batch 2 (2026-09-02, after commit 2aba358; multiagent, decisions by Chief: fix Windows containment now, ASK on host)
+### Batch 2 (2026-09-02, after commit 2aba358; multiagent, decisions by Gaffer: fix Windows containment now, ASK on host)
 
 | Task | Lane | Status | Verification evidence |
 |---|---|---|---|
@@ -183,11 +183,11 @@ Repository-wide `pnpm lint` fails before and after this change set because of th
 landing-site assets (`apps/site/assets/*.js`, ~23k errors) and the `biome.json` schema-version note;
 every file touched here passes `biome check` individually.
 
-### Batch 7 (2026-09-03, next-steps items 12-16; decisions by Chief: register page is a static funnel in `apps/site`; `outbox_events` documented as write-only debt; the no-backdoor copy is aligned on all live site surfaces)
+### Batch 7 (2026-09-03, next-steps items 12-16; decisions by Gaffer: register page is a static funnel in `apps/site`; `outbox_events` documented as write-only debt; the no-backdoor copy is aligned on all live site surfaces)
 
 | Item | Lane | Status | Verification evidence |
 |---|---|---|---|
-| 12 `biome migrate` to schema 2.5.11 | inline | done, commit accepted by Chief | migration rewrote only `$schema` (2.5.8 → 2.5.11), `files.includes` untouched; `pnpm lint` exit 0 (2 pre-existing warnings in `infra/updater/src/compose-service.test.ts`, from CLI 2.5.11, not the schema bump) |
+| 12 `biome migrate` to schema 2.5.11 | inline | done, commit accepted by Gaffer | migration rewrote only `$schema` (2.5.8 → 2.5.11), `files.includes` untouched; `pnpm lint` exit 0 (2 pre-existing warnings in `infra/updater/src/compose-service.test.ts`, from CLI 2.5.11, not the schema bump) |
 | 13 supervisor tests impossible on Windows gated | inline | done | `computer-spec.test.ts` argv test skips on win32 or missing `python3`; two `home-ownership.test.ts` symlink tests skip on win32 or non-root; `pnpm vitest run infra/sandboxes/supervisor/src` → 63 passed, 5 skipped, 0 failed (was 3 failed) |
 | 14a dead `/v1/events` relay alias removed | inline | done | grep for `v1/events` in code → zero hits; relay suite 5/5; `tsc` clean; the untrusted-runtime test now pins `/v1/relay/events`; stale comments in `env.ts` and `.env.example` updated |
 | 14b `outbox_events` recorded as write-only debt | inline | done | corrected fact: `applyVerifiedPaymentEvent`/`applyEntitlementEvent` (`packages/db/src/platform.ts`) write `entitlement.changed` rows from the live Xendit webhook path, no reader exists, `sentAt` never set; two 2026-09-03 decision-log entries added to `docs/architecture.md`, the frozen-hybrid evidence line corrected |
@@ -203,7 +203,7 @@ every file touched here passes `biome check` individually.
 | Historical plan state | done | Part D and Part E now identify resolved decisions and historical instructions; Part F records only the frozen outbox residual. |
 | Unrelated workspace state | classified | Restored the six uncommitted `gsap-cinematic` sources. `.agent/`, `.mimosa/`, and local preview captures are ignored; untracked documentation, legal, font, and product assets remain separate candidate source work and are not staged here. |
 
-## Part D — Decisions resolved by Chief
+## Part D — Decisions resolved by Gaffer
 
 All decisions in this section are historical. The selected outcomes are recorded in the
 Batch 4–7 execution-status tables and `docs/architecture.md`; they are not active gates.
@@ -298,7 +298,7 @@ approval rules, and locally-managed credentials stay in the self-hosted PostgreS
 - `@rakazo/*` and `@safrs/*` do not exist in this capsule; `@sentrabot/*` is canonical. No migration boundary is needed.
 
 ### 2026-09-02 — hybrid Control Plane / Desktop Runtime
-- Status: decision pending with Chief (see docs/superpowers/plans/2026-09-02-convergence-directive.md, Part D). Record the outcome here.
+- Status: decision pending with Gaffer (see docs/superpowers/plans/2026-09-02-convergence-directive.md, Part D). Record the outcome here.
 ```
 
 - [ ] **Step 2: Add the product section to `README.md`** (insert after the `## App` section)
@@ -332,7 +332,7 @@ cd D:/DEV/Monorepo/projects/product/sentrabot && for f in docs/architecture.md d
 ```
 Expected: three `ok` lines and one match in each file.
 
-- [ ] **Step 5: Commit** (only when Chief asks for a commit)
+- [ ] **Step 5: Commit** (only when Gaffer asks for a commit)
 
 ```bash
 git add docs/architecture.md README.md docs/self-host.md
@@ -484,7 +484,7 @@ In `createRunExecutor({...})` change `phone: messaging ? createPhoneContextLoade
 Run: `pnpm --filter @sentrabot/worker test && pnpm --filter @sentrabot/worker check`
 Expected: 3 tests pass; tsc clean.
 
-- [ ] **Step 7: Commit** (when Chief asks)
+- [ ] **Step 7: Commit** (when Gaffer asks)
 
 ```bash
 git add apps/worker/src/messaging.ts apps/worker/src/messaging.test.ts apps/worker/src/index.ts apps/worker/package.json vitest.config.ts
@@ -521,7 +521,7 @@ with
 Run: `pnpm --filter @sentrabot/api test`
 Expected: 26 files, 208 tests passed.
 
-- [ ] **Step 4: Commit** (when Chief asks)
+- [ ] **Step 4: Commit** (when Gaffer asks)
 
 ```bash
 git add apps/api/src/relay-routes.test.ts
@@ -587,7 +587,7 @@ Expected: all pass, tsc clean. Then start the API (`pnpm --filter @sentrabot/api
 
 - [ ] **Step 5: Record the decision** in `docs/architecture.md` (replace the "decision pending" entry with Problem/Evidence/Decision/Rejected/Trade-off/Migration consequence).
 
-- [ ] **Step 6: Commit** (when Chief asks)
+- [ ] **Step 6: Commit** (when Gaffer asks)
 
 ```bash
 git add apps/api/src/env.ts apps/api/src/env.test.ts apps/api/src/app.ts .env.example docs/architecture.md
@@ -627,7 +627,7 @@ Reuse the file's existing fake-provider and `context` helpers (see its lines 1-2
 
 `.env.example` `SANDBOX_PROVIDER=docker` line: add the comment `# docker | e2b | daytona | box | none. "desktop" runs on this host without isolation (experimental).`
 
-- [ ] **Step 4: Commit** (when Chief asks)
+- [ ] **Step 4: Commit** (when Gaffer asks)
 
 ```bash
 git add packages/adapters/src/host-aware-sandbox.test.ts docs/self-host.md .env.example
@@ -719,7 +719,7 @@ git commit -m "docs(sandbox): label trusted host execution as experimental and p
 Run: `pnpm test:integration` (starts a `postgres:16-alpine` testcontainer; needs Docker) or, with a database at hand, `VERIFY_DATABASE=1 DATABASE_URL=<url> pnpm --filter @sentrabot/testkit test -- executor-lifecycle`.
 Expected: both new tests pass alongside the existing six. If the routine test finds two runs, first confirm that `InMemoryJobQueue.enqueue` (`packages/adapters/src/wakeup.ts`) clamps far-future delays — Node's `setTimeout` wraps delays above 2^31-1 ms to 1 ms, which would re-fire the re-armed wakeup immediately and is a harness artifact. If the delay is in range and there are still two runs, stop and report: that is a real duplicate-execution bug, not a test to loosen.
 
-- [ ] **Step 3: Commit** (when Chief asks)
+- [ ] **Step 3: Commit** (when Gaffer asks)
 
 ```bash
 git add packages/testkit/src/executor-lifecycle.test.ts
@@ -735,7 +735,7 @@ git commit -m "test(testkit): pin routine and waiting-permission survival across
 
 - [ ] **Step 1: Edit both files.**
 - [ ] **Step 2: Verify** — `pnpm lint` and `pnpm --filter @sentrabot/core test` still pass.
-- [ ] **Step 3: Commit** (when Chief asks) — `chore: drop references to the removed apps/www`
+- [ ] **Step 3: Commit** (when Gaffer asks) — `chore: drop references to the removed apps/www`
 
 ---
 

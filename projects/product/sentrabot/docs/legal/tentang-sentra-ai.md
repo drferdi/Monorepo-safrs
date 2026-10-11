@@ -99,7 +99,7 @@ Creator, Care — dengan total 37 berkas. Yang ada di `packages/bot-templates` a
 `clinical-operations`, dan seterusnya. Masing-masing berisi `ROLE.md`, `template.json`, dan
 `evals.json` — **bukan** `SYSTEM_PROMPT.md` dan `manifest.json` seperti yang diklaim halaman.
 
-Artinya salah satu dari tiga hal berikut benar, dan Chief perlu memastikan yang mana:
+Artinya salah satu dari tiga hal berikut benar, dan Gaffer perlu memastikan yang mana:
 - kesembilan bot itu ada di repositori lain yang belum disambungkan ke sesi ini;
 - kesembilan bot itu masih dalam rencana, sehingga halaman pemasaran mendahului produk;
 - kesembilan bot itu adalah nama baru bagi sebagian template korporat yang sudah ada.

@@ -16,7 +16,7 @@ They are stored in Git LFS (see `.gitattributes`).
 ## Policy
 
 - Baselines are as much a contract as code: a changed screenshot must be
-  reviewed by the Chief like any other R2/R3 style change.
+  reviewed by the Gaffer like any other R2/R3 style change.
 - Do not widen the pixel tolerance to mask a real change.
 - The visual spec captures the readiness desk in its deterministic
   "ready" state (API + PostgreSQL reachable in the disposable e2e env).

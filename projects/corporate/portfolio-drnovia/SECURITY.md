@@ -7,7 +7,7 @@ and how to disclose issues. It does not redefine R0–R3.
 ## Disclosure
 
 Report findings through the organization's **private** security channel to
-**Chief**. Do not file public issues with exploit detail or credentials.
+**Gaffer**. Do not file public issues with exploit detail or credentials.
 
 CURRENT: there is no project-specific mailing list, bug bounty, or GitHub
 private vulnerability reporting configured for this capsule (those would be
@@ -16,17 +16,17 @@ root `.github` R2 work).
 ```mermaid
 sequenceDiagram
   participant Finder
-  participant Chief
+  participant Gaffer
   participant Capsule as projects/corporate/portfolio-drnovia
   participant Root as root SECURITY.md
-  Finder->>Chief: private report (no public PoC)
-  Chief->>Root: classify R1/R2/R3
+  Finder->>Gaffer: private report (no public PoC)
+  Gaffer->>Root: classify R1/R2/R3
   alt R1 capsule-only
-    Chief->>Capsule: patch and verify
+    Gaffer->>Capsule: patch and verify
   else R2 shared or lockfile
-    Chief->>Root: designated review
+    Gaffer->>Root: designated review
   else R3 production
-    Chief->>Chief: explicit authorization before execution
+    Gaffer->>Gaffer: explicit authorization before execution
   end
 ```
 

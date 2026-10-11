@@ -1,6 +1,6 @@
 # SentraBot Free — Batas v1
 
-**Status: TERKUNCI** · Keputusan Chief, 1 September 2026
+**Status: TERKUNCI** · Keputusan Gaffer, 1 September 2026
 Dokumen ini adalah sumber kebenaran tunggal untuk batas paket Free. Halaman harga, Ketentuan
 Layanan, dan penegakan di backend harus mengacu ke sini.
 
@@ -121,7 +121,7 @@ Ilustrasi bila tarif efektif 11% dan harga final Rp79.000:
 | PPN | ± Rp7.829 |
 | Dibayar pelanggan | **Rp79.000** |
 
-**Catatan Chief:** per September 2026 ketentuan DJP menyatakan tarif formal PPN 12%, namun
+**Catatan Gaffer:** per September 2026 ketentuan DJP menyatakan tarif formal PPN 12%, namun
 untuk barang/jasa selain kategori mewah digunakan DPP nilai lain 11/12 sehingga tarif
 efektifnya tetap 11%.
 

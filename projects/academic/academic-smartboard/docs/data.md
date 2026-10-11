@@ -35,7 +35,7 @@ placeholder.
 **DIKECUALIKAN** dari `public/` — konsen/lisensi belum terverifikasi.
 Kedua foto **DIHILANGKAN** dari situs (tidak dirender, tanpa placeholder —
 bagian `tentang` tidak punya field gambar) sampai ada konfirmasi tertulis
-dari Chief. `public/` hanya memuat 6 gambar webp artikel wawasan hasil
+dari Gaffer. `public/` hanya memuat 6 gambar webp artikel wawasan hasil
 optimasi (504K total), tanpa foto orang.
 
 ## `apps/web` — data (sub-fase 1–2/5)

@@ -1,12 +1,13 @@
 # HANDOFF
 
-Last updated: 2026-09-25
+Last updated: 2026-10-11 (Claude Code, local `main`, task `TASK-20261011-GAFFER-ADDRESS`)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Durable decisions go
 to `DECISIONS.md`.
 
 ## Current state
 
+- 2026-10-11 (Claude Code, task `TASK-20261011-GAFFER-ADDRESS`, R1): docs in this capsule now address the owner as "Gaffer" instead of "Chief" (wording only; no code, config or behaviour change).
 - Branch `integration/capsules-standalone` (base `main` de9e91bb), task
   `TASK-20260925-CAPSULES-STANDALONE-INTEGRATION` (R2, Cursor, REVIEW), shared with sentrabot.
 - `project.contract.json` added; root packages localized under `packages/` (see `DECISIONS.md`).

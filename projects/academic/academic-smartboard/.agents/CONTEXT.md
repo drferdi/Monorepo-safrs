@@ -2,7 +2,7 @@
 
 - Purpose: multi-tenant tutoring platform covering session scheduling, curriculum, evaluation,
   tutor payroll, and the Kayyisa AI agent for Kurikulum Merdeka (`AGENTS.md` objective).
-- Human owner: Chief (dr. Ferdi Iskandar). Default risk: R1 (`project.contract.json`).
+- Human owner: Gaffer (dr. Ferdi Iskandar). Default risk: R1 (`project.contract.json`).
 - Stack: Node.js 24 and pnpm; apps under `apps/site` and `apps/web` build as static exports; the
   token source and gate live in `packages/token`, and apps consume the pinned tarball
   `vendor/sentra-token-1.0.0.tgz`.

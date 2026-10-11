@@ -47,7 +47,7 @@ flowchart TB
 ## What they do not cover
 
 Browser momentum or visual pixel diffs. HTTP smoke is exercised by the extraction verifier; visual
-behavior still needs a human look at `http://127.0.0.1:4173` until Chief asks for Playwright.
+behavior still needs a human look at `http://127.0.0.1:4173` until Gaffer asks for Playwright.
 
 ## Isolated resources
 

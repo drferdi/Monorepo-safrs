@@ -1,7 +1,7 @@
 # Spesifikasi Build: Sentra Bot via WhatsApp (MVP)
 
 **Status:** Draft untuk implementasi
-**Disiapkan oleh:** Claude (Chief Research, Diligence & Knowledge Architect) — spesifikasi ini adalah brief/prompt untuk dieksekusi oleh Claude Code atau tim engineering
+**Disiapkan oleh:** Claude (Gaffer Research, Diligence & Knowledge Architect) — spesifikasi ini adalah brief/prompt untuk dieksekusi oleh Claude Code atau tim engineering
 **Untuk:** dr Ferdi Iskandar, Sentra Artificial Intelligence
 **Tanggal:** 2026-09-01
 **Terkait:** `docs/plans/plans.md` (strategi Indonesia), `CLAUDE.md` (prinsip arsitektur Sentra Bot)
@@ -168,7 +168,7 @@ Karena kredensial WABA dan sebagian data percakapan transit melalui server:
 
 ---
 
-## 8. Pertanyaan Terbuka (perlu keputusan Chief sebelum/selama implementasi)
+## 8. Pertanyaan Terbuka (perlu keputusan Gaffer sebelum/selama implementasi)
 
 1. **Provisioning identitas** — onboarding link+OTP, atau auto-create saat pesan pertama masuk?
 2. **Provider Speech-to-Text** — apakah provider voice existing (ElevenLabs/Cartesia/OpenAI) sudah mencakup STT, atau perlu tambahan provider baru khusus transkripsi?
