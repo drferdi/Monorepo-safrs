@@ -268,6 +268,7 @@ export function VeraWidget() {
                   <Image src={officialLogo} alt="" width={48} height={36} unoptimized />
                 </span>
                 <h2>{greeting}, Dokter</h2>
+                <p>Saya Vera. Ada yang bisa Vera bantu?</p>
               </div>
             ) : (
               messages.filter((m) => m.id !== INITIAL_MESSAGE.id && !(m.isStreaming && !m.text)).map((msg) =>
@@ -356,7 +357,7 @@ export function VeraWidget() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Escape" && suggesting) { e.stopPropagation(); setInput(""); } }}
-                placeholder="Ada yang bisa Vera bantu?"
+                placeholder="Tulis pertanyaan klinis…"
                 aria-label="Pesan untuk Vera"
                 disabled={loading}
               />

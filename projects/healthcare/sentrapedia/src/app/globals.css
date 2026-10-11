@@ -898,6 +898,7 @@ h1 span { white-space: normal; }
 .vera-hero-logo { display: block; line-height: 0; }
 .vera-hero-logo img { width: 56px; height: auto; }
 .vera-hero h2 { margin: 0; font-family: "Iowan Old Style", Georgia, "Times New Roman", serif; font-size: 22px; font-weight: 400; letter-spacing: -0.01em; color: var(--vera-text); }
+.vera-hero p { margin: -6px 0 0; font-size: 13px; color: var(--vera-dim); }
 
 .vera-question { align-self: flex-end; max-width: 82%; margin: 0; padding: 9px 13px; border-radius: 16px 16px 4px 16px; background: var(--vera-raised); box-shadow: var(--vera-raise-sm); font-size: 13px; line-height: 1.4; color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; animation: vera-bubble-in 200ms ease-out both; }
 .vera-answer { display: flex; flex-direction: column; gap: 6px; animation: vera-bubble-in 200ms ease-out both; }
