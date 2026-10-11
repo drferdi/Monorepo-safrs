@@ -50,3 +50,35 @@ describe("clinical evidence gate", () => {
     expect(report.drugs[0].status).toBe("verified");
   });
 });
+
+describe("clinical evidence gate fix round 1", () => {
+  it("doses a drug whose name and strength sit in different passages as doseRemoved", () => {
+    const { report } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), bundle("Amoksisilin untuk pneumonia anak.", "Dosis 500 mg tiap hari untuk anak lain."), pneumonia);
+    expect(report.drugs[0]).toMatchObject({ status: "doseRemoved", evidenceIds: ["E1"] });
+  });
+  it("keeps a therapy whose ICD-10 category matches the requested code", () => {
+    const { therapy: out, report } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg")], { forDiagnosis: { icd10: "J18", label: "Pneumonia" } }), bundle("Amoksisilin 500 mg 3 kali sehari."), pneumonia);
+    expect(out?.regimen[0].dose).toBe("3x500mg");
+    expect(report.therapyRemoved).toBe(false);
+  });
+  it("removes all therapy with a reason when no drug is verified or dosed", () => {
+    const { therapy: out, report } = gateTherapy(therapy([drug("Levofloxacin", "1x750mg")]), bundle("Amoksisilin 500 mg."), pneumonia);
+    expect(out).toBeUndefined();
+    expect(report).toMatchObject({ therapyRemoved: true, reason: "Tidak ada obat yang indikasinya terverifikasi di TheOracle." });
+  });
+  it("keeps a drug-less warning with the unverified suffix and drops a warning that names only a removed drug", () => {
+    const { therapy: out } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg"), drug("Levofloxacin", "1x750mg")], { interactions: ["Kehamilan trimester pertama", "Hindari NSAID"], contraindications: ["Levofloxacin: anak"] }), bundle("Amoksisilin 500 mg."), pneumonia);
+    expect(out?.interactions).toEqual(["Kehamilan trimester pertama (belum terverifikasi)", "Hindari NSAID (belum terverifikasi)"]);
+    expect(out?.contraindications).toEqual([]);
+  });
+  it("supports a safety item only when one passage names its drug, a safety term and its own specific words", () => {
+    const { therapy: out } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg")], { contraindications: ["Amoxicillin: gangguan hati berat", "Amoxicillin: alergi penisilin"] }), bundle("Amoksisilin 500 mg. Kontraindikasi amoksisilin: alergi penisilin."), pneumonia);
+    expect(out?.contraindications).toEqual(["Amoxicillin: gangguan hati berat (belum terverifikasi)", "Amoxicillin: alergi penisilin"]);
+  });
+  it("does not verify a plain dose from a per-kg passage, but verifies a per-kg dose", () => {
+    const plain = gateTherapy(therapy([drug("Amoxicillin", "3x10mg")]), bundle("Amoksisilin 10 mg/kgBB per hari."), pneumonia);
+    expect(plain.report.drugs[0].status).toBe("doseRemoved");
+    const perKg = gateTherapy(therapy([drug("Amoxicillin", "3x10mg/kg")]), bundle("Amoksisilin 10 mg/kgBB per hari."), pneumonia);
+    expect(perKg.report.drugs[0].status).toBe("verified");
+  });
+});

@@ -16,7 +16,10 @@ function spell(word: string): string {
 const tokens = (text: string) => text.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z]+/).filter(Boolean).map(spell);
 const names = (drug: string) => tokens(drug).filter(word => word.length >= 4);
 const mentions = (passage: string[], drug: string) => { const wanted = names(drug); return wanted.length > 0 && wanted.every(word => passage.includes(word)); };
-const strengths = (dose: string) => [...dose.toLowerCase().matchAll(/(\d+(?:[.,]\d+)?)\s*(mcg|µg|mg|g|iu|ml)\b/g)].map(m => new RegExp(`(?<![\\d.,])${m[1].replace(/[.,]/, "[.,]")}\\s*${UNIT[m[2]]}\\b`, "i"));
+const strengths = (dose: string) => {
+  const tail = /\/\s*kg/.test(dose.toLowerCase()) ? "(?=\\s*\\/\\s*kg)" : "(?!\\s*\\/\\s*kg)";
+  return [...dose.toLowerCase().matchAll(/(\d+(?:[.,]\d+)?)\s*(mcg|µg|mg|g|iu|ml)\b/g)].map(m => new RegExp(`(?<![\\d.,])${m[1].replace(/[.,]/, "[.,]")}\\s*${UNIT[m[2]]}\\b${tail}`, "i"));
+};
 
 export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBundle | undefined, diagnosis: { icd10: string; label: string } | undefined): { therapy: MiraTherapy | undefined; report: EvidenceGateReport } {
   const forDiagnosis = therapy.forDiagnosis;
@@ -33,9 +36,12 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
   });
   const kept = therapy.regimen.filter((_, i) => drugs[i].status !== "removed");
   const safety = (items: string[]) => items.flatMap(item => {
-    const drug = kept.find(r => mentions(tokens(item), r.drug));
-    if (!drug) return [];
-    const supported = passages.some(p => mentions(p.words, drug.drug) && SAFETY_TERM.test(p.text.toLowerCase()));
+    const words = tokens(item);
+    const named = therapy.regimen.filter(r => mentions(words, r.drug));
+    const keptNamed = kept.filter(r => named.includes(r));
+    if (named.length && !keptNamed.length) return [];
+    const specific = words.filter(w => w.length >= 5 && !named.some(r => tokens(r.drug).includes(w)));
+    const supported = keptNamed.length > 0 && passages.some(p => keptNamed.every(r => mentions(p.words, r.drug)) && SAFETY_TERM.test(p.text.toLowerCase()) && specific.some(w => p.words.includes(w)));
     return [supported ? item : item + UNVERIFIED];
   });
   const gated: MiraTherapy = { forDiagnosis, regimen: kept.map(r => drugs[therapy.regimen.indexOf(r)].status === "verified" ? r : { ...r, dose: "" }), interactions: safety(therapy.interactions), contraindications: safety(therapy.contraindications) };
