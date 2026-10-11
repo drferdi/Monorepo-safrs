@@ -290,3 +290,17 @@ describe("clinical evidence gate: percent and bare U are strengths", () => {
     expect(out?.interactions).toEqual(["Hindari pada luka bakar >20% luas permukaan tubuh (belum terverifikasi)"]);
   });
 });
+
+describe("clinical evidence gate: per-kg is decided for each strength", () => {
+  const status = (dose: string, text: string) => gateTherapy(therapy([drug("Azithromycin", dose)]), bundle(text), pneumonia).report.drugs[0].status;
+  it("verifies a per-kg dose and a plain cap written in one dose", () => {
+    expect(status("1x10mg/kgBB, maks 500mg", "Azitromisin 10 mg/kgBB/hari dosis tunggal (maks 500 mg).")).toBe("verified");
+    expect(status("1x10mg/kgBB, maks 500mg", "Azitromisin 10 mg/kgBB/hari dosis tunggal (maks 500 mg/kgBB).")).toBe("doseRemoved");
+  });
+  it("reads 'per kg' in a passage like '/kg'", () => {
+    expect(status("1x10mg/kgBB", "Azitromisin 10 mg per kg BB per hari.")).toBe("verified");
+    expect(status("1x500mg", "Azitromisin 500 mg per kg BB per hari.")).toBe("doseRemoved");
+    expect(status("1x10 mg per kgBB", "Azitromisin 10 mg/kgBB/hari.")).toBe("verified");
+    expect(status("1x10mg/kgBB", "Azitromisin 10 mg sekali sehari.")).toBe("doseRemoved");
+  });
+});

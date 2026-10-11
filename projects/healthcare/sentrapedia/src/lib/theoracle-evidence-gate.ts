@@ -54,10 +54,15 @@ const number = (value: string) => value.replace(/[.,]/g, "[.,]").replace(/\s+/g,
 // Each number of a pair needs its own match: the first stands alone or opens the same pair.
 // One tablet or capsule next to a strength such as 500 mg adds nothing to check: the 500 mg is the dose.
 // Without `percent`, a percent is not a strength (a safety item's "eGFR turun >50%" is a threshold).
+// Each strength is per kg or not on its own ("10 mg/kgBB, maks 500 mg"), and "per kg" reads like "/kg".
+const PER_KG = String.raw`\s*(?:\/|per)\s*kg`;
 const strengths = (dose: string, percent = true) => {
-  const tail = /\/\s*kg/.test(dose.toLowerCase()) ? "(?=\\s*\\/\\s*kg)" : "(?!\\s*\\/\\s*kg)";
-  const found = [...dose.toLowerCase().matchAll(STRENGTH)].filter(m => percent || m[3] !== "%");
-  return found.filter(m => !(COUNTED.test(m[3]) && !m[1] && m[2] === "1" && found.some(o => !COUNTED.test(o[3])))).flatMap(m => [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}${m[3] === "%" ? "" : "\\b"}${tail}`, "i")));
+  const text = dose.toLowerCase();
+  const found = [...text.matchAll(STRENGTH)].filter(m => percent || m[3] !== "%");
+  return found.filter(m => !(COUNTED.test(m[3]) && !m[1] && m[2] === "1" && found.some(o => !COUNTED.test(o[3])))).flatMap(m => {
+    const tail = new RegExp(`^${PER_KG}`).test(text.slice(m.index + m[0].length)) ? `(?=${PER_KG})` : `(?!${PER_KG})`;
+    return [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}${m[3] === "%" ? "" : "\\b"}${tail}`, "i"));
+  });
 };
 // Strips every strength with its per-unit tails; "Amoxicillin 500 mg/clavulanate 125 mg" -> "Amoxicillin/clavulanate".
 export const unstrength = (text: string) => text.replace(new RegExp(STRENGTH.source + PER, "gi"), "").replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ").trim();
