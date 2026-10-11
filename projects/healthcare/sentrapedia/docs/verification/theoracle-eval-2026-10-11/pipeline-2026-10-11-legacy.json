@@ -44,7 +44,9 @@
       "removed": 9
     },
     "retrievalSuccess": null,
-    "costUsd": 0.8945
+    "costUsd": 0.8945,
+    "auditCostUsd": 0.8945,
+    "auditCostNote": "costUsd is the diagnosis step only (result.meta); auditCostUsd is the sum over all MIRA calls in the audit log for this run (targeted includes the 61 therapy calls)."
   },
   "rows": [
     {

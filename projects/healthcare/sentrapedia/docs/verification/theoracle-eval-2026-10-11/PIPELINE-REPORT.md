@@ -14,11 +14,11 @@ Live run, 61 cases each (`eval-set.json` gold queries, no exact-term rows), mode
 | mira_tx p50 / p95 | - | 1879 / 2512 ms |
 | gate p50 / p95 | 1 / 1 ms | 1 / 1 ms |
 | ICD-10 valid | 100% | 100% |
-| ICD-10 top-1 vs draft gold | 98.4% (60/61) | 98.4% (60/61) |
+| ICD-10 top-1 vs draft gold (queries name the disease; upper bound) | 98.4% (60/61) | 98.4% (60/61) |
 | Drugs written (gate report) | 65 | 71 |
 | Doses written | 64 | 71 |
-| Doses "supported" (lexical, see limits) | 61 (95.3%) | 69 (97.2%) |
-| Drugs verified (dose shown) | 36 (55%) | 41 (58%) |
+| Doses "supported" (loose lexical, overstates; see limits) | 61 (95.3%) | 69 (97.2%) |
+| Drugs verified (dose shown; headline dose number) | 36 (55%) | 41 (58%) |
 | Dose removed (drug shown, dose blanked) | 20 (31%) | 28 (39%) |
 | Drug removed (no support) | 9 (14%) | 2 (3%) |
 | Doses displayed | 36 | 41 |
@@ -59,6 +59,7 @@ Result: 8 yes, 1 no, 1 unclear. Both failures are of the kind a lexical gate pas
 
 ## Limits
 
+- Every eval query names the disease, its abbreviation or a lay term for it, and the cases carry no age, sex, vitals or labs, so the ICD-10 figure measures name-to-code lookup, not diagnosis from a clinical presentation.
 - Gold ICD-10 labels are drafts (written from document titles), not clinician-reviewed; accuracy against them is an upper-leaning proxy. The 98.4% reflects mostly easy, textbook queries.
 - Cases are fictional one-line complaints with null age/sex; no vitals, labs or history. Adult/child cannot be told from the case, so population consistency is judged only against the passage.
 - The "supported" metric is lexical and loose: a dose counts as supported when each strength number appears as a substring in any sent passage (a "5" matches "50"). It overstates support; the gate's `verified` count (drug named and dose present in the same passage) is the stricter number. The gate itself is lexical, as spot-check #2 and #8 show.
