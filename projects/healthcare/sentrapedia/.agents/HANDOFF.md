@@ -1,5 +1,27 @@
 # Sentrapedia handoff
 
+## Evidence gate: per kg is decided for each strength (#9) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for #9 (correct per-kg doses blanked) and approved the bounded design with one Opus review.
+- `87c8eb2b` (R2), `src/lib/theoracle-evidence-gate.ts` `strengths()`:
+  - Each strength takes its own per-kg tail from the text right after it. "10 mg/kgBB, maks 500 mg" now verifies from a passage with a per-kg 10 mg and a plain 500 mg cap. Before, the whole dose was treated as per kg and blanked.
+  - A passage's "per kg BB" counts like "/kgBB".
+  - A plain strength still never matches a per-kg one, either way.
+- The Opus review returned "with fixes":
+  - Critical: "10 mg/hari/kgBB" was read as plain and verified by "10 mg/hari".
+  - Important: "10 mg - 15 mg/kgBB" split its ends, so a plain 10 mg verified the first end.
+  - Minor: "kilogram" was not read.
+- Fixed in `252c7909`. The per-kg tail now skips per-unit tails (/hari, /dosis, /kali, /jam, /menit, /detik, with an optional number) and the other end of a range, and accepts "kilogram". The same tail is used for the model's dose and for the passage.
+- Verified:
+  - RED first (both rounds); gate tests 51/51, `npm test` 240/240, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies against `91837ff9`: no status change and no field change (41 legacy / 40 targeted verified). No audited reply had a per-kg dose with a plain cap, so the gain is for future replies.
+- Known limits:
+  - Frequency is not checked.
+  - In "10 mg/kgBB - 15 mg" the second end is read as plain (fail-safe: it blanks when the passage has 15 mg/kgBB).
+  - Per-unit tails outside the list (e.g. "/minggu") before "/kg" are not skipped; the dose is then read as plain and needs a plain passage.
+  - `unstrength` can leave "per kg" text behind (cosmetic, #11).
+- Local `main` fast-forwarded. Not pushed.
+
 ## Evidence gate: percent and bare U are strengths (#12) - 2026-10-11 Asia/Jakarta
 
 - Gaffer asked for #12 (percent and bare "U" counted as doses) and approved the bounded design with one Opus review. This replaces the earlier rule that a percent is part of the product name.

@@ -98,6 +98,12 @@ A percent concentration ("1x5%", "1-2.5%") now verifies against a passage that n
 
 All 13 new verifications are topical concentrations from passages for the same disease: permetrin 5% (skabies), kloramfenikol 1% (hordeolum), triamsinolon 0,1% and klorheksidin 0,1-0,2% (stomatitis aftosa), mupirosin 2% (impetigo), timolol 0,25% (glaukoma, FORNAS), hidrokortison 1-2,5% (dermatitis atopik). No verified dose was lost. Safety items and filled route/duration/note fields are unchanged in count.
 
+### Per kg is decided for each strength (commits `87c8eb2b`, `252c7909`)
+
+A dose that mixes a per-kg amount and a plain cap ("10 mg/kgBB, maks 500 mg") now verifies when the passage carries both the same way. Before this change, the whole dose was treated as per kg and blanked. A passage's "per kg BB" or "per kilogram" counts like "/kgBB". Per kg is also found behind another per-unit tail ("10 mg/hari/kgBB") and is shared by both ends of a range ("10 mg - 15 mg/kgBB"). A plain strength never matches a per-kg one, in either direction.
+
+Replay, same 122 replies: no change (legacy 41, targeted 40 verified). No audited reply had this kind of dose, so the gain applies to future replies.
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.
