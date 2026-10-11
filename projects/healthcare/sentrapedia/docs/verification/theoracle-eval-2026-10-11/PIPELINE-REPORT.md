@@ -66,3 +66,4 @@ Result: 8 yes, 1 no, 1 unclear. Both failures are of the kind a lexical gate pas
 - Spot-check is 10 rows, one rater, no second reading.
 - One run per path, temperature as configured; model variation between runs was not measured (4 of 61 top-1 code strings differed between the two runs).
 - Cost and latency are for 1 case at a time on local CPU with a warm index (cold start 2.6 s not included).
+- Therapy retrieval success was counted from `therapyGrounding`, which a `mira_tx` failure also clears; the script now reads the `retrieve_tx` stage. No `mira_tx` stage failed in the saved runs, so 61/61 still holds.

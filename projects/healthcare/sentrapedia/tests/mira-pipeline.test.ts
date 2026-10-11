@@ -10,6 +10,8 @@ const input = () => new Request("http://127.0.0.1:3104/api/mira", { method: "POS
 const bundle = (text: string): TheOracleGroundingBundle => ({ version: THEORACLE_GROUNDING_CAPABILITY, corpus: { name: "TheOracle", indexSha256: "a".repeat(64), embeddingModel: { id: "onnx-community/embeddinggemma-300m-ONNX", revision: "e".repeat(40), dtype: "fp32", dims: 768 }, retrievedAt: "2026-10-11T12:00:00.000Z", reviewProvenance: "fixture" }, queryDigest: "b".repeat(64), evidence: [{ evidenceId: "E1", text, retrievalRank: 1, similarity: 0.6, source: { title: "ppk.pdf", docSource: "uji", origin: "fixture", textSha256: "c".repeat(64) } }] });
 const diagnosisResult = (likely: { icd10: string; label: string; confidenceTier: string }[]) => ({ contractVersion: "1", status: "ok", differential: { likely, alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: [], nextBestActions: [], disposition: null, unfilled: [], meta });
 const pneumonia = { icd10: "J18.9", label: "Pneumonia", confidenceTier: "low" };
+const UNAVAILABLE = "Referensi atau langkah terapi TheOracle tidak tersedia; terapi dan dosis tidak ditampilkan.";
+const absent = (reason = UNAVAILABLE, forDiagnosis = { icd10: "J18.9", label: "Pneumonia" }) => ({ forDiagnosis, therapyRemoved: true, reason, drugs: [] });
 const therapy = { forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, regimen: [{ drug: "Amoxicillin", dose: "3x500mg", route: "PO", duration: "5 hari", note: "" }, { drug: "Levofloxacin", dose: "1x750mg", route: "PO", duration: "5 hari", note: "" }], interactions: [], contraindications: [] };
 
 function service(options: { capabilities?: string[]; likely?: typeof pneumonia[]; therapyStatus?: "ok" | "unavailable"; withTherapy?: boolean } = {}) {
@@ -55,6 +57,7 @@ describe("targeted therapy pipeline", () => {
     expect(posts.map(p => p.path)).toEqual(["/v1/diagnosis/step"]);
     expect(body.result.therapy).toBeUndefined();
     expect(body.result.differential.likely[0].icd10).toBe("J18.9");
+    expect(body.evidenceGate).toEqual(absent());
     expect(logs.find(l => l.stage === "retrieve_tx")).toMatchObject({ ok: false, code: "THEORACLE_NO_MATCH" });
   });
   it("skips therapy when the diagnosis step has no likely diagnosis", async () => {
@@ -63,6 +66,7 @@ describe("targeted therapy pipeline", () => {
     const body = await (await gateway.step(input())).json();
     expect(posts.map(p => p.path)).toEqual(["/v1/diagnosis/step"]);
     expect(body.result.therapy).toBeUndefined();
+    expect(body.evidenceGate).toEqual(absent("Diagnosis kerja belum ada; terapi tidak disusun.", { icd10: "", label: "" }));
     expect(logs.map(l => l.stage)).toEqual(["retrieve_dx", "mira_dx"]);
   });
   it("returns the diagnosis without therapy when the therapy step is unavailable", async () => {
@@ -70,6 +74,7 @@ describe("targeted therapy pipeline", () => {
     const { gateway, logs } = gatewayWith(fetchFn);
     const body = await (await gateway.step(input())).json();
     expect(body.result.therapy).toBeUndefined();
+    expect(body.evidenceGate).toEqual(absent());
     expect(logs.find(l => l.stage === "mira_tx")).toMatchObject({ ok: false, code: "MODEL_ERROR" });
   });
   it("falls back to the current path when MIRA lacks the capability, and still gates its therapy", async () => {
@@ -97,7 +102,7 @@ describe("targeted therapy pipeline", () => {
     const { gateway, logs } = gatewayWith(fetchFn);
     const body = await (await gateway.step(input())).json();
     expect(body.result.therapy).toBeUndefined();
-    expect(body.evidenceGate).toBeUndefined();
+    expect(body.evidenceGate).toEqual(absent());
     expect(logs.find(l => l.stage === "mira_tx")).toMatchObject({ ok: false, code: "CONTRACT" });
   });
   it("records a contract failure once in mira_tx when the therapy cost exceeds the limit", async () => {
@@ -107,6 +112,7 @@ describe("targeted therapy pipeline", () => {
     const body = await (await gateway.step(input())).json();
     expect(body.result.therapy).toBeUndefined();
     expect(body.therapyGrounding).toBeUndefined();
+    expect(body.evidenceGate).toEqual(absent());
     expect(logs.find(l => l.stage === "mira_tx")).toMatchObject({ ok: false, code: "CONTRACT" });
     expect(logs.map(l => l.stage)).toEqual(["retrieve_dx", "mira_dx", "retrieve_tx", "mira_tx"]);
   });
@@ -118,6 +124,7 @@ describe("targeted therapy pipeline", () => {
     expect(response.status).toBe(200);
     expect(posts.map(p => p.path)).toEqual(["/v1/diagnosis/step"]);
     expect(body.result.therapy).toBeUndefined();
+    expect(body.evidenceGate).toEqual(absent());
     expect(logs.find(l => l.stage === "retrieve_tx")).toMatchObject({ ok: false, code: "THEORACLE_UNAVAILABLE" });
   });
   it("applies no retrieval time limit on the legacy path", async () => {

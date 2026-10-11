@@ -31,7 +31,7 @@ for (const item of queries.filter(q => q.gold?.length && !q.term)) {
     // icdValid accepts the full code or its 3-character category.
     icd10: likely?.icd10 ?? null, diagnosis: likely?.label ?? null, icdValid: !!likely && names.has(likely.icd10) || !!likely && names.has(likely.icd10.slice(0, 3)),
     icdCorrect: !!likely && (labels[item.id] ?? []).includes(likely.icd10.slice(0, 3)),
-    therapyRetrieved: !!body.therapyGrounding, drugsWritten: written.length, dosesWritten: written.filter(d => d.dose).length,
+    therapyRetrieved: (body.pipeline?.stages ?? []).some(s => s.stage === "retrieve_tx" && s.ok),drugsWritten: written.length, dosesWritten: written.filter(d => d.dose).length,
     dosesSupported: supported.length, verified: gate ? gate.drugs.filter(d => d.status === "verified").length : null,
     doseRemoved: gate ? gate.drugs.filter(d => d.status === "doseRemoved").length : null, removed: gate ? gate.drugs.filter(d => d.status === "removed").length : null,
     displayedDoses: (body.result.therapy?.regimen ?? []).filter(r => r.dose).length, costUsd: body.result.meta.costUsd, verifiedEvidence,

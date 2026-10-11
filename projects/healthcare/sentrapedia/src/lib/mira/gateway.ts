@@ -131,9 +131,12 @@ export function createMiraGateway(options: Options = {}) {
         let final: MiraResult = result;
         let therapyGrounding: TheOracleGroundingBundle | undefined;
         const diagnosis = result.differential.likely[0];
-        if (targeted && diagnosis) {
+        const target = diagnosis ? { icd10: diagnosis.icd10, label: diagnosis.label } : undefined;
+        // A targeted therapy that is skipped or lost still says why; a gate run below replaces this report.
+        const absent = (reason: string): EvidenceGateReport => ({ forDiagnosis: target ?? { icd10: "", label: "" }, therapyRemoved: true, reason, drugs: [] });
+        let evidenceGate: EvidenceGateReport | undefined = targeted && !target ? absent("Diagnosis kerja belum ada; terapi tidak disusun.") : undefined;
+        if (targeted && target) {
           try {
-            const target = { icd10: diagnosis.icd10, label: diagnosis.label };
             therapyGrounding = await timed("retrieve_tx", () => options.retrieveTherapyGrounding!(caseData, target), retrievalLimitMs);
             if (!validTheOracleGrounding(therapyGrounding)) throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Referensi terapi tidak dapat diverifikasi.");
             const bundle = therapyGrounding;
@@ -151,11 +154,11 @@ export function createMiraGateway(options: Options = {}) {
             // A stage failure leaves the diagnosis without therapy; an overall timeout or cancel still ends the request.
             if (controller.signal.aborted) throw error;
             therapyGrounding = undefined;
+            evidenceGate = absent("Referensi atau langkah terapi TheOracle tidak tersedia; terapi dan dosis tidak ditampilkan.");
           }
         }
-        let evidenceGate: EvidenceGateReport | undefined;
         if (final.therapy) {
-          const gated = await timed("gate", async () => gateTherapy(final.therapy!, targeted ? therapyGrounding : grounding, diagnosis ? { icd10: diagnosis.icd10, label: diagnosis.label } : undefined));
+          const gated = await timed("gate", async () => gateTherapy(final.therapy!, targeted ? therapyGrounding : grounding, target));
           evidenceGate = gated.report;
           const withoutTherapy = { ...final };
           delete withoutTherapy.therapy;
