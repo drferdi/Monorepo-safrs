@@ -1,11 +1,11 @@
 import { validCase, validResult, type MiraResult, type MiraAnalysis } from "./contract";
 import type { CaseState } from "./types";
-import { theOracleSource, theOracleDiseases, type Disease } from "../theoracle";
+import { referenceIncludes, theOracleSource, theOracleDiseases, type Disease } from "../theoracle";
 import { newId, type Message } from "../workspace";
 import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
-import { unstrength, validGate, type EvidenceGateReport, type GateStatus } from "../theoracle-evidence-gate";
+import { gateTherapy, unstrength, validGate, type EvidenceGateReport, type GateStatus } from "../theoracle-evidence-gate";
 
 const gateLine: Record<GateStatus, string> = { verified: "dosis terverifikasi", doseRemoved: "dosis tidak ditemukan di TheOracle, cek pedoman", removed: "tidak ditampilkan, indikasi tidak terverifikasi di TheOracle" };
 const passages = (bundle: TheOracleGroundingBundle) => bundle.evidence.map(item => `- ${item.source.title} [${item.evidenceId}] · kemiripan ${item.similarity}\n  ${item.text}`).join("\n\n");
@@ -53,15 +53,6 @@ export const diagnosisReferenceMarker = "Referensi penyakit terkait";
 
 const recorded = (text: string) => text.split(/\r?\n/).map(line => `  ${line}`).join("\n");
 const vitalLabels: Record<string, string> = { systolic: "Sistolik (mmHg)", diastolic: "Diastolik (mmHg)", heartRate: "Nadi (/menit)", respiratoryRate: "Napas (/menit)", temperature: "Suhu (°C)", spo2: "SpO₂ (%)", gcs: "GCS" };
-
-function referenceIncludes(sourceCode: string, code: string): boolean {
-  if (!/^[A-Z]\d{2}(?:\.[A-Z0-9]{1,4})?$/.test(code)) return false;
-  return sourceCode.toUpperCase().split(",").some(value => {
-    const token = value.trim();
-    const range = /^([A-Z]\d{2})-([A-Z]\d{2})$/.exec(token);
-    return range ? code.slice(0, 3) >= range[1] && code.slice(0, 3) <= range[2] : code === token || code.startsWith(token + ".");
-  });
-}
 
 export function miraDraft(result: MiraResult, traceId: string, createdAt: string, caseData?: CaseState, focus?: MiraFocus, gate?: EvidenceGateReport): string {
   // Bullets only where there are several points; a single point stays a plain line.
@@ -155,8 +146,17 @@ export function diagnosisContent(message: Pick<Message, "content" | "originalCon
   try {
     const source: unknown = JSON.parse(message.sourceText!);
     if (!source || typeof source !== "object" || !("case" in source) || !("result" in source) || !("traceId" in source) || !("createdAt" in source) || !validCase(source.case) || !validResult(source.result) || typeof source.traceId !== "string" || typeof source.createdAt !== "string") return message.content;
-    const gate = "evidenceGate" in source && validGate(source.evidenceGate) ? source.evidenceGate : undefined;
-    return miraDraft(source.result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined, gate) + theOracleCitations("grounding" in source ? source.grounding : undefined, "therapyGrounding" in source ? source.therapyGrounding : undefined, gate);
+    const grounding = "grounding" in source ? source.grounding : undefined;
+    const therapyGrounding = "therapyGrounding" in source ? source.therapyGrounding : undefined;
+    const stored = "evidenceGate" in source && validGate(source.evidenceGate) ? source.evidenceGate : undefined;
+    // A draft saved before the evidence gate holds the model's doses unchecked: gate it now against its stored bundle, as the gateway does.
+    const likely = source.result.differential.likely[0];
+    const late = !stored && source.result.therapy ? gateTherapy(source.result.therapy, validTheOracleGrounding(therapyGrounding) ? therapyGrounding : validTheOracleGrounding(grounding) ? grounding : undefined, likely && { icd10: likely.icd10, label: likely.label }) : undefined;
+    const withoutTherapy = { ...source.result };
+    delete withoutTherapy.therapy;
+    const result = late ? (late.therapy ? { ...source.result, therapy: late.therapy } : withoutTherapy) : source.result;
+    const gate = stored ?? late?.report;
+    return miraDraft(result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined, gate) + theOracleCitations(grounding, therapyGrounding, gate);
   } catch { return message.content; }
 }
 

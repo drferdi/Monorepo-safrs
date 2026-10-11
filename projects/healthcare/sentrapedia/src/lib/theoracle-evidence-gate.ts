@@ -1,5 +1,6 @@
 import type { MiraTherapy } from "./mira/contract";
 import type { TheOracleGroundingBundle } from "./theoracle-grounding-types";
+import { referenceIncludes, theOracleDiseases } from "./theoracle";
 
 export type GateStatus = "verified" | "doseRemoved" | "removed";
 // `dose` (and `drug`) are the raw model strings, kept for audit only; never display them.
@@ -32,6 +33,13 @@ function spell(word: string): string {
 const tokens = (text: string) => text.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z]+/).filter(Boolean).map(spell);
 const names = (drug: string) => tokens(drug).filter(word => word.length >= 4);
 const mentions = (passage: string[], drug: string) => { const wanted = names(drug); return wanted.length > 0 && wanted.every(word => passage.includes(word)); };
+// Words that do not single out one disease: qualifiers, function words, and any word in three or more catalog names (demam, akut, jantung).
+const catalogCounts = new Map<string, number>();
+theOracleDiseases.forEach(d => new Set(tokens(d.nama)).forEach(word => catalogCounts.set(word, (catalogCounts.get(word) ?? 0) + 1)));
+const GENERIC = new Set(["kronis", "infeksi", "tanpa", "dengan", "komplikasi", "lain", "lainnya", "pada", "anak", "dewasa", "umum", "tidak", "lokasi", "spesifik", "acute", "chronic", "disease", "infection", "syndrome", "disorder", "without", "complication", "unspecified", "specified", "other", "status", "type", "tipe", "primer", "sekunder", "adult", "child", "fever", "signs", "warning", "human", "virus", "organism", "origin", "site"].map(spell));
+// The distinctive words of the diagnosis label and of the TheOracle catalog names for its code; capitals such as HIV count too.
+const diagnosisWords = (diagnosis: { icd10: string; label: string }) => new Set([diagnosis.label, ...theOracleDiseases.filter(d => referenceIncludes(d.kode, diagnosis.icd10.trim().toUpperCase())).map(d => d.nama)]
+  .flatMap(name => [...tokens(name).filter(word => word.length >= 4 && !GENERIC.has(word) && (catalogCounts.get(word) ?? 0) < 3), ...(name.match(/\b[A-Z]{2,}\b/g) ?? []).flatMap(tokens)]));
 const number = (value: string) => value.replace(/[.,]/g, "[.,]").replace(/\s+/g, "\\s*");
 // Each number of a pair needs its own match: the first stands alone or opens the same pair.
 const strengths = (dose: string) => {
@@ -46,20 +54,23 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
   const removed = (reason: string) => ({ therapy: undefined, report: { forDiagnosis, therapyRemoved: true, reason, drugs: therapy.regimen.map((r): GateDrug => ({ drug: r.drug, dose: r.dose, status: "removed", evidenceIds: [] })) } });
   if (!bundle?.evidence.length) return removed("Referensi TheOracle untuk terapi tidak tersedia; dosis tidak ditampilkan.");
   if (!diagnosis || forDiagnosis.icd10.trim().toUpperCase().slice(0, 3) !== diagnosis.icd10.trim().toUpperCase().slice(0, 3)) return removed(`Terapi ditulis untuk diagnosis lain (${forDiagnosis.icd10}), bukan ${diagnosis?.icd10 ?? "diagnosis kerja"}.`);
-  const passages = bundle.evidence.map(item => ({ id: item.evidenceId, text: item.text, words: tokens(item.text) }));
+  const named = diagnosisWords(diagnosis);
+  const passages = bundle.evidence.map(item => { const words = tokens(item.text); return { id: item.evidenceId, text: item.text, words, about: [...tokens(item.source.title), ...words].some(word => named.has(word)) }; });
   const naming = (drug: string) => passages.filter(p => mentions(p.words, drug));
+  // A strength counts only from a passage about the diagnosis: an azole list for cryptococcosis does not dose pityriasis versicolor.
+  const dosingFor = (drug: string) => naming(drug).filter(p => p.about);
   // A strength outside `dose` is shown only when one passage naming the drug carries all of it.
   const carried = (text: string, among: { text: string }[]) => { const patterns = strengths(text); return !patterns.length || among.some(p => patterns.every(pattern => pattern.test(p.text))); };
   const drugs = therapy.regimen.map((r): GateDrug => {
     const named = naming(r.drug);
     if (!named.length) return { drug: r.drug, dose: r.dose, status: "removed", evidenceIds: [] };
     const patterns = strengths(r.dose + " " + r.drug);
-    const dosing = patterns.length ? named.filter(p => patterns.every(pattern => pattern.test(p.text))) : [];
+    const dosing = patterns.length ? dosingFor(r.drug).filter(p => patterns.every(pattern => pattern.test(p.text))) : [];
     return dosing.length ? { drug: r.drug, dose: r.dose, status: "verified", evidenceIds: dosing.map(p => p.id) } : { drug: r.drug, dose: r.dose, status: "doseRemoved", evidenceIds: named.map(p => p.id) };
   });
   const kept = therapy.regimen.filter((_, i) => drugs[i].status !== "removed");
   const shown = (r: MiraTherapy["regimen"][number]) => {
-    const named = naming(r.drug); const text = (field: string) => carried(field, named) ? field : "";
+    const named = dosingFor(r.drug); const text = (field: string) => carried(field, named) ? field : "";
     return { ...(drugs[therapy.regimen.indexOf(r)].status === "verified" ? r : { ...r, drug: unstrength(r.drug), dose: "" }), route: text(r.route), duration: text(r.duration), note: text(r.note) };
   };
   const safety = (items: string[]) => items.flatMap(item => {

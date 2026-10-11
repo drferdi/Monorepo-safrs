@@ -7,6 +7,7 @@ import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDuration
 import { theOracleSourceLinks } from "../src/lib/mira/presentation";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import { restoreWorkspace, initialWorkspace, workspaceReducer } from "../src/lib/workspace";
+import { gateTherapy } from "../src/lib/theoracle-evidence-gate";
 
 const analysis = {
   case: { ...emptyCase(), chiefComplaint: "Keluhan sintetis", anamnesis: { freeText: "Gejala sintetis" }, currentMedications: ["Obat tercatat"], results: [{ name: "Tes sintetis", value: 3, unit: "unit" }] },
@@ -275,6 +276,21 @@ describe("therapy verification presentation", () => {
     expect(without).toBe(miraDraft(analysis.result, "trace", "2026-10-11T00:00:00.000Z", undefined, undefined, undefined));
     const message = miraMessage({ ...analysis, grounding, evidenceGate: gate });
     expect(section(diagnosisContent(message), "Terapi Farmakologi")).toContain("Terapi tidak ditampilkan: Tidak ada obat");
+  });
+  it("gates an untouched draft saved before the evidence gate at render, as the gateway would", () => {
+    const pneumonia = { icd10: "J18.9", label: "Pneumonia" };
+    const dosed = { ...grounding, evidence: [{ ...grounding.evidence[0], text: "Pneumonia: amoksisilin 500 mg 3 kali sehari; parasetamol bila demam." }] };
+    const therapy = { forDiagnosis: pneumonia, regimen: [{ drug: "Amoxicillin", dose: "3x500mg", route: "PO", duration: "5 hari", note: "" }, { drug: "Paracetamol", dose: "3x1000mg", route: "PO", duration: "", note: "" }, { drug: "Levofloxacin", dose: "1x750mg", route: "PO", duration: "", note: "" }], interactions: [], contraindications: [] };
+    const result = { ...analysis.result, differential: { ...analysis.result.differential, likely: [{ ...pneumonia, confidenceTier: "low" as const }] }, therapy };
+    const old = miraMessage({ ...analysis, result, grounding: dosed });
+    expect(old.content).toContain("1x750mg");
+    const gated = gateTherapy(therapy, dosed, pneumonia);
+    const now = miraMessage({ ...analysis, result: { ...result, therapy: gated.therapy! }, grounding: dosed, evidenceGate: gated.report });
+    expect(diagnosisContent(old)).toBe(now.content);
+    expect(diagnosisContent(old)).not.toMatch(/1x750mg|3x1000mg/);
+    const unbundled = diagnosisContent(miraMessage({ ...analysis, result }));
+    expect(section(unbundled, "Terapi Farmakologi")).toContain("Terapi tidak ditampilkan: Referensi TheOracle untuk terapi tidak tersedia");
+    expect(unbundled).not.toMatch(/3x500mg|1x750mg|3x1000mg/);
   });
   it("keeps the therapy grounding in the saved source and its links", () => {
     const therapyGrounding = { ...grounding, evidence: [{ ...grounding.evidence[0], evidenceId: "T1", text: "Terapi pneumonia." }] };

@@ -3,11 +3,12 @@ import { gateTherapy, unstrength } from "../src/lib/theoracle-evidence-gate";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import type { MiraTherapy } from "../src/lib/mira/contract";
 
-const bundle = (...texts: string[]): TheOracleGroundingBundle => ({
+// A plain string is a passage from a pneumonia document; { title, text } sets the document title.
+const bundle = (...items: (string | { title: string; text: string })[]): TheOracleGroundingBundle => ({
   version: THEORACLE_GROUNDING_CAPABILITY,
   corpus: { name: "TheOracle", indexSha256: "a".repeat(64), embeddingModel: { id: "m/x", revision: "e".repeat(40), dtype: "fp32", dims: 3 }, retrievedAt: "2026-10-11T00:00:00.000Z", reviewProvenance: "fixture" },
   queryDigest: "b".repeat(64),
-  evidence: texts.map((text, i) => ({ evidenceId: `E${i + 1}`, text, retrievalRank: i + 1, similarity: 0.5, source: { title: `doc${i + 1}.pdf`, docSource: "uji", origin: "fixture", textSha256: "c".repeat(64) } })),
+  evidence: items.map((item, i) => ({ evidenceId: `E${i + 1}`, text: typeof item === "string" ? item : item.text, retrievalRank: i + 1, similarity: 0.5, source: { title: typeof item === "string" ? `pneumonia-${i + 1}.md` : item.title, docSource: "uji", origin: "fixture", textSha256: "c".repeat(64) } })),
 });
 const therapy = (regimen: MiraTherapy["regimen"], extra: Partial<MiraTherapy> = {}): MiraTherapy => ({ forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, regimen, interactions: [], contraindications: [], ...extra });
 const drug = (name: string, dose: string) => ({ drug: name, dose, route: "PO", duration: "5 hari", note: "" });
@@ -180,5 +181,42 @@ describe("clinical evidence gate final fix", () => {
     expect(gateTherapy(therapy([drug("Fentanil", "50 μg")]), bundle("Fentanil 50 mcg IV."), pneumonia).report.drugs[0].status).toBe("verified");
     const names = ["Parasetamol 120 mg/5 ml sirup", "Ceftriaxone 1 g/vial", "Ondansetron 4 mg / 8 mg"].map(name => gateTherapy(therapy([drug(name, "")]), bundle("Parasetamol sirup, ceftriaxone vial dan ondansetron tersedia."), pneumonia).therapy?.regimen[0].drug);
     expect(names).toEqual(["Parasetamol sirup", "Ceftriaxone", "Ondansetron"]);
+  });
+});
+
+describe("clinical evidence gate: the dose passage names the diagnosis", () => {
+  const versicolor = { icd10: "B36.0", label: "Pityriasis versicolor" };
+  const forVersicolor = (regimen: MiraTherapy["regimen"]) => therapy(regimen, { forDiagnosis: versicolor });
+  const azoleList = { title: "dermatovenereologi-perdoski-2021.pdf", text: "Triazol: flukonazol oral 50 mg per hari selama 14-30 hari; itrakonazol 100-200 mg; posakonazol 400 mg/12 jam. Alternatif amfoterisin B." };
+
+  it("does not verify a dose from a passage about another disease (lay_terms-03)", () => {
+    const { therapy: out, report } = gateTherapy(forVersicolor([drug("Flukonazol", "1x50mg")]), bundle(azoleList), versicolor);
+    expect(out?.regimen[0]).toMatchObject({ drug: "Flukonazol", dose: "" });
+    expect(report.drugs[0]).toMatchObject({ status: "doseRemoved", evidenceIds: ["E1"] });
+  });
+  it("does not let another passage that names the diagnosis carry the dose", () => {
+    const { report } = gateTherapy(forVersicolor([drug("Flukonazol", "1x50mg")]), bundle(azoleList, { title: "dermatovenereologi-perdoski-2021.pdf", text: "Pitiriasis versikolor: ketokonazol krim, flukonazol oral." }), versicolor);
+    expect(report.drugs[0]).toMatchObject({ status: "doseRemoved" });
+  });
+  it("verifies a dose from a passage that names the diagnosis in its text, title or a TheOracle catalog name", () => {
+    const named = (item: { title: string; text: string }) => gateTherapy(forVersicolor([drug("Flukonazol", "1x50mg")]), bundle(item), versicolor).report.drugs[0].status;
+    expect(named({ title: "perdoski.pdf", text: "Pitiriasis versikolor: flukonazol 50 mg/hari." })).toBe("verified");
+    expect(named({ title: "pityriasis-versikolor.md", text: "Flukonazol 50 mg/hari selama 14 hari." })).toBe("verified");
+    expect(named({ title: "perdoski.pdf", text: "Panu luas: flukonazol 50 mg/hari." })).toBe("verified");
+  });
+  it("counts an acronym in the diagnosis label but not a generic word", () => {
+    const hiv = { icd10: "Z21", label: "Asymptomatic human immunodeficiency virus [HIV] infection status" };
+    expect(gateTherapy(therapy([drug("Efavirenz", "1x600mg")], { forDiagnosis: hiv }), bundle({ title: "fornas-2025.pdf", text: "Antiretroviral untuk HIV: efavirenz 600 mg." }), hiv).report.drugs[0].status).toBe("verified");
+    const oma = { icd10: "H66.9", label: "Otitis media akut, unspecified" };
+    expect(gateTherapy(therapy([drug("Amoxicillin", "2x250mg")], { forDiagnosis: oma }), bundle({ title: "tonsilitis-2018.pdf", text: "Infeksi akut: amoksisilin 250 mg." }), oma).report.drugs[0].status).toBe("doseRemoved");
+  });
+  it("does not count a word shared by many catalog diseases or a function word", () => {
+    const typhoid = { icd10: "A01.0", label: "Demam tifoid" };
+    expect(gateTherapy(therapy([drug("Paracetamol", "3x500mg")], { forDiagnosis: typhoid }), bundle({ title: "kejang-demam.md", text: "Kejang demam pada anak: parasetamol 500 mg." }), typhoid).report.drugs[0].status).toBe("doseRemoved");
+    expect(gateTherapy(therapy([drug("Paracetamol", "3x500mg")], { forDiagnosis: typhoid }), bundle({ title: "demam-tifoid.md", text: "Parasetamol 500 mg bila demam." }), typhoid).report.drugs[0].status).toBe("verified");
+  });
+  it("blanks a note strength carried only by a passage about another disease", () => {
+    const { therapy: out } = gateTherapy(forVersicolor([{ ...drug("Flukonazol", "1x50mg"), note: "dosis maksimal 400 mg" }]), bundle(azoleList, { title: "panu.md", text: "Flukonazol untuk pitiriasis versikolor." }), versicolor);
+    expect(out?.regimen[0].note).toBe("");
   });
 });
