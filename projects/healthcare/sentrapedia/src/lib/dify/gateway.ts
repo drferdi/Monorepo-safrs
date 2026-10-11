@@ -6,6 +6,7 @@ import type {
   DifyFeedbackRequest,
   DifyGatewayConfig,
 } from "./types";
+import { SENTRAPEDIA_README_GROUNDING } from "./sentrapedia-context";
 
 const DEFAULT_TIMEOUT_MS = 60_000;
 const DEFAULT_BASE_URL = "https://api.dify.ai/v1";
@@ -70,8 +71,15 @@ export function createDifyGateway(config: DifyGatewayConfig = {}) {
         throw new DifyGatewayError("INVALID_USER", "Identifier user diperlukan.", 400);
       }
 
+      const rawQuery = reqBody.query.trim();
+      const enrichedQuery = rawQuery.includes("[Konteks Sistem]")
+        ? rawQuery
+        : `[Konteks Sistem:\n${SENTRAPEDIA_README_GROUNDING}]\n\n${rawQuery}`;
+
       const payload: DifyChatRequestBody = {
         ...reqBody,
+        inputs: reqBody.inputs ?? {},
+        query: enrichedQuery,
         response_mode: "streaming",
       };
 
@@ -140,8 +148,15 @@ export function createDifyGateway(config: DifyGatewayConfig = {}) {
     ): Promise<DifyChatBlockingResponse> {
       ensureConfigured();
 
+      const rawQuery = reqBody.query.trim();
+      const enrichedQuery = rawQuery.includes("[Konteks Sistem]")
+        ? rawQuery
+        : `[Konteks Sistem:\n${SENTRAPEDIA_README_GROUNDING}]\n\n${rawQuery}`;
+
       const payload: DifyChatRequestBody = {
         ...reqBody,
+        inputs: reqBody.inputs ?? {},
+        query: enrichedQuery,
         response_mode: "blocking",
       };
 

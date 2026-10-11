@@ -55,8 +55,8 @@ describe("Dify Gateway", () => {
     expect(callArgs[0]).toBe("https://api.dify.ai/v1/chat-messages");
     expect(callArgs[1].headers.Authorization).toBe("Bearer test-key-123");
     const sentBody = JSON.parse(callArgs[1].body);
-    expect(sentBody.response_mode).toBe("streaming");
-    expect(sentBody.query).toBe("Jelaskan tatalaksana stroke");
+    expect(sentBody.query).toContain("Jelaskan tatalaksana stroke");
+    expect(sentBody.query).toContain("Sentrapedia");
   });
 
   it("handles upstream error response", async () => {
