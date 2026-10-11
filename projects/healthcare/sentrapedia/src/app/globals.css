@@ -853,11 +853,11 @@ h1 span { white-space: normal; }
   --vera-dim: #9a9aa4;
   --vera-accent: #40e0d0;
   --vera-accent-ink: #086b61;
-  --vera-shadow-dark: rgba(8, 8, 10, 0.75);
-  --vera-shadow-light: rgba(255, 255, 255, 0.045);
-  --vera-raise: 5px 5px 12px var(--vera-shadow-dark), -3px -3px 9px var(--vera-shadow-light);
-  --vera-raise-sm: 3px 3px 7px var(--vera-shadow-dark), -2px -2px 6px var(--vera-shadow-light);
-  --vera-press: inset 2px 2px 5px var(--vera-shadow-dark), inset -2px -2px 5px var(--vera-shadow-light);
+  --vera-shadow-dark: rgba(8, 8, 10, 0.5);
+  --vera-shadow-light: rgba(255, 255, 255, 0.03);
+  --vera-raise: 3px 3px 8px var(--vera-shadow-dark), -2px -2px 6px var(--vera-shadow-light);
+  --vera-raise-sm: 2px 2px 5px var(--vera-shadow-dark), -1px -1px 4px var(--vera-shadow-light);
+  --vera-press: inset 1px 1px 3px var(--vera-shadow-dark), inset -1px -1px 3px var(--vera-shadow-light);
   position: fixed;
   bottom: 22px;
   right: 22px;
@@ -895,8 +895,8 @@ h1 span { white-space: normal; }
 .vera-panel-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 12px 16px; scrollbar-width: thin; scrollbar-color: #3a3a42 transparent; }
 .vera-panel-body[data-fresh="true"] { justify-content: center; }
 .vera-hero { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; animation: vera-bubble-in 260ms ease-out both; }
-.vera-hero-logo { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 20px; background: var(--vera-raised); box-shadow: var(--vera-raise); }
-.vera-hero-logo img { width: 42px; height: auto; filter: drop-shadow(0 0 6px rgba(64, 224, 208, 0.4)); }
+.vera-hero-logo { display: block; line-height: 0; }
+.vera-hero-logo img { width: 56px; height: auto; }
 .vera-hero h2 { margin: 0; font-family: "Iowan Old Style", Georgia, "Times New Roman", serif; font-size: 22px; font-weight: 400; letter-spacing: -0.01em; color: var(--vera-text); }
 
 .vera-question { align-self: flex-end; max-width: 82%; margin: 0; padding: 9px 13px; border-radius: 16px 16px 4px 16px; background: var(--vera-raised); box-shadow: var(--vera-raise-sm); font-size: 13px; line-height: 1.4; color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; animation: vera-bubble-in 200ms ease-out both; }
