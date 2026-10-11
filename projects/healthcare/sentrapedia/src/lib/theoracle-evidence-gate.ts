@@ -5,6 +5,13 @@ export type GateStatus = "verified" | "doseRemoved" | "removed";
 export interface GateDrug { drug: string; dose: string; status: GateStatus; evidenceIds: string[] }
 export interface EvidenceGateReport { forDiagnosis: { icd10: string; label: string }; therapyRemoved: boolean; reason: string; drugs: GateDrug[] }
 
+const isRecord = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object";
+const GATE_STATUSES: readonly unknown[] = ["verified", "doseRemoved", "removed"];
+export function validGate(value: unknown): value is EvidenceGateReport {
+  return isRecord(value) && isRecord(value.forDiagnosis) && typeof value.forDiagnosis.icd10 === "string" && typeof value.forDiagnosis.label === "string" && typeof value.therapyRemoved === "boolean" && typeof value.reason === "string" && Array.isArray(value.drugs)
+    && value.drugs.every(d => isRecord(d) && typeof d.drug === "string" && typeof d.dose === "string" && GATE_STATUSES.includes(d.status) && Array.isArray(d.evidenceIds) && d.evidenceIds.every(id => typeof id === "string"));
+}
+
 const UNVERIFIED = " (belum terverifikasi)";
 const UNIT: Record<string, string> = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|mikrogram)", "µg": "(?:mcg|µg|mikrogram)", g: "(?:g|gram)", iu: "(?:iu|ui|unit)", ml: "(?:ml|mililiter)" };
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;

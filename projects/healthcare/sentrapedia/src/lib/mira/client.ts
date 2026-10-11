@@ -1,6 +1,7 @@
 import { containsIdentity, validCase, validResult, type MiraAnalysis } from "./contract";
 import type { CaseState } from "./types";
 import { validTheOracleGrounding } from "../theoracle-grounding-types";
+import { validGate } from "../theoracle-evidence-gate";
 
 export async function requestMiraAnalysis(caseData: CaseState, options: { synthetic: boolean; signal?: AbortSignal; fetchFn?: typeof fetch }): Promise<MiraAnalysis> {
   if (!options.synthetic) throw new Error("Konfirmasi bahwa keluhan dan konteks menggunakan data fiktif tanpa identitas pribadi.");
@@ -17,5 +18,8 @@ export async function requestMiraAnalysis(caseData: CaseState, options: { synthe
   }
   if (!data || typeof data !== "object" || !("result" in data) || !validResult(data.result) || data.result.status !== "ok" || !("traceId" in data) || typeof data.traceId !== "string" || !("createdAt" in data) || typeof data.createdAt !== "string" || !Number.isFinite(Date.parse(data.createdAt))) throw new Error("Respons analisis tidak dapat diverifikasi.");
   if (!("grounding" in data) || !validTheOracleGrounding(data.grounding)) throw new Error("Respons analisis tidak dapat diverifikasi.");
-  return { case: snapshot, result: data.result, traceId: data.traceId, createdAt: data.createdAt, grounding: data.grounding };
+  const therapyGrounding = "therapyGrounding" in data ? data.therapyGrounding : undefined;
+  if (therapyGrounding !== undefined && !validTheOracleGrounding(therapyGrounding)) throw new Error("Respons analisis tidak dapat diverifikasi.");
+  const evidenceGate = "evidenceGate" in data && validGate(data.evidenceGate) ? data.evidenceGate : undefined;
+  return { case: snapshot, result: data.result, traceId: data.traceId, createdAt: data.createdAt, grounding: data.grounding, ...(therapyGrounding ? { therapyGrounding } : {}), ...(evidenceGate ? { evidenceGate } : {}) };
 }

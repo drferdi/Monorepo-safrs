@@ -45,4 +45,11 @@ describe("direct main-composer analysis", () => {
       return Response.json(response);
     } })).rejects.toThrow();
   });
+  it("keeps the optional therapy grounding and evidence gate, and rejects an invalid therapy grounding", async () => {
+    const gate = { forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, therapyRemoved: false, reason: "", drugs: [] };
+    const ok = await requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => Response.json({ ...response, therapyGrounding: grounding, evidenceGate: gate }) });
+    expect(ok.therapyGrounding).toEqual(grounding);
+    expect(ok.evidenceGate).toEqual(gate);
+    await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => Response.json({ ...response, therapyGrounding: { bad: true } }) })).rejects.toThrow("Respons analisis tidak dapat diverifikasi.");
+  });
 });

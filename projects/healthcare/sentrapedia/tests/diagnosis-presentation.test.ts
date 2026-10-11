@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { emptyCase, type MiraResult } from "../src/lib/mira/contract";
-import { diagnosisContent, diagnosisSectionTitles, icd10SectionTitle, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay } from "../src/lib/mira/presentation";
+import { diagnosisContent, diagnosisSectionTitles, icd10SectionTitle, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay, theOracleCitations } from "../src/lib/mira/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
 import { theOracleDiseases, relatedDiseases } from "../src/lib/theoracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
@@ -241,5 +241,31 @@ describe("source shown to the clinician", () => {
     expect(message.sourceText).toContain("\"kind\": \"MIRA\"");
     expect(sourceForDisplay({ sourceText: "Input\nteks lokal" })).toBe("Input\nteks lokal");
     expect(sourceForDisplay({})).toBeUndefined();
+  });
+});
+
+describe("therapy verification presentation", () => {
+  const grounding: TheOracleGroundingBundle = { version: THEORACLE_GROUNDING_CAPABILITY, corpus: { name: "TheOracle", indexSha256: "a".repeat(64), embeddingModel: { id: "onnx-community/embeddinggemma-300m-ONNX", revision: "e".repeat(40), dtype: "fp32", dims: 768 }, retrievedAt: "2026-10-11T00:00:00.000Z", reviewProvenance: "Gaffer stated session-level review provenance." }, queryDigest: "b".repeat(64), evidence: [{ evidenceId: "E1", text: "Pneumonia diterapi dengan amoksisilin.", retrievalRank: 1, similarity: 0.7, source: { title: "PNPK Pneumonia.md", docSource: "Kemenkes uji", origin: "oracle-ii-knowledge-base", textSha256: "c".repeat(64) } }] };
+  it("shows a removed dose as 'dosis: cek pedoman' and lists therapy verification after the references", () => {
+    const result = { ...analysis.result, therapy: { forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, regimen: [{ drug: "Amoxicillin", dose: "", route: "PO", duration: "5 hari", note: "" }], interactions: [], contraindications: ["Amoxicillin: alergi penisilin (belum terverifikasi)"] } };
+    const draft = miraDraft(result, "trace", "2026-10-11T00:00:00.000Z");
+    expect(draft).toContain("Amoxicillin dosis: cek pedoman PO 5 hari");
+    const gate = { forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, therapyRemoved: false, reason: "", drugs: [{ drug: "Amoxicillin", dose: "3x500mg", status: "doseRemoved", evidenceIds: ["E1"] }, { drug: "Levofloxacin", dose: "1x750mg", status: "removed", evidenceIds: [] }] };
+    const citations = theOracleCitations(grounding, grounding, gate);
+    expect(citations).toContain("## Verifikasi terapi");
+    expect(citations).toContain("- Amoxicillin: dosis tidak ditemukan di TheOracle, cek pedoman");
+    expect(citations).toContain("- Levofloxacin: tidak ditampilkan, indikasi tidak terverifikasi di TheOracle");
+    expect(citations).toContain("Referensi terapi (dicari memakai diagnosis):");
+  });
+  it("renders a draft saved before the evidence gate exactly as before", () => {
+    expect(theOracleCitations(grounding)).toBe(theOracleCitations(grounding, undefined, undefined));
+    expect(theOracleCitations(grounding)).not.toContain("Verifikasi terapi");
+  });
+  it("keeps the therapy grounding in the saved source and its links", () => {
+    const therapyGrounding = { ...grounding, evidence: [{ ...grounding.evidence[0], evidenceId: "T1", text: "Terapi pneumonia." }] };
+    const message = miraMessage({ ...analysis, grounding, therapyGrounding });
+    expect(JSON.parse(sourceForDisplay(message)!).therapyGrounding).toEqual(therapyGrounding);
+    expect(theOracleSourceLinks(message).map(link => link.id)).toEqual(["E1", "T1"]);
+    expect(diagnosisContent(message)).toBe(message.content);
   });
 });

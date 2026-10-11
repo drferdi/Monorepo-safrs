@@ -4,18 +4,25 @@ import { theOracleSource, theOracleDiseases, type Disease } from "../theoracle";
 import { newId, type Message } from "../workspace";
 import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
-import { validTheOracleGrounding } from "../theoracle-grounding-types";
+import { validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
+import { validGate } from "../theoracle-evidence-gate";
 
-export function theOracleCitations(grounding: unknown): string {
+const gateLine: Record<string, string> = { verified: "dosis terverifikasi", doseRemoved: "dosis tidak ditemukan di TheOracle, cek pedoman", removed: "tidak ditampilkan, indikasi tidak terverifikasi di TheOracle" };
+const passages = (bundle: TheOracleGroundingBundle) => bundle.evidence.map(item => `- ${item.source.title} [${item.evidenceId}] · kemiripan ${item.similarity}\n  ${item.text}`).join("\n\n");
+
+export function theOracleCitations(grounding: unknown, therapyGrounding?: unknown, gate?: unknown): string {
   if (!validTheOracleGrounding(grounding)) return "";
-  return "\n\n---\n\n## Referensi TheOracle\n\nReferensi yang dipilih sebelum analisis:\n\n" + grounding.evidence.map(item => `- ${item.source.title} [${item.evidenceId}] · kemiripan ${item.similarity}\n  ${item.text}`).join("\n\n");
+  const therapy = validTheOracleGrounding(therapyGrounding) ? "\n\nReferensi terapi (dicari memakai diagnosis):\n\n" + passages(therapyGrounding) : "";
+  const verification = validGate(gate) ? "\n\n## Verifikasi terapi\n\n" + [gate.reason, ...gate.drugs.map(d => `- ${d.drug}: ${gateLine[d.status]}${d.status === "verified" && d.evidenceIds.length ? ` [${d.evidenceIds.join(", ")}]` : ""}`)].filter(Boolean).join("\n") : "";
+  return "\n\n---\n\n## Referensi TheOracle\n\nReferensi yang dipilih sebelum analisis:\n\n" + passages(grounding) + therapy + verification;
 }
 
 export function theOracleSourceLinks(message: Pick<Message, "sourceText">) {
   try {
     const source: unknown = JSON.parse(message.sourceText ?? "null");
     if (!source || typeof source !== "object" || !("grounding" in source) || !validTheOracleGrounding(source.grounding)) return [];
-    return source.grounding.evidence.map(item => ({ id: item.evidenceId, label: item.source.title, text: item.text }));
+    const bundles = [source.grounding, ...("therapyGrounding" in source && validTheOracleGrounding(source.therapyGrounding) ? [source.therapyGrounding] : [])];
+    return bundles.flatMap(bundle => bundle.evidence.map(item => ({ id: item.evidenceId, label: item.source.title, text: item.text })));
   } catch { return []; }
 }
 
@@ -30,8 +37,8 @@ export function hasMiraSource(message: Pick<Message, "sourceText">): boolean {
 // The clinician sees the case as entered, with trace and time; engine metadata stays in the stored source.
 export function sourceForDisplay(message: Pick<Message, "sourceText">): string | undefined {
   if (!hasMiraSource(message)) return message.sourceText;
-  const source = JSON.parse(message.sourceText!) as { case?: unknown; traceId?: unknown; createdAt?: unknown; grounding?: unknown };
-  return JSON.stringify({ case: source.case, traceId: source.traceId, createdAt: source.createdAt, ...(validTheOracleGrounding(source.grounding) ? { grounding: source.grounding } : {}) }, null, 2);
+  const source = JSON.parse(message.sourceText!) as { case?: unknown; traceId?: unknown; createdAt?: unknown; grounding?: unknown; therapyGrounding?: unknown };
+  return JSON.stringify({ case: source.case, traceId: source.traceId, createdAt: source.createdAt, ...(validTheOracleGrounding(source.grounding) ? { grounding: source.grounding } : {}), ...(validTheOracleGrounding(source.therapyGrounding) ? { therapyGrounding: source.therapyGrounding } : {}) }, null, 2);
 }
 
 export type MiraFocus = "workup" | "refer" | "icd10";
@@ -71,7 +78,7 @@ export function miraDraft(result: MiraResult, traceId: string, createdAt: string
   const therapy = result.therapy?.regimen.length ? result.therapy : undefined;
   const regimen = therapy && join([
     `Untuk ${therapy.forDiagnosis.label} (${therapy.forDiagnosis.icd10})`,
-    points(therapy.regimen.map(r => [r.drug, r.dose, r.route, r.duration].filter(Boolean).join(" ") + (r.note ? ` (${r.note})` : ""))),
+    points(therapy.regimen.map(r => [r.drug, r.dose || "dosis: cek pedoman", r.route, r.duration].filter(Boolean).join(" ") + (r.note ? ` (${r.note})` : ""))),
     field("DDI", points(therapy.interactions)),
     field("Kontraindikasi", points(therapy.contraindications)),
   ]);
@@ -148,11 +155,11 @@ export function diagnosisContent(message: Pick<Message, "content" | "originalCon
   try {
     const source: unknown = JSON.parse(message.sourceText!);
     if (!source || typeof source !== "object" || !("case" in source) || !("result" in source) || !("traceId" in source) || !("createdAt" in source) || !validCase(source.case) || !validResult(source.result) || typeof source.traceId !== "string" || typeof source.createdAt !== "string") return message.content;
-    return miraDraft(source.result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined) + theOracleCitations("grounding" in source ? source.grounding : undefined);
+    return miraDraft(source.result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined) + theOracleCitations("grounding" in source ? source.grounding : undefined, "therapyGrounding" in source ? source.therapyGrounding : undefined, "evidenceGate" in source ? source.evidenceGate : undefined);
   } catch { return message.content; }
 }
 
 export function miraMessage(analysis: MiraAnalysis, reviewDefaults?: ReviewItem[], mode: ModeId = "ddx"): Message {
-  const content = miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case, miraFocus(mode)) + theOracleCitations(analysis.grounding);
+  const content = miraDraft(analysis.result, analysis.traceId, analysis.createdAt, analysis.case, miraFocus(mode)) + theOracleCitations(analysis.grounding, analysis.therapyGrounding, analysis.evidenceGate);
   return { id: newId(), role: "assistant", mode, content, originalContent: content, createdAt: analysis.createdAt, reviewStatus: "draft", reviewItems: freshReview(reviewDefaults), sourceText: JSON.stringify({ kind: "MIRA", contractVersion: "1", ...analysis, theOracleSource, review: "belum ditinjau" }, null, 2) };
 }
