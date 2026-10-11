@@ -18,7 +18,7 @@ def test_packaged_engine_and_schemas_match_the_recorded_source():
         assert sha256(ROOT / item["path"]) == item["packagedSha256"], item["path"]
         if item["path"] not in ["service/__init__.py", "service/menu.py", "service/tests/test_components.py", "service/tests/test_data_policy.py", "routines.py", "config.py",
                                 "service/app.py", "service/prompts.py", "service/contract/mira-step-request.schema.json",
-                                "service/contract/SOURCE.md", "service/tests/test_step_api.py"]:
+                                "service/contract/SOURCE.md", "service/tests/test_step_api.py", "service/postchecks.py"]:
             assert item["packagedSha256"] == item["sourceSha256"]
     for name, digest in manifest["snapshotHashes"].items():
         assert sha256(ROOT / name) == digest
