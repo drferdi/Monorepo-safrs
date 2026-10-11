@@ -19,12 +19,12 @@ will fail that test until its files are re-checked out.
 
 Verification: typecheck 0; lint 0; `npm test` 158/158; `test:mira` 157 passed 1 skipped;
 `test:system` 7/7; build 0; deploy:dry-run PASS; benchmark recall@5 0.841, warm 39 ms median,
-cold start 3.1 s; vector parity 1.0. `docker build`: dependency stage passed, Docker Desktop engine
-failed (HTTP 500) during `next build` in its 4 GB VM — rerun after restarting Docker (8 GB advised).
+cold start 3.1 s; vector parity 1.0. `docker build` exit 0 (3.1 GB, after a Docker
+Desktop engine restart); container smoke: Linux embedding 768-d, home 200, MIRA `groundingReady: true`.
 Details: `docs/verification/2026-10-11-theoracle-vector-only.md`, model eval
 `docs/verification/theoracle-eval-2026-10-11/`.
 
-Open: Docker rerun; Gaffer review of eval gold labels; ICD-10/dose recall 0.50; Lance export
+Open: Gaffer review of eval gold labels; ICD-10/dose recall 0.50; Lance export
 (`theoracle/` data in the main checkout, 72 MB, untracked) keep or delete; `oracle/` catalog
 untouched; chunk ingest tool (@langchain splitter) lives only in the session scratchpad; drafts
 saved before v2 lose their citations section; main checkout `oracle-ii/*.sqlite*` and
