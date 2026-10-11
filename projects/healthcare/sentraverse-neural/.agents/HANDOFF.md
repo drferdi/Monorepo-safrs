@@ -6,7 +6,7 @@
 - Contract updated: `AGENTS.md` risk R1 -> R2 with the route described; `project.contract.json` risk R2 plus an optional Dify service dependency (`DIFY_API_KEY`).
 - Verified: typecheck 0, lint 0, test 55/55, build 0 (route dynamic), deploy:dry-run PASS. Local production server with `DIFY_API_URL` pointed at a closed local port (no Dify calls): messages 1-10 reached the upstream step, message 11 returned 429, a 1,001-character question returned 413, and the widget banner showed the limit message.
 - Design aligned with Sentrapedia's Vera on Gaffer's request: dark panel with soft neumorphism, plain official Sentraverse logo with a time-based English greeting, "Vera · Sentraverse" pill, right-aligned user bubbles, copy and sources actions (no like/dislike: there is no feedback endpoint), raised composer with `/` suggestions and a round send button, logo launcher. Inline SVG icons (no new dependency). Checked desktop and mobile in a local production server; a sent message showed the generic unavailable state.
-- Not verified: a live Dify answer, and whether `DIFY_API_KEY` is set in the Vercel project `sentraverseii`. A durable cross-instance limit would need a shared store (for example Vercel KV), which is a new service and not added.
+- Published 2026-10-11: drferdi/Sentraverse-N `main` = `a8aab8d4` (snapshot on top of GitHub main, README v2.1 kept). Gaffer set `DIFY_API_KEY` (sensitive, Production) in Vercel `sentraverseii`, redeployed (`dpl_46XbJVZPKAN4VYkvqGcfvJ2P6hZk`, READY), and confirmed a live Vera answer works. A durable cross-instance limit would need a shared store (for example Vercel KV), which is a new service and not added.
 
 ## 2026-10-11 - Existing Vera changes recorded (Codex metadata only)
 
