@@ -49,6 +49,23 @@
     - `git merge sentrapedia/main -m "Merge GitHub main into evidence gate and targeted therapy publish"`
     - `$env:CHIEF_PUSH_OK=1; git push sentrapedia sentrapedia-publish:refs/heads/main; Remove-Item Env:CHIEF_PUSH_OK`
   - The GitHub README edits (logo, editorial hero, referral terminology) exist only on the Sentrapedia remote; the monorepo copy of `README.md` is older.
+- **#6 Uncommitted ICD edit in `D:\DEV\monorepo` (branch `chore/tools-closeout`): nothing is lost any more, and its working tree was not touched.**
+  - Compared by blob hash:
+    - `postchecks.py` and `test_components.py` are identical to `ffc74272` and to `main`;
+    - `test_packaging.py` is identical to `ffc74272` (`main` has a later version);
+    - `SOURCE.json` differs only in 5 derived `packagedSha256` values;
+    - `next-env.d.ts` is the `next dev` touch (`.next/dev/types`).
+  - So the ICD change is fully in `main` and there is no conflict with `ffc74272`.
+  - The only unique content was 4 HANDOFF sections (17:30-19:00: ICD-10 check, dose inventory and PNPK extraction, PPK FKTP extraction, ISO gap fill). They are copied verbatim into "Ported notes from the main checkout" below.
+  - Full backup of that checkout's tracked edits, with its working tree unchanged: `refs/backup/chore-tools-closeout-2026-10-11` = `9319d749` (`git stash create` + `update-ref`). To restore: `git stash apply 9319d749`.
+  - Not cleaned: another session is active in that checkout. It has a running dev server, a new untracked `docs/plans/active/Audit_actions.md` from 21:30, and `tools/retriever` handoff edits.
+  - Once that session ends, the sentrapedia files can be reset with `git restore` without loss, because the content is in `ffc74272`/`main` plus the backup ref. The untracked files are not covered by the ref.
+- Bagian A status:
+  - #1 and #4 checked, no change needed.
+  - #2 done as a code default; deploy pending Gaffer.
+  - #5 explained; publish split ready, push and publish merge pending Gaffer.
+  - #6 done with no loss; cleanup deferred while that checkout is in use.
+  - Not pushed.
 
 ## Ported notes from the main checkout - 2026-10-11 Asia/Jakarta
 
