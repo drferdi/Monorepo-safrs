@@ -14,12 +14,13 @@ export function validGate(value: unknown): value is EvidenceGateReport {
 }
 
 const UNVERIFIED = " (belum terverifikasi)";
-const UNITS = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|μg|ug|mikrogram)", g: "(?:g|gram)", iu: "(?:iu|ui|units?)", ml: "(?:ml|mililiter)", meq: "(?:meq)", mmol: "(?:mmol)" };
-const UNIT: Record<string, string> = { ...UNITS, "µg": UNITS.mcg, "μg": UNITS.mcg, ug: UNITS.mcg, mikrogram: UNITS.mcg, miligram: UNITS.mg, gram: UNITS.g, ui: UNITS.iu, unit: UNITS.iu, units: UNITS.iu, mililiter: UNITS.ml };
+const UNITS = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|μg|ug|mikrogram)", g: "(?:g|gram)", iu: "(?:iu|ui|units?)", ml: "(?:ml|mililiter)", meq: "(?:meq)", mmol: "(?:mmol)", tetes: "(?:tetes|gtt)", semprotan: "(?:semprotan|semprot|spray)", puff: "(?:puff)" };
+// Drop, spray and puff counts are doses too: "1-2 semprotan" must appear in the passage like "500 mg".
+const UNIT: Record<string, string> = { ...UNITS, gtt: UNITS.tetes, semprot: UNITS.semprotan, spray: UNITS.semprotan, "µg": UNITS.mcg, "μg": UNITS.mcg, ug: UNITS.mcg, mikrogram: UNITS.mcg, miligram: UNITS.mg, gram: UNITS.g, ui: UNITS.iu, unit: UNITS.iu, units: UNITS.iu, mililiter: UNITS.ml };
 // 1.200.000 and 1,200,000 are one number (thousands separators); "2,4 juta IU" keeps its multiplier.
 const NUMBER = String.raw`(?:\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(?:\s*(?:juta|ribu|million))?`;
 // A strength, or a pair such as 5-40 mg (range) or 875/125 mg (combination) whose numbers share one unit.
-const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\s*(mikrogram|miligram|mililiter|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g)\b`, "gi");
+const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\s*(mikrogram|miligram|mililiter|semprotan|semprot|spray|puff|tetes|gtt|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g)\b`, "gi");
 // Per-unit tails such as "/5 ml", "/kg/24 jam" or "/m2"; a drug name after a slash is not one of them.
 const PER = String.raw`(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:(?:ml|dl|l|vial|ampul|amp|tablet|tab|kapsul|kaps|kgbb|kg|m2|hari|dosis|kali|jam|menit|mnt|detik)\b|m²))*`;
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;

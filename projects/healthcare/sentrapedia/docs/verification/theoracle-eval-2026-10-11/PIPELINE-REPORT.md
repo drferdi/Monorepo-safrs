@@ -42,11 +42,11 @@ The gate was replayed over the same 122 model replies stored in the MIRA audit l
 
 | Gate counts (drugs) | Legacy | Targeted |
 |---|---|---|
-| Verified, old gate → final gate | 36 → 35 | 41 → 39 |
-| Dose removed | 20 → 21 | 28 → 30 |
+| Verified, old gate → final gate | 36 → 38 | 41 → 43 |
+| Dose removed | 20 → 18 | 28 → 26 |
 | Drug removed | 9 → 9 | 2 → 2 |
 
-Headline with the shipped gate: verified doses **35 → 39** (legacy → targeted), drug removals 9 → 2. Latency, ICD-10 and cost are unchanged; the gate takes about 1 ms.
+Headline with the shipped gate: verified doses **38 → 43** (legacy → targeted), drug removals 9 → 2. Counted with drop, spray and puff counts as strengths (last gate change). That change verified 7 more drops, each against a passage for the same disease: ofloksasin 2 x 4 tetes (OMSK), kloramfenikol 1 tetes (konjungtivitis), karbogliserin (serumen), ofloksasin (otitis eksterna). Before it, the counts were 35 → 39. Latency, ICD-10 and cost are unchanged; the gate takes about 1 ms.
 
 ## What it means
 

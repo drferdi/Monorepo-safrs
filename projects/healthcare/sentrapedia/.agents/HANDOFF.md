@@ -20,8 +20,9 @@
   - The gate verifies mg/g doses from them (epinefrin, ibuprofen, seftriakson, amoksisilin).
   - Benchmark: recall@5 0.864 (unchanged), dose recall 0.754 -> 0.770, targeted dose recall 0.885 -> 0.902 (55/61). Results in `dose-recall-tatalaksana.json`.
   - `npm test` 216/216, `tsc` 0, `eslint` 0.
-- Known limit: drops and sprays ("1-2 tetes", "1-2 semprotan", "0,05%") are not strengths for the gate. Such drugs show with "dosis: cek pedoman", even though the passage has the regimen.
-- Next, for Gaffer: confirm the non-dose additions; decide whether count-based doses (tetes/semprotan) should be verifiable. Not pushed.
+- Drop, spray and puff counts (tetes/gtt, semprotan/spray, puff) are now strengths, at Gaffer's request. "1-2 semprotan" verifies only against a passage that names the drug and says "1–2 semprotan", and unverified counts in notes are blanked. Percent concentrations stay part of the product name.
+- Eval replay with this gate: verified 38 -> 43 (legacy -> targeted), dose removed 18 -> 26. The 7 new verifications were checked by hand; all come from passages for the same disease. Local `main` was fast-forwarded to `8ca134f1` (Gaffer). Not pushed.
+- Next, for Gaffer: confirm the non-dose additions.
 
 ## Final review fixes: evidence gate closes strength leaks - 2026-10-11 Asia/Jakarta
 

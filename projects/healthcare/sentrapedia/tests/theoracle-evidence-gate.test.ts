@@ -158,6 +158,13 @@ describe("clinical evidence gate final fix", () => {
     expect(gateTherapy(therapy([fentanil]), bundle("Fentanil untuk nyeri berat."), pneumonia).therapy?.regimen[0].note).toBe("");
     expect(gateTherapy(therapy([{ ...fentanil, drug: "Insulin", note: "tambah 10 units" }]), bundle("Insulin subkutan."), pneumonia).therapy?.regimen[0].note).toBe("");
   });
+  it("verifies drop and spray counts like any other strength", () => {
+    const spray = drug("Oxymetazoline 0,05%", "1-2 semprotan");
+    expect(gateTherapy(therapy([spray]), bundle("Oxymetazoline 0,05%: 1–2 semprotan pada nostril yang berdarah."), pneumonia).report.drugs[0].status).toBe("verified");
+    expect(gateTherapy(therapy([spray]), bundle("Oxymetazoline 0,05%: 3 semprotan."), pneumonia).report.drugs[0].status).toBe("doseRemoved");
+    expect(gateTherapy(therapy([drug("Carbamide peroxide 6,5%", "5-10 tetes 2x sehari")]), bundle("Carbamide peroxide 6,5% tetes telinga: 5–10 tetes, dua kali sehari."), pneumonia).report.drugs[0].status).toBe("verified");
+    expect(gateTherapy(therapy([{ drug: "Salbutamol", dose: "", route: "inhalasi", duration: "", note: "boleh diulang 4 puff" }]), bundle("Salbutamol inhalasi 2 puff."), pneumonia).therapy?.regimen[0].note).toBe("");
+  });
   it("strips every strength and its per-unit tails but keeps the drug names", () => {
     expect(["Benzatin penisilin 1.200.000 IU", "Ceftriaxone 50 mg/kg/24 jam", "Furosemid 40 mg/m2", "Dobutamin 5 mcg/kg/menit", "Amoxicillin 500 mg/clavulanate 125 mg", "Trimetoprim 80 mg/sulfametoksazol 400 mg tablet"].map(unstrength))
       .toEqual(["Benzatin penisilin", "Ceftriaxone", "Furosemid", "Dobutamin", "Amoxicillin/clavulanate", "Trimetoprim/sulfametoksazol tablet"]);
