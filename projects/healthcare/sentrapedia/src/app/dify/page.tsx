@@ -14,10 +14,15 @@ import {
   ChevronUp,
   Bot,
   User,
-  ExternalLink,
 } from "lucide-react";
 import { sendDifyChatMessage, sendDifyMessageFeedback } from "../../lib/dify/client";
 import type { DifyAgentThought, DifyRetrieverResource } from "../../lib/dify/types";
+
+let chatSeq = 0;
+function nextChatId(prefix: string): string {
+  chatSeq += 1;
+  return `${prefix}-${Date.now()}-${chatSeq}`;
+}
 
 interface ChatMessage {
   id: string;
@@ -62,8 +67,8 @@ export default function DifyChatPage() {
     if (!textToSend || loading) return;
 
     setInput("");
-    const userMsgId = `user-${Date.now()}`;
-    const assistantMsgId = `asst-${Date.now()}`;
+    const userMsgId = nextChatId("user");
+    const assistantMsgId = nextChatId("asst");
     const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
     setMessages((prev) => [

@@ -14,7 +14,7 @@ Identitas Produk:
 
 Arsitektur & Pilar Utama:
 1. WORKSPACE: Pengelolaan perjumpaan medis (encounters), catatan kasus, templat dokumen (SOAP, PICO, DDx), draf, checklist, dan riwayat revisi.
-2. ORACLE & ORACLE II: Katalog pencarian referensi penyakit dan pelacakan bukti literatur klinis (sumber Kementerian Kesehatan / PNPK).
+2. ORACLE & THEORACLE: Katalog pencarian referensi penyakit, dan TheOracle sebagai satu-satunya sumber pengetahuan klinis (pencarian vektor lokal atas pedoman Kementerian Kesehatan / PNPK dan literatur terkait).
 3. MIRA: Engine penalaran klinis terkelola untuk menyusun draf analisis kasus terstruktur (konsultasi klinis, differential diagnosis, diagnostic workup, referral assessment, dan ICD-10 coding).
 4. DIFY AI INTEGRATION: Menghubungkan agen cerdas Dify dengan Knowledge Base ekosistem Sentraverse/Sentrapedia melalui Server-Sent Events (SSE) streaming real-time, penelusuran alur berpikir (agent thoughts), dan pelacakan sitasi bukti.
 `.trim();
