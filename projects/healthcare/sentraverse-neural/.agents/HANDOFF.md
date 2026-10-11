@@ -1,5 +1,12 @@
 # HANDOFF
 
+## 2026-10-11 - Existing Vera changes recorded (Codex metadata only)
+
+- Gaffer authorized registry/handoff cleanup. Observed existing changes in `app/layout.tsx` and `app/globals.css`, plus untracked `components/VeraNeuralWidget.tsx` and `app/api/vera/chat/route.ts`: layout mounts the widget, styles support it, and the POST route streams from Dify using deployment environment configuration.
+- No application code changed by this metadata task. Existing owner `TASK-20260927-HEALTHCARE-MIGRATION` remains in the shared registry; this entry records the working tree, not application approval or authorship.
+- Gates: handoff, registry ownership and lifecycle PASS / exit 0. Full root governance FAIL / exit 1 at stale integrity-review evidence for the combined branch. Application typecheck, lint, tests, build and live-provider behavior NOT RUN for these existing changes. No inference requests or environment values read.
+- Risks / next tasks: review the added external-provider/API behavior against the older no-API contract below, then run capsule-local checks before application approval or publication. No deploy authorized.
+
 Last updated: 2026-10-09 (the "one living organism" motion system)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
