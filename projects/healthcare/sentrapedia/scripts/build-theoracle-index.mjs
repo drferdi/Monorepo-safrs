@@ -1,5 +1,6 @@
 // Embeds theoracle/index/chunks.jsonl with the pinned local model and writes vectors.f32 + manifest.json.
-// Usage: node scripts/build-theoracle-index.mjs [--device cpu|dml]. Resumable after interruption.
+// Usage: node scripts/build-theoracle-index.mjs [--device cpu|dml] [--append]. Resumable after interruption.
+// --append keeps the vectors of the existing rows and embeds only rows added to chunks.jsonl since the last build.
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { AutoModel, AutoTokenizer, env } from "@huggingface/transformers";
@@ -14,10 +15,13 @@ const chunksRaw = readFileSync(`${indexDir}chunks.jsonl`);
 const texts = chunksRaw.toString("utf8").trim().split("\n").map(line => profile.prefixes.document + JSON.parse(line).text);
 const tokenizer = await AutoTokenizer.from_pretrained(profile.id);
 const model = await AutoModel.from_pretrained(profile.id, { dtype: profile.dtype, device });
-const lengths = texts.map(text => tokenizer.encode(text).length);
-const order = texts.map((_, i) => i).sort((a, b) => lengths[a] - lengths[b]);
+const previous = process.argv.includes("--append") ? new Float32Array(readFileSync(`${indexDir}vectors.f32`).buffer.slice(0)) : new Float32Array(0);
+const kept = previous.length / profile.dims;
+const lengths = texts.map((text, i) => i < kept ? 0 : tokenizer.encode(text).length);
+const order = texts.map((_, i) => i).filter(i => i >= kept).sort((a, b) => lengths[a] - lengths[b]);
 const partial = `${indexDir}vectors.partial.f32`, progress = `${indexDir}vectors.partial.json`;
 const vectors = existsSync(progress) ? new Float32Array(readFileSync(partial).buffer.slice(0)) : new Float32Array(texts.length * profile.dims);
+if (!existsSync(progress)) vectors.set(previous);
 let done = existsSync(progress) ? JSON.parse(readFileSync(progress, "utf8")).done : 0;
 const started = performance.now();
 for (let at = done, batch = 0; at < order.length; at += 16, batch++) {
@@ -34,7 +38,8 @@ for (let at = done, batch = 0; at < order.length; at += 16, batch++) {
 const vectorBytes = Buffer.from(vectors.buffer);
 writeFileSync(`${indexDir}vectors.f32`, vectorBytes); rmSync(partial); rmSync(progress);
 const sha = data => createHash("sha256").update(data).digest("hex");
-const chunks = { count: texts.length, sha256: sha(chunksRaw), truncated: lengths.filter(n => n > profile.maxTokens).length };
+const keptTruncated = kept ? JSON.parse(readFileSync(`${indexDir}manifest.json`, "utf8")).chunks.truncated : 0;
+const chunks = { count: texts.length, sha256: sha(chunksRaw), truncated: keptTruncated + lengths.filter(n => n > profile.maxTokens).length };
 const vectorInfo = { format: "float32 little-endian, row-major, one L2-normalised row per chunk in chunks.jsonl order", sha256: sha(vectorBytes) };
 const modelInfo = { id: profile.id, revision: profile.revision, dtype: profile.dtype, dims: profile.dims, files: profile.files };
 const manifest = {

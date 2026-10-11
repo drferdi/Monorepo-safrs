@@ -1,5 +1,28 @@
 # Sentrapedia handoff
 
+## TheOracle: 10 tatalaksana documents added to the index - 2026-10-11 Asia/Jakarta
+
+- Ten markdown documents with Gaffer-approved content are now in `theoracle/sources/tatalaksana/`: asfiksia neonatus, epistaksis, impaksi gigi, infeksi intraabdominal, osteosarkoma, Hirschsprung, pterigium, pulpa-periradikuler, sarkopenia and serumen prop. They carry Gaffer's two corrections: PPV 40-60/menit, and pip-tazo 3,375 g/6 jam nonberat vs 4,5 g berat.
+- Headings: Terapi farmakologis / Tindakan / Supportive care / Indikasi rujukan / Kontraindikasi / Sumber.
+- Additions not in Gaffer's draft, all non-dose and for Gaffer to confirm:
+  - ICD-10 categories: P21, R04.0, K01.1, C40-C41, Q43.1, H11.0, K04, H61.2;
+  - referral criteria for impaksi gigi, infeksi intraabdominal, osteosarkoma, pterigium, pulpa, sarkopenia and serumen;
+  - asfiksia monitoring;
+  - named guideline sources.
+- `scripts/add-theoracle-docs.mjs` (new) builds the chunks:
+  - one chunk per section, with the title and intro repeated, so a drug, its dose and the disease name share one passage;
+  - `origin: sentrapedia-tatalaksana`;
+  - deterministic ids, idempotent.
+- `scripts/build-theoracle-index.mjs --append` (new flag) embeds only the new rows. 42 chunks were embedded in 9 s (dml). The index now holds 20,465 chunks, indexSha256 `05a4f38b...`.
+- The old 20,423 chunks and vectors are byte-identical; their prefix sha256 matches the previous manifest.
+- Verified:
+  - Targeted retrieval for all 10 diseases puts the new documents in the 6-passage bundle, rank 1 for 6 of them.
+  - The gate verifies mg/g doses from them (epinefrin, ibuprofen, seftriakson, amoksisilin).
+  - Benchmark: recall@5 0.864 (unchanged), dose recall 0.754 -> 0.770, targeted dose recall 0.885 -> 0.902 (55/61). Results in `dose-recall-tatalaksana.json`.
+  - `npm test` 216/216, `tsc` 0, `eslint` 0.
+- Known limit: drops and sprays ("1-2 tetes", "1-2 semprotan", "0,05%") are not strengths for the gate. Such drugs show with "dosis: cek pedoman", even though the passage has the regimen.
+- Next, for Gaffer: confirm the non-dose additions; decide whether count-based doses (tetes/semprotan) should be verifiable. Not pushed.
+
 ## Final review fixes: evidence gate closes strength leaks - 2026-10-11 Asia/Jakarta
 
 - **Merged into local `main`** (Gaffer's choice). `main` was merged into the branch first (`fcd385e1`, no sentrapedia changes from main), then `main` was fast-forwarded. On the merged tree: `npm test` 216/216, `tsc` 0, `test:mira` 178 passed / 1 skipped. Not pushed.
