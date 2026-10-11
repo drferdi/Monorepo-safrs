@@ -8,14 +8,14 @@ import { validTheOracleGrounding } from "../theoracle-grounding-types";
 
 export function theOracleCitations(grounding: unknown): string {
   if (!validTheOracleGrounding(grounding)) return "";
-  return "\n\n---\n\n## Referensi TheOracle\n\nReferensi yang dipilih sebelum analisis:\n\n" + grounding.evidence.map(item => `- ${item.source.filename}, halaman PDF ${item.source.pdfPage} [${item.evidenceId}]\n  ${item.text}\n  Sumber: ${item.source.driveUrl}`).join("\n\n");
+  return "\n\n---\n\n## Referensi TheOracle\n\nReferensi yang dipilih sebelum analisis:\n\n" + grounding.evidence.map(item => `- ${item.source.title} [${item.evidenceId}] · kemiripan ${item.similarity}\n  ${item.text}`).join("\n\n");
 }
 
 export function theOracleSourceLinks(message: Pick<Message, "sourceText">) {
   try {
     const source: unknown = JSON.parse(message.sourceText ?? "null");
     if (!source || typeof source !== "object" || !("grounding" in source) || !validTheOracleGrounding(source.grounding)) return [];
-    return source.grounding.evidence.map(item => ({ id: item.evidenceId, label: `${item.source.filename}, halaman PDF ${item.source.pdfPage}`, url: item.source.driveUrl, text: item.text }));
+    return source.grounding.evidence.map(item => ({ id: item.evidenceId, label: item.source.title, text: item.text }));
   } catch { return []; }
 }
 

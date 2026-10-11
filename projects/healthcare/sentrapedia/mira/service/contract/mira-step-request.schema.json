@@ -21,14 +21,25 @@
       "required": ["version", "corpus", "queryDigest", "evidence"],
       "additionalProperties": false,
       "properties": {
-        "version": { "const": "theoracle-grounding-v1" },
+        "version": { "const": "theoracle-grounding-v2" },
         "corpus": {
           "type": "object",
-          "required": ["name", "databaseSha256", "retrievedAt", "reviewProvenance"],
+          "required": ["name", "indexSha256", "embeddingModel", "retrievedAt", "reviewProvenance"],
           "additionalProperties": false,
           "properties": {
             "name": { "const": "TheOracle" },
-            "databaseSha256": { "$ref": "#/$defs/sha256" },
+            "indexSha256": { "$ref": "#/$defs/sha256" },
+            "embeddingModel": {
+              "type": "object",
+              "required": ["id", "revision", "dtype", "dims"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+                "revision": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+                "dtype": { "type": "string", "minLength": 1, "maxLength": 16 },
+                "dims": { "type": "integer", "minimum": 1 }
+              }
+            },
             "retrievedAt": { "type": "string", "minLength": 1, "maxLength": 64 },
             "reviewProvenance": { "type": "string", "minLength": 1, "maxLength": 500 }
           }
@@ -40,37 +51,22 @@
           "maxItems": 6,
           "items": {
             "type": "object",
-            "required": ["evidenceId", "text", "retrievalKind", "retrievalRank", "source", "extraction"],
+            "required": ["evidenceId", "text", "retrievalRank", "similarity", "source"],
             "additionalProperties": false,
             "properties": {
               "evidenceId": { "type": "string", "minLength": 1, "maxLength": 100 },
-              "text": { "type": "string", "minLength": 1, "maxLength": 1600 },
-              "retrievalKind": { "enum": ["candidate", "clinical_fact", "page"] },
+              "text": { "type": "string", "minLength": 1, "maxLength": 2400 },
               "retrievalRank": { "type": "integer", "minimum": 1, "maximum": 6 },
+              "similarity": { "type": "number", "minimum": -1, "maximum": 1 },
               "source": {
                 "type": "object",
-                "required": ["fileNo", "filename", "documentSha256", "pdfPage", "pageTextSha256", "driveUrl"],
+                "required": ["title", "docSource", "origin", "textSha256"],
                 "additionalProperties": false,
                 "properties": {
-                  "fileNo": { "type": "string", "minLength": 1, "maxLength": 32 },
-                  "filename": { "type": "string", "minLength": 1, "maxLength": 500 },
-                  "documentSha256": { "$ref": "#/$defs/sha256" },
-                  "pdfPage": { "type": "integer", "minimum": 1 },
-                  "pageTextSha256": { "$ref": "#/$defs/sha256" },
-                  "driveUrl": { "type": "string", "minLength": 1, "maxLength": 2048 }
-                }
-              },
-              "extraction": {
-                "type": "object",
-                "required": ["candidateId", "category", "sourceCharOffset", "sourceCharEnd", "reviewStatus", "requiresVisualReview"],
-                "additionalProperties": false,
-                "properties": {
-                  "candidateId": { "type": ["string", "null"], "maxLength": 100 },
-                  "category": { "type": ["string", "null"], "maxLength": 100 },
-                  "sourceCharOffset": { "type": ["integer", "null"], "minimum": 0 },
-                  "sourceCharEnd": { "type": ["integer", "null"], "minimum": 0 },
-                  "reviewStatus": { "type": "string", "minLength": 1, "maxLength": 200 },
-                  "requiresVisualReview": { "type": "boolean" }
+                  "title": { "type": "string", "minLength": 1, "maxLength": 500 },
+                  "docSource": { "type": "string", "minLength": 1, "maxLength": 500 },
+                  "origin": { "type": "string", "minLength": 1, "maxLength": 100 },
+                  "textSha256": { "$ref": "#/$defs/sha256" }
                 }
               }
             }

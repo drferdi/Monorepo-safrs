@@ -10,6 +10,9 @@ __pycache__/
 .pytest_cache/
 *.sqlite-wal
 *.sqlite-shm
+theoracle/model/
+theoracle/index/vectors.partial.*
+_to_delete/
 # Local agent and verification output (also ignored by the monorepo root)
 verify-report/
 .superpowers/
