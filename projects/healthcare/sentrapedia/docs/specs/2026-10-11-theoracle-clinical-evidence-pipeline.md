@@ -61,8 +61,8 @@ so no path shows an unverified dose. If the flag is on but MIRA does not adverti
    as for the step.
 3. **Clinical evidence gate** (`src/lib/theoracle-evidence-gate.ts`, pure function): input = therapy,
    the targeted bundle, the step's `differential.likely[0]`.
-   - ICD-10: `therapy.forDiagnosis.icd10` must equal the requested diagnosis code (after postchecks);
-     otherwise therapy is dropped.
+   - ICD-10: `therapy.forDiagnosis.icd10` must be in the same 3-character category as the requested
+     diagnosis code (after postchecks; J18 and J18.9 agree); otherwise therapy is dropped.
    - Indication verified = the drug's generic name occurs in a passage of the targeted bundle (a bundle
      retrieved for this diagnosis). Not verified → drug removed.
    - Dose verified = drug name and strength (number + unit, e.g. `500mg` matches `500 mg`) occur in
