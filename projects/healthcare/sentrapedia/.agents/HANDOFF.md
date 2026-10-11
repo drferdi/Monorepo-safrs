@@ -1,5 +1,25 @@
 # Sentrapedia handoff
 
+## Evidence gate: percent and bare U are strengths (#12) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for #12 (percent and bare "U" counted as doses) and approved the bounded design with one Opus review. This replaces the earlier rule that a percent is part of the product name.
+- `a14c2969` (R2), `src/lib/theoracle-evidence-gate.ts`:
+  - "%" is a strength unit; "1x5%" verifies only from a passage naming the drug and the diagnosis that carries "5%". Ranges check both ends, and 0.1% matches 0,1%.
+  - A bare "U" joins the IU family: "10 U" matches "10 IU" or "10 unit"; "5 untuk" is not a unit.
+  - An unverified percent is stripped from the drug name ("Permetrin krim 5%" -> "Permetrin krim") and blanks a route/duration/note that carries it, like mg.
+- The Opus review returned "with fixes": safety items with a percent threshold were dropped. Fixed in `b91b0f3a`: safety items ignore percents and are shown with "(belum terverifikasi)" as before.
+- Verified:
+  - RED first (both rounds); gate tests 46/46, `npm test` 235/235, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies: verified 35 -> 41 legacy and 33 -> 40 targeted. All 13 additions were checked by hand and are topical concentrations from passages for the same disease: permetrin 5%, kloramfenikol 1%, triamsinolon 0,1%, klorheksidin 0,1-0,2%, mupirosin 2%, timolol 0,25% (FORNAS), hidrokortison 1-2,5%.
+  - Cases with a verified dose: 30 legacy, 31 targeted.
+  - Against `b0b0482e`: no verified dose lost; safety items (43/42) and filled route/duration/note fields (130/164) unchanged.
+- Known limits:
+  - Frequency is not checked.
+  - A percent threshold in a note ("target SpO2 >94%") blanks that note (fail-safe).
+  - `unstrength` leaves leftovers where a strength touches letters ("D5%" -> "D", "Lidokain 2%-adrenalin" -> "Lidokain -adrenalin"). Cosmetic; no dose is shown.
+  - "persen" written as a word is not read.
+- Local `main` fast-forwarded. Not pushed.
+
 ## Evidence gate: tablet and capsule counts are doses - 2026-10-11 Asia/Jakarta
 
 - Gaffer asked for "#12 jumlah tablet dihitung sebagai dosis". Note: Gaffer's original #12 is "persen dan U tunggal"; I had mislabelled tablet counts as #12 in the #8 report. Percent and bare "U" are still open.

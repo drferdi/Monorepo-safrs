@@ -87,6 +87,17 @@ A dose written as a count ("3 x 1-2 tablet", "1 kapsul") now verifies when a pas
 
 Replay, same 122 replies: targeted verified 32 → 33, legacy unchanged at 35. The one new verification is antasida 3x1-2 tablet for gastritis, cited from `gastritis.md`: "Antasida oral 3 x 1-2 tablet".
 
+### Percent and bare U are strengths (commits `a14c2969`, `b91b0f3a`)
+
+A percent concentration ("1x5%", "1-2.5%") now verifies against a passage that names the drug and the diagnosis and carries the same percent; a bare "U" is read as IU. Before this change, topical doses were always blanked. Percent thresholds in contraindications and interactions are not treated as strengths, so those warnings still show as "(belum terverifikasi)".
+
+| Gate counts (drugs) | Legacy | Targeted |
+|---|---|---|
+| Verified, before → with percent | 35 → 41 | 33 → 40 |
+| Cases with at least one verified dose | 30 | 31 |
+
+All 13 new verifications are topical concentrations from passages for the same disease: permetrin 5% (skabies), kloramfenikol 1% (hordeolum), triamsinolon 0,1% and klorheksidin 0,1-0,2% (stomatitis aftosa), mupirosin 2% (impetigo), timolol 0,25% (glaukoma, FORNAS), hidrokortison 1-2,5% (dermatitis atopik). No verified dose was lost. Safety items and filled route/duration/note fields are unchanged in count.
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.
