@@ -16,8 +16,8 @@ export function validGate(value: unknown): value is EvidenceGateReport {
 const UNVERIFIED = " (belum terverifikasi)";
 const UNITS = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|mikrogram)", g: "(?:g|gram)", iu: "(?:iu|ui|unit)", ml: "(?:ml|mililiter)" };
 const UNIT: Record<string, string> = { ...UNITS, "µg": UNITS.mcg, mikrogram: UNITS.mcg, miligram: UNITS.mg, gram: UNITS.g, ui: UNITS.iu, unit: UNITS.iu, mililiter: UNITS.ml };
-// A strength, or a range such as 5-40 mg whose bounds share one unit.
-const STRENGTH = /(?:(\d+(?:[.,]\d+)?)\s*[-–]\s*)?(\d+(?:[.,]\d+)?)\s*(mikrogram|miligram|mililiter|gram|unit|mcg|µg|mg|ui|iu|ml|g)\b/gi;
+// A strength, or a pair such as 5-40 mg (range) or 875/125 mg (combination) whose numbers share one unit.
+const STRENGTH = /(?:(\d+(?:[.,]\d+)?)\s*[-–/]\s*)?(\d+(?:[.,]\d+)?)\s*(mikrogram|miligram|mililiter|gram|unit|mcg|µg|mg|ui|iu|ml|g)\b/gi;
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;
 
 // English and Indonesian spellings of generic names converge: amoxicillin and amoksisilin -> amoksisilin.
@@ -28,10 +28,10 @@ const tokens = (text: string) => text.toLowerCase().normalize("NFKD").replace(/[
 const names = (drug: string) => tokens(drug).filter(word => word.length >= 4);
 const mentions = (passage: string[], drug: string) => { const wanted = names(drug); return wanted.length > 0 && wanted.every(word => passage.includes(word)); };
 const number = (value: string) => value.replace(/[.,]/, "[.,]");
-// Each bound of a range needs its own match: the lower bound stands alone or opens the same range.
+// Each number of a pair needs its own match: the first stands alone or opens the same pair.
 const strengths = (dose: string) => {
   const tail = /\/\s*kg/.test(dose.toLowerCase()) ? "(?=\\s*\\/\\s*kg)" : "(?!\\s*\\/\\s*kg)";
-  return [...dose.toLowerCase().matchAll(STRENGTH)].flatMap(m => [...(m[1] ? [`${number(m[1])}(?:\\s*[-–]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}\\b${tail}`, "i")));
+  return [...dose.toLowerCase().matchAll(STRENGTH)].flatMap(m => [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}\\b${tail}`, "i")));
 };
 const unstrength = (text: string) => text.replace(new RegExp(`${STRENGTH.source}(?:\\s*\\/\\s*kg[a-z]*)?`, "gi"), "").replace(/\s+/g, " ").trim();
 

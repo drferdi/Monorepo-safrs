@@ -131,4 +131,10 @@ describe("clinical evidence gate final fix", () => {
     for (const text of ["Furosemid 5-40 mg per hari.", "Furosemid 5 – 40 mg per hari.", "Furosemid mulai 5 mg, dapat dinaikkan sampai 40 mg."]) expect(gateTherapy(therapy([drug("Furosemide", "1x5–40 mg")]), bundle(text), pneumonia).report.drugs[0].status).toBe("verified");
     expect(gateTherapy(therapy([drug("Furosemide", "1x5-40mg")]), bundle("Furosemid 5-40 mg per hari."), pneumonia).report.drugs[0].status).toBe("verified");
   });
+  it("(h) checks and strips both numbers of a combination strength such as 875/125 mg", () => {
+    const partial = gateTherapy(therapy([item("Amoxicillin-clavulanate 875/125 mg", "2x1 tablet")]), bundle("Amoksisilin-klavulanat 125 mg."), pneumonia);
+    expect(partial.report.drugs[0].status).toBe("doseRemoved");
+    expect(partial.therapy?.regimen[0].drug).toBe("Amoxicillin-clavulanate");
+    expect(gateTherapy(therapy([item("Amoxicillin-clavulanate", "2x875/125mg")]), bundle("Amoksisilin-klavulanat 875/125 mg 2 kali sehari."), pneumonia).report.drugs[0].status).toBe("verified");
+  });
 });
