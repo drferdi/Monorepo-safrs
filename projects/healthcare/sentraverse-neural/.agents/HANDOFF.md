@@ -1,5 +1,12 @@
 # HANDOFF
 
+## 2026-10-11 - Site public, durable Vera limit (Claude)
+
+- Gaffer approved making the site public: Vercel `sentraverseii` `ssoProtection` changed from `all_except_custom_domains` to `prod_deployment_urls_and_all_previews`. `https://sentraverseii.vercel.app/` returns 200; deployment URLs still require Vercel login (302).
+- A Vercel Firewall rate-limit rule (10/IP/hour on `/api/vera/chat`) failed twice via API with "Seawall Config not found" and was dropped; the WAF window is at most 1 hour anyway.
+- Gaffer installed Upstash Redis from the Vercel Marketplace (env `KV_REST_API_URL`, `KV_REST_API_TOKEN`, Production + Preview). New `app/api/vera/chat/limit.ts`: 10 messages per visitor per 24 h counted in Upstash over its REST pipeline (`SET NX EX`, `INCR`, `TTL`) with plain `fetch` (no new dependency); the key is a SHA-256 prefix of the IP, never the raw IP; 2 s timeout; falls back to the old per-instance memory count when the store is missing or unreachable. `route.ts` uses it; `Retry-After` is the remaining TTL.
+- Verified: new `limit.test.mjs` RED first, then 4/4; `npm test` 59/59 (script now also runs `app/**/*.test.mjs`); typecheck 0; eslint on `app/api/vera/chat/` 0; build 0. Not yet verified live (needs publish and real Dify messages).
+
 ## 2026-10-11 - Vera widget hardened and verified (Claude)
 
 - Gaffer approved committing and publishing the Vera widget with a limit of 10 messages per person. `POST /api/vera/chat` now allows 10 messages per client IP per 24 hours (in-memory, best-effort: a cold start or another serverless instance resets the count), caps questions at 1,000 characters (413), returns 429 with `Retry-After`, and no longer forwards Dify error text or names `.env.local` to the browser.
