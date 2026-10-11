@@ -4,6 +4,31 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
+// Each visitor (by client IP) gets 10 messages per 24 hours. The counter lives in this
+// server instance's memory, so it is best-effort: a cold start or another instance resets it.
+const MESSAGE_LIMIT = 10;
+const WINDOW_MS = 24 * 60 * 60 * 1000;
+const MAX_QUERY_CHARS = 1000;
+const usage = new Map<string, { count: number; resetAt: number }>();
+
+function clientId(req: NextRequest): string {
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown';
+}
+
+function takeMessage(id: string, now: number): number | null {
+  if (usage.size > 5000) {
+    for (const [key, entry] of usage) if (entry.resetAt <= now) usage.delete(key);
+  }
+  const entry = usage.get(id);
+  if (!entry || entry.resetAt <= now) {
+    usage.set(id, { count: 1, resetAt: now + WINDOW_MS });
+    return null;
+  }
+  if (entry.count >= MESSAGE_LIMIT) return entry.resetAt;
+  entry.count += 1;
+  return null;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -16,12 +41,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (query.length > MAX_QUERY_CHARS) {
+      return NextResponse.json(
+        { error: `Please keep your question under ${MAX_QUERY_CHARS} characters.` },
+        { status: 413 }
+      );
+    }
+
+    const now = Date.now();
+    const blockedUntil = takeMessage(clientId(req), now);
+    if (blockedUntil !== null) {
+      return NextResponse.json(
+        { error: `You have reached the limit of ${MESSAGE_LIMIT} messages per day. Please try again later.` },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil((blockedUntil - now) / 1000)) } }
+      );
+    }
+
     const apiKey = process.env.DIFY_API_KEY;
     const apiUrl = process.env.DIFY_API_URL || 'https://api.dify.ai/v1';
 
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'DIFY_API_KEY is not configured in .env.local' },
+        { error: 'Vera is not available right now.' },
         { status: 500 }
       );
     }
@@ -42,10 +83,10 @@ export async function POST(req: NextRequest) {
     });
 
     if (!difyResponse.ok) {
-      const errorText = await difyResponse.text();
+      console.error(`Vera upstream error: ${difyResponse.status}`);
       return NextResponse.json(
-        { error: `Dify API error: ${errorText}` },
-        { status: difyResponse.status }
+        { error: 'Vera is not available right now.' },
+        { status: 502 }
       );
     }
 
@@ -65,9 +106,9 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Vera proxy error:', error instanceof Error ? error.message : error);
     return NextResponse.json(
-      { error: `Vera proxy error: ${message}` },
+      { error: 'Vera is not available right now.' },
       { status: 500 }
     );
   }

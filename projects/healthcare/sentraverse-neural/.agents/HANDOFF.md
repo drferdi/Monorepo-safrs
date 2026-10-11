@@ -1,5 +1,12 @@
 # HANDOFF
 
+## 2026-10-11 - Vera widget hardened and verified (Claude)
+
+- Gaffer approved committing and publishing the Vera widget with a limit of 10 messages per person. `POST /api/vera/chat` now allows 10 messages per client IP per 24 hours (in-memory, best-effort: a cold start or another serverless instance resets the count), caps questions at 1,000 characters (413), returns 429 with `Retry-After`, and no longer forwards Dify error text or names `.env.local` to the browser.
+- Contract updated: `AGENTS.md` risk R1 -> R2 with the route described; `project.contract.json` risk R2 plus an optional Dify service dependency (`DIFY_API_KEY`).
+- Verified: typecheck 0, lint 0, test 55/55, build 0 (route dynamic), deploy:dry-run PASS. Local production server with `DIFY_API_URL` pointed at a closed local port (no Dify calls): messages 1-10 reached the upstream step, message 11 returned 429, a 1,001-character question returned 413, and the widget banner showed the limit message.
+- Not verified: a live Dify answer, and whether `DIFY_API_KEY` is set in the Vercel project `sentraverseii`. A durable cross-instance limit would need a shared store (for example Vercel KV), which is a new service and not added.
+
 ## 2026-10-11 - Existing Vera changes recorded (Codex metadata only)
 
 - Gaffer authorized registry/handoff cleanup. Observed existing changes in `app/layout.tsx` and `app/globals.css`, plus untracked `components/VeraNeuralWidget.tsx` and `app/api/vera/chat/route.ts`: layout mounts the widget, styles support it, and the POST route streams from Dify using deployment environment configuration.

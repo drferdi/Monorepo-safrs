@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "healthcare/sentraverse-neural",
   "owner": "Chief (dr. Ferdi Iskandar)",
-  "risk": "R1",
+  "risk": "R2",
   "runtime": {
     "name": "node",
     "version": "24"
@@ -31,7 +31,8 @@
   },
   "artifacts": [".next/BUILD_ID"],
   "externalDependencies": [
-    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true }
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "service", "name": "Dify chat API for the Vera widget", "locator": "DIFY_API_KEY", "required": false }
   ],
   "mutableStatePaths": ["node_modules", ".next", "next-env.d.ts", "tsconfig.tsbuildinfo", "test-results", "playwright-report"]
 }
