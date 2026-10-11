@@ -44,10 +44,11 @@
     - the remote-only commits are GitHub README edits and their PR merges;
     - a dry-run merge with `sentrapedia/main` is clean (only `README.md` differs);
     - read-only secret scan of the added lines: no keys or tokens; the only tracked env file is `.env.example`.
-  - Making the local publish merge commit was refused by the permission classifier ("Remote Repoint"), so it is left to Gaffer. Commands from the monorepo root, after Gaffer approves the publish:
-    - `git switch -c sentrapedia-publish sentrapedia-standalone-next`
-    - `git merge sentrapedia/main -m "Merge GitHub main into evidence gate and targeted therapy publish"`
-    - `$env:CHIEF_PUSH_OK=1; git push sentrapedia sentrapedia-publish:refs/heads/main; Remove-Item Env:CHIEF_PUSH_OK`
+  - Making the local publish merge commit was refused by the permission classifier ("Remote Repoint"), so it is left to Gaffer. PowerShell, in a temporary worktree so the busy `D:\DEV\monorepo` checkout is not switched:
+    - `git -C D:\DEV\monorepo worktree add D:\DEV\monorepo.worktrees\sentrapedia-publish -b sentrapedia-publish sentrapedia-standalone-next`
+    - `git -C D:\DEV\monorepo.worktrees\sentrapedia-publish merge sentrapedia/main -m "Merge GitHub main into evidence gate and targeted therapy publish"`
+    - `$env:CHIEF_PUSH_OK=1; git -C D:\DEV\monorepo.worktrees\sentrapedia-publish push sentrapedia sentrapedia-publish:refs/heads/main; Remove-Item Env:CHIEF_PUSH_OK`
+    - `git -C D:\DEV\monorepo worktree remove D:\DEV\monorepo.worktrees\sentrapedia-publish`
   - The GitHub README edits (logo, editorial hero, referral terminology) exist only on the Sentrapedia remote; the monorepo copy of `README.md` is older.
 - **#6 Uncommitted ICD edit in `D:\DEV\monorepo` (branch `chore/tools-closeout`): nothing is lost any more, and its working tree was not touched.**
   - Compared by blob hash:
