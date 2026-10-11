@@ -234,10 +234,12 @@ describe("clinical evidence gate: tablet content is not a dose", () => {
     expect(status("Diosmin", "3x450mg", mpff)).toBe("doseRemoved");
     expect(status("Hesperidin", "3x50mg", mpff)).toBe("doseRemoved");
     expect(status("Paracetamol", "3x500mg", "Parasetamol 500 mg, 2 tablet 3 kali sehari.")).toBe("doseRemoved");
+    for (const phrase of ["2 tablet, 3 kali sehari", "3 kali sehari 2 tablet", "2 tablet sekali minum", "2 kapsul sekaligus", "3 × 2 kaps", "3 x 2 tabs", "3 x 1-2 tablet"]) expect(status("Paracetamol", "3x500mg", `Parasetamol 500 mg ${phrase}.`), phrase).toBe("doseRemoved");
   });
   it("keeps verifying one tablet per dose, a monthly quantity, or a strength also written as a dose", () => {
     expect(status("Amoxicillin", "3x500mg", "Amoksisilin 500 mg 3 x 1 tablet selama 5 hari.")).toBe("verified");
     expect(status("Diazepam", "1x2mg", "diazepam 1. tab 2 mg 30 tab/bulan. 2. tab 5 mg 30 tab/bulan.")).toBe("verified");
+    expect(status("Paracetamol", "3x500mg", "Parasetamol 500 mg; kemasan 12 tablet, 3 kali sehari.")).toBe("verified");
     expect(status("Paracetamol", "3x500mg", "Parasetamol tablet 500 mg, 2 tablet 3 kali sehari pada dewasa; anak 500 mg dosis tunggal.")).toBe("verified");
   });
 });

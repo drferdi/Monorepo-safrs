@@ -25,8 +25,9 @@ const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\
 // Per-unit tails such as "/5 ml", "/kg/24 jam" or "/m2"; a drug name after a slash is not one of them.
 const PER = String.raw`(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:(?:ml|dl|l|vial|ampul|amp|tablet|tab|kapsul|kaps|kgbb|kg|m2|hari|dosis|kali|jam|menit|mnt|detik)\b|m²))*`;
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;
-// Two or more tablets per dose ("3 x 2 tablet", "2 tablet 3 kali", "2 kapsul sekaligus"): a strength just before it is tablet content, not a dose.
-const UNITS_PER_DOSE = /\d+\s*[x×]\s*[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)\b|(?:^|[^\d.,/])[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)\s*(?:\d+\s*(?:[x×]|kali)|sekaligus|per\s*kali|tiap\s*kali)/i;
+// Two or more tablets per dose ("3 x 2 tablet", "2 tablet, 3 kali", "3 kali sehari 2 tablet", "2 kapsul sekaligus"): a strength just before it is tablet content, not a dose.
+const TABLETS = String.raw`(?:1\s*-\s*)?[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)s?\b`;
+const UNITS_PER_DOSE = new RegExp(String.raw`\d+\s*[x×]\s*${TABLETS}|(?:^|[^\d.,/])${TABLETS}[\s,;]*(?:\d+\s*(?:[x×]|kali)|sekaligus|sekali|per\s*kali|tiap\s*kali)|\d+\s*kali\s*sehari[\s,;]*${TABLETS}`, "i");
 // A passage doses with a strength when one of its occurrences is not followed, within 80 characters, by a multi-tablet dose.
 const doses = (pattern: RegExp, text: string) => [...text.matchAll(new RegExp(pattern.source, "gi"))].some(m => !UNITS_PER_DOSE.test(text.slice(m.index + m[0].length, m.index + m[0].length + 80)));
 
