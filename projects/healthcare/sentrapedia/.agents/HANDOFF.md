@@ -1,5 +1,32 @@
 # Sentrapedia handoff
 
+## Final review fixes: evidence gate closes strength leaks - 2026-10-11 Asia/Jakarta
+
+- The whole-branch review (opus, range `ffc74272~1..c67639e6`) found that the gate blanked only `dose`. Strengths in `note`, `duration`, `route`, the drug name and safety items reached the UI. A live case on the default legacy path: a crystalloid note "dapat diulang sampai 40ml/kg dalam 1 jam" was shown after the dose was blanked.
+- Fixes (R2), commits `5dea8cd7`, `7e182f81`, `f166ce72`, `c07272cf`:
+  - **Strengths in other fields.** A strength in `route`/`duration`/`note` is shown only when one passage naming the drug carries it; otherwise the field is blanked. A drug-name strength is part of dose verification and is stripped from the name when the drug is not verified, both in the regimen and in "Verifikasi terapi". A safety item with an unsupported strength is dropped.
+  - **Ranges and combinations.** Both bounds are checked (5-40 mg, 875/125 mg).
+  - **New units.** mEq and mmol, "juta/ribu IU", and Greek μg are now strengths.
+  - **Targeted path.** When retrieval or the therapy step fails, or there is no working diagnosis, the reply carries `evidenceGate.therapyRemoved` with a reason, so the UI says "Terapi tidak ditampilkan: …".
+  - **Eval script.** `retrievalSuccess` now reads the `retrieve_tx` stage.
+- Verified:
+  - `npx vitest run` gate, presentation, pipeline, client and theoracle-mira: 94/94, exit 0.
+  - `npx tsc --noEmit`: exit 0.
+  - `npx eslint` on touched files: exit 0.
+  - `npm run test:mira`: 178 passed, 1 skipped at review time (no Python change since).
+- Parked (non-blocking):
+  - Percent concentrations and tablet counts are not strengths.
+  - The per-kg check runs over dose+name, which fails safe but can under-verify.
+  - A field with an unverified strength is blanked whole (a route such as "PO 250 mg sirup" disappears).
+  - Minors M1, M3, M5–M10 are listed in `.superpowers/sdd/2026-10-11-theoracle-clinical-evidence-pipeline/final-review.md` (worktree root).
+- For Gaffer:
+  - Drafts saved before the gate still show their original model doses (the spec says render as today).
+  - `MIRA_TARGETED_THERAPY` default stays OFF.
+  - The gold ICD labels are still draft.
+  - The uncommitted postchecks edits in the main checkout `D:\DEV\monorepo` overlap `ffc74272`.
+  - Not pushed.
+- Next (approved by Gaffer): add 10 tatalaksana markdowns (asfiksia, epistaksis, impaksi gigi, infeksi intraabdominal, osteosarkoma, Hirschsprung, pterigium, pulpa-periradikuler, sarkopenia, serumen) to the TheOracle index. Content is reviewed by Gaffer, doses are directly verifiable, with corrections PPV 40–60/menit and pip-tazo 3,375 g/6 jam nonberat vs 4,5 g berat. Headings: Terapi farmakologis / Tindakan / Supportive care / Indikasi rujukan / Kontraindikasi / Sumber.
+
 ## TheOracle pipeline evaluation, legacy vs targeted (Task 7) - 2026-10-11 Asia/Jakarta
 
 - Ran the paid end-to-end evaluation (approved by Gaffer): 61 gold cases on each path through the real `POST /api/mira`, `google/gemini-2.5-flash`. Script `scripts/eval-theoracle-pipeline.mjs`; rows and summaries in `docs/verification/theoracle-eval-2026-10-11/pipeline-2026-10-11-{legacy,targeted}.json`; report `PIPELINE-REPORT.md` (same folder).
