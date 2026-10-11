@@ -23,35 +23,31 @@ def post(client, request, headers=AUTH):
 
 def theoracle_grounding() -> dict:
     return {
-        "version": "theoracle-grounding-v1",
+        "version": "theoracle-grounding-v2",
         "corpus": {
             "name": "TheOracle",
-            "databaseSha256": "a" * 64,
-            "retrievedAt": "2026-10-10T12:00:00.000Z",
-            "reviewProvenance": "Gaffer stated the Kemenkes corpus was personally reviewed in the 2026-10-10 session.",
+            "indexSha256": "a" * 64,
+            "embeddingModel": {
+                "id": "onnx-community/embeddinggemma-300m-ONNX",
+                "revision": "e" * 40,
+                "dtype": "fp32",
+                "dims": 768,
+            },
+            "retrievedAt": "2026-10-11T12:00:00.000Z",
+            "reviewProvenance": "Gaffer stated on 2026-10-11 that Gaffer reviewed and approved the TheOracle corpus.",
         },
         "queryDigest": "b" * 64,
         "evidence": [
             {
                 "evidenceId": "P001-001",
                 "text": "THEORACLE_QUOTE pneumonia guidance exact source passage",
-                "retrievalKind": "candidate",
                 "retrievalRank": 1,
+                "similarity": 0.71,
                 "source": {
-                    "fileNo": "001",
-                    "filename": "001_PNPK_Pneumonia.pdf",
-                    "documentSha256": "c" * 64,
-                    "pdfPage": 17,
-                    "pageTextSha256": "d" * 64,
-                    "driveUrl": "https://drive.google.com/file/d/test/view",
-                },
-                "extraction": {
-                    "candidateId": "P001-001",
-                    "category": "diagnosis",
-                    "sourceCharOffset": 10,
-                    "sourceCharEnd": 62,
-                    "reviewStatus": "SOURCE_TEXT_EXACT_SEMANTIC_REVIEW_REQUIRED",
-                    "requiresVisualReview": False,
+                    "title": "PNPK_Pneumonia.md",
+                    "docSource": "Kemenkes knowledge base markdown reviewed and approved by Gaffer",
+                    "origin": "oracle-ii-knowledge-base",
+                    "textSha256": "c" * 64,
                 },
             }
         ],
@@ -315,7 +311,7 @@ def test_healthz_needs_no_token(make_client):
     client, _ = make_client([])
     body = client.get("/healthz").json()
     assert body["status"] == "ok" and body["contractVersion"] == "1"
-    assert "theoracle-grounding-v1" in body["capabilities"]
+    assert "theoracle-grounding-v2" in body["capabilities"]
 
 
 def test_grounding_is_optional_for_legacy_v1_clients(make_client, example_request):
@@ -341,6 +337,7 @@ def test_grounded_full_assessment_keeps_case_unchanged_and_supplies_every_call(m
         assert request["case"]["chiefComplaint"] in prompt
         assert "THEORACLE_QUOTE pneumonia guidance exact source passage" in prompt
         assert "separate from patient facts" in prompt
+        assert "verbatim from an excerpt" in prompt
     [record] = audit_lines(settings)
     assert record["request"]["case"] == original_case
     assert record["request"]["grounding"] == request["grounding"]

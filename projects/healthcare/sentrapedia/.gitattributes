@@ -1,0 +1,2 @@
+# TheOracle vectors are binary and rebuilt as a whole; keep them out of regular git history.
+theoracle/index/vectors.f32 filter=lfs diff=lfs merge=lfs -text

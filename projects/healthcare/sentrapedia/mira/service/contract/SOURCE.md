@@ -12,7 +12,7 @@ here and update this table. `tests/test_contract.py` compares the copies with th
 
 | File | SHA-256 |
 | --- | --- |
-| `mira-step-request.schema.json` | `62f9c08bcf121a6249780077b5a9fbff0adb4327381333f44d34e26b404c0c47` |
+| `mira-step-request.schema.json` | `efd15f70ee4f9741404df05cfd97e86f78660c6e4ff0ee28fdd1cd0eaecc59f2` |
 | `mira-step-response.schema.json` | `b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171` |
 | `examples/mira-step-request.example.json` | `b5be590734e7cbb01be30abef776d17bf791c27b60b826849a05987e31826ba3` |
 | `examples/mira-step-response.example.json` | `787d11fbcb737faac6ddcdbb9b1bea5709b887b50bf882b73b93ad063511fadd` |
@@ -32,3 +32,7 @@ a separate work item; do not modify its contract as part of this implementation.
 On 2026-10-11 Gaffer made TheOracle the single source of truth for Sentra knowledge: the
 envelope is now `theoracle-grounding-v1` with corpus name `TheOracle` (was
 `oracle-grounding-v1` / `Oracle II`).
+On 2026-10-11 Gaffer approved the vector-only TheOracle (local EmbeddingGemma-300m): the
+envelope is now `theoracle-grounding-v2`. The corpus carries `indexSha256` and `embeddingModel`
+(id, revision, dtype, dims); each evidence item carries `similarity` and a `source` of `title`,
+`docSource`, `origin` and `textSha256`. PDF page, Drive URL and extraction fields were removed.

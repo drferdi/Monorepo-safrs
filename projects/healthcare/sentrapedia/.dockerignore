@@ -4,3 +4,8 @@ node_modules
 .git
 .env*
 *.tsbuildinfo
+theoracle/model
+theoracle/data
+theoracle/_versions
+theoracle/_transactions
+_to_delete

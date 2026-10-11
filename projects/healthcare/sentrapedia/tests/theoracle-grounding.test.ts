@@ -1,8 +1,7 @@
 import { createHash } from "node:crypto";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { DatabaseSync } from "node:sqlite";
 import { afterEach, describe, expect, it } from "vitest";
 import { emptyCase } from "../src/lib/mira/contract";
 import { validTheOracleGrounding } from "../src/lib/theoracle-grounding-types";
@@ -10,155 +9,103 @@ import {
   THEORACLE_GROUNDING_CAPABILITY,
   TheOracleGroundingError,
   retrieveTheOracleGrounding,
+  type TheOracleManifest,
 } from "../src/lib/theoracle-grounding";
 
 const scratch: string[] = [];
+const sha256 = (data: string | Uint8Array) => createHash("sha256").update(data).digest("hex");
+const header = (title: string) => `<document_metadata>\nsourceDocument: ${title}\npublished: 10/11/2026\n</document_metadata>\n\n`;
+const chunk = (id: string, title: string, body: string, vector: number[]) => ({ id, title, docSource: "Kemenkes uji", origin: "oracle-ii-knowledge-base", text: header(title) + body, textSha256: sha256(header(title) + body), vector });
+const fixtureChunks = [
+  chunk("A1", "PNPK Pneumonia.md", "Batuk dan   demam\npada pneumonia.", [1, 0, 0]),
+  chunk("A2", "PNPK Pneumonia.md", "Amoksisilin 3 x 500 mg selama 5 hari.", [0.9, 0.1, 0]),
+  chunk("A3", "PNPK Pneumonia.md", "Bagian ketiga yang tidak boleh lolos.", [0.85, 0.15, 0]),
+  chunk("C1", "Kontak.md", "Hubungi 081234567890 untuk konsultasi.", [0.95, 0.05, 0]),
+  chunk("B1", "PNPK Tuberkulosis.md", "Batuk lebih dari dua minggu.", [0.2, 0.98, 0]),
+];
 
-function fixtureDatabase(): string {
+function fixtureIndex(tamper = false): string {
   const directory = mkdtempSync(path.join(tmpdir(), "sentrapedia-theoracle-"));
   scratch.push(directory);
-  const databasePath = path.join(directory, "theoracle.sqlite");
-  const db = new DatabaseSync(databasePath);
-  db.exec(`
-    CREATE TABLE source_documents_v2(file_no TEXT PRIMARY KEY, disease_slug TEXT NOT NULL, filename TEXT NOT NULL, sha256 TEXT NOT NULL, drive_url TEXT NOT NULL, page_count INTEGER NOT NULL, regulatory_status TEXT NOT NULL, clinical_review_status TEXT NOT NULL);
-    CREATE TABLE source_pages_v2(file_no TEXT NOT NULL, pdf_page INTEGER NOT NULL, text_search TEXT NOT NULL, text_sha256 TEXT NOT NULL, requires_visual_review INTEGER NOT NULL, PRIMARY KEY(file_no,pdf_page));
-    CREATE TABLE source_candidates_v2(candidate_id TEXT PRIMARY KEY, file_no TEXT NOT NULL, pdf_page INTEGER NOT NULL, disease_slug TEXT NOT NULL, category TEXT NOT NULL, evidence_quote TEXT NOT NULL, source_char_offset INTEGER NOT NULL, source_char_end INTEGER NOT NULL, score INTEGER NOT NULL, review_status TEXT NOT NULL);
-    CREATE VIRTUAL TABLE source_candidates_fts_v2 USING fts5(candidate_id UNINDEXED,disease_slug,category,evidence_quote,tokenize='unicode61 remove_diacritics 2');
-    CREATE TABLE documents(file_id TEXT PRIMARY KEY, file_no TEXT, topic TEXT NOT NULL, year INTEGER, kmk_number TEXT, document_scope TEXT, clinical_population TEXT NOT NULL, disease_group TEXT NOT NULL, drive_url TEXT NOT NULL, filename TEXT NOT NULL, sha256 TEXT, page_count INTEGER, status TEXT NOT NULL, ingested_at TEXT, source_version_note TEXT, extraction_warnings TEXT);
-    CREATE TABLE pages(page_id INTEGER PRIMARY KEY, file_id TEXT NOT NULL, pdf_page INTEGER NOT NULL, printed_page TEXT, text_raw TEXT NOT NULL, text_search TEXT NOT NULL, char_count INTEGER NOT NULL, image_count INTEGER NOT NULL, extraction_flag TEXT);
-    CREATE VIRTUAL TABLE pages_fts USING fts5(text_search,content='pages',content_rowid='page_id',tokenize='unicode61 remove_diacritics 2');
-  `);
-  const documentHash = "a".repeat(64);
-  const quote = "Batuk dan demam merupakan gambaran yang perlu dinilai pada pneumonia.";
-  const pageOne = `Pendahuluan pedoman. ${quote} Pemeriksaan klinis berikutnya.`;
-  const pageTwo = "Pemeriksaan pneumonia untuk batuk menetap. ".repeat(80);
-  const pageHash = createHash("sha256").update(pageOne).digest("hex");
-  const pageTwoHash = createHash("sha256").update(pageTwo).digest("hex");
-  const quoteOffset = pageOne.indexOf(quote);
-  db.prepare("INSERT INTO source_documents_v2 VALUES(?,?,?,?,?,?,?,?)").run("001", "pneumonia", "001_PNPK_Pneumonia.pdf", documentHash, "https://example.test/pneumonia", 2, "UNVERIFIED", "SOURCE_REVIEWED");
-  db.prepare("INSERT INTO source_pages_v2 VALUES(?,?,?,?,?)").run("001", 1, pageOne, pageHash, 0);
-  db.prepare("INSERT INTO source_pages_v2 VALUES(?,?,?,?,?)").run("001", 2, pageTwo, pageTwoHash, 1);
-  db.prepare("INSERT INTO source_candidates_v2 VALUES(?,?,?,?,?,?,?,?,?,?)").run("P001-001", "001", 1, "pneumonia", "diagnosis", quote, quoteOffset, quoteOffset + quote.length, 42, "SOURCE_TEXT_EXACT_SEMANTIC_REVIEW_REQUIRED");
-  db.prepare("INSERT INTO source_candidates_fts_v2 VALUES(?,?,?,?)").run("P001-001", "pneumonia", "diagnosis", quote);
-  db.prepare("INSERT INTO documents VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)").run("doc-1", "001", "Pneumonia", 2024, null, null, "dewasa", "respirasi", "https://example.test/pneumonia", "001_PNPK_Pneumonia.pdf", documentHash, 2, "ready", null, null, null);
-  db.prepare("INSERT INTO pages VALUES(?,?,?,?,?,?,?,?,?)").run(1, "doc-1", 1, null, pageOne, pageOne, pageOne.length, 0, null);
-  db.prepare("INSERT INTO pages VALUES(?,?,?,?,?,?,?,?,?)").run(2, "doc-1", 2, null, pageTwo, pageTwo, pageTwo.length, 1, null);
-  db.exec("INSERT INTO pages_fts(pages_fts) VALUES('rebuild')");
-  db.close();
-  return databasePath;
+  const chunks = fixtureChunks.map(item => JSON.stringify({ id: item.id, title: item.title, docSource: item.docSource, origin: item.origin, text: item.text, textSha256: item.textSha256 })).join("\n") + "\n";
+  const vectors = Buffer.from(Float32Array.from(fixtureChunks.flatMap(item => { const norm = Math.hypot(...item.vector); return item.vector.map(value => value / norm); })).buffer);
+  const manifest: TheOracleManifest = {
+    model: { id: "fixture/model", revision: "f".repeat(40), dtype: "fp32", dims: 3, files: {} },
+    prefixes: { query: "task: search result | query: ", document: "title: none | text: " },
+    maxTokens: 2048,
+    chunks: { count: fixtureChunks.length, sha256: sha256(chunks) },
+    vectors: { sha256: sha256(vectors) },
+    indexSha256: "d".repeat(64),
+  };
+  writeFileSync(path.join(directory, "chunks.jsonl"), chunks);
+  writeFileSync(path.join(directory, "vectors.f32"), tamper ? Buffer.concat([vectors.subarray(4), Buffer.alloc(4)]) : vectors);
+  writeFileSync(path.join(directory, "manifest.json"), JSON.stringify(manifest));
+  return directory;
 }
 
-function caseFor(complaint: string) {
-  return { ...emptyCase(), chiefComplaint: complaint };
+function fakeEmbedder(calls: string[]) {
+  return async () => async (text: string) => { calls.push(text); return Float32Array.from([1, 0, 0]); };
 }
+
+const caseFor = (complaint: string) => ({ ...emptyCase(), chiefComplaint: complaint });
 
 afterEach(() => {
   while (scratch.length) rmSync(scratch.pop()!, { recursive: true, force: true });
 });
 
-describe("TheOracle grounding retrieval", () => {
-  it("returns frozen, bounded candidate-first citations with exact source and page provenance", () => {
-    const databasePath = fixtureDatabase();
-    const bundle = retrieveTheOracleGrounding(caseFor("batuk demam pneumonia"), {
-      databasePath,
-      limit: 2,
-      now: () => new Date("2026-10-10T12:00:00.000Z"),
-    });
-
+describe("TheOracle vector grounding", () => {
+  it("returns a frozen bundle with model, index and per-passage provenance", async () => {
+    const calls: string[] = [];
+    const bundle = await retrieveTheOracleGrounding(caseFor("batuk demam"), { indexDir: fixtureIndex(), embedder: fakeEmbedder(calls), now: () => new Date("2026-10-11T00:00:00.000Z") });
+    expect(validTheOracleGrounding(bundle)).toBe(true);
     expect(bundle.version).toBe(THEORACLE_GROUNDING_CAPABILITY);
+    expect(bundle.corpus).toMatchObject({ name: "TheOracle", indexSha256: "d".repeat(64), embeddingModel: { id: "fixture/model", revision: "f".repeat(40), dtype: "fp32", dims: 3 }, retrievedAt: "2026-10-11T00:00:00.000Z" });
+    expect(calls).toEqual(["task: search result | query: batuk demam"]);
+    expect(bundle.queryDigest).toBe(sha256("batuk demam"));
+    expect(bundle.evidence[0]).toEqual({ evidenceId: "A1", text: "Batuk dan demam pada pneumonia.", retrievalRank: 1, similarity: 1, source: { title: "PNPK Pneumonia.md", docSource: "Kemenkes uji", origin: "oracle-ii-knowledge-base", textSha256: fixtureChunks[0].textSha256 } });
+    expect(bundle.evidence[1].text).toBe("Amoksisilin 3 x 500 mg selama 5 hari.");
+    expect(JSON.stringify(bundle)).not.toMatch(/url|chunkSource|document_metadata/i);
+    expect(Object.isFrozen(bundle) && Object.isFrozen(bundle.evidence) && Object.isFrozen(bundle.evidence[0].source) && Object.isFrozen(bundle.corpus.embeddingModel)).toBe(true);
+  });
+
+  it("keeps at most two passages per document and skips sources that trip the MIRA privacy guard", async () => {
+    const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: fakeEmbedder([]) });
+    expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1"]);
+    expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3]);
+  });
+
+  it("clamps the evidence limit", async () => {
+    const indexDir = fixtureIndex();
+    expect((await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: fakeEmbedder([]), limit: 1 })).evidence).toHaveLength(1);
+    expect((await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: fakeEmbedder([]), limit: 99 })).evidence.length).toBeLessThanOrEqual(6);
+  });
+
+  it("refuses an empty query before embedding", async () => {
+    const calls: string[] = [];
+    await expect(retrieveTheOracleGrounding(caseFor("  -- "), { indexDir: fixtureIndex(), embedder: fakeEmbedder(calls) })).rejects.toMatchObject({ code: "THEORACLE_QUERY_EMPTY" });
+    expect(calls).toEqual([]);
+  });
+
+  it("refuses an index whose files do not match the manifest", async () => {
+    await expect(retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(true), embedder: fakeEmbedder([]) })).rejects.toMatchObject({ code: "THEORACLE_UNAVAILABLE" });
+  });
+
+  it("reports a local embedding failure as unavailable", async () => {
+    const failing = async () => async (): Promise<Float32Array> => { throw new Error("onnx failure"); };
+    const error: unknown = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: failing }).catch((caught: unknown) => caught);
+    expect(error).toBeInstanceOf(TheOracleGroundingError);
+    expect(error).toMatchObject({ code: "THEORACLE_UNAVAILABLE" });
+  });
+
+  it("answers from the real TheOracle index with the pinned local model without modifying it", async () => {
+    const indexDir = path.join(process.cwd(), "theoracle", "index");
+    const before = sha256(readFileSync(path.join(indexDir, "vectors.f32")));
+    const manifest = JSON.parse(readFileSync(path.join(indexDir, "manifest.json"), "utf8")) as TheOracleManifest;
+    const bundle = await retrieveTheOracleGrounding(caseFor("malaria demam menggigil"));
     expect(validTheOracleGrounding(bundle)).toBe(true);
-    expect(bundle.evidence).toHaveLength(2);
-    expect(bundle.evidence[0]).toMatchObject({
-      evidenceId: "P001-001",
-      retrievalKind: "candidate",
-      retrievalRank: 1,
-      source: {
-        fileNo: "001",
-        filename: "001_PNPK_Pneumonia.pdf",
-        documentSha256: "a".repeat(64),
-        pdfPage: 1,
-        pageTextSha256: createHash("sha256").update("Pendahuluan pedoman. Batuk dan demam merupakan gambaran yang perlu dinilai pada pneumonia. Pemeriksaan klinis berikutnya.").digest("hex"),
-      },
-      extraction: {
-        candidateId: "P001-001",
-        category: "diagnosis",
-        sourceCharOffset: 21,
-        sourceCharEnd: 90,
-        reviewStatus: "SOURCE_TEXT_EXACT_SEMANTIC_REVIEW_REQUIRED",
-        requiresVisualReview: false,
-      },
-    });
-    expect(bundle.evidence[1].retrievalKind).toBe("page");
-    expect(bundle.evidence.every(item => item.text.length <= 1_600)).toBe(true);
-    expect(bundle.corpus.reviewProvenance).toContain("Gaffer stated");
-    expect(bundle.queryDigest).toMatch(/^[a-f0-9]{64}$/);
-    expect(Object.isFrozen(bundle)).toBe(true);
-    expect(Object.isFrozen(bundle.evidence)).toBe(true);
-    expect(Object.isFrozen(bundle.evidence[0].source)).toBe(true);
-  });
-
-  it("returns at most six distinct pages and uses full-page fallback only after candidates", () => {
-    const databasePath = fixtureDatabase();
-    const bundle = retrieveTheOracleGrounding(caseFor("batuk pneumonia"), { databasePath, limit: 99 });
-    expect(bundle.evidence.length).toBeLessThanOrEqual(6);
-    expect(new Set(bundle.evidence.map(item => `${item.source.fileNo}:${item.source.pdfPage}`)).size).toBe(bundle.evidence.length);
-    expect(bundle.evidence[0].retrievalKind).toBe("candidate");
-    expect(bundle.evidence.slice(1).every(item => item.retrievalKind === "page")).toBe(true);
-  });
-
-  it("validates curated clinical-fact quotations against their source page and retains exact coordinates", () => {
-    const databasePath = fixtureDatabase();
-    const db = new DatabaseSync(databasePath);
-    db.exec("CREATE TABLE clinical_facts(fact_id INTEGER PRIMARY KEY, file_id TEXT, pdf_page INTEGER, evidence_category TEXT, evidence_quote TEXT, source_char_offset INTEGER, review_status TEXT); CREATE VIRTUAL TABLE clinical_facts_fts USING fts5(concept,evidence_quote,search_aliases); DELETE FROM source_candidates_fts_v2;");
-    const quote = "Batuk dan demam merupakan gambaran yang perlu dinilai pada pneumonia.";
-    db.prepare("INSERT INTO clinical_facts VALUES(?,?,?,?,?,?,?)").run(1, "doc-1", 1, "diagnosis", quote, 21, "SOURCE_REVIEWED");
-    db.prepare("INSERT INTO clinical_facts_fts(rowid,concept,evidence_quote,search_aliases) VALUES(?,?,?,?)").run(1, "pneumonia", quote, "batuk demam");
-    db.close();
-    const bundle = retrieveTheOracleGrounding(caseFor("batuk demam pneumonia"), { databasePath, limit: 1 });
-    expect(bundle.evidence[0]).toMatchObject({ retrievalKind: "clinical_fact", text: quote, extraction: { sourceCharOffset: 21, sourceCharEnd: 21 + quote.length } });
-    expect(validTheOracleGrounding(bundle)).toBe(true);
-  });
-
-  it("fails explicitly for an unusable query or lexical no-match", () => {
-    const databasePath = fixtureDatabase();
-    for (const complaint of ["...", "xylophone quasar"]) {
-      expect(() => retrieveTheOracleGrounding(caseFor(complaint), { databasePath })).toThrow(TheOracleGroundingError);
-      try { retrieveTheOracleGrounding(caseFor(complaint), { databasePath }); }
-      catch (error) { expect((error as TheOracleGroundingError).code).toMatch(/^THEORACLE_(QUERY_EMPTY|NO_MATCH)$/); }
-    }
-  });
-
-  it("rejects a candidate whose quote or offsets no longer match the hashed source page", () => {
-    const databasePath = fixtureDatabase();
-    const db = new DatabaseSync(databasePath);
-    db.prepare("UPDATE source_candidates_v2 SET evidence_quote = ?, source_char_end = source_char_end + 1 WHERE candidate_id = ?").run("tampered quote", "P001-001");
-    db.close();
-
-    const bundle = retrieveTheOracleGrounding(caseFor("batuk demam pneumonia"), { databasePath, limit: 2 });
-    expect(bundle.evidence.some(item => item.retrievalKind === "candidate")).toBe(false);
-    expect(bundle.evidence.every(item => item.retrievalKind === "page")).toBe(true);
-  });
-
-  it("does not mutate the real TheOracle database", () => {
-    const databasePath = path.join(process.cwd(), "oracle-ii", "sentra_clinical_core_source_reparsed.sqlite");
-    const before = createHash("sha256").update(readFileSync(databasePath)).digest("hex");
-    const bundle = retrieveTheOracleGrounding(caseFor("malaria demam"), { databasePath, limit: 2 });
-    const after = createHash("sha256").update(readFileSync(databasePath)).digest("hex");
-    expect(bundle.evidence.length).toBeGreaterThan(0);
-    expect(validTheOracleGrounding(bundle)).toBe(true);
-    expect(after).toBe(before);
-  });
-
-  it("skips public-source quotations that trigger the MIRA PII guard without weakening it", () => {
-    for (const complaint of ["whooping cough", "maksilofasial"]) {
-      try {
-        const bundle = retrieveTheOracleGrounding(caseFor(complaint));
-        expect(bundle.evidence.map(item => item.evidenceId)).not.toContain(complaint === "whooping cough" ? "P005-002" : "P079-009");
-        expect(validTheOracleGrounding(bundle)).toBe(true);
-      } catch (error) {
-        expect(error).toBeInstanceOf(TheOracleGroundingError);
-        if (error instanceof TheOracleGroundingError) expect(error.code).toBe("THEORACLE_NO_MATCH");
-      }
-    }
-  });
+    expect(bundle.corpus.indexSha256).toBe(manifest.indexSha256);
+    expect(bundle.corpus.embeddingModel).toEqual({ id: manifest.model.id, revision: manifest.model.revision, dtype: manifest.model.dtype, dims: manifest.model.dims });
+    expect(bundle.evidence.some(item => /malaria/i.test(item.source.title + item.text))).toBe(true);
+    expect(sha256(readFileSync(path.join(indexDir, "vectors.f32")))).toBe(before);
+  }, 180_000);
 });

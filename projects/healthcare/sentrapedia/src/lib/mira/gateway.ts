@@ -4,7 +4,7 @@ import { miraServiceVersion } from "./model-profile";
 import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
 import type { CaseState } from "./types";
 
-type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; freeModel?: string; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => TheOracleGroundingBundle };
+type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; freeModel?: string; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => Promise<TheOracleGroundingBundle> };
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const failure = (code: string, message: string, status: number) => reply({ error: { code, message } }, status);
 async function boundedBody(response: Response | Request, limit: number): Promise<string> {
@@ -68,7 +68,7 @@ export function createMiraGateway(options: Options = {}) {
           if (selectedModel && !health.modelReady) return failure(options.freeModel ? "FREE_MODEL_REQUIRED" : "MODEL_REQUIRED", "Perencanaan dan asesmen harus memakai profil OpenRouter yang dipilih. Tidak ada analisis dijalankan.", 503);
           if (options.retrieveGrounding && !health.groundingReady) return failure("GROUNDING_REQUIRED", "Layanan analisis belum mendukung referensi TheOracle. Muat ulang layanan setelah pembaruan.", 503);
         }
-        const grounding = options.retrieveGrounding?.(payload.case);
+        const grounding = await options.retrieveGrounding?.(payload.case);
         if (options.retrieveGrounding && !validTheOracleGrounding(grounding)) throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Referensi TheOracle tidak dapat diverifikasi.");
         controller.signal.throwIfAborted();
         const serviceBody = JSON.stringify({ contractVersion: "1", traceId, case: payload.case, ...(grounding ? { grounding } : {}) });

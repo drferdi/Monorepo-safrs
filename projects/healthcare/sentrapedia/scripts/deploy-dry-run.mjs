@@ -3,7 +3,7 @@ import { dirname, isAbsolute, relative, resolve } from "node:path";
 
 const capsule = process.cwd();
 const inside = (file) => { const path = relative(capsule, file); return !path.startsWith("..") && !isAbsolute(path); };
-const required = ["package-lock.json", "next.config.ts", ".next/BUILD_ID", ".next/standalone/server.js", ".next/standalone/package.json", ".next/static", "Dockerfile", ".next/standalone/mira/service/app.py", ".next/standalone/mira/requirements.lock", ".next/standalone/mira/SOURCE.json", ".next/standalone/scripts/run-system.mjs", ".next/standalone/scripts/install-mira.mjs"];
+const required = ["package-lock.json", "next.config.ts", ".next/BUILD_ID", ".next/standalone/server.js", ".next/standalone/package.json", ".next/static", "Dockerfile", ".next/standalone/mira/service/app.py", ".next/standalone/mira/requirements.lock", ".next/standalone/mira/SOURCE.json", ".next/standalone/scripts/run-system.mjs", ".next/standalone/scripts/install-mira.mjs", ".next/standalone/theoracle/index/manifest.json", ".next/standalone/theoracle/index/vectors.f32", ".next/standalone/theoracle/index/chunks.jsonl", ".next/standalone/theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data"];
 for (const file of required) {
   if (!existsSync(resolve(capsule, file))) throw new Error(`Missing deploy input: ${file}. Run npm ci and npm run build first.`);
 }

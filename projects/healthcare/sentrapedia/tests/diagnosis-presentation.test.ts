@@ -5,7 +5,7 @@ import { documentSections, replaceSection } from "../src/lib/studio";
 import { theOracleDiseases, relatedDiseases } from "../src/lib/theoracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
 import { theOracleSourceLinks } from "../src/lib/mira/presentation";
-import { retrieveTheOracleGrounding } from "../src/lib/theoracle-grounding";
+import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import { restoreWorkspace, initialWorkspace, workspaceReducer } from "../src/lib/workspace";
 
 const analysis = {
@@ -18,12 +18,13 @@ const withDifferential = (differential: MiraResult["differential"]) => ({ ...ana
 
 describe("TheOracle citation persistence", () => {
   it("retains the exact retrieval snapshot through edits, reload and untouched regeneration", () => {
-    const grounding = retrieveTheOracleGrounding({ ...emptyCase(), chiefComplaint: "malaria demam" });
+    const grounding: TheOracleGroundingBundle = { version: THEORACLE_GROUNDING_CAPABILITY, corpus: { name: "TheOracle", indexSha256: "a".repeat(64), embeddingModel: { id: "onnx-community/embeddinggemma-300m-ONNX", revision: "e".repeat(40), dtype: "fp32", dims: 768 }, retrievedAt: "2026-10-11T00:00:00.000Z", reviewProvenance: "Gaffer stated session-level review provenance." }, queryDigest: "b".repeat(64), evidence: [{ evidenceId: "chunk-1", text: "Malaria tanpa komplikasi diterapi dengan DHP sesuai berat badan.", retrievalRank: 1, similarity: 0.68, source: { title: "PNPK Malaria.md", docSource: "Kemenkes uji", origin: "oracle-ii-knowledge-base", textSha256: "c".repeat(64) } }] };
     const message = miraMessage({ ...analysis, grounding });
     expect(message.content).toContain("## Referensi TheOracle");
     expect(diagnosisContent(message)).toBe(message.content);
     expect(JSON.parse(sourceForDisplay(message)!).grounding).toEqual(grounding);
-    expect(theOracleSourceLinks(message)[0]).toEqual({ id: grounding.evidence[0].evidenceId, label: `${grounding.evidence[0].source.filename}, halaman PDF ${grounding.evidence[0].source.pdfPage}`, url: grounding.evidence[0].source.driveUrl, text: grounding.evidence[0].text });
+    expect(theOracleSourceLinks(message)[0]).toEqual({ id: "chunk-1", label: "PNPK Malaria.md", text: grounding.evidence[0].text });
+    expect(message.content).toContain("- PNPK Malaria.md [chunk-1] · kemiripan 0.68");
     const state = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [message] }] };
     const edited = workspaceReducer(state, { type: "message.edit", encounterId: state.encounters[0].id, messageId: message.id, content: message.content + "\nCatatan dokter" });
     const restored = restoreWorkspace(JSON.stringify(edited));
