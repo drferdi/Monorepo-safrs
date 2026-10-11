@@ -29,6 +29,16 @@ export function translate(payload, root) {
       },
     ];
   }
+  if (toolName === "Edit" || toolName === "Write") {
+    const target = payload?.tool_input?.file_path ?? payload?.tool_input?.path;
+    if (!target) return [];
+    return [
+      {
+        type: "write",
+        paths: [repositoryRelative(String(target), root)],
+      },
+    ];
+  }
   return [];
 }
 

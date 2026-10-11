@@ -35,7 +35,7 @@ must show these — hiding them would misrepresent what the repository can do.
 | Automation policy | `.safrs/automation-policy.json` | file read | Shipped | Covered | Canonical | Connected | R2 |
 | Sensitive-path classification | `.safrs/sensitive-paths.json` | file read | Shipped | Covered | Canonical | Connected | R2 |
 | Document registry + routing | `.safrs/document-registry.json` | `tools/safrs/generate_routing.py` | Shipped | Covered | Canonical | Connected | R2 |
-| Tool inventory (17 tools) | `.safrs/tool-inventory.json` | file read | Shipped | Covered | Canonical | Connected | R2 |
+| Tool inventory (16 tools) | `.safrs/tool-inventory.json` | file read | Shipped | Covered | Canonical | Connected | R2 |
 | Contract schemas (7) | `.safrs/schemas/` | JSON Schema 2020-12 | Shipped | Covered | Canonical | Connected | R2 |
 | Eight PR gates | `tools/automation/src/gates.mjs` | `pnpm saf gate --all` | Shipped | Covered | Wiki | Connected | R2 |
 | Evidence manifests | `tools/automation/src/evidence.mjs` | `pnpm saf evidence` | Shipped | Covered | Canonical | Partially Connected | R2 |
@@ -43,8 +43,9 @@ must show these — hiding them would misrepresent what the repository can do.
 | Publisher identity | `tools/automation/src/publisher.mjs` | `pnpm saf publish` | Partial (evaluation-only) | Covered | Canonical | Requires Human Action | R3 |
 | Verification-integrity review | `.safrs/reviews/verification-integrity.json` | governance checker | Shipped | Covered | Canonical | Connected | R2 |
 
-**Known limitation:** `main` has no branch protection, so the eight gates are published but not
-required. The dashboard must state this rather than implying the gates are enforced.
+**Known limitation:** `main` has an active ruleset, but it does not yet require
+code-owner approval or a minimum human review. The dashboard must state this
+gap rather than implying R2 review is enforced.
 
 ## 2. Developer tooling
 
@@ -129,10 +130,10 @@ The largest capability in the repository and the one most at risk of being invis
 | --- | --- | --- | --- | --- | --- |
 | `ci.yml` | `.github/workflows/` | Shipped | Required on pull requests **and** `push` to `main`; depends on Git LFS for visual snapshots and a disposable PostgreSQL service on port 54329 | Connected | R2 |
 | `safrs-governance.yml` | `.github/workflows/` | Shipped | Green | Connected | R2 |
-| `safrs-pr-gates.yml` | `.github/workflows/` | Shipped | Published, **not required** (no branch protection) | Connected | R2 |
+| `safrs-pr-gates.yml` | `.github/workflows/` | Shipped | Published; branch review enforcement remains incomplete | Connected | R2 |
 | `safrs-publish.yml` | `.github/workflows/` | Shipped | Evaluation-only | Requires Human Action | R3 |
 | `safrs-task-control.yml` | `.github/workflows/` | Shipped | Green | Connected | R2 |
-| Renovate | `.github/renovate.json` | Shipped | PR-only, `automerge: false` | Not Yet Connected | R2 |
+| Renovate | `.github/renovate.json` | Shipped | PR-only; patch, minor, pin, digest, and lockfile maintenance may auto-merge after checks | Not Yet Connected | R2 |
 | CODEOWNERS + PR template | `.github/` | Shipped | Verification controls | Not Yet Connected | R2 |
 
 ## 7. Test surfaces

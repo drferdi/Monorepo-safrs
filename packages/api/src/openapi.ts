@@ -116,12 +116,18 @@ export function openApiDocsHtml(): string {
     <title>SAFRS Golden Path API — Docs</title>
     <link
       rel="stylesheet"
-      href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"
+      href="https://unpkg.com/swagger-ui-dist@5.30.2/swagger-ui.css"
+      integrity="sha512-eZpfl9qlKnbDvlJ2brfdx3nhlP1FMsA23w65motxKdYsUcfMcdO2bcLPr7mXhvyzmDZwuzYCJKrl/sEo1ditVQ=="
+      crossorigin="anonymous"
     />
   </head>
   <body>
     <div id="swagger-ui"></div>
-    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script
+      src="https://unpkg.com/swagger-ui-dist@5.30.2/swagger-ui-bundle.js"
+      integrity="sha512-S3rkmTECRsgtsysO1CAFdy2KElfxyyEKzzQ/GudcfJ09ahsZIM3G4uvtsgCXMXsnvmSJA3O9FWQtzFyq8QMuzA=="
+      crossorigin="anonymous"
+    ></script>
     <script>
       window.onload = () => {
         window.ui = SwaggerUIBundle({

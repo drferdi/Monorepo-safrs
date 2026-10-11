@@ -59,7 +59,7 @@ catalog:
   "@types/pg": 8.15.6
   "@types/react": 19.2.7
   "@types/react-dom": 19.2.3
-  "@vitest/coverage-v8": 4.1.10
+  "@vitest/coverage-v8": 4.1.11
   axios: 1.18.0
   better-auth: 1.7.1
   class-variance-authority: 0.7.1
@@ -67,10 +67,10 @@ catalog:
   dayjs: 1.11.13
   electron: 43.4.1
   fast-check: 4.9.0
-  hono: 4.13.1
+  hono: 4.13.7
   husky: 9.1.7
   lucide-react: 0.516.0
-  next: 16.3.6
+  next: 16.3.8
   pg: 8.16.3
   playwright: 1.62.1
   postcss: 8.5.26
@@ -85,7 +85,7 @@ catalog:
   tailwindcss: 4.3.3
   turbo: 2.10.9
   typescript: 7.0.2
-  vitest: 4.1.10
+  vitest: 4.1.11
   zod: 4.4.3
 
 # Minutes (pnpm unit): 1440 = 1 day. A quoted duration string crashes pnpm
@@ -102,7 +102,9 @@ overrides:
   # @sentra/token has an optional next peer; without this it resolves an older,
   # vulnerable next (GHSA-p293-qw3h-jr36, GHSA-2xp9-vwfh-vxw4 < 16.3.3).
   next: "catalog:"
-  sharp: ">=0.35.4"
+  sharp: ">=0.35.5"
+  source-map-js: ">=1.2.2"
+  "@grpc/grpc-js": ">=1.14.5"
   # GHSA-ggr8-5vv4-36mx / CVE-2026-40345: uncontrolled recursion in
   # deepmerge-ts < 8.0.0, pulled in transitively by @prisma/config.
   deepmerge-ts: ">=8.0.1"

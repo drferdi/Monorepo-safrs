@@ -23,7 +23,7 @@ try {
 
 const target = payload?.file_path ?? null;
 if (!target) {
-  respond({ permission: "allow" });
+  respond({ permission: "deny" });
 }
 
 const root = process.cwd();

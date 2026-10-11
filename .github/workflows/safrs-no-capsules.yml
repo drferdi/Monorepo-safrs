@@ -1,0 +1,40 @@
+name: SAFRS no capsules
+
+# Monorepo-safrs hanya memuat Monorepo. Setiap capsule di projects/ punya
+# repo sendiri (kontrak standalone, AGENTS.md). Pemeriksaan ini berjalan di
+# GitHub, sehingga tidak bisa dilewati dengan variabel izin di komputer lokal.
+# Yang diizinkan di bawah projects/:
+#   - projects/internal/control-center/** (dashboard milik Monorepo)
+#   - berkas Markdown (*.md): stub topologi/dokumentasi, bukan kode
+# Selain itu, cabang mana pun yang membawa kode capsule menjadi merah.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  no-capsule-code:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          lfs: false
+      - name: Tolak kode capsule di luar allowlist
+        shell: bash
+        run: |
+          set -euo pipefail
+          offenders="$(git ls-files -- projects \
+            | grep -v '^projects/internal/control-center/' \
+            | grep -v '\.md$' || true)"
+          if [ -n "$offenders" ]; then
+            echo "::error::Kode capsule tidak boleh berada di Monorepo-safrs. Pindahkan ke repo capsule-nya sendiri:"
+            echo "$offenders" | head -200
+            echo "Total: $(printf '%s\n' "$offenders" | wc -l) berkas"
+            exit 1
+          fi
+          echo "OK: tidak ada kode capsule di luar allowlist."

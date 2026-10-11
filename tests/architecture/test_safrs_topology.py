@@ -33,6 +33,11 @@ class SafrsTopologyTests(unittest.TestCase):
             'packages/database/AGENTS.md': '../../AGENTS.md',
             'tools/AGENTS.md': '../AGENTS.md',
         }
+        if (ROOT / 'projects').is_dir():
+            expected.update({
+                'projects/internal/golden-path/AGENTS.md': '../../../AGENTS.md',
+                'projects/internal/golden-path/apps/web/AGENTS.md': '../../../../../AGENTS.md',
+            })
         for path, canonical_link in expected.items():
             with self.subTest(path=path):
                 document = ROOT / path

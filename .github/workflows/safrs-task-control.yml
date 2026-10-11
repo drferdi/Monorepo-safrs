@@ -22,7 +22,7 @@ on:
         required: true
         type: string
       payload:
-        description: JSON request (lease_id, actor, worktree_id, scope_prefixes, expires_at, fencing_token, next_state)
+        description: JSON request (lease_id, worktree_id, scope_prefixes, expires_at, fencing_token, next_state). Actor is taken from github.actor, not payload.
         required: true
         type: string
 
@@ -48,6 +48,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          SAFRS_GITHUB_ACTOR: ${{ github.actor }}
           SAFRS_LEASE_ACTION: ${{ inputs.action }}
           SAFRS_TASK_ID: ${{ inputs.task_id }}
           SAFRS_LEASE_PAYLOAD: ${{ inputs.payload }}
