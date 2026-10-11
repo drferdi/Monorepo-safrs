@@ -302,5 +302,20 @@ describe("clinical evidence gate: per-kg is decided for each strength", () => {
     expect(status("1x500mg", "Azitromisin 500 mg per kg BB per hari.")).toBe("doseRemoved");
     expect(status("1x10 mg per kgBB", "Azitromisin 10 mg/kgBB/hari.")).toBe("verified");
     expect(status("1x10mg/kgBB", "Azitromisin 10 mg sekali sehari.")).toBe("doseRemoved");
+    expect(status("1x500mg", "Azitromisin 500 mg per kali minum.")).toBe("verified");
+  });
+  it("finds per kg behind another per-unit tail, in the dose and in the passage", () => {
+    expect(status("1x10 mg/hari/kgBB", "Azitromisin 10 mg/hari.")).toBe("doseRemoved");
+    expect(status("1x10 mg/hari", "Azitromisin 10 mg/hari/kgBB.")).toBe("doseRemoved");
+    expect(status("1x10 mg/hari/kgBB", "Azitromisin 10 mg/kgBB/hari.")).toBe("verified");
+    expect(status("1x10mg/kgBB", "Azitromisin 10 mg per kilogram berat badan.")).toBe("verified");
+    expect(status("1x10mg", "Azitromisin 10 mg per kilogram berat badan.")).toBe("doseRemoved");
+  });
+  it("gives both ends of a range the same per kg", () => {
+    expect(status("10 mg - 15 mg/kgBB", "Azitromisin 10 mg tablet; anak 15 mg/kgBB.")).toBe("doseRemoved");
+    expect(status("10 mg - 15 mg/kgBB", "Azitromisin 10 mg/kgBB - 15 mg/kgBB.")).toBe("verified");
+  });
+  it("keeps a plain strength in the drug name plain next to a per-kg dose", () => {
+    expect(gateTherapy(therapy([drug("Azithromycin 500 mg", "10 mg/kgBB")]), bundle("Azitromisin 500 mg tablet; anak 10 mg/kgBB."), pneumonia).report.drugs[0].status).toBe("verified");
   });
 });

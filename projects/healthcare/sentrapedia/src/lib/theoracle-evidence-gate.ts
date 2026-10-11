@@ -55,7 +55,8 @@ const number = (value: string) => value.replace(/[.,]/g, "[.,]").replace(/\s+/g,
 // One tablet or capsule next to a strength such as 500 mg adds nothing to check: the 500 mg is the dose.
 // Without `percent`, a percent is not a strength (a safety item's "eGFR turun >50%" is a threshold).
 // Each strength is per kg or not on its own ("10 mg/kgBB, maks 500 mg"), and "per kg" reads like "/kg".
-const PER_KG = String.raw`\s*(?:\/|per)\s*kg`;
+// Per kg may follow another per-unit tail ("10 mg/hari/kgBB") or the other end of a range ("10 mg - 15 mg/kgBB").
+const PER_KG = String.raw`(?:\s*[-–]\s*${NUMBER}\s*[a-zµμ]+)?(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:hari|dosis|kali|jam|menit|mnt|detik)\b)*\s*(?:\/|per)\s*(?:kg|kilogram)`;
 const strengths = (dose: string, percent = true) => {
   const text = dose.toLowerCase();
   const found = [...text.matchAll(STRENGTH)].filter(m => percent || m[3] !== "%");
