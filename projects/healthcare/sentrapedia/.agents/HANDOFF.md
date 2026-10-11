@@ -33,6 +33,22 @@
   - The single eval miss (BBLR answered P21.0, severe birth asphyxia) stays a miss, because the query names BBLR. Labels were not tuned to results.
   - `gold-icd10.json` status now reads "machine-checked, clinician sign-off pending", with the check in a `checked` field.
   - Finding: the Oracle-II catalog JSON (provenance snapshot, not edited) carries wrong ICD codes for OMSK, katarak anak and BBLR. Nothing in the gate reads catalog codes; the gate uses catalog names only.
+- **#5 Local `main` vs `origin/main`: the divergence is by design. `main` must not be pushed to `origin`.**
+  - `origin` (drferdi/Monorepo-safrs) is the control-plane tree. `tools/safrs/check_topology.py` on origin says: "Origin is published without projects/** (BOUNDARIES capsule gate)".
+  - The merge-base (`5b6b808b`, 2026-08-25) has no `projects/` either.
+  - Local `main` is 904 ahead and 41 behind (fetch only). Pushing it would publish every capsule.
+  - Merging `origin/main` into local `main` (dry run, `merge-tree`) gives 28 conflicts. They are in control-plane files: guard hooks, CI, `AGENTS.md`, `pnpm-lock.yaml`, `packages/api`, `tools/automation`, SAFRS reviews.
+  - That is an R3 governance integration, outside Sentrapedia. Not done; flagged as a separate task.
+  - Sentrapedia ships through its own remote (`sentrapedia`, drferdi/Sentrapedia) by subtree split. A fresh split of local `main` is ready as branch `sentrapedia-standalone-next` (`50e073db`, 1251 commits walked):
+    - 59 commits ahead of `sentrapedia/main`, 12 behind;
+    - the remote-only commits are GitHub README edits and their PR merges;
+    - a dry-run merge with `sentrapedia/main` is clean (only `README.md` differs);
+    - read-only secret scan of the added lines: no keys or tokens; the only tracked env file is `.env.example`.
+  - Making the local publish merge commit was refused by the permission classifier ("Remote Repoint"), so it is left to Gaffer. Commands from the monorepo root, after Gaffer approves the publish:
+    - `git switch -c sentrapedia-publish sentrapedia-standalone-next`
+    - `git merge sentrapedia/main -m "Merge GitHub main into evidence gate and targeted therapy publish"`
+    - `$env:CHIEF_PUSH_OK=1; git push sentrapedia sentrapedia-publish:refs/heads/main; Remove-Item Env:CHIEF_PUSH_OK`
+  - The GitHub README edits (logo, editorial hero, referral terminology) exist only on the Sentrapedia remote; the monorepo copy of `README.md` is older.
 
 ## Evidence gate: a field keeps its supported leading part (#10) - 2026-10-11 Asia/Jakarta
 
