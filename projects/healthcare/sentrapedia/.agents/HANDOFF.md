@@ -49,6 +49,10 @@
     - `git -C D:\DEV\monorepo.worktrees\sentrapedia-publish merge sentrapedia/main -m "Merge GitHub main into evidence gate and targeted therapy publish"`
     - `$env:CHIEF_PUSH_OK=1; git -C D:\DEV\monorepo.worktrees\sentrapedia-publish push sentrapedia sentrapedia-publish:refs/heads/main; Remove-Item Env:CHIEF_PUSH_OK`
     - `git -C D:\DEV\monorepo worktree remove D:\DEV\monorepo.worktrees\sentrapedia-publish`
+  - **Published 2026-10-12 by Gaffer:**
+    - `sentrapedia/main` = `c0ef8ba6`, a fast-forward that merges split `9b61a291` with the GitHub README edits.
+    - The temporary worktree was removed and pruned. The local branch `sentrapedia-publish` is kept.
+    - This line itself is not in the standalone repo yet.
   - The GitHub README edits (logo, editorial hero, referral terminology) exist only on the Sentrapedia remote; the monorepo copy of `README.md` is older.
 - **#6 Uncommitted ICD edit in `D:\DEV\monorepo` (branch `chore/tools-closeout`): nothing is lost any more, and its working tree was not touched.**
   - Compared by blob hash:
