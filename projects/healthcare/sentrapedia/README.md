@@ -128,7 +128,7 @@ flowchart TB
   STORE[("BROWSER LOCAL STORAGE")]
   CATALOG[("ORACLE DISEASE JSON")]
   GATE["NEXT.JS /api/mira + INPUT GATES"]
-  SOURCE[("ORACLE II SQLITE / SOURCE EVIDENCE")]
+  SOURCE[("THEORACLE VECTOR INDEX / SOURCE EVIDENCE")]
   MIRA["BUNDLED MIRA / PYTHON"]
   PROVIDER["OPENROUTER / GEMINI FLASH"]
   DRAFT["VALIDATED DRAFT + SOURCE SNAPSHOT"]
@@ -173,7 +173,7 @@ flowchart TB
 <td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>144 disease records across 15 categories, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/theoracle.ts</sub></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><small><b><code>03 · ORACLE II</code></b></small><br /><small>Read-only SQLite source retrieval with document/page hashes, bounded passages and source review metadata.</small><br /><sub>IMPLEMENTED · oracle-ii · src/lib/theoracle-grounding.ts</sub></td>
+<td width="50%" valign="top"><small><b><code>03 · THEORACLE</code></b></small><br /><small>Local vector retrieval (EmbeddingGemma-300m on this machine) with index, model and per-passage hashes and bounded passages.</small><br /><sub>IMPLEMENTED · theoracle · src/lib/theoracle-grounding.ts</sub></td>
 <td width="50%" valign="top"><small><b><code>04 · MIRA</code></b></small><br /><small>Bundled FastAPI engine, schema validation, privacy checks, model calls and budget ledger.</small><br /><sub>IMPLEMENTED · mira/service · scripts/run-system.mjs</sub></td>
 </tr>
 <tr>
@@ -202,7 +202,7 @@ flowchart TB
 <tr>
 <td width="33%" valign="top"><small><b><code>APPLICATION</code></b></small><br /><small>Next.js 16.4.0 · React 19.3.0 · TypeScript · Lucide · local Sentra CSS tokens.</small></td>
 <td width="33%" valign="top"><small><b><code>REASONING</code></b></small><br /><small>Python 3.11+ · FastAPI · Uvicorn · OpenRouter SDK · JSON schema · synthetic-only policy.</small></td>
-<td width="33%" valign="top"><small><b><code>EVIDENCE</code></b></small><br /><small>Oracle JSON · Oracle II SQLite · source hashes · browser localStorage · MIRA audit ledger.</small></td>
+<td width="33%" valign="top"><small><b><code>EVIDENCE</code></b></small><br /><small>Oracle JSON · TheOracle vector index · source hashes · browser localStorage · MIRA audit ledger.</small></td>
 </tr>
 </table>
 
@@ -219,7 +219,7 @@ flowchart TB
   ENGINE["MIRA / EPHEMERAL LOOPBACK"]
   WEB["NEXT.JS WORKSPACE / 3101"]
   API["SAME-ORIGIN GATEWAY"]
-  SQL[("ORACLE II SQLITE")]
+  SQL[("THEORACLE VECTOR INDEX")]
   BROWSER[("BROWSER localStorage")]
   CLOUD["OPENROUTER PROVIDER"]
   STOP["PAIRED SHUTDOWN"]
@@ -275,7 +275,7 @@ The separate **document workspace** contains 18 built-in document modes and loca
 
 **Oracle / reference discovery.** A bundled JSON disease catalog supports quick search by name, code and category. Its 144 records across 15 categories are catalog data, not an assertion that the reference is exhaustive or nationally endorsed.
 
-**Oracle II / evidence provenance.** Read-only SQLite retrieval and source manifests provide bounded passages with document/page/hash context. Evidence is available only where source ingestion and quality gates support it. A match can be absent, outdated, partial or misleading, and machine-selected excerpts are not automatically clinician-approved.
+**TheOracle / evidence provenance.** Local vector retrieval over a manifest-verified index provides bounded passages with index, embedding-model and chunk-hash context; the case text is embedded on this machine and never leaves it for retrieval. Evidence is available only where source ingestion and quality gates support it. A match can be absent, outdated, partial or misleading, and machine-selected excerpts are not automatically clinician-approved.
 
 **MIRA / provisional synthesis.** The Python reasoning service synthesizes available fictional context and bounded references through configured model access and structured response contracts. A coherent draft, schema-valid output, and successful provider call are **three different facts**—none alone proves medical validity.
 
@@ -298,7 +298,7 @@ Sentrapedia/
 │   ├── lib/theoracle-grounding.ts  # Read-only retrieval
 │   └── app/sentra-tokens.css    # Local token snapshot
 ├── oracle/                      # Disease reference JSON
-├── oracle-ii/                   # Source corpus, evidence, QA, SQLite
+├── theoracle/                   # TheOracle: index (chunks, vectors, manifest), model (installed), provenance
 ├── mira/                        # Bundled Python service and locks
 ├── tests/                       # App, gateway and supervisor tests
 └── docs/                        # Architecture and dated evidence reports
@@ -315,7 +315,7 @@ flowchart TB
   INPUT["PROMPT + ENCOUNTER CONTEXT"]
   GATE["SYNTHETIC CONFIRMATION + PII CHECKS"]
   API["LOCAL /api/mira"]
-  SOURCE["ORACLE II SOURCE + HASH VERIFICATION"]
+  SOURCE["THEORACLE LOCAL VECTOR SEARCH + HASH VERIFICATION"]
   ENGINE["MIRA CONTRACT + POLICY"]
   MODEL["OPENROUTER / GEMINI FLASH"]
   VERIFY["SCHEMA + MODEL + COST VALIDATION"]
@@ -429,7 +429,7 @@ The system check performs configuration/readiness preflight without paid inferen
 </tr>
 <tr>
 <td width="50%" valign="top"><small><b><code>AI / AUTOMATION</code></b></small><br /><small>Python MIRA, OpenRouter model calls, capability/profile checks, guarded budgets.</small></td>
-<td width="50%" valign="top"><small><b><code>DATA</code></b></small><br /><small>Browser localStorage, Oracle JSON, read-only Oracle II SQLite and local audit files.</small></td>
+<td width="50%" valign="top"><small><b><code>DATA</code></b></small><br /><small>Browser localStorage, Oracle JSON, read-only TheOracle vector index and local audit files.</small></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><small><b><code>SECURITY</code></b></small><br /><small>Local-origin checks, ephemeral MIRA token, schema/identity guards; development-only posture.</small></td>
@@ -560,12 +560,12 @@ Primary code: [route](src/app/api/mira/route.ts) · [gateway](src/lib/mira/gatew
 <table width="100%">
 <tr>
 <td width="33%" valign="top"><small><b><code>DATA</code></b></small><br /><small>Fictional patient/encounter context, drafts, tasks, source snippets and model trace metadata.</small></td>
-<td width="33%" valign="top"><small><b><code>PERSISTENCE</code></b></small><br /><small>`sentrapedia-workspace-v1` and `sentrapedia-feedback` browser localStorage; Oracle JSON/SQLite and local MIRA budget ledger.</small></td>
+<td width="33%" valign="top"><small><b><code>PERSISTENCE</code></b></small><br /><small>`sentrapedia-workspace-v1` and `sentrapedia-feedback` browser localStorage; Oracle JSON, TheOracle index and local MIRA budget ledger.</small></td>
 <td width="33%" valign="top"><small><b><code>OBSERVABILITY</code></b></small><br /><small>Trace IDs, source IDs/hashes, local error codes, MIRA audit files and dated verification reports.</small></td>
 </tr>
 </table>
 
-**Oracle is not Oracle II.** The UI disease catalog reads `oracle/sentrapedia.json`. Oracle II also ships a read-only SQLite source corpus, evidence files and provenance metadata. [Its source parser QA](oracle-ii/README.md) documents **72 newly reprocessed PDFs, 8,332 source-page text records and 904 machine-selected literal excerpts**. Machine-selected text may be semantically misclassified: unreviewed candidate fields remain quarantined, not promoted as clinician-approved facts.
+**Oracle is not TheOracle.** The UI disease catalog reads `oracle/sentrapedia.json`. TheOracle is the single knowledge source for MIRA grounding: 20,423 chunks with local EmbeddingGemma-300m vectors in `theoracle/index/`. The former Oracle II SQLite was removed; its sources and QA moved to `theoracle/provenance/oracle-ii/`. [Its source parser QA](theoracle/provenance/oracle-ii/README.md) documents **72 newly reprocessed PDFs, 8,332 source-page text records and 904 machine-selected literal excerpts**. Machine-selected text may be semantically misclassified: unreviewed candidate fields remain quarantined, not promoted as clinician-approved facts.
 
 The account dialog supports JSON export and clearing browser-local records, but no authenticated multiuser database or guaranteed sync/retention exists. Audit history under `.runtime/mira-deepseek/audit` should be preserved when relocating an existing installation to retain daily-budget context.
 
@@ -594,7 +594,7 @@ The account dialog supports JSON export and clearing browser-local records, but 
 
 **Explicit limitations:** software test passes do not verify diagnostic accuracy, treatment quality, guideline currency or patient outcomes. Real use requires clinical validation, secure persistence, consent/transcription governance, regulated privacy/security controls, role authorization, EHR integrations and appropriate approvals. Browser speech recognition may invoke a vendor service. Provider billing can occur even for aborted requests. The five-second response target is an aspiration, not established end-to-end performance.
 
-See [current integration](docs/mira-integration.md), [data contract](docs/data.md), [testing](docs/testing.md) and [Oracle II QA](oracle-ii/QA_REPORT.md).
+See [current integration](docs/mira-integration.md), [data contract](docs/data.md), [testing](docs/testing.md) and [Oracle II QA](theoracle/provenance/oracle-ii/QA_REPORT.md).
 
 ## 14 / OFFICIAL SPONSOR & INSTITUTIONAL CONTEXT
 
@@ -616,7 +616,7 @@ No external sponsor is declared for this product. Sentrapedia is developed under
 <td width="50%" valign="top"><small><b><code>FASTAPI / OPENROUTER</code></b></small><br /><small>Python, FastAPI, Uvicorn, Pydantic, httpx, OpenRouter-compatible SDK.</small></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><small><b><code>ORACLE / SQLITE</code></b></small><br /><small>Bundled disease JSON, Node `node:sqlite`, provenance and evidence records.</small></td>
+<td width="50%" valign="top"><small><b><code>ORACLE / THEORACLE</code></b></small><br /><small>Bundled disease JSON, `@huggingface/transformers` + ONNX Runtime for local embeddings, provenance and evidence records.</small></td>
 <td width="50%" valign="top"><small><b><code>VERIFICATION / PACKAGING</code></b></small><br /><small>Vitest, ESLint 9, TypeScript 5.9, Node tests, mocked Python tests, standalone Next.js packaging.</small></td>
 </tr>
 </table>
@@ -635,7 +635,7 @@ No external sponsor is declared for this product. Sentrapedia is developed under
 <td width="50%" valign="top"><img src="https://img.shields.io/badge/04-AI%20%C2%B7%20AUTOMATION-8B5CF6?style=flat-square" alt="AI automation" /><br /><small><b><code>AI · AUTOMATION</code></b></small><br /><small>MIRA, Gemini 2.5 Flash, OpenRouter, model-profile, cost and grounding guards.</small></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><img src="https://img.shields.io/badge/05-DATABASE%20%26%20STORAGE-0EA5E9?style=flat-square" alt="Database storage" /><br /><small><b><code>DATABASE & STORAGE</code></b></small><br /><small>Oracle II read-only SQLite, Oracle catalog JSON, browser localStorage and audit files.</small></td>
+<td width="50%" valign="top"><img src="https://img.shields.io/badge/05-DATABASE%20%26%20STORAGE-0EA5E9?style=flat-square" alt="Database storage" /><br /><small><b><code>DATABASE & STORAGE</code></b></small><br /><small>TheOracle read-only vector index, Oracle catalog JSON, browser localStorage and audit files.</small></td>
 <td width="50%" valign="top"><img src="https://img.shields.io/badge/06-DEVOPS%20%C2%B7%20PACKAGE-F59E0B?style=flat-square" alt="DevOps package" /><br /><small><b><code>DEVOPS · PACKAGE</code></b></small><br /><small>npm lockfile, Python venv and pinned requirements, Next standalone, Dockerfile, dry-run.</small></td>
 </tr>
 <tr>
@@ -675,11 +675,12 @@ The following is **historical repository evidence from October 10, 2026**. The R
 | <small>MIRA service tests</small> | <small>157 passed, 1 skipped</small> | <small>[Integrated runtime report](docs/verification/2026-10-10-integrated-mira.md)</small> | <small>Mocked provider, not clinical accuracy</small> |
 | <small>Build / deploy dry run</small> | <small>PASS</small> | <small>[Machine-readable evidence](docs/verification/2026-10-10-integrated-mira.json)</small> | <small>Six traces, no actual deployment</small> |
 | <small>Standalone HTTP smoke</small> | <small>PASS</small> | <small>[Integrated runtime report](docs/verification/2026-10-10-integrated-mira.md)</small> | <small>Local page, static asset, synthetic rejection</small> |
-| <small>Oracle II grounding</small> | <small>PASS</small> | <small>[Oracle II verification](docs/verification/2026-10-10-oracle-ii-grounding.md)</small> | <small>Retrieval benchmark is not diagnostic validation</small> |
+| <small>Oracle II grounding</small> | <small>SUPERSEDED</small> | <small>[Oracle II verification](docs/verification/2026-10-10-oracle-ii-grounding.md)</small> | <small>Replaced by TheOracle vector retrieval on 2026-10-11</small> |
+| <small>TheOracle vector grounding</small> | <small>PASS</small> | <small>[TheOracle verification](docs/verification/2026-10-11-theoracle-vector-only.md) · [model eval](docs/verification/theoracle-eval-2026-10-11/REPORT.md)</small> | <small>Retrieval recall is not diagnostic validation; eval gold labels are draft</small> |
 | <small>Docker image build/run</small> | <small>NOT VERIFIED</small> | <small>[Integrated runtime report](docs/verification/2026-10-10-integrated-mira.md)</small> | <small>Docker daemon unavailable in reported test</small> |
 | <small>Clinical validity / production</small> | <small>NOT ESTABLISHED</small> | <small>[Current integration contract](docs/mira-integration.md)</small> | <small>Requires separate safety/security approval</small> |
 
-**Engineering references:** [MIRA integration](docs/mira-integration.md) · [Architecture](docs/architecture.md) (contains older superseded runtime descriptions) · [Data](docs/data.md) · [Testing](docs/testing.md) · [Oracle II QA](oracle-ii/README.md).
+**Engineering references:** [MIRA integration](docs/mira-integration.md) · [Architecture](docs/architecture.md) (contains older superseded runtime descriptions) · [Data](docs/data.md) · [Testing](docs/testing.md) · [Oracle II QA](theoracle/provenance/oracle-ii/README.md).
 
 <p align="center">
 <b>Architected and built by dr. Ferdi Iskandar (the Gaffer) · Sentra Artificial Intelligence.</b><br />

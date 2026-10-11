@@ -1,5 +1,36 @@
 # Sentrapedia handoff
 
+## TheOracle vector-only with local EmbeddingGemma — 2026-10-11 Asia/Jakarta
+
+Status: committed on `feat/oracle-vector-only` (worktree `D:\DEV\monorepo.worktrees\oracle-vector-only`):
+`c3581e5e` store/runtime/contract/tests, `8b030bfd` SQLite removal + Oracle II move, then docs.
+Not pushed, not merged. R2 (engine contract + data path). Gaffer chose EmbeddingGemma ("Gemma,
+lanjut"), no Gemini for embeddings, and capsule-local Git LFS for `theoracle/index/vectors.f32`.
+
+What changed: `theoracle/index/` (20,423 chunks, vectors via LFS, manifest with model/file/chunk/
+vector hashes, indexSha256 `f9d64669…`); `src/lib/theoracle-grounding.ts` vector retriever (local
+CPU query embedding, max 6 / 2 per document, PII filter); contract `theoracle-grounding-v2` in TS,
+schema, `app.py`, `prompts.py` (verbatim drug/dose/ICD-10/lab rule), tests; postinstall installs
+the pinned model into `theoracle/model/` (git-ignored); standalone/Docker ship index, model,
+onnxruntime-node and sharp; `oracle-ii/` moved to `theoracle/provenance/oracle-ii/`, SQLite removed.
+`mira/SOURCE.json` packaged/snapshot hashes re-pinned to LF bytes (they recorded CRLF working
+copies; a clean LF checkout failed `test_packaging`). The main checkout still has CRLF copies and
+will fail that test until its files are re-checked out.
+
+Verification: typecheck 0; lint 0; `npm test` 158/158; `test:mira` 157 passed 1 skipped;
+`test:system` 7/7; build 0; deploy:dry-run PASS; benchmark recall@5 0.841, warm 39 ms median,
+cold start 3.1 s; vector parity 1.0. `docker build`: dependency stage passed, Docker Desktop engine
+failed (HTTP 500) during `next build` in its 4 GB VM — rerun after restarting Docker (8 GB advised).
+Details: `docs/verification/2026-10-11-theoracle-vector-only.md`, model eval
+`docs/verification/theoracle-eval-2026-10-11/`.
+
+Open: Docker rerun; Gaffer review of eval gold labels; ICD-10/dose recall 0.50; Lance export
+(`theoracle/` data in the main checkout, 72 MB, untracked) keep or delete; `oracle/` catalog
+untouched; chunk ingest tool (@langchain splitter) lives only in the session scratchpad; drafts
+saved before v2 lose their citations section; main checkout `oracle-ii/*.sqlite*` and
+`_to_delete/` for Gaffer to delete. Main checkout (Dify agent): Vida's uncommitted design changes
+were stashed on Gaffer's request (`stash@{0}`), Dify commits kept.
+
 ## TheOracle is the knowledge SSOT; contract renamed — 2026-10-11 Asia/Jakarta
 
 Status: Phase A done in place on `codex/oracle-ii-grounding`, uncommitted. Gaffer decided
