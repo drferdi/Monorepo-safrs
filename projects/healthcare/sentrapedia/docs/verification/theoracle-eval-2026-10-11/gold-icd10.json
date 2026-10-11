@@ -1,5 +1,6 @@
 {
-  "status": "draft - written by Claude from the gold document titles; awaits Gaffer review",
+  "status": "draft - written by Claude from the gold document titles; machine-checked, clinician sign-off pending",
+  "checked": "2026-10-11: all 61 labels exist in BPJS e-Klaim ICD-10 (mira/service/data/icd10.json); 57 agree with the Oracle-II catalog code of the gold document; the 4 others were read case by case and kept (catalog wrong: OMSK H65/H67, congenital cataract H25/H28, BBLR P96; stunting catalog E40/E46 vs gold E45/E34/R62). No label was changed after seeing results.",
   "created": "2026-10-11",
   "rule": "likely[0] is correct when its first three characters are in the list",
   "labels": {

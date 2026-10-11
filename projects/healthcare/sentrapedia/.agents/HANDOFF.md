@@ -22,6 +22,17 @@
   - M10 fixed in the same commit: `mira_tx` now ends 1 s before the overall timer (65 s), so a slow therapy step drops only the therapy and keeps the diagnosis. Before, the whole reply failed with TIMEOUT. A timeout on a non-retrieval stage is logged as `TIMEOUT`, not `THEORACLE_UNAVAILABLE`.
   - Verified: RED first (new pipeline test); `npm test` 249/249, `tsc` 0, `eslint` 0.
   - Takes effect only after a deploy, which needs Gaffer. No env file, deployment or budget was changed.
+- **#4 Gold ICD-10 labels: machine-checked, no label changed; clinician sign-off still pending.**
+  - All 61 labels exist in BPJS e-Klaim ICD-10.
+  - 57 agree with the Oracle-II catalog code of the gold document.
+  - The other 4 were read one by one and kept as they are:
+    - OMSK: gold H66; the catalog's H65/H67 is wrong.
+    - Congenital cataract: gold Q12/H26; the catalog's H25 is senile cataract.
+    - BBLR: gold P07/P05; the catalog's P96 is wrong.
+    - Stunting: gold E45/E34/R62; the catalog has E40/E46.
+  - The single eval miss (BBLR answered P21.0, severe birth asphyxia) stays a miss, because the query names BBLR. Labels were not tuned to results.
+  - `gold-icd10.json` status now reads "machine-checked, clinician sign-off pending", with the check in a `checked` field.
+  - Finding: the Oracle-II catalog JSON (provenance snapshot, not edited) carries wrong ICD codes for OMSK, katarak anak and BBLR. Nothing in the gate reads catalog codes; the gate uses catalog names only.
 
 ## Evidence gate: a field keeps its supported leading part (#10) - 2026-10-11 Asia/Jakarta
 
