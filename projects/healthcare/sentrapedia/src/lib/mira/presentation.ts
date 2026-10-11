@@ -149,13 +149,16 @@ export function diagnosisContent(message: Pick<Message, "content" | "originalCon
     const grounding = "grounding" in source ? source.grounding : undefined;
     const therapyGrounding = "therapyGrounding" in source ? source.therapyGrounding : undefined;
     const stored = "evidenceGate" in source && validGate(source.evidenceGate) ? source.evidenceGate : undefined;
-    // A draft saved before the evidence gate holds the model's doses unchecked: gate it now against its stored bundle, as the gateway does.
+    // Saved therapy is gated again with the current gate against its stored bundle, as the gateway does: a draft saved before
+    // the gate holds the model's doses unchecked, and an earlier gate may have verified a dose a later one rejects.
     const likely = source.result.differential.likely[0];
-    const late = !stored && source.result.therapy ? gateTherapy(source.result.therapy, validTheOracleGrounding(therapyGrounding) ? therapyGrounding : validTheOracleGrounding(grounding) ? grounding : undefined, likely && { icd10: likely.icd10, label: likely.label }) : undefined;
+    const late = source.result.therapy ? gateTherapy(source.result.therapy, validTheOracleGrounding(therapyGrounding) ? therapyGrounding : validTheOracleGrounding(grounding) ? grounding : undefined, likely && { icd10: likely.icd10, label: likely.label }) : undefined;
     const withoutTherapy = { ...source.result };
     delete withoutTherapy.therapy;
-    const result = late ? (late.therapy ? { ...source.result, therapy: late.therapy } : withoutTherapy) : source.result;
-    const gate = stored ?? late?.report;
+    // An earlier gate's report keeps its removals and safety items; only doses the current gate no longer verifies are downgraded.
+    const unverified = new Set(late?.report.drugs.filter(d => d.status !== "verified").map(d => d.drug));
+    const result = !late ? source.result : !late.therapy ? withoutTherapy : { ...source.result, therapy: stored ? { ...source.result.therapy!, regimen: late.therapy.regimen } : late.therapy };
+    const gate = !late ? stored : stored && late.therapy ? { ...stored, drugs: stored.drugs.map(d => d.status === "verified" && unverified.has(d.drug) ? { ...d, status: "doseRemoved" as const } : d) } : late.report;
     return miraDraft(result, source.traceId, source.createdAt, source.case, message.mode ? miraFocus(message.mode) : undefined, gate) + theOracleCitations(grounding, therapyGrounding, gate);
   } catch { return message.content; }
 }

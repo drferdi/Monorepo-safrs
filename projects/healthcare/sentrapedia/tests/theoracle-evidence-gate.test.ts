@@ -215,6 +215,12 @@ describe("clinical evidence gate: the dose passage names the diagnosis", () => {
     expect(gateTherapy(therapy([drug("Paracetamol", "3x500mg")], { forDiagnosis: typhoid }), bundle({ title: "kejang-demam.md", text: "Kejang demam pada anak: parasetamol 500 mg." }), typhoid).report.drugs[0].status).toBe("doseRemoved");
     expect(gateTherapy(therapy([drug("Paracetamol", "3x500mg")], { forDiagnosis: typhoid }), bundle({ title: "demam-tifoid.md", text: "Parasetamol 500 mg bila demam." }), typhoid).report.drugs[0].status).toBe("verified");
   });
+  it("ignores Roman numerals, all-capital labels and English ICD qualifiers", () => {
+    const status = (dx: { icd10: string; label: string }, name: string, dose: string, item: { title: string; text: string }) => gateTherapy(therapy([drug(name, dose)], { forDiagnosis: dx }), bundle(item), dx).report.drugs[0].status;
+    expect(status({ icd10: "I10", label: "Hipertensi stage II" }, "Amlodipine", "1x10mg", { title: "gagal-jantung.md", text: "NYHA kelas II: amlodipin 10 mg." })).toBe("doseRemoved");
+    expect(status({ icd10: "A01.0", label: "DEMAM TIFOID" }, "Paracetamol", "3x500mg", { title: "kejang-demam.md", text: "Kejang demam: parasetamol 500 mg." })).toBe("doseRemoved");
+    expect(status({ icd10: "J18.9", label: "Community-acquired pneumonia" }, "Ceftriaxone", "1x2g", { title: "sepsis.pdf", text: "Hospital-acquired infection: seftriakson 2 gram." })).toBe("doseRemoved");
+  });
   it("blanks a note strength carried only by a passage about another disease", () => {
     const { therapy: out } = gateTherapy(forVersicolor([{ ...drug("Flukonazol", "1x50mg"), note: "dosis maksimal 400 mg" }]), bundle(azoleList, { title: "panu.md", text: "Flukonazol untuk pitiriasis versikolor." }), versicolor);
     expect(out?.regimen[0].note).toBe("");

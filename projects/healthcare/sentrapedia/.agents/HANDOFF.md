@@ -21,10 +21,19 @@
   - 14 changed rows read by hand: 6 correctly blocked (incl. flukonazol PV), 8 correct doses now blanked (fail-safe).
   - Details in `PIPELINE-REPORT.md`, "Re-scored with the diagnosis check".
 - A stricter rule (every distinctive word of one name) gave 43 -> 23. It lost TB, cerumen, urticaria and asthma doses because English labels do not match Indonesian text, so it was rejected.
+- Final review (one Opus pass) returned "with fixes"; all four points were fixed in the follow-up commit:
+  - Saved therapy is now always re-gated at render, so a draft gated by the earlier rule (since `af452685`) no longer shows a dose the current gate rejects. A stored report keeps its removals and safety items; only verified doses the current gate rejects are downgraded.
+  - The "Sebelum edit" (compare) and "Versi dipilih" (history) panes render the original-draft snapshot through `diagnosisContent`, so raw model doses no longer appear there after an edit.
+  - Capitals rule: Roman numerals (stage II) and all-capital labels no longer count as diagnosis words.
+  - English ICD qualifiers (acquired, upper, severe, NOS, ...) were added to the generic list.
+  - New tests cover all four; `npm test` 226/226, tsc 0, eslint 0. Replay counts unchanged (same 14 rows).
+- Render gating falls back to `grounding` when `therapyGrounding` is invalid; with no working diagnosis the reason text differs from the gateway's. Therapy is hidden either way.
 - Known limits:
   - English labels vs Indonesian text (Haemorrhoids/hemoroid) and catalog code eras (I84 vs K64, Z21 vs B20-B24) cost true doses.
   - Synonyms such as ODHA for HIV are not known.
   - A shared organ word (otitis, telinga) still links otitis media and eksterna.
+  - 4 of 144 catalog names have no distinctive word (Sinusitis Akut, Sinusitis Kronik, Diare Kronik, Diare Akut pada Anak). Their doses verify only through the model's label.
+  - A long chunk covering several diseases still verifies when it names the diagnosis anywhere.
 - Not pushed. Open items from the previous list are unchanged (#1, #2, #4-#6, #8-#20).
 
 ## TheOracle: 10 tatalaksana documents added to the index - 2026-10-11 Asia/Jakarta

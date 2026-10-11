@@ -36,10 +36,12 @@ const mentions = (passage: string[], drug: string) => { const wanted = names(dru
 // Words that do not single out one disease: qualifiers, function words, and any word in three or more catalog names (demam, akut, jantung).
 const catalogCounts = new Map<string, number>();
 theOracleDiseases.forEach(d => new Set(tokens(d.nama)).forEach(word => catalogCounts.set(word, (catalogCounts.get(word) ?? 0) + 1)));
-const GENERIC = new Set(["kronis", "infeksi", "tanpa", "dengan", "komplikasi", "lain", "lainnya", "pada", "anak", "dewasa", "umum", "tidak", "lokasi", "spesifik", "acute", "chronic", "disease", "infection", "syndrome", "disorder", "without", "complication", "unspecified", "specified", "other", "status", "type", "tipe", "primer", "sekunder", "adult", "child", "fever", "signs", "warning", "human", "virus", "organism", "origin", "site"].map(spell));
-// The distinctive words of the diagnosis label and of the TheOracle catalog names for its code; capitals such as HIV count too.
+const GENERIC = new Set(["kronis", "infeksi", "tanpa", "dengan", "komplikasi", "lain", "lainnya", "pada", "anak", "dewasa", "umum", "tidak", "lokasi", "spesifik", "acute", "chronic", "disease", "infection", "syndrome", "disorder", "without", "complication", "unspecified", "specified", "other", "status", "type", "tipe", "primer", "sekunder", "adult", "child", "fever", "signs", "warning", "human", "virus", "organism", "origin", "site", "acquired", "upper", "lower", "tract", "essential", "primary", "secondary", "mild", "moderate", "severe", "recurrent", "bacterial", "viral", "elsewhere", "classified", "presumed", "nos", "nec"].map(spell));
+// The distinctive words of the diagnosis label and of the TheOracle catalog names for its code.
+// Short capitals such as HIV count too, but not Roman numerals (stage II) or the words of a label written all in capitals.
 const diagnosisWords = (diagnosis: { icd10: string; label: string }) => new Set([diagnosis.label, ...theOracleDiseases.filter(d => referenceIncludes(d.kode, diagnosis.icd10.trim().toUpperCase())).map(d => d.nama)]
-  .flatMap(name => [...tokens(name).filter(word => word.length >= 4 && !GENERIC.has(word) && (catalogCounts.get(word) ?? 0) < 3), ...(name.match(/\b[A-Z]{2,}\b/g) ?? []).flatMap(tokens)]));
+  .flatMap(name => [...tokens(name).filter(word => word.length >= 4 && (catalogCounts.get(word) ?? 0) < 3), ...(name === name.toUpperCase() ? [] : (name.match(/\b[A-Z]{2,}\b/g) ?? []).filter(word => !/^[IVXL]+$/.test(word)).flatMap(tokens))])
+  .filter(word => !GENERIC.has(word)));
 const number = (value: string) => value.replace(/[.,]/g, "[.,]").replace(/\s+/g, "\\s*");
 // Each number of a pair needs its own match: the first stands alone or opens the same pair.
 const strengths = (dose: string) => {

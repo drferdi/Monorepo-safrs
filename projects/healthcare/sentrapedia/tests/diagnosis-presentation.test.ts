@@ -287,10 +287,25 @@ describe("therapy verification presentation", () => {
     const gated = gateTherapy(therapy, dosed, pneumonia);
     const now = miraMessage({ ...analysis, result: { ...result, therapy: gated.therapy! }, grounding: dosed, evidenceGate: gated.report });
     expect(diagnosisContent(old)).toBe(now.content);
+    expect(diagnosisContent(now)).toBe(now.content);
+    const state = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [old] }] };
+    const edited = workspaceReducer(state, { type: "message.edit", encounterId: state.encounters[0].id, messageId: old.id, content: diagnosisContent(old) + "\nCatatan dokter" }).encounters[0].messages[0];
+    expect(diagnosisContent({ ...edited, content: edited.originalContent! })).toBe(now.content);
+    expect(diagnosisContent({ ...edited, content: edited.revisions![0].content })).toBe(now.content);
     expect(diagnosisContent(old)).not.toMatch(/1x750mg|3x1000mg/);
     const unbundled = diagnosisContent(miraMessage({ ...analysis, result }));
     expect(section(unbundled, "Terapi Farmakologi")).toContain("Terapi tidak ditampilkan: Referensi TheOracle untuk terapi tidak tersedia");
     expect(unbundled).not.toMatch(/3x500mg|1x750mg|3x1000mg/);
+  });
+  it("re-checks a dose that an earlier gate verified from a passage about another disease", () => {
+    const versicolor = { icd10: "B36.0", label: "Pityriasis versicolor" };
+    const azoles = { ...grounding, evidence: [{ ...grounding.evidence[0], text: "Triazol: flukonazol oral 50 mg per hari selama 14-30 hari; itrakonazol 100-200 mg.", source: { ...grounding.evidence[0].source, title: "dermatovenereologi-perdoski-2021.pdf" } }] };
+    const therapy = { forDiagnosis: versicolor, regimen: [{ drug: "Flukonazol", dose: "1x50mg", route: "PO", duration: "14-30 hari", note: "" }], interactions: [], contraindications: [] };
+    const result = { ...analysis.result, differential: { ...analysis.result.differential, likely: [{ ...versicolor, confidenceTier: "low" as const }] }, therapy };
+    const earlier = { forDiagnosis: versicolor, therapyRemoved: false, reason: "", drugs: [{ drug: "Flukonazol", dose: "1x50mg", status: "verified" as const, evidenceIds: ["E1"] }] };
+    const content = diagnosisContent(miraMessage({ ...analysis, result, grounding: azoles, evidenceGate: earlier }));
+    expect(content).not.toContain("1x50mg");
+    expect(content).toContain("- Flukonazol: dosis tidak ditemukan di TheOracle, cek pedoman");
   });
   it("keeps the therapy grounding in the saved source and its links", () => {
     const therapyGrounding = { ...grounding, evidence: [{ ...grounding.evidence[0], evidenceId: "T1", text: "Terapi pneumonia." }] };
