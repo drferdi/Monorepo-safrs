@@ -1,5 +1,12 @@
 # Sentrapedia handoff
 
+## Dependency security pass — 2026-10-11 Asia/Jakarta
+
+- MIRA: `starlette` 0.41.3 had 14 known advisories (pip-audit). Pins bumped in `mira/requirements.lock`: fastapi 0.115.4 -> 0.141.1, starlette 0.41.3 -> 1.7.0, new `annotated-doc==0.0.5` (required by FastAPI >= 0.120). FastAPI 0.142+ was skipped because it adds `opentelemetry-api`.
+- Verified: pip-audit "No known vulnerabilities found", `pip check` clean, test:mira 157 passed + 1 skipped (one test-client deprecation warning from Starlette), test:system 7/7, build 0, deploy:dry-run PASS. Docker image not rebuilt for this change.
+- npm: `npm audit --omit=dev` = 0. The 5 high findings are one dev-only chain (`eslint-config-next` -> `@next/eslint-plugin-next` -> `fast-glob` -> `micromatch` -> `braces` 3.0.3, GHSA-vfj7-8cjw-p6xm). No patched `braces` release exists (latest is 3.0.3); npm's suggested fix is a downgrade to eslint-config-next 14, which is not acceptable. Left as is; it only runs during lint, not in the shipped app.
+- Not checked: the GitHub Dependabot alert page itself (`gh` is not authenticated and the browser pane is not signed in to GitHub).
+
 ## Vera (Dify) widget redesign — 2026-10-11 Asia/Jakarta
 
 - Dify moved out of the sidebar into a floating `VeraWidget` (`src/components/vera-widget.tsx`, rendered in `src/app/layout.tsx`); `/dify` stays as the full-screen view.
