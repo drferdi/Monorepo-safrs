@@ -31,6 +31,23 @@ Cost note: `result.meta.costUsd` summed to $0.6009 for targeted (diagnosis step 
 
 Offline retrieval numbers from Task 2 (dose-bearing chunk from a gold doc or naming the gold disease reaches the model, 61 queries): 0.508 (before) -> 0.754 (after the second query) -> 0.885 (targeted retrieval, 54/61).
 
+### Re-scored with the final gate (offline replay, no model calls)
+
+The table above uses the gate at `c67639e6`. The final review then tightened the gate:
+- strengths in note, duration, route, the drug name and safety items are checked;
+- both bounds of a range are checked;
+- mEq, mmol, "juta IU" and μg are recognised.
+
+The gate was replayed over the same 122 model replies stored in the MIRA audit log (`.runtime/mira-deepseek/audit/audit-2026-10-11.jsonl`, with the grounding bundle sent to each call). The replay with the old gate reproduces the committed counts exactly (36/20/9 and 41/28/2), so it is a faithful re-run.
+
+| Gate counts (drugs) | Legacy | Targeted |
+|---|---|---|
+| Verified, old gate → final gate | 36 → 35 | 41 → 39 |
+| Dose removed | 20 → 21 | 28 → 30 |
+| Drug removed | 9 → 9 | 2 → 2 |
+
+Headline with the shipped gate: verified doses **35 → 39** (legacy → targeted), drug removals 9 → 2. Latency, ICD-10 and cost are unchanged; the gate takes about 1 ms.
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.

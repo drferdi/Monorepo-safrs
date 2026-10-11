@@ -18,7 +18,17 @@
   - Percent concentrations and tablet counts are not strengths.
   - The per-kg check runs over dose+name, which fails safe but can under-verify.
   - A field with an unverified strength is blanked whole (a route such as "PO 250 mg sirup" disappears).
-  - Minors M1, M3, M5–M10 are listed in `.superpowers/sdd/2026-10-11-theoracle-clinical-evidence-pipeline/final-review.md` (worktree root).
+  - Stripping cuts a combination name to its first drug ("Amoxicillin 500 mg/clavulanate 125 mg" → "Amoxicillin"), and "3x1/2 g" → "3x". Both fail safe.
+  - Review minors, not fixed:
+    - **M1:** the client accepts therapy without an `evidenceGate`.
+    - **M3:** the gate wording is misleading on an ICD mismatch, a missing bundle, or an empty regimen ("no drug needed" reads as "not verified").
+    - **M5:** the eval's "ICD-10 valid" checks existence only, not name-to-label match.
+    - **M6:** the eval JSON `costUsd` is diagnosis-only (`auditCostUsd` has the total).
+    - **M7:** the complaint dose passage skips `MAX_PER_DOCUMENT`.
+    - **M8:** the `DOSE` test reads the full chunk while the bundle carries 2,400 chars.
+    - **M9:** `/v1/therapy/step` ignores `MIRA_FAST_THERAPY`.
+    - **M10:** `mira_tx` has no own time limit; the worst case is about 70 s against the 65 s overall timer.
+- Eval re-scored with the final gate by offline replay of the 122 audited replies, no model calls. The old gate reproduces the committed counts exactly. Final gate: verified 35 → 39 (legacy → targeted), dose removed 21 → 30, drug removed 9 → 2. See `PIPELINE-REPORT.md`, "Re-scored with the final gate".
 - For Gaffer:
   - Drafts saved before the gate still show their original model doses (the spec says render as today).
   - `MIRA_TARGETED_THERAPY` default stays OFF.
