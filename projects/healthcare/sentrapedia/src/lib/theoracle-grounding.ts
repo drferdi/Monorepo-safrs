@@ -102,6 +102,18 @@ function freezeBundle(bundle: TheOracleGroundingBundle): TheOracleGroundingBundl
   return Object.freeze(bundle);
 }
 
+// Embeds the text locally and ranks every chunk by cosine similarity to it.
+async function rankChunks({ manifest, chunks, vectors, embed }: LoadedIndex, text: string): Promise<{ ranked: number[]; scores: Float32Array }> {
+  let q: Float32Array;
+  try { q = await embed(manifest.prefixes.query + text); } catch { throw unavailable("Embedding lokal TheOracle gagal. Analisis tidak dijalankan."); }
+  const dims = manifest.model.dims;
+  const scores = new Float32Array(chunks.length);
+  for (let i = 0; i < chunks.length; i++) { let s = 0; const offset = i * dims; for (let k = 0; k < dims; k++) s += q[k] * vectors[offset + k]; scores[i] = s; }
+  return { ranked: [...scores.keys()].sort((a, b) => scores[b] - scores[a]), scores };
+}
+
+const evidenceItem = (chunk: Chunk, score: number): Omit<TheOracleGroundingEvidence, "retrievalRank"> => ({ evidenceId: chunk.id, text: evidenceText(chunk.text), similarity: Math.round(score * 10_000) / 10_000, source: { title: chunk.title, docSource: chunk.docSource, origin: chunk.origin, textSha256: chunk.textSha256 } });
+
 export async function retrieveTheOracleGrounding(caseData: CaseState, options: RetrieveOptions = {}): Promise<TheOracleGroundingBundle> {
   const query = queryText(caseData);
   if (!/[\p{L}\p{N}]/u.test(query)) throw new TheOracleGroundingError("THEORACLE_QUERY_EMPTY", "Keluhan belum memiliki istilah klinis yang dapat dicari di TheOracle.");
@@ -109,20 +121,17 @@ export async function retrieveTheOracleGrounding(caseData: CaseState, options: R
   const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
   const limit = Math.max(1, Math.min(Math.trunc(options.limit ?? MAX_EVIDENCE), MAX_EVIDENCE));
   if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
-  const { manifest, chunks, vectors, embed } = await loaded.get(indexDir)!;
-  let q: Float32Array;
-  try { q = await embed(manifest.prefixes.query + query); } catch { throw unavailable("Embedding lokal TheOracle gagal. Analisis tidak dijalankan."); }
+  const index = await loaded.get(indexDir)!;
+  const { manifest, chunks } = index;
   const dims = manifest.model.dims;
-  const scores = new Float32Array(chunks.length);
-  for (let i = 0; i < chunks.length; i++) { let s = 0; const offset = i * dims; for (let k = 0; k < dims; k++) s += q[k] * vectors[offset + k]; scores[i] = s; }
-  const ranked = [...scores.keys()].sort((a, b) => scores[b] - scores[a]);
+  const { ranked, scores } = await rankChunks(index, query);
   const selected: Omit<TheOracleGroundingEvidence, "retrievalRank">[] = [];
   const perDocument = new Map<string, number>();
   for (const i of ranked) {
     if (selected.length >= limit) break;
     const chunk = chunks[i];
     if ((perDocument.get(chunk.title) ?? 0) >= MAX_PER_DOCUMENT) continue;
-    const item = { evidenceId: chunk.id, text: evidenceText(chunk.text), similarity: Math.round(scores[i] * 10_000) / 10_000, source: { title: chunk.title, docSource: chunk.docSource, origin: chunk.origin, textSha256: chunk.textSha256 } };
+    const item = evidenceItem(chunk, scores[i]);
     if (!item.text || sourceTriggersMiraPrivacy(item)) continue;
     perDocument.set(chunk.title, (perDocument.get(chunk.title) ?? 0) + 1);
     selected.push(item);
@@ -132,15 +141,12 @@ export async function retrieveTheOracleGrounding(caseData: CaseState, options: R
   // Search the whole corpus again for treatment and add the best passage that states a dose, in place of the lowest match.
   const therapy: typeof selected = [];
   if (limit > 1) {
-    let t: Float32Array;
-    try { t = await embed(manifest.prefixes.query + query + THERAPY_QUERY); } catch { throw unavailable("Embedding lokal TheOracle gagal. Analisis tidak dijalankan."); }
-    const therapyScores = new Float32Array(chunks.length);
-    for (let i = 0; i < chunks.length; i++) { let s = 0; const offset = i * dims; for (let k = 0; k < dims; k++) s += t[k] * vectors[offset + k]; therapyScores[i] = s; }
-    for (const i of [...therapyScores.keys()].sort((a, b) => therapyScores[b] - therapyScores[a])) {
+    const { ranked: therapyRanked, scores: therapyScores } = await rankChunks(index, query + THERAPY_QUERY);
+    for (const i of therapyRanked) {
       if (therapy.length >= THERAPY_EVIDENCE) break;
       const chunk = chunks[i];
       if (!DOSE.test(chunk.text) || selected.some(item => item.evidenceId === chunk.id)) continue;
-      const item = { evidenceId: chunk.id, text: evidenceText(chunk.text), similarity: Math.round(therapyScores[i] * 10_000) / 10_000, source: { title: chunk.title, docSource: chunk.docSource, origin: chunk.origin, textSha256: chunk.textSha256 } };
+      const item = evidenceItem(chunk, therapyScores[i]);
       if (!item.text || sourceTriggersMiraPrivacy(item)) continue;
       therapy.push(item);
     }
@@ -180,13 +186,9 @@ export async function retrieveTheOracleTherapyGrounding(caseData: CaseState, dia
   const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");
   const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
   if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
-  const { manifest, chunks, vectors, embed } = await loaded.get(indexDir)!;
-  let q: Float32Array;
-  try { q = await embed(manifest.prefixes.query + query); } catch { throw unavailable("Embedding lokal TheOracle gagal. Analisis tidak dijalankan."); }
-  const dims = manifest.model.dims;
-  const scores = new Float32Array(chunks.length);
-  for (let i = 0; i < chunks.length; i++) { let s = 0; const offset = i * dims; for (let k = 0; k < dims; k++) s += q[k] * vectors[offset + k]; scores[i] = s; }
-  const ranked = [...scores.keys()].sort((a, b) => scores[b] - scores[a]);
+  const index = await loaded.get(indexDir)!;
+  const { manifest, chunks } = index;
+  const { ranked, scores } = await rankChunks(index, query);
   const selected: Omit<TheOracleGroundingEvidence, "retrievalRank">[] = [];
   const perDocument = new Map<string, number>();
   for (const wantDose of [true, false]) {
@@ -194,7 +196,7 @@ export async function retrieveTheOracleTherapyGrounding(caseData: CaseState, dia
       if (selected.length >= (wantDose ? THERAPY_DOSE_EVIDENCE : MAX_EVIDENCE)) break;
       const chunk = chunks[i];
       if (DOSE.test(chunk.text) !== wantDose || (perDocument.get(chunk.title) ?? 0) >= MAX_PER_DOCUMENT) continue;
-      const item = { evidenceId: chunk.id, text: evidenceText(chunk.text), similarity: Math.round(scores[i] * 10_000) / 10_000, source: { title: chunk.title, docSource: chunk.docSource, origin: chunk.origin, textSha256: chunk.textSha256 } };
+      const item = evidenceItem(chunk, scores[i]);
       if (!item.text || sourceTriggersMiraPrivacy(item)) continue;
       perDocument.set(chunk.title, (perDocument.get(chunk.title) ?? 0) + 1);
       selected.push(item);
@@ -203,7 +205,7 @@ export async function retrieveTheOracleTherapyGrounding(caseData: CaseState, dia
   if (!selected.length) throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "TheOracle tidak menemukan referensi terapi untuk diagnosis ini.");
   return freezeBundle({
     version: THEORACLE_GROUNDING_CAPABILITY,
-    corpus: { name: "TheOracle", indexSha256: manifest.indexSha256, embeddingModel: { id: manifest.model.id, revision: manifest.model.revision, dtype: manifest.model.dtype, dims }, retrievedAt: (options.now ?? (() => new Date()))().toISOString(), reviewProvenance: REVIEW_PROVENANCE },
+    corpus: { name: "TheOracle", indexSha256: manifest.indexSha256, embeddingModel: { id: manifest.model.id, revision: manifest.model.revision, dtype: manifest.model.dtype, dims: manifest.model.dims }, retrievedAt: (options.now ?? (() => new Date()))().toISOString(), reviewProvenance: REVIEW_PROVENANCE },
     queryDigest: sha256(query),
     evidence: selected.map((item, index) => ({ ...item, retrievalRank: index + 1 })),
   });

@@ -27,16 +27,16 @@ const fixtureChunks = [
   chunk("D2", "PPK Fasyankes Primer.pdf", "Terapi 500 mg, hubungi 081234567890.", [0, 0, 1]),
 ];
 
-function fixtureIndex(tamper = false): string {
+function fixtureIndex(tamper = false, items = fixtureChunks): string {
   const directory = mkdtempSync(path.join(tmpdir(), "sentrapedia-theoracle-"));
   scratch.push(directory);
-  const chunks = fixtureChunks.map(item => JSON.stringify({ id: item.id, title: item.title, docSource: item.docSource, origin: item.origin, text: item.text, textSha256: item.textSha256 })).join("\n") + "\n";
-  const vectors = Buffer.from(Float32Array.from(fixtureChunks.flatMap(item => { const norm = Math.hypot(...item.vector); return item.vector.map(value => value / norm); })).buffer);
+  const chunks = items.map(item => JSON.stringify({ id: item.id, title: item.title, docSource: item.docSource, origin: item.origin, text: item.text, textSha256: item.textSha256 })).join("\n") + "\n";
+  const vectors = Buffer.from(Float32Array.from(items.flatMap(item => { const norm = Math.hypot(...item.vector); return item.vector.map(value => value / norm); })).buffer);
   const manifest: TheOracleManifest = {
     model: { id: "fixture/model", revision: "f".repeat(40), dtype: "fp32", dims: 3, files: {} },
     prefixes: { query: "task: search result | query: ", document: "title: none | text: " },
     maxTokens: 2048,
-    chunks: { count: fixtureChunks.length, sha256: sha256(chunks) },
+    chunks: { count: items.length, sha256: sha256(chunks) },
     vectors: { sha256: sha256(vectors) },
     indexSha256: "d".repeat(64),
   };
@@ -94,6 +94,21 @@ describe("TheOracle vector grounding", () => {
     expect(validTheOracleGrounding(bundle)).toBe(true);
     expect(calls).toEqual(["task: search result | query: Pneumonia (J18.9)\npenatalaksanaan terapi dosis obat\n30 tahun, perempuan, hamil\nObat rutin: warfarin"]);
     expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["D1", "A2", "A1", "B1"]);
+  });
+
+  it("starts the therapy query with the bare diagnosis label when there is no ICD-10 code", async () => {
+    const calls: string[] = [];
+    const embedder = async () => async (text: string) => { calls.push(text); return Float32Array.from([0, 0, 1]); };
+    await retrieveTheOracleTherapyGrounding(caseFor("batuk"), { icd10: "", label: "Pneumonia" }, { indexDir: fixtureIndex(), embedder });
+    expect(calls[0].split("\n")[0]).toBe("task: search result | query: Pneumonia");
+  });
+
+  it("reports no therapy match when every passage is filtered out", async () => {
+    const onlyContact = [chunk("C1", "Kontak.md", "Hubungi 081234567890 untuk konsultasi.", [0, 0, 1])];
+    const embedder = async () => async () => Float32Array.from([0, 0, 1]);
+    const error: unknown = await retrieveTheOracleTherapyGrounding(caseFor("batuk"), { icd10: "J18.9", label: "Pneumonia" }, { indexDir: fixtureIndex(false, onlyContact), embedder }).catch((caught: unknown) => caught);
+    expect(error).toBeInstanceOf(TheOracleGroundingError);
+    expect(error).toMatchObject({ code: "THEORACLE_NO_MATCH" });
   });
 
   it("clamps the evidence limit", async () => {
