@@ -380,3 +380,17 @@ describe("unstrength leaves a clean drug name", () => {
       .toEqual(["Vit. B12", "Vitamin D", "Amoksisilin per oral", "Antihistamin H1 generasi kedua (non-sedatif)", "Metronidazol (oral)", "Metronidazol — 3x sehari"]);
   });
 });
+
+describe("unstrength never leaves or creates a strength", () => {
+  // Review seeds: removing a bracket, a frequency or a wider span must not join a leftover number to a leftover unit.
+  const seeds = ["Prednison 1-2 (maks 60 mg) mg/kg", "Amoksisilin 3 (500 mg) kapsul", "Obat 1.200.000 ( 2 ml ) IU", "Obat 2 (maks) tablet", "Parasetamol 1 500 mg x 2 tablet", "Obat 2 500 mg ×3 puff", "Parasetamol 2 10 mg x 3 mg", "Obat 2 D5% tablet", "Obat 3 3x500 mg tablet", "Parasetamol 2 500 mg per 5 ml tablet", "Obat 2 500 mg berat badan tablet", "Obat 2 [500 mg] tablet"];
+  it("leaves no number followed by a dose unit", () => {
+    for (const name of seeds) expect(unstrength(name), name).not.toMatch(/\d\s*(?:mg|ml|iu|g|%|tablet|kapsul|puff)\b|\d\s*%/i);
+  });
+  it("keeps a vitamin letter and strips only D before a percent", () => {
+    expect(["Vitamin E400 IU", "Vitamin C500mg", "Dekstrosa D10%"].map(unstrength)).toEqual(["Vitamin E", "Vitamin C", "Dekstrosa"]);
+  });
+  it("tidies the remaining cosmetic leftovers", () => {
+    expect(["Parasetamol 500 mg x 3 hari", "Isoniazid (maks 300 mg/hari, 5 mg/kg)", "Zinc (s/d 20 mg)", "Obat 500 mg x 3.5 mg"].map(unstrength)).toEqual(["Parasetamol", "Isoniazid", "Zinc", "Obat"]);
+  });
+});

@@ -70,13 +70,18 @@ const CLAUSE = /((?:[;\n]|(?<!\d),|,(?!\d)|\.(?=\s*(?:[A-Z]|$)))\s*)/;
 const CONDITION = /^(?:kecuali|bila|jika|apabila|hanya)\b/i;
 const PARTIAL = " (sebagian belum terverifikasi)";
 // Strips every strength with its per-unit tails; "Amoxicillin 500 mg/clavulanate 125 mg" -> "Amoxicillin/clavulanate".
-// A frequency or a single letter glued to a strength goes with it ("3x500 mg", "500mg x 3", "D5%"), and a bracket
-// left empty or holding only a limit word goes too ("Isoniazid (maks 300 mg)" -> "Isoniazid").
-const GLUED = String.raw`(?:\d+\s*[x×]\s*|(?<![a-z])[a-wyz](?=\d))?`;
-export const unstrength = (text: string) => text.replace(new RegExp(GLUED + STRENGTH.source + PER + String.raw`(?:\s*[x×]\s*\d+\b)?`, "gi"), "")
+// A frequency glued to a strength goes with it ("3x500 mg", "500mg x 3", "x 3 hari"), so does the D of "D5%", and a
+// bracket left empty or holding only a limit word goes too ("Isoniazid (maks 300 mg)" -> "Isoniazid").
+const GLUED = String.raw`(?:\d+\s*[x×]\s*|(?<![a-z])[x×]\s*(?=\d)|(?<![a-z])d(?=\d+(?:[.,]\d+)?\s*%))?`;
+const FREQUENCY = String.raw`(?:\s*[x×]\s*\d+(?:\s*(?:hari|kali)\b|(?![\d.,]*\s*[a-zµμ%])))?`;
+const STRIP = new RegExp(GLUED + STRENGTH.source + PER + FREQUENCY, "gi");
+const tidy = (text: string) => text.replace(STRIP, "")
   .replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ")
-  .replace(/\(\s*(?:(?:max|maks|maksimal|maximum|hingga|sampai|s\.?d)\.?\s*)?\)/gi, "").replace(/\(\s+/g, "(").replace(/\s+([,;:)])/g, "$1").replace(/\s+-(?=\p{L})/gu, "-")
+  .replace(/[([]\s*(?:(?:max|maks|maksimal|maximum|hingga|sampai|s\.?d\.?|s\/d)(?![a-z]))?[\s,;:./]*[)\]]/gi, "").replace(/\(\s+/g, "(").replace(/\s+([,;:)])/g, "$1").replace(/\s+-(?=\p{L})/gu, "-")
   .replace(/\s+/g, " ").replace(/^[\s,;:\-–—/]+|[\s,;:\-–—/]+$/g, "");
+// Repeats until nothing changes: a removal can bring a leftover number next to a leftover unit ("3 (500 mg) kapsul"),
+// and STRIP matches every strength, so the fixed point holds none.
+export const unstrength = (text: string): string => { const next = tidy(text); return next === text ? text : unstrength(next); };
 
 export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBundle | undefined, diagnosis: { icd10: string; label: string } | undefined): { therapy: MiraTherapy | undefined; report: EvidenceGateReport } {
   const forDiagnosis = therapy.forDiagnosis;
