@@ -12,7 +12,11 @@ import {
   ThumbsUp,
   ThumbsDown,
   AlertCircle,
+  ArrowUp,
+  Plus,
 } from "lucide-react";
+import Image from "next/image";
+import officialLogo from "../assets/sentra-official-logo.png";
 import { sendDifyChatMessage, sendDifyMessageFeedback } from "../lib/dify/client";
 import type { DifyRetrieverResource } from "../lib/dify/types";
 
@@ -55,6 +59,7 @@ export function VeraWidget() {
   const [expandedSourceId, setExpandedSourceId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [greeting, setGreeting] = useState("Selamat datang");
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -218,8 +223,14 @@ export function VeraWidget() {
   };
 
   const typing = messages.some((m) => m.isStreaming && !m.text);
+  const fresh = messages.length === 1;
   const suggesting = input.startsWith("/");
   const suggestions = QUICK_PROMPTS.filter((p) => p.toLowerCase().includes(input.slice(1).trim().toLowerCase()));
+
+  const toggleOpen = () => {
+    if (!isOpen) setGreeting(greetingFor(new Date().getHours()));
+    setIsOpen(!isOpen);
+  };
 
   const copyAnswer = async (msg: ChatMessage) => {
     try {
@@ -236,42 +247,40 @@ export function VeraWidget() {
       {isOpen && (
         <div role="dialog" aria-label="Chat Vera" className="vera-widget-panel">
           <header className="vera-panel-header">
-            <span className="vera-avatar" aria-hidden="true">
-              <VeraMark size={11} />
-            </span>
-            <strong className="vera-title">Vera</strong>
             <button type="button" className="vera-icon-button" onClick={handleResetChat} aria-label="Mulai ulang percakapan" title="Mulai ulang percakapan">
-              <RotateCcw size={16} />
+              <RotateCcw size={15} />
             </button>
-            <a className="vera-icon-button" href="/dify" aria-label="Buka layar penuh" title="Buka layar penuh">
-              <Maximize2 size={16} />
-            </a>
-            <button type="button" className="vera-icon-button" onClick={() => setIsOpen(false)} aria-label="Tutup chat Vera" title="Tutup">
-              <X size={18} />
-            </button>
+            <span className="vera-plan">Vera · <b>TheOracle</b></span>
+            <span className="vera-header-actions">
+              <a className="vera-icon-button" href="/dify" aria-label="Buka layar penuh" title="Buka layar penuh">
+                <Maximize2 size={15} />
+              </a>
+              <button type="button" className="vera-icon-button" onClick={() => setIsOpen(false)} aria-label="Tutup chat Vera" title="Tutup">
+                <X size={17} />
+              </button>
+            </span>
           </header>
 
-          <div className="vera-panel-body">
-            {messages.filter((m) => !(m.isStreaming && !m.text)).map((msg) =>
-              msg.sender === "user" ? (
-                <p key={msg.id} className="vera-question">{msg.text}</p>
-              ) : (
-                <div key={msg.id} className="vera-answer">
-                  <div className="vera-bubble">
-                    {msg.text}
-                    {msg.isStreaming && <span className="vera-caret" aria-hidden="true" />}
-                  </div>
-                  {msg.id !== "vera-intro" && !msg.isStreaming && (
-                    <div className="vera-meta">
-                      {msg.resources && msg.resources.length > 0 ? (
-                        <button type="button" className="vera-sources-toggle" onClick={() => setExpandedSourceId(expandedSourceId === msg.id ? null : msg.id)} aria-expanded={expandedSourceId === msg.id}>
-                          <span className="vera-count">{msg.resources.length}</span> Sumber
-                          <ChevronDown size={13} data-open={expandedSourceId === msg.id} />
-                        </button>
-                      ) : (
-                        <span />
-                      )}
-                      <span className="vera-actions">
+          <div className="vera-panel-body" data-fresh={fresh}>
+            {fresh ? (
+              <div className="vera-hero">
+                <span className="vera-hero-logo" aria-hidden="true">
+                  <Image src={officialLogo} alt="" width={48} height={36} unoptimized />
+                </span>
+                <h2>{greeting}, Dokter</h2>
+              </div>
+            ) : (
+              messages.filter((m) => m.id !== INITIAL_MESSAGE.id && !(m.isStreaming && !m.text)).map((msg) =>
+                msg.sender === "user" ? (
+                  <p key={msg.id} className="vera-question">{msg.text}</p>
+                ) : (
+                  <div key={msg.id} className="vera-answer">
+                    <div className="vera-reply">
+                      {msg.text}
+                      {msg.isStreaming && <span className="vera-caret" aria-hidden="true" />}
+                    </div>
+                    {!msg.isStreaming && (
+                      <div className="vera-meta">
                         <button type="button" onClick={() => copyAnswer(msg)} aria-label="Salin jawaban" title="Salin">
                           {copiedId === msg.id ? <Check size={14} /> : <Copy size={14} />}
                         </button>
@@ -281,29 +290,33 @@ export function VeraWidget() {
                         <button type="button" onClick={() => handleFeedback(msg.id, "dislike")} data-active={msg.feedback === "dislike"} aria-label="Kurang akurat" title="Kurang akurat">
                           <ThumbsDown size={14} />
                         </button>
-                      </span>
-                    </div>
-                  )}
-                  {msg.resources && expandedSourceId === msg.id && (
-                    <ul className="vera-sources">
-                      {msg.resources.map((res, i) => (
-                        <li key={i}>
-                          <strong>{res.document_name || res.dataset_name || "Dokumen resmi"}</strong>
-                          {res.score ? <em>{(res.score * 100).toFixed(0)}% relevan</em> : null}
-                          {res.content && <p>{res.content}</p>}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                        {msg.resources && msg.resources.length > 0 && (
+                          <button type="button" className="vera-sources-toggle" onClick={() => setExpandedSourceId(expandedSourceId === msg.id ? null : msg.id)} aria-expanded={expandedSourceId === msg.id}>
+                            <span className="vera-count">{msg.resources.length}</span> Sumber
+                            <ChevronDown size={13} data-open={expandedSourceId === msg.id} />
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    {msg.resources && expandedSourceId === msg.id && (
+                      <ul className="vera-sources">
+                        {msg.resources.map((res, i) => (
+                          <li key={i}>
+                            <strong>{res.document_name || res.dataset_name || "Dokumen resmi"}</strong>
+                            {res.score ? <em>{(res.score * 100).toFixed(0)}% relevan</em> : null}
+                            {res.content && <p>{res.content}</p>}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )
               )
             )}
 
             {typing && (
-              <div className="vera-answer">
-                <div className="vera-bubble vera-typing" role="status" aria-label="Vera sedang mengetik">
-                  <i /><i /><i />
-                </div>
+              <div className="vera-typing" role="status" aria-label="Vera sedang mengetik">
+                <i /><i /><i />
               </div>
             )}
 
@@ -336,38 +349,40 @@ export function VeraWidget() {
                 )) : <li className="vera-suggestions-empty">Tidak ada saran yang cocok</li>}
               </ul>
             )}
-            <label className="vera-input-wrap">
+            <div className="vera-composer">
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Escape" && suggesting) { e.stopPropagation(); setInput(""); } }}
+                placeholder="Ada yang bisa Vera bantu?"
                 aria-label="Pesan untuk Vera"
                 disabled={loading}
               />
-              {!input && (
-                <span className="vera-hint" aria-hidden="true">
-                  Ketik <kbd>/</kbd> untuk saran
-                </span>
-              )}
-            </label>
-            {loading ? (
-              <button type="button" onClick={handleStopGenerating} className="vera-send-btn">
-                <Square size={11} /> Stop
-              </button>
-            ) : (
-              <button type="submit" disabled={!input.trim() || (suggesting && !suggestions.length)} className="vera-send-btn">
-                Tanya
-              </button>
-            )}
+              <div className="vera-composer-row">
+                <button type="button" className="vera-round-btn" onClick={() => { setInput("/"); inputRef.current?.focus(); }} aria-label="Tampilkan saran pertanyaan" title="Saran pertanyaan" disabled={loading}>
+                  <Plus size={15} />
+                </button>
+                <span className="vera-hint">Ketik <kbd>/</kbd> untuk saran</span>
+                {loading ? (
+                  <button type="button" onClick={handleStopGenerating} className="vera-send-btn" aria-label="Hentikan jawaban" title="Stop">
+                    <Square size={11} />
+                  </button>
+                ) : (
+                  <button type="submit" disabled={!input.trim() || (suggesting && !suggestions.length)} className="vera-send-btn" aria-label="Kirim pertanyaan" title="Kirim">
+                    <ArrowUp size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
           </form>
         </div>
       )}
 
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleOpen}
         aria-label={isOpen ? "Tutup chat Vera" : "Buka chat Vera"}
         className="vera-widget-trigger"
         data-open={isOpen}
@@ -379,6 +394,13 @@ export function VeraWidget() {
       </button>
     </div>
   );
+}
+
+function greetingFor(hour: number): string {
+  if (hour < 11) return "Selamat pagi";
+  if (hour < 15) return "Selamat siang";
+  if (hour < 18) return "Selamat sore";
+  return "Selamat malam";
 }
 
 function VeraMark({ size }: { size: number }) {
