@@ -1,5 +1,22 @@
 # Sentrapedia handoff
 
+## MIRA client gates therapy that arrives without a gate report (M1) - 2026-10-12 Asia/Jakarta
+
+- Gaffer asked for M1 and approved the bounded design with one Opus review.
+- `f0341f0f` (R2), `src/lib/mira/client.ts`:
+  - When `result.therapy` arrives without `evidenceGate`, the client runs `gateTherapy` itself, against `therapyGrounding` (or the diagnosis `grounding`) and `likely[0]`, as the gateway does. This can only happen with an older or faulty server.
+  - The diagnosis is kept. Unverified doses are blanked, and the therapy is dropped when no drug is kept.
+  - The report is stored, so `content` and `sourceText` no longer hold unchecked doses.
+  - A reply with a valid report is used as sent.
+- Opus review: "Yes", no Critical or Important.
+  - Every view (message card, document studio, history, export) already renders through `diagnosisContent`, which gates again.
+  - Its test gaps are covered by a follow-up test: fallback to the diagnosis bundle, and therapy written for another diagnosis.
+- Verified: RED first; `tests/mira-client.test.ts` 10/10, `npm test` 266/266 at commit time, `tsc` 0, `eslint` 0.
+- Known limits:
+  - The client trusts any well-formed `evidenceGate`. A forged report marking doses verified is still stored in `content`/`sourceText`, but `diagnosisContent` gates the regimen again before showing it.
+  - A stale "verified" citation line for a drug no longer in the regimen predates this change.
+- Not pushed.
+
 ## Evidence gate: Unicode minus and every range separator - 2026-10-12 Asia/Jakarta
 
 - Gaffer asked for the Unicode minus fix and approved the bounded design with one Opus review.

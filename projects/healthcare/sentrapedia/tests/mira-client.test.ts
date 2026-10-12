@@ -72,6 +72,13 @@ describe("therapy that arrives without a gate report", () => {
     expect(analysis.result.therapy).toBeUndefined();
     expect(analysis.evidenceGate?.therapyRemoved).toBe(true);
   });
+  it("falls back to the diagnosis bundle, and drops therapy written for another diagnosis", async () => {
+    const supported = await run({ ...withTherapy(), grounding: tx });
+    expect(supported.result.therapy?.regimen[0]).toMatchObject({ drug: "Paracetamol", dose: "" });
+    const other = await run(withTherapy({ therapyGrounding: tx, result: { ...withTherapy().result, therapy: { ...therapy, forDiagnosis: { icd10: "J18.9", label: "Pneumonia" } } } }));
+    expect(other.result.therapy).toBeUndefined();
+    expect(other.evidenceGate?.therapyRemoved).toBe(true);
+  });
   it("is left as the server sent it when a gate report is present", async () => {
     const evidenceGate = { forDiagnosis: therapy.forDiagnosis, therapyRemoved: false, reason: "", drugs: [{ drug: "Paracetamol", dose: "3x500mg", status: "verified", evidenceIds: ["P001-001"] }] };
     const analysis = await run(withTherapy({ therapyGrounding: tx, evidenceGate }));
