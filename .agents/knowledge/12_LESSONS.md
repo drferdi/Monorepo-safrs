@@ -21,6 +21,7 @@ Entry rules:
 - Never claim test/lint/build passes without running it — evidence before assertions (2026-08-11).
 - After adding/removing workspace packages, refresh the lockfile before `--frozen-lockfile`
   validation (2026-08-11).
+- In Claude Code's Bash tool on this machine, a quoted heredoc still turns `\\` into `\`, so Python escapes like `'\\n'` arrive as real newlines; put scripts with backslashes in a file and run that (2026-10-12, broke a generator edit and a TOML edit).
 
 ## Source of Truth
 
