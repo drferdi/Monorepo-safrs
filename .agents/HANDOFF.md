@@ -35,7 +35,8 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 - REVIEW: `TASK-20261012-CLAUDE-PATH-RULES-WT`, `TASK-20261012-MUST-DEMOTION`,
   `TASK-20261012-ROOT-HANDOFF-TAKEOVER` (this file; Gaffer approved taking it over from
-  `TASK-20261011-TOOLS-CLOSEOUT`), and Codex's `TASK-20261011-TOOLS-*` set. Move them to MERGED
+  `TASK-20261011-TOOLS-CLOSEOUT`), `TASK-20261012-CODEX-AGENTS-HYGIENE`,
+  `TASK-20261012-LESSON-HEREDOC`, and Codex's `TASK-20261011-TOOLS-*` set. Move them to MERGED
   once the integrity review accepts them.
 - OpenCode Jev hang: next try is inside the OpenCode TUI.
 
@@ -50,6 +51,8 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 ## Next actions
 
-- `.codex/agents` still say "Chief", two agents share the name `security-reviewer`, and
-  `01-context-management-agent.toml` still lists `03_ARCHITECTURE.md` as required reading.
 - Root Biome ignores the catalog file that Prompt's relocation touched; resolve that exclusion.
+- `.codex/agents` (2026-10-12, `TASK-20261012-CODEX-AGENTS-HYGIENE`): "Chief" is now "Gaffer",
+  `09-security-reviewer.toml` is named `09-security-reviewer` (the documented `security-reviewer`
+  stays), and agent 01 points at the AGENTS.md MUST list instead of a stale copy. Not verified
+  inside Codex. `09-security-reviewer` says read-only but has no `sandbox_mode = "read-only"`.
