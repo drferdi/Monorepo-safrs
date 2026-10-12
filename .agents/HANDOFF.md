@@ -1,5 +1,13 @@
 # HANDOFF — Monorepo control plane
 
+## 2026-10-12 - MUST read order trimmed (Claude Code)
+
+- Gaffer approved moving MUST documents to path-scoped loading. Moved two: `docs/architecture/MONOREPO_PURPOSE.md` and `.agents/knowledge/03_ARCHITECTURE.md` are now SHOULD with the new scope `task:architecture`, and they load via `.claude/rules` when manifests or structure are touched (root config, `**/package.json`, lockfiles, `tsconfig*`, `packages/**`, `.safrs/**`, `tools/**`, `scripts/**`, `projects/**/AGENTS.md`). The MUST list is now 6 documents (READ_FIRST, HANDOFF, BOUNDARIES, OBJECTIVES, CONTEXT, LESSONS; read_order renumbered 1-6). About 1,300 fewer words at session start.
+- Kept MUST on purpose: HANDOFF and BOUNDARIES (collision and local-only rules), LESSONS (cross-cutting safety lines such as `.env` and `git add`), and three small documents. HANDOFF is now the largest session-start cost (about 1,700 words); trimming it is a separate hygiene task.
+- Non-Claude agents (Codex, Cursor, Droid) now see these two documents only through the `task:architecture` route in AGENTS.md. `.codex/agents/01-context-management-agent.toml` still lists `03_ARCHITECTURE.md` explicitly (unchanged).
+- Owner: `TASK-20261012-MUST-DEMOTION` (AGENTS.md); registry and rules remain under `TASK-20261012-CLAUDE-PATH-RULES-WT`. Verification: `check_routing`, `check_docs`, `check_task_ownership`, `generate_routing --check` PASS / exit 0; Biome exit 0. Live haiku test: the MONOREPO_PURPOSE rule appears after reading `turbo.json` and is absent in a no-read control.
+- Local `main` was fast-forwarded to the merge of this branch (`4a57dc09`) before this step, and again after it. Nothing pushed.
+
 ## 2026-10-12 - Path-scoped Claude rules (Claude Code)
 
 - Gaffer approved the takeover of this handoff: `TASK-20261011-TOOLS-CLOSEOUT` (REVIEW, work already committed) is SUPERSEDED; new owner `TASK-20261012-ROOT-HANDOFF-TAKEOVER`. Implementation owner: `TASK-20261012-CLAUDE-PATH-RULES-WT` (the first two claims of this task were bound to the main checkout by mistake and are SUPERSEDED).
