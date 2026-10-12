@@ -252,6 +252,7 @@ test("Proof 2: SOLO route works and achieves READY when verification passes", as
       evidenceManifest: validEvidence(),
     },
     providerOptions: {
+      acceptanceResult: { accepted: true },
       rootImplementProvider: async () => {
         rootImplementCalled = true;
         return {
@@ -351,6 +352,7 @@ test("Proof 4: Economy worker succeeds on eligible bounded work", async () => {
       evidenceManifest: validEvidence(),
     },
     providerOptions: {
+      acceptanceResult: { accepted: true },
       executeWorkerProvider: async ({ workerClass, task }) => {
         dispatchedWorkerClasses.push(workerClass);
         return {
@@ -410,6 +412,7 @@ test("Proof 5: Capability mismatch escalates Economy to Strong", async () => {
       evidenceManifest: validEvidence(),
     },
     providerOptions: {
+      acceptanceResult: { accepted: true },
       executeWorkerProvider: async ({ workerClass, task }) => {
         dispatchedWorkerClasses.push(workerClass);
         return {
