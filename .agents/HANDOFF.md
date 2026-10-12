@@ -50,10 +50,15 @@ This file is overwritten with current state, not appended; keep it short (it is 
   `@gmail.com` address in `tools/prompt/README.md` go into the export.
 - Log in to Grok and Antigravity once so their Jev use can be verified. Upload the corrected
   `audit-monorepo-agent` skill (`~/Downloads/audit-monorepo-agent.zip`) in claude.ai.
-- Audit actions (`verify-report/agent-audit-2026-10-10.txt` §7), status 2026-10-12: A-6, A-7, A-17
-  done; A-13 and A-19 partly done; A-2, A-3, A-4, A-5, A-11, A-14, A-15, A-16, A-18 still open and
-  not approved. A-1 (key rotation), A-2 (repo is public), A-3 (ruleset requires 0 reviews), and
-  A-18 (`gh` token invalid) are Gaffer's own jobs.
+- Audit actions (`verify-report/agent-audit-2026-10-10.txt` §7), status 2026-10-12: A-3, A-6, A-7,
+  A-17, A-18 done; A-4, A-13, A-19 partly done; A-2, A-5, A-11, A-14, A-15, A-16 still open and not
+  approved. A-1 (key rotation) and A-2 (repo is public) are Gaffer's own jobs.
+- Gaffer's rule (2026-10-12): merges into `main` happen only on Gaffer's command. GitHub ruleset
+  "SAFRS main protection" (`21369601`) now requires 1 approving review; only the repository Admin
+  role may bypass, and only when merging a pull request. Apps such as `app/cursor` (which merged
+  #37, #38, #41, #42 without review) can no longer merge. `~/.codex/config.toml` has
+  `git-pr-watch-auto-merge = false` (Codex `approval_policy = "never"` is unchanged, rest of A-4).
+  Before/after ruleset JSON is in the 2026-10-12 Claude session scratchpad.
 
 ## Done 2026-10-12 (Gaffer-approved)
 
