@@ -25,6 +25,11 @@ elif gen.current_block(text) != gen.build_block(ROOT):
     errors.append('AGENTS.md routing block drifted from .safrs/document-registry.json; '
                   'run: python tools/safrs/generate_routing.py')
 
+drifted = gen.rules_drift(ROOT)
+if drifted:
+    errors.append('.claude/rules drifted from .safrs/document-registry.json ('
+                  + ', '.join(drifted) + '); run: python tools/safrs/generate_routing.py')
+
 # 2. Non-doc anchors the router must still reference.
 required = [
     'SAFRS_SPEC.md', 'scripts/safrs-verify.sh',

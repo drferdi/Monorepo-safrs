@@ -51,7 +51,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:implementation"
+      "scope": "task:implementation",
+      "paths": [
+        "**/*.{ts,tsx,js,jsx,mjs,cjs,py}"
+      ]
     },
     {
       "id": "coding",
@@ -59,7 +62,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:implementation"
+      "scope": "task:implementation",
+      "paths": [
+        "**/*.{ts,tsx,js,jsx,mjs,cjs,py}"
+      ]
     },
     {
       "id": "documentation",
@@ -67,7 +73,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:documentation"
+      "scope": "task:documentation",
+      "paths": [
+        "**/*.md"
+      ]
     },
     {
       "id": "decisions",
@@ -75,7 +84,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:decision"
+      "scope": "task:decision",
+      "paths": [
+        "docs/adrs/**"
+      ]
     },
     {
       "id": "products",
@@ -333,7 +345,10 @@
       "type": "reference",
       "status": "ACTIVE",
       "normativity": "SHOULD",
-      "scope": "task:decision"
+      "scope": "task:decision",
+      "paths": [
+        "docs/adrs/**"
+      ]
     },
     {
       "id": "progress-board",
@@ -358,7 +373,12 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:governance"
+      "scope": "task:governance",
+      "paths": [
+        ".safrs/**",
+        "tools/safrs/**",
+        "scripts/safrs-verify.*"
+      ]
     },
     {
       "id": "capsule-sovereignty",
@@ -366,7 +386,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:implementation"
+      "scope": "task:implementation",
+      "paths": [
+        "**/*.{ts,tsx,js,jsx,mjs,cjs,py}"
+      ]
     },
     {
       "id": "purpose-driven-audit",
@@ -382,7 +405,12 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:governance"
+      "scope": "task:governance",
+      "paths": [
+        ".safrs/**",
+        "tools/safrs/**",
+        "scripts/safrs-verify.*"
+      ]
     },
     {
       "id": "context-active-avery",
