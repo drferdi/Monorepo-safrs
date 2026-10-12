@@ -44,7 +44,7 @@ Identity separation: the coding agent never holds merge or production-execution 
 
 ### Gaffer orchestration (v0.1)
 
-On top of the automation control plane, [Gaffer orchestration](../features/gaffer-orchestration.md) routes a Gaffer's plain-language intent through SOLO/DECOMPOSE, cheapest-qualified worker routing (ECONOMY/STRONG), SAFRS verification, and Root semantic acceptance. Its runtime (`tools/automation/src/gaffer/`) reuses the SAFRS ports rather than re-implementing contracts, risk, leases, or evidence. The v0.1 Codex provider callbacks are simulated; economic validation is Phase 4.
+On top of the automation control plane, [Gaffer orchestration](../features/gaffer-orchestration.md) routes the user's plain-language intent through SOLO/DECOMPOSE, cheapest-qualified worker routing (ECONOMY/STRONG), SAFRS verification, and Root semantic acceptance. Its runtime (`tools/automation/src/gaffer/`) reuses the SAFRS ports rather than re-implementing contracts, risk, leases, or evidence. The v0.1 Codex provider callbacks are simulated; economic validation is Phase 4.
 
 ## Repository topology
 
