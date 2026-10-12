@@ -1,5 +1,14 @@
 # HANDOFF — Monorepo control plane
 
+## 2026-10-12 - Path-scoped Claude rules (Claude Code)
+
+- Gaffer approved the takeover of this handoff: `TASK-20261011-TOOLS-CLOSEOUT` (REVIEW, work already committed) is SUPERSEDED; new owner `TASK-20261012-ROOT-HANDOFF-TAKEOVER`. Implementation owner: `TASK-20261012-CLAUDE-PATH-RULES-WT` (the first two claims of this task were bound to the main checkout by mistake and are SUPERSEDED).
+- Registry documents may carry `paths` (globs). `tools/safrs/generate_routing.py` now also emits `.claude/rules/safrs-<id>.md`, a pointer to the canonical document that Claude Code loads only when matching files are touched. `check_routing.py` and `generate_routing.py --check` catch rule drift; `check_docs.py` validates `paths`. `.gitignore` now tracks `.claude/rules/`.
+- `paths` added to 8 SHOULD documents only (implementation, documentation, decision, governance scopes). The MUST read order is unchanged; demoting MUST documents is a pending Gaffer decision. `task:product`, `task:review`, and `task:planning` have no path signal.
+- `safrs-auditor` and `token-guard` now run on `model: sonnet`.
+- Verification: `check_routing`, `check_docs`, `generate_routing --check`, `check_task_ownership` PASS / exit 0; tamper and empty-`paths` negative tests fail as expected; ruff and Biome exit 0; markdownlint is not installed. Live Claude Code (haiku) test: the `06_CODING.md` rule appears after reading a `.py` file and is absent in a no-read control. Full governance not run (baseline FAIL, see 2026-10-11).
+- Remaining risks / next tasks: only Claude Code honors `.claude/rules`; Codex, Cursor, and Droid still read the full AGENTS.md routing. On Windows the generator rewrites AGENTS.md with CRLF (pre-existing; revert CRLF-only diffs). Branch `feat/claude-path-scoped-rules` is not pushed.
+
 ## 2026-10-11 - Tools governance closeout (Codex)
 
 - Gaffer approved stale-claim takeover and registry/handoff cleanup. Superseded `TASK-20260922-BIOME-ROOT-EXCLUDE-PROJECTS` and `INDEPENDENCE-SKIP-GIT-IGNORED`; the latter belonged to an unregistered worktree. Used validated shared storage and a lease transition event. New owner: `TASK-20261011-TOOLS-CLOSEOUT` for this handoff, `biome.jsonc`, and `tools/standalone-tools.json`.
