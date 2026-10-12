@@ -1,5 +1,16 @@
 # Sentrapedia handoff
 
+## Eval: ICD-10 label-to-name overlap (M5) - 2026-10-12 Asia/Jakarta
+
+- Gaffer asked for M5 and approved the bounded design with one Opus review.
+- `0663d938` (R1):
+  - New `scripts/icd-name-match.mjs` applies the `postchecks.py` lexical rule: a meaningful label word must occur in the official name of the code or its category.
+  - `scripts/eval-theoracle-pipeline.mjs` adds per-row `icdNameMatch` and summary `icd10.nameMatch`. `valid` still only means "the code exists in the BPJS list".
+- The Opus review returned "with fixes" (wording only). The metric is not a lower bound: a wrong disease that shares a class word ("Typhoid fever" for R50.9, "Type 1 diabetes" for E11.9) still matches. `df5829f8` calls it "approximate lexical overlap", and a test records both directions.
+- Offline re-score of the stored rows (no model calls): 57/61 on both paths. The 4 non-overlapping rows have correct codes (synonyms, Indonesian labels, stunting), as recorded in `PIPELINE-REPORT.md`.
+- Verified: RED first; `tests/icd-name-match.test.ts` 3/3, `npm test` 270/270, `tsc` 0, `eslint` 0, `node --check` on the eval script. The eval script itself was not run, because it makes paid calls.
+- Not pushed.
+
 ## MIRA client gates therapy that arrives without a gate report (M1) - 2026-10-12 Asia/Jakarta
 
 - Gaffer asked for M1 and approved the bounded design with one Opus review.

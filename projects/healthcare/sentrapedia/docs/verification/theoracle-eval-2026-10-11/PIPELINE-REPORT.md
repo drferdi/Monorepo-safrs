@@ -126,6 +126,28 @@ FORNAS writes ranges with the minus sign U+2212 ("15−30 gram"), and PPK uses "
 
 The new verifications are furosemid 20-40 mg for acute heart failure ("furosemid injeksi 20 s/d 40 mg bolus", FKTP 2022) and kalsium polistiren sulfonat 15-30 g/hari for CKD stage 5 (FORNAS 2023). In addition, the FORNAS budesonid duration is now shown whole.
 
+### ICD-10 "valid" only meant "the code exists" (commits `0663d938`, `df5829f8`)
+
+The 100% "ICD-10 valid" above only means that the code, or its 3-character category, exists in the BPJS e-Klaim list. The eval script now also records `icdNameMatch`: whether a meaningful word of the model's label occurs in the official name of the code or its category, using the same rule as the MIRA postcheck. This is approximate lexical overlap and can be wrong in both directions:
+
+- a synonym or an Indonesian label misses;
+- a wrong disease that shares a class word still matches ("Typhoid fever" for R50.9 Fever).
+
+Re-scored offline from the stored rows, with no model calls:
+
+| ICD-10 (61 cases) | Legacy | Targeted |
+|---|---|---|
+| Code exists in the BPJS list | 61 | 61 |
+| Label words overlap the official name | 57 | 57 |
+
+All 4 non-overlapping rows were read by hand, and each has a correct code:
+- A37.9 "Pertussis" (official name: Whooping cough);
+- E45 "Stunting";
+- N39.0 "Infeksi Saluran Kemih, lokasi tidak spesifik" (an Indonesian label);
+- F20 "Skizofrenia" on legacy, and M19.9 "Osteoarthrosis" (official name: Arthrosis) on targeted.
+
+The headline ICD number remains top-1 against the draft gold: 98.4%.
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.
