@@ -25,7 +25,7 @@ Both hooks are Node scripts invoked as `node .claude/hooks/<name>.mjs` — a rel
 with no shell expansion, so they behave identically on Windows PowerShell, Git Bash, and
 POSIX shells. Payload arrives on stdin as JSON.
 
-### guard-sensitive-paths.mjs (PreToolUse: Bash, Edit, Write, NotebookEdit)
+### guard-sensitive-paths.mjs (PreToolUse: Bash, PowerShell, Edit, Write, NotebookEdit)
 
 The hook translates the payload with `tools/automation/src/adapters/claude.mjs` and asks
 the shared guard (`tools/automation/src/guard.mjs`), so Claude reaches the same verdict as
@@ -48,7 +48,7 @@ Cursor and Codex.
   `.codex/config.toml`, `.husky/pre-push`) are denied for every agent.
 - Fail-closed: a malformed payload blocks the call (exit 2). The credential list is
   hard-coded so it still applies when the registry is unreadable.
-- Only the `Bash` tool is guarded for commands; the `PowerShell` tool is not matched.
+- Commands from the `Bash` and `PowerShell` tools get the same verdicts.
 
 ### format-edited-file.mjs (PostToolUse: Edit, Write)
 

@@ -43,11 +43,12 @@ This file is overwritten with current state, not appended; keep it short (it is 
   `TASK-20261012-CONTROL-CENTER-BIOME`/`-A11Y`/`-HANDOFF`, `TASK-20261011-GAFFER-ADDRESS`, and
   Codex's `TASK-20261011-TOOLS-*` set, and `TASK-20261012-PROVIDER-PROOF-FIXTURES`. Move them to
   MERGED once the integrity review accepts them.
-- `TASK-20261012-DOCS-REFRESH` owns this file now. Gaffer approved superseding
-  `TASK-20261012-ROOT-HANDOFF-TAKEOVER` (its claim was bound to another worktree), so the
-  integrity review of that task's committed handoff edits moves to this task. It also refreshes
-  README (ruleset, merge policy, generated routing), `docs/bootstrap/CLAUDE_SETUP.md` (hook is
-  fail-closed and asks), and the wiki pages for automation, Claude, and Codex.
+- `TASK-20261012-POWERSHELL-GUARD` owns this file now. Gaffer approved superseding
+  `TASK-20261012-ROOT-HANDOFF-TAKEOVER` and then `TASK-20261012-DOCS-REFRESH` (claims bound to
+  other worktrees), so the integrity review of both tasks' committed edits moves to this task.
+  `DOCS-REFRESH` (`30e7a2f9`) refreshed README (ruleset, merge policy, generated routing),
+  `docs/bootstrap/CLAUDE_SETUP.md` (hook is fail-closed and asks), and the wiki pages for
+  automation, Claude, and Codex.
 - OpenCode Jev hang: next try is inside the OpenCode TUI.
 
 ## Blockers (need Gaffer)
@@ -123,9 +124,10 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 ## Next actions
 
-- Claude guard gap: `.claude/settings.json` matches `Bash|Edit|Write|NotebookEdit`, and the Claude
-  adapter translates only `Bash`, so commands run through Claude Code's `PowerShell` tool skip the
-  guard. Fix: add `PowerShell` to the matcher and the adapter (verification control, own task).
+- Fixed 2026-10-12 (`TASK-20261012-POWERSHELL-GUARD`): commands run through Claude Code's
+  `PowerShell` tool skipped the guard (matcher and adapter knew only `Bash`). Both now include
+  `PowerShell`; a hook test checks the matcher and a force-push/merge through PowerShell. Hook
+  configuration is snapshotted at session start, so running Claude sessions need a restart.
 - Policy conflict to settle: the parked Phase 6 publisher is designed to enable GitHub auto-merge
   for a verified head (`SAFRS_AUTOMATION.md`, `SAFRS_APPROVALS.md`, ADR 0002), while Gaffer's rule
   is never enable auto-merge. It stays disabled (`SAFRS_PUBLISHER_ENABLED` false); revisit before
