@@ -1,5 +1,12 @@
 # HANDOFF — Control Center
 
+## 2026-10-12 - Capsule Biome config (Claude Code)
+
+- Gaffer approved taking over this handoff from `TASK-20261011-TOOLS-LOCAL` (now SUPERSEDED; its work was committed). Owners: `TASK-20261012-CONTROL-CENTER-HANDOFF`, `-BIOME`, `-A11Y`.
+- Root cause of "lint unavailable": the capsule had no Biome config, so `biome check src` inherited root `biome.jsonc`, which excludes `projects/**`; it processed zero files and exited 1. Added capsule-root `biome.jsonc` (same settings as golden-path and root, explicit ignores, VCS off). The Biome binary still comes from the root workspace (known root coupling).
+- Linting for the first time surfaced one error: `aria-label` on the generic brand `<div>` (unsupported for its role). Removed it; the visible wordmark "Sentra Control Center" remains the accessible text.
+- Verification: `biome check src` from `apps/web`: 43 files, exit 0. Typecheck and tests not run (no `node_modules` in the worktree; the change removes one JSX attribute and no test references it).
+
 ## 2026-10-11 - Prompt catalog path relocation (Codex)
 
 - Updated only Prompt entry-point, evidence, and documentation paths in `apps/web/src/lib/repo/catalog.ts` from `projects/internal/prompt` to `tools/prompt`, following Gaffer's relocation order.

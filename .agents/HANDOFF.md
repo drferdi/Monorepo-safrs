@@ -51,7 +51,8 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 ## Next actions
 
-- Root Biome ignores the catalog file that Prompt's relocation touched; resolve that exclusion.
+- Resolved 2026-10-12: Control Center now has its own `biome.jsonc` and its lint script checks
+  43 files (see its handoff). `TASK-20261011-TOOLS-LOCAL` was SUPERSEDED with Gaffer's approval.
 - `.codex/agents` (2026-10-12, `TASK-20261012-CODEX-AGENTS-HYGIENE`): "Chief" is now "Gaffer",
   `09-security-reviewer.toml` is named `09-security-reviewer` (the documented `security-reviewer`
   stays), and agent 01 points at the AGENTS.md MUST list instead of a stale copy. Not verified
