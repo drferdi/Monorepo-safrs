@@ -547,7 +547,7 @@ const HOME_ACTION_IDS = [
 
 function SentraChromeBrand() {
   return (
-    <div className="chrome__brand" aria-label="Sentra Control Center">
+    <div className="chrome__brand">
       {/* Official master logomark (docs/brand) — transparent, token-colored via mask. */}
       <span className="chrome__logo" aria-hidden="true" />
       <span className="chrome__wordmark">
