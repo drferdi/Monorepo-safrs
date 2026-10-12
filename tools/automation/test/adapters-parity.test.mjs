@@ -186,6 +186,16 @@ test("Codex hands merges to its execpolicy prompt only while the prompt rules ex
   }
 });
 
+test("Claude's PowerShell tool translates like Bash", () => {
+  assert.deepEqual(
+    claude.translate(
+      { tool_name: "PowerShell", tool_input: { command: "git merge feat/x" } },
+      process.cwd(),
+    ),
+    [{ type: "command", command: "git merge feat/x" }],
+  );
+});
+
 test("droid adapter denies every mutation while disabled", () => {
   const events = droid.translate({ command: "echo hi" });
   const override = droid.authorizeOverride(events[0]);

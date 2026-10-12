@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, rmdirSync } from "node:fs";
+import { existsSync, readFileSync, rmdirSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -184,6 +184,30 @@ test("a merge asks Gaffer through Claude's permission prompt", () => {
   const output = JSON.parse(result.stdout).hookSpecificOutput;
   assert.equal(output.permissionDecision, "ask");
   assert.match(output.permissionDecisionReason, /Gaffer/);
+});
+
+test("the PowerShell tool is guarded like Bash", () => {
+  const settings = JSON.parse(
+    readFileSync(path.join(repoRoot, ".claude/settings.json"), "utf8"),
+  );
+  assert.ok(
+    settings.hooks.PreToolUse.some((entry) =>
+      entry.matcher.split("|").includes("PowerShell"),
+    ),
+  );
+  const blocked = runHook({
+    tool_name: "PowerShell",
+    tool_input: { command: "git.exe push --force origin main" },
+  });
+  assert.equal(blocked.exitCode, 2);
+  const asked = runHook({
+    tool_name: "PowerShell",
+    tool_input: { command: "git -C D:/DEV/monorepo merge feat/x" },
+  });
+  assert.equal(
+    JSON.parse(asked.stdout).hookSpecificOutput.permissionDecision,
+    "ask",
+  );
 });
 
 test("ordinary Bash from a subdirectory is allowed", () => {

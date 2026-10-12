@@ -11,7 +11,7 @@ function repositoryRelative(target, root) {
 export function translate(payload, root) {
   const toolName = String(payload?.tool_name ?? "");
   const input = payload?.tool_input ?? {};
-  if (toolName === "Bash") {
+  if (toolName === "Bash" || toolName === "PowerShell") {
     return [{ type: "command", command: String(input.command ?? "") }];
   }
   const target = input.file_path ?? input.notebook_path ?? input.path ?? null;

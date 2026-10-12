@@ -48,7 +48,7 @@
         ]
       },
       {
-        "matcher": "Bash|Edit|Write|NotebookEdit",
+        "matcher": "Bash|PowerShell|Edit|Write|NotebookEdit",
         "hooks": [
           {
             "type": "command",
