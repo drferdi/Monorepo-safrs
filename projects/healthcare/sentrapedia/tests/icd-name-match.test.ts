@@ -14,7 +14,8 @@ describe("eval ICD name match", () => {
     expect(icdNameMatch("B86", "Pneumonia", names)).toBe(false);
     expect(icdNameMatch("Z99.99", "Pneumonia", names)).toBe(false);
   });
-  it("is a lower bound: a synonym of the official name does not match", () => {
+  it("is approximate both ways: a synonym misses, and a wrong disease sharing a class word matches", () => {
     expect(icdNameMatch("A37.9", "Pertussis, unspecified", names)).toBe(false);
+    expect(icdNameMatch("R50.9", "Typhoid fever", new Map([["R50", "Fever of unknown origin"], ["R50.9", "Fever, unspecified"]]))).toBe(true);
   });
 });

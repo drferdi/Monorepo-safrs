@@ -29,7 +29,8 @@ for (const item of queries.filter(q => q.gold?.length && !q.term)) {
   const verifiedEvidence = gate ? gate.drugs.filter(d => d.status === "verified").map(d => ({ drug: d.drug, dose: d.dose, passages: d.evidenceIds.map(id => { const e = evidence.find(x => x.evidenceId === id); return e ? { id, title: e.source.title, text: e.text.slice(0, 600) } : { id }; }) })) : [];
   rows.push({
     id: item.id, ok: true, ms, path: body.pipeline?.path ?? null, stages: body.pipeline?.stages ?? [],
-    // icdValid: the full code or its 3-character category exists in the list. icdNameMatch: the label also names its disease.
+    // icdValid: the full code or its 3-character category exists in the list. icdNameMatch: approximate lexical overlap between
+    // the label and the official name (scripts/icd-name-match.mjs), not a check that the code is right.
     icd10: likely?.icd10 ?? null, diagnosis: likely?.label ?? null, icdValid: !!likely && names.has(likely.icd10) || !!likely && names.has(likely.icd10.slice(0, 3)),
     icdNameMatch: !!likely && icdNameMatch(likely.icd10, likely.label, names),
     icdCorrect: !!likely && (labels[item.id] ?? []).includes(likely.icd10.slice(0, 3)),
