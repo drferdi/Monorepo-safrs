@@ -127,11 +127,22 @@ test("all enforceable adapters produce identical verdicts for the shared matrix"
   }
 });
 
-test("adapters without an ask channel render ask as a block", () => {
+test("ask prompts the human where the adapter can; Codex has no ask channel and blocks", () => {
   const ask = { decision: "ask", reasonCode: "DB_DESTRUCTIVE", message: "x" };
   assert.equal(codex.render(ask).exitCode, 2);
-  assert.equal(claude.render(ask).exitCode, 2);
+  const rendered = claude.render(ask);
+  assert.equal(rendered.exitCode, 0);
+  assert.deepEqual(JSON.parse(rendered.stdout).hookSpecificOutput, {
+    hookEventName: "PreToolUse",
+    permissionDecision: "ask",
+    permissionDecisionReason: "SAFRS guard: x",
+  });
   assert.equal(cursor.render(ask).permission, "ask");
+  assert.equal(
+    claude.render({ decision: "deny", reasonCode: "FORCE_PUSH", message: "x" })
+      .exitCode,
+    2,
+  );
 });
 
 test("droid adapter denies every mutation while disabled", () => {

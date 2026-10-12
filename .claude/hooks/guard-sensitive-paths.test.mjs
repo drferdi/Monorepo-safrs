@@ -18,7 +18,11 @@ function runHook(payload, spawnOptions = {}) {
     encoding: "utf8",
     ...spawnOptions,
   });
-  return { exitCode: result.status, stderr: result.stderr ?? "" };
+  return {
+    exitCode: result.status,
+    stderr: result.stderr ?? "",
+    stdout: result.stdout ?? "",
+  };
 }
 
 test("malformed payload is blocked (fail closed)", () => {
@@ -169,6 +173,17 @@ test("Bash from a subdirectory is still guarded", () => {
   );
   assert.equal(result.exitCode, 2);
   assert.match(result.stderr, /force-push/);
+});
+
+test("a merge asks Gaffer through Claude's permission prompt", () => {
+  const result = runHook({
+    tool_name: "Bash",
+    tool_input: { command: "git merge feat/x" },
+  });
+  assert.equal(result.exitCode, 0);
+  const output = JSON.parse(result.stdout).hookSpecificOutput;
+  assert.equal(output.permissionDecision, "ask");
+  assert.match(output.permissionDecisionReason, /Gaffer/);
 });
 
 test("ordinary Bash from a subdirectory is allowed", () => {

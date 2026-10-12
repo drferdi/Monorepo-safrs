@@ -70,6 +70,35 @@ test("command verdicts: hard reset and PR merge ask, safe variants allowed", () 
   }
 });
 
+test("command verdicts: merges and main fast-forwards ask, merge plumbing allowed", () => {
+  for (const command of [
+    "git merge feat/x",
+    "rtk git merge --no-ff main",
+    "git pull origin main",
+    "git fetch -q . feat/x:main",
+    "git push . feat/x:refs/heads/main",
+    "git branch -f main feat/x",
+    "git update-ref refs/heads/main abc123",
+  ]) {
+    const verdict = authorize({ type: "command", command });
+    assert.equal(verdict.decision, "ask", command);
+    assert.equal(verdict.reasonCode, "MERGE", command);
+  }
+  for (const command of [
+    "git merge --abort",
+    "git merge --continue",
+    "git merge-base main HEAD",
+    "git merge-tree --write-tree main feat/x",
+    "git fetch -q . feat/x:feat/y",
+  ]) {
+    assert.equal(
+      authorize({ type: "command", command }).decision,
+      "allow",
+      command,
+    );
+  }
+});
+
 test("credential commands: read/print deny, bare mention asks, templates allowed", () => {
   assert.equal(
     authorize({ type: "command", command: "cat .env" }).decision,

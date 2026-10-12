@@ -77,7 +77,24 @@ const COMMAND_RULES = [
     reasonCode: "PR_MERGE",
     decision: "ask",
     test: (command) => /\bgh\s+pr\s+merge\b/iu.test(command),
-    message: "merging a pull request needs explicit human approval.",
+    message:
+      "merging needs Gaffer's explicit go in this conversation; ask Gaffer first (where the agent cannot prompt, Gaffer runs the merge).",
+  },
+  {
+    reasonCode: "MERGE",
+    decision: "ask",
+    test: (command) =>
+      /\bgit\s+merge(?![\w-])(?![^\n]*--(?:abort|continue|quit)\b)/iu.test(
+        command,
+      ) ||
+      /\bgit\s+pull(?![\w-])/iu.test(command) ||
+      /\bgit\s+(?:fetch|push)\s+(?:-\S+\s+)*\.\s+\S+:(?:refs\/heads\/)?main\b/iu.test(
+        command,
+      ) ||
+      /\bgit\s+branch\s+(?:-f|--force)\s+main\b/iu.test(command) ||
+      /\bgit\s+update-ref\s+refs\/heads\/main\b/iu.test(command),
+    message:
+      "merging needs Gaffer's explicit go in this conversation; ask Gaffer first (where the agent cannot prompt, Gaffer runs the merge).",
   },
   {
     reasonCode: "CREDENTIAL_ACCESS",

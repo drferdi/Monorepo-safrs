@@ -28,9 +28,25 @@ export function translate(payload, root) {
   return [];
 }
 
-/** Claude hook protocol: exit 2 blocks with stderr; exit 0 allows. */
+/**
+ * Claude hook protocol: exit 2 blocks with stderr; exit 0 allows. An "ask"
+ * verdict becomes Claude Code's permission prompt, so the human confirms the
+ * call (verified 2026-10-12: honored in default and bypassPermissions modes).
+ */
 export function render(result) {
-  if (["deny", "ask", "stop"].includes(result.decision)) {
+  if (result.decision === "ask") {
+    return {
+      exitCode: 0,
+      stdout: JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: "PreToolUse",
+          permissionDecision: "ask",
+          permissionDecisionReason: `SAFRS guard: ${result.message}`,
+        },
+      }),
+    };
+  }
+  if (["deny", "stop"].includes(result.decision)) {
     return { exitCode: 2, stderr: `SAFRS guard: ${result.message}` };
   }
   if (result.additionalContext) {

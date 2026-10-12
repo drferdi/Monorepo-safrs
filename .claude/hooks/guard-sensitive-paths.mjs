@@ -160,6 +160,10 @@ for (const event of claude.translate(payload, root)) {
   if (rendered.stderr) {
     console.error(rendered.stderr);
   }
+  if (rendered.stdout) {
+    process.stdout.write(rendered.stdout);
+    process.exit(rendered.exitCode);
+  }
   if (rendered.exitCode !== 0) {
     process.exit(rendered.exitCode);
   }
