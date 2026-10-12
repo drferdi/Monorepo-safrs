@@ -36,7 +36,7 @@ This file is overwritten with current state, not appended; keep it short (it is 
 - REVIEW: `TASK-20261012-CLAUDE-PATH-RULES-WT`, `TASK-20261012-MUST-DEMOTION`,
   `TASK-20261012-ROOT-HANDOFF-TAKEOVER` (this file; Gaffer approved taking it over from
   `TASK-20261011-TOOLS-CLOSEOUT`), `TASK-20261012-CODEX-AGENTS-HYGIENE`,
-  `TASK-20261012-LESSON-HEREDOC`, and Codex's `TASK-20261011-TOOLS-*` set. Move them to MERGED
+  `TASK-20261012-LESSON-HEREDOC`, `TASK-20261012-AUDIT-A6-A7`, `TASK-20261012-LFS-PRE-PUSH`, `TASK-20261011-GAFFER-ADDRESS`, and Codex's `TASK-20261011-TOOLS-*` set. Move them to MERGED
   once the integrity review accepts them.
 - OpenCode Jev hang: next try is inside the OpenCode TUI.
 
@@ -46,20 +46,28 @@ This file is overwritten with current state, not appended; keep it short (it is 
   Dry-run 2026-10-12 (local refs only, no fetch, per BOUNDARIES): against `origin/main` `b2d3a022`,
   outside `projects/**` the export is 371 added, 124 modified, 39 deleted files (286 under `tools/`),
   with 31 textual merge conflicts. PII scan of added lines: no WhatsApp JID or phone number; the
-  `secret` pattern hits are code identifiers; one personal `@gmail.com` address in
-  `tools/prompt/README.md` needs Gaffer's call. Open question: should `tools/prompt` (own repository
-  planned) be in the export at all?
-- `docs/gaffer-address-root` (`e75608d7`, WIP, R3 by path): merges cleanly, 56 files, Chief→Gaffer
-  swaps only. Not ready: in the gaffer-orchestration docs "Gaffer" is also the orchestration layer,
-  so lines like "Gaffer does not choose models" now contradict themselves (about 5 lines). Its claim
-  `TASK-20261011-GAFFER-ADDRESS` is orphaned (worktree `main-merge-tmp` no longer exists).
+  `secret` pattern hits are code identifiers. Gaffer decided (2026-10-12): `tools/prompt` and the
+  `@gmail.com` address in `tools/prompt/README.md` go into the export.
 - Log in to Grok and Antigravity once so their Jev use can be verified. Upload the corrected
   `audit-monorepo-agent` skill (`~/Downloads/audit-monorepo-agent.zip`) in claude.ai.
-- `git lfs pre-push`: recommended yes. `core.hooksPath` is `.husky/_`, so Git LFS hooks never run
-  (603 LFS files); the hook must replay stdin because the capsule gate already reads it.
-- Audit actions A-2..A-7 and A-11..A-19 (`verify-report/agent-audit-2026-10-10.txt` §7) are not
-  approved. Status 2026-10-12: A-17 done; A-13 and A-19 partly done; A-2, A-3, A-4, A-5, A-6, A-7,
-  A-11, A-14, A-15, A-16, A-18 still open. A-1 (key rotation) is Gaffer's own job.
+- Audit actions (`verify-report/agent-audit-2026-10-10.txt` §7), status 2026-10-12: A-6, A-7, A-17
+  done; A-13 and A-19 partly done; A-2, A-3, A-4, A-5, A-11, A-14, A-15, A-16, A-18 still open and
+  not approved. A-1 (key rotation), A-2 (repo is public), A-3 (ruleset requires 0 reviews), and
+  A-18 (`gh` token invalid) are Gaffer's own jobs.
+
+## Done 2026-10-12 (Gaffer-approved)
+
+- `docs/gaffer-address-root` merged (`631c6aba`). Four sentrawiki lines where "Gaffer" meant the
+  user were changed to "the user", because Gaffer is also the orchestration layer (`1a16acae`).
+  `TASK-20261011-GAFFER-ADDRESS` was resumed in a recreated `main-merge-tmp` worktree (its claim
+  was bound there), moved to REVIEW, and the temporary worktree was removed.
+- `.husky/pre-push` (and its copy `scripts/git-hooks/pre-push`) now runs `git lfs pre-push` after
+  both gates; stdin is read once and replayed. Gates and the LFS call were tested by hand.
+- A-6/A-7: the shared guard asks before `git reset --hard` and `gh pr merge`; Claude and Codex
+  guards block a malformed payload (exit 2). The repo-local `.claude/settings.local.json`
+  (gitignored) no longer allows `rtk gh *`, and `rtk git *` is narrowed to status/diff/log/show.
+  The guard test "sibling worktree ... lowercase-drive" fails when run from a linked worktree,
+  before and after this change; it needs the main checkout.
 
 ## Next actions
 
