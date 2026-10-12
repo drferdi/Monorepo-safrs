@@ -43,11 +43,23 @@ This file is overwritten with current state, not appended; keep it short (it is 
 ## Blockers (need Gaffer)
 
 - Filtered export and independent integrity review before anything from local `main` is published.
-- `docs/gaffer-address` (`bf4be2af`, R3 by path) is not merged into `main`.
+  Dry-run 2026-10-12 (local refs only, no fetch, per BOUNDARIES): against `origin/main` `b2d3a022`,
+  outside `projects/**` the export is 371 added, 124 modified, 39 deleted files (286 under `tools/`),
+  with 31 textual merge conflicts. PII scan of added lines: no WhatsApp JID or phone number; the
+  `secret` pattern hits are code identifiers; one personal `@gmail.com` address in
+  `tools/prompt/README.md` needs Gaffer's call. Open question: should `tools/prompt` (own repository
+  planned) be in the export at all?
+- `docs/gaffer-address-root` (`e75608d7`, WIP, R3 by path): merges cleanly, 56 files, Chief→Gaffer
+  swaps only. Not ready: in the gaffer-orchestration docs "Gaffer" is also the orchestration layer,
+  so lines like "Gaffer does not choose models" now contradict themselves (about 5 lines). Its claim
+  `TASK-20261011-GAFFER-ADDRESS` is orphaned (worktree `main-merge-tmp` no longer exists).
 - Log in to Grok and Antigravity once so their Jev use can be verified. Upload the corrected
   `audit-monorepo-agent` skill (`~/Downloads/audit-monorepo-agent.zip`) in claude.ai.
-- Decide whether `.husky/pre-push` should also run `git lfs pre-push`.
-- Audit actions A-2..A-7 and A-11..A-19 are not approved. A-1 (key rotation) is Gaffer's own job.
+- `git lfs pre-push`: recommended yes. `core.hooksPath` is `.husky/_`, so Git LFS hooks never run
+  (603 LFS files); the hook must replay stdin because the capsule gate already reads it.
+- Audit actions A-2..A-7 and A-11..A-19 (`verify-report/agent-audit-2026-10-10.txt` §7) are not
+  approved. Status 2026-10-12: A-17 done; A-13 and A-19 partly done; A-2, A-3, A-4, A-5, A-6, A-7,
+  A-11, A-14, A-15, A-16, A-18 still open. A-1 (key rotation) is Gaffer's own job.
 
 ## Next actions
 
