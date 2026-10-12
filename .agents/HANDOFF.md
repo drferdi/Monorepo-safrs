@@ -63,7 +63,12 @@ This file is overwritten with current state, not appended; keep it short (it is 
   `~/.codex/AGENTS.md` say ask before any merge; "go", "merge it", or clear agreement approves
   that merge only. The shared guard's new `MERGE` rule asks on `git merge`, `git pull`, and
   fast-forwarding `main`. Claude now shows a permission prompt for every guard "ask" (before, ask
-  blocked, so even approved merges failed). Codex cannot prompt: it stops and Gaffer runs the merge.
+  blocked, so even approved merges failed). Codex (`2db20bad`): `approval_policy = "on-request"`
+  (rest of A-4; `writable_roots` and the daily automation are unchanged) plus
+  `~/.codex/rules/safrs-merge.rules` (`prompt` for git merge, git pull, gh pr merge, also via rtk),
+  so Codex asks Gaffer itself. Codex hooks cannot ask (fail-open), so the Codex guard passes those
+  merges to the prompt only while that rules file exists, and still blocks fast-forwarding `main`
+  (`MAIN_REF_UPDATE`). Checked with `codex execpolicy check`; not yet seen in a live Codex session.
   Not yet fast-forwarded into local `main`: that is itself a merge and waits for Gaffer's go.
 
 ## Done 2026-10-12 (Gaffer-approved)
