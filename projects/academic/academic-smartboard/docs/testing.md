@@ -33,7 +33,7 @@ Record the exact build, lint, type-check, unit, integration, and end-to-end comm
     week, curriculum phase/alignment/coverage/structure/reading, progression,
     sessionDetail, api `buildQuery`, nav, auth reducer, cn. RTL + `jsdom`
     sengaja belum ditambah (Keputusan terbuka plan — rendering dicek manual /
-    E2E Chief terhadap backend arsip).
+    E2E Gaffer terhadap backend arsip).
   - `test:build` — `node --test tests/build-output.test.mjs`: assert **12**
     route sub-fase 1+2 diekspor ke `out/<route>/index.html` (termasuk
     `/sesi/placeholder`, `/akademik/perkembangan/placeholder`). Jalankan

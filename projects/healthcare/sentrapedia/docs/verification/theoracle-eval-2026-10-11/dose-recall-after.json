@@ -1,0 +1,566 @@
+{
+  "measuredAt": "2026-10-11T12:13:26.784Z",
+  "node": "v24.21.0",
+  "scope": "Actual TheOracle retrieval (local CPU query embedding + cosine search + caps); excludes MIRA model inference and HTTP latency",
+  "indexSha256": "f9d646693cb0bf334eb602da3fd933be120333d7cdcbafe7711bfd3f0a878964",
+  "embeddingModel": {
+    "id": "onnx-community/embeddinggemma-300m-ONNX",
+    "revision": "5090578d9565bb06545b4552f76e6bc2c93e4a66",
+    "dtype": "fp32",
+    "dims": 768
+  },
+  "indexUnchanged": true,
+  "coldStartMs": 2540,
+  "rssGrowthMb": 814,
+  "warmLatencyMs": {
+    "median": 73.2,
+    "p95": 82.8,
+    "max": 98.4
+  },
+  "recallAt5": {
+    "lay_terms": {
+      "hits": 16,
+      "total": 16,
+      "recallAt5": 1
+    },
+    "abbreviations": {
+      "hits": 13,
+      "total": 15,
+      "recallAt5": 0.867
+    },
+    "mixed_id_en": {
+      "hits": 13,
+      "total": 15,
+      "recallAt5": 0.867
+    },
+    "typos": {
+      "hits": 14,
+      "total": 15,
+      "recallAt5": 0.933
+    },
+    "exact_terms": {
+      "hits": 20,
+      "total": 27,
+      "recallAt5": 0.741
+    },
+    "exact_terms.drug_dose": {
+      "hits": 5,
+      "total": 8,
+      "recallAt5": 0.625
+    },
+    "exact_terms.icd10": {
+      "hits": 3,
+      "total": 6,
+      "recallAt5": 0.5
+    },
+    "exact_terms.lab": {
+      "hits": 4,
+      "total": 5,
+      "recallAt5": 0.8
+    },
+    "exact_terms.score": {
+      "hits": 8,
+      "total": 8,
+      "recallAt5": 1
+    },
+    "overall": {
+      "hits": 76,
+      "total": 88,
+      "recallAt5": 0.864
+    }
+  },
+  "doseRecall": {
+    "hits": 46,
+    "total": 61,
+    "rate": 0.754,
+    "rows": [
+      {
+        "id": "lay_terms-01",
+        "hit": true,
+        "doseTitles": [
+          "oksiuriasis-enterobiasis-cacing-kremi.md",
+          "dermatovenereologi-perdoski-2021.pdf",
+          "askariasis.md",
+          "ankilostomiasis-infeksi-cacing-tambang.md",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-02",
+        "hit": true,
+        "doseTitles": [
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-03",
+        "hit": true,
+        "doseTitles": [
+          "tinea-versikolor-pitiriasis-versikolor-panu.md",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-04",
+        "hit": true,
+        "doseTitles": [
+          "hordeolum-bintitan.md",
+          "blefaritis.md",
+          "episkleritis.md",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-05",
+        "hit": true,
+        "doseTitles": [
+          "vertigo-posisi-paroksismal-jinak-bppv.md",
+          "gawat-darurat-medis-bedah-unair.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-06",
+        "hit": true,
+        "doseTitles": [
+          "tension-type-headache-tth.md",
+          "patologi-klinik-anatomik-unair.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-07",
+        "hit": false,
+        "doseTitles": [
+          "otitis-eksterna.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-08",
+        "hit": true,
+        "doseTitles": [
+          "urtikaria-akut.md",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-09",
+        "hit": true,
+        "doseTitles": [
+          "kejang-demam-sederhana.md",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-10",
+        "hit": true,
+        "doseTitles": [
+          "kandidiasis-mulut-oral-thrush.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-11",
+        "hit": true,
+        "doseTitles": [
+          "pertusis-batuk-rejan.md",
+          "bronkitis-akut.md",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-12",
+        "hit": true,
+        "doseTitles": [
+          "parotitis-epidemika-gondongan-mumps.md",
+          "otitis-eksterna.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-13",
+        "hit": true,
+        "doseTitles": [
+          "hemoroid-eksterna-dan-interna-derajat-1-2.md",
+          "sirosis-hati-dewasa-2025.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-14",
+        "hit": true,
+        "doseTitles": [
+          "gastritis.md",
+          "gastroesophageal-reflux-disease-gerd.md",
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-15",
+        "hit": false,
+        "doseTitles": [
+          "thalasemia-2018.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-16",
+        "hit": false,
+        "doseTitles": [
+          "dermatovenereologi-perdoski-2021.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-01",
+        "hit": true,
+        "doseTitles": [
+          "fktp-kmk-2022.pdf",
+          "fasyankes-primer-idi-2017.pdf",
+          "penyakit-paru-obstruktif-2019.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-02",
+        "hit": false,
+        "doseTitles": [
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-03",
+        "hit": false,
+        "doseTitles": [
+          "sirosis-hati-dewasa-2025.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-04",
+        "hit": true,
+        "doseTitles": [
+          "otitis-media-akut-oma.md",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-05",
+        "hit": true,
+        "doseTitles": [
+          "otitis-media-akut-oma.md",
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-06",
+        "hit": false,
+        "doseTitles": [
+          "sirosis-hati-dewasa-2025.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-07",
+        "hit": true,
+        "doseTitles": [
+          "tuberkulosis-2019.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-08",
+        "hit": false,
+        "doseTitles": [
+          "penyakit-dalam-papdi-2024.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-09",
+        "hit": false,
+        "doseTitles": [
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-10",
+        "hit": true,
+        "doseTitles": [
+          "resusitasi-bblr-2018.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-11",
+        "hit": true,
+        "doseTitles": [
+          "gangguan-cemas-menyeluruh-gad.md",
+          "gawat-darurat-medis-bedah-unair.pdf",
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-12",
+        "hit": true,
+        "doseTitles": [
+          "tension-type-headache-tth.md",
+          "sirosis-hati-dewasa-2025.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-13",
+        "hit": true,
+        "doseTitles": [
+          "vertigo-posisi-paroksismal-jinak-bppv.md",
+          "gawat-darurat-medis-bedah-unair.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-14",
+        "hit": false,
+        "doseTitles": [
+          "fktp-kmk-2022.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-15",
+        "hit": true,
+        "doseTitles": [
+          "gastroesophageal-reflux-disease-gerd.md",
+          "fasyankes-primer-idi-2017.pdf",
+          "gastritis.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-01",
+        "hit": true,
+        "doseTitles": [
+          "penyakit-dalam-papdi-2024.pdf",
+          "penyakit-dalam-papdi-2024.pdf",
+          "pneumonia-dewasa-2023.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-02",
+        "hit": true,
+        "doseTitles": [
+          "fktp-kmk-2022.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-03",
+        "hit": true,
+        "doseTitles": [
+          "penyakit-dalam-papdi-2024.pdf",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-04",
+        "hit": true,
+        "doseTitles": [
+          "stroke-2019.pdf",
+          "stroke-2019.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-05",
+        "hit": true,
+        "doseTitles": [
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-06",
+        "hit": true,
+        "doseTitles": [
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-07",
+        "hit": true,
+        "doseTitles": [
+          "fktp-kmk-2022.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-08",
+        "hit": true,
+        "doseTitles": [
+          "otitis-eksterna.md",
+          "otitis-media-akut-oma.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-09",
+        "hit": true,
+        "doseTitles": [
+          "sepsis-pada-anak.md",
+          "sepsis-anak-2021.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-10",
+        "hit": true,
+        "doseTitles": [
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-11",
+        "hit": true,
+        "doseTitles": [
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-12",
+        "hit": true,
+        "doseTitles": [
+          "hepatitis-b.md",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-13",
+        "hit": false,
+        "doseTitles": [
+          "fktp-kmk-2022.pdf",
+          "fasyankes-primer-idi-2017.pdf",
+          "fornas-2025.pdf",
+          "fornas-2025.pdf",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-14",
+        "hit": true,
+        "doseTitles": [
+          "penyakit-dalam-papdi-2024.pdf",
+          "fornas-2025.pdf",
+          "fasyankes-primer-idi-2017.pdf",
+          "fornas-2023.pdf",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-15",
+        "hit": false,
+        "doseTitles": [
+          "tumor-otak-2020.pdf"
+        ]
+      },
+      {
+        "id": "typos-01",
+        "hit": true,
+        "doseTitles": [
+          "tuberkulosis-2019.pdf"
+        ]
+      },
+      {
+        "id": "typos-02",
+        "hit": true,
+        "doseTitles": [
+          "gawat-darurat-medis-bedah-unair.pdf",
+          "ppk-bedah-umum.pdf",
+          "sirosis-hati-dewasa-2025.pdf",
+          "fornas-2023.pdf",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-03",
+        "hit": true,
+        "doseTitles": [
+          "penyakit-dalam-papdi-2024.pdf"
+        ]
+      },
+      {
+        "id": "typos-04",
+        "hit": false,
+        "doseTitles": [
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-05",
+        "hit": true,
+        "doseTitles": [
+          "asma-bronkiale.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-06",
+        "hit": true,
+        "doseTitles": [
+          "demam-tifoid.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-07",
+        "hit": true,
+        "doseTitles": [
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-08",
+        "hit": false,
+        "doseTitles": [
+          "blefaritis.md",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-09",
+        "hit": true,
+        "doseTitles": [
+          "gastroenteritis-akut-diare-akut.md",
+          "disentri-basiler-shigellosis.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-10",
+        "hit": true,
+        "doseTitles": [
+          "migren-tanpa-aura.md",
+          "patologi-klinik-anatomik-unair.pdf"
+        ]
+      },
+      {
+        "id": "typos-11",
+        "hit": true,
+        "doseTitles": [
+          "thalasemia-2018.pdf"
+        ]
+      },
+      {
+        "id": "typos-12",
+        "hit": false,
+        "doseTitles": [
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-13",
+        "hit": true,
+        "doseTitles": [
+          "skizofrenia-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-14",
+        "hit": false,
+        "doseTitles": [
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-15",
+        "hit": true,
+        "doseTitles": [
+          "impetigo-krustosa-dan-bulosa.md",
+          "rinitis-alergika.md",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      }
+    ]
+  }
+}

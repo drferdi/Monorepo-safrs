@@ -9,3 +9,13 @@ export function searchDiseases(query: string, category: string): Disease[] {
   return theOracleDiseases.filter(d => (category === "all" || d.kategori === category) && terms.every(term => `${d.nama} ${d.kode} ${d.kategori}`.toLocaleLowerCase("id").includes(term)));
 }
 export function relatedDiseases(code: string): Disease[] { return theOracleDiseases.filter(d => d.kode.trim().toUpperCase() === code.trim().toUpperCase()); }
+
+// True when a catalog code field ("B36.0", "B20-B24", "L01, L08") covers an ICD-10 code.
+export function referenceIncludes(sourceCode: string, code: string): boolean {
+  if (!/^[A-Z]\d{2}(?:\.[A-Z0-9]{1,4})?$/.test(code)) return false;
+  return sourceCode.toUpperCase().split(",").some(value => {
+    const token = value.trim();
+    const range = /^([A-Z]\d{2})-([A-Z]\d{2})$/.exec(token);
+    return range ? code.slice(0, 3) >= range[1] && code.slice(0, 3) <= range[2] : code === token || code.startsWith(token + ".");
+  });
+}

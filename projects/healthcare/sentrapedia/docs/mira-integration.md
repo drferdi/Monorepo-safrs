@@ -11,7 +11,7 @@ flowchart LR
   Supervisor --> Engine["Bundled MIRA engine"]
   Engine --> Ready["Profile and grounding health check"]
   Ready --> Web["Sentrapedia workspace"]
-  Web --> Gateway["Server gateway + Oracle II evidence"]
+  Web --> Gateway["Server gateway + TheOracle evidence"]
   Gateway --> Engine
   Engine --> Provider["OpenRouter / Gemini Flash"]
 ```
@@ -28,8 +28,10 @@ postchecks; `mira/common` owns provider/data policy and call guards.
 installation. `scripts/run-system.mjs` owns startup, ephemeral loopback port,
 per-run token, readiness and shutdown. Windows child guardians use Job Objects
 and parent monitoring; POSIX cleanup handles INT/TERM/HUP process groups.
-`scripts/build-system.mjs` stages engine, launcher and static assets into the
-standalone output. `src/lib/theoracle-grounding.ts` owns readonly Oracle II retrieval.
+`scripts/build-system.mjs` stages engine, launcher, TheOracle index and model and static assets into the
+standalone output. `src/lib/theoracle-grounding.ts` owns readonly TheOracle vector retrieval; the query is
+embedded locally on CPU with the model recorded in `theoracle/index/manifest.json`.
+`npm ci` also downloads that pinned model once (about 1.2 GB) into `theoracle/model/`.
 
 The internal engine is a Python process managed by the application lifecycle.
 No external `MiraRoot`, source checkout, shared service, manually supplied service

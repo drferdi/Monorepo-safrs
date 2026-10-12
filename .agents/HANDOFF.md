@@ -9,6 +9,14 @@
 - Verification: `check_routing`, `check_docs`, `generate_routing --check`, `check_task_ownership` PASS / exit 0; tamper and empty-`paths` negative tests fail as expected; ruff and Biome exit 0; markdownlint is not installed. Live Claude Code (haiku) test: the `06_CODING.md` rule appears after reading a `.py` file and is absent in a no-read control. Full governance not run (baseline FAIL, see 2026-10-11).
 - Remaining risks / next tasks: only Claude Code honors `.claude/rules`; Codex, Cursor, and Droid still read the full AGENTS.md routing. On Windows the generator rewrites AGENTS.md with CRLF (pre-existing; revert CRLF-only diffs). Branch `feat/claude-path-scoped-rules` is not pushed.
 
+## 2026-10-11 - Local main integration (Claude)
+
+- Gaffer approved a LOCAL-only integration (BOUNDARIES: "integrate to main means LOCAL merge only") and, after seeing the R3 result, explicitly approved fast-forwarding local `main`. Branch `integrate/monorepo-sync` = `chore/tools-closeout` + merge of `feat/sentrapedia-dify-theoracle` (Sentrapedia capsule taken whole from the published branch; Oracle II SQLite removed as superseded) + medboard agent files tracked again (`935db235`, topology rule).
+- A trial merge of `origin/main` was started and aborted before commit: BOUNDARIES forbids pulling origin into local work; no origin content is in any local branch. Not pushed anywhere.
+- Gates: `node --run governance` 13/14 stages OK (policy, registry, routing, inventory, topology, project independence 17 capsules, tool independence, Actions pinning, automation policy, task contracts, ownership, lifecycle 171/616, approvals). FAIL at sensitive-change classification: R3, verification controls and implementation in one change set; independent integrity review required.
+- Sanitation (`git log -S'@g.us'`): 5 local commits from the 2026-08-24/25 PII incident and governance fixes, so local history must not be pushed as is.
+- Next: publish to origin only through a filtered export (control-plane only, no `projects/**`, PII-scanned) on top of `origin/main`, with ~20 governance/security conflicts to resolve (guard hooks, CI, AGENTS.md, verification-integrity.json, provider-codex, lockfile) and an independent integrity review. Codex was active in `tools/retriever` during this work; its uncommitted changes in the main checkout were not touched.
+
 ## 2026-10-11 - Tools governance closeout (Codex)
 
 - Gaffer approved stale-claim takeover and registry/handoff cleanup. Superseded `TASK-20260922-BIOME-ROOT-EXCLUDE-PROJECTS` and `INDEPENDENCE-SKIP-GIT-IGNORED`; the latter belonged to an unregistered worktree. Used validated shared storage and a lease transition event. New owner: `TASK-20261011-TOOLS-CLOSEOUT` for this handoff, `biome.jsonc`, and `tools/standalone-tools.json`.

@@ -204,7 +204,7 @@ boundary is needed.
   create `entitlement.changed` rows inside the live Xendit webhook transaction; no read path
   exists anywhere, so `sentAt` is never set.
 - Decision: document it as permanent debt tied to the frozen hybrid control-plane work. No
-  drain/deliverer is added and the writer is not removed without Chief's approval.
+  drain/deliverer is added and the writer is not removed without Gaffer's approval.
 - Rejected: wiring `drainOutbox` now (the hybrid work is frozen); dropping the table (never
   without an approved migration).
 - Trade-off: rows accumulate locally with `sentAt` null; harmless in the self-hosted database,

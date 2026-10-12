@@ -42,7 +42,7 @@ project's "minimum sufficient change" rule.
 ## What was actually broken and fixed
 
 The rebrand's mechanical `rakazo` → `sentrabot` replace correctly renamed the **product**, but the
-GitHub **org** (`elie222`, the upstream author) was never Chief's — self-update
+GitHub **org** (`elie222`, the upstream author) was never Gaffer's — self-update
 (`packages/core/src/self-update.ts`), the update-image resolver (`packages/core/src/compose-update.ts`),
 the Electron auto-updater config (`apps/desktop/package.json`), and doc/workflow references all still
 pointed at `github.com/elie222/...` / `ghcr.io/elie222/...`, which don't exist under that name. Fixed

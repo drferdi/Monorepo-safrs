@@ -14,7 +14,7 @@ Unduhan pertama `mint` cukup besar, jadi jalankan sekali di jaringan yang stabil
 
 ## Menerbitkan
 
-Belum tersambung. Untuk menerbitkan, Chief perlu:
+Belum tersambung. Untuk menerbitkan, Gaffer perlu:
 
 1. Membuat akun di [mintlify.com](https://mintlify.com)
 2. Memasang GitHub App Mintlify ke repositori ini

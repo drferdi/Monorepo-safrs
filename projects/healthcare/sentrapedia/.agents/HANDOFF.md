@@ -1,5 +1,521 @@
 # Sentrapedia handoff
 
+## Eval: ICD-10 label-to-name overlap (M5) - 2026-10-12 Asia/Jakarta
+
+- Gaffer asked for M5 and approved the bounded design with one Opus review.
+- `0663d938` (R1):
+  - New `scripts/icd-name-match.mjs` applies the `postchecks.py` lexical rule: a meaningful label word must occur in the official name of the code or its category.
+  - `scripts/eval-theoracle-pipeline.mjs` adds per-row `icdNameMatch` and summary `icd10.nameMatch`. `valid` still only means "the code exists in the BPJS list".
+- The Opus review returned "with fixes" (wording only). The metric is not a lower bound: a wrong disease that shares a class word ("Typhoid fever" for R50.9, "Type 1 diabetes" for E11.9) still matches. `df5829f8` calls it "approximate lexical overlap", and a test records both directions.
+- Offline re-score of the stored rows (no model calls): 57/61 on both paths. The 4 non-overlapping rows have correct codes (synonyms, Indonesian labels, stunting), as recorded in `PIPELINE-REPORT.md`.
+- Verified: RED first; `tests/icd-name-match.test.ts` 3/3, `npm test` 270/270, `tsc` 0, `eslint` 0, `node --check` on the eval script. The eval script itself was not run, because it makes paid calls.
+- Not pushed.
+
+## MIRA client gates therapy that arrives without a gate report (M1) - 2026-10-12 Asia/Jakarta
+
+- Gaffer asked for M1 and approved the bounded design with one Opus review.
+- `f0341f0f` (R2), `src/lib/mira/client.ts`:
+  - When `result.therapy` arrives without `evidenceGate`, the client runs `gateTherapy` itself, against `therapyGrounding` (or the diagnosis `grounding`) and `likely[0]`, as the gateway does. This can only happen with an older or faulty server.
+  - The diagnosis is kept. Unverified doses are blanked, and the therapy is dropped when no drug is kept.
+  - The report is stored, so `content` and `sourceText` no longer hold unchecked doses.
+  - A reply with a valid report is used as sent.
+- Opus review: "Yes", no Critical or Important.
+  - Every view (message card, document studio, history, export) already renders through `diagnosisContent`, which gates again.
+  - Its test gaps are covered by a follow-up test: fallback to the diagnosis bundle, and therapy written for another diagnosis.
+- Verified: RED first; `tests/mira-client.test.ts` 10/10, `npm test` 266/266 at commit time, `tsc` 0, `eslint` 0.
+- Known limits:
+  - The client trusts any well-formed `evidenceGate`. A forged report marking doses verified is still stored in `content`/`sourceText`, but `diagnosisContent` gates the regimen again before showing it.
+  - A stale "verified" citation line for a drug no longer in the regimen predates this change.
+- Not pushed.
+
+## Evidence gate: Unicode minus and every range separator - 2026-10-12 Asia/Jakarta
+
+- Gaffer asked for the Unicode minus fix and approved the bounded design with one Opus review.
+- `81459977` (R2): FORNAS writes ranges with U+2212 ("4−8 mL", "15−30 gram"). One dash class now serves STRENGTH, the range pattern in `strengths()`, PER_KG, tablet counts, and `unstrength`'s trim. Both ends of a range are still required.
+- The Opus review said "Yes": the classes are correct, and the gate is stricter on the model side. It found an older Important gap.
+  - A model range written with an em dash, a figure dash, U+2010, "~", "s/d", "sampai" or "hingga" was read as its upper end alone.
+  - So "250—500 mg" was verified by a passage with only "500 mg" (a leak, not fail-safe), and `unstrength` left "Amoksisilin 250".
+- Fixed in `2e6a2ecd`: one `RANGE` separator (U+2010-2014, U+2212, "~", "s/d", "s.d.", "sampai", "hingga") used everywhere a range is read.
+- Verified:
+  - RED first (both rounds); gate tests 73/73, `npm test` 263/263, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies against `a7c739c2`: verified 41 -> 42 legacy and 41 -> 42 targeted. Each addition was checked by hand against its passage:
+    - targeted: kalsium polistiren sulfonat 15-30 g/hari for N18.5 (FORNAS 2023 "15−30 gram/hari ... sampai dengan dialisis");
+    - legacy and targeted: furosemid 1x20-40 mg for I50.0 (FKTP 2022 and PPK IDI 2017 "furosemid injeksi 20 s/d 40 mg bolus", acute heart failure);
+    - the budesonid duration is now shown whole.
+- Known limits:
+  - A lab range next to a drug can match a model "dose" with the same numbers and unit ("Hb 10−12 g/dL"). This was already the case before; it is unrealistic, since it needs the model to write that range as a dose.
+  - Frequency is still not checked (furosemid "1x" vs "dapat diulang tiap jam").
+- Not pushed.
+
+## Evidence gate: stripped drug names are clean (#11) - 2026-10-12 Asia/Jakarta
+
+- Gaffer asked for #11 (cosmetic leftovers after a strength is removed) and approved the bounded design with one Opus review.
+- `3c80e08b` (R2), `unstrength` only, so dose verification is untouched:
+  - A frequency glued to a strength goes with it: "3x500 mg", "500mg x 3", "3x1 tablet", "x 3 hari".
+  - "per kg", "kg BB", "kilogram" and "berat badan" are per-unit tails.
+  - A bracket left empty or holding only a limit word (max/maks/maksimal/hingga/sampai/s.d./s/d) is removed.
+  - Punctuation is tidied ("Amoksisilin, 3 kali sehari", "Lidokain-adrenalin").
+- The Opus review returned "with fixes".
+  - Critical: a removal could join a leftover number to a leftover unit and show a new dose. Examples: "Amoksisilin 3 (500 mg) kapsul" became "Amoksisilin 3 kapsul", and "Obat 2 D5% tablet" became "Obat 2 tablet". The review found 19 such names.
+  - Important: "Vitamin E400 IU" became "Vitamin".
+- Fixed in `4685276f`:
+  - `unstrength` repeats until the text stops changing. Its pattern contains STRENGTH, so the fixed point holds no strength.
+  - Only the D of "D5%" is taken with a strength.
+  - The remaining minor leftovers are tidied: "(maks,)", "(s/d)", "[]", "x 3 hari", "x 3.5 mg".
+- Verified:
+  - RED first (both rounds; the review's leaking names are now a test).
+  - Gate tests 67/67, `npm test` 257/257, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies against `9bc97db2`: no output change. Only one real name carried a strength ("Permetrin krim 5%"), and it already stripped cleanly.
+- Known limits:
+  - A bare frequency number can remain ("Parasetamol 1-2 x 500 mg" -> "Parasetamol 1"). It carries no unit, so it is not a dose.
+  - Unicode minus ranges ("4−8 mL") are still not read as ranges; that is a separate small fix.
+- Not pushed.
+
+## Open items A (#1, #2, #4, #5, #6) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked to work through A #1, #2, #4, #5, #6 one by one, choosing the best option without questions. Hard rules still hold: no push, no paid calls, no loss of uncommitted work.
+- **#1 Non-dose additions in the 10 tatalaksana documents: machine-checked, no correction needed.**
+  - ICD-10: all 8 codes exist in `mira/service/data/icd10.json` (BPJS e-Klaim) with matching names. P21 Birth asphyxia, R04.0 Epistaxis, K01.1 Impacted teeth, C40/C41 bone malignancy, Q43.1 Hirschsprung's disease, H11.0 Pterygium, K04 pulp/periapical, H61.2 Impacted cerumen.
+  - They agree with the Oracle-II catalog JSON for the same diseases: P21.9 sits inside P21, and K01.1 sits inside K01.
+  - Infeksi intraabdominal (catalog K65) and sarkopenia (catalog M62.84, an ICD-10-CM code absent from WHO/BPJS) carry no code line. Left as is, because adding one would change indexed text and need a re-embed for no retrieval gain.
+  - Referral criteria and asfiksia monitoring match standard practice and the cited guidelines.
+  - The named sources are real guidelines: NRP/AAP, PNPK Asfiksia 2019, AAO-HNS Epistaxis 2020 and Cerumen 2017, ADA 2019 antibiotic guideline, SIS/IDSA cIAI with STOP-IT, NCI PDQ Osteosarcoma, APSA HAEC 2017, AAO EyeWiki, EWGSOP2/ICFSR/PROT-AGE.
+  - The documents are unchanged. Clinical sign-off stays with Gaffer, who already approved the dose content.
+- **#2 `MIRA_TARGETED_THERAPY` is now on by default** (`d799f6b0`, R2).
+  - The spec said "default on once evaluation passes".
+  - The replay with the final gate supports it:
+    - drugs removed for the wrong diagnosis 9 -> 2;
+    - cases with a verified dose 30 -> 31;
+    - verified doses 41 legacy vs 40 targeted;
+    - audit cost $0.89 -> $0.84;
+    - p50 latency 2.5 -> 4.6 s.
+  - `MIRA_TARGETED_THERAPY=false` keeps the legacy path, as documented in `.env.example`. The MIRA service always advertises `theoracle-targeted-therapy-v1`; without it, the gateway falls back to legacy.
+  - M10 fixed in the same commit: `mira_tx` now ends 1 s before the overall timer (65 s), so a slow therapy step drops only the therapy and keeps the diagnosis. Before, the whole reply failed with TIMEOUT. A timeout on a non-retrieval stage is logged as `TIMEOUT`, not `THEORACLE_UNAVAILABLE`.
+  - Verified: RED first (new pipeline test); `npm test` 249/249, `tsc` 0, `eslint` 0.
+  - Takes effect only after a deploy, which needs Gaffer. No env file, deployment or budget was changed.
+- **#4 Gold ICD-10 labels: machine-checked, no label changed; clinician sign-off still pending.**
+  - All 61 labels exist in BPJS e-Klaim ICD-10.
+  - 57 agree with the Oracle-II catalog code of the gold document.
+  - The other 4 were read one by one and kept as they are:
+    - OMSK: gold H66; the catalog's H65/H67 is wrong.
+    - Congenital cataract: gold Q12/H26; the catalog's H25 is senile cataract.
+    - BBLR: gold P07/P05; the catalog's P96 is wrong.
+    - Stunting: gold E45/E34/R62; the catalog has E40/E46.
+  - The single eval miss (BBLR answered P21.0, severe birth asphyxia) stays a miss, because the query names BBLR. Labels were not tuned to results.
+  - `gold-icd10.json` status now reads "machine-checked, clinician sign-off pending", with the check in a `checked` field.
+  - Finding: the Oracle-II catalog JSON (provenance snapshot, not edited) carries wrong ICD codes for OMSK, katarak anak and BBLR. Nothing in the gate reads catalog codes; the gate uses catalog names only.
+- **#5 Local `main` vs `origin/main`: the divergence is by design. `main` must not be pushed to `origin`.**
+  - `origin` (drferdi/Monorepo-safrs) is the control-plane tree. `tools/safrs/check_topology.py` on origin says: "Origin is published without projects/** (BOUNDARIES capsule gate)".
+  - The merge-base (`5b6b808b`, 2026-08-25) has no `projects/` either.
+  - Local `main` is 904 ahead and 41 behind (fetch only). Pushing it would publish every capsule.
+  - Merging `origin/main` into local `main` (dry run, `merge-tree`) gives 28 conflicts. They are in control-plane files: guard hooks, CI, `AGENTS.md`, `pnpm-lock.yaml`, `packages/api`, `tools/automation`, SAFRS reviews.
+  - That is an R3 governance integration, outside Sentrapedia. Not done; flagged as a separate task.
+  - Sentrapedia ships through its own remote (`sentrapedia`, drferdi/Sentrapedia) by subtree split. A fresh split of local `main` is ready as branch `sentrapedia-standalone-next` (`50e073db`, 1251 commits walked):
+    - 59 commits ahead of `sentrapedia/main`, 12 behind;
+    - the remote-only commits are GitHub README edits and their PR merges;
+    - a dry-run merge with `sentrapedia/main` is clean (only `README.md` differs);
+    - read-only secret scan of the added lines: no keys or tokens; the only tracked env file is `.env.example`.
+  - Making the local publish merge commit was refused by the permission classifier ("Remote Repoint"), so it is left to Gaffer. PowerShell, in a temporary worktree so the busy `D:\DEV\monorepo` checkout is not switched:
+    - `git -C D:\DEV\monorepo worktree add D:\DEV\monorepo.worktrees\sentrapedia-publish -b sentrapedia-publish sentrapedia-standalone-next`
+    - `git -C D:\DEV\monorepo.worktrees\sentrapedia-publish merge sentrapedia/main -m "Merge GitHub main into evidence gate and targeted therapy publish"`
+    - `$env:CHIEF_PUSH_OK=1; git -C D:\DEV\monorepo.worktrees\sentrapedia-publish push sentrapedia sentrapedia-publish:refs/heads/main; Remove-Item Env:CHIEF_PUSH_OK`
+    - `git -C D:\DEV\monorepo worktree remove D:\DEV\monorepo.worktrees\sentrapedia-publish`
+  - **Published 2026-10-12 by Gaffer:**
+    - `sentrapedia/main` = `c0ef8ba6`, a fast-forward that merges split `9b61a291` with the GitHub README edits.
+    - The temporary worktree was removed and pruned. The local branch `sentrapedia-publish` is kept.
+    - This line itself is not in the standalone repo yet.
+  - The GitHub README edits (logo, editorial hero, referral terminology) exist only on the Sentrapedia remote; the monorepo copy of `README.md` is older.
+- **#6 Uncommitted ICD edit in `D:\DEV\monorepo` (branch `chore/tools-closeout`): nothing is lost any more, and its working tree was not touched.**
+  - Compared by blob hash:
+    - `postchecks.py` and `test_components.py` are identical to `ffc74272` and to `main`;
+    - `test_packaging.py` is identical to `ffc74272` (`main` has a later version);
+    - `SOURCE.json` differs only in 5 derived `packagedSha256` values;
+    - `next-env.d.ts` is the `next dev` touch (`.next/dev/types`).
+  - So the ICD change is fully in `main` and there is no conflict with `ffc74272`.
+  - The only unique content was 4 HANDOFF sections (17:30-19:00: ICD-10 check, dose inventory and PNPK extraction, PPK FKTP extraction, ISO gap fill). They are copied verbatim into "Ported notes from the main checkout" below.
+  - Full backup of that checkout's tracked edits, with its working tree unchanged: `refs/backup/chore-tools-closeout-2026-10-11` = `9319d749` (`git stash create` + `update-ref`). To restore: `git stash apply 9319d749`.
+  - Not cleaned: another session is active in that checkout. It has a running dev server, a new untracked `docs/plans/active/Audit_actions.md` from 21:30, and `tools/retriever` handoff edits.
+  - Once that session ends, the sentrapedia files can be reset with `git restore` without loss, because the content is in `ffc74272`/`main` plus the backup ref. The untracked files are not covered by the ref.
+- Bagian A status:
+  - #1 and #4 checked, no change needed.
+  - #2 done as a code default; deploy pending Gaffer.
+  - #5 explained; publish split ready, push and publish merge pending Gaffer.
+  - #6 done with no loss; cleanup deferred while that checkout is in use.
+  - Not pushed.
+
+## Ported notes from the main checkout - 2026-10-11 Asia/Jakarta
+
+- The four sections below were written by another session in `D:\DEV\monorepo` (branch `chore/tools-closeout`) and existed only as an uncommitted edit there. Copied verbatim for #6; the original is kept in `refs/backup/chore-tools-closeout-2026-10-11`.
+
+### ISO gap fill — 2026-10-11 19:00 Asia/Jakarta
+
+Status: data work only. New file `.runtime/dose-inventory/iso_gap_fill.json` (gitignored).
+Gaffer's ruling: ISO is a reference and is to be used as one, with citation (source and page).
+
+Source: ISO Indonesia Vol. 53 (2021), 536 pages, supplied by Gaffer. Product monographs parsed
+mechanically from `pdftotext` (brand, composition, In, Ds, KI, IO): 1,087 usable entries, 477 generics.
+Gap fill for the groups still without a numeric dose: (a) drugs named in a store narrative get the
+ISO dose for that generic, (b) ISO entries whose indication names the disease (hand-written keyword
+list). Result: 19 groups, 120 rows, each with ISO page, brand and the matching basis. These are
+general per-drug doses, not disease-specific first-line regimens. Keyword matching is noisy: 12
+clearly unrelated rows were removed by hand (fracture, acute kidney injury, scrofuloderma, parts of
+cerebral palsy, corneal ulcer, vitamin deficiency); the rest is not clinician reviewed.
+
+Inventory now (about 296 groups): 160 store, 41 PNPK, 17 PPK, 19 ISO, 24 PPK-only diseases,
+35 without a numeric dose (almost all non-drug: refraction, hernia, lipoma, cleft lip, stunting).
+
+Other files received and NOT used: "MIMS Digital Guide 2023-2024" is MIMS Pharmacy Philippines
+(wrong country); "Kumpulan Resep" is a 2017 OSCE cheat sheet with errors; "Obat Generik dan Nama
+Dagang" has no dose data; Formularium RSSA 2017 is superseded by Fornas 2025. MIMS Petunjuk Konsultasi
+Indonesia 2021/2022 and Fornas 2025 are usable and not yet processed.
+
+### PPK FKTP dose extraction — 2026-10-11 18:45 Asia/Jakarta
+
+Status: data work only, no engine or app code changed. New file
+`.runtime/dose-inventory/ppk_doses_verified.json` (gitignored).
+
+Sources, both taken from Gaffer's Google Drive via the Drive connector (full PDF bytes):
+`PPK_FKTP_KMK_1936_2022.pdf` (300 pages) and `PPK_Fasyankes_Primer_IDI_2017.pdf` (478 pages).
+KMK 1936/2022 only amends named chapters of KMK 1186/2022 (TB, TB-HIV, lepra, HIV, MI, heart failure,
+hypertension, stroke, psychiatry, PPOK, DM2, normal pregnancy; adds COVID-19, depression, schizophrenia,
+yaws, diabetic nephropathy). The base KMK 1186/2022 is NOT available (not in Drive; the Kemenkes
+regulation site refuses agent fetches), so PPK IDI 2017 stands in for unchanged chapters and every row
+carries its source document.
+
+Result: 757 drug-dose statements over about 130 disease sections, each with PDF page and verbatim
+quote. Independent check: every quote is an exact substring of the `pdftotext` page text and contains
+the dose numbers (0 rejected); 12 rows lack the drug name inside the quote; 6 pages skipped (unreadable
+tables, e.g. TB-RO weight-band grids, OAT KDT table). `icd10` is re-derived from each section's
+"No ICD-10" line and kept only if the code exists in the BPJS list (716 rows); the extractor's own
+value is in `icd10_agent` and is often an ICPC-2 code, do not use it.
+
+Inventory after merge (about 296 groups): 160 already had a dose in a store (68 of them now have PPK
+evidence to compare against, comparison not run), 41 filled from PNPK, 17 filled from PPK, 24 diseases
+present in PPK but in no store, 54 still without a numeric dose (many non-drug conditions). Source
+typos are copied verbatim and need clinician eyes (e.g. MgSO4 IM "5mg", "2 x 500-100 mg" cefadroxil).
+
+Also received, not processed: Fornas 2025 (KMK 1199/2025, 224 pages) and KMK 1818/2024 (amendment of
+Fornas 2023). Fornas is a drug/strength/facility-level list, not dosing per diagnosis; intended use is
+the identity layer of the dose gate.
+
+### Dose inventory and PNPK dose extraction — 2026-10-11 18:10 Asia/Jakarta
+
+Status: data work only, no engine or app code changed. Steps 2/3 of the ICD/dose review (therapy
+after diagnosis, dose gate) are NOT implemented: Gaffer chose to complete the dose data first.
+Working files in `.runtime/dose-inventory/` (gitignored): `build_inventory.py`, `inventory.json`,
+`pnpk_doses_verified.json`, plus copies of Gaffer's legacy `penyakit.json` and `drug_mapping.json`.
+
+Inventory: 432 records from three stores (`oracle/sentrapedia.json`, `oracle-ii/knowledge_base`,
+legacy `penyakit.json`) group into about 272 disease groups (automatic name/ICD matching, approximate).
+160 have a numeric dose in at least one store (124 of them in one store only), 112 did not.
+No store has a per-record clinician review mark. `penyakit.json` ICD codes are wrong for some
+diseases (burn = R12, tinea versicolor = B85); do not use it as a code reference.
+
+PNPK extraction: for 45 groups without a dose, the 610 dose-bearing pages of their PNPK PDFs
+(`source_pages_v2`) were read by parallel extraction agents. Result: 1,491 drug-dose statements
+for 41 groups, each with PDF page and a verbatim quote. Independent check: every quote is an exact
+substring of the stored page text and contains the dose numbers (0 rejected); 8 items lack the drug
+name inside the quote and are flagged `drug_in_quote: false`. 30 pages skipped as unreadable tables.
+4 groups yielded nothing (Karies Gigi, Akupunktur Medik, Retinopati Diabetika, Karsinoma Sel Hati).
+These are copies of guideline text, not curated first-line regimens, and not clinician reviewed.
+
+Open: 71 groups still without a dose (mostly KKI primary-care diseases). Official source is
+PPK Dokter FKTP, KMK HK.01.07/MENKES/1186/2022; the Kemenkes regulation site could not be fetched
+from the agent side, Gaffer to supply the PDF. Dose-source decision for the gate is still Gaffer's
+(supersedes nothing yet: the 2026-10-09 rule "Oracle narratives never generate regimens" stands).
+
+### ICD-10 code checked against its label — 2026-10-11 17:30 Asia/Jakarta
+
+Status: done in place, uncommitted. Gaffer approved step 1 of the ICD/dose accuracy review
+("Silahkan") and supplied the ministry list `PUBLIC_ICD-10_e-klaim.xlsx - ICD10.csv`. R2: engine
+post-check change, no prompt, contract or schema change.
+
+Finding (198 audit records, fictional cases): the post-check only tested that a code exists.
+Valid codes naming another disease passed (Chikungunya as A98.4 = Ebola; Machupo as A96.0 13x;
+torsion of ovary as N83.2), and a diagnosis with an unknown code was removed (acute appendicitis
+K35.0 dropped from cannotMiss 7x).
+
+Change: `mira/service/postchecks.py` adds `resolve_code` / `code_for_label`. A valid code is
+replaced only when the label is the exact official name of another code, or shares no word with
+its own name and identifies one code unambiguously (same category, then chapter, then list).
+An unknown code is recovered from the label, then from its three-character category, before it
+is removed. Unrepairable mismatches keep the code and add an audit note. Therapy `forDiagnosis`
+uses the same check. Replay over the 1,030 logged diagnoses: 22 repaired, 14 kept with a note.
+
+Data: the ministry CSV (18,542 rows, all `ICD10_2010`, SHA-256 `f2c18a09…c4bf7a`) matches
+`mira/service/data/icd10.json` except that the JSON also has `N18.0` and four M99.1x names carry
+a leading space in the CSV. `icd10.json` left unchanged; the CSV is not in the capsule.
+
+Divergence recorded: `mira/SOURCE.json` packagedSha256 for `service/postchecks.py` and
+`service/tests/test_components.py`; `service/postchecks.py` added to the allow-list in
+`test_packaging.py`. 16 new cases in `test_components.py`.
+
+Gates: MIRA pytest 173 passed 1 skipped, run in a Linux Python 3.12 venv outside the capsule
+with the pinned lock versions (the Windows venv was not used). `npm run test:mira`, typecheck,
+lint, vitest, build and dry run not run; no TypeScript changed. `.next/standalone` still holds
+the old engine until the next build.
+
+Open (awaiting Gaffer): step 2 therapy after diagnosis with retrieval by diagnosis, step 3 dose
+gate; whether kept-with-note mismatches should be shown to the clinician; `N18.0` in the JSON
+but not in the ministry list.
+
+## Evidence gate: a field keeps its supported leading part (#10) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for #10 (a whole route/duration/note blanked for one unsupported number) and approved the bounded design with one Opus review.
+- `4d9de82c` (R2), `src/lib/theoracle-evidence-gate.ts` `shown()`: fields split into clauses at ";", a newline, a non-decimal ",", or a sentence-ending "."; unsupported clauses are dropped instead of the whole field.
+- The Opus review returned "with fixes". The dose invariant held, but dropping clauses could change clinical meaning:
+  - "Hindari bila CrCl <30 ml/menit, kurangi dosis" became "kurangi dosis".
+  - "jangan diberikan, kecuali 2 g dosis tunggal" became "jangan diberikan".
+  - Clauses could also be supported by different passages.
+- Fixed in `0496cac6`:
+  - Only a trailing run of clauses is dropped. If the first unsupported clause is the first clause, the field is blanked.
+  - The kept part must be carried by one passage and have balanced brackets.
+  - If any dropped clause starts with kecuali/bila/jika/apabila/hanya, the field is blanked.
+  - A cut field ends with "(sebagian belum terverifikasi)".
+  - "maks. 4 g" and decimals are not split.
+- Verified:
+  - RED first (both rounds; 6 tests failed on `4d9de82c`); gate tests 59/59, `npm test` 248/248, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies against `955232f7`: one field changes. budesonid (asthma) duration "" -> "Hari pertama maks 10 mL perhari (sebagian belum terverifikasi)", which is verbatim in FORNAS 2023/2025.
+  - No dose status, safety item, or other field changes.
+- Known limits:
+  - FORNAS writes ranges with U+2212 ("4−8 mL"); the strength regex reads only "-" and "–", so that budesonid clause is still dropped. A small follow-up.
+  - A condition word in the middle of a dropped clause ("pada anak bila ...") is not detected; only a leading one is.
+  - A "." followed by a lowercase word does not split, so such fields are blanked whole (fail-safe).
+  - Browser preview not run: the change is in the gate, and the replay exercises it; the UI renders the field text as is.
+- Local `main` fast-forwarded. Not pushed.
+
+## Evidence gate: per kg is decided for each strength (#9) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for #9 (correct per-kg doses blanked) and approved the bounded design with one Opus review.
+- `87c8eb2b` (R2), `src/lib/theoracle-evidence-gate.ts` `strengths()`:
+  - Each strength takes its own per-kg tail from the text right after it. "10 mg/kgBB, maks 500 mg" now verifies from a passage with a per-kg 10 mg and a plain 500 mg cap. Before, the whole dose was treated as per kg and blanked.
+  - A passage's "per kg BB" counts like "/kgBB".
+  - A plain strength still never matches a per-kg one, either way.
+- The Opus review returned "with fixes":
+  - Critical: "10 mg/hari/kgBB" was read as plain and verified by "10 mg/hari".
+  - Important: "10 mg - 15 mg/kgBB" split its ends, so a plain 10 mg verified the first end.
+  - Minor: "kilogram" was not read.
+- Fixed in `252c7909`. The per-kg tail now skips per-unit tails (/hari, /dosis, /kali, /jam, /menit, /detik, with an optional number) and the other end of a range, and accepts "kilogram". The same tail is used for the model's dose and for the passage.
+- Verified:
+  - RED first (both rounds); gate tests 51/51, `npm test` 240/240, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies against `91837ff9`: no status change and no field change (41 legacy / 40 targeted verified). No audited reply had a per-kg dose with a plain cap, so the gain is for future replies.
+- Known limits:
+  - Frequency is not checked.
+  - In "10 mg/kgBB - 15 mg" the second end is read as plain (fail-safe: it blanks when the passage has 15 mg/kgBB).
+  - Per-unit tails outside the list (e.g. "/minggu") before "/kg" are not skipped; the dose is then read as plain and needs a plain passage.
+  - `unstrength` can leave "per kg" text behind (cosmetic, #11).
+- Local `main` fast-forwarded. Not pushed.
+
+## Evidence gate: percent and bare U are strengths (#12) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for #12 (percent and bare "U" counted as doses) and approved the bounded design with one Opus review. This replaces the earlier rule that a percent is part of the product name.
+- `a14c2969` (R2), `src/lib/theoracle-evidence-gate.ts`:
+  - "%" is a strength unit; "1x5%" verifies only from a passage naming the drug and the diagnosis that carries "5%". Ranges check both ends, and 0.1% matches 0,1%.
+  - A bare "U" joins the IU family: "10 U" matches "10 IU" or "10 unit"; "5 untuk" is not a unit.
+  - An unverified percent is stripped from the drug name ("Permetrin krim 5%" -> "Permetrin krim") and blanks a route/duration/note that carries it, like mg.
+- The Opus review returned "with fixes": safety items with a percent threshold were dropped. Fixed in `b91b0f3a`: safety items ignore percents and are shown with "(belum terverifikasi)" as before.
+- Verified:
+  - RED first (both rounds); gate tests 46/46, `npm test` 235/235, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies: verified 35 -> 41 legacy and 33 -> 40 targeted. All 13 additions were checked by hand and are topical concentrations from passages for the same disease: permetrin 5%, kloramfenikol 1%, triamsinolon 0,1%, klorheksidin 0,1-0,2%, mupirosin 2%, timolol 0,25% (FORNAS), hidrokortison 1-2,5%.
+  - Cases with a verified dose: 30 legacy, 31 targeted.
+  - Against `b0b0482e`: no verified dose lost; safety items (43/42) and filled route/duration/note fields (130/164) unchanged.
+- Known limits:
+  - Frequency is not checked.
+  - A percent threshold in a note ("target SpO2 >94%") blanks that note (fail-safe).
+  - `unstrength` leaves leftovers where a strength touches letters ("D5%" -> "D", "Lidokain 2%-adrenalin" -> "Lidokain -adrenalin"). Cosmetic; no dose is shown.
+  - "persen" written as a word is not read.
+- Local `main` fast-forwarded. Not pushed.
+
+## Evidence gate: tablet and capsule counts are doses - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for "#12 jumlah tablet dihitung sebagai dosis". Note: Gaffer's original #12 is "persen dan U tunggal"; I had mislabelled tablet counts as #12 in the #8 report. Percent and bare "U" are still open.
+- Gaffer approved the bounded design without an Opus review.
+- `5cb691b9` (R2), `src/lib/theoracle-evidence-gate.ts`:
+  - Tablet/tab/kaplet and kapsul/kaps (and English tablets/capsules) are strength units. "3 x 2 tablet" or "1-2 kapsul" verifies only from a passage that names the drug and the diagnosis and carries the same count. Both ends of a range are checked.
+  - Tablet and capsule do not match each other.
+  - A count of one next to a mass strength ("Parasetamol 500 mg, 3x1 tablet") is not checked separately; existing test c2 relies on this.
+  - A tablet count is itself the dose, so the #8 tablet-content rule skips it.
+  - Counts in route/duration/note need the same support or the field is blanked.
+- Verified:
+  - RED first; gate tests 42/42, `npm test` 231/231, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies: targeted verified 32 -> 33. The only change is antasida "3x1-2 tablet" for gastritis, from `gastritis.md` "Antasida oral 3 x 1-2 tablet" (correct). Legacy stays at 35.
+- Known limits:
+  - Frequency ("3x") is not checked, same as mg doses.
+  - "1 tablet" is common and can match another drug's line in the same chunk (the chunk must still name the drug and the diagnosis).
+  - "½ tablet", spoons and sachets are not covered.
+  - A model dose of "Diosmin 450 mg 3x2 tablet" is still blanked, because the #8 rule treats the 450 mg as tablet content.
+- Not pushed.
+
+## Evidence gate: tablet content is not a dose (#8) - 2026-10-11 Asia/Jakarta
+
+- Gaffer asked for #8 and approved the bounded design.
+- `8240ad93` + `4a94afa5` (R2), `src/lib/theoracle-evidence-gate.ts`, new `UNITS_PER_DOSE` and `doses()`:
+  - A strength occurrence followed within 80 characters by two or more tablets/capsules per dose does not verify the dose. Matched phrasings: "3 x 2 tablet", "2 tablet, 3 kali", "3 kali sehari 2 tablet", "2 kapsul sekaligus", "sekali minum", "tabs", "3 x 1-2 tablet".
+  - Another occurrence of the same strength written as a dose still verifies.
+  - FORNAS "30 tab/bulan", "3 x 1 tablet" and "kemasan 12 tablet" are not per-dose counts.
+  - The rule is fail-safe: drug kept, dose blanked.
+- Verified:
+  - RED first (2 rounds); gate tests 39/39, `npm test` 228/228, `tsc` 0, `eslint` 0.
+  - Replay of 122 replies: 0 changes on the current gate (35 legacy / 32 targeted verified). On the pre-#7 gate, exactly the 4 diosmin/hesperidin rows flip, nothing else.
+  - One Opus review: "Yes". Its cheap phrasing gaps were fixed in `4a94afa5`.
+- Known limits:
+  - A tablet count written before the strength ("3 x 2 tablet parasetamol 500 mg") is not detected.
+  - A count more than 80 characters after the strength is missed.
+  - The window can reach into the next drug's text; this only blanks, so it errs on the safe side.
+  - Spoon/sachet counts ("120 mg/5 ml 3 x 2 sendok takar") are not covered.
+  - A correct dose written in tablets is still blanked (#12, tablet counts are not strengths).
+- Not pushed.
+
+## Evidence gate: dose passage must name the diagnosis (#7); pre-gate drafts gated at render (#3) - 2026-10-11 Asia/Jakarta
+
+- Gaffer picked #7 and #3 from the open list ("Please fix" on #3) and approved the bounded design; edited pre-gate drafts stay as written (Gaffer).
+- `24c0dc8b` (R2):
+  - `src/lib/theoracle-evidence-gate.ts`: a dose is verified only from a passage (title or text) that names the working diagnosis.
+    - The diagnosis is named by one distinctive word of its label or of a TheOracle catalog name for its ICD-10 code.
+    - Words in 3+ catalog names and qualifier/function words do not count; capitals such as HIV do.
+    - Otherwise the drug stays with the dose blanked; strengths in route/duration/note follow the same passages. Safety items unchanged.
+  - `src/lib/mira/presentation.ts` `diagnosisContent`: an untouched draft without `evidenceGate` but with therapy is gated at render, against `therapyGrounding` or else `grounding`, exactly like the gateway. With no bundle, therapy is hidden with the reason.
+  - `src/components/workspace.tsx`: encounter export uses the rendered (gated) text. The edit box was already seeded from it.
+  - `referenceIncludes` moved to `src/lib/theoracle.ts`.
+- Verified:
+  - RED first for both: 4 gate tests, then 1 parity test (`diagnosisContent(old draft) === miraMessage(gated).content`). The generic-word test was added after the rule change, as a regression guard.
+  - `npm test` 224/224, `npx tsc --noEmit` 0, `npx eslint` on touched files 0.
+  - `test:mira` not run (no Python change). No browser check: the change is a pure render function covered by the parity test.
+- Offline replay, 61 + 61 eval replies, old gate reproduces the report exactly:
+  - verified 38 -> 35 legacy, 43 -> 32 targeted;
+  - cases with a verified dose 28 -> 25 and 32 -> 26;
+  - 14 changed rows read by hand: 6 correctly blocked (incl. flukonazol PV), 8 correct doses now blanked (fail-safe).
+  - Details in `PIPELINE-REPORT.md`, "Re-scored with the diagnosis check".
+- A stricter rule (every distinctive word of one name) gave 43 -> 23. It lost TB, cerumen, urticaria and asthma doses because English labels do not match Indonesian text, so it was rejected.
+- Final review (one Opus pass) returned "with fixes"; all four points were fixed in the follow-up commit:
+  - Saved therapy is now always re-gated at render, so a draft gated by the earlier rule (since `af452685`) no longer shows a dose the current gate rejects. A stored report keeps its removals and safety items; only verified doses the current gate rejects are downgraded.
+  - The "Sebelum edit" (compare) and "Versi dipilih" (history) panes render the original-draft snapshot through `diagnosisContent`, so raw model doses no longer appear there after an edit.
+  - Capitals rule: Roman numerals (stage II) and all-capital labels no longer count as diagnosis words.
+  - English ICD qualifiers (acquired, upper, severe, NOS, ...) were added to the generic list.
+  - New tests cover all four; `npm test` 226/226, tsc 0, eslint 0. Replay counts unchanged (same 14 rows).
+- Render gating falls back to `grounding` when `therapyGrounding` is invalid; with no working diagnosis the reason text differs from the gateway's. Therapy is hidden either way.
+- Known limits:
+  - English labels vs Indonesian text (Haemorrhoids/hemoroid) and catalog code eras (I84 vs K64, Z21 vs B20-B24) cost true doses.
+  - Synonyms such as ODHA for HIV are not known.
+  - A shared organ word (otitis, telinga) still links otitis media and eksterna.
+  - 4 of 144 catalog names have no distinctive word (Sinusitis Akut, Sinusitis Kronik, Diare Kronik, Diare Akut pada Anak). Their doses verify only through the model's label.
+  - A long chunk covering several diseases still verifies when it names the diagnosis anywhere.
+- Local `main` fast-forwarded to `79643cd1` (Gaffer chose "merge locally"), without `git pull`; local `main` still diverges from `origin/main`. Branch and worktree kept. Not pushed.
+- Open items from the previous list are unchanged (#1, #2, #4-#6, #8-#20). Next, for Gaffer: whether to turn on `MIRA_TARGETED_THERAPY` (#2), now with 32 verified targeted doses vs 35 legacy on the replay.
+- Laporan Orkestrasi:
+  - Orchestrator: Opus 5.5 (claude-opus-5-5) (reasoning effort not exposed)
+  - Worker: SOLO - no implementation worker dispatched. One reviewer: Claude Opus (subagent model "opus"; exact version and reasoning effort not exposed).
+  - Result: SUCCESS
+  - Suggested remediation: None - all required work is complete
+
+## TheOracle: 10 tatalaksana documents added to the index - 2026-10-11 Asia/Jakarta
+
+- Ten markdown documents with Gaffer-approved content are now in `theoracle/sources/tatalaksana/`: asfiksia neonatus, epistaksis, impaksi gigi, infeksi intraabdominal, osteosarkoma, Hirschsprung, pterigium, pulpa-periradikuler, sarkopenia and serumen prop. They carry Gaffer's two corrections: PPV 40-60/menit, and pip-tazo 3,375 g/6 jam nonberat vs 4,5 g berat.
+- Headings: Terapi farmakologis / Tindakan / Supportive care / Indikasi rujukan / Kontraindikasi / Sumber.
+- Additions not in Gaffer's draft, all non-dose and for Gaffer to confirm:
+  - ICD-10 categories: P21, R04.0, K01.1, C40-C41, Q43.1, H11.0, K04, H61.2;
+  - referral criteria for impaksi gigi, infeksi intraabdominal, osteosarkoma, pterigium, pulpa, sarkopenia and serumen;
+  - asfiksia monitoring;
+  - named guideline sources.
+- `scripts/add-theoracle-docs.mjs` (new) builds the chunks:
+  - one chunk per section, with the title and intro repeated, so a drug, its dose and the disease name share one passage;
+  - `origin: sentrapedia-tatalaksana`;
+  - deterministic ids, idempotent.
+- `scripts/build-theoracle-index.mjs --append` (new flag) embeds only the new rows. 42 chunks were embedded in 9 s (dml). The index now holds 20,465 chunks, indexSha256 `05a4f38b...`.
+- The old 20,423 chunks and vectors are byte-identical; their prefix sha256 matches the previous manifest.
+- Verified:
+  - Targeted retrieval for all 10 diseases puts the new documents in the 6-passage bundle, rank 1 for 6 of them.
+  - The gate verifies mg/g doses from them (epinefrin, ibuprofen, seftriakson, amoksisilin).
+  - Benchmark: recall@5 0.864 (unchanged), dose recall 0.754 -> 0.770, targeted dose recall 0.885 -> 0.902 (55/61). Results in `dose-recall-tatalaksana.json`.
+  - `npm test` 216/216, `tsc` 0, `eslint` 0.
+- Drop, spray and puff counts (tetes/gtt, semprotan/spray, puff) are now strengths, at Gaffer's request. "1-2 semprotan" verifies only against a passage that names the drug and says "1–2 semprotan", and unverified counts in notes are blanked. Percent concentrations stay part of the product name.
+- Eval replay with this gate: verified 38 -> 43 (legacy -> targeted), dose removed 18 -> 26. The 7 new verifications were checked by hand; all come from passages for the same disease. Local `main` was fast-forwarded to `8ca134f1` (Gaffer). Not pushed.
+- Next, for Gaffer: confirm the non-dose additions.
+
+## Final review fixes: evidence gate closes strength leaks - 2026-10-11 Asia/Jakarta
+
+- **Merged into local `main`** (Gaffer's choice). `main` was merged into the branch first (`fcd385e1`, no sentrapedia changes from main), then `main` was fast-forwarded. On the merged tree: `npm test` 216/216, `tsc` 0, `test:mira` 178 passed / 1 skipped. Not pushed.
+- **Open for Gaffer:** local `main` has diverged from `origin/main` (879 ahead, 40 behind) since before this work. `git pull` was not run. The branch and worktree are kept for the 10 tatalaksana documents.
+
+- The whole-branch review (opus, range `ffc74272~1..c67639e6`) found that the gate blanked only `dose`. Strengths in `note`, `duration`, `route`, the drug name and safety items reached the UI. A live case on the default legacy path: a crystalloid note "dapat diulang sampai 40ml/kg dalam 1 jam" was shown after the dose was blanked.
+- Fixes (R2), commits `5dea8cd7`, `7e182f81`, `f166ce72`, `c07272cf` and the number-parsing fix after it:
+  - **Strengths in other fields.** A strength in `route`/`duration`/`note` is shown only when one passage naming the drug carries it; otherwise the field is blanked. A drug-name strength is part of dose verification and is stripped from the name when the drug is not verified, both in the regimen and in "Verifikasi terapi". A safety item with an unsupported strength is dropped.
+  - **Ranges and combinations.** Both bounds are checked (5-40 mg, 875/125 mg).
+  - **New units.** mEq and mmol, "juta/ribu IU", and Greek μg are now strengths.
+  - **Numbers and stripping.** Thousands separators are parsed (1.200.000 IU is no longer verified by a 200.000 IU passage). ug and units are now strengths. Stripping removes per-unit tails (/5 ml, /kg/24 jam, /m2) but keeps a combination's second drug ("Amoxicillin/clavulanate").
+  - **Targeted path.** When retrieval or the therapy step fails, or there is no working diagnosis, the reply carries `evidenceGate.therapyRemoved` with a reason, so the UI says "Terapi tidak ditampilkan: …".
+  - **Eval script.** `retrievalSuccess` now reads the `retrieve_tx` stage.
+- Verified:
+  - `npx vitest run` gate, presentation, pipeline, client and theoracle-mira: 94/94, exit 0.
+  - `npx tsc --noEmit`: exit 0.
+  - `npx eslint` on touched files: exit 0.
+  - `npm run test:mira`: 178 passed, 1 skipped at review time (no Python change since).
+- Parked (non-blocking):
+  - Percent concentrations and tablet counts are not strengths.
+  - The per-kg check runs over dose+name, which fails safe but can under-verify.
+  - A field with an unverified strength is blanked whole (a route such as "PO 250 mg sirup" disappears).
+  - Cosmetic residue after stripping ("Isoniazid (max )", "3x", "-"), with no digit or unit left behind. Percent concentrations and a bare "U" are not strengths.
+  - Review minors, not fixed:
+    - **M1:** the client accepts therapy without an `evidenceGate`.
+    - **M3:** the gate wording is misleading on an ICD mismatch, a missing bundle, or an empty regimen ("no drug needed" reads as "not verified").
+    - **M5:** the eval's "ICD-10 valid" checks existence only, not name-to-label match.
+    - **M6:** the eval JSON `costUsd` is diagnosis-only (`auditCostUsd` has the total).
+    - **M7:** the complaint dose passage skips `MAX_PER_DOCUMENT`.
+    - **M8:** the `DOSE` test reads the full chunk while the bundle carries 2,400 chars.
+    - **M9:** `/v1/therapy/step` ignores `MIRA_FAST_THERAPY`.
+    - **M10:** `mira_tx` has no own time limit; the worst case is about 70 s against the 65 s overall timer.
+- Eval re-scored with the final gate by offline replay of the 122 audited replies, no model calls. The old gate reproduces the committed counts exactly. Final gate: verified 35 → 39 (legacy → targeted), dose removed 21 → 30, drug removed 9 → 2. See `PIPELINE-REPORT.md`, "Re-scored with the final gate".
+- For Gaffer:
+  - Drafts saved before the gate still show their original model doses (the spec says render as today).
+  - `MIRA_TARGETED_THERAPY` default stays OFF.
+  - The gold ICD labels are still draft.
+  - The uncommitted postchecks edits in the main checkout `D:\DEV\monorepo` overlap `ffc74272`.
+  - Not pushed.
+- Next (approved by Gaffer): add 10 tatalaksana markdowns (asfiksia, epistaksis, impaksi gigi, infeksi intraabdominal, osteosarkoma, Hirschsprung, pterigium, pulpa-periradikuler, sarkopenia, serumen) to the TheOracle index. Content is reviewed by Gaffer, doses are directly verifiable, with corrections PPV 40–60/menit and pip-tazo 3,375 g/6 jam nonberat vs 4,5 g berat. Headings: Terapi farmakologis / Tindakan / Supportive care / Indikasi rujukan / Kontraindikasi / Sumber.
+
+## TheOracle pipeline evaluation, legacy vs targeted (Task 7) - 2026-10-11 Asia/Jakarta
+
+- Ran the paid end-to-end evaluation (approved by Gaffer): 61 gold cases on each path through the real `POST /api/mira`, `google/gemini-2.5-flash`. Script `scripts/eval-theoracle-pipeline.mjs`; rows and summaries in `docs/verification/theoracle-eval-2026-10-11/pipeline-2026-10-11-{legacy,targeted}.json`; report `PIPELINE-REPORT.md` (same folder).
+- Result, legacy -> targeted: latency p50 2.50 -> 4.55 s (p95 2.87 -> 5.55 s); ICD-10 top-1 vs draft gold 98.4% both (queries name the disease; upper bound, name-to-code lookup, not diagnosis from a clinical presentation); verified doses 36 -> 41, dose removed 20 -> 28, drug removed 9 -> 2; cases with a verified dose 27 -> 31; therapy retrieval 61/61, no fallback; cost (audit) $0.8945 -> $0.8401. Total spend of the evaluation $1.73.
+- Spot-check of 10 verified doses: 8 yes, 1 no (fluconazole 50 mg cited from an unrelated azole list for pityriasis versicolor), 1 unclear (diosmin 450 mg is tablet content, regimen is 3 x 2 tablets). The lexical gate cannot catch either kind.
+- Default of `MIRA_TARGETED_THERAPY` stays OFF; no default, env file or budget was changed. Gaffer decides from the report.
+- Verified: `npx eslint scripts/eval-theoracle-pipeline.mjs` 0, `npx tsc --noEmit` 0. Servers started for the runs were stopped; `next-env.d.ts` touched by `next dev` was restored.
+- Open risks: gold labels still draft; one-line fictional cases (no age, so adult/child is unknowable); gate is lexical (wrong-disease and tablet-content cases pass); spot-check is 10 rows by one reader; the script's "supported" rate (95.3% -> 97.2%) is loose lexical and overstates support; `verified` is the headline dose number. Not pushed.
+- Next steps: Gaffer decides whether to turn on `MIRA_TARGETED_THERAPY`; if yes, consider a disease-title check in the gate (cited passage must name the diagnosis) and tablet-content handling for combination products.
+
+## TheOracle dose retrieval + ICD-10 postchecks — 2026-10-11 Asia/Jakarta
+
+- Root cause (retrieval, not missing knowledge): grounding is queried with the complaint only, so it returned symptom passages. Doses sit in treatment passages, mostly in other guidelines: `fasyankes-primer-idi-2017.pdf` (133 dose chunks), `fktp-kmk-2022.pdf`, `fornas-2023/2025.pdf`, PERDOSKI. The 144 disease markdowns carry doses in only 52 cases.
+- `8e1d5604` (R2) `src/lib/theoracle-grounding.ts`: second local query (complaint + "penatalaksanaan terapi dosis obat") over the whole corpus; the best passage that states a drug amount (regex, not lab values such as mg/dL) replaces the lowest-ranked match. Evidence count stays at most 6, so contract, gateway, engine and the number of MIRA calls are unchanged.
+- `ffc74272` (R2) ported the `postchecks.py` ICD-10 fix from the keyword copy (code repaired from the diagnosis label when unambiguous, otherwise kept with an audit note) and updated the `SOURCE.json` hashes.
+- Measured, `node scripts/benchmark-theoracle-grounding.mjs` (88-query draft eval set, local CPU), files `docs/verification/theoracle-eval-2026-10-11/dose-recall-{before,after}.json`: dose recall (a dose-bearing chunk from a gold doc, or one naming the gold disease, reaches the model) 0.508 -> 0.754 (31 -> 46 of 61); recall@5 0.841 -> 0.864; drug_dose 0.50 -> 0.625; ICD-10 retrieval row unchanged at 0.50 (code strings; the fix is the postcheck); warm latency median 35 -> 73 ms; index unchanged. One query lost (DBD, whose treatment is fluids). Fornas fills 14 of 61 treatment slots, 9 of them hits.
+- First attempt (treatment passage from the same document only) gave 24 -> 26 of 61 and lowered recall@5; discarded.
+- `diseases-dose-coverage.json`: 10 of 144 disease docs have no dose chunk naming them anywhere in TheOracle (asfiksia, epistaksis, impaksi gigi, infeksi intraabdominal, osteosarkoma, Hirschsprung, pterigium, pulpa periradikuler, sarkopenia, serumen). Lexical check; HIV, TB and cedera otak were false negatives and are corrected in the file.
+- Verified: vitest `tests/theoracle-grounding.test.ts` 8/8 (includes the real index), tsc 0, eslint 0 on touched files, `npm run test:mira` 173 passed / 1 skipped (Windows, repo script).
+- Not done: end-to-end dose accuracy (does the therapy part copy the right dose from the excerpt) needs live MIRA model calls, which are paid; awaiting Gaffer. `_complete_therapy` still prefers a complete regimen; check it in that run. Eval gold labels are still draft. Not pushed. The keyword copy (`D:\DEV\monorepo`) still holds the uncommitted ICD change; Gaffer decides whether to keep it.
+
+## MIRA R4 + R5 (architecture overview) — 2026-10-11 Asia/Jakarta
+
+- Gaffer chose R4 + R5 from `docs/architecture-overview-2026-10-11.md`.
+- R4: removed the legacy free-model path (`src/lib/mira/free-profile.ts`, `freeModel` branches and the `freeOnly` health field in `gateway.ts`, `tests/mira-free.test.ts`, `config/mira-free.env.example`, `scripts/run-mira-free.ps1`). `route.ts` never passed `freeModel`, so runtime behaviour is unchanged.
+- R5: one profile file `scripts/mira-profile.json` (model, per-step budget, engine step deadline, gateway margin) read by `model-profile.ts`, `route.ts` and `scripts/mira-runtime.mjs`. Gateway timeout is now derived: (20 s deadline + 25 s margin) = 45 s, was a hard-coded 135 s left from the old 120 s deadline. `build-system.mjs` and the `Dockerfile` copy the JSON next to the launcher.
+- Verified: new tests RED first (profile file missing), then typecheck 0, eslint on touched files 0, `vitest tests/mira` 20/20, `test:system` 8/8, `npm run build` 0 (`.next/standalone/scripts/mira-profile.json` present; the standalone `mira-runtime.mjs` loads it), `deploy:dry-run` 0. `scripts/run-mira-deepseek.ps1` only calls `run-system.mjs`; `config/mira-deepseek.env.example` repeats the same values (20 s, 0.10) as documentation. Not run: Docker build, a live MIRA analysis (paid; not approved). Python engine defaults in `mira/service/settings.py` are untouched (env from the launcher overrides them).
+- Docs `docs/architecture.md` still list the removed free-model files as historical.
+
+## Dependency security pass — 2026-10-11 Asia/Jakarta
+
+- MIRA: `starlette` 0.41.3 had 14 known advisories (pip-audit). Pins bumped in `mira/requirements.lock`: fastapi 0.115.4 -> 0.141.1, starlette 0.41.3 -> 1.7.0, new `annotated-doc==0.0.5` (required by FastAPI >= 0.120). FastAPI 0.142+ was skipped because it adds `opentelemetry-api`.
+- Verified: pip-audit "No known vulnerabilities found", `pip check` clean, test:mira 157 passed + 1 skipped (one test-client deprecation warning from Starlette), test:system 7/7, build 0, deploy:dry-run PASS. Docker image not rebuilt for this change.
+- npm: `npm audit --omit=dev` = 0. The 5 high findings are one dev-only chain (`eslint-config-next` -> `@next/eslint-plugin-next` -> `fast-glob` -> `micromatch` -> `braces` 3.0.3, GHSA-vfj7-8cjw-p6xm). No patched `braces` release exists (latest is 3.0.3); npm's suggested fix is a downgrade to eslint-config-next 14, which is not acceptable. Left as is; it only runs during lint, not in the shipped app.
+- Not checked: the GitHub Dependabot alert page itself (`gh` is not authenticated and the browser pane is not signed in to GitHub).
+
+## Vera (Dify) widget redesign — 2026-10-11 Asia/Jakarta
+
+- Dify moved out of the sidebar into a floating `VeraWidget` (`src/components/vera-widget.tsx`, rendered in `src/app/layout.tsx`); `/dify` stays as the full-screen view.
+- Current design (commit d852c68c, per Gaffer's mockup): dark panel with soft neumorphism 330x440 (mobile: full width, max 480px tall), top bar (reset, "Vera · TheOracle" pill, expand, close), opening state with the plain logo, no card) official Sentra neuron logo (`src/assets/sentra-official-logo.png`, LFS, cropped from Gaffer's attachment) and a time-based greeting, right-aligned user bubbles, plain assistant replies with copy/like/dislike/sources, raised composer card with `+` suggestions and a round send button.
+- Verified: typecheck 0, lint 0 on the widget, build 0, deploy:dry-run PASS, browser check desktop + mobile on port 3105 (opening view, `+` suggestions, send button enables). No real Dify message was sent, so the conversation view was not exercised live. No unit test covers the widget.
+- Open: not pushed to drferdi/Sentrapedia yet (needs Gaffer's approval; LFS object for the logo must be pushed explicitly).
+
 ## Legacy theoracle/ inventory read — 2026-10-11 Asia/Jakarta
 
 Read-only (copy in session scratchpad, pylance 12.0.0 + pyarrow 25.0.1 in a scratchpad venv
@@ -10,6 +526,37 @@ chunks, 768-dim Gemini vectors, 144 documents: 100 disease markdowns (all from
 29 are other references e.g. FAA, ESC, AHA, GOLD, FORNAS, PERDOSKI, UNAIR). No source PDFs left
 in AnythingLLM storage; treat `theoracle/` as the only copy. Branch now `feat/oracle-vector-only`
 at checkpoint `20b15b2e`.
+
+## TheOracle vector-only with local EmbeddingGemma — 2026-10-11 Asia/Jakarta
+
+Status: committed on `feat/oracle-vector-only` (worktree `D:\DEV\monorepo.worktrees\oracle-vector-only`):
+`c3581e5e` store/runtime/contract/tests, `8b030bfd` SQLite removal + Oracle II move, then docs.
+Not pushed, not merged. R2 (engine contract + data path). Gaffer chose EmbeddingGemma ("Gemma,
+lanjut"), no Gemini for embeddings, and capsule-local Git LFS for `theoracle/index/vectors.f32`.
+
+What changed: `theoracle/index/` (20,423 chunks, vectors via LFS, manifest with model/file/chunk/
+vector hashes, indexSha256 `f9d64669…`); `src/lib/theoracle-grounding.ts` vector retriever (local
+CPU query embedding, max 6 / 2 per document, PII filter); contract `theoracle-grounding-v2` in TS,
+schema, `app.py`, `prompts.py` (verbatim drug/dose/ICD-10/lab rule), tests; postinstall installs
+the pinned model into `theoracle/model/` (git-ignored); standalone/Docker ship index, model,
+onnxruntime-node and sharp; `oracle-ii/` moved to `theoracle/provenance/oracle-ii/`, SQLite removed.
+`mira/SOURCE.json` packaged/snapshot hashes re-pinned to LF bytes (they recorded CRLF working
+copies; a clean LF checkout failed `test_packaging`). The main checkout still has CRLF copies and
+will fail that test until its files are re-checked out.
+
+Verification: typecheck 0; lint 0; `npm test` 158/158; `test:mira` 157 passed 1 skipped;
+`test:system` 7/7; build 0; deploy:dry-run PASS; benchmark recall@5 0.841, warm 39 ms median,
+cold start 3.1 s; vector parity 1.0. `docker build` exit 0 (3.1 GB, after a Docker
+Desktop engine restart); container smoke: Linux embedding 768-d, home 200, MIRA `groundingReady: true`.
+Details: `docs/verification/2026-10-11-theoracle-vector-only.md`, model eval
+`docs/verification/theoracle-eval-2026-10-11/`.
+
+Open: Gaffer review of eval gold labels; ICD-10/dose recall 0.50; Lance export
+(`theoracle/` data in the main checkout, 72 MB, untracked) keep or delete; `oracle/` catalog
+untouched; chunk ingest tool (@langchain splitter) lives only in the session scratchpad; drafts
+saved before v2 lose their citations section; main checkout `oracle-ii/*.sqlite*` and
+`_to_delete/` for Gaffer to delete. Main checkout (Dify agent): Vida's uncommitted design changes
+were stashed on Gaffer's request (`stash@{0}`), Dify commits kept.
 
 ## TheOracle is the knowledge SSOT; contract renamed — 2026-10-11 Asia/Jakarta
 

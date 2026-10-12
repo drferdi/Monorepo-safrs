@@ -3,6 +3,14 @@ import { test } from "node:test";
 import { spawn } from "node:child_process";
 import { resolve } from "node:path";
 import { engineEnvironment, engineReady, model, pythonPath } from "../scripts/mira-runtime.mjs";
+import profile from "../scripts/mira-profile.json" with { type: "json" };
+
+test("launcher takes model, step deadline and budget from the shared MIRA profile", () => {
+  const env = engineEnvironment(resolve("test-capsule"), { OPENROUTER_API_KEY: "fixture-only" }, "token");
+  assert.equal(model, profile.model);
+  assert.equal(env.MIRA_STEP_DEADLINE_S, String(profile.stepDeadlineS));
+  assert.equal(env.MIRA_MAX_USD_PER_STEP, profile.stepBudgetUsd.toFixed(2));
+});
 
 test("engine uses capsule runtime and preserves approved profile despite inherited external config", () => {
   const root = resolve("test-capsule");
@@ -25,7 +33,7 @@ test("startup requires a provider key without exposing values", () => {
 });
 
 test("workspace waits for grounded matching engine rather than old separate services", () => {
-  const health = { status: "ok", contractVersion: "1", capabilities: ["theoracle-grounding-v1"], version: `mira-service/0.1.0+contract=1+provider=openrouter+data=synthetic-only+plan=${model}+assess=${model}+experimental+ddx=provisional+assessment=fast+therapy=fast` };
+  const health = { status: "ok", contractVersion: "1", capabilities: ["theoracle-grounding-v2"], version: `mira-service/0.1.0+contract=1+provider=openrouter+data=synthetic-only+plan=${model}+assess=${model}+experimental+ddx=provisional+assessment=fast+therapy=fast` };
   assert.equal(engineReady(health), true);
   for (const changed of [{ capabilities: [] }, { contractVersion: "2" }, { status: "unavailable" }, { version: health.version.replace(model, "other") }, { version: health.version.replace("+therapy=fast", "") }]) assert.equal(engineReady({ ...health, ...changed }), false);
 });

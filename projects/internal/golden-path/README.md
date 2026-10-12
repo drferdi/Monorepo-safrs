@@ -2,11 +2,11 @@
 
 ## Objective
 
-Meja kesiapan ini membantu Chief melihat hubungan Database → API bertipe → Web → Siap, lalu menyimpan satu contoh untuk membuktikan alur.
+Meja kesiapan ini membantu Gaffer melihat hubungan Database → API bertipe → Web → Siap, lalu menyimpan satu contoh untuk membuktikan alur.
 
 ## Owner and boundary
 
-Chief owns the product outcome. This project owns only `projects/internal/golden-path/**`; reusable interfaces remain in declared `@safrs/*` packages.
+Gaffer owns the product outcome. This project owns only `projects/internal/golden-path/**`; reusable interfaces remain in declared `@safrs/*` packages.
 
 ## Non-goals
 

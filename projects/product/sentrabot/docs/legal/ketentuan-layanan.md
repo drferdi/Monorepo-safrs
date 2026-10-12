@@ -18,7 +18,7 @@ atas nama organisasi, Anda menyatakan berwenang mengikat organisasi tersebut.
 
 **[ISI: alamat terdaftar dan alamat surel kontak.]**
 
-*(Identitas dikonfirmasi Chief, 1 September 2026.)*
+*(Identitas dikonfirmasi Gaffer, 1 September 2026.)*
 
 ---
 
@@ -34,7 +34,7 @@ Tergantung paket:
 | Pro | **30** | Kuota Managed AI lebih besar |
 | Business | **100** | Beberapa anggota tim, bantuan prioritas |
 
-Batas bot dihitung **per workspace**. *(Terkunci Chief, 1 September 2026.)*
+Batas bot dihitung **per workspace**. *(Terkunci Gaffer, 1 September 2026.)*
 
 Kuota Managed AI dihitung dari pemakaian dan dicatat pada instalasi Anda (`UsageRecord`).
 Kuota habis dapat diisi ulang lewat top-up.
@@ -130,7 +130,7 @@ dan periode pengajuan klaim.]**
 
 **Harga ditampilkan sudah termasuk pajak yang berlaku** (*tax-inclusive*). Angka yang dilihat
 pelanggan adalah angka yang dibayar; tidak ada pajak yang ditambahkan mendadak saat checkout.
-Ini sejalan dengan posisi produk yang plug-and-play. *(Keputusan Chief, 1 September 2026.)*
+Ini sejalan dengan posisi produk yang plug-and-play. *(Keputusan Gaffer, 1 September 2026.)*
 
 **[ISI: siklus penagihan, metode pembayaran, kebijakan pengembalian dana, dan ketentuan
 perpanjangan otomatis. Untuk paket tahunan yang dibayar di muka, kebijakan pengembalian dana
@@ -193,7 +193,7 @@ Free tanpa penghapusan data.
 
 Batas paket Free selengkapnya: `docs/product/paket-free-batas-v1.md`.
 
-*(Keputusan produk Chief, 1 September 2026.)*
+*(Keputusan produk Gaffer, 1 September 2026.)*
 
 ---
 

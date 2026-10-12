@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import profile from "./mira-profile.json" with { type: "json" };
 
-export const model = "google/gemini-2.5-flash";
+export const model = profile.model;
 export async function preflightProvider(fetchFn = fetch) {
   const readMetadata = async url => {
     const response = await fetchFn(url, { signal: AbortSignal.timeout(10000), redirect: "error" });
@@ -42,14 +43,14 @@ export function engineEnvironment(root, environment, token) {
     MIRA_DATA_POLICY: "synthetic-only", MIRA_PLAN_MODEL: model, MIRA_PLAN_MODEL_CHOICES: model,
     MIRA_ASSESS_MODEL: model, MIRA_OPENROUTER_PROVIDER_SORT: "throughput", MIRA_OPENROUTER_ZDR: "false",
     MIRA_PROVISIONAL_DIFFERENTIAL: "true", MIRA_FAST_ASSESSMENT: "true", MIRA_FAST_THERAPY: "true",
-    MIRA_FAST_COPY_PROVIDERS: "google-ai-studio,google-vertex/global", MIRA_STEP_DEADLINE_S: "20",
-    MIRA_MAX_USD_PER_STEP: "0.10", MIRA_DAILY_BUDGET_USD: "5", MIRA_ALLOWED_ORIGINS: "",
+    MIRA_FAST_COPY_PROVIDERS: "google-ai-studio,google-vertex/global", MIRA_STEP_DEADLINE_S: String(profile.stepDeadlineS),
+    MIRA_MAX_USD_PER_STEP: profile.stepBudgetUsd.toFixed(2), MIRA_DAILY_BUDGET_USD: "5", MIRA_ALLOWED_ORIGINS: "",
     MIRA_AUDIT_DIR: resolve(root, ".runtime/mira-deepseek/audit"),
   };
 }
 export function engineReady(health) {
   return health?.status === "ok" && health.contractVersion === "1" &&
-    health.capabilities?.includes("theoracle-grounding-v1") &&
+    health.capabilities?.includes("theoracle-grounding-v2") &&
     health.version?.includes(`+contract=1+provider=openrouter+data=synthetic-only+plan=${model}+assess=${model}`) &&
     health.version?.endsWith("+ddx=provisional+assessment=fast+therapy=fast");
 }

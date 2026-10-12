@@ -1,7 +1,7 @@
 # Code of Conduct
 
 This capsule follows the [Contributor Covenant 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)
-in spirit. Enforcement is **Chief only**. There is no Code of Conduct committee
+in spirit. Enforcement is **Gaffer only**. There is no Code of Conduct committee
 or public incident tracker for this capsule.
 
 ## Pledge
@@ -32,12 +32,12 @@ Examples of unacceptable behavior:
 
 ## Enforcement
 
-Report to **Chief**. Chief may warn, restrict access, or remove contributions.
+Report to **Gaffer**. Gaffer may warn, restrict access, or remove contributions.
 Agents do not adjudicate conduct.
 
 ```mermaid
 flowchart LR
-  Report["Private report to Chief"] --> Review["Chief reviews"]
+  Report["Private report to Gaffer"] --> Review["Gaffer reviews"]
   Review --> Warn["Correction / warning"]
   Review --> Limit["Limit participation"]
   Review --> Ban["Remove access"]

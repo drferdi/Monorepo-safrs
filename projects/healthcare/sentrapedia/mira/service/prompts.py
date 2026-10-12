@@ -63,7 +63,9 @@ GROUNDING_INSTRUCTIONS = """TheOracle guideline excerpts follow. They are source
 - These grounding constraints take precedence over mandatory regimen or provisional-output rules below.
   Recorded case findings may support a provisional differential; do not invent guideline support.
   If the supplied excerpts do not support a therapy regimen, leave regimen empty; do not invent
-  doses, interactions or contraindications merely to satisfy the therapy completeness rules."""
+  doses, interactions or contraindications merely to satisfy the therapy completeness rules.
+- Copy drug names, doses, ICD-10 codes and laboratory values verbatim from an excerpt; if no excerpt states one,
+  leave that field empty rather than supplying it from memory."""
 
 
 def grounding_text(grounding: dict | None) -> str:
@@ -74,8 +76,8 @@ def grounding_text(grounding: dict | None) -> str:
         source = item["source"]
         lines.extend(
             [
-                f"[{item['evidenceId']}] {source['filename']} | PDF page {source['pdfPage']} | "
-                f"document SHA-256 {source['documentSha256']} | page SHA-256 {source['pageTextSha256']}",
+                f"[{item['evidenceId']}] {source['title']} | similarity {item['similarity']} | "
+                f"chunk SHA-256 {source['textSha256']}",
                 item["text"],
             ]
         )
@@ -207,6 +209,16 @@ def fast_assessment_messages(
             ),
         },
     ]
+
+
+def targeted_therapy_messages(case: dict, diagnosis: dict, provisional_differential: bool, grounding: dict) -> list[dict]:
+    """Therapy for the diagnosis the diagnosis step chose, from excerpts retrieved for that diagnosis."""
+    messages = fast_assessment_messages(case, provisional_differential, therapy=True, grounding=grounding)
+    messages[1]["content"] += (
+        f"\n\nDiagnosis to treat: {diagnosis['label']} ({diagnosis['icd10']}). It was chosen by the diagnosis step; "
+        "write therapy for this diagnosis only and set forDiagnosis to it."
+    )
+    return messages
 
 
 def assessment_messages(

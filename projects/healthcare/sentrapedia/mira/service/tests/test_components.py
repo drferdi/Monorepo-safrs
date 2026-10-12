@@ -16,7 +16,7 @@ import pytest
 from service import ASSIST_DIR, SRC_DIR
 from service.contract import CONTRACT_DIR, REQUEST, RESPONSE, UNFILLABLE_FIELDS, errors, unavailable_response
 from service.menu import EXCLUDED_TOOLS, PLANNING_TOOLS
-from service.postchecks import SERVICE_DIR, incompatible_rule, normalize_code
+from service.postchecks import SERVICE_DIR, apply, icd_codes, incompatible_rule, normalize_code, resolve_code
 from service.prompts import ASSESSMENT_INSTRUCTIONS, ASSESSMENT_SCHEMA, THERAPY_SCHEMA, case_text
 from service.settings import StartupRefused, check_startup, load_settings
 from service.sim_benchmark import parse_args, simulation_response
@@ -108,6 +108,60 @@ def test_icd_normalization(raw, expected):
     from service.postchecks import icd_codes
 
     assert normalize_code(raw, icd_codes()) == expected
+
+
+@pytest.mark.parametrize(
+    ("raw", "label", "expected"),
+    [
+        # a valid code that names another disease is replaced when the label names exactly one code
+        ("A98.4", "Chikungunya", "A92.0"),
+        ("A17.8", "Tuberculous meningitis", "A17.0"),
+        ("N83.2", "Torsion of ovary, ovarian pedicle and fallopian tube", "N83.5"),
+        ("A96.0", "Machupo haemorrhagic fever", "A96.1"),
+        # a code that is not in the list is recovered from the label, then from its category
+        ("K35.0", "Acute appendicitis with generalized peritonitis", "K35.2"),
+        ("K35.0", "Acute appendicitis", "K35"),
+        ("N44.0", "Torsion of testis", "N44"),
+        # no unambiguous repair: a valid code is kept, an unknown code is given up
+        ("N36.0", "Urethritis", "N36.0"),
+        ("I63.9", "Ischemic stroke", "I63.9"),
+        ("N39.0", "Infeksi Saluran Kemih", "N39.0"),
+        ("K99.1", "Invented", None),
+        ("I16.1", "Hypertensive emergency", None),
+        # a matching or more general label never changes a valid code
+        ("K35.8", "Acute appendicitis", "K35.8"),
+        ("K35.80", "Appendicitis (ICD-10-CM style)", "K35.8"),
+        ("J18.9", "Pneumonia, unspecified organism", "J18.9"),
+    ],
+)
+def test_icd_code_is_checked_against_its_label(raw, label, expected):
+    code, note = resolve_code(raw, label, icd_codes())
+    assert code == expected
+    assert (note is not None and note.startswith("repaired")) == (expected is not None and expected != normalize_code(raw, icd_codes()))
+
+
+def test_a_cannot_miss_diagnosis_with_an_unknown_code_is_repaired_not_removed():
+    assessment = {
+        "differential": {
+            "likely": [{"icd10": "A98.4", "label": "Chikungunya", "confidenceTier": "low"}],
+            "alternatives": [],
+            "cannotMiss": [{"icd10": "K35.0", "label": "Acute appendicitis", "confidenceTier": "low"}],
+        },
+        "evidence": [{"icd10": "K35.0", "supporting": ["nyeri perut kanan bawah"], "opposing": []}],
+        "missingInformation": [],
+        "nextBestActions": [],
+        "disposition": None,
+        "unfilled": [],
+        "therapy": {"forDiagnosis": {"icd10": "A98.4", "label": "Chikungunya"}, "regimen": [], "interactions": [], "contraindications": []},
+    }
+    fields, notes = apply(assessment, {"demographics": {"sex": "M"}, "facilityCapabilities": []})
+
+    assert [d["icd10"] for d in fields["differential"]["cannotMiss"]] == ["K35"]
+    assert [d["icd10"] for d in fields["differential"]["likely"]] == ["A92.0"]
+    assert fields["evidence"][0]["icd10"] == "K35"
+    assert fields["therapy"]["forDiagnosis"]["icd10"] == "A92.0"
+    assert fields["unfilled"] == []
+    assert len(notes) == 3 and all("repaired" in note for note in notes)
 
 
 @pytest.mark.parametrize(

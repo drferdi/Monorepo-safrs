@@ -2,7 +2,7 @@
 
 Status: SELESAI — verifier resmi `tools/project-standalone` RESULT PASS
 (11 stage) pada 2026-08-24, branch `chore/smartboard-standalone`.
-Pemilik: Chief. Pelaksana: agent.
+Pemilik: Gaffer. Pelaksana: agent.
 
 ## Keputusan teknis saat eksekusi
 
@@ -63,7 +63,7 @@ direktori bersih.
 
 Pola acuan: `corporate/portfolio-drnovia` (satu-satunya capsule yang lolos).
 Rencana 8 fase / 28 butir, checklist live di Artifact
-"Smartboard Standalone" (panel Chief):
+"Smartboard Standalone" (panel Gaffer):
 
 - Fase 0 Baseline: typecheck site+web hijau via root (terverifikasi), branch kerja.
 - Fase 1 Fondasi lokal: `package.json` + `pnpm-workspace.yaml` capsule

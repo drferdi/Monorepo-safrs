@@ -1,0 +1,6 @@
+{
+  "model": "google/gemini-2.5-flash",
+  "stepBudgetUsd": 0.1,
+  "stepDeadlineS": 20,
+  "gatewayMarginS": 25
+}

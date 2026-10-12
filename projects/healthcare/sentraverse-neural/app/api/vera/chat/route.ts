@@ -1,32 +1,14 @@
 // Architected and built by Drferdi.
 // Sentraverse-Neural - Vera Assistant Streaming API Route
 import { NextRequest, NextResponse } from 'next/server';
+import { MESSAGE_LIMIT, takeMessage } from './limit';
 
 export const runtime = 'nodejs';
 
-// Each visitor (by client IP) gets 10 messages per 24 hours. The counter lives in this
-// server instance's memory, so it is best-effort: a cold start or another instance resets it.
-const MESSAGE_LIMIT = 10;
-const WINDOW_MS = 24 * 60 * 60 * 1000;
 const MAX_QUERY_CHARS = 1000;
-const usage = new Map<string, { count: number; resetAt: number }>();
 
 function clientId(req: NextRequest): string {
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown';
-}
-
-function takeMessage(id: string, now: number): number | null {
-  if (usage.size > 5000) {
-    for (const [key, entry] of usage) if (entry.resetAt <= now) usage.delete(key);
-  }
-  const entry = usage.get(id);
-  if (!entry || entry.resetAt <= now) {
-    usage.set(id, { count: 1, resetAt: now + WINDOW_MS });
-    return null;
-  }
-  if (entry.count >= MESSAGE_LIMIT) return entry.resetAt;
-  entry.count += 1;
-  return null;
 }
 
 export async function POST(req: NextRequest) {
@@ -48,12 +30,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const now = Date.now();
-    const blockedUntil = takeMessage(clientId(req), now);
-    if (blockedUntil !== null) {
+    const retryAfterS = await takeMessage(clientId(req));
+    if (retryAfterS !== null) {
       return NextResponse.json(
         { error: `You have reached the limit of ${MESSAGE_LIMIT} messages per day. Please try again later.` },
-        { status: 429, headers: { 'Retry-After': String(Math.ceil((blockedUntil - now) / 1000)) } }
+        { status: 429, headers: { 'Retry-After': String(retryAfterS) } }
       );
     }
 

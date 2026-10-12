@@ -3,10 +3,11 @@ import responseSchema from "./response.schema.json";
 import { validateJson } from "./validate-json";
 import type { CaseState, EngineResult } from "./types";
 import type { TheOracleGroundingBundle } from "../theoracle-grounding-types";
+import type { EvidenceGateReport } from "../theoracle-evidence-gate";
 
 export interface MiraTherapy { forDiagnosis: { icd10: string; label: string }; regimen: { drug: string; dose: string; route: string; duration: string; note: string }[]; interactions: string[]; contraindications: string[] }
 export type MiraResult = Omit<EngineResult, "meta"> & { contractVersion: "1"; meta: { version: string; model: string | null; costUsd: number | null }; therapy?: MiraTherapy };
-export interface MiraAnalysis { case: CaseState; result: MiraResult; traceId: string; createdAt: string; grounding?: TheOracleGroundingBundle }
+export interface MiraAnalysis { case: CaseState; result: MiraResult; traceId: string; createdAt: string; grounding?: TheOracleGroundingBundle; therapyGrounding?: TheOracleGroundingBundle; evidenceGate?: EvidenceGateReport }
 export function validCase(value: unknown): value is CaseState {
   if (validateJson({ contractVersion: "1", traceId: "validation", case: value }, requestSchema).length) return false;
   const data = value as CaseState;

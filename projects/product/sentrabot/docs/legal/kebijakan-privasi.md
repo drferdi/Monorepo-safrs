@@ -38,7 +38,7 @@ sakit, dan data pasien maupun rekam medis tidak bersinggungan dengan SentraBot.
 
 **[ISI: alamat terdaftar dan alamat surel kontak privasi.]**
 
-*(Identitas dikonfirmasi Chief, 1 September 2026.)*
+*(Identitas dikonfirmasi Gaffer, 1 September 2026.)*
 
 ---
 
@@ -58,7 +58,7 @@ Pada **Sentra Managed AI**, kami memroses potongan konteks semata untuk menerusk
 dan menghitung kuota — tidak untuk keperluan lain, dan tidak untuk melatih model. Pada
 **BYOK**, jalur itu tidak ada sama sekali.
 
-*(Dikonfirmasi Chief, 1 September 2026.)*
+*(Dikonfirmasi Gaffer, 1 September 2026.)*
 
 ---
 
@@ -134,7 +134,7 @@ Yang **tidak pernah** dikumpulkan, dinyalakan atau tidak:
 - riwayat peramban
 - data medis dan data pribadi sensitif lainnya
 
-*(Keputusan produk Chief, 1 September 2026. Opsi lanjutan: menjalankan PostHog self-hosted
+*(Keputusan produk Gaffer, 1 September 2026. Opsi lanjutan: menjalankan PostHog self-hosted
 sebagai pilihan deployment — tidak menjadi penghambat peluncuran.)*
 
 **[VERIFIKASI TEKNIK: pastikan implementasi benar-benar mati secara bawaan dan daftar
