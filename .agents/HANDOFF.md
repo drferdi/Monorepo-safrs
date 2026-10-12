@@ -9,9 +9,9 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 ## Current state
 
-- Local `main` is `ac6173fb`, fast-forwarded from `feat/claude-path-scoped-rules` on Gaffer's go
-  (local only). `feat` is ahead again with the guard-prefix fix and this handoff; moving `main`
-  needs a new go. The main checkout is on `chore/tools-closeout`, so the new guards and hooks are
+- Local `main` is `89487d4f` (fast-forwarded on Gaffer's go, local only). `feat` is ahead with the
+  inbound `origin/main` integration (`57c92731`), the Proof fixtures, and this handoff; moving
+  `main` needs a new go. The main checkout is on `chore/tools-closeout`, so the new guards and hooks are
   not active there until it switches to `main`. `origin/codex/oracle-ii-grounding` was pushed by Gaffer on 2026-10-11 (`88e56bb7` included).
 - Local `main` history must not be pushed as is: it holds commits from the 2026-08-24/25 PII
   incident. Publication goes only through a filtered export (control plane only, no `projects/**`,
@@ -96,7 +96,9 @@ This file is overwritten with current state, not appended; keep it short (it is 
   clause; the outbound rule is unchanged. Brought in: `next` 16.3.8 and higher override floors
   (lockfile regenerated), API security headers and demo write limiter, fail-closed Codex provider
   (`--capsule` required), CI `safrs-no-capsules`, and two guard rules: `SELF_AUTHORIZED_PUBLICATION`
-  and `SELF_GUARD_MODIFICATION`.
+  and `SELF_GUARD_MODIFICATION`. Provider Proof 2/4/5 failed after it (they relied on implicit
+  acceptance); they now pass an explicit `acceptanceResult` (`a210d52d`, provider code unchanged).
+  `integrate/origin-main` is now an ancestor of `feat`; its branch and worktree can go (Gaffer's call).
 - Needs Gaffer: `SELF_GUARD_MODIFICATION` is unconditional in `authorize()`, so it denies every
   agent (Claude, Cursor, Codex), not only Codex as its message says, any write to `guard.mjs`, the
   Codex adapter, `.codex/hooks/**`, `.codex/config.toml`, and `.husky/pre-push`. Keep it for all
