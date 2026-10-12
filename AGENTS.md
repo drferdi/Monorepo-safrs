@@ -41,6 +41,7 @@
 - **Windows Shell Quirks:** A user-level RTK hook rewrites Shell `git` to `rtk git` and may filter output; use `git.exe` for raw diffs. Worktree "uncommitted edits" are often CRLF-only; confirm with `git.exe diff --ignore-cr-at-eol --stat` before discarding.
 - **pnpm Overrides:** pnpm 9.x ignores `overrides` in `pnpm-workspace.yaml`; capsules on pnpm 9 put overrides in `package.json` `pnpm.overrides`.
 - **Attribution:** Every agent git commit must include trailer: `Co-Authored-By: <Agent/Vendor> <email>`.
+- **Merge only on Gaffer's go:** Before any merge (`git merge`, `git pull`, fast-forwarding `main`, `gh pr merge`), ask Gaffer and wait. "go", "merge it", or any clear agreement in the current conversation approves that merge only. Never enable auto-merge. The shared guard asks on these commands; Codex cannot prompt, so it stops and Gaffer runs the merge.
 
 ## Risk Tiers (`.safrs/policy.json`)
 - **R0:** Read-only analysis.
