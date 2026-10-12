@@ -9,8 +9,10 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 ## Current state
 
-- Local `main` is the merge of `feat/claude-path-scoped-rules` (local only). The main checkout is on
-  `chore/tools-closeout`. `origin/codex/oracle-ii-grounding` was pushed by Gaffer on 2026-10-11 (`88e56bb7` included).
+- Local `main` is `ac6173fb`, fast-forwarded from `feat/claude-path-scoped-rules` on Gaffer's go
+  (local only). `feat` is ahead again with the guard-prefix fix and this handoff; moving `main`
+  needs a new go. The main checkout is on `chore/tools-closeout`, so the new guards and hooks are
+  not active there until it switches to `main`. `origin/codex/oracle-ii-grounding` was pushed by Gaffer on 2026-10-11 (`88e56bb7` included).
 - Local `main` history must not be pushed as is: it holds commits from the 2026-08-24/25 PII
   incident. Publication goes only through a filtered export (control plane only, no `projects/**`,
   PII-scanned) on top of `origin/main`, with about 20 governance/security conflicts and an
@@ -36,7 +38,10 @@ This file is overwritten with current state, not appended; keep it short (it is 
 - REVIEW: `TASK-20261012-CLAUDE-PATH-RULES-WT`, `TASK-20261012-MUST-DEMOTION`,
   `TASK-20261012-ROOT-HANDOFF-TAKEOVER` (this file; Gaffer approved taking it over from
   `TASK-20261011-TOOLS-CLOSEOUT`), `TASK-20261012-CODEX-AGENTS-HYGIENE`,
-  `TASK-20261012-LESSON-HEREDOC`, `TASK-20261012-AUDIT-A6-A7`, `TASK-20261012-LFS-PRE-PUSH`, `TASK-20261011-GAFFER-ADDRESS`, and Codex's `TASK-20261011-TOOLS-*` set. Move them to MERGED
+  `TASK-20261012-LESSON-HEREDOC`, `TASK-20261012-AUDIT-A6-A7`, `TASK-20261012-LFS-PRE-PUSH`,
+  `TASK-20261012-MERGE-ASK`, `TASK-20261012-CODEX-MERGE-PROMPT`,
+  `TASK-20261012-CONTROL-CENTER-BIOME`/`-A11Y`/`-HANDOFF`, `TASK-20261011-GAFFER-ADDRESS`, and
+  Codex's `TASK-20261011-TOOLS-*` set. Move them to MERGED
   once the integrity review accepts them.
 - OpenCode Jev hang: next try is inside the OpenCode TUI.
 
@@ -48,6 +53,9 @@ This file is overwritten with current state, not appended; keep it short (it is 
   with 31 textual merge conflicts. PII scan of added lines: no WhatsApp JID or phone number; the
   `secret` pattern hits are code identifiers. Gaffer decided (2026-10-12): `tools/prompt` and the
   `@gmail.com` address in `tools/prompt/README.md` go into the export.
+- A worktree sits inside the repo root, which AGENTS.md forbids:
+  `projects/healthcare/sentrapedia/.claude/worktrees/suspicious-easley-9e5623` (detached at
+  `b2d3a022`, created by another session). Not removed; Gaffer decides.
 - Log in to Grok and Antigravity once so their Jev use can be verified. Upload the corrected
   `audit-monorepo-agent` skill (`~/Downloads/audit-monorepo-agent.zip`) in claude.ai.
 - Audit actions (`verify-report/agent-audit-2026-10-10.txt` §7), status 2026-10-12: A-3, A-6, A-7,
@@ -57,7 +65,7 @@ This file is overwritten with current state, not appended; keep it short (it is 
   "SAFRS main protection" (`21369601`) now requires 1 approving review; only the repository Admin
   role may bypass, and only when merging a pull request. Apps such as `app/cursor` (which merged
   #37, #38, #41, #42 without review) can no longer merge. `~/.codex/config.toml` has
-  `git-pr-watch-auto-merge = false` (Codex `approval_policy = "never"` is unchanged, rest of A-4).
+  `git-pr-watch-auto-merge = false` (Codex `approval_policy` is now `on-request`, see below).
   Before/after ruleset JSON is in the 2026-10-12 Claude session scratchpad.
 - Same rule, locally (`e893452c`, `6603264b`): AGENTS.md, `~/.claude/CLAUDE.md`, and
   `~/.codex/AGENTS.md` say ask before any merge; "go", "merge it", or clear agreement approves
@@ -69,7 +77,12 @@ This file is overwritten with current state, not appended; keep it short (it is 
   so Codex asks Gaffer itself. Codex hooks cannot ask (fail-open), so the Codex guard passes those
   merges to the prompt only while that rules file exists, and still blocks fast-forwarding `main`
   (`MAIN_REF_UPDATE`). Checked with `codex execpolicy check`; not yet seen in a live Codex session.
-  Not yet fast-forwarded into local `main`: that is itself a merge and waits for Gaffer's go.
+  Recheck 2026-10-12 (`a7302428`): these rules only matched a bare `git <subcommand>`, so
+  `git.exe merge`, `git -C <path> merge`, `git -c k=v pull`, `gh.exe pr merge` (and the same
+  spellings of `reset --hard` and force push) were allowed. One shared prefix now covers them, and
+  `checkout -B main` / `switch -C main` count as main-ref updates. Codex passes a merge to its
+  prompt only for the bare spellings the rules file matches; other spellings are blocked. Accepted
+  false positive: the text "git merge" inside a commit message also asks.
 
 ## Done 2026-10-12 (Gaffer-approved)
 
