@@ -347,10 +347,11 @@ describe("clinical evidence gate: a field drops only its unsupported clauses", (
     expect(amox({ note: "IV (1 g, lalu 2 g)" })?.note).toBe("");
     expect(amox({ note: "500 mg (maks. 4 g/hari)" })?.note).toBe("");
   });
-  it("keeps the FORNAS budesonid first-day limit when the follow-on range is not matched", () => {
+  it("keeps the whole FORNAS budesonid duration, whose range is written with a Unicode minus", () => {
     const budesonid = { drug: "budesonid", dose: "", route: "inhalasi", duration: "Hari pertama maks 10 mL perhari, selanjutnya 4–8 mL perhari selama 5 hari.", note: "" };
     const fornas = "budesonid cairan ih 0,25 mg/mL Hari pertama maks 10 mL perhari, selanjutnya 4−8 mL perhari selama 5 hari. Pneumonia.";
-    expect(gateTherapy(therapy([budesonid]), bundle(fornas), pneumonia).therapy?.regimen[0].duration).toBe("Hari pertama maks 10 mL perhari" + PARTIAL);
+    expect(gateTherapy(therapy([budesonid]), bundle(fornas), pneumonia).therapy?.regimen[0].duration).toBe(budesonid.duration);
+    expect(gateTherapy(therapy([{ ...budesonid, duration: "Hari pertama maks 10 mL perhari, selanjutnya 4–9 mL perhari selama 5 hari." }]), bundle(fornas), pneumonia).therapy?.regimen[0].duration).toBe("Hari pertama maks 10 mL perhari" + PARTIAL);
   });
   it("does not split a decimal comma or point", () => {
     expect(amox({ route: "IV dalam NaCl 0,9%" })?.route).toBe("");
@@ -392,5 +393,18 @@ describe("unstrength never leaves or creates a strength", () => {
   });
   it("tidies the remaining cosmetic leftovers", () => {
     expect(["Parasetamol 500 mg x 3 hari", "Isoniazid (maks 300 mg/hari, 5 mg/kg)", "Zinc (s/d 20 mg)", "Obat 500 mg x 3.5 mg"].map(unstrength)).toEqual(["Parasetamol", "Isoniazid", "Zinc", "Obat"]);
+  });
+});
+
+describe("clinical evidence gate: a Unicode minus (U+2212) is a range dash", () => {
+  const status = (name: string, dose: string, text: string) => gateTherapy(therapy([drug(name, dose)]), bundle(text), pneumonia).report.drugs[0].status;
+  it("verifies a range the passage writes with U+2212, and still needs both ends", () => {
+    expect(status("Amoxicillin", "3x250–500 mg", "Amoksisilin 250−500 mg 3 kali sehari.")).toBe("verified");
+    expect(status("Amoxicillin", "3x250-1000 mg", "Amoksisilin 250−500 mg 3 kali sehari.")).toBe("doseRemoved");
+    expect(status("Antasida", "3x1-2 tablet", "Antasida oral 3 x 1−2 tablet.")).toBe("verified");
+    expect(status("Azithromycin", "10 mg - 15 mg/kgBB", "Azitromisin 10 mg/kgBB − 15 mg/kgBB.")).toBe("verified");
+  });
+  it("strips a U+2212 range from a drug name", () => {
+    expect(unstrength("Amoksisilin 250−500 mg")).toBe("Amoksisilin");
   });
 });

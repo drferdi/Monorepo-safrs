@@ -21,13 +21,15 @@ const UNITS = { mg: "(?:mg|miligram)", mcg: "(?:mcg|µg|μg|ug|mikrogram)", g: "
 const UNIT: Record<string, string> = { ...UNITS, gtt: UNITS.tetes, semprot: UNITS.semprotan, spray: UNITS.semprotan, "µg": UNITS.mcg, "μg": UNITS.mcg, ug: UNITS.mcg, mikrogram: UNITS.mcg, miligram: UNITS.mg, gram: UNITS.g, ui: UNITS.iu, unit: UNITS.iu, units: UNITS.iu, u: UNITS.iu, mililiter: UNITS.ml, tablets: UNITS.tablet, tab: UNITS.tablet, tabs: UNITS.tablet, kaplet: UNITS.tablet, kaplets: UNITS.tablet, kaps: UNITS.kapsul, capsule: UNITS.kapsul, capsules: UNITS.kapsul };
 // 1.200.000 and 1,200,000 are one number (thousands separators); "2,4 juta IU" keeps its multiplier.
 const NUMBER = String.raw`(?:\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)(?:\s*(?:juta|ribu|million))?`;
+// Range dashes: hyphen, en dash, and the minus sign U+2212 that FORNAS uses ("4−8 mL").
+const DASH = "-–−";
 // A strength, or a pair such as 5-40 mg (range) or 875/125 mg (combination) whose numbers share one unit.
-const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[-–/]\s*)?(${NUMBER})\s*(tablets?|tabs?|kaplets?|kapsul|kaps|capsules?|mikrogram|miligram|mililiter|semprotan|semprot|spray|puff|tetes|gtt|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g|u|%)(?:(?<=%)|\b)`, "gi");
+const STRENGTH = new RegExp(String.raw`(?:(${NUMBER})\s*[${DASH}/]\s*)?(${NUMBER})\s*(tablets?|tabs?|kaplets?|kapsul|kaps|capsules?|mikrogram|miligram|mililiter|semprotan|semprot|spray|puff|tetes|gtt|gram|units?|mmol|meq|mcg|µg|μg|ug|mg|ui|iu|ml|g|u|%)(?:(?<=%)|\b)`, "gi");
 // Per-unit tails such as "/5 ml", "/kg/24 jam" or "/m2"; a drug name after a slash is not one of them.
 const PER = String.raw`(?:\s*(?:\/|\bper\b)\s*(?:\d[\d.,]*\s*)?(?:(?:ml|dl|l|vial|ampul|amp|tablet|tab|kapsul|kaps|kg\s*bb|kgbb|kilogram|kg|m2|hari|dosis|kali|jam|menit|mnt|detik)\b|m²))*(?:\s*(?:bb|berat\s*badan)\b)?`;
 const SAFETY_TERM = /kontraindikasi|interaksi|hindari|jangan diberikan/;
 // Two or more tablets per dose ("3 x 2 tablet", "2 tablet, 3 kali", "3 kali sehari 2 tablet", "2 kapsul sekaligus"): a strength just before it is tablet content, not a dose.
-const TABLETS = String.raw`(?:1\s*-\s*)?[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)s?\b`;
+const TABLETS = String.raw`(?:1\s*[${DASH}]\s*)?[2-9]\s*(?:tablet|tab|kapsul|kaps|kaplet)s?\b`;
 const UNITS_PER_DOSE = new RegExp(String.raw`\d+\s*[x×]\s*${TABLETS}|(?:^|[^\d.,/])${TABLETS}[\s,;]*(?:\d+\s*(?:[x×]|kali)|sekaligus|sekali|per\s*kali|tiap\s*kali)|\d+\s*kali\s*sehari[\s,;]*${TABLETS}`, "i");
 // A passage doses with a strength when one of its occurrences is not followed, within 80 characters, by a multi-tablet dose;
 // a tablet or capsule count is itself the dose.
@@ -56,13 +58,13 @@ const number = (value: string) => value.replace(/[.,]/g, "[.,]").replace(/\s+/g,
 // Without `percent`, a percent is not a strength (a safety item's "eGFR turun >50%" is a threshold).
 // Each strength is per kg or not on its own ("10 mg/kgBB, maks 500 mg"), and "per kg" reads like "/kg".
 // Per kg may follow another per-unit tail ("10 mg/hari/kgBB") or the other end of a range ("10 mg - 15 mg/kgBB").
-const PER_KG = String.raw`(?:\s*[-–]\s*${NUMBER}\s*[a-zµμ]+)?(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:hari|dosis|kali|jam|menit|mnt|detik)\b)*\s*(?:\/|per)\s*(?:kg|kilogram)`;
+const PER_KG = String.raw`(?:\s*[${DASH}]\s*${NUMBER}\s*[a-zµμ]+)?(?:\s*\/\s*(?:\d[\d.,]*\s*)?(?:hari|dosis|kali|jam|menit|mnt|detik)\b)*\s*(?:\/|per)\s*(?:kg|kilogram)`;
 const strengths = (dose: string, percent = true) => {
   const text = dose.toLowerCase();
   const found = [...text.matchAll(STRENGTH)].filter(m => percent || m[3] !== "%");
   return found.filter(m => !(COUNTED.test(m[3]) && !m[1] && m[2] === "1" && found.some(o => !COUNTED.test(o[3])))).flatMap(m => {
     const tail = new RegExp(`^${PER_KG}`).test(text.slice(m.index + m[0].length)) ? `(?=${PER_KG})` : `(?!${PER_KG})`;
-    return [...(m[1] ? [`${number(m[1])}(?:\\s*[-–/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}${m[3] === "%" ? "" : "\\b"}${tail}`, "i"));
+    return [...(m[1] ? [`${number(m[1])}(?:\\s*[${DASH}/]\\s*${number(m[2])})?`] : []), number(m[2])].map(value => new RegExp(`(?<![\\d.,])${value}\\s*${UNIT[m[3]]}${m[3] === "%" ? "" : "\\b"}${tail}`, "i"));
   });
 };
 // Clauses end at ";", a newline, a "," that is not a decimal mark ("0,9%" stays whole) or a "." that ends a sentence ("maks. 4 g" stays whole).
@@ -78,7 +80,7 @@ const STRIP = new RegExp(GLUED + STRENGTH.source + PER + FREQUENCY, "gi");
 const tidy = (text: string) => text.replace(STRIP, "")
   .replace(/\s*\/\s*/g, "/").replace(/^\/+|\/+$/g, "").replace(/\s+/g, " ")
   .replace(/[([]\s*(?:(?:max|maks|maksimal|maximum|hingga|sampai|s\.?d\.?|s\/d)(?![a-z]))?[\s,;:./]*[)\]]/gi, "").replace(/\(\s+/g, "(").replace(/\s+([,;:)])/g, "$1").replace(/\s+-(?=\p{L})/gu, "-")
-  .replace(/\s+/g, " ").replace(/^[\s,;:\-–—/]+|[\s,;:\-–—/]+$/g, "");
+  .replace(/\s+/g, " ").replace(/^[\s,;:\-–—−/]+|[\s,;:\-–—−/]+$/g, "");
 // Repeats until nothing changes: a removal can bring a leftover number next to a leftover unit ("3 (500 mg) kapsul"),
 // and STRIP matches every strength, so the fixed point holds none.
 export const unstrength = (text: string): string => { const next = tidy(text); return next === text ? text : unstrength(next); };
