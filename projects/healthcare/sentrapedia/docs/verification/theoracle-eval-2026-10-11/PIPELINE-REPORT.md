@@ -116,6 +116,16 @@ When a dose is not verified, its strength is removed from the drug name. The rem
 
 Replay, same 122 replies: no change. Only one real drug name carried a strength, and it was already clean.
 
+### Every range separator needs both ends (commits `81459977`, `2e6a2ecd`)
+
+FORNAS writes ranges with the minus sign U+2212 ("15−30 gram"), and PPK uses "s/d" ("20 s/d 40 mg"). The gate now reads these, other dash forms, "~", "sampai" and "hingga" as range separators. Both ends must appear in the passage, so a model range such as "250—500 mg" is no longer verified by a passage that says only "500 mg".
+
+| Gate counts (drugs) | Legacy | Targeted |
+|---|---|---|
+| Verified, before → after | 41 → 42 | 41 → 42 |
+
+The new verifications are furosemid 20-40 mg for acute heart failure ("furosemid injeksi 20 s/d 40 mg bolus", FKTP 2022) and kalsium polistiren sulfonat 15-30 g/hari for CKD stage 5 (FORNAS 2023). In addition, the FORNAS budesonid duration is now shown whole.
+
 ## What it means
 
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.
