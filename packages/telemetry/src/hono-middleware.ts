@@ -3,7 +3,6 @@ import {
   ATTR_HTTP_REQUEST_METHOD,
   ATTR_HTTP_RESPONSE_STATUS_CODE,
   ATTR_HTTP_ROUTE,
-  ATTR_URL_FULL,
 } from "@opentelemetry/semantic-conventions";
 import type { Context, MiddlewareHandler } from "hono";
 
@@ -25,7 +24,6 @@ export function telemetryMiddleware(): MiddlewareHandler {
       attributes: {
         [ATTR_HTTP_REQUEST_METHOD]: method,
         [ATTR_HTTP_ROUTE]: path,
-        [ATTR_URL_FULL]: context.req.url,
       },
     });
 

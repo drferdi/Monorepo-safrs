@@ -50,7 +50,8 @@ This file is overwritten with current state, not appended; keep it short (it is 
 - Filtered export and independent integrity review before anything from local `main` is published.
   Dry-run 2026-10-12 (local refs only, no fetch, per BOUNDARIES): against `origin/main` `b2d3a022`,
   outside `projects/**` the export is 371 added, 124 modified, 39 deleted files (286 under `tools/`),
-  with 31 textual merge conflicts. PII scan of added lines: no WhatsApp JID or phone number; the
+  with 31 textual merge conflicts. Since the inbound integration, the local tree already contains
+  `origin/main`, so the export no longer has to resolve those conflicts. PII scan of added lines: no WhatsApp JID or phone number; the
   `secret` pattern hits are code identifiers. Gaffer decided (2026-10-12): `tools/prompt` and the
   `@gmail.com` address in `tools/prompt/README.md` go into the export.
 - A worktree sits inside the repo root, which AGENTS.md forbids:
@@ -86,6 +87,21 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 ## Done 2026-10-12 (Gaffer-approved)
 
+- Inbound `origin/main` integration (Gaffer's go, local only): `integrate/origin-main` (`c0db62b4`:
+  41 `origin/main` commits including #37-#42, 27 conflicts resolved by an earlier Claude session)
+  is merged into `feat/claude-path-scoped-rules`. Three new conflicts: this file, the Claude hook's
+  parse-error message (both exit 2), and `guard.test.mjs` (both sides' tests kept). Correction: that
+  branch's handoff said local `main` was fast-forwarded to it; it never was (`main` moved on through
+  the Sentrapedia branch at 06:58). This integration is the only exception to the BOUNDARIES inbound
+  clause; the outbound rule is unchanged. Brought in: `next` 16.3.8 and higher override floors
+  (lockfile regenerated), API security headers and demo write limiter, fail-closed Codex provider
+  (`--capsule` required), CI `safrs-no-capsules`, and two guard rules: `SELF_AUTHORIZED_PUBLICATION`
+  and `SELF_GUARD_MODIFICATION`.
+- Needs Gaffer: `SELF_GUARD_MODIFICATION` is unconditional in `authorize()`, so it denies every
+  agent (Claude, Cursor, Codex), not only Codex as its message says, any write to `guard.mjs`, the
+  Codex adapter, `.codex/hooks/**`, `.codex/config.toml`, and `.husky/pre-push`. Keep it for all
+  agents or scope it to Codex? Until then `SELF_AUTHORIZED_PUBLICATION` keeps its bare `\bgit\s+push`
+  match (`git.exe push --no-verify` passes); the prefix fix waits because the file is self-guarded.
 - `docs/gaffer-address-root` merged (`631c6aba`). Four sentrawiki lines where "Gaffer" meant the
   user were changed to "the user", because Gaffer is also the orchestration layer (`1a16acae`).
   `TASK-20261011-GAFFER-ADDRESS` was resumed in a recreated `main-merge-tmp` worktree (its claim

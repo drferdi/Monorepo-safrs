@@ -60,4 +60,38 @@ describe("createServerEnv", () => {
       expect((error as Error).message).not.toContain(suppliedAppUrl);
     }
   });
+
+  it("requires a complete Stripe key prefix without exposing its value", () => {
+    const environment = {
+      APP_URL: "http://localhost:3000",
+      DATABASE_URL: "postgresql://safrs:safrs@127.0.0.1:54329/safrs_test",
+      NODE_ENV: "test" as const,
+      STRIPE_SECRET_KEY: "sk_not_a_complete_key",
+    };
+
+    expect(() => createServerEnv(environment)).toThrowError(
+      "Invalid environment variables: STRIPE_SECRET_KEY",
+    );
+  });
+
+  it("accepts complete Stripe test and live key prefixes", () => {
+    const baseEnvironment = {
+      APP_URL: "http://localhost:3000",
+      DATABASE_URL: "postgresql://safrs:safrs@127.0.0.1:54329/safrs_test",
+      NODE_ENV: "test" as const,
+    };
+
+    expect(() =>
+      createServerEnv({
+        ...baseEnvironment,
+        STRIPE_SECRET_KEY: "sk_test_123",
+      }),
+    ).not.toThrow();
+    expect(() =>
+      createServerEnv({
+        ...baseEnvironment,
+        STRIPE_SECRET_KEY: "sk_live_123",
+      }),
+    ).not.toThrow();
+  });
 });

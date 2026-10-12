@@ -12,4 +12,5 @@ Files under `.github/workflows/`:
 
 Do not claim these are **required** GitHub checks. `docs/governance/safrs_conformance.md` refuses Controlled until branch protection evidence exists. HANDOFF notes GitHub Free private-repo limits.
 
-Renovate: `.github/renovate.json` (`automerge: false`).
+Renovate: `.github/renovate.json` auto-merges patch, minor, pin, digest, and
+lockfile-maintenance PRs after checks; major updates remain review-only.

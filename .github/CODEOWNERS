@@ -31,15 +31,21 @@
 /.safrs/**                                      @drferdii
 /.github/workflows/**                           @drferdii
 /.github/CODEOWNERS                             @drferdii
+/.github/pull_request_template.md               @drferdii
 
 # Vendor instruction adapters
 /CLAUDE.md                                      @drferdii
 /GEMINI.md                                      @drferdii
 /.agents/**                                     @drferdii
-/.cursor/rules/**                               @drferdii
+/.cursor/**                                     @drferdii
+/.claude/**                                     @drferdii
+/.codex/**                                      @drferdii
+/.husky/**                                      @drferdii
+**/.mcp.json                                    @drferdii
 
 # Project capsule routing
 /projects/**/AGENTS.md                          @drferdii
+/projects/**/ai/**                              @drferdii
 
 # Shared boundaries
 /packages/**                                    @drferdii
@@ -87,14 +93,19 @@
 
 /tools/safrs/**                                 @drferdii
 /tools/automation/**                            @drferdii
+/tools/codegen/**                               @drferdii
+/tools/task/**                                  @drferdii
+/tools/status/**                                @drferdii
 /.safrs/approvals/**                            @drferdii
 /.safrs/evidence/**                             @drferdii
+/scripts/check-tokens.mjs                       @drferdii
 /tests/governance/test_automation_approvals.py  @drferdii
+/tests/governance/test_task_ownership.py        @drferdii
 /tests/fixtures/automation/**                   @drferdii
 /tests/governance/test_automation_contracts.py  @drferdii
 /tests/repository/precommit.test.mjs            @drferdii
-/.husky/**                                      @drferdii
-/.codex/**                                      @drferdii
+/tests/repository/task-command.test.mjs         @drferdii
+/tests/repository/status-command.test.mjs       @drferdii
 # Root-level suites need their own entries: the `**/` forms below only match
 # nested paths, so tests/architecture/** and tests/security/** were uncovered.
 /tests/architecture/**                          @drferdii

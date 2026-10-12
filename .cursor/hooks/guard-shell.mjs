@@ -34,6 +34,10 @@ const [{ authorize }, cursor] = await Promise.all([
 
 const events = cursor.translate(payload);
 if (events.length === 0) {
-  respond({ permission: "allow", user_message: "", agent_message: "" });
+  respond({
+    permission: "deny",
+    user_message: "Blocked: SAFRS could not classify this shell request.",
+    agent_message: "Denying an unclassifiable hook payload.",
+  });
 }
 respond(cursor.render(authorize(events[0], {})));

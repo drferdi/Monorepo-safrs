@@ -24,7 +24,7 @@ jobs:
           POSTGRES_PASSWORD: safrs
           POSTGRES_USER: safrs
         ports:
-          - 54329:5432
+          - 127.0.0.1:54329:5432
         options: >-
           --health-cmd "pg_isready -U safrs -d safrs_test"
           --health-interval 5s

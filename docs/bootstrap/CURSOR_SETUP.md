@@ -70,7 +70,7 @@ Reload Cursor or confirm under **Settings → Hooks** after pull. Scripts use No
 | Server | Purpose |
 | --- | --- |
 | `context7` | Current public library docs |
-| `playwright` | Browser automation / E2E assist via MCP |
+| `playwright` | Browser automation / E2E assist via MCP, restricted to local origins |
 | `firecrawl` | Web scrape/search (needs `FIRECRAWL_API_KEY` in user env) |
 | `sequential-thinking` | Structured multi-step reasoning assist |
 

@@ -41,6 +41,15 @@ const CREDENTIAL_EXCEPTIONS = [
   "**/.env.dist",
 ];
 
+const SELF_GUARD_PATTERNS = [
+  ".codex/config.toml",
+  ".codex/hooks.json",
+  ".codex/hooks/**",
+  ".husky/pre-push",
+  "tools/automation/src/guard.mjs",
+  "tools/automation/src/adapters/codex.mjs",
+];
+
 /** Template filenames are always safe; remove them before pattern tests so
  *  ".env" inside ".env.example" cannot trigger a credential match. */
 function stripTemplateNames(command) {
@@ -56,6 +65,16 @@ const GH = String.raw`\bgh(?:\.exe)?["']?(?:\s+(?:-R\s+${ARG}|--?[\w-]+(?:=${ARG
 const invokes = (source) => new RegExp(source, "iu");
 
 const COMMAND_RULES = [
+  {
+    reasonCode: "SELF_AUTHORIZED_PUBLICATION",
+    decision: "deny",
+    test: (command) =>
+      /(?:^|[\s;&|])(?:CHIEF_PUSH_OK|CHIEF_PUSH_PROJECTS_OK)\s*=|\$env:(?:CHIEF_PUSH_OK|CHIEF_PUSH_PROJECTS_OK)\s*=|\bgit\s+push\b[^\n]*\s--no-verify\b|\bgit\s+(?:-c\s+core\.hooksPath\s*=\s*\S+\s+)?push\b[^\n]*\s--no-verify\b|\bgit\s+(?:config\s+core\.hooksPath|-c\s+core\.hooksPath=)/iu.test(
+        command,
+      ),
+    message:
+      "publication authority and hook bypasses cannot be self-granted by an agent; use the repository's human-authorized publication path.",
+  },
   {
     reasonCode: "FORCE_PUSH",
     decision: "deny",
@@ -212,6 +231,13 @@ export function authorize(event, context = {}) {
       verification_control_patterns: [],
     };
     for (const target of event.paths ?? []) {
+      if (matchesAny(target, SELF_GUARD_PATTERNS)) {
+        return {
+          decision: "deny",
+          reasonCode: "SELF_GUARD_MODIFICATION",
+          message: `Codex may not modify its own enforcement boundary: ${target}`,
+        };
+      }
       if (target.startsWith("../") || path.isAbsolute(target)) {
         return {
           decision: "deny",

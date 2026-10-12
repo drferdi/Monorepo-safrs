@@ -19,7 +19,7 @@
     "assets"
   ],
   "peerDependencies": {
-    "next": ">=15"
+    "next": "catalog:"
   },
   "peerDependenciesMeta": {
     "next": {

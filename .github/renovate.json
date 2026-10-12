@@ -30,6 +30,11 @@
       "description": "D-003, Chief 2026-08-18: lock file maintenance merges on its own; it moves no declared version.",
       "matchUpdateTypes": ["lockFileMaintenance"],
       "automerge": true
+    },
+    {
+      "description": "Unpatchable on npm; Chief approved ignore 2026-10-11",
+      "matchPackageNames": ["braces", "node-forge", "sprintf-js"],
+      "enabled": false
     }
   ]
 }
