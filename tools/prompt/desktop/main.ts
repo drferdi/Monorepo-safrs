@@ -426,6 +426,10 @@ function createWindow() {
   mainWindow.setFocusable(true)
   mainWindow.focus()
 
+  mainWindow.webContents.setWindowOpenHandler(() => {
+    return { action: 'deny' }
+  })
+
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'))
 
   if (process.env.SENTRA_DESKTOP_DEBUG === '1') {
