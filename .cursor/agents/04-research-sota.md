@@ -1,6 +1,6 @@
 ---
 name: 04-research-sota
-description: Verify current best practice with web or docs research before tech or product decisions. Use when the Chief asks for SOTA, alternatives, or up-to-date recommendations.
+description: Verify current best practice with web or docs research before tech or product decisions. Use when the Gaffer asks for SOTA, alternatives, or up-to-date recommendations.
 ---
 
 # Research SOTA

@@ -9,7 +9,7 @@
 - Priority: p2
 - Location: `projects/corporate/portfolio-drnovia/`
 - Port: 4173
-- Human Owner: Chief (dr. Ferdi Iskandar)
+- Human Owner: Gaffer (dr. Ferdi Iskandar)
 
 ## Objective
 
@@ -91,11 +91,11 @@ docs/
 
 | Date | Decision | Rationale | Owner | Impact | Status |
 |------|----------|-----------|-------|--------|--------|
-| 2025 | Vendored React 18 | Eliminates package manager dependency, version drift, and supply-chain risks. Guarantees reproducible builds across environments. | Chief | Dependency model | Enforced |
-| 2025 | Preserve Framer composition | Visual identity was already finalized and approved by Dr. Novia. Redesign risks client dissatisfaction and timeline extension. | Chief | Design scope | Enforced |
-| 2025 | Lenis on `.framer-bpy7lj` | Discovered through extensive debugging that window-level Lenis attachment breaks scroll on this specific Framer composition structure. The Content-Wrapper node must own overflow. | Chief | Scroll behavior | Enforced |
-| 2025 | No lockfile / no Turbo / no Biome | Intentional simplicity for a single-page portfolio. Build toolchain overhead exceeds value for a static site with < 50 components. | Chief | Tooling scope | Enforced |
-| 2025 | Scoped CSS fixes only | `styles/novia.css` is the designated modification surface. `styles/framer.css` preservation ensures Framer composition integrity. | Chief | CSS maintainability | Enforced |
+| 2025 | Vendored React 18 | Eliminates package manager dependency, version drift, and supply-chain risks. Guarantees reproducible builds across environments. | Gaffer | Dependency model | Enforced |
+| 2025 | Preserve Framer composition | Visual identity was already finalized and approved by Dr. Novia. Redesign risks client dissatisfaction and timeline extension. | Gaffer | Design scope | Enforced |
+| 2025 | Lenis on `.framer-bpy7lj` | Discovered through extensive debugging that window-level Lenis attachment breaks scroll on this specific Framer composition structure. The Content-Wrapper node must own overflow. | Gaffer | Scroll behavior | Enforced |
+| 2025 | No lockfile / no Turbo / no Biome | Intentional simplicity for a single-page portfolio. Build toolchain overhead exceeds value for a static site with < 50 components. | Gaffer | Tooling scope | Enforced |
+| 2025 | Scoped CSS fixes only | `styles/novia.css` is the designated modification surface. `styles/framer.css` preservation ensures Framer composition integrity. | Gaffer | CSS maintainability | Enforced |
 
 ## Current Focus
 
@@ -129,10 +129,10 @@ docs/
 
 | # | Blocker | Severity | Dependency | ETA | Owner | Impact if Unresolved | Mitigation |
 |---|---------|----------|------------|-----|-------|---------------------|------------|
-| 1 | Hosting and domain setup | High | Domain registration and hosting platform account | TBD | Chief | Website inaccessible to public; portfolio cannot be shared | Evaluate Netlify (free tier sufficient), Vercel, or existing Hostinger account |
-| 2 | Asset optimization | Medium | Image/video compression tools and processing time | TBD | Chief | Large assets cause slow initial page load; poor Lighthouse score | Batch process with Sharp (images) and FFmpeg (video); automate in build script |
-| 3 | Browser compatibility validation | Medium | Access to Chrome, Firefox, Safari, Edge for manual testing | TBD | Chief | Scroll or layout issues in specific browsers damage professional impression | Use BrowserStack or similar for cross-browser testing; prioritize Chrome and Safari |
-| 4 | Mobile responsiveness | Medium | Framer composition may not be inherently responsive | TBD | Chief | Poor mobile experience reduces professional credibility | Add responsive breakpoints in `styles/novia.css`; test on actual mobile devices |
+| 1 | Hosting and domain setup | High | Domain registration and hosting platform account | TBD | Gaffer | Website inaccessible to public; portfolio cannot be shared | Evaluate Netlify (free tier sufficient), Vercel, or existing Hostinger account |
+| 2 | Asset optimization | Medium | Image/video compression tools and processing time | TBD | Gaffer | Large assets cause slow initial page load; poor Lighthouse score | Batch process with Sharp (images) and FFmpeg (video); automate in build script |
+| 3 | Browser compatibility validation | Medium | Access to Chrome, Firefox, Safari, Edge for manual testing | TBD | Gaffer | Scroll or layout issues in specific browsers damage professional impression | Use BrowserStack or similar for cross-browser testing; prioritize Chrome and Safari |
+| 4 | Mobile responsiveness | Medium | Framer composition may not be inherently responsive | TBD | Gaffer | Poor mobile experience reduces professional credibility | Add responsive breakpoints in `styles/novia.css`; test on actual mobile devices |
 
 ## Related Projects
 

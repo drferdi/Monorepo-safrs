@@ -8,11 +8,11 @@ Next.js App Router unit that proves the typed Database → API → Web flow with
 
 Root `AGENTS.md` names this as the **current legacy demonstrator** pending capsule migration: `projects/internal/golden-path/apps/web` mounts the package-owned Hono API under `/api`.
 
-Owner: Chief (human). Boundary: `projects/internal/golden-path/apps/web/**`. Default risk
+Owner: Gaffer (human). Boundary: `projects/internal/golden-path/apps/web/**`. Default risk
 R1; API, dependency, environment, database, architecture, test-control, and CI
 changes are R2.
 
-Active contributors: the golden-path capsule is owned by Chief (human owner);
+Active contributors: the golden-path capsule is owned by Gaffer (human owner);
 engineering work is executed by agents under the SAFRS multi-agent protocol.
 
 ## Architecture

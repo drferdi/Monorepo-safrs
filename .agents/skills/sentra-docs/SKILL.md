@@ -15,7 +15,7 @@ Generate a **purpose-oriented, evidence-bearing, human-authoritative** documenta
 set for one project capsule. Do not dump empty ISO templates. Every file must
 AUTHORIZE, DEFINE, DECIDE, GUIDE, VERIFY, or PRESERVE.
 
-Communicate with Chief in **Bahasa Indonesia**. Write the documents themselves in
+Communicate with Gaffer in **Bahasa Indonesia**. Write the documents themselves in
 **professional English**. Keep identifiers, paths, and commands in English.
 
 Reference instance (already filled, not a copy-paste source of Avery facts):
@@ -43,7 +43,7 @@ Load next:
 | `--refresh` | Update existing SPDS from inspectable evidence; do not wipe unknown-but-true content |
 | `--overlay` | Force overlays. If omitted, **infer** from evidence (folder name is not enough) |
 
-If the capsule path is ambiguous, stop and ask Chief once.
+If the capsule path is ambiguous, stop and ask Gaffer once.
 
 ## Non-negotiable rules
 
@@ -56,7 +56,7 @@ If the capsule path is ambiguous, stop and ask Chief once.
    - Point `docs/README.md`, capsule `README.md`, and capsule `AGENTS.md` at `docs/spds/read_first.md`
 4. **Do not invent** certifications, live runtime health, secrets, phone numbers, or medical-device status.
 5. **Healthcare folder ≠ medical device.** If the product is not SaMD, H01–H10 must **classify non-applicability**, not fake a 62304 file.
-6. **Do not commit, push, or deploy** unless Chief ordered it in this session.
+6. **Do not commit, push, or deploy** unless Gaffer ordered it in this session.
 7. Secrets, PHI, WhatsApp sessions, and live `.env` stay out of git and out of these docs.
 8. Conflicting sources stay DISPUTED in `epistemic_ledger.md`. Do not collapse them into a fake FACT.
 
@@ -76,9 +76,9 @@ From evidence, set flags:
 | `operated_system` | Long-running service, gateway, or bot |
 | `regulated_or_contracted` | Legal/compliance obligations named in repo |
 
-Write CORE + SENTRA always. Write CONDITIONAL/DOMAIN only when the flag matches, **unless** Chief asked for the full catalog — then write skipped overlays as short **Not applicable** documents with the reason (still useful; not bureaucracy if they DEFINE non-scope).
+Write CORE + SENTRA always. Write CONDITIONAL/DOMAIN only when the flag matches, **unless** Gaffer asked for the full catalog — then write skipped overlays as short **Not applicable** documents with the reason (still useful; not bureaucracy if they DEFINE non-scope).
 
-When Chief says “all documents above” / full standard: emit the **entire catalog** in `catalog.json`, using Not applicable stubs where the condition is false.
+When Gaffer says “all documents above” / full standard: emit the **entire catalog** in `catalog.json`, using Not applicable stubs where the condition is false.
 
 ### 2. Write genome first
 
@@ -119,7 +119,7 @@ Update (do not rewrite unrelated prose):
 - Capsule `AGENTS.md` required-context list — `docs/spds/read_first.md` first
 - Capsule README — one short pointer
 
-### 5. Report to Chief
+### 5. Report to Gaffer
 
 In Bahasa Indonesia, list:
 

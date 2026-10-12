@@ -2,12 +2,12 @@
 
 ## Goal
 
-Provide a verifiable, non-deploying SAFRS v1.1 monorepo baseline that helps Chief run a typed local Database → API → Web journey with safe setup, one-command development, and optional capabilities left uninstalled.
+Provide a verifiable, non-deploying SAFRS v1.1 monorepo baseline that helps Gaffer run a typed local Database → API → Web journey with safe setup, one-command development, and optional capabilities left uninstalled.
 
 ## Assumptions and scope
 
 - Verification uses only the declared local PostgreSQL/test resources and no production credential or deployment action.
-- `pnpm db:reset` is intentionally excluded: Chief has not supplied the repository's required explicit reset authorization.
+- `pnpm db:reset` is intentionally excluded: Gaffer has not supplied the repository's required explicit reset authorization.
 - SAFRS governance, package/dependency, migration, API, CI, and instruction changes are R2 and require independent review.
 - GitHub repository administrator settings are outside the local checkout and are recorded as gaps rather than assumed complete.
 
@@ -51,7 +51,7 @@ The commands above the manifest row ran at the integrated tree around commit `3e
 
 ## Review status
 
-The accumulated change is R2 because it includes shared contracts, database/migration tooling, dependencies, CI, agent routing, and governing verification. The consolidated final Sol review returned `fix-first` with five findings: ledger references to ignored report files, root dependency/CI/verifier paths not classified as R2, Renovate missing from the tool inventory, lifecycle links pointing at the active plan after it moved to completed, and checksums generated from an uncommitted working tree. All five findings were closed in commit `a65fdb6` under Chief's explicit authorization for this closure round, without requesting a re-review. The `MANIFEST.txt` scope covers 208 tracked files, and the regenerated `SHA256SUMS.txt` matches that committed manifest scope.
+The accumulated change is R2 because it includes shared contracts, database/migration tooling, dependencies, CI, agent routing, and governing verification. The consolidated final Sol review returned `fix-first` with five findings: ledger references to ignored report files, root dependency/CI/verifier paths not classified as R2, Renovate missing from the tool inventory, lifecycle links pointing at the active plan after it moved to completed, and checksums generated from an uncommitted working tree. All five findings were closed in commit `a65fdb6` under Gaffer's explicit authorization for this closure round, without requesting a re-review. The `MANIFEST.txt` scope covers 208 tracked files, and the regenerated `SHA256SUMS.txt` matches that committed manifest scope.
 
 ## Conformance and gaps
 

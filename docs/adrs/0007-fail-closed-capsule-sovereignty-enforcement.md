@@ -1,10 +1,10 @@
 # ADR 0007 — Fail-Closed Enforcement of Capsule Sovereignty and Capsule-Owned Agent Context
 
-- Status: Accepted (designated R2 review by Chief, 2026-09-24)
+- Status: Accepted (designated R2 review by Gaffer, 2026-09-24)
 - Risk: R2 (verification controls, CI, shared package schema, canonical agent knowledge,
   agent session protocol)
 - Date: 2026-09-24
-- Deciders: Chief
+- Deciders: Gaffer
 - Records: the supersession of ADR 0001 by ADR 0006, which was never marked
 - Related: ADR 0006, `docs/architecture/MONOREPO_PURPOSE.md` (I-01, I-03, I-05, I-06, I-08)
 
@@ -77,7 +77,7 @@ does not travel with it when it is extracted.
 3. **Fail-closed coverage with an explicit known-nonconformance record.** Accepted. Every capsule
    is either verified or explicitly recorded as non-conformant. Unknown or stale states fail.
    Recorded debt does not block unrelated work.
-4. **Keep capsule agent state out of Git.** Rejected by Chief on 2026-09-24. A gitignored
+4. **Keep capsule agent state out of Git.** Rejected by Gaffer on 2026-09-24. A gitignored
    handoff cannot be checked by a git-based gate, is invisible in new worktrees, and is lost on a
    fresh clone. Tracking it is accepted, with the content rule in decision 7.
 5. **Run full empirical extraction for every capsule on every pull request.** Deferred. It is the

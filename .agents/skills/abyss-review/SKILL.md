@@ -1,6 +1,6 @@
 ---
 name: abyss-review
-description: Deep-dive read-only review of the SAFRS Monorepo (d:\DEV\Monorepo) to understand what actually exists before proposing new ideas, migrations, or refactors. Use when the user asks to "review ulang", "audit", "inspect", "rehydrate", "lihat apa yang ada", or before proposing any new capability/package/project, to avoid duplicating work that is already implemented, planned, or locked by decision. Always address the user as Chief in chat. Output in Bahasa Indonesia; code/paths/identifiers in English.
+description: Deep-dive read-only review of the SAFRS Monorepo (d:\DEV\Monorepo) to understand what actually exists before proposing new ideas, migrations, or refactors. Use when the user asks to "review ulang", "audit", "inspect", "rehydrate", "lihat apa yang ada", or before proposing any new capability/package/project, to avoid duplicating work that is already implemented, planned, or locked by decision. Always address the user as Gaffer in chat. Output in Bahasa Indonesia; code/paths/identifiers in English.
 disable-model-invocation: true
 ---
 
@@ -13,7 +13,7 @@ Nama "abyss" merujuk ke `abyss-monorepo` (repo legacy pra-migrasi) — pengingat
 ## Kapan dipakai
 
 Panggil manual via `/abyss-review` saat:
-- Chief minta "review ulang", "lihat apa yang ada", "audit monorepo"
+- Gaffer minta "review ulang", "lihat apa yang ada", "audit monorepo"
 - Sebelum mengajukan ide/arsitektur/capability/package baru
 - Sebelum migrasi project dari abyss-monorepo
 - Saat ragu apakah sesuatu sudah diimplementasi
@@ -24,7 +24,7 @@ Panggil manual via `/abyss-review` saat:
 2. **Bukti dari disk, bukan klaim.** Verifikasi path file ada + baca isinya sebelum menyimpulkan "sudah ada".
 3. **Akui keputusan terkunci.** Jangan proposal yang melanggar `.agents/DECISIONS.md` atau `docs/governance/PLATFORM_ACTIVATION.md`.
 4. **Akui plan yang sudah ada.** Cek `docs/plans/active/` + `docs/superpowers/plans/` sebelum menyatakan ide "baru".
-5. **Address user sebagai Chief.** Bahasa Indonesia di chat; English di code/path/identifier.
+5. **Address user sebagai Gaffer.** Bahasa Indonesia di chat; English di code/path/identifier.
 6. **Tidak print credentials.** Termasuk `DATABASE_URL`, `.env`, kunci API.
 
 ## Workflow
@@ -87,7 +87,7 @@ Susun laporan terstruktur:
 
 Untuk setiap safe gap, berikan:
 - Nama ide + klasifikasi risiko (R0-R3 dari `.safrs/policy.json`)
-- Teknologi terbaru (verifikasi via WebSearch bila relevan — Chief minta SOTA)
+- Teknologi terbaru (verifikasi via WebSearch bila relevan — Gaffer minta SOTA)
 - Value ke misi Sentra (AI ecosystem, digital factory)
 - Bentuk MVP konkret (file path, package, route)
 - Apakah ini ide baru vs lanjutan/revisi plan existing
@@ -113,7 +113,7 @@ Jangan ajukan ide yang:
 ## Koreksi diri
 [akui asumsi awal yang salah]
 
-Chief, mau saya jadikan plan detail yang mana?
+Gaffer, mau saya jadikan plan detail yang mana?
 ```
 
 ## Anti-pattern (jangan lakukan)

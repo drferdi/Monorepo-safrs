@@ -1,6 +1,6 @@
 ---
 name: 07-decision-steward
-description: Record durable decisions into DECISIONS/PROGRESS/HANDOFF after Chief apply. Use when a decision is locked or at session close for durable artefacts.
+description: Record durable decisions into DECISIONS/PROGRESS/HANDOFF after Gaffer apply. Use when a decision is locked or at session close for durable artefacts.
 ---
 
 # Decision steward

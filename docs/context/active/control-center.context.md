@@ -8,11 +8,11 @@
 - Status: active
 - Priority: p2
 - Location: `projects/internal/control-center/`
-- Human Owner: Chief (dr. Ferdi Iskandar)
+- Human Owner: Gaffer (dr. Ferdi Iskandar)
 
 ## Objective
 
-Control Center is the internal operational dashboard for monitoring and controlling all Sentra AI services. It serves as the single pane of glass through which the Chief and internal team observe system health, service status, logs, and metrics across all product capsules.
+Control Center is the internal operational dashboard for monitoring and controlling all Sentra AI services. It serves as the single pane of glass through which the Gaffer and internal team observe system health, service status, logs, and metrics across all product capsules.
 
 The dashboard addresses four operational visibility needs:
 1. **Service health monitoring** — real-time status of all Sentra AI applications (API, web, desktop, mobile, worker) and product capsules (SentraBot, Avery, Academic Smartboard, etc.)
@@ -69,10 +69,10 @@ The standard health response schema (proposed):
 
 | Date | Decision | Rationale | Owner | Impact | Status |
 |------|----------|-----------|-------|--------|--------|
-| 2024-10 | Build internal first | Control own infrastructure monitoring before relying on external SaaS dashboards (Datadog, New Relic). Avoid vendor lock-in and data egress. | Chief | Architecture independence | Active |
-| 2025-02 | Connect all capsules | Unified visibility is critical for operational decision-making. Fragmented monitoring leads to blind spots and delayed incident response. | Chief | Scope expansion | Active |
-| 2025-08 | Standard metrics schema | Every capsule must expose consistent health endpoints. Without standardization, Control Center cannot aggregate meaningfully. | Chief | Integration contract | Active |
-| 2026-01 | Internal-only access | Control Center contains infrastructure details, service topology, and potentially error logs with sensitive data. No external access permitted. | Chief | Security posture | Enforced |
+| 2024-10 | Build internal first | Control own infrastructure monitoring before relying on external SaaS dashboards (Datadog, New Relic). Avoid vendor lock-in and data egress. | Gaffer | Architecture independence | Active |
+| 2025-02 | Connect all capsules | Unified visibility is critical for operational decision-making. Fragmented monitoring leads to blind spots and delayed incident response. | Gaffer | Scope expansion | Active |
+| 2025-08 | Standard metrics schema | Every capsule must expose consistent health endpoints. Without standardization, Control Center cannot aggregate meaningfully. | Gaffer | Integration contract | Active |
+| 2026-01 | Internal-only access | Control Center contains infrastructure details, service topology, and potentially error logs with sensitive data. No external access permitted. | Gaffer | Security posture | Enforced |
 
 ## Current Focus
 
@@ -90,7 +90,7 @@ The standard health response schema (proposed):
 
 3. Alert System Design
    - Threshold-based alerting: error rate > 5%, latency > 500ms, disk usage > 80%
-   - Alert routing: in-app notification, email to Chief, SMS for critical only
+   - Alert routing: in-app notification, email to Gaffer, SMS for critical only
    - Alert deduplication and grouping to prevent notification fatigue
 
 4. Metrics Standardization
@@ -103,9 +103,9 @@ The standard health response schema (proposed):
 
 | # | Blocker | Severity | Dependency | ETA | Owner | Impact if Unresolved | Mitigation |
 |---|---------|----------|------------|-----|-------|---------------------|------------|
-| 1 | Metrics API from capsules | High | Each capsule must expose standard health endpoint | TBD | Chief | Control Center has no data to display; dashboard is empty | Start with SentraBot and Golden Path as pilot implementations |
-| 2 | Real-time log streaming | Medium | WebSocket or Server-Sent Events implementation for live log tailing | TBD | Chief | Log view is delayed by batch processing interval (minutes) | Phase 1: batch collection every 60 seconds; Phase 2: real-time streaming |
-| 3 | Time-series database selection | Low | Evaluation of InfluxDB vs TimescaleDB vs PostgreSQL JSONB for metrics storage | TBD | Chief | Suboptimal query performance for large metric volumes | Start with PostgreSQL (already operational); migrate if volume exceeds threshold |
+| 1 | Metrics API from capsules | High | Each capsule must expose standard health endpoint | TBD | Gaffer | Control Center has no data to display; dashboard is empty | Start with SentraBot and Golden Path as pilot implementations |
+| 2 | Real-time log streaming | Medium | WebSocket or Server-Sent Events implementation for live log tailing | TBD | Gaffer | Log view is delayed by batch processing interval (minutes) | Phase 1: batch collection every 60 seconds; Phase 2: real-time streaming |
+| 3 | Time-series database selection | Low | Evaluation of InfluxDB vs TimescaleDB vs PostgreSQL JSONB for metrics storage | TBD | Gaffer | Suboptimal query performance for large metric volumes | Start with PostgreSQL (already operational); migrate if volume exceeds threshold |
 
 ## Related Projects
 

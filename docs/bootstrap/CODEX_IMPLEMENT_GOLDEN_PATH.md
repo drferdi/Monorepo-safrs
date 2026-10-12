@@ -120,4 +120,4 @@ Create `docs/evidence/SAFRS_GOLDEN_PATH_VERIFICATION.md` containing:
 - unresolved gaps;
 - safe next actions.
 
-Do not add a remote, push, open a pull request, merge, or deploy unless Chief separately authorizes it.
+Do not add a remote, push, open a pull request, merge, or deploy unless Gaffer separately authorizes it.

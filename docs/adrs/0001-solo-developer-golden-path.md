@@ -3,12 +3,12 @@
 - Status: SUPERSEDED
 - Superseded by: ADR 0006 (structure). Stack guidance restated in ADR 0007 decision 4.
 - Date: 2026-08-10
-- Decision owner: Chief
+- Decision owner: Gaffer
 - Risk: R2 (shared architecture, packages, database, CI, and governance)
 
 ## Context
 
-Chief needs a monorepo that makes safe application delivery approachable without hand-writing API documentation, opening several terminals, or remembering fragile setup steps. The repository must preserve all SAFRS v1.1 controls and avoid inventing a product domain.
+Gaffer needs a monorepo that makes safe application delivery approachable without hand-writing API documentation, opening several terminals, or remembering fragile setup steps. The repository must preserve all SAFRS v1.1 controls and avoid inventing a product domain.
 
 ## Options considered
 

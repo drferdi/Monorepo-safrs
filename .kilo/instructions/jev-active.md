@@ -1,6 +1,6 @@
 # Jev Active Override
 
-Chief explicitly approved immediate active mode for the project-local Jev router.
+Gaffer explicitly approved immediate active mode for the project-local Jev router.
 
 Before substantial browser research, repeating a failed approach, loading several tools or skills, spawning agents, choosing between materially different execution routes, or proposing a consequential action, consider whether a small bounded Jev decision would change the next step. If yes, build a compact English state without secrets, call the installed router, interpret its action, and continue the original task. Skip Jev for simple answers, deterministic calculations, routine file edits, and situations where the call adds no useful decision. Respect `bypass jev`. Keep irreversible actions behind human confirmation.
 

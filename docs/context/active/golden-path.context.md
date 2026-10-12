@@ -9,11 +9,11 @@
 - Status: active
 - Priority: p1 (reference implementation — enables all other SAFRS migrations)
 - Location: `projects/internal/golden-path/`
-- Human Owner: Chief (dr. Ferdi Iskandar)
+- Human Owner: Gaffer (dr. Ferdi Iskandar)
 
 ## Objective
 
-Golden Path is the reference implementation and proof-of-concept that demonstrates the complete SAFRS typed stack: typed Database -> typed API -> typed Web. It serves as the "table of readiness" where the Chief can observe the end-to-end flow and verify that each layer is properly connected and functional.
+Golden Path is the reference implementation and proof-of-concept that demonstrates the complete SAFRS typed stack: typed Database -> typed API -> typed Web. It serves as the "table of readiness" where the Gaffer can observe the end-to-end flow and verify that each layer is properly connected and functional.
 
 The project has one explicit purpose and four explicit non-goals:
 
@@ -39,7 +39,7 @@ Success criteria:
 
 ## Architecture Overview
 
-Golden Path is a reference implementation of the SAFRS typed stack and a capsule like any other: it is not a root demonstrator, it is excluded from the root pnpm workspace, and root CI does not run it (Chief, 2026-09-25). It owns its pnpm workspace, lockfile, and `project.contract.json`, and carries local snapshots of the `@safrs/*` and `@sentra/token` packages it uses under `packages/`; it never consumes root `packages/`.
+Golden Path is a reference implementation of the SAFRS typed stack and a capsule like any other: it is not a root demonstrator, it is excluded from the root pnpm workspace, and root CI does not run it (Gaffer, 2026-09-25). It owns its pnpm workspace, lockfile, and `project.contract.json`, and carries local snapshots of the `@safrs/*` and `@sentra/token` packages it uses under `packages/`; it never consumes root `packages/`.
 
 ### Technology Stack
 
@@ -100,12 +100,12 @@ Standalone proof (from the Monorepo root): `node tools/project-standalone/src/cl
 
 | Date | Decision | Rationale | Owner | Impact | Status |
 | --- | --- | --- | --- | --- | --- |
-| 2026 | Use @safrs/* shared packages | Centralizes common functionality (auth, database, API patterns, UI components) across all capsules. Reduces duplication and ensures consistency. | Chief | Architecture standard | Superseded 2026-09-25 |
-| 2026-09-25 | Standalone capsule with localized package snapshots | Root packages are private and unpublished; capsules may not consume root `packages/`. Golden Path is excluded from the root workspace and root CI and passes standalone verify. Evidence: `projects/internal/golden-path/.agents/DECISIONS.md`. | Chief | Capsule standalone contract | Enforced |
-| 2026 | No production deploy | Explicitly scoped as proof-of-concept. Production concerns (scaling, monitoring, security hardening) add complexity that distracts from the core type-safety demonstration. | Chief | Scope boundary | Enforced |
-| 2026 | No authentication system | Auth is a complex domain (sessions, JWT, OAuth, password hashing). Adding auth to a POC creates noise. Auth will be added as a separate reference implementation after Golden Path passes. | Chief | Scope boundary | Enforced |
-| 2026 | Synthetic demo data only | Using real data in a POC creates privacy and compliance risks. Synthetic data enables free experimentation and public sharing of the codebase. | Chief | Data strategy | Enforced |
-| 2026 | Quality gates as mandatory | Without enforced quality gates, the reference implementation becomes a broken window. Other capsules will copy bad patterns. | Chief | Quality standard | Enforced |
+| 2026 | Use @safrs/* shared packages | Centralizes common functionality (auth, database, API patterns, UI components) across all capsules. Reduces duplication and ensures consistency. | Gaffer | Architecture standard | Superseded 2026-09-25 |
+| 2026-09-25 | Standalone capsule with localized package snapshots | Root packages are private and unpublished; capsules may not consume root `packages/`. Golden Path is excluded from the root workspace and root CI and passes standalone verify. Evidence: `projects/internal/golden-path/.agents/DECISIONS.md`. | Gaffer | Capsule standalone contract | Enforced |
+| 2026 | No production deploy | Explicitly scoped as proof-of-concept. Production concerns (scaling, monitoring, security hardening) add complexity that distracts from the core type-safety demonstration. | Gaffer | Scope boundary | Enforced |
+| 2026 | No authentication system | Auth is a complex domain (sessions, JWT, OAuth, password hashing). Adding auth to a POC creates noise. Auth will be added as a separate reference implementation after Golden Path passes. | Gaffer | Scope boundary | Enforced |
+| 2026 | Synthetic demo data only | Using real data in a POC creates privacy and compliance risks. Synthetic data enables free experimentation and public sharing of the codebase. | Gaffer | Data strategy | Enforced |
+| 2026 | Quality gates as mandatory | Without enforced quality gates, the reference implementation becomes a broken window. Other capsules will copy bad patterns. | Gaffer | Quality standard | Enforced |
 
 ## Current Focus
 
@@ -142,10 +142,10 @@ Standalone proof (from the Monorepo root): `node tools/project-standalone/src/cl
 
 | # | Blocker | Severity | Dependency | ETA | Owner | Impact if Unresolved | Mitigation |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Shared package stability | Resolved 2026-09-25 | Packages are now capsule-local snapshots | — | Chief | Root package changes no longer affect Golden Path | Snapshots evolve with the capsule |
-| 2 | Type generation pipeline | High | Prisma -> TypeScript types auto-generation must work reliably | TBD | Chief | Manual type maintenance defeats the purpose; introduces human error | Automate `prisma generate` in pre-build hook; fail build if generation fails |
-| 3 | E2E test environment | Medium | Headless browser + test database setup in CI | TBD | Chief | Cannot verify end-to-end flow automatically; relies on manual testing | Use Playwright with `playwright-test` and testcontainers for PostgreSQL |
-| 4 | Documentation for other capsules | Medium | Clear runbook showing how to replicate Golden Path pattern | TBD | Chief | Other capsule developers cannot learn from Golden Path; adoption blocked | Document every step in `docs/golden-path-runbook.md`; include video walkthrough |
+| 1 | Shared package stability | Resolved 2026-09-25 | Packages are now capsule-local snapshots | — | Gaffer | Root package changes no longer affect Golden Path | Snapshots evolve with the capsule |
+| 2 | Type generation pipeline | High | Prisma -> TypeScript types auto-generation must work reliably | TBD | Gaffer | Manual type maintenance defeats the purpose; introduces human error | Automate `prisma generate` in pre-build hook; fail build if generation fails |
+| 3 | E2E test environment | Medium | Headless browser + test database setup in CI | TBD | Gaffer | Cannot verify end-to-end flow automatically; relies on manual testing | Use Playwright with `playwright-test` and testcontainers for PostgreSQL |
+| 4 | Documentation for other capsules | Medium | Clear runbook showing how to replicate Golden Path pattern | TBD | Gaffer | Other capsule developers cannot learn from Golden Path; adoption blocked | Document every step in `docs/golden-path-runbook.md`; include video walkthrough |
 
 ## Related Projects
 

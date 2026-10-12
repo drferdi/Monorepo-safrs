@@ -6,7 +6,7 @@
 
 Prisma 7 + PostgreSQL client, reset guard, and a deterministic local seed for the golden-path demo. In the **root** workspace it is the only package allowed to touch **this** Prisma schema and these migrations.
 
-Migrations and schema changes here are R2. Production data and destructive production operations are R3 and may only be prepared until Chief authorizes execution (`packages/database/AGENTS.md`).
+Migrations and schema changes here are R2. Production data and destructive production operations are R3 and may only be prepared until Gaffer authorizes execution (`packages/database/AGENTS.md`).
 
 ## Key source files
 

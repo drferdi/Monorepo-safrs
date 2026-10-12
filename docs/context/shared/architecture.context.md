@@ -9,7 +9,7 @@ This document establishes the canonical architectural principles, patterns, and 
 Sentra AI operates on a strict control-plane separation:
 
 ```
-Human Layer (Chief / dr. Ferdi Iskandar)
+Human Layer (Gaffer / dr. Ferdi Iskandar)
     ↓ directives, approvals (R2/R3), strategic decisions
 Agent Layer (Nara, Sarah, Cursor, Claude, Codex)
     ↓ execution, implementation, recommendations
@@ -104,8 +104,8 @@ Every change in the monorepo is classified into one of three risk tiers. This de
 | Tier | Scope | Approval Required | Verification | Examples |
 |------|-------|-------------------|--------------|----------|
 | **R1** | Single capsule, no shared-package impact | Agent self-approval | Lint, typecheck, unit tests | New component in one capsule; bug fix in isolated code |
-| **R2** | Shared package changes; cross-capsule interface changes | Chief review required | Full test suite; integration tests | Update to `@safrs/api` contract; change to `packages/db` schema |
-| **R3** | Production deploy; credential changes; DNS; security policy | Chief explicit approval + security review | Penetration test; rollback plan; audit log | Production deployment; new OAuth provider; database migration with data loss risk |
+| **R2** | Shared package changes; cross-capsule interface changes | Gaffer review required | Full test suite; integration tests | Update to `@safrs/api` contract; change to `packages/db` schema |
+| **R3** | Production deploy; credential changes; DNS; security policy | Gaffer explicit approval + security review | Penetration test; rollback plan; audit log | Production deployment; new OAuth provider; database migration with data loss risk |
 
 ### Escalation Rules
 - Default assumption: R1 for any change within a single capsule
@@ -154,13 +154,13 @@ Status: Experimental — may migrate to Pattern A after Golden Path validation
 ## Communication Protocols
 
 ### Agent-to-Agent Communication
-- **Nara (Executive)**: Coordinates cross-project priorities, surfaces blockers, prepares decision briefs for Chief
+- **Nara (Executive)**: Coordinates cross-project priorities, surfaces blockers, prepares decision briefs for Gaffer
 - **Sarah (Clinical)**: Domain-specific medical knowledge, BPJS protocol expertise, clinical workflow validation
 - **Coding Agents (Cursor, Claude, Codex)**: Implementation, code review, debugging, test writing
 - **Boundary**: Nara does not write production code; coding agents do not make strategic decisions. Sarah does not modify infrastructure code; coding agents do not modify clinical protocols.
 
 ### Human-Agent Communication
-- Chief communicates intent, constraints, and approval decisions
+- Gaffer communicates intent, constraints, and approval decisions
 - Agents communicate progress, blockers, recommendations, and escalation requests
 - All decisions at R2 and R3 are documented in capsule `.context.md` Key Decisions table
 
@@ -209,7 +209,7 @@ All capsules using Pattern A must consume these packages in order:
 | Public-safe | Can be committed, uploaded, shared publicly | Design tokens, architecture docs, public marketing content |
 | Internal | Monorepo-internal, no external sharing | AGENTS.md, workflow docs, most READMEs |
 | Confidential | Encryption required for storage, access logging | SECURITY.md, credential handling docs, patient data schemas |
-| Restricted | Chief-only access, air-gapped if possible | Production credentials, API keys, database connection strings, patient PHI |
+| Restricted | Gaffer-only access, air-gapped if possible | Production credentials, API keys, database connection strings, patient PHI |
 
 ### Sensitive Surfaces (Always R3)
 - `.env` and `.env.local` files
@@ -240,6 +240,6 @@ All capsules using Pattern A must consume these packages in order:
 
 4. **Reproducible builds**: Every production build must be deterministic — identical source produces identical output. This requires pinned dependencies, no dynamic imports in build path, and fixed build environment.
 
-5. **Agent transparency**: All agent actions are logged, auditable, and reversible. Agents must declare their reasoning when escalating to Chief. Chief has override authority on all agent decisions.
+5. **Agent transparency**: All agent actions are logged, auditable, and reversible. Agents must declare their reasoning when escalating to Gaffer. Gaffer has override authority on all agent decisions.
 
 6. **Fail secure, not fail safe**: When systems fail, they fail in the most restrictive mode. Examples: sandbox stops rather than leaks; API returns 403 rather than 500 with data exposure; patient data access denied rather than permitted.

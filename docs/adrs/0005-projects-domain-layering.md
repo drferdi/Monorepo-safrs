@@ -2,7 +2,7 @@
 
 - Status: Proposed pending designated R2 review
 - Date: 2026-08-22
-- Deciders: Chief
+- Deciders: Gaffer
 - Supersedes: decision D1 in `docs/superpowers/specs/2026-08-20-smartboard-migration-design.md`
 
 ## Context
@@ -11,7 +11,7 @@ Project capsules used to sit one level below `projects/`, one folder per product
 
 The 2026-08-20 smartboard design considered a domain layer and deferred it. Its stated reason was accurate: `pnpm-workspace.yaml` (`projects/*/apps/*`), `tools/safrs/check_topology.py`, and `scripts/check-tokens.mjs` all assumed a capsule was exactly one level deep, so a domain folder would force three governance controls to change at once. It proposed waiting for four or five products and a dedicated ADR.
 
-Chief ruled on 2026-08-22 that the layering applies now, and applies uniformly. A structure where some capsules are grouped and others are not was rejected explicitly.
+Gaffer ruled on 2026-08-22 that the layering applies now, and applies uniformly. A structure where some capsules are grouped and others are not was rejected explicitly.
 
 ## Decision
 
@@ -41,6 +41,6 @@ Capsule depth is now three path segments, so canonical links from a capsule to t
 ## Rejected alternatives
 
 - **Domain as a name prefix** (`projects/academic-smartboard/`): rejected because the grouping exists only in the name, so no tool, reviewer, or routing file can act on it.
-- **Layering only where it seems useful**: rejected by Chief. Mixed structure is harder to reason about than either consistent alternative.
+- **Layering only where it seems useful**: rejected by Gaffer. Mixed structure is harder to reason about than either consistent alternative.
 - **Keeping empty `docs/`, `src/`, and `tests/` in domain folders** to satisfy the old one-level checker: rejected because those directories would exist purely to appease a tool, and would imply a domain owns code.
 - **Deferring until four or five products exist**: superseded. The count was already six, and every additional capsule raises the cost of the move.
