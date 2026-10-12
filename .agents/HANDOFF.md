@@ -9,10 +9,11 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 ## Current state
 
-- Local `main` is `89487d4f` (fast-forwarded on Gaffer's go, local only). `feat` is ahead with the
-  inbound `origin/main` integration (`57c92731`), the Proof fixtures, and this handoff; moving
-  `main` needs a new go. The main checkout is on `chore/tools-closeout`, so the new guards and hooks are
-  not active there until it switches to `main`. `origin/codex/oracle-ii-grounding` was pushed by Gaffer on 2026-10-11 (`88e56bb7` included).
+- Local `main` is `a54ee055` (fast-forwarded on Gaffer's go, local only) and contains
+  `origin/main` `b2d3a022`. The main checkout is on `main`, so today's guards and hooks are active
+  there. `docs/refresh-2026-10-12` (worktree `main-merge-tmp`) is ahead with the docs refresh;
+  moving `main` needs a new go. `integrate/origin-main`, the stray Sentrapedia worktree
+  `suspicious-easley-9e5623`, and the mistaken `npx biome` cache were removed with Gaffer's approval. `origin/codex/oracle-ii-grounding` was pushed by Gaffer on 2026-10-11 (`88e56bb7` included).
 - Local `main` history must not be pushed as is: it holds commits from the 2026-08-24/25 PII
   incident. Publication goes only through a filtered export (control plane only, no `projects/**`,
   PII-scanned) on top of `origin/main`, with about 20 governance/security conflicts and an
@@ -36,13 +37,17 @@ This file is overwritten with current state, not appended; keep it short (it is 
 ## Work in flight
 
 - REVIEW: `TASK-20261012-CLAUDE-PATH-RULES-WT`, `TASK-20261012-MUST-DEMOTION`,
-  `TASK-20261012-ROOT-HANDOFF-TAKEOVER` (this file; Gaffer approved taking it over from
-  `TASK-20261011-TOOLS-CLOSEOUT`), `TASK-20261012-CODEX-AGENTS-HYGIENE`,
+  `TASK-20261012-CODEX-AGENTS-HYGIENE`,
   `TASK-20261012-LESSON-HEREDOC`, `TASK-20261012-AUDIT-A6-A7`, `TASK-20261012-LFS-PRE-PUSH`,
   `TASK-20261012-MERGE-ASK`, `TASK-20261012-CODEX-MERGE-PROMPT`,
   `TASK-20261012-CONTROL-CENTER-BIOME`/`-A11Y`/`-HANDOFF`, `TASK-20261011-GAFFER-ADDRESS`, and
-  Codex's `TASK-20261011-TOOLS-*` set. Move them to MERGED
-  once the integrity review accepts them.
+  Codex's `TASK-20261011-TOOLS-*` set, and `TASK-20261012-PROVIDER-PROOF-FIXTURES`. Move them to
+  MERGED once the integrity review accepts them.
+- `TASK-20261012-DOCS-REFRESH` owns this file now. Gaffer approved superseding
+  `TASK-20261012-ROOT-HANDOFF-TAKEOVER` (its claim was bound to another worktree), so the
+  integrity review of that task's committed handoff edits moves to this task. It also refreshes
+  README (ruleset, merge policy, generated routing), `docs/bootstrap/CLAUDE_SETUP.md` (hook is
+  fail-closed and asks), and the wiki pages for automation, Claude, and Codex.
 - OpenCode Jev hang: next try is inside the OpenCode TUI.
 
 ## Blockers (need Gaffer)
@@ -117,6 +122,14 @@ This file is overwritten with current state, not appended; keep it short (it is 
   before and after this change; it needs the main checkout.
 
 ## Next actions
+
+- Claude guard gap: `.claude/settings.json` matches `Bash|Edit|Write|NotebookEdit`, and the Claude
+  adapter translates only `Bash`, so commands run through Claude Code's `PowerShell` tool skip the
+  guard. Fix: add `PowerShell` to the matcher and the adapter (verification control, own task).
+- Policy conflict to settle: the parked Phase 6 publisher is designed to enable GitHub auto-merge
+  for a verified head (`SAFRS_AUTOMATION.md`, `SAFRS_APPROVALS.md`, ADR 0002), while Gaffer's rule
+  is never enable auto-merge. It stays disabled (`SAFRS_PUBLISHER_ENABLED` false); revisit before
+  Phase 6.
 
 - Resolved 2026-10-12: Control Center now has its own `biome.jsonc` and its lint script checks
   43 files (see its handoff). `TASK-20261011-TOOLS-LOCAL` was SUPERSEDED with Gaffer's approval.

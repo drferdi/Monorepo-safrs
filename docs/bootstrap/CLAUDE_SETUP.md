@@ -10,12 +10,13 @@ not a second policy tree.
 | --- | --- |
 | `CLAUDE.md` | Thin adapter pointing at `AGENTS.md` |
 | `.claude/settings.json` | Hook wiring plus read-deny for credential files |
-| `.claude/hooks/guard-sensitive-paths.mjs` | PreToolUse: block credential writes, warn on R2 paths |
+| `.claude/hooks/guard-sensitive-paths.mjs` | PreToolUse: shared-guard verdicts for shell commands and file writes |
 | `.claude/hooks/format-edited-file.mjs` | PostToolUse: run Biome on the edited file |
-| `.claude/agents/*.md` | Read-only reviewers (SAFRS classification, design tokens) |
+| `.claude/agents/*.md` | Read-only reviewers (SAFRS classification, design tokens) on `model: sonnet` |
+| `.claude/rules/safrs-*.md` | Path-scoped context rules, generated from `.safrs/document-registry.json` |
 | `.claude/skills/*/SKILL.md` | Repeatable workflows (verification, capability activation) |
 
-Tracked in git: `settings.json`, `hooks/`, `agents/`, `skills/`. Ignored: everything else
+Tracked in git: `settings.json`, `hooks/`, `agents/`, `skills/`, `rules/`. Ignored: everything else
 under `.claude/`, including `settings.local.json` (personal overrides go there).
 
 ## Hooks
@@ -24,8 +25,18 @@ Both hooks are Node scripts invoked as `node .claude/hooks/<name>.mjs` — a rel
 with no shell expansion, so they behave identically on Windows PowerShell, Git Bash, and
 POSIX shells. Payload arrives on stdin as JSON.
 
-### guard-sensitive-paths.mjs (PreToolUse: Edit, Write, NotebookEdit)
+### guard-sensitive-paths.mjs (PreToolUse: Bash, Edit, Write, NotebookEdit)
 
+The hook translates the payload with `tools/automation/src/adapters/claude.mjs` and asks
+the shared guard (`tools/automation/src/guard.mjs`), so Claude reaches the same verdict as
+Cursor and Codex.
+
+- **Shell commands:** force-push, self-granted publication (`CHIEF_PUSH_OK`,
+  `--no-verify`, `core.hooksPath`), and credential-file access are denied. `git merge`,
+  `git pull`, fast-forwarding `main`, `gh pr merge`, `git reset --hard`, and destructive
+  database commands **ask**: Claude Code shows a permission prompt
+  (`permissionDecision: "ask"`), and Gaffer approves or rejects. Every spelling counts:
+  `git.exe`, `git -C <path>`, `git -c key=value`.
 - **Exit 2 (blocks)** for credential files: `.env`, `.env.*`, `**/*.pem`, `**/*.p12`,
   `**/*.pfx`, `**/*.key`, `**/id_rsa*`. `.env.example` is explicitly allowed.
 - **Exit 0 with a stderr notice** when the path matches
@@ -33,8 +44,11 @@ POSIX shells. Payload arrives on stdin as JSON.
   (never weaken, keep out of implementation change sets) and ordinary R2 `patterns`.
 - The R2 pattern list is **read from the registry**, not duplicated here. Editing
   `.safrs/sensitive-paths.json` changes hook behaviour automatically.
-- Fail-open by design: a malformed payload logs to stderr and allows the call. The
-  credential list is hard-coded so it still applies when the registry is unreadable.
+- Writes to the guard's own files (`guard.mjs`, the Codex adapter, `.codex/hooks/**`,
+  `.codex/config.toml`, `.husky/pre-push`) are denied for every agent.
+- Fail-closed: a malformed payload blocks the call (exit 2). The credential list is
+  hard-coded so it still applies when the registry is unreadable.
+- Only the `Bash` tool is guarded for commands; the `PowerShell` tool is not matched.
 
 ### format-edited-file.mjs (PostToolUse: Edit, Write)
 

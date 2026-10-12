@@ -116,7 +116,24 @@ The `gate` and `authority-apply` commands write to `GITHUB_STEP_SUMMARY` when pr
 
 ### Adapter parity
 
-`tools/automation/src/adapters/` contains one translator per agent: `claude.mjs`, `codex.mjs`, `cursor.mjs`, `droid.mjs`. Each maps a native hook payload to guard events (`{type: "command"|"read"|"write"}`) and renders a verdict back to the native protocol. Canonical verdicts are identical across adapters; an adapter without an "ask" channel renders ask as deny (fail closed), and one without any enforceable pre-action hook must stay read-only. Per `.safrs/adapter-capabilities.json`, Droid is `read_only_disabled` pending Activation Decision 4 because it exposes no enforceable pre-action hook.
+`tools/automation/src/adapters/` contains one translator per agent: `claude.mjs`, `codex.mjs`, `cursor.mjs`, `droid.mjs`. Each maps a native hook payload to guard events (`{type: "command"|"read"|"write"}`) and renders a verdict back to the native protocol. Canonical verdicts are identical across adapters; an adapter without an "ask" channel renders ask as deny (fail closed), and one without any enforceable pre-action hook must stay read-only. Claude Code renders ask as a permission prompt (`permissionDecision: "ask"`) and Cursor as `permission: "ask"`. Codex hooks cannot ask, so ask blocks there, with one exception: `git merge`, `git pull`, and `gh pr merge`, written in the bare form that `~/.codex/rules/safrs-merge.rules` matches, go to Codex's own approval prompt (`approval_policy = "on-request"`) while that rules file exists. Fast-forwarding `main` always blocks in Codex.
+
+Command rules in `guard.mjs` match any spelling of `git`/`gh` (`git.exe`, `git -C <path>`, `git -c key=value`, `--no-pager`):
+
+| Reason code | Verdict | Commands |
+| --- | --- | --- |
+| `FORCE_PUSH` | deny | `git push --force` / `-f` (`--force-with-lease` allowed) |
+| `SELF_AUTHORIZED_PUBLICATION` | deny | setting `CHIEF_PUSH_OK`, `push --no-verify`, changing `core.hooksPath` |
+| `UNRESTRICTED_AUTONOMY` | deny | `--dangerously-skip-permissions`, `--yolo`, Droid `--auto high/max` |
+| `CREDENTIAL_ACCESS` | deny | reading or writing `.env`, keys, `credentials.json`, `secrets.json` |
+| `MERGE` | ask | `git merge` (not `--abort`/`--continue`/`--quit`, not `merge-base`), `git pull` |
+| `MAIN_REF_UPDATE` | ask | `git fetch/push . x:main`, `git branch -f main`, `git checkout -B` / `switch -C main`, `git update-ref refs/heads/main` |
+| `PR_MERGE` | ask | `gh pr merge` |
+| `GIT_RESET_HARD` | ask | `git reset --hard` |
+| `DB_DESTRUCTIVE` | ask | `prisma migrate reset`, `DROP DATABASE`, `dropdb`, `db:reset` |
+| `CREDENTIAL_MENTION` | ask | any other command naming `.env` |
+
+Writes are denied outside the repository, to credential files, outside a task contract's write scopes, and (`SELF_GUARD_MODIFICATION`) to the guard's own files for every agent. Per `.safrs/adapter-capabilities.json`, Droid is `read_only_disabled` pending Activation Decision 4 because it exposes no enforceable pre-action hook.
 
 ```mermaid
 graph LR

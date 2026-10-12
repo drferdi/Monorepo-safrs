@@ -987,7 +987,10 @@ blocked from reading it.
 | `OTEL_SDK_DISABLED`, `OTEL_EXPORTER_OTLP_ENDPOINT` | Optional OpenTelemetry export (`compose.telemetry.yaml`) |
 
 Working on this repository as an agent (or with one) starts at
-[`AGENTS.md`](AGENTS.md), which routes to everything else. Complete documentation and knowledge base guides are available on the [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki).
+[`AGENTS.md`](AGENTS.md), which routes to everything else. Its read order (six
+MUST documents, then task-scoped ones) and Claude Code's path-scoped rules in
+`.claude/rules/` are both generated from `.safrs/document-registry.json` by
+`python tools/safrs/generate_routing.py`; edit the registry, not the outputs. Complete documentation and knowledge base guides are available on the [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki).
 
 ### Current capsules
 
@@ -1057,15 +1060,27 @@ installer.
 | <sub>Single-command local bootstrap</sub> | <sub>Verified</sub> | <sub>`pnpm dev`</sub> | <sub>Docker (Postgres)</sub> |
 | <sub>Renovate</sub> | <sub>Patch, minor, pin, digest, and lockfile updates auto-merge only after tests pass; major updates wait for Gaffer</sub> | <sub>—</sub> | <sub>Dependency dashboard enabled; GitHub-native auto-merge is disabled</sub> |
 | <sub>GitHub security</sub> | <sub>Secret scanning, push protection, Dependabot alerts and security updates, and dependency graph enabled</sub> | <sub>—</sub> | <sub>Live GitHub API check on 2026-08-20; continuous drift audit is not implemented</sub> |
-| <sub>CODEOWNERS R2/R3 enforcement</sub> | <sub>Declared, **not yet enforced**</sub> | <sub>—</sub> | <sub>Branch protection on `main` (checklist in [`PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md))</sub> |
+| <sub>CODEOWNERS R2/R3 enforcement</sub> | <sub>Declared, **not yet enforced**</sub> | <sub>—</sub> | <sub>Code-owner review in the `main` ruleset (checklist in [`PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md))</sub> |
 | <sub>Publisher auto-merge</sub> | <sub>Evaluation-only</sub> | <sub>—</sub> | <sub>`SAFRS_PUBLISHER_ENABLED` stays false until Phase 6 activates the required identity and controls</sub> |
 
 > [!IMPORTANT]
-> `main` currently has **no branch protection**, so the eight gates above are
-> published but not required. Requiring them, together with creating the
-> auditor and publisher identities, is parked Phase 6 work. Gaffer resolved the
-> activation policy on 2026-08-18; activation waits for a named runner and the
-> Phase 6 reviewed change.
+> Since 2026-10-12 the GitHub ruleset **SAFRS main protection** guards `main`:
+> changes arrive by pull request with one approving review (stale reviews are
+> dismissed), the eight gates above plus `verify` and `governance` must pass,
+> and deletion and force-push are blocked. Only the repository Admin role may
+> bypass, and only when merging a pull request, so apps cannot merge on their
+> own. Code-owner review is not required yet. Creating the auditor and
+> publisher identities is still parked Phase 6 work.
+
+**Merges happen only on Gaffer's go.** Agents ask before `git merge`,
+`git pull`, fast-forwarding `main`, and `gh pr merge`, and never enable
+auto-merge. The shared guard enforces this for every spelling (`git.exe`,
+`git -C <path>`, `git -c key=value`): Claude Code shows a permission prompt,
+Codex asks through its own approval prompt (`~/.codex/rules/safrs-merge.rules`)
+and otherwise blocks, and fast-forwarding `main` from Codex always blocks. The
+guard also asks before `git reset --hard`, and denies force-push, self-granted
+publication (`CHIEF_PUSH_OK`, `--no-verify`, `core.hooksPath`), and agent
+writes to the guard's own files.
 
 Additional optional capabilities (see `tools/capabilities/manifests/` for the
 full catalog) can be previewed and recorded per project with:
