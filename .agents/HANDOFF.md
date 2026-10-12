@@ -59,6 +59,12 @@ This file is overwritten with current state, not appended; keep it short (it is 
   #37, #38, #41, #42 without review) can no longer merge. `~/.codex/config.toml` has
   `git-pr-watch-auto-merge = false` (Codex `approval_policy = "never"` is unchanged, rest of A-4).
   Before/after ruleset JSON is in the 2026-10-12 Claude session scratchpad.
+- Same rule, locally (`e893452c`, `6603264b`): AGENTS.md, `~/.claude/CLAUDE.md`, and
+  `~/.codex/AGENTS.md` say ask before any merge; "go", "merge it", or clear agreement approves
+  that merge only. The shared guard's new `MERGE` rule asks on `git merge`, `git pull`, and
+  fast-forwarding `main`. Claude now shows a permission prompt for every guard "ask" (before, ask
+  blocked, so even approved merges failed). Codex cannot prompt: it stops and Gaffer runs the merge.
+  Not yet fast-forwarded into local `main`: that is itself a merge and waits for Gaffer's go.
 
 ## Done 2026-10-12 (Gaffer-approved)
 
