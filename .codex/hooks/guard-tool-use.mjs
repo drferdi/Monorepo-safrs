@@ -56,7 +56,8 @@ const mergePromptRules = existsSync(
 
 for (const event of codex.translate(payload, root)) {
   const rendered = codex.render(authorize(event, { sensitivePaths }), {
-    mergePromptRules,
+    mergePromptRules:
+      mergePromptRules && codex.promptRulesMatch(event.command ?? ""),
   });
   if (rendered.stderr) {
     console.error(rendered.stderr);

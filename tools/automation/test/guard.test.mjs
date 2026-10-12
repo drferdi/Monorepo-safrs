@@ -52,6 +52,9 @@ test("command verdicts: hard reset and PR merge ask, safe variants allowed", () 
     ["rtk git reset --hard origin/main", "GIT_RESET_HARD"],
     ["gh pr merge 42 --squash", "PR_MERGE"],
     ["rtk gh pr merge --auto", "PR_MERGE"],
+    ["git.exe reset --hard HEAD", "GIT_RESET_HARD"],
+    ['git -C "D:/DEV/my repo" reset --hard', "GIT_RESET_HARD"],
+    ["gh.exe pr merge 42", "PR_MERGE"],
   ]) {
     const verdict = authorize({ type: "command", command });
     assert.equal(verdict.decision, "ask", command);
@@ -61,6 +64,7 @@ test("command verdicts: hard reset and PR merge ask, safe variants allowed", () 
     "git reset --soft HEAD~1",
     "git reset HEAD file.txt",
     "gh pr view 42",
+    "git.exe -C D:/DEV/monorepo diff --stat",
   ]) {
     assert.equal(
       authorize({ type: "command", command }).decision,
@@ -79,6 +83,12 @@ test("command verdicts: merges and main fast-forwards ask, merge plumbing allowe
     ["git push . feat/x:refs/heads/main", "MAIN_REF_UPDATE"],
     ["git branch -f main feat/x", "MAIN_REF_UPDATE"],
     ["git update-ref refs/heads/main abc123", "MAIN_REF_UPDATE"],
+    ["git.exe merge feat/x", "MERGE"],
+    ["git -C D:/DEV/monorepo merge feat/x", "MERGE"],
+    ["git --no-pager -c core.editor=true pull", "MERGE"],
+    ["git.exe fetch . feat/x:main", "MAIN_REF_UPDATE"],
+    ["git checkout -B main feat/x", "MAIN_REF_UPDATE"],
+    ["git switch -C main feat/x", "MAIN_REF_UPDATE"],
   ]) {
     const verdict = authorize({ type: "command", command });
     assert.equal(verdict.decision, "ask", command);
@@ -90,6 +100,10 @@ test("command verdicts: merges and main fast-forwards ask, merge plumbing allowe
     "git merge-base main HEAD",
     "git merge-tree --write-tree main feat/x",
     "git fetch -q . feat/x:feat/y",
+    "git.exe merge-base main HEAD",
+    "git -C D:/DEV/monorepo merge --abort",
+    "git -C D:/DEV/monorepo log --merges",
+    "git switch main",
   ]) {
     assert.equal(
       authorize({ type: "command", command }).decision,

@@ -40,6 +40,15 @@ export function translate(payload, root) {
  */
 const CODEX_PROMPTED = new Set(["MERGE", "PR_MERGE"]);
 
+/** Command shapes the argv-prefix rules in safrs-merge.rules can match. Other
+ *  spellings (git.exe, git -C <path>, chained commands) would slip past the
+ *  Codex prompt, so the hook blocks them instead. */
+export function promptRulesMatch(command) {
+  return /^\s*(?:rtk\s+)?(?:git\s+(?:merge|pull)|gh\s+pr\s+merge)(?:\s|$)/u.test(
+    command,
+  );
+}
+
 export function render(result, { mergePromptRules = false } = {}) {
   if (
     result.decision === "ask" &&

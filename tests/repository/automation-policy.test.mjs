@@ -523,6 +523,20 @@ test("Codex guard lets merges reach the Codex prompt only when the merge prompt 
       JSON.parse(deferred.stdout).hookSpecificOutput.additionalContext,
       /Gaffer/,
     );
+    // The rules match argv prefixes only, so other spellings stay blocked.
+    for (const command of [
+      "git.exe merge feat/x",
+      "git -C D:/DEV/monorepo merge feat/x",
+    ]) {
+      const blocked = runHook(
+        codexGuard,
+        { tool_name: "Bash", tool_input: { command } },
+        undefined,
+        repositoryRoot,
+        env,
+      );
+      assert.equal(blocked.status, 2, command);
+    }
   } finally {
     rmSync(home, { recursive: true, force: true });
   }
