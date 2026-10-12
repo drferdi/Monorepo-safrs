@@ -104,7 +104,7 @@ def main() -> int:
             return 1
         print('SAFRS routing block and Claude rules: in sync')
         return 0
-    agents.write_text(text.replace(current_block(text), expected), encoding='utf-8')
+    agents.write_text(text.replace(current_block(text), expected), encoding='utf-8', newline='\n')
     rules_dir = ROOT / RULES_DIR
     rules_dir.mkdir(parents=True, exist_ok=True)
     rules = build_rules()
