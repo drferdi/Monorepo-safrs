@@ -32,9 +32,23 @@
       "path": ".agents/knowledge/03_ARCHITECTURE.md",
       "type": "canonical",
       "status": "CANONICAL",
-      "normativity": "MUST",
-      "read_order": 5,
-      "scope": "always"
+      "normativity": "SHOULD",
+      "scope": "task:architecture",
+      "paths": [
+        "package.json",
+        "pnpm-workspace.yaml",
+        "turbo.json",
+        "tsconfig.json",
+        "biome.jsonc",
+        "**/package.json",
+        "**/pnpm-lock.yaml",
+        "**/tsconfig*.json",
+        "packages/**",
+        ".safrs/**",
+        "tools/**",
+        "scripts/**",
+        "projects/**/AGENTS.md"
+      ]
     },
     {
       "id": "context",
@@ -42,7 +56,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 6,
+      "read_order": 5,
       "scope": "always"
     },
     {
@@ -328,7 +342,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 7,
+      "read_order": 6,
       "scope": "always"
     },
     {
@@ -363,9 +377,23 @@
       "path": "docs/architecture/MONOREPO_PURPOSE.md",
       "type": "canonical",
       "status": "CANONICAL",
-      "normativity": "MUST",
-      "scope": "always",
-      "read_order": 8
+      "normativity": "SHOULD",
+      "scope": "task:architecture",
+      "paths": [
+        "package.json",
+        "pnpm-workspace.yaml",
+        "turbo.json",
+        "tsconfig.json",
+        "biome.jsonc",
+        "**/package.json",
+        "**/pnpm-lock.yaml",
+        "**/tsconfig*.json",
+        "packages/**",
+        ".safrs/**",
+        "tools/**",
+        "scripts/**",
+        "projects/**/AGENTS.md"
+      ]
     },
     {
       "id": "agent-autonomy-model",
@@ -510,6 +538,7 @@
     "task:product",
     "task:review",
     "task:governance",
-    "task:planning"
+    "task:planning",
+    "task:architecture"
   ]
 }
