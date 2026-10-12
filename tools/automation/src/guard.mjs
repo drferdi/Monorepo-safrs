@@ -68,6 +68,18 @@ const COMMAND_RULES = [
       "direct destructive database commands are prohibited; use repository wrappers with explicit human authorization.",
   },
   {
+    reasonCode: "GIT_RESET_HARD",
+    decision: "ask",
+    test: (command) => /\bgit\s+reset\s+[^\n]*--hard\b/iu.test(command),
+    message: "git reset --hard discards work; confirm with a human first.",
+  },
+  {
+    reasonCode: "PR_MERGE",
+    decision: "ask",
+    test: (command) => /\bgh\s+pr\s+merge\b/iu.test(command),
+    message: "merging a pull request needs explicit human approval.",
+  },
+  {
     reasonCode: "CREDENTIAL_ACCESS",
     decision: "deny",
     test: (command) =>

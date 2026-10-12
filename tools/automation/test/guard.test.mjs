@@ -46,6 +46,30 @@ test("command verdicts: force-push deny, lease allowed, destructive db asks, aut
   );
 });
 
+test("command verdicts: hard reset and PR merge ask, safe variants allowed", () => {
+  for (const [command, reasonCode] of [
+    ["git reset --hard HEAD~1", "GIT_RESET_HARD"],
+    ["rtk git reset --hard origin/main", "GIT_RESET_HARD"],
+    ["gh pr merge 42 --squash", "PR_MERGE"],
+    ["rtk gh pr merge --auto", "PR_MERGE"],
+  ]) {
+    const verdict = authorize({ type: "command", command });
+    assert.equal(verdict.decision, "ask", command);
+    assert.equal(verdict.reasonCode, reasonCode, command);
+  }
+  for (const command of [
+    "git reset --soft HEAD~1",
+    "git reset HEAD file.txt",
+    "gh pr view 42",
+  ]) {
+    assert.equal(
+      authorize({ type: "command", command }).decision,
+      "allow",
+      command,
+    );
+  }
+});
+
 test("credential commands: read/print deny, bare mention asks, templates allowed", () => {
   assert.equal(
     authorize({ type: "command", command: "cat .env" }).decision,

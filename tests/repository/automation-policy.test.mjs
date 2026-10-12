@@ -495,9 +495,9 @@ test("Codex guard reports verification-control context without blocking", () => 
   );
 });
 
-test("Codex guard handles malformed payloads without inventing a target", () => {
+test("Codex guard blocks malformed payloads (fail closed)", () => {
   const result = runHook(codexGuard, {}, "not-json");
-  assert.equal(result.status, 0);
+  assert.equal(result.status, 2);
   assert.match(result.stderr, /could not be parsed/i);
 });
 

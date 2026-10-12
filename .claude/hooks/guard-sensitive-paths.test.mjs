@@ -21,6 +21,16 @@ function runHook(payload, spawnOptions = {}) {
   return { exitCode: result.status, stderr: result.stderr ?? "" };
 }
 
+test("malformed payload is blocked (fail closed)", () => {
+  const result = spawnSync("node", [hookPath], {
+    input: "not-json",
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /could not be parsed/);
+});
+
 test("write outside the repository is denied", () => {
   const result = runHook({
     tool_name: "Write",

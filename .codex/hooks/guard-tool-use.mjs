@@ -25,9 +25,9 @@ try {
   payload = raw ? JSON.parse(raw) : {};
 } catch (error) {
   console.error(
-    `SAFRS guard: hook payload could not be parsed (${error.message}).`,
+    `SAFRS guard: hook payload could not be parsed (${error.message}); blocked (fail closed).`,
   );
-  process.exit(0);
+  process.exit(2);
 }
 
 const root = findRepositoryRoot(String(payload.cwd ?? process.cwd()));

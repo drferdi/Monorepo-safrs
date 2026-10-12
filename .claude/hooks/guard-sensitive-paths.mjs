@@ -16,9 +16,9 @@ try {
   payload = raw ? JSON.parse(raw) : null;
 } catch (error) {
   console.error(
-    `SAFRS guard: hook payload could not be parsed (${error.message}); path classification was skipped.`,
+    `SAFRS guard: hook payload could not be parsed (${error.message}); blocked (fail closed).`,
   );
-  process.exit(0);
+  process.exit(2);
 }
 
 /**
@@ -122,10 +122,14 @@ const target =
  */
 function repositoryToplevel(directory) {
   try {
-    return execFileSync("git", ["-C", directory, "rev-parse", "--show-toplevel"], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
+    return execFileSync(
+      "git",
+      ["-C", directory, "rev-parse", "--show-toplevel"],
+      {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      },
+    ).trim();
   } catch {
     return directory;
   }
