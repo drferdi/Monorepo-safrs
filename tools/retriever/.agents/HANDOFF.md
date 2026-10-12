@@ -1,47 +1,53 @@
 # HANDOFF
 
-## 2026-10-11 - Tool quality gates and contract alignment (Codex)
+## 2026-10-11 - Sentrapedia website committed and pushed (Codex)
 
-- Files: `package.json`, `project.contract.json`, `README.md`, new `scripts/lint.mjs` and `scripts/deploy-dry-run.mjs`, lint and CSP regression tests, renderer HTML CSP. Earlier launcher fixes remain in the working tree.
-- Replaced placeholder success gates with source syntax/debugger/dynamic-execution checks and actual build-artifact validation. Tests compile CLI output before running; corrected desktop/CLI/preview documentation. Contract declares HTTrack, frozen install and mutable data paths.
-- PASS / exit 0: typecheck, build, local lint (16 maintained files), 7 tests, isolated-profile desktop smoke, deployment dry-run, tools contract discovery and structural checker. Exact CSP hash permits the required inline bootstrap without allowing arbitrary inline scripts.
-- Remaining risks: lint is deliberately limited and does not check style; fresh extraction/install not performed; global governance fails on other scope ownership/handoff. No scraping, data deletion, provider calls, installs, commit or push.
-- Next: independent review and extraction verification when install/network scope is authorized.
+- Scope: Gaffer authorized committing and pushing the complete website to drferdi/Sentrapediasite, then explicitly authorized one additional packaging correction/verification cycle after the earlier circuit breaker. Unrelated monorepo clinical changes excluded.
+- Delivery: isolated checkout at data/scrapes/m3-pg.de/Sentrapediasite; local codex/site-import tracks origin/main. Initial commit 36f8cd9ec43a4255beae42cf414b184b0e881ca8, feat: add sentrapedia website and motion, includes required OpenAI Codex co-author trailer and 1,316 files. Non-force SSH push succeeded; fresh ls-remote confirms both remote main and remote HEAD equal the local commit. Working tree clean.
+- Files: complete sentrapedia-transformation website/source/assets/evidence, original-reconstruction with protected baseline, original public m3-pg.de mirror, standalone README/AGENTS, scoped .gitignore, byte-preserving .gitattributes, repository handoff and stage-8 export record. Dependencies, authoring scratch outputs, environment files, cookies and crawl caches excluded.
+- Packaging correction: only four absent Bootstrap/WordPress dist assets copied; existing read-only baseline untouched. Initial broad dist exclusions narrowed to motion-authoring. Six newly authored packaging files normalized to LF; direct byte/whitespace validation passed. Jev stop_retry honored for failed merge-copy/GitHub CLI/whitespace-command approaches; GitHub CLI was not reused.
+- PASS / exit 0 in isolated checkout: website verifier (330 protected baseline files, 27 unchanged original design/runtime files, six media sets, local HTTP/asset/range checks); playback regression 1/1; reconstruction verifier (18 pages, 293 assets, baseline hashes); server regression 1/1; 1,310 source-copy hash comparisons; potential-secret and 100 MiB file-limit scan; 1,316 staged blob-to-working-byte comparisons; staged public-runtime inclusion/excluded-artifact checks; Git commit; SSH push; remote/local SHA equality. No TypeScript/JavaScript source edits or dependency installation in packaging.
+- Limits and next: GitHub repository delivery only; no hosting deployment or clinical validation. Homepage detail/English content and prior authoring dependency review remain separate. Continue website work from the isolated Sentrapediasite checkout to keep its Git history independent from the original ignored scrape workspace.
 
-## 2026-10-11 — Restore local Electron and desktop shortcut
+## 2026-10-11 - Sentrapedia click-focused zoom in three videos (Codex)
 
-- **Scope**: Retriever remains at `tools/retriever`; root monorepo supplies governance only.
-- **Changed files**: `Run-Retriever.bat`, `Run-Retriever.ps1`, `package.json`, `.agents/HANDOFF.md`.
-- **Local dependency repair**: re-linked seven generated package links to the existing local
-  `.pnpm` store using its package map; regenerated portable command shims and installed the
-  local Electron 44.5.1 binary. All 94 dependency links resolve within Retriever.
-- **Launcher behavior**: uses local Electron, prepares a missing binary through the local
-  installer, reports failures, and no longer force-stops existing Electron processes.
-  Nested package scripts use Node.js `--run` instead of the ineffective pnpm shim.
-- **Gates**: typecheck PASS (exit 0); lint script PASS (exit 0, placeholder only, no real
-  linter configured); PowerShell parser PASS (exit 0); build PASS (exit 0); targeted engine
-  tests PASS (4/4, exit 0); desktop smoke PASS (exit 0); dependency boundary check PASS
-  (94 links, zero outside, exit 0); original Desktop shortcut PASS (exit 0, window title
-  `Retriever`, responding). Commands ran through `node --run` from this tool directory.
-- **Remaining risks**: Electron emits existing CSP and deprecated console-event warnings.
-  Extra module-boundary preload harness failed on Windows path parsing; Jev stopped that
-  approach. A full extracted-folder lifecycle has not been verified. The initial installer
-  followed the old root link and generated a root Electron 44.7.0 binary before local repair;
-  Retriever now uses only local 44.5.1. No global tooling/configuration was changed.
-- **Next tasks**: optional separate review of Electron CSP and pnpm installation behavior.
-  The desktop application was left open. No push, deployment, or scraped-data change.
+- Scope: Gaffer requested close-ups in three of the six videos so clicked controls are easier to see. Selected SOAP, Surat Rujukan and Edukasi Pasien; local work on chore/tools-closeout.
+- Files: sentrapedia-transformation/motion-authoring/src/WorkflowScene.tsx, WorkflowVideo.tsx and storyboards.ts; three regenerated master/WebM/WebP/poster sets and optimized web MP4s; corresponding generated media; README; reference/stage-7 and refreshed stage-4 export/decode reports; this handoff and archive.
+- Result: first-scene camera smoothly zooms 2.67x from 0.9 to 1.55 seconds, holds through the simulated click, then returns to the complete screenshot by 2.75 seconds. The 600x375 close-up contains the whole target button; outer tablet, headline and footer stay fixed. Education highlight bounds corrected to match the actual button without overlapping its neighbor. Other scenes remain full-screen views.
+- PASS / exit 0: authoring TypeScript; targeted ESLint on all three changed TypeScript files; Retriever typecheck; completed selected Remotion renders; encoding; verify-web actual H.264 30/1 fps, 270 frames, 9 seconds, 1280px width, faststart, matching SHA and full decode for all six videos; site verifier 330 protected baseline files, 27 identical original CSS/JS/font files, source/served equality, layout, MIME and byte ranges; targeted workflow-playback regression 1/1; six browser-case assertions; git diff --check.
+- Browser: selected three videos checked at 1338x824 and 390x844, seek to 2 seconds. All six cases readyState 4, zero media errors, video and poster contained, exactly one loaded player and no horizontal overflow. Exported peak and return-to-full frames inspected; browser cases verify DOM readiness/framing, not painted seek frames. A referral browser capture retained the previous frame after seek; Jev stop_retry honored, no recapture. Screenshots, browser-playback.json, three render manifests, export/decode reports, source snapshots and before/after hashes saved in reference/stage-7. Playback restored, viewport reset, live preview marked as deliverable.
+- Integrity: 43 pre-existing files remain byte-identical, including all MIRA/Anamnesis/SBAR masters and derivatives, branding copies, homepage HTML and playback controller. All six export master hashes match current render manifests. Web video total 6,649,419 bytes versus 6,341,697 previously (+4.9 percent). No website layout, font, color or controller change.
+- Limits and next: live frame pacing was not measured again; earlier dependency review remains separate. No install, paid inference, screenshot upload, clinical validation, extraction, push or publishing. Review the three close-ups at http://127.0.0.1:3401/#featured-projects; detail and English pages remain separate work.
 
-## 2026-10-10 — .agents files added
+## 2026-10-11 - Sentrapedia tablet media, clipping and official logo (Codex)
 
-- **Scope**: `tools/retriever` governance files only.
-- **Touched files**: `.agents/CONTEXT.md`, `.agents/HANDOFF.md`, `.agents/DECISIONS.md` (new);
-  owner name in `AGENTS.md` and `project.contract.json` changed from "Chief" to "Gaffer".
-- **Evidence**: SAFRS topology no longer reports missing `.agents/` files for this capsule.
-  No code, build, or test was run.
-- **State**: the capsule is **not tracked in Git** (never committed) and has **no `.gitignore`**,
-  so `node_modules/`, `dist/`, `dist-electron/`, and scraped `data/` would be committed as-is.
-- **Next actions** (only when Gaffer decides to commit the capsule):
-  1. Add a capsule `.gitignore` for `node_modules/`, `dist/`, `dist-electron/`, and scraped
-     output under `data/`.
-  2. Run the contract commands from `project.contract.json` and record exit codes here.
-  3. Commit the capsule as its own change.
+- Scope: Gaffer requested living tablet-like media, reported clipped video text at 1338x824, then supplied official neuron artwork with adjacent Sentrapedia text. Local work on chore/tools-closeout; no install, upload, publishing or push.
+- Files: sentrapedia-transformation/motion-authoring/src/WorkflowScene.tsx, render-brand.mjs, six regenerated master/derivative/poster sets, assets/branding and workflows, assets/workflow-playback.js, scripts/transform.mjs and verify.mjs, generated branding/homepage/media, README, reference/stage-6 and refreshed stage-4 export/decode reports; this handoff and archive.
+- Media: each complete 1600x1000 screenshot fits inside a floating/tilting tablet with at least 16px screen margin, soft shadow and faint reflection. Earlier ROI zoom/pan was removed. Dedicated controller fits both poster and video with contain and suppresses image hover zoom. Original media slots remain; fine UI text is smaller in narrow cards.
+- Branding: unchanged official ink and white PNG copies match SHA-256 with supplied desktop brand originals. Existing Inter Bold supplies adjacent text. Compact 152x24 lockup sits inside the existing header span; scrolled asset 168x48 fits its original column. Footer and middle asset boxes retain dimensions; side badge and 1920x1096 five-second intro use official artwork. Verifier normalizes only the exact approved compact-image span addition.
+- PASS / exit 0: authoring TypeScript and targeted WorkflowScene ESLint; Retriever typecheck; lintSource on four changed JavaScript files; targeted workflow-playback regression 1/1; six completed Remotion renders and web encoding; verify-web actual H.264 30/1 fps, 270 frames, 9 seconds, 1280px width, faststart, full decode and SHA; site verifier 330 protected baseline files and 27 identical original CSS/JS/fonts, declared branding/media structure, served/source equality, HTTP MIME and ranges. All six stage-6 master hashes match both render manifests and web exports. Official intro fully decodes to 150 frames/5 seconds.
+- Browser PASS: 18 fit/hover cases across 1338x824, 1440x1000 and 390x844; posters/videos fully contained, transform none on hover, readyState 4, one loaded player and no horizontal overflow. Reduced motion selects six still posters and creates no workflow video. Saved desktop MIRA, mobile and official branding screenshots in reference/stage-6. Temporary Studio closed; media emulation and viewport override reset; screenshot pause/seek restored to playback.
+- Review: one independent read-only reviewer found no actionable current clipping/branding finding; exact verifier exception and official source hashes checked. A provisional provenance mismatch was withdrawn after evidence finalization; parent independently verified all six matching master hashes. Review details in reference/stage-6/review.json.
+- Size and limits: web videos total 6,341,697 bytes versus 5,882,368 before this turn, +7.8 percent. Live frame pacing was not remeasured. Studio DOM-bound inspection stopped after a canvas-mount timing error under Jev stop_retry; global animation-settling diagnostic timed out and was not repeated. No strict pixel comparison, capsule extraction or clinical validation claim. Earlier authoring dependency review remains pending; unrelated Sentrapedia next-env.d.ts preserved.
+- Next: review http://127.0.0.1:3401/#featured-projects. Detail/English pages and their destination content remain separate adaptation work; close earlier authoring dependency review independently.
+
+## 2026-10-11 - Sentrapedia playful motion effects (Codex)
+
+- Scope: Gaffer requested additional fun effects after approving the optimized playback. Local reversible media edits on branch chore/tools-closeout; original website layout, palette, typography and runtime preserved.
+- Files: sentrapedia-transformation/motion-authoring/src/WorkflowScene.tsx, six regenerated authoring MP4/WebM/WebP/poster outputs and render manifests, assets/workflows and served copies, README, reference/stage-5, refreshed stage-4 web export/decoder reports, this handoff and archive.
+- Result: staggered spring headlines, softer card bounce, three-dot cursor trails, cursor squash/stretch, six short monochrome click sparkles and spring step indicators. Effects are frame-driven and baked into all six videos; click decoration does not imply successful clinical completion. No additional website runtime animation or dependency added.
+- PASS / exit 0: authoring TypeScript; Retriever typecheck; targeted workflow-playback regression 1/1; six Remotion renders; web encoding; verify-web full decoding, actual H.264 30/1 fps, 270 frames, 9 seconds, 1280px width, faststart and SHA checks; stage verifier (330 protected baseline files, 27 identical original design files, source/served equality, HTTP MIME and byte ranges). Homepage and playback controller SHA remain exactly identical before/after this task.
+- Lint: npm run lint returned exit 1, six no-undef errors in unchanged render.mjs, encode-web.mjs and verify-web.mjs for Node console/process globals. Raw cached diagnostics show zero errors/warnings in changed WorkflowScene.tsx and all other src files. Jev stop_retry honored; no rule disabling, configuration changes or unrelated fixes. Diagnostics saved in reference/stage-5/lint-observation.json.
+- Browser: Studio frame 60 shows sparkles with no error overlay; frame 35 shows cursor trail. Final website SOAP playback readyState 4, unpaused, nonzero time on desktop and mobile 390x844; mobile has no horizontal overflow. Pausing/seeking for the screenshot was restored to playback; viewport override reset and temporary Studio shut down. Evidence: reference/stage-5/browser-playback.json, website-sparkles.png, mobile-playback.png, source-revision.json, six render manifests, web-exports.json and media-decoding.json.
+- Size: current web MP4 total 5,882,368 bytes versus 5,751,458 previously, an increase of 2.3 percent. Existing visible-card loading/unloading and reduced-motion fallback are unchanged. Live frame pacing was not remeasured; prior Jev stop_retry honored. Earlier R2 authoring dependency review remains pending; no clinical validation, install, upload, publishing, push or extraction claim.
+- Next: review the playful revision at http://127.0.0.1:3401/#featured-projects. Detail-page adaptation and the pending authoring dependency review remain separate work.
+
+## 2026-10-11 - Sentrapedia video playback performance fix (Codex)
+
+- Scope: Gaffer reported severe lag in the approved modern motion. The homepage was serving six large animated WebPs at 10 fps although existing Remotion MP4 masters were 30 fps. Preserve original design and motion content.
+- Files: sentrapedia-transformation/assets/workflow-playback.js, six assets/workflows/*-web.mp4, motion-authoring/encode-web.mjs and verify-web.mjs, scripts/transform.mjs, verify.mjs and workflow-playback.test.mjs, generated homepage/media, README, reference/stage-4, this handoff and archive. No dependency or package-manifest changes in this fix.
+- Result: homepage uses poster-backed H.264 30 fps videos, 1280px width, faststart, 270 frames and 9 seconds each. Total video bytes 5,751,458 versus 22,369,928 previous WebP bytes (74.3 percent smaller). Dedicated new controller loads only the visible open card; closed/offscreen cards pause and unload, reduced motion shows posters. Original 27 CSS/JS/font files and protected 330-file baseline unchanged.
+- PASS / exit 0: Retriever typecheck; authoring TypeScript; Retriever lintSource checks on all six changed JavaScript files; targeted regression test 1/1 (intentional RED observed before implementation, GREEN after); transform; stage verifier including source/served hashes, local targets, video MIME and 32-byte HTTP ranges. FFprobe verifies actual H.264, 30/1 fps, width, 270 frames and exact 9-second duration; faststart box ordering and FFmpeg full decode pass for all six videos.
+- Browser: SOAP/MIRA desktop and SOAP mobile video playback observed, readyState 4 and advancing currentTime. Six card switches leave only the open player with a source; previous sources unload. Offscreen players all pause/unload; reduced motion creates no workflow player and selects all six posters. Seven section geometry/background values have zero deltas against original baseline at 1440x1000 and 390x844. Evidence and screenshots in reference/stage-4/browser-playback.json, desktop-playback.png and mobile-playback.png.
+- Limits: live frame-pacing diagnostics exceeded browser command timeout and Jev stop_retry was honored; no observed fps or dropped-frame claim. Generic browser error log entries are unresolved and do not identify a media failure; inspected players had no MediaError. Earlier designated R2 authoring dependency review remains pending after reviewer usage exhaustion. No strict pixel comparison, capsule extraction, clinical validation, install, external upload, publish or push.
+- Next: Gaffer can refresh http://127.0.0.1:3401/#featured-projects to use optimized playback. Device-specific smoothness remains subject to actual hardware/browser conditions. Continue detail-page adaptation and pending authoring dependency review separately.
