@@ -15,7 +15,9 @@ if [ "${CHIEF_PUSH_OK:-0}" != "1" ]; then
   exit 1
 fi
 
-# stdin: <local_ref> <local_sha> <remote_ref> <remote_sha> per baris
+# stdin: <local_ref> <local_sha> <remote_ref> <remote_sha> per baris.
+# Dibaca sekali karena gate capsule dan Git LFS sama-sama membutuhkannya.
+refs=$(cat)
 if [ "${CHIEF_PUSH_PROJECTS_OK:-0}" != "1" ]; then
   zero=0000000000000000000000000000000000000000
   while read -r local_ref local_sha remote_ref remote_sha; do
@@ -33,6 +35,15 @@ if [ "${CHIEF_PUSH_PROJECTS_OK:-0}" != "1" ]; then
       echo "Pengecualian sadar: CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push ..." >&2
       exit 1
     fi
-  done
+  done <<EOF
+$refs
+EOF
 fi
-exit 0
+
+# Git LFS: core.hooksPath menunjuk ke husky, jadi hook pre-push milik LFS
+# tidak pernah dipasang. Tanpa baris ini objek LFS tidak ikut ter-upload.
+if ! command -v git-lfs >/dev/null 2>&1; then
+  echo "PUSH DIBLOKIR: git-lfs tidak ditemukan, padahal repo ini memakai Git LFS." >&2
+  exit 1
+fi
+printf '%s\n' "$refs" | git lfs pre-push "$@"
