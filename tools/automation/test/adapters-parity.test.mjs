@@ -145,6 +145,27 @@ test("ask prompts the human where the adapter can; Codex has no ask channel and 
   );
 });
 
+test("Codex hands merges to its execpolicy prompt only while the prompt rules exist", () => {
+  for (const reasonCode of ["MERGE", "PR_MERGE"]) {
+    const ask = { decision: "ask", reasonCode, message: "x" };
+    const deferred = codex.render(ask, { mergePromptRules: true });
+    assert.equal(deferred.exitCode, 0, reasonCode);
+    assert.match(
+      JSON.parse(deferred.stdout).hookSpecificOutput.additionalContext,
+      /Gaffer/,
+    );
+    assert.equal(codex.render(ask).exitCode, 2, reasonCode);
+  }
+  for (const reasonCode of ["MAIN_REF_UPDATE", "DB_DESTRUCTIVE"]) {
+    const ask = { decision: "ask", reasonCode, message: "x" };
+    assert.equal(
+      codex.render(ask, { mergePromptRules: true }).exitCode,
+      2,
+      reasonCode,
+    );
+  }
+});
+
 test("droid adapter denies every mutation while disabled", () => {
   const events = droid.translate({ command: "echo hi" });
   const override = droid.authorizeOverride(events[0]);

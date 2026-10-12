@@ -6,6 +6,7 @@
  * back into the Codex protocol (exit 2 blocks; stdout may carry context).
  */
 import { existsSync, readFileSync } from "node:fs";
+import { homedir } from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -49,8 +50,14 @@ const [{ authorize }, codex, sensitivePaths] = await Promise.all([
   }),
 ]);
 
+const mergePromptRules = existsSync(
+  path.join(homedir(), ".codex", "rules", "safrs-merge.rules"),
+);
+
 for (const event of codex.translate(payload, root)) {
-  const rendered = codex.render(authorize(event, { sensitivePaths }));
+  const rendered = codex.render(authorize(event, { sensitivePaths }), {
+    mergePromptRules,
+  });
   if (rendered.stderr) {
     console.error(rendered.stderr);
   }

@@ -71,18 +71,18 @@ test("command verdicts: hard reset and PR merge ask, safe variants allowed", () 
 });
 
 test("command verdicts: merges and main fast-forwards ask, merge plumbing allowed", () => {
-  for (const command of [
-    "git merge feat/x",
-    "rtk git merge --no-ff main",
-    "git pull origin main",
-    "git fetch -q . feat/x:main",
-    "git push . feat/x:refs/heads/main",
-    "git branch -f main feat/x",
-    "git update-ref refs/heads/main abc123",
+  for (const [command, reasonCode] of [
+    ["git merge feat/x", "MERGE"],
+    ["rtk git merge --no-ff main", "MERGE"],
+    ["git pull origin main", "MERGE"],
+    ["git fetch -q . feat/x:main", "MAIN_REF_UPDATE"],
+    ["git push . feat/x:refs/heads/main", "MAIN_REF_UPDATE"],
+    ["git branch -f main feat/x", "MAIN_REF_UPDATE"],
+    ["git update-ref refs/heads/main abc123", "MAIN_REF_UPDATE"],
   ]) {
     const verdict = authorize({ type: "command", command });
     assert.equal(verdict.decision, "ask", command);
-    assert.equal(verdict.reasonCode, "MERGE", command);
+    assert.equal(verdict.reasonCode, reasonCode, command);
   }
   for (const command of [
     "git merge --abort",

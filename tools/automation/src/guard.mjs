@@ -86,8 +86,14 @@ const COMMAND_RULES = [
     test: (command) =>
       /\bgit\s+merge(?![\w-])(?![^\n]*--(?:abort|continue|quit)\b)/iu.test(
         command,
-      ) ||
-      /\bgit\s+pull(?![\w-])/iu.test(command) ||
+      ) || /\bgit\s+pull(?![\w-])/iu.test(command),
+    message:
+      "merging needs Gaffer's explicit go in this conversation; ask Gaffer first (where the agent cannot prompt, Gaffer runs the merge).",
+  },
+  {
+    reasonCode: "MAIN_REF_UPDATE",
+    decision: "ask",
+    test: (command) =>
       /\bgit\s+(?:fetch|push)\s+(?:-\S+\s+)*\.\s+\S+:(?:refs\/heads\/)?main\b/iu.test(
         command,
       ) ||

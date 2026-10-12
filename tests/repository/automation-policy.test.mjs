@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
@@ -35,11 +36,12 @@ const unrestrictedAutonomyPattern =
 const downloadCommandPattern =
   /\b(?:curl|wget|iwr|invoke-webrequest|invoke-restmethod)\b/iu;
 
-function runHook(script, payload, inputOverride, cwd = repositoryRoot) {
+function runHook(script, payload, inputOverride, cwd = repositoryRoot, env) {
   return spawnSync(process.execPath, [script], {
     cwd,
     encoding: "utf8",
     input: inputOverride ?? JSON.stringify(payload),
+    env: env ?? process.env,
   });
 }
 
@@ -493,6 +495,37 @@ test("Codex guard reports verification-control context without blocking", () => 
     output.hookSpecificOutput.additionalContext,
     /verification.*R2/i,
   );
+});
+
+test("Codex guard lets merges reach the Codex prompt only when the merge prompt rules exist", () => {
+  const home = mkdtempSync(join(tmpdir(), "codex-home-"));
+  const env = { ...process.env, HOME: home, USERPROFILE: home };
+  const payload = {
+    tool_name: "Bash",
+    tool_input: { command: "git merge feat/x" },
+  };
+  try {
+    assert.equal(
+      runHook(codexGuard, payload, undefined, repositoryRoot, env).status,
+      2,
+    );
+    mkdirSync(join(home, ".codex", "rules"), { recursive: true });
+    writeFileSync(join(home, ".codex", "rules", "safrs-merge.rules"), "");
+    const deferred = runHook(
+      codexGuard,
+      payload,
+      undefined,
+      repositoryRoot,
+      env,
+    );
+    assert.equal(deferred.status, 0, deferred.stderr);
+    assert.match(
+      JSON.parse(deferred.stdout).hookSpecificOutput.additionalContext,
+      /Gaffer/,
+    );
+  } finally {
+    rmSync(home, { recursive: true, force: true });
+  }
 });
 
 test("Codex guard blocks malformed payloads (fail closed)", () => {
