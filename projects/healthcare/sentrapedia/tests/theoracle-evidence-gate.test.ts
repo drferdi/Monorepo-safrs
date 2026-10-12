@@ -408,3 +408,21 @@ describe("clinical evidence gate: a Unicode minus (U+2212) is a range dash", () 
     expect(unstrength("Amoksisilin 250−500 mg")).toBe("Amoksisilin");
   });
 });
+
+describe("clinical evidence gate: every range separator needs both ends", () => {
+  const status = (dose: string, text: string) => gateTherapy(therapy([drug("Amoxicillin", dose)]), bundle(text), pneumonia).report.drugs[0].status;
+  const upperOnly = "Amoksisilin 500 mg 3 kali sehari.";
+  it("checks the first end of a range written with any dash, s/d, sampai, hingga or ~", () => {
+    for (const dose of ["3x250−500 mg", "3x250—500 mg", "3x250‒500 mg", "3x250‐500 mg", "3x250 s/d 500 mg", "3x250 sampai 500 mg", "3x250 hingga 500 mg", "3x250~500 mg"]) expect(status(dose, upperOnly), dose).toBe("doseRemoved");
+  });
+  it("verifies such a range when the passage carries both ends", () => {
+    expect(status("3x250 s/d 500 mg", "Amoksisilin 250 sampai 500 mg 3 kali sehari.")).toBe("verified");
+    expect(status("3x250—500 mg", "Amoksisilin 250-500 mg 3 kali sehari.")).toBe("verified");
+  });
+  it("still reads a U+2212 tablet count as tablet content", () => {
+    expect(status("3x500 mg", "Amoksisilin 500 mg 3 x 1−2 tablet.")).toBe("doseRemoved");
+  });
+  it("strips such a range whole from a drug name", () => {
+    expect(["Amoksisilin 250—500 mg", "Amoksisilin 250 s/d 500 mg", "Amoksisilin 250 sampai 500 mg"].map(unstrength)).toEqual(["Amoksisilin", "Amoksisilin", "Amoksisilin"]);
+  });
+});
