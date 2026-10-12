@@ -54,3 +54,28 @@ describe("direct main-composer analysis", () => {
     for (const evidenceGate of [{ bad: true }, null, { ...gate, drugs: "x" }, { ...gate, drugs: [{ drug: "A", dose: "", status: "unknown", evidenceIds: [] }] }]) await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => Response.json({ ...response, evidenceGate }) })).rejects.toThrow("Respons analisis tidak dapat diverifikasi.");
   });
 });
+
+describe("therapy that arrives without a gate report", () => {
+  const headache = { icd10: "R51", label: "Sakit kepala", confidenceTier: "low" };
+  const therapy = { forDiagnosis: { icd10: "R51", label: "Sakit kepala" }, regimen: [{ drug: "Paracetamol", dose: "3x500mg", route: "PO", duration: "3 hari", note: "" }], interactions: [], contraindications: [] };
+  const withTherapy = (extra: Record<string, unknown> = {}) => ({ ...response, result: { ...response.result, differential: { ...response.result.differential, likely: [headache] }, therapy }, ...extra });
+  const tx = { ...grounding, evidence: [{ ...grounding.evidence[0], text: "Sakit kepala: parasetamol 1 g bila nyeri." }] };
+  const run = (data: unknown) => requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => Response.json(data) });
+  it("is gated on the client against its therapy bundle, keeping the diagnosis", async () => {
+    const analysis = await run(withTherapy({ therapyGrounding: tx }));
+    expect(analysis.result.differential.likely[0].icd10).toBe("R51");
+    expect(analysis.result.therapy?.regimen[0]).toMatchObject({ drug: "Paracetamol", dose: "" });
+    expect(analysis.evidenceGate?.drugs[0]).toMatchObject({ drug: "Paracetamol", status: "doseRemoved" });
+  });
+  it("loses its therapy when no passage names the drug, and says why", async () => {
+    const analysis = await run(withTherapy());
+    expect(analysis.result.therapy).toBeUndefined();
+    expect(analysis.evidenceGate?.therapyRemoved).toBe(true);
+  });
+  it("is left as the server sent it when a gate report is present", async () => {
+    const evidenceGate = { forDiagnosis: therapy.forDiagnosis, therapyRemoved: false, reason: "", drugs: [{ drug: "Paracetamol", dose: "3x500mg", status: "verified", evidenceIds: ["P001-001"] }] };
+    const analysis = await run(withTherapy({ therapyGrounding: tx, evidenceGate }));
+    expect(analysis.result.therapy?.regimen[0].dose).toBe("3x500mg");
+    expect(analysis.evidenceGate).toEqual(evidenceGate);
+  });
+});
