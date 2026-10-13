@@ -2,6 +2,12 @@
   // This file is JSONC: fallow reads these comments; generic JSON tools may not.
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
   "entry": ["src/index.{ts,tsx,js,jsx}", "src/main.{ts,tsx,js,jsx}"],
+  "ignorePatterns": [
+    // Standalone capsule with its own package.json. The root pnpm workspace
+    // excludes projects/healthcare, so a root fallow run would treat
+    // @ai-sdk/google (already declared in the capsule) as a root dependency.
+    "projects/healthcare/assistverse/**"
+  ],
   "workspaces": {
     "patterns": [
       "projects/*/*/apps/*",
