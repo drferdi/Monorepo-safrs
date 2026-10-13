@@ -18,9 +18,6 @@ Root `packages/` holds reusable, product-neutral capabilities. They are **not** 
 | `@safrs/ui` | `packages/ui/` | `StatusCard` primitive |
 | `@safrs/database` | `packages/database/` | Prisma + Postgres, reset guard, seed |
 | `@safrs/api` | `packages/api/` | Hono routes, typed client, OpenAPI |
-| *(incomplete)* | `packages/auth/` | Better Auth sources without a shipped package.json — [auth.md](auth.md) |
-
-`packages/auth/src` exists with Better Auth + Prisma adapter in `node_modules`, but there is no published workspace `package.json` in the listing used for this wiki. Do not treat `@safrs/auth` as a shipped package.
 
 ## Dependency graph (legacy golden-path)
 
@@ -55,7 +52,6 @@ SentraBot, Kediri, and Smartboard keep **capsule-local** packages (`@sentrabot/*
 
 - [API](api.md)
 - [Database](database.md)
-- [Auth](auth.md)
 - [Token](token.md)
 - [Golden path](../projects/golden-path.md)
 - [Capsule sovereignty](../governance/capsule-sovereignty.md)

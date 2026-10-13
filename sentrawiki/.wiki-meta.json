@@ -2,7 +2,7 @@
   "generatedAt": "2026-09-21T00:00:00Z",
   "commitHash": "21f477425762c615a0c835967c2f8b7d0ab3c380",
   "branch": "feat/gaffer-safrs-wiring",
-  "pageCount": 81,
+  "pageCount": 80,
   "note": "Derived navigation. Canonical truth remains SAFRS_SPEC.md, MONOREPO_PURPOSE.md, ADRs, and capsule docs.",
   "topLevelSections": [
     "overview",
@@ -76,7 +76,6 @@
     "packages/telemetry.md",
     "packages/token.md",
     "packages/config.md",
-    "packages/auth.md",
     "tools/index.md",
     "tools/safrs.md",
     "tools/automation.md",

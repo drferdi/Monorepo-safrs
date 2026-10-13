@@ -10,8 +10,8 @@ Root workspace members reference `catalog:` so those packages share one version 
 
 | Dependency | Catalog version |
 | --- | --- |
-| `next` | 16.3.0 |
-| `hono` | 4.13.1 |
+| `next` | 16.3.8 |
+| `hono` | 4.13.7 |
 | `zod` | 4.4.3 |
 | `@hono/zod-validator` | 0.9.0 |
 | `prisma` / `@prisma/client` | 7.9.1 |
@@ -75,9 +75,9 @@ graph TD
     UI --> TOKEN
 ```
 
-- **`projects/internal/golden-path/apps/web`** is the **legacy** deployable unit in the root workspace. It mounts `@safrs/api`, and uses `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry`.
+- **`projects/internal/golden-path/apps/web`** is a standalone capsule, excluded from the root workspace (`pnpm-workspace.yaml`). It mounts `@safrs/api`, and uses `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry`.
 - **`@safrs/api`** owns the typed Hono API; it consumes `@safrs/schemas` for Zod contracts, applies `@safrs/telemetry` middleware, and talks to `@safrs/database`.
-- **`@safrs/database`** wraps Prisma + PostgreSQL and depends on `@safrs/env` and `@safrs/telemetry`. It does **not** depend on `@safrs/schemas`.
+- **`@safrs/database`** wraps Prisma + PostgreSQL and depends on `@safrs/env`, `@safrs/schemas`, and `@safrs/telemetry`.
 - **`@safrs/env`** validates environment with `@t3-oss/env-core`/`@t3-oss/env-nextjs` and extends `@safrs/config` presets.
 - **`@safrs/telemetry`** extends the `@safrs/config` presets and stays server-only.
 - **`@safrs/ui`** is built on `@sentra/token`.
