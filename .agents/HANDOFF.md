@@ -9,6 +9,7 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-13 (Cursor): Fallow no longer reports `@ai-sdk/google` as an unlisted root dependency. The import lives in Assistverse, whose `package.json` already depends on it; `.fallowrc.json` `ignorePatterns` skips that standalone capsule so a root run does not attribute the import to the root manifest. Evidence: `npx fallow@3.33.1 dead-code --unlisted-deps` no longer lists `@ai-sdk/google`; the same command with `--root projects/healthcare/assistverse` reports 0 unlisted dependencies.
 - 2026-10-13 (Kilo): Kilo adapter setup implemented per `docs/bootstrap/KILO_SETUP.md` — four
   custom commands (`.kilo/command/{safrs-verify,capsule-verify,doctor,capsule-status}.md`), a
   read-only `safrs-auditor` subagent (`.kilo/agent/safrs-auditor.md`), and a `commit_message.prompt`
