@@ -83,7 +83,7 @@ function repositoryRootFor(target) {
   const directory = path.dirname(path.resolve(process.cwd(), target));
   const ours = commonGitDirectory(process.cwd());
   if (!ours) {
-    return process.cwd();
+    return repositoryToplevel(process.cwd());
   }
   let probe = directory;
   while (true) {
@@ -98,12 +98,12 @@ function repositoryRootFor(target) {
           },
         ).trim();
       } catch {
-        return process.cwd();
+        return repositoryToplevel(process.cwd());
       }
     }
     const parent = path.dirname(probe);
     if (parent === probe) {
-      return process.cwd();
+      return repositoryToplevel(process.cwd());
     }
     probe = parent;
   }
@@ -138,13 +138,33 @@ function repositoryToplevel(directory) {
 const root = target
   ? repositoryRootFor(String(target))
   : repositoryToplevel(process.cwd());
-const [{ authorize }, claude] = await Promise.all([
-  import(pathToFileURL(path.join(root, "tools/automation/src/guard.mjs")).href),
-  import(
-    pathToFileURL(path.join(root, "tools/automation/src/adapters/claude.mjs"))
-      .href
-  ),
-]);
+/**
+ * Any crash in this hook exits 1, which Claude treats as a non-blocking
+ * error, so the tool call would run unguarded. Every failure from here on
+ * blocks instead (fail closed).
+ */
+function failClosed(what, error) {
+  console.error(
+    `SAFRS guard: ${what} failed (${error.message}); blocked (fail closed).`,
+  );
+  process.exit(2);
+}
+
+let authorize;
+let claude;
+try {
+  [{ authorize }, claude] = await Promise.all([
+    import(
+      pathToFileURL(path.join(root, "tools/automation/src/guard.mjs")).href
+    ),
+    import(
+      pathToFileURL(path.join(root, "tools/automation/src/adapters/claude.mjs"))
+        .href
+    ),
+  ]);
+} catch (error) {
+  failClosed(`loading the shared guard from ${root}`, error);
+}
 
 let sensitivePaths;
 try {
@@ -155,8 +175,16 @@ try {
   sensitivePaths = { patterns: [], verification_control_patterns: [] };
 }
 
-for (const event of claude.translate(payload, root)) {
-  const rendered = claude.render(authorize(event, { sensitivePaths }));
+let events;
+try {
+  events = claude
+    .translate(payload, root)
+    .map((event) => claude.render(authorize(event, { sensitivePaths })));
+} catch (error) {
+  failClosed("evaluating the guard", error);
+}
+
+for (const rendered of events) {
   if (rendered.stderr) {
     console.error(rendered.stderr);
   }

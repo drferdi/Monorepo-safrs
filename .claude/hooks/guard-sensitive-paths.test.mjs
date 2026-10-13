@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, readFileSync, rmdirSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmdirSync,
+  rmSync,
+} from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -46,6 +52,37 @@ test("write outside the repository is denied", () => {
   });
   assert.equal(result.exitCode, 2);
   assert.match(result.stderr, /outside the repository/);
+});
+
+test("write outside the repository is denied from a subdirectory cwd too", () => {
+  // Regression: the root fell back to process.cwd() (here tools/), the guard
+  // import failed, node exited 1, and Claude ran the write unguarded.
+  const result = runHook(
+    {
+      tool_name: "Write",
+      tool_input: {
+        file_path: "C:/Users/nobody/outside-the-repo/file.txt",
+        content: "x",
+      },
+    },
+    { cwd: path.join(repoRoot, "tools") },
+  );
+  assert.equal(result.exitCode, 2, result.stderr);
+  assert.match(result.stderr, /outside the repository/);
+});
+
+test("a guard that cannot be loaded blocks (fail closed)", () => {
+  const outside = mkdtempSync(path.join(os.tmpdir(), "guard-no-repo-"));
+  try {
+    const result = runHook(
+      { tool_name: "Bash", tool_input: { command: "echo hi" } },
+      { cwd: outside },
+    );
+    assert.equal(result.exitCode, 2, result.stderr);
+    assert.match(result.stderr, /fail closed/);
+  } finally {
+    rmSync(outside, { recursive: true, force: true });
+  }
 });
 
 test("write to a plan-mode plan file is allowed", () => {
