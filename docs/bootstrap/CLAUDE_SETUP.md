@@ -12,9 +12,11 @@ not a second policy tree.
 | `.claude/settings.json` | Hook wiring plus read-deny for credential files |
 | `.claude/hooks/guard-sensitive-paths.mjs` | PreToolUse: shared-guard verdicts for shell commands and file writes |
 | `.claude/hooks/format-edited-file.mjs` | PostToolUse: run Biome on the edited file |
+| `.claude/hooks/session-context.mjs` | SessionStart: branch, `git status --short`, and the head of the root HANDOFF |
+| `.claude/hooks/handoff-reminder.mjs` | Stop: one HANDOFF reminder per session when edits skipped HANDOFF |
 | `.claude/agents/*.md` | Read-only reviewers (SAFRS classification, design tokens) on `model: sonnet` |
 | `.claude/rules/safrs-*.md` | Path-scoped context rules, generated from `.safrs/document-registry.json` |
-| `.claude/skills/*/SKILL.md` | Repeatable workflows (verification, capability activation) |
+| `.claude/skills/*/SKILL.md` | Repeatable workflows (verification, capability activation, session protocol, Prisma migration) |
 
 Tracked in git: `settings.json`, `hooks/`, `agents/`, `skills/`, `rules/`. Ignored: everything else
 under `.claude/`, including `settings.local.json` (personal overrides go there).
@@ -49,6 +51,9 @@ Cursor and Codex.
 - Fail-closed: a malformed payload blocks the call (exit 2). The credential list is
   hard-coded so it still applies when the registry is unreadable.
 - Commands from the `Bash` and `PowerShell` tools get the same verdicts.
+- Plan mode's plan file (a direct `.md` child of `<CLAUDE_CONFIG_DIR or ~/.claude>/plans/`)
+  skips the outside-repository deny in the Claude adapter; any other path outside the
+  repository is still denied.
 
 ### format-edited-file.mjs (PostToolUse: Edit, Write)
 
@@ -56,6 +61,25 @@ Runs `biome check --write --no-errors-on-unmatched <file>` through the local bin
 `node_modules/@biomejs/biome/bin/biome` for TypeScript, JavaScript, JSON, and CSS files.
 Never blocks; unfixable findings go to stderr. This moves format drift from
 `.husky/pre-commit` and CI to edit time.
+
+### session-context.mjs (SessionStart: startup, resume, compact)
+
+Prints the branch, `git status --short` (first 30 paths), the first 40 lines of
+`.agents/HANDOFF.md`, and the names of its later sections into the model context, so the
+HANDOFF read survives a context compaction. Prints nothing outside a git repository. Never
+blocks.
+
+### handoff-reminder.mjs (Stop)
+
+Reads the session transcript. When it shows `Edit`, `Write`, or `NotebookEdit` calls but none
+touched a `.agents/HANDOFF.md` (root or capsule), the first stop is blocked once with a
+reminder to overwrite the HANDOFF of every touched scope or to say why none is due yet.
+`stop_hook_active` and a per-session marker in the temp directory stop it from looping.
+Files under the Claude config directory (plans, memory) and the temp directory do not count.
+Any error allows the stop.
+
+Hook tests: `node --test .claude/hooks/*.test.mjs`. The sibling-worktree guard test needs the
+main checkout (its precondition fails inside a linked worktree).
 
 **Restart caveat:** Claude Code snapshots hook configuration at session start. After
 changing `.claude/settings.json` or a hook script, start a new session — the running one
@@ -82,11 +106,17 @@ Both are read-only (`Read, Grep, Glob, Bash`) and report; the calling session ap
 | --- | --- | --- |
 | `verify` | `/verify` — user only (`disable-model-invocation: true`) | The SAFRS verification sequence and how to read its failures |
 | `new-capability` | user or model | Capability-pack activation and project capsules through `pnpm capability:add` / `pnpm project:new` |
+| `safrs-session` | user or model | Claude adapter of `.agents/skills/safrs-session`: session start, scope, and session-end HANDOFF protocol |
+| `prisma-migration` | `/prisma-migration` — user only | Claude adapter of `.agents/skills/prisma-migration`: safe migration through repository wrappers; the validation script stays in `.agents/skills/prisma-migration/scripts/` |
 
 ## MCP servers
 
-**context7** is already available for library documentation and needs no repository
-configuration.
+**context7** is not shipped by the repository. Install it per user (no `.mcp.json`, so no R2
+change), pinned to a release at least two weeks old:
+
+```bash
+claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp@4.1.1
+```
 
 A PostgreSQL MCP server was evaluated and **deferred** — no `.mcp.json` is shipped:
 
