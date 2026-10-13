@@ -17,7 +17,7 @@ function repositoryRelative(target, root) {
  */
 function isPlanFile(target, root) {
   const plans = path.join(
-    process.env.CLAUDE_CONFIG_DIR ?? path.join(os.homedir(), ".claude"),
+    process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), ".claude"),
     "plans",
   );
   const relative = path.relative(plans, path.resolve(root, target));

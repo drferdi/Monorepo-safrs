@@ -27,7 +27,7 @@ function readPayload() {
 /** Repository-like targets this session edited, from the JSONL transcript. */
 function editedFiles(transcriptPath) {
   const ignored = [
-    process.env.CLAUDE_CONFIG_DIR ?? path.join(os.homedir(), ".claude"),
+    process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), ".claude"),
     os.tmpdir(),
   ].map((directory) => path.resolve(directory).toLowerCase());
   const files = new Set();
@@ -62,12 +62,19 @@ function editedFiles(transcriptPath) {
 
 try {
   const payload = readPayload();
-  if (!payload || payload.stop_hook_active || !payload.transcript_path) {
+  // Without a session id the once-per-session marker cannot be keyed, so the
+  // reminder stays silent rather than risk repeating.
+  if (
+    !payload ||
+    payload.stop_hook_active ||
+    !payload.transcript_path ||
+    !payload.session_id
+  ) {
     process.exit(0);
   }
   const marker = path.join(
     os.tmpdir(),
-    `safrs-handoff-reminded-${String(payload.session_id ?? "unknown").replaceAll(/[^\w-]/gu, "")}`,
+    `safrs-handoff-reminded-${String(payload.session_id).replaceAll(/[^\w-]/gu, "")}`,
   );
   if (existsSync(marker)) {
     process.exit(0);
@@ -75,7 +82,7 @@ try {
   const files = editedFiles(payload.transcript_path);
   if (
     files.length === 0 ||
-    files.some((file) => file.endsWith(".agents/HANDOFF.md"))
+    files.some((file) => file.toLowerCase().endsWith(".agents/handoff.md"))
   ) {
     process.exit(0);
   }

@@ -198,7 +198,24 @@ test("Claude's PowerShell tool translates like Bash", () => {
   );
 });
 
-test("Claude plan-mode plan files skip the outside-repository deny", () => {
+test("Claude plan-mode plan files skip the outside-repository deny", (t) => {
+  // An empty value must mean "unset", never "plans/ under the cwd".
+  const saved = process.env.CLAUDE_CONFIG_DIR;
+  process.env.CLAUDE_CONFIG_DIR = "";
+  t.after(() => {
+    if (saved === undefined) {
+      delete process.env.CLAUDE_CONFIG_DIR;
+    } else {
+      process.env.CLAUDE_CONFIG_DIR = saved;
+    }
+  });
+  assert.deepEqual(
+    claude.translate(
+      { tool_name: "Write", tool_input: { file_path: "plans/x.md" } },
+      ROOT,
+    ),
+    [{ type: "write", paths: ["plans/x.md"] }],
+  );
   const plans = path.join(os.homedir(), ".claude", "plans");
   for (const tool_name of ["Write", "Edit"]) {
     assert.deepEqual(

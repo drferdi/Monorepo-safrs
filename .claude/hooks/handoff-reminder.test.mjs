@@ -13,6 +13,8 @@ const hookPath = path.join(
 );
 const repoRoot = path.resolve(path.dirname(hookPath), "..", "..");
 const scratch = mkdtempSync(path.join(os.tmpdir(), "handoff-reminder-"));
+// The hook ignores the Claude config dir; pin it to the ~/.claude default.
+const { CLAUDE_CONFIG_DIR: _ignored, ...env } = process.env;
 test.after(() => rmSync(scratch, { recursive: true, force: true }));
 
 function transcript(...edits) {
@@ -38,6 +40,7 @@ function stop(transcript_path, extra = {}) {
     }),
     cwd: repoRoot,
     encoding: "utf8",
+    env,
   });
   rmSync(path.join(os.tmpdir(), `safrs-handoff-reminded-${session_id}`), {
     force: true,
@@ -58,6 +61,7 @@ test("edits without a HANDOFF block the first stop, once per session", () => {
     }),
     cwd: repoRoot,
     encoding: "utf8",
+    env,
   });
   assert.equal(first.status, 0);
   const verdict = JSON.parse(first.stdout);
@@ -66,6 +70,12 @@ test("edits without a HANDOFF block the first stop, once per session", () => {
   const second = stop(file, { session_id });
   assert.equal(second.status, 0);
   assert.equal(second.stdout, "");
+});
+
+test("a payload without session_id never blocks", () => {
+  const result = stop(transcript(["Write", repoFile]), { session_id: "" });
+  assert.equal(result.status, 0);
+  assert.equal(result.stdout, "");
 });
 
 test("stop_hook_active never blocks again", () => {

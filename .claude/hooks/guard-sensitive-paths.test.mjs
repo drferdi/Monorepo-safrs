@@ -49,13 +49,17 @@ test("write outside the repository is denied", () => {
 });
 
 test("write to a plan-mode plan file is allowed", () => {
-  const result = runHook({
-    tool_name: "Write",
-    tool_input: {
-      file_path: path.join(os.homedir(), ".claude", "plans", "some-plan.md"),
-      content: "x",
+  const { CLAUDE_CONFIG_DIR: _ignored, ...env } = process.env;
+  const result = runHook(
+    {
+      tool_name: "Write",
+      tool_input: {
+        file_path: path.join(os.homedir(), ".claude", "plans", "some-plan.md"),
+        content: "x",
+      },
     },
-  });
+    { env },
+  );
   assert.equal(result.exitCode, 0, result.stderr);
 });
 

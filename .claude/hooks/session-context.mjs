@@ -26,8 +26,13 @@ function readPayload() {
   }
 }
 
+/** stdout, or null when git fails; never takes optional locks, so another
+ *  session's index.lock cannot turn a busy repository into "(clean)". */
 function git(cwd, args) {
-  const result = spawnSync("git", args, { cwd, encoding: "utf8" });
+  const result = spawnSync("git", ["--no-optional-locks", ...args], {
+    cwd,
+    encoding: "utf8",
+  });
   return result.status === 0 ? result.stdout.trimEnd() : null;
 }
 
@@ -46,15 +51,22 @@ if (!root) {
 }
 
 const out = [`SAFRS session context (${payload?.source ?? "startup"})`];
-out.push(`Branch: ${git(root, ["branch", "--show-current"]) || "(detached)"}`);
+const branch = git(root, ["branch", "--show-current"]);
+out.push(
+  `Branch: ${branch === null ? "(unavailable)" : branch || "(detached)"}`,
+);
 
 const status = git(root, ["status", "--short"]);
 out.push("", "git status --short:");
-out.push(
-  ...(status
-    ? capped(status.split("\n"), STATUS_LINES, "changed paths")
-    : ["(clean)"]),
-);
+if (status === null) {
+  out.push("(unavailable)");
+} else {
+  out.push(
+    ...(status
+      ? capped(status.split("\n"), STATUS_LINES, "changed paths")
+      : ["(clean)"]),
+  );
+}
 
 try {
   const lines = readFileSync(path.join(root, HANDOFF), "utf8").split(/\r?\n/u);

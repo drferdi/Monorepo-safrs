@@ -70,11 +70,12 @@
     ],
     "SessionStart": [
       {
-        "matcher": "startup|resume|compact",
+        "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/session-context.mjs\""
+            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/session-context.mjs\"",
+            "timeout": 10
           }
         ]
       }
@@ -84,7 +85,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/handoff-reminder.mjs\""
+            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/handoff-reminder.mjs\"",
+            "timeout": 10
           }
         ]
       }
