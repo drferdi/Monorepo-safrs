@@ -17,6 +17,9 @@ const hookPath = path.join(
   "guard-sensitive-paths.mjs",
 );
 const repoRoot = path.resolve(path.dirname(hookPath), "..", "..");
+// Absolute on every platform: a "C:/..." literal is a relative path on POSIX,
+// where the guard would then allow it and these tests would fail.
+const OUTSIDE_FILE = path.join(os.tmpdir(), "outside-the-repo", "file.txt");
 
 /** True inside a linked worktree, whose git dir differs from the common dir. */
 function inLinkedWorktree() {
@@ -65,7 +68,7 @@ test("write outside the repository is denied", () => {
   const result = runHook({
     tool_name: "Write",
     tool_input: {
-      file_path: "C:/Users/nobody/outside-the-repo/file.txt",
+      file_path: OUTSIDE_FILE,
       content: "x",
     },
   });
@@ -80,7 +83,7 @@ test("write outside the repository is denied from a subdirectory cwd too", () =>
     {
       tool_name: "Write",
       tool_input: {
-        file_path: "C:/Users/nobody/outside-the-repo/file.txt",
+        file_path: OUTSIDE_FILE,
         content: "x",
       },
     },
