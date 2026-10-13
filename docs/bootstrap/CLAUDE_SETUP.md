@@ -62,12 +62,12 @@ Runs `biome check --write --no-errors-on-unmatched <file>` through the local bin
 Never blocks; unfixable findings go to stderr. This moves format drift from
 `.husky/pre-commit` and CI to edit time.
 
-### session-context.mjs (SessionStart: startup, resume, compact)
+### session-context.mjs (SessionStart: startup, resume, clear, compact)
 
 Prints the branch, `git status --short` (first 30 paths), the first 40 lines of
 `.agents/HANDOFF.md`, and the names of its later sections into the model context, so the
-HANDOFF read survives a context compaction. Prints nothing outside a git repository. Never
-blocks.
+HANDOFF read survives a context compaction. Git runs without optional locks; a failed git
+call prints `(unavailable)`. Prints nothing outside a git repository. Never blocks.
 
 ### handoff-reminder.mjs (Stop)
 
@@ -76,7 +76,11 @@ touched a `.agents/HANDOFF.md` (root or capsule), the first stop is blocked once
 reminder to overwrite the HANDOFF of every touched scope or to say why none is due yet.
 `stop_hook_active` and a per-session marker in the temp directory stop it from looping.
 Files under the Claude config directory (plans, memory) and the temp directory do not count.
-Any error allows the stop.
+Any error, and a payload without `session_id`, allows the stop.
+
+Limits: Stop fires at the end of every turn, so the single reminder lands on the first turn
+that ends after an edit, often mid-task; later turns are not reminded again. Edits made by
+subagents (separate transcripts) or through Bash/PowerShell are not seen.
 
 Hook tests: `node --test .claude/hooks/*.test.mjs`. The sibling-worktree guard test needs the
 main checkout (its precondition fails inside a linked worktree).
@@ -112,7 +116,7 @@ Both are read-only (`Read, Grep, Glob, Bash`) and report; the calling session ap
 ## MCP servers
 
 **context7** is not shipped by the repository. Install it per user (no `.mcp.json`, so no R2
-change), pinned to a release at least two weeks old:
+change), pinned to an exact release (4.1.1, published 2026-09-14):
 
 ```bash
 claude mcp add --scope user context7 -- npx -y @upstash/context7-mcp@4.1.1
