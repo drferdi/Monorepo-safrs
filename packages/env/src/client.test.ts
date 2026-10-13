@@ -26,17 +26,21 @@ describe("createClientEnv", () => {
       .spyOn(console, "error")
       .mockImplementation(() => undefined);
 
-    expect(() =>
-      createClientEnv({ NEXT_PUBLIC_APP_URL: supplied }),
-    ).toThrowError("Invalid environment variables");
-
     try {
-      createClientEnv({ NEXT_PUBLIC_APP_URL: supplied });
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-      expect((error as Error).message).not.toContain(supplied);
-    }
+      expect(() =>
+        createClientEnv({ NEXT_PUBLIC_APP_URL: supplied }),
+      ).toThrowError("Invalid environment variables");
 
-    consoleError.mockRestore();
+      try {
+        createClientEnv({ NEXT_PUBLIC_APP_URL: supplied });
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error);
+        expect((error as Error).message).not.toContain(supplied);
+      }
+
+      expect(JSON.stringify(consoleError.mock.calls)).not.toContain(supplied);
+    } finally {
+      consoleError.mockRestore();
+    }
   });
 });
