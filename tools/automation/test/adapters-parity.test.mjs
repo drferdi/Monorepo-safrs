@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 
 import * as claude from "../src/adapters/claude.mjs";
@@ -194,6 +196,31 @@ test("Claude's PowerShell tool translates like Bash", () => {
     ),
     [{ type: "command", command: "git merge feat/x" }],
   );
+});
+
+test("Claude plan-mode plan files skip the outside-repository deny", () => {
+  const plans = path.join(os.homedir(), ".claude", "plans");
+  for (const tool_name of ["Write", "Edit"]) {
+    assert.deepEqual(
+      claude.translate(
+        { tool_name, tool_input: { file_path: path.join(plans, "x.md") } },
+        ROOT,
+      ),
+      [],
+      tool_name,
+    );
+  }
+  for (const file_path of [
+    path.join(plans, "nested", "x.md"),
+    path.join(plans, "x.sh"),
+    path.join(os.homedir(), ".claude", "settings.json"),
+  ]) {
+    const [event] = claude.translate(
+      { tool_name: "Write", tool_input: { file_path } },
+      ROOT,
+    );
+    assert.equal(authorize(event).reasonCode, "OUTSIDE_REPOSITORY", file_path);
+  }
 });
 
 test("droid adapter denies every mutation while disabled", () => {

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, readFileSync, rmdirSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -45,6 +46,17 @@ test("write outside the repository is denied", () => {
   });
   assert.equal(result.exitCode, 2);
   assert.match(result.stderr, /outside the repository/);
+});
+
+test("write to a plan-mode plan file is allowed", () => {
+  const result = runHook({
+    tool_name: "Write",
+    tool_input: {
+      file_path: path.join(os.homedir(), ".claude", "plans", "some-plan.md"),
+      content: "x",
+    },
+  });
+  assert.equal(result.exitCode, 0, result.stderr);
 });
 
 test("write to a sibling worktree of this repo is allowed even when the hook's own cwd is lowercase-drive", {

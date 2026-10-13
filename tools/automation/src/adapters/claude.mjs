@@ -1,3 +1,4 @@
+import os from "node:os";
 import path from "node:path";
 
 /** Claude Code PreToolUse payload → guard events. */
@@ -6,6 +7,24 @@ function repositoryRelative(target, root) {
   const absolute = path.resolve(root, target);
   const relative = path.relative(root, absolute);
   return relative.split(path.sep).join("/");
+}
+
+/**
+ * Plan mode writes its plan to `<Claude config dir>/plans/<name>.md`, which is
+ * outside every repository, so the outside-repository deny broke plan mode.
+ * Only a direct `.md` child of that folder is exempt; anything nested or of
+ * another type still reaches the guard.
+ */
+function isPlanFile(target, root) {
+  const plans = path.join(
+    process.env.CLAUDE_CONFIG_DIR ?? path.join(os.homedir(), ".claude"),
+    "plans",
+  );
+  const relative = path.relative(plans, path.resolve(root, target));
+  return (
+    path.dirname(relative) === "." &&
+    path.extname(relative).toLowerCase() === ".md"
+  );
 }
 
 export function translate(payload, root) {
@@ -23,6 +42,9 @@ export function translate(payload, root) {
     return [{ type: "read", paths: [relative] }];
   }
   if (["Edit", "Write", "NotebookEdit"].includes(toolName)) {
+    if (isPlanFile(String(target), root)) {
+      return [];
+    }
     return [{ type: "write", paths: [relative] }];
   }
   return [];
