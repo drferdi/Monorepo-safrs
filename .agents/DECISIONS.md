@@ -3,6 +3,18 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-10-13 - Monorepo GitHub push carries only the changed files
+
+Gaffer: the GitHub monorepo (`origin`, `drferdi/Monorepo-safrs`, public) does not include the
+projects. `origin/main` has zero `projects/**` files; each capsule has its own remote. Local
+branches sit on about 973 unpublished commits (capsule code and the 2026-08 history with real
+WhatsApp numbers), so pushing a local branch as is carries all of it and the pre-push publish and
+capsule gates refuse it. Rule: to publish, make a clean branch from `origin/main` in
+`../monorepo.worktrees/<branch>`, bring only the changed control-plane files, confirm
+`git rev-list origin/main..HEAD -- projects/` is 0 and no WhatsApp/phone pattern in added lines,
+unset the upstream, then Gaffer runs the push (`CHIEF_PUSH_OK=1` is Gaffer's to set). Leave
+WhatsApp data out; never include capsule code. First use: `feat/task-scope-transfer` (`4de792d0`).
+
 ## 2026-10-10 - Codex drops its PostToolUse formatter; Cursor drops the filesystem MCP
 
 Gaffer approved both (R2) after the 2026-10-10 agent audit. Codex keeps only the PreToolUse
