@@ -51,6 +51,12 @@ Cursor and Codex.
 - Fail-closed: a malformed payload blocks the call (exit 2), and so does a shared guard that
   cannot be loaded or evaluated (a crash would exit 1, which Claude treats as non-blocking).
   The credential list is hard-coded so it still applies when the registry is unreadable.
+  This covers the hook once it starts. If the session's directory is outside any git
+  repository, the launch command cannot find the hook and Claude treats that as a
+  non-blocking error, so nothing is guarded there.
+- Recovery: if a broken `tools/automation/src/guard.mjs` or `adapters/claude.mjs` in a
+  worktree makes every call there exit 2, repair the file outside Claude, or from a session
+  whose directory is a healthy worktree (`git -C <broken-worktree> checkout -- <file>`).
 - The repository root comes from the target's worktree, or else from the toplevel of the
   session's current directory, so the guard also holds when the session sits in a
   subdirectory such as `tools/`.
