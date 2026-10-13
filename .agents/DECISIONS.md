@@ -12,8 +12,10 @@ WhatsApp numbers), so pushing a local branch as is carries all of it and the pre
 capsule gates refuse it. Rule: to publish, make a clean branch from `origin/main` in
 `../monorepo.worktrees/<branch>`, bring only the changed control-plane files, confirm
 `git rev-list origin/main..HEAD -- projects/` is 0 and no WhatsApp/phone pattern in added lines,
-unset the upstream, then Gaffer runs the push (`CHIEF_PUSH_OK=1` is Gaffer's to set). Leave
-WhatsApp data out; never include capsule code. First use: `feat/task-scope-transfer` (`4de792d0`).
+unset the upstream, then push. Leave WhatsApp data out; never include capsule code. First use:
+`feat/task-scope-transfer` (`4de792d0`). The pre-push hook now checks only the outgoing commits:
+a clean push passes with no variable; WhatsApp/phone patterns still need `CHIEF_PUSH_OK=1`
+(Gaffer's to set) and `projects/**` still needs `CHIEF_PUSH_PROJECTS_OK=1` too.
 
 ## 2026-10-10 - Codex drops its PostToolUse formatter; Cursor drops the filesystem MCP
 
