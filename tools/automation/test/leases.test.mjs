@@ -261,3 +261,70 @@ test("remote authority rejects client attempts to override its action or actor",
     assert.match(result.stderr, /not allowed/u);
   }
 });
+
+test("SCOPE_AMEND keeps the original CLAIM and moves the effective scope", () => {
+  const chain = freshChain();
+  const claimDigest = chain[0].event_digest;
+  const updated = ["projects/internal/golden-path/", "docs/readme.md"];
+  const amended = nextEvent(
+    chain,
+    {
+      action: "SCOPE_AMEND",
+      ...claimRequest(),
+      fencing_token: 1,
+      transfer_operation_id: "TRANSFER-20261013-DEMO",
+      transfer_reason: "test amendment",
+      authorized_actor: "gaffer",
+      previous_scope_prefixes: SCOPES,
+      updated_scope_prefixes: updated,
+      previous_scope_digest: scopeDigest(SCOPES),
+      updated_scope_digest: scopeDigest(updated),
+    },
+    { occurred_at: T1, authority_run_url: RUN_URL },
+  );
+  assert.equal(amended.denied, undefined);
+  assert.equal(chain[0].event_digest, claimDigest);
+  assert.equal(chain[0].event_type, "CLAIM");
+  const next = [...chain, amended.event];
+  assert.deepEqual(verifyEventChain(next).errors, []);
+  const state = replayState(next);
+  assert.equal(state.fencing_token, 1);
+  assert.equal(state.scope_digest, scopeDigest(updated));
+  assert.equal(state.actor, "agent:claude:fable");
+  assert.equal(amended.event.next_state, "CLAIMED");
+});
+
+test("SCOPE_AMEND rejects a forged digest and a missing operation id", () => {
+  const chain = freshChain();
+  const forged = nextEvent(
+    chain,
+    {
+      action: "SCOPE_AMEND",
+      ...claimRequest(),
+      fencing_token: 1,
+      transfer_operation_id: "TRANSFER-20261013-DEMO",
+      transfer_reason: "forged",
+      authorized_actor: "gaffer",
+      previous_scope_prefixes: SCOPES,
+      updated_scope_prefixes: ["docs/readme.md"],
+      previous_scope_digest: "a".repeat(64),
+      updated_scope_digest: "b".repeat(64),
+    },
+    { occurred_at: T1, authority_run_url: null },
+  );
+  assert.match(forged.denied, /digest/iu);
+  const missing = nextEvent(
+    chain,
+    {
+      action: "SCOPE_AMEND",
+      ...claimRequest(),
+      fencing_token: 1,
+      previous_scope_prefixes: SCOPES,
+      updated_scope_prefixes: ["docs/readme.md"],
+      previous_scope_digest: scopeDigest(SCOPES),
+      updated_scope_digest: scopeDigest(["docs/readme.md"]),
+    },
+    { occurred_at: T1, authority_run_url: null },
+  );
+  assert.match(missing.denied, /operation/iu);
+});

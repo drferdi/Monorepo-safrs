@@ -42,7 +42,8 @@
         "TRANSITION",
         "RELEASE",
         "EXPIRE",
-        "RECLAIM"
+        "RECLAIM",
+        "SCOPE_AMEND"
       ]
     },
     "task_id": {
@@ -115,8 +116,56 @@
     },
     "event_digest": {
       "$ref": "#/$defs/sha256"
+    },
+    "transfer_operation_id": {
+      "type": "string",
+      "pattern": "^TRANSFER-[0-9]{8}-[A-Z0-9-]+$"
+    },
+    "previous_scope_prefixes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "previous_scope_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "updated_scope_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "transfer_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authorized_actor": {
+      "type": "string",
+      "minLength": 1
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "SCOPE_AMEND"
+          }
+        },
+        "required": ["event_type"]
+      },
+      "then": {
+        "required": [
+          "transfer_operation_id",
+          "previous_scope_prefixes",
+          "previous_scope_digest",
+          "updated_scope_digest",
+          "transfer_reason",
+          "authorized_actor"
+        ]
+      }
+    }
+  ],
   "$defs": {
     "sha256": {
       "type": "string",

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { canonicalize } from "../../automation/src/canonical-json.mjs";
 import { nextEvent } from "../../automation/src/leases.mjs";
 import {
@@ -17,23 +18,31 @@ import {
   validateTaskShape,
 } from "./ownership.mjs";
 import {
-  appendLeaseEvent,
-  mutateSharedRegistry,
   readLeaseEvents,
   readSharedRegistry,
   resolveControlPlanePaths,
   resolveWorktreeId,
+  transferJournalPath,
+  withRecoveredLock,
 } from "./storage.mjs";
+import { executeScopeTransfer, recoverTransferJournal } from "./transfer.mjs";
 
 const repositoryRoot = join(
   dirname(fileURLToPath(import.meta.url)),
   "../../..",
 );
-const controlPlanePaths = resolveControlPlanePaths(repositoryRoot);
-const currentWorktreeId = resolveWorktreeId(repositoryRoot);
+const liveContext = {
+  repositoryRoot,
+  paths: resolveControlPlanePaths(repositoryRoot),
+  worktreeId: resolveWorktreeId(repositoryRoot),
+};
+let activeContext = liveContext;
 
 function validate(registry, options = {}) {
-  return validateRegistry(registry, { repositoryRoot, ...options });
+  return validateRegistry(registry, {
+    repositoryRoot: activeContext.repositoryRoot,
+    ...options,
+  });
 }
 
 function usage() {
@@ -41,14 +50,16 @@ function usage() {
   pnpm task claim --id ID --title TITLE --owner-id ID --owner-label LABEL --risk R0|R1|R2|R3 --scope PATH [--scope PATH...] [--state CLAIMED|PLANNED|EXECUTING] [--yes]
   pnpm task state --id ID --to STATE [--yes]
   pnpm task close --id ID [--yes]
-  pnpm task list [--json] [--active]`;
+  pnpm task list [--json] [--active]
+  pnpm task transfer --operation TRANSFER-ID --destination TASK --actor ACTOR --reason TEXT --move SOURCE=PATH [--move SOURCE=PATH...] [--yes]
+  pnpm task recover`;
 }
 
 function parseArgs(argv) {
   const args = {
     command: argv[0],
     flags: {},
-    lists: { scope: [], tools: [] },
+    lists: { scope: [], tools: [], move: [] },
   };
   for (let i = 1; i < argv.length; i += 1) {
     const token = argv[i];
@@ -73,10 +84,8 @@ function parseArgs(argv) {
       throw new Error(`missing value for --${key}`);
     }
     i += 1;
-    if (key === "scope") {
-      args.lists.scope.push(value);
-    } else if (key === "tools") {
-      args.lists.tools.push(value);
+    if (key === "scope" || key === "tools" || key === "move") {
+      args.lists[key].push(value);
     } else {
       args.flags[key] = value;
     }
@@ -85,19 +94,26 @@ function parseArgs(argv) {
 }
 
 function loadRegistry({ enforceOperational = true } = {}) {
-  return validate(readSharedRegistry(controlPlanePaths), {
+  return validate(readSharedRegistry(activeContext.paths), {
     enforceOperational,
   });
 }
 
-/**
- * Record a local lease event mirroring a registry mutation. Local events
- * carry authority_run_url null; remote reconciliation is required before
- * push. A failure here is loud but does not roll back the registry —
- * check_lifecycle flags registry/ledger drift.
- */
-function recordLeaseEvent(action, task, extras = {}) {
-  const chain = readLeaseEvents(controlPlanePaths, task.id);
+function journalIsPending() {
+  return existsSync(transferJournalPath(activeContext.paths));
+}
+
+function reportPendingJournal() {
+  console.error(
+    redactText(
+      "transfer journal is pending; preview did not recover or write. Run `pnpm task recover` or retry the mutation with --yes.",
+    ),
+  );
+  return 1;
+}
+
+function buildLeaseLine(action, task, extras = {}) {
+  const chain = readLeaseEvents(activeContext.paths, task.id);
   const outcome = nextEvent(
     chain,
     {
@@ -120,9 +136,9 @@ function recordLeaseEvent(action, task, extras = {}) {
         `WARNING: local lease event ${action} for ${task.id} denied: ${outcome.denied}`,
       ),
     );
-    return;
+    return null;
   }
-  appendLeaseEvent(controlPlanePaths, canonicalize(outcome.event));
+  return canonicalize(outcome.event);
 }
 
 function preview(message, registry) {
@@ -167,18 +183,18 @@ function buildClaim(registry, args) {
       state,
       risk,
       scope_prefixes: args.lists.scope.map((scope) =>
-        normalizePrefix(scope, "scope", repositoryRoot),
+        normalizePrefix(scope, "scope", activeContext.repositoryRoot),
       ),
       allowed_tools: args.lists.tools,
       owner_id: requireFlag(args.flags, "owner-id"),
       owner_label: requireFlag(args.flags, "owner-label"),
-      worktree_id: currentWorktreeId,
+      worktree_id: activeContext.worktreeId,
       claimed_at: timestamp,
       updated_at: timestamp,
       expires_at: args.flags["expires-at"] ?? null,
       notes: args.flags.notes,
     },
-    { repositoryRoot },
+    { repositoryRoot: activeContext.repositoryRoot },
   );
   const next = {
     version: 1,
@@ -196,19 +212,32 @@ function buildClaim(registry, args) {
 }
 
 function claim(args) {
-  const { id, next } = buildClaim(loadRegistry(), args);
-  preview(`Preview claim ${id} (pass --yes to write):`, next);
   if (!args.flags.yes) {
+    if (journalIsPending()) {
+      return reportPendingJournal();
+    }
+    const { id, next } = buildClaim(loadRegistry(), args);
+    preview(`Preview claim ${id} (pass --yes to write):`, next);
     return 0;
   }
-  const written = mutateSharedRegistry(
-    controlPlanePaths,
-    (registry) => buildClaim(validate(registry), args).next,
-    validate,
-  );
-  const task = written.tasks.find((entry) => entry.id === id);
-  recordLeaseEvent("CLAIM", task);
+  const id = requireFlag(args.flags, "id");
+  const written = withRecoveredLock(activeContext.paths, (commit) => {
+    const built = buildClaim(
+      validate(readSharedRegistry(activeContext.paths)),
+      args,
+    );
+    const task = built.next.tasks.find((entry) => entry.id === built.id);
+    const line = buildLeaseLine("CLAIM", task);
+    return commit({
+      registryText: `${JSON.stringify(built.next, null, 2)}\n`,
+      appendedLines: line ? [line] : [],
+      result: built.next,
+    });
+  });
   console.log(redactText(`Wrote shared claim ${id}`));
+  if (!written.tasks.some((entry) => entry.id === id)) {
+    throw new Error(`shared claim ${id} was not recorded`);
+  }
   return 0;
 }
 
@@ -219,16 +248,18 @@ function buildState(registry, id, to) {
     throw new Error(`unknown task id: ${id}`);
   }
   const current = registry.tasks[index];
-  if (current.worktree_id !== currentWorktreeId) {
+  if (current.worktree_id !== activeContext.worktreeId) {
     throw new Error(
-      `task ${id} belongs to worktree ${current.worktree_id}; current worktree is ${currentWorktreeId}`,
+      `task ${id} belongs to worktree ${current.worktree_id}; current worktree is ${activeContext.worktreeId}`,
     );
   }
   if (!canTransition(current.state, to)) {
     throw new Error(`illegal transition ${current.state} → ${to}`);
   }
   const updated = { ...current, state: to, updated_at: nowIso() };
-  validateTaskShape(updated, { repositoryRoot });
+  validateTaskShape(updated, {
+    repositoryRoot: activeContext.repositoryRoot,
+  });
   const next = {
     version: 1,
     tasks: registry.tasks.map((task, taskIndex) =>
@@ -242,28 +273,37 @@ function buildState(registry, id, to) {
 function stateCommand(args) {
   const id = requireFlag(args.flags, "id");
   const to = requireFlag(args.flags, "to");
-  const { current, next } = buildState(
-    loadRegistry({ enforceOperational: false }),
-    id,
-    to,
-  );
-  preview(
-    `Preview state ${id}: ${current.state} → ${to} (pass --yes to write):`,
-    next,
-  );
   if (!args.flags.yes) {
+    if (journalIsPending()) {
+      return reportPendingJournal();
+    }
+    const { current, next } = buildState(
+      loadRegistry({ enforceOperational: false }),
+      id,
+      to,
+    );
+    preview(
+      `Preview state ${id}: ${current.state} → ${to} (pass --yes to write):`,
+      next,
+    );
     return 0;
   }
-  const written = mutateSharedRegistry(
-    controlPlanePaths,
-    (registry) => buildState(registry, id, to).next,
-    validate,
-  );
-  recordLeaseEvent(
-    "TRANSITION",
-    written.tasks.find((entry) => entry.id === id),
-    { next_state: to },
-  );
+  withRecoveredLock(activeContext.paths, (commit) => {
+    const built = buildState(
+      validate(readSharedRegistry(activeContext.paths), {
+        enforceOperational: false,
+      }),
+      id,
+      to,
+    );
+    const task = built.next.tasks.find((entry) => entry.id === id);
+    const line = buildLeaseLine("TRANSITION", task, { next_state: to });
+    return commit({
+      registryText: `${JSON.stringify(built.next, null, 2)}\n`,
+      appendedLines: line ? [line] : [],
+      result: built.next,
+    });
+  });
   console.log(redactText(`Updated ${id} to ${to}`));
   return 0;
 }
@@ -275,9 +315,9 @@ function buildClose(registry, id) {
     throw new Error(`unknown task id: ${id}`);
   }
   const current = registry.tasks[index];
-  if (current.worktree_id !== currentWorktreeId) {
+  if (current.worktree_id !== activeContext.worktreeId) {
     throw new Error(
-      `task ${id} belongs to worktree ${current.worktree_id}; current worktree is ${currentWorktreeId}`,
+      `task ${id} belongs to worktree ${current.worktree_id}; current worktree is ${activeContext.worktreeId}`,
     );
   }
   const to = closeTargetState(current.state);
@@ -307,28 +347,38 @@ function buildClose(registry, id) {
 
 function closeCommand(args) {
   const id = requireFlag(args.flags, "id");
-  const { current, next, to } = buildClose(
-    loadRegistry({ enforceOperational: false }),
-    id,
-  );
-  preview(
-    `Preview close ${id}: ${current.state} → ${to} (pass --yes to write):`,
-    next,
-  );
   if (!args.flags.yes) {
+    if (journalIsPending()) {
+      return reportPendingJournal();
+    }
+    const { current, next, to } = buildClose(
+      loadRegistry({ enforceOperational: false }),
+      id,
+    );
+    preview(
+      `Preview close ${id}: ${current.state} → ${to} (pass --yes to write):`,
+      next,
+    );
     return 0;
   }
-  const written = mutateSharedRegistry(
-    controlPlanePaths,
-    (registry) => buildClose(registry, id).next,
-    validate,
-  );
-  recordLeaseEvent(
-    "RELEASE",
-    written.tasks.find((entry) => entry.id === id),
-    { next_state: to },
-  );
-  console.log(redactText(`Closed ${id} as ${to}`));
+  let closedAs = "";
+  withRecoveredLock(activeContext.paths, (commit) => {
+    const built = buildClose(
+      validate(readSharedRegistry(activeContext.paths), {
+        enforceOperational: false,
+      }),
+      id,
+    );
+    closedAs = built.to;
+    const task = built.next.tasks.find((entry) => entry.id === id);
+    const line = buildLeaseLine("RELEASE", task, { next_state: built.to });
+    return commit({
+      registryText: `${JSON.stringify(built.next, null, 2)}\n`,
+      appendedLines: line ? [line] : [],
+      result: built.next,
+    });
+  });
+  console.log(redactText(`Closed ${id} as ${closedAs}`));
   return 0;
 }
 
@@ -355,7 +405,46 @@ function listCommand(args) {
   return 0;
 }
 
-function main(argv) {
+function transferCommand(args) {
+  const moves = (args.lists.move ?? []).map((item) => {
+    const separator = item.indexOf("=");
+    if (separator <= 0) {
+      throw new Error(`--move must be TASK=path (${item})`);
+    }
+    return {
+      sourceId: item.slice(0, separator),
+      path: item.slice(separator + 1),
+    };
+  });
+  const request = {
+    operationId: requireFlag(args.flags, "operation"),
+    destinationId: requireFlag(args.flags, "destination"),
+    actor: requireFlag(args.flags, "actor"),
+    reason: requireFlag(args.flags, "reason"),
+    worktreeId: activeContext.worktreeId,
+    moves,
+    dryRun: !args.flags.yes,
+  };
+  const result = executeScopeTransfer(activeContext.paths, request);
+  console.log(redactText(JSON.stringify(result)));
+  if (result.recoveryPending) {
+    console.error(
+      redactText(
+        "transfer journal is pending; dry-run did not recover or write. Run `pnpm task recover` or retry with --yes.",
+      ),
+    );
+    return 1;
+  }
+  return 0;
+}
+
+function recoverCommand() {
+  const recovered = recoverTransferJournal(activeContext.paths);
+  console.log(redactText(JSON.stringify({ recovered })));
+  return 0;
+}
+
+function execute(argv) {
   try {
     if (!argv[0] || argv[0] === "--help" || argv[0] === "-h") {
       console.log(usage());
@@ -371,6 +460,10 @@ function main(argv) {
         return closeCommand(args);
       case "list":
         return listCommand(args);
+      case "transfer":
+        return transferCommand(args);
+      case "recover":
+        return recoverCommand();
       default:
         throw new Error(`unknown command ${args.command}\n${usage()}`);
     }
@@ -382,4 +475,26 @@ function main(argv) {
   }
 }
 
-process.exitCode = main(process.argv.slice(2));
+export function runTaskCommand(argv, context) {
+  const previous = activeContext;
+  if (context) {
+    activeContext = context;
+  }
+  try {
+    return execute(argv);
+  } finally {
+    activeContext = previous;
+  }
+}
+
+function invokedAsCli() {
+  const entry = process.argv[1];
+  if (!entry) {
+    return false;
+  }
+  return import.meta.url === pathToFileURL(resolve(entry)).href;
+}
+
+if (invokedAsCli()) {
+  process.exitCode = runTaskCommand(process.argv.slice(2));
+}

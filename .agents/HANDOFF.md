@@ -10,6 +10,15 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 ## Current state
 
 - This worktree is `feat/prompt-template-metaprompt` at `66ba2ed9`. Control-plane patch: scope-owned HANDOFF, SAFRS over vendor skills, Windows governance command `pnpm governance` (not full quality verification), and Firecrawl recorded absent from `.cursor/mcp.json`. `pnpm governance` on 2026-10-13 failed at `check_task_ownership.py`: `.agents/BOUNDARIES.md` has no active owner in `main` because `TASK-20261011-GAFFER-ADDRESS` (REVIEW, other worktree) already holds that path. Cursor rule files are claimed by `TASK-20261013-CAPABILITY-AWARENESS`. Claims from 2026-10-12 below stay open.
+- 2026-10-13 (Claude Code, Gaffer's split): docs/rules part committed as `bbc3fc51`. The
+  `pnpm task transfer` / `SCOPE_AMEND` feature (`tools/task/**`, `tools/automation/src/leases.mjs`,
+  `tools/safrs/check_lifecycle.py`, lease schema, tests) stays uncommitted pending a separate R3
+  review: it changes a verification control and the code it governs together. Fixed before review:
+  transfer accepted source and destination tasks from any worktree, so a session could take another
+  session's claim (`--actor` is a free string). It now rejects any task not bound to the current
+  worktree, like `task state`/`close`; new test covers source and destination. Evidence: transfer
+  17/17, leases 12/12, lifecycle unittest 3/3, biome 0, `check_lifecycle.py` OK. Open: `--actor`
+  is still unauthenticated (recorded, not verified).
 - Local `main` is `a54ee055` (fast-forwarded on Gaffer's go, local only) and contains
   `origin/main` `b2d3a022`. The main checkout is on `main`, so today's guards and hooks are active
   there. `docs/refresh-2026-10-12` (worktree `main-merge-tmp`) is ahead with the docs refresh;
