@@ -48,8 +48,12 @@ Cursor and Codex.
   `.safrs/sensitive-paths.json` changes hook behaviour automatically.
 - Writes to the guard's own files (`guard.mjs`, the Codex adapter, `.codex/hooks/**`,
   `.codex/config.toml`, `.husky/pre-push`) are denied for every agent.
-- Fail-closed: a malformed payload blocks the call (exit 2). The credential list is
-  hard-coded so it still applies when the registry is unreadable.
+- Fail-closed: a malformed payload blocks the call (exit 2), and so does a shared guard that
+  cannot be loaded or evaluated (a crash would exit 1, which Claude treats as non-blocking).
+  The credential list is hard-coded so it still applies when the registry is unreadable.
+- The repository root comes from the target's worktree, or else from the toplevel of the
+  session's current directory, so the guard also holds when the session sits in a
+  subdirectory such as `tools/`.
 - Commands from the `Bash` and `PowerShell` tools get the same verdicts.
 - Plan mode's plan file (a direct `.md` child of `<CLAUDE_CONFIG_DIR or ~/.claude>/plans/`)
   skips the outside-repository deny in the Claude adapter; any other path outside the
@@ -82,8 +86,8 @@ Limits: Stop fires at the end of every turn, so the single reminder lands on the
 that ends after an edit, often mid-task; later turns are not reminded again. Edits made by
 subagents (separate transcripts) or through Bash/PowerShell are not seen.
 
-Hook tests: `node --test .claude/hooks/*.test.mjs`. The sibling-worktree guard test needs the
-main checkout (its precondition fails inside a linked worktree).
+Hook tests: `node --test .claude/hooks/*.test.mjs`; `pnpm test` runs them too. The
+sibling-worktree guard test needs the main checkout and skips inside a linked worktree.
 
 **Restart caveat:** Claude Code snapshots hook configuration at session start. After
 changing `.claude/settings.json` or a hook script, start a new session — the running one
