@@ -3,6 +3,13 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-10-13 - Pre-push publish and capsule gates removed
+
+Gaffer's order: the `CHIEF_PUSH_OK` / `CHIEF_PUSH_PROJECTS_OK` gates in `.husky/pre-push` are gone;
+the hook only runs `git lfs pre-push`. Two days of fixing our own gate (three rejected integrity
+reviews of `720f443f` and its fixes) cost more than it protected. Pushes stay Gaffer's call; the
+clean-branch rule below (no `projects/**`, no WhatsApp/phone patterns) is checked by hand.
+
 ## 2026-10-13 - Monorepo GitHub push carries only the changed files
 
 Gaffer: the GitHub monorepo (`origin`, `drferdi/Monorepo-safrs`, public) does not include the
