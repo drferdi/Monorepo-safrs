@@ -18,6 +18,25 @@ const hookPath = path.join(
 );
 const repoRoot = path.resolve(path.dirname(hookPath), "..", "..");
 
+/** True inside a linked worktree, whose git dir differs from the common dir. */
+function inLinkedWorktree() {
+  const [gitDir, commonDir] = execFileSync(
+    "git",
+    [
+      "-C",
+      repoRoot,
+      "rev-parse",
+      "--path-format=absolute",
+      "--git-dir",
+      "--git-common-dir",
+    ],
+    { encoding: "utf8" },
+  )
+    .trim()
+    .split(/\r?\n/u);
+  return path.resolve(gitDir) !== path.resolve(commonDir);
+}
+
 function runHook(payload, spawnOptions = {}) {
   const result = spawnSync("node", [hookPath], {
     input: JSON.stringify(payload),
@@ -101,7 +120,12 @@ test("write to a plan-mode plan file is allowed", () => {
 });
 
 test("write to a sibling worktree of this repo is allowed even when the hook's own cwd is lowercase-drive", {
-  skip: process.platform !== "win32" && process.platform !== "darwin",
+  // The repro needs the main checkout: inside a linked worktree
+  // --git-common-dir is always absolute, so the precondition below can
+  // never hold there.
+  skip:
+    (process.platform !== "win32" && process.platform !== "darwin") ||
+    (inLinkedWorktree() && "needs the main checkout, not a linked worktree"),
 }, () => {
   // Regression test for the actual mechanism (confirmed by running the
   // two `git` invocations directly against this repo, git 2.55.0.windows.3,
