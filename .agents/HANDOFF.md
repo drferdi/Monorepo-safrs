@@ -9,6 +9,15 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-13 (Kilo): Kilo adapter setup implemented per `docs/bootstrap/KILO_SETUP.md` — four
+  custom commands (`.kilo/command/{safrs-verify,capsule-verify,doctor,capsule-status}.md`), a
+  read-only `safrs-auditor` subagent (`.kilo/agent/safrs-auditor.md`), and a `commit_message.prompt`
+  in `.kilo/kilo.jsonc` that auto-appends `Co-Authored-By: Kilo Code <noreply@kilo.ai>`. Gap
+  surfaced (not changed): `.kilo/**` is absent from `.safrs/sensitive-paths.json`; registering it as
+  an R2 pattern is a separate change. Known: this Kilo build cannot parse frontmatter under
+  `.kilo/command/` / `.kilo/agent/` (repro: minimal `---`/JSON/TOML probes all fail with
+  "No context found for instance"; `.agents/skills/*/SKILL.md` parses fine) — flagged to Gaffer.
+  `docs/bootstrap/KILO_SETUP.md` is untracked in this worktree.
 - This worktree is `feat/prompt-template-metaprompt` at `66ba2ed9`. Control-plane patch: scope-owned HANDOFF, SAFRS over vendor skills, Windows governance command `pnpm governance` (not full quality verification), and Firecrawl recorded absent from `.cursor/mcp.json`. `pnpm governance` on 2026-10-13 failed at `check_task_ownership.py`: `.agents/BOUNDARIES.md` has no active owner in `main` because `TASK-20261011-GAFFER-ADDRESS` (REVIEW, other worktree) already holds that path. Cursor rule files are claimed by `TASK-20261013-CAPABILITY-AWARENESS`. Claims from 2026-10-12 below stay open.
 - 2026-10-13 (Claude Code, Gaffer's split): docs/rules part committed as `bbc3fc51`. The
   `pnpm task transfer` / `SCOPE_AMEND` feature (`tools/task/**`, `tools/automation/src/leases.mjs`,

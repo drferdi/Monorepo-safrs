@@ -2,6 +2,7 @@
   "$schema": "https://app.kilo.ai/config.json",
   "instructions": [".kilo/instructions/*.md"],
   "commit_message": {
-    "prompt": ""
-  }
+    "prompt": "Append the SAFRS attribution trailer `Co-Authored-By: Kilo Code <noreply@kilo.ai>` to the end of every commit message (AGENTS.md mandate, SAFRS-09)."
+  },
+  "snapshot": false
 }
