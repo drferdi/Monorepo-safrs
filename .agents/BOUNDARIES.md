@@ -43,10 +43,12 @@
 - Another session's LOCAL (unpushed) commits are that session's property:
   merging, rebasing, stashing, or publishing them is out of scope unless Gaffer
   orders it explicitly. If they block you, report — do not absorb them.
-- `.agents/HANDOFF.md`: append/update your own workstream section; never rewrite
-  or delete another session's section. Gaffer's own uncommitted edits (root
-  `AGENTS.md`, `.safrs/**`, `.agents/CONTEXT.md`) are never committed, stashed,
-  or reverted by any session.
+- HANDOFF ownership follows ADR 0007. Overwrite only the `HANDOFF.md` of the
+  scope this session owns (capsule: `projects/<domain>/<capsule>/.agents/HANDOFF.md`;
+  root `.agents/HANDOFF.md` only for control-plane work). Never write another
+  scope's HANDOFF. When overwriting, keep another live session's open claim.
+  Gaffer's own uncommitted edits (root `AGENTS.md`, `.safrs/**`,
+  `.agents/CONTEXT.md`) are never committed, stashed, or reverted by any session.
 
 ## 3. Sensitive data
 

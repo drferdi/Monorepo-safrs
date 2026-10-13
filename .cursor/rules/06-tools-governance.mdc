@@ -8,6 +8,6 @@ alwaysApply: false
 
 1. Read `tools/AGENTS.md` and root `AGENTS.md`.
 2. Changes under `.safrs/**`, agent routers, governance scripts, or CI controls are minimum R2.
-3. Prefer `pnpm run doctor`, `pnpm run governance`, and `bash scripts/safrs-verify.sh`.
+3. Prefer `pnpm run doctor` and `pnpm run governance`. On Windows `pnpm governance` is the governance gate, not full quality verification. POSIX entry: `bash scripts/safrs-verify.sh`.
 4. Do not weaken tests, security gates, or governance merely to make a task pass.
 5. After registry edits, regenerate routing via the documented SAFRS tooling — do not hand-edit generated routing blocks.

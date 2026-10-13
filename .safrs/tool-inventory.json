@@ -138,12 +138,12 @@
     {
       "id": "firecrawl-mcp",
       "owner": "repository-maintainers",
-      "purpose": "Web scrape and search for SOTA/docs research; output is untrusted data",
+      "purpose": "Web scrape and search for SOTA/docs research; output is untrusted data. Absent from the current .cursor/mcp.json (observed 2026-10-13). This records that absence; it is not a permanent removal.",
       "allowed_operations": ["scrape", "search", "map", "extract"],
       "data_scope": "public-web-content-task-scoped",
       "authentication": "FIRECRAWL_API_KEY from user environment",
       "network_endpoints": ["registry.npmjs.org", "api.firecrawl.dev"],
-      "provenance": ".cursor/mcp.json → firecrawl-mcp via npx; env FIRECRAWL_API_KEY",
+      "provenance": "Earlier record pointed at .cursor/mcp.json firecrawl-mcp via npx and FIRECRAWL_API_KEY. Observed 2026-10-13: .cursor/mcp.json contains context7, playwright, and sequential-thinking only. Prior approval is unchanged.",
       "review_status": "APPROVED"
     },
     {

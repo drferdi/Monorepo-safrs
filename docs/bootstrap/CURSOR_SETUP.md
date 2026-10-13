@@ -16,7 +16,7 @@ Verified against [Cursor Rules](https://cursor.com/docs/rules) and [Ignore files
 
 ## Token budget
 
-- Keep **total `alwaysApply` content small** (one thin router: `01-safrs.mdc`).
+- Keep **total `alwaysApply` content small**. The always-on adapters are `00-capability-awareness.mdc`, `01-safrs.mdc`, and `10-jev.mdc`.
 - Prefer **glob** and **agent-requested** rules so unrelated work does not load package policy.
 - Rules should **reference** files (`AGENTS.md`, `UI-RULES.md`) instead of copying them.
 - Official guidance: keep individual rules focused and under 500 lines; this repo targets far shorter adapters.
@@ -25,15 +25,17 @@ Verified against [Cursor Rules](https://cursor.com/docs/rules) and [Ignore files
 
 | File | Activation | Points to |
 | --- | --- | --- |
-| `01-safrs.mdc` | Always | Root `AGENTS.md`, HANDOFF, verify |
+| `00-capability-awareness.mdc` | Always | Verified session capabilities; points at `AGENTS.md` |
+| `01-safrs.mdc` | Always | Root `AGENTS.md`, HANDOFF, governance gate |
 | `02-api-boundary.mdc` | `packages/api`, `packages/schemas` | `packages/api/AGENTS.md` |
 | `03-database-boundary.mdc` | `packages/database` | `packages/database/AGENTS.md` |
 | `04-plan-r2-r3.mdc` | Agent-requested | Risk gates + sibling worktree path |
 | `05-security-surfaces.mdc` | Agent-requested | `SECURITY.md` |
 | `06-tools-governance.mdc` | tools / `.safrs` / scripts | `tools/AGENTS.md` |
 | `07-ui-tokens.mdc` | Globs (UI/CSS/email) | `packages/token/AGENTS.md` |
-| `08-verify-before-done.mdc` | Agent-requested | `scripts/safrs-verify.sh` |
+| `08-verify-before-done.mdc` | Agent-requested | Windows governance gate `pnpm governance`; full quality verification is separate |
 | `09-web-golden-path.mdc` | `projects/internal/golden-path` | Capsule + web `AGENTS.md` |
+| `10-jev.mdc` | Always | Jev before costly or consequential steps |
 
 `@`-mention agent-requested rules when relevant (e.g. `@08-verify-before-done` or `@verify-before-done`).
 
@@ -49,7 +51,7 @@ Verified against [Cursor Rules](https://cursor.com/docs/rules) and [Ignore files
 2. Use **Plan Mode** for multi-file or R2/R3 work (`@04-plan-r2-r3`).
 3. Scope edits to the owned package/project; rely on glob rules when those files are in context.
 4. Before “done”: `/verify` (and/or `@08-verify-before-done`) — paste command evidence.
-5. Overwrite `.agents/HANDOFF.md` at session end.
+5. Overwrite only the HANDOFF of the scope this session touched, and keep another live session's open claim. Root `.agents/HANDOFF.md` is for control-plane work.
 
 ## Hooks (project)
 
@@ -71,8 +73,9 @@ Reload Cursor or confirm under **Settings → Hooks** after pull. Scripts use No
 | --- | --- |
 | `context7` | Current public library docs |
 | `playwright` | Browser automation / E2E assist via MCP, restricted to local origins |
-| `firecrawl` | Web scrape/search (needs `FIRECRAWL_API_KEY` in user env) |
 | `sequential-thinking` | Structured multi-step reasoning assist |
+
+`firecrawl` remains an approved inventory record, and it is absent from the current `.cursor/mcp.json` (observed 2026-10-13). That records the absence. It is not a decision to remove the server permanently. Do not install Firecrawl to close the gap.
 
 No filesystem MCP is shipped: its reads bypassed the `beforeReadFile` credential guard, and
 Cursor's own file tools already cover the repository (Gaffer, 2026-10-10).

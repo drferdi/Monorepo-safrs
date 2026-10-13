@@ -1,14 +1,15 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-12 (Claude Code, `feat/claude-path-scoped-rules`)
+Last updated: 2026-10-13 (Cursor, `feat/prompt-template-metaprompt`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
-This file is overwritten with current state, not appended; keep it short (it is a MUST read).
+Overwrite this file only for control-plane work. Keep another live session's open claim. Keep it short (it is a MUST read).
 
 ## Current state
 
+- This worktree is `feat/prompt-template-metaprompt` at `66ba2ed9`. Control-plane patch: scope-owned HANDOFF, SAFRS over vendor skills, Windows governance command `pnpm governance` (not full quality verification), and Firecrawl recorded absent from `.cursor/mcp.json`. `pnpm governance` on 2026-10-13 failed at `check_task_ownership.py`: `.agents/BOUNDARIES.md` has no active owner in `main` because `TASK-20261011-GAFFER-ADDRESS` (REVIEW, other worktree) already holds that path. Cursor rule files are claimed by `TASK-20261013-CAPABILITY-AWARENESS`. Claims from 2026-10-12 below stay open.
 - Local `main` is `a54ee055` (fast-forwarded on Gaffer's go, local only) and contains
   `origin/main` `b2d3a022`. The main checkout is on `main`, so today's guards and hooks are active
   there. `docs/refresh-2026-10-12` (worktree `main-merge-tmp`) is ahead with the docs refresh;
