@@ -12,8 +12,8 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 - This worktree is `feat/prompt-template-metaprompt` at `66ba2ed9`. Control-plane patch: scope-owned HANDOFF, SAFRS over vendor skills, Windows governance command `pnpm governance` (not full quality verification), and Firecrawl recorded absent from `.cursor/mcp.json`. `pnpm governance` on 2026-10-13 failed at `check_task_ownership.py`: `.agents/BOUNDARIES.md` has no active owner in `main` because `TASK-20261011-GAFFER-ADDRESS` (REVIEW, other worktree) already holds that path. Cursor rule files are claimed by `TASK-20261013-CAPABILITY-AWARENESS`. Claims from 2026-10-12 below stay open.
 - 2026-10-13 (Claude Code, Gaffer's split): docs/rules part committed as `bbc3fc51`. The
   `pnpm task transfer` / `SCOPE_AMEND` feature (`tools/task/**`, `tools/automation/src/leases.mjs`,
-  `tools/safrs/check_lifecycle.py`, lease schema, tests) stays uncommitted pending a separate R3
-  review: it changes a verification control and the code it governs together. Fixed before review:
+  `tools/safrs/check_lifecycle.py`, lease schema, tests) committed as `a5b07642` on Gaffer's
+  explicit R3 go: it changes a verification control and the code it governs together. Fixed first:
   transfer accepted source and destination tasks from any worktree, so a session could take another
   session's claim (`--actor` is a free string). It now rejects any task not bound to the current
   worktree, like `task state`/`close`; new test covers source and destination. Evidence: transfer
