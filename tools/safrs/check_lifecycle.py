@@ -27,6 +27,7 @@ MUTATION_ACTIVE = {
 }
 TERMINAL_EVENT_TYPES = {'RELEASE', 'EXPIRE'}
 TERMINAL_STATES = {'MERGED', 'CLOSED', 'FAILED', 'ABORTED', 'SUPERSEDED'}
+SCOPE_BEARING = {'CLAIM', 'RECLAIM', 'SCOPE_AMEND'}
 
 
 def load_contract_checker():
@@ -76,6 +77,53 @@ def verify_chain(events, errors, label):
         token = expected
 
 
+def latest_scope_event(events):
+    for event in reversed(events):
+        if event.get('event_type') in SCOPE_BEARING:
+            return event
+    return None
+
+
+def scope_amend_errors(events) -> list[str]:
+    """Reject a SCOPE_AMEND whose digests were not derived from its prefixes."""
+    errors = []
+    prior_digest = None
+    for index, event in enumerate(events):
+        event_type = event.get('event_type')
+        if event_type not in SCOPE_BEARING:
+            continue
+        if event_type == 'SCOPE_AMEND':
+            required = (
+                'transfer_operation_id',
+                'previous_scope_prefixes',
+                'previous_scope_digest',
+                'updated_scope_digest',
+                'transfer_reason',
+                'authorized_actor',
+            )
+            missing = [field for field in required if not event.get(field)]
+            if missing:
+                errors.append(
+                    f'event[{index}]: SCOPE_AMEND missing {", ".join(missing)}'
+                )
+                continue
+            previous = event.get('previous_scope_prefixes')
+            updated = event.get('scope_prefixes')
+            if not isinstance(previous, list) or not isinstance(updated, list):
+                errors.append(f'event[{index}]: SCOPE_AMEND scopes must be arrays')
+                continue
+            if scope_digest(previous) != event.get('previous_scope_digest'):
+                errors.append(f'event[{index}]: previous scope digest mismatch')
+            if scope_digest(updated) != event.get('scope_digest'):
+                errors.append(f'event[{index}]: updated scope digest mismatch')
+            if event.get('scope_digest') != event.get('updated_scope_digest'):
+                errors.append(f'event[{index}]: scope digest fields disagree')
+            if prior_digest is not None and event.get('previous_scope_digest') != prior_digest:
+                errors.append(f'event[{index}]: SCOPE_AMEND does not continue the prior scope')
+        prior_digest = event.get('scope_digest')
+    return errors
+
+
 def chain_is_terminal(events) -> bool:
     last = events[-1]
     return (
@@ -111,6 +159,9 @@ def main() -> None:
 
     for task_id, events in sorted(chains.items()):
         verify_chain(events, errors, task_id)
+        errors.extend(
+            f'{task_id}: {error}' for error in scope_amend_errors(events)
+        )
         task = registry_tasks.get(task_id)
         if task is None:
             # A chain may outlive registry pruning; that is history, not drift.
@@ -126,15 +177,8 @@ def main() -> None:
                 f'{task_id}: registry says {task["state"]} but lease chain is still active'
             )
         claim_scopes = task.get('scope_prefixes', [])
-        last_claim = next(
-            (
-                event
-                for event in reversed(events)
-                if event.get('event_type') in {'CLAIM', 'RECLAIM'}
-            ),
-            None,
-        )
-        if last_claim and last_claim.get('scope_digest') != scope_digest(claim_scopes):
+        effective = latest_scope_event(events)
+        if effective and effective.get('scope_digest') != scope_digest(claim_scopes):
             errors.append(f'{task_id}: lease scope digest diverges from registry claim')
 
     for surface in ['.agents/HANDOFF.md', '.agents/PROGRESS.md']:
