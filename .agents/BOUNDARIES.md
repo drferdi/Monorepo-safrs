@@ -18,10 +18,9 @@
   `git log --all -S"@g.us" --oneline` and grep staged history for phone-number
   patterns (`62\d{9,}`); a hit means stop and surface to Gaffer first.
 - **Capsule gate (Gaffer, 2026-08-25):** capsule code under `projects/**` is never
-  published through the monorepo remote. The pre-push publish and capsule gates
-  were removed on Gaffer's order (2026-10-13); this is now checked by hand before
-  a push. Capsules publish
-  through their own dedicated remotes (e.g. the `avery` remote), never `origin`.
+  published through the monorepo remote; check this by hand before a push.
+  Capsules publish through their own dedicated remotes (e.g. the `avery` remote),
+  never `origin`.
   **Executed 2026-08-25 (Gaffer-ordered):** `origin/main` was history-rewritten —
   `projects/**` stripped from ALL public history and PII (JID/MSISDN) redacted —
   then force-pushed (`main` @ `5b6b808`), stale remote branches deleted, branch

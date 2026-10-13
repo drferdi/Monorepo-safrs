@@ -92,7 +92,7 @@ docker compose -f compose.telemetry.yaml up -d jaeger
 
 - Do not `git clean -xdf` at repo root — it deletes gitignored `database/` corpus data.
 - Do not read, print, or commit `.env` or production credentials.
-- Do not push without Gaffer's explicit session order (`CHIEF_PUSH_OK`; project paths need `CHIEF_PUSH_PROJECTS_OK`). See `.agents/BOUNDARIES.md`.
+- Do not push without Gaffer's explicit session order. See `.agents/BOUNDARIES.md`.
 - Do not copy golden-path's `@safrs/*` imports into a new capsule.
 
 ## Related

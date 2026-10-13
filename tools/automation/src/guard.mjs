@@ -69,7 +69,7 @@ const COMMAND_RULES = [
     reasonCode: "SELF_AUTHORIZED_PUBLICATION",
     decision: "deny",
     test: (command) =>
-      /(?:^|[\s;&|])(?:CHIEF_PUSH_OK|CHIEF_PUSH_PROJECTS_OK)\s*=|\$env:(?:CHIEF_PUSH_OK|CHIEF_PUSH_PROJECTS_OK)\s*=|\bgit\s+push\b[^\n]*\s--no-verify\b|\bgit\s+(?:-c\s+core\.hooksPath\s*=\s*\S+\s+)?push\b[^\n]*\s--no-verify\b|\bgit\s+(?:config\s+core\.hooksPath|-c\s+core\.hooksPath=)/iu.test(
+      /\bgit\s+push\b[^\n]*\s--no-verify\b|\bgit\s+(?:-c\s+core\.hooksPath\s*=\s*\S+\s+)?push\b[^\n]*\s--no-verify\b|\bgit\s+(?:config\s+core\.hooksPath|-c\s+core\.hooksPath=)/iu.test(
         command,
       ),
     message:

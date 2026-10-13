@@ -123,7 +123,7 @@ Command rules in `guard.mjs` match any spelling of `git`/`gh` (`git.exe`, `git -
 | Reason code | Verdict | Commands |
 | --- | --- | --- |
 | `FORCE_PUSH` | deny | `git push --force` / `-f` (`--force-with-lease` allowed) |
-| `SELF_AUTHORIZED_PUBLICATION` | deny | setting `CHIEF_PUSH_OK`, `push --no-verify`, changing `core.hooksPath` |
+| `SELF_AUTHORIZED_PUBLICATION` | deny | `push --no-verify`, changing `core.hooksPath` |
 | `UNRESTRICTED_AUTONOMY` | deny | `--dangerously-skip-permissions`, `--yolo`, Droid `--auto high/max` |
 | `CREDENTIAL_ACCESS` | deny | reading or writing `.env`, keys, `credentials.json`, `secrets.json` |
 | `MERGE` | ask | `git merge` (not `--abort`/`--continue`/`--quit`, not `merge-base`), `git pull` |

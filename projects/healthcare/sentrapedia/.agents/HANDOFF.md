@@ -118,7 +118,7 @@
   - Making the local publish merge commit was refused by the permission classifier ("Remote Repoint"), so it is left to Gaffer. PowerShell, in a temporary worktree so the busy `D:\DEV\monorepo` checkout is not switched:
     - `git -C D:\DEV\monorepo worktree add D:\DEV\monorepo.worktrees\sentrapedia-publish -b sentrapedia-publish sentrapedia-standalone-next`
     - `git -C D:\DEV\monorepo.worktrees\sentrapedia-publish merge sentrapedia/main -m "Merge GitHub main into evidence gate and targeted therapy publish"`
-    - `$env:CHIEF_PUSH_OK=1; git -C D:\DEV\monorepo.worktrees\sentrapedia-publish push sentrapedia sentrapedia-publish:refs/heads/main; Remove-Item Env:CHIEF_PUSH_OK`
+    - `git -C D:\DEV\monorepo.worktrees\sentrapedia-publish push sentrapedia sentrapedia-publish:refs/heads/main`
     - `git -C D:\DEV\monorepo worktree remove D:\DEV\monorepo.worktrees\sentrapedia-publish`
   - **Published 2026-10-12 by Gaffer:**
     - `sentrapedia/main` = `c0ef8ba6`, a fast-forward that merges split `9b61a291` with the GitHub README edits.
@@ -640,8 +640,8 @@ constant) are the low-risk starting points.
 ## Standalone repository published — 2026-10-11 04:30 Asia/Jakarta
 
 Status: Sentrapedia now has its own repository, https://github.com/drferdi/Sentrapedia (private),
-`main` = `ce4ac21`. Gaffer ordered it to be saved there as an independent project and opened the
-monorepo publish gate for this push (`CHIEF_PUSH_OK=1`). R1: history publication to a private repo.
+`main` = `ce4ac21`. Gaffer ordered it to be saved there as an independent project and approved
+this push. R1: history publication to a private repo.
 
 Changes: `git subtree split --prefix=projects/healthcare/sentrapedia` gave 31 commits with the
 capsule history and no other monorepo paths. Capsule `.gitignore` now covers `verify-report/`,
@@ -658,9 +658,8 @@ Limits: monorepo branch `codex/oracle-ii-grounding` is still 1+ commits ahead of
 pushed. This HANDOFF entry itself is not yet in the standalone repo.
 
 Next: to sync later, from the monorepo root run `git subtree split --prefix=projects/healthcare/sentrapedia
--b sentrapedia-standalone` then push it to `sentrapedia main` (fast-forward; publish gate needs Gaffer).
-In PowerShell: `$env:CHIEF_PUSH_OK=1; git push sentrapedia sentrapedia-standalone:refs/heads/main;
-Remove-Item Env:CHIEF_PUSH_OK`.
+-b sentrapedia-standalone` then push it to `sentrapedia main` (fast-forward; push needs Gaffer).
+`git push sentrapedia sentrapedia-standalone:refs/heads/main`.
 
 ## Design audit fixes — 2026-10-11 03:05 Asia/Jakarta
 

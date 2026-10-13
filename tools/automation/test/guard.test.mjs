@@ -115,9 +115,6 @@ test("command verdicts: merges and main fast-forwards ask, merge plumbing allowe
 
 test("publication authority cannot be self-granted or git hooks bypassed", () => {
   const blocked = [
-    "CHIEF_PUSH_OK=1 git push origin feature",
-    "CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push origin feature",
-    '$env:CHIEF_PUSH_OK="1"; git push origin feature',
     "git push --no-verify origin feature",
     "git config core.hooksPath /dev/null",
     "git -c core.hooksPath=/dev/null push origin feature",
