@@ -75,7 +75,7 @@ graph TD
     UI --> TOKEN
 ```
 
-- **`projects/internal/golden-path/apps/web`** is a standalone capsule, excluded from the root workspace (`pnpm-workspace.yaml`). It mounts `@safrs/api`, and uses `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry`.
+- **`projects/internal/golden-path/apps/web`** is a standalone capsule, excluded from the root workspace (`pnpm-workspace.yaml`). It uses its own copies of `@safrs/api`, `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry` under `projects/internal/golden-path/packages/*`, not the root packages.
 - **`@safrs/api`** owns the typed Hono API; it consumes `@safrs/schemas` for Zod contracts, applies `@safrs/telemetry` middleware, and talks to `@safrs/database`.
 - **`@safrs/database`** wraps Prisma + PostgreSQL and depends on `@safrs/env`, `@safrs/schemas`, and `@safrs/telemetry`.
 - **`@safrs/env`** validates environment with `@t3-oss/env-core`/`@t3-oss/env-nextjs` and extends `@safrs/config` presets.
