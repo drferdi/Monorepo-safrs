@@ -15,7 +15,7 @@ A capsule is standalone only when **structural** checks and **empirical extracti
 | [academic/academic-smartboard](academic-smartboard.md) | academic | El-Kayyisa bimbel + Kayyisa agent | `project.contract.json` | excluded |
 | [corporate/portfolio-drnovia](portfolio-drnovia.md) | corporate | Static portfolio (Framer markup + Lenis) | `project.contract.json` | not included |
 | [healthcare/avery](avery.md) | healthcare | Hermes agent configuration | SPDS + AGENTS | not a Node workspace |
-| [internal/golden-path](golden-path.md) | internal | Typed DB→API→Web demo | none at capsule root | **included (legacy)** |
+| [internal/golden-path](golden-path.md) | internal | Typed DB→API→Web demo | none at capsule root | excluded (standalone) |
 | [internal/control-center](control-center.md) | internal | Local repo-health dashboard | none at capsule root | **included (legacy)** |
 | [template](template.md) | n/a | Scaffold | placeholder contract | template |
 
