@@ -7,7 +7,9 @@
 - Fix (uncommitted, Gaffer said "go"): `project.contract.json` drops both entries. `artifacts` is now `.next/BUILD_ID` only; `mutableStatePaths` keeps `apps/site/reference/verification.json`. `check_project_independence.py` OK, verifier `status` structural PASS.
 - Run 2: install, lint, typecheck PASS; test FAIL in `test:mira` only (vitest 270/270, site 13/13, system 8/8 passed). build, run, deployDryRun did not run. Cleanup PASS.
 - Cause of the MIRA failure (`test_packaging.py`, `service/menu.py`): the working copy has CRLF while `.gitattributes` says `eol=lf`; the Git blob hashes to the recorded `f9f661f4…`. Not a repo defect, so a fresh clone should pass. `git ls-files --eol` shows 8 such files (6 under `mira/`, `tests/mira-composer.test.ts`, `apps/site/docs/migration-manifest.json`).
-- The contract fix is committed at Gaffer's request, before a full extraction pass. Next, on Gaffer's approval: re-check those 8 files out with LF (working tree only; Git diff stays empty), then re-run extraction so build, run and deployDryRun are proven. No push.
+- Contract fix committed in `2506cdee`. With Gaffer's approval the 8 files were then re-checked out with LF (Git diff empty; `menu.py` hashes to `f9f661f4…`; `test_packaging.py` 2/2).
+- Run 3: install, lint, typecheck, test, build, artifacts, deployDryRun and cleanup PASS. Only the HTTP smoke failed: `run-system.mjs start` exits with "OPENROUTER_API_KEY belum tersedia", because the verifier sanitizes the environment and `.env.local` is never copied. This is the declared required secret, not a portability defect.
+- Open: a full extraction PASS needs the key supplied to the extracted run, which is Gaffer's call (it sends the key to the verifier process; startup only reads OpenRouter public metadata, no paid inference). No push.
 
 ## Public site integrated into the product capsule - 2026-10-14 Asia/Jakarta
 
