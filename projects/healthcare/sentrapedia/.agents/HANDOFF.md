@@ -1,5 +1,14 @@
 # Sentrapedia handoff
 
+## Standalone extraction after the site move - 2026-10-14 Asia/Jakarta
+
+- The site move landed in `d9dfa44c` (Codex, not pushed). The "still uncommitted" note below is superseded.
+- `node tools/project-standalone/src/cli.mjs verify healthcare/sentrapedia` (run 1) failed at install: `apps/site/site` was in `mutableStatePaths` and `apps/site/site/index.html` in `artifacts`, so extraction left out 68 tracked site files (HTML, theme CSS, fonts) that `install:check` and the site tests read before build.
+- Fix (uncommitted, Gaffer said "go"): `project.contract.json` drops both entries. `artifacts` is now `.next/BUILD_ID` only; `mutableStatePaths` keeps `apps/site/reference/verification.json`. `check_project_independence.py` OK, verifier `status` structural PASS.
+- Run 2: install, lint, typecheck PASS; test FAIL in `test:mira` only (vitest 270/270, site 13/13, system 8/8 passed). build, run, deployDryRun did not run. Cleanup PASS.
+- Cause of the MIRA failure (`test_packaging.py`, `service/menu.py`): the working copy has CRLF while `.gitattributes` says `eol=lf`; the Git blob hashes to the recorded `f9f661f4…`. Not a repo defect, so a fresh clone should pass. `git ls-files --eol` shows 8 such files (6 under `mira/`, `tests/mira-composer.test.ts`, `apps/site/docs/migration-manifest.json`).
+- The contract fix is committed at Gaffer's request, before a full extraction pass. Next, on Gaffer's approval: re-check those 8 files out with LF (working tree only; Git diff stays empty), then re-run extraction so build, run and deployDryRun are proven. No push.
+
 ## Public site integrated into the product capsule - 2026-10-14 Asia/Jakarta
 
 - **Gaffer's authoritative topology:** Sentrapedia is one sovereign product capsule and future repository at `projects/healthcare/sentrapedia/`. The clinical system remains at the capsule root; the public website now lives at `apps/site/`. Do not recreate the former sibling capsule `projects/healthcare/sentrapedia-website/`.
