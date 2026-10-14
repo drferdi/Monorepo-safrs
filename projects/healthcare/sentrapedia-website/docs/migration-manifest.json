@@ -1,0 +1,550 @@
+{
+  "schemaVersion": 1,
+  "source": "Sentrapediasite/sentrapedia-transformation active checkout",
+  "files": [
+    {
+      "path": "assets/branding/sentra-neuron-ink.png",
+      "sha256": "09370788ff1791a3e540266c1c652eacab596b58378a82f90127c0d741c88c51"
+    },
+    {
+      "path": "assets/branding/sentra-neuron-white.png",
+      "sha256": "c09c536152da54ae8f38c21c40257cc5abb03ecadacc4d3855f52705864e120e"
+    },
+    {
+      "path": "assets/branding/sentrapedia-wordmark-big.svg",
+      "sha256": "2578b295b9ca28f8087ee81cbb27a594cbae2cb32ed145416d8709b905770e20"
+    },
+    {
+      "path": "assets/branding/sentrapedia-wordmark-compact.svg",
+      "sha256": "e333f84fe525ee5f6b17d4cb31b886c1dde2fba2feaa301f65c2dd776cd8609f"
+    },
+    {
+      "path": "assets/branding/sentrapedia-wordmark-footer.svg",
+      "sha256": "30dd382c21273aa0c457662bf2b000f14fa20b0eda5ea04aa2314372d83edd79"
+    },
+    {
+      "path": "assets/branding/sentrapedia-wordmark-header.svg",
+      "sha256": "46fa4bb751285699fc36ab67331d86a31b412947f9e21fb53eb206b9b6258879"
+    },
+    {
+      "path": "assets/clinical-note.config.mjs",
+      "sha256": "adecbc291644fed18ccc970eec4029ab75ac3f802eb2807f7ea988ced4dc157d"
+    },
+    {
+      "path": "assets/clinical-product/anamnesis-source.png",
+      "sha256": "0ee11bec25403915b989aa66ecd723df0928495bc98e8096ed2d7a18f57faf59"
+    },
+    {
+      "path": "assets/clinical-product/document-review.png",
+      "sha256": "8a1dede345f859f0e8efaba5751ee655088b99cd7bed95455f1a86f28e2ac4e8"
+    },
+    {
+      "path": "assets/clinical-product/workspace.png",
+      "sha256": "d6d8ac94f985cfe8624b9ee0d9ab769ec091cf0f3006da83713dcf06d6e4a93b"
+    },
+    {
+      "path": "assets/clinical-video.css",
+      "sha256": "a0446af09eb0b4ecd1a61c6a6caf46249f55339fb8e28d4f4adde7265d4234b0"
+    },
+    {
+      "path": "assets/clinical-video.js",
+      "sha256": "8ff376ae1e89fe02ffdcfc5b16d0ddca17f09b1d37687b4e877007b63b998645"
+    },
+    {
+      "path": "assets/design-audit.css",
+      "sha256": "56f7d6d2c6b86bc669c24c7235a80292e9fd55ff1bd5f7496879efa3f224cf56"
+    },
+    {
+      "path": "assets/design-audit.js",
+      "sha256": "4cc044a361b93ad6873b9061053d197ef0a72b4f85ad4ad6ed99c26f71d56d83"
+    },
+    {
+      "path": "assets/DrawSVGPlugin.min.js",
+      "sha256": "beb19529f54c1212f1f5117d027be01afda2f363a4926d32aa979bc11140edc1"
+    },
+    {
+      "path": "assets/faq.css",
+      "sha256": "9f656f74cea8bd3044e2e49453c85d1e63ca3dd1816ae4650dbe20b31cde974f"
+    },
+    {
+      "path": "assets/faq.js",
+      "sha256": "5e1417c54a75f4e4a5e326ca94072a1bf1a92ec01065e55718ce6070e59e4a33"
+    },
+    {
+      "path": "assets/fonts/Caveat-OFL.txt",
+      "sha256": "1f9d81d094273d82f3898a1ee8b598a717d050ecbf5ff7bede105b704880157b"
+    },
+    {
+      "path": "assets/fonts/Caveat-Variable.ttf",
+      "sha256": "0bdb6b660482d31531b3945849fba5916b3ef8695da7024a9e6b9ee3c4157988"
+    },
+    {
+      "path": "assets/gsap.min.js",
+      "sha256": "dd7dc87e023b3480f9707296342565ca2e361c8393cabb30f9557e06eb1bed4d"
+    },
+    {
+      "path": "assets/pricing.css",
+      "sha256": "a3c4f2bf4024f00c12c1921526d14213ea2da158f223c1172622cc2f49d66ece"
+    },
+    {
+      "path": "assets/pricing.js",
+      "sha256": "091b5e4f8adeae52680eb1321c909bb127883e0393303b4233e9027a0a606ffa"
+    },
+    {
+      "path": "assets/ScrollTrigger.min.js",
+      "sha256": "ba6ffe7b85ddcc7b891b91a430f88640dff41017874bceedf071ca156ccccefa"
+    },
+    {
+      "path": "assets/sentrapedia-hero.webm",
+      "sha256": "5f8295df5d536578442ab0ebe0f8954230fd1348fe83025fcceec95d90fbc30e"
+    },
+    {
+      "path": "assets/sentrapedia-solusi.mp4",
+      "sha256": "e0f70730ce86ac18d97fa22a8372e4de327373b69a23ea5baff60075bf110a65"
+    },
+    {
+      "path": "assets/SplitText.min.js",
+      "sha256": "419f7027a5f086a12cb7988736d8fdd3a6ed2200229661de25b6628ca7ced344"
+    },
+    {
+      "path": "assets/workflow-playback.js",
+      "sha256": "1234c22dc9ffa703b50f3c22db12f0e43f75dd3156f356ef49fe96830d11f1ac"
+    },
+    {
+      "path": "assets/workflows.json",
+      "sha256": "8639e38a174b56a143635ea4430d6ac25cc511de6eb82dc526745164487d0914"
+    },
+    {
+      "path": "assets/workflows/anamnesis-poster.webp",
+      "sha256": "5a1a5df721a3674a8eed7ab3234bf381336334dee091add2596b41fa3837dd65"
+    },
+    {
+      "path": "assets/workflows/anamnesis-web.mp4",
+      "sha256": "54cdd135dbf61e19674d46e4af7193ea3a10873b194379627eb8105879e29914"
+    },
+    {
+      "path": "assets/workflows/anamnesis.webm",
+      "sha256": "aa9f3e876dd0c25da2c2e85ddcf772bd5a3d66010e22b043b78d3041a6e0debd"
+    },
+    {
+      "path": "assets/workflows/anamnesis.webp",
+      "sha256": "5173c54ec6af95daf49aeb8becc2b41e2858b77598d3f1d081bf0732ef41e038"
+    },
+    {
+      "path": "assets/workflows/education-poster.webp",
+      "sha256": "3cbff3038f47739b5db0d06ea222999c837cfdb34984d5fcf2f1f1096360c862"
+    },
+    {
+      "path": "assets/workflows/education-web.mp4",
+      "sha256": "7b2a6b53418451de6738ab1bb8929ce9cbad0e7ca2f62377c0af575a50241ff4"
+    },
+    {
+      "path": "assets/workflows/education.webm",
+      "sha256": "0615eaf236921a87bd5bf95d2eef4caa558258b38eed177f1a6ab6ecdc5e1674"
+    },
+    {
+      "path": "assets/workflows/education.webp",
+      "sha256": "e2f38c41a9f9ddd49fe4c678a21d7041e8037dba13b2dea1bb350d6af5a5bb44"
+    },
+    {
+      "path": "assets/workflows/mira-poster.webp",
+      "sha256": "5d00d6ad6c835a6e3bbd1d328057536298f208a93412532a41239b1ba257cad0"
+    },
+    {
+      "path": "assets/workflows/mira-web.mp4",
+      "sha256": "91dc82fc47e052adecd9d4524ee6fa31d2f82170978bc54e2ded6aa0ba0eba8b"
+    },
+    {
+      "path": "assets/workflows/mira.webm",
+      "sha256": "7ca4dff2b1961316046f0303abe38376b6e3cc6bb6302bc21281d5e55e64de2b"
+    },
+    {
+      "path": "assets/workflows/mira.webp",
+      "sha256": "467a2a1fbb3d1290ba72fc13be1099048ee0c37587890b0ab11068f48f2fbf35"
+    },
+    {
+      "path": "assets/workflows/referral-poster.webp",
+      "sha256": "523e838db0184bbe66d81b07c8202b9bc55dc0eac3023a6198a5235e8d951595"
+    },
+    {
+      "path": "assets/workflows/referral-web.mp4",
+      "sha256": "e7e713c1c0917c4cac7c1bd44d63a5027f5ada3bd6eadbce5049b0dd8047ea8e"
+    },
+    {
+      "path": "assets/workflows/referral.webm",
+      "sha256": "1b34c86cb9968c4d4e3d4f7c90d171d6a7a6adbaf81995d4ab304e60b818162b"
+    },
+    {
+      "path": "assets/workflows/referral.webp",
+      "sha256": "4a7487b6f28e603d633994c400bc5b3198d30496ab6c7976a77eb06ffe9cb9f0"
+    },
+    {
+      "path": "assets/workflows/sbar-poster.webp",
+      "sha256": "8b10034343d539c06094995ae844e2afd946abed751aa10a0bd4d1a767a87d47"
+    },
+    {
+      "path": "assets/workflows/sbar-web.mp4",
+      "sha256": "be1cd995b4e9492457387f0abdac09845a35d01a303fcd00e83c71f226a9c2b0"
+    },
+    {
+      "path": "assets/workflows/sbar.webm",
+      "sha256": "06b84beb4ada697b60cfa919f78feffcc7a1c44c229beaa0c6c9feb097159808"
+    },
+    {
+      "path": "assets/workflows/sbar.webp",
+      "sha256": "750ad0c7a850721c997da3902e755f8a08b3f9d6281a78dcaafed3805d9881a9"
+    },
+    {
+      "path": "assets/workflows/soap-poster.webp",
+      "sha256": "9e14ef35593a82ea63f04eb7d488b7d3f1cefadfe74e5883d8f18bcfd0e38c1c"
+    },
+    {
+      "path": "assets/workflows/soap-web.mp4",
+      "sha256": "84a9700acc9ebad7af49b250ee07ca69ea93a2af225ea878ac7b904d66ecb120"
+    },
+    {
+      "path": "assets/workflows/soap.webm",
+      "sha256": "9aa546d6cb24ece57211ac45f8017381a7a4ca0381da8a5e6088c25684a90917"
+    },
+    {
+      "path": "assets/workflows/soap.webp",
+      "sha256": "75583e1e3f8ab1e85e74d1e404320dfbcc13142e8fcb8099c44a98ba258da0aa"
+    },
+    {
+      "path": "reference/design-integrity.json",
+      "sha256": "669846077e250ac680053eadc0bd4078be713ced94c2c45c7a27743bd8c713b0"
+    },
+    {
+      "path": "scripts/clinical-neuron.mjs",
+      "sha256": "f2e65a33bef77f7fb5e94e50c64b623146d14afea2f5d97cc728c62be0e81d79"
+    },
+    {
+      "path": "scripts/clinical-note.mjs",
+      "sha256": "a0773859d87aa2cf745c0192e6838c57a933a0a61f4627db07b6ee3684ea7b06"
+    },
+    {
+      "path": "scripts/clinical-video.test.mjs",
+      "sha256": "7184e9b9445769bffd2103b800b971d1e4edecb87aae469d08dfd49d8049b72f"
+    },
+    {
+      "path": "scripts/contact.mjs",
+      "sha256": "0eea0e9f0b4756bcc5af38ca1a9e620d7b0bc1fcc0a11a77fcdf4c19f2ffec80"
+    },
+    {
+      "path": "scripts/contact.test.mjs",
+      "sha256": "80ba317be4b826a1fd7e54b4afd9af55416dd6f4a6eda2325e9791b3390a292b"
+    },
+    {
+      "path": "scripts/faq.test.mjs",
+      "sha256": "7a7628f02cedbb1c9cabb8b86bf1b99deabe73a1914c5aa3be387136ed7757aa"
+    },
+    {
+      "path": "scripts/hero.test.mjs",
+      "sha256": "04192f598666c37a4a418f41e834da64ec73d19f66ac626bf0da56025ab530d0"
+    },
+    {
+      "path": "scripts/serve.mjs",
+      "sha256": "82c2c3df59fed8ed02f1698c53d97accc2cfd2c19135ecc937d41b4538e79793"
+    },
+    {
+      "path": "scripts/serve.test.mjs",
+      "sha256": "739488884ef9758be22463d46c3f0031c5704b4aa072bbf68cffbdc712b260d6"
+    },
+    {
+      "path": "scripts/transform.mjs",
+      "sha256": "24a81ec3c224d0f01e61472e9df68c43e58b7b80e44cfcf1f29e3b981ce4de78"
+    },
+    {
+      "path": "scripts/verify.mjs",
+      "sha256": "3d9b79bc9c64b00ed1a70fc95ce2b6759f89ac3750083f11c87ab9985e79b754"
+    },
+    {
+      "path": "scripts/workflow-playback.test.mjs",
+      "sha256": "188235453fd7bb1f44e647f8c0faeb28b32154e18152d7d1c8505a4f0168bd1a"
+    },
+    {
+      "path": "site/assets/brand/favicon.png",
+      "sha256": "09370788ff1791a3e540266c1c652eacab596b58378a82f90127c0d741c88c51"
+    },
+    {
+      "path": "site/assets/theme/css/main1509.css",
+      "sha256": "94953e56933c033ef688ff222aa3c3c91ce6e1c6707307fe7a072c3ca88b6847"
+    },
+    {
+      "path": "site/assets/theme/css/responsive.css",
+      "sha256": "0472f17db7e7ae6716e89120db6f2bc3a50c1fe3e22611aeb906f3d5d7da47dd"
+    },
+    {
+      "path": "site/assets/theme/fonts/Inter_28pt-Bold.ttf",
+      "sha256": "ceec73bdfc78d352bcc222b9ac28e752a20b4a339daefc69bc67f49380425c0c"
+    },
+    {
+      "path": "site/assets/theme/fonts/Inter_28pt-Regular.ttf",
+      "sha256": "3081ede8389f3516e8616d2b2fe60cac639b341640dff0250d253d3aac5e613f"
+    },
+    {
+      "path": "site/assets/theme/fonts/Inter_28pt-SemiBold.ttf",
+      "sha256": "cedce7a9bfdea18077a12cda546db5683e7763b7a3a876b75a52c7eef11cecb2"
+    },
+    {
+      "path": "site/assets/theme/img/arrow-down.svg",
+      "sha256": "3aab7a579cd28b743d6ee92f1e9548c9a6b876994f69c18b5b55fee05895da21"
+    },
+    {
+      "path": "site/assets/theme/img/sentrapedia-hero.webm",
+      "sha256": "5f8295df5d536578442ab0ebe0f8954230fd1348fe83025fcceec95d90fbc30e"
+    },
+    {
+      "path": "site/assets/theme/img/sentrapedia-wordmark-big.svg",
+      "sha256": "2578b295b9ca28f8087ee81cbb27a594cbae2cb32ed145416d8709b905770e20"
+    },
+    {
+      "path": "site/assets/theme/img/sentrapedia-wordmark-compact.svg",
+      "sha256": "e333f84fe525ee5f6b17d4cb31b886c1dde2fba2feaa301f65c2dd776cd8609f"
+    },
+    {
+      "path": "site/assets/theme/img/sentrapedia-wordmark-footer.svg",
+      "sha256": "30dd382c21273aa0c457662bf2b000f14fa20b0eda5ea04aa2314372d83edd79"
+    },
+    {
+      "path": "site/assets/theme/img/sentrapedia-wordmark-header.svg",
+      "sha256": "46fa4bb751285699fc36ab67331d86a31b412947f9e21fb53eb206b9b6258879"
+    },
+    {
+      "path": "site/assets/theme/js/custom55e2.js",
+      "sha256": "ec1eeb5c499f8854b961901c83a61018a9d1c1cd791029496bdac9b0f241dfb1"
+    },
+    {
+      "path": "site/assets/vendor/contact-form.css",
+      "sha256": "a3b9f5df6bf638a4cb583480bed6e18a84ad7141cc3d75b81094f91dd7b82f32"
+    },
+    {
+      "path": "site/assets/vendor/jquery-migrate.min.js",
+      "sha256": "5274f11e6fb32ae0cf2dfb9f8043272865c397a7c4223b4cfa7d50ea52fbde89"
+    },
+    {
+      "path": "site/assets/vendor/jquery.min.js",
+      "sha256": "cb6f2d32c49d1c2b25e9ffc9aaafa3f83075346c01bcd4ae6eb187392a4292cf"
+    },
+    {
+      "path": "site/assets/vendor/language-menu.css",
+      "sha256": "19fb8fd435c0bce0c7b49c24d128cce686d4a6bba0de63d34d5effa4e1f644f4"
+    },
+    {
+      "path": "site/faq/index.html",
+      "sha256": "01148c759ade87f0e663497940813727b2e630f8673137b8488216bbe0c9ad68"
+    },
+    {
+      "path": "site/index.html",
+      "sha256": "a99542f03e3b40714e03e1cdcccec05be70a9ab9b545a57bc732224d13bc3d3f"
+    },
+    {
+      "path": "site/media/clinical-product/anamnesis-source.png",
+      "sha256": "0ee11bec25403915b989aa66ecd723df0928495bc98e8096ed2d7a18f57faf59"
+    },
+    {
+      "path": "site/media/clinical-product/document-review.png",
+      "sha256": "8a1dede345f859f0e8efaba5751ee655088b99cd7bed95455f1a86f28e2ac4e8"
+    },
+    {
+      "path": "site/media/clinical-product/workspace.png",
+      "sha256": "d6d8ac94f985cfe8624b9ee0d9ab769ec091cf0f3006da83713dcf06d6e4a93b"
+    },
+    {
+      "path": "site/media/clinical-video.css",
+      "sha256": "a0446af09eb0b4ecd1a61c6a6caf46249f55339fb8e28d4f4adde7265d4234b0"
+    },
+    {
+      "path": "site/media/clinical-video.js",
+      "sha256": "8ff376ae1e89fe02ffdcfc5b16d0ddca17f09b1d37687b4e877007b63b998645"
+    },
+    {
+      "path": "site/media/design-audit.css",
+      "sha256": "56f7d6d2c6b86bc669c24c7235a80292e9fd55ff1bd5f7496879efa3f224cf56"
+    },
+    {
+      "path": "site/media/design-audit.js",
+      "sha256": "4cc044a361b93ad6873b9061053d197ef0a72b4f85ad4ad6ed99c26f71d56d83"
+    },
+    {
+      "path": "site/media/DrawSVGPlugin.min.js",
+      "sha256": "beb19529f54c1212f1f5117d027be01afda2f363a4926d32aa979bc11140edc1"
+    },
+    {
+      "path": "site/media/faq.css",
+      "sha256": "9f656f74cea8bd3044e2e49453c85d1e63ca3dd1816ae4650dbe20b31cde974f"
+    },
+    {
+      "path": "site/media/faq.js",
+      "sha256": "5e1417c54a75f4e4a5e326ca94072a1bf1a92ec01065e55718ce6070e59e4a33"
+    },
+    {
+      "path": "site/media/fonts/Caveat-OFL.txt",
+      "sha256": "1f9d81d094273d82f3898a1ee8b598a717d050ecbf5ff7bede105b704880157b"
+    },
+    {
+      "path": "site/media/fonts/Caveat-Variable.ttf",
+      "sha256": "0bdb6b660482d31531b3945849fba5916b3ef8695da7024a9e6b9ee3c4157988"
+    },
+    {
+      "path": "site/media/gsap.min.js",
+      "sha256": "dd7dc87e023b3480f9707296342565ca2e361c8393cabb30f9557e06eb1bed4d"
+    },
+    {
+      "path": "site/media/pricing.css",
+      "sha256": "a3c4f2bf4024f00c12c1921526d14213ea2da158f223c1172622cc2f49d66ece"
+    },
+    {
+      "path": "site/media/pricing.js",
+      "sha256": "091b5e4f8adeae52680eb1321c909bb127883e0393303b4233e9027a0a606ffa"
+    },
+    {
+      "path": "site/media/ScrollTrigger.min.js",
+      "sha256": "ba6ffe7b85ddcc7b891b91a430f88640dff41017874bceedf071ca156ccccefa"
+    },
+    {
+      "path": "site/media/sentrapedia-solusi.mp4",
+      "sha256": "e0f70730ce86ac18d97fa22a8372e4de327373b69a23ea5baff60075bf110a65"
+    },
+    {
+      "path": "site/media/SplitText.min.js",
+      "sha256": "419f7027a5f086a12cb7988736d8fdd3a6ed2200229661de25b6628ca7ced344"
+    },
+    {
+      "path": "site/media/workflow-playback.js",
+      "sha256": "1234c22dc9ffa703b50f3c22db12f0e43f75dd3156f356ef49fe96830d11f1ac"
+    },
+    {
+      "path": "site/media/workflows/anamnesis-poster.webp",
+      "sha256": "5a1a5df721a3674a8eed7ab3234bf381336334dee091add2596b41fa3837dd65"
+    },
+    {
+      "path": "site/media/workflows/anamnesis-web.mp4",
+      "sha256": "54cdd135dbf61e19674d46e4af7193ea3a10873b194379627eb8105879e29914"
+    },
+    {
+      "path": "site/media/workflows/anamnesis.webm",
+      "sha256": "aa9f3e876dd0c25da2c2e85ddcf772bd5a3d66010e22b043b78d3041a6e0debd"
+    },
+    {
+      "path": "site/media/workflows/anamnesis.webp",
+      "sha256": "5173c54ec6af95daf49aeb8becc2b41e2858b77598d3f1d081bf0732ef41e038"
+    },
+    {
+      "path": "site/media/workflows/education-poster.webp",
+      "sha256": "3cbff3038f47739b5db0d06ea222999c837cfdb34984d5fcf2f1f1096360c862"
+    },
+    {
+      "path": "site/media/workflows/education-web.mp4",
+      "sha256": "7b2a6b53418451de6738ab1bb8929ce9cbad0e7ca2f62377c0af575a50241ff4"
+    },
+    {
+      "path": "site/media/workflows/education.webm",
+      "sha256": "0615eaf236921a87bd5bf95d2eef4caa558258b38eed177f1a6ab6ecdc5e1674"
+    },
+    {
+      "path": "site/media/workflows/education.webp",
+      "sha256": "e2f38c41a9f9ddd49fe4c678a21d7041e8037dba13b2dea1bb350d6af5a5bb44"
+    },
+    {
+      "path": "site/media/workflows/mira-poster.webp",
+      "sha256": "5d00d6ad6c835a6e3bbd1d328057536298f208a93412532a41239b1ba257cad0"
+    },
+    {
+      "path": "site/media/workflows/mira-web.mp4",
+      "sha256": "91dc82fc47e052adecd9d4524ee6fa31d2f82170978bc54e2ded6aa0ba0eba8b"
+    },
+    {
+      "path": "site/media/workflows/mira.webm",
+      "sha256": "7ca4dff2b1961316046f0303abe38376b6e3cc6bb6302bc21281d5e55e64de2b"
+    },
+    {
+      "path": "site/media/workflows/mira.webp",
+      "sha256": "467a2a1fbb3d1290ba72fc13be1099048ee0c37587890b0ab11068f48f2fbf35"
+    },
+    {
+      "path": "site/media/workflows/referral-poster.webp",
+      "sha256": "523e838db0184bbe66d81b07c8202b9bc55dc0eac3023a6198a5235e8d951595"
+    },
+    {
+      "path": "site/media/workflows/referral-web.mp4",
+      "sha256": "e7e713c1c0917c4cac7c1bd44d63a5027f5ada3bd6eadbce5049b0dd8047ea8e"
+    },
+    {
+      "path": "site/media/workflows/referral.webm",
+      "sha256": "1b34c86cb9968c4d4e3d4f7c90d171d6a7a6adbaf81995d4ab304e60b818162b"
+    },
+    {
+      "path": "site/media/workflows/referral.webp",
+      "sha256": "4a7487b6f28e603d633994c400bc5b3198d30496ab6c7976a77eb06ffe9cb9f0"
+    },
+    {
+      "path": "site/media/workflows/sbar-poster.webp",
+      "sha256": "8b10034343d539c06094995ae844e2afd946abed751aa10a0bd4d1a767a87d47"
+    },
+    {
+      "path": "site/media/workflows/sbar-web.mp4",
+      "sha256": "be1cd995b4e9492457387f0abdac09845a35d01a303fcd00e83c71f226a9c2b0"
+    },
+    {
+      "path": "site/media/workflows/sbar.webm",
+      "sha256": "06b84beb4ada697b60cfa919f78feffcc7a1c44c229beaa0c6c9feb097159808"
+    },
+    {
+      "path": "site/media/workflows/sbar.webp",
+      "sha256": "750ad0c7a850721c997da3902e755f8a08b3f9d6281a78dcaafed3805d9881a9"
+    },
+    {
+      "path": "site/media/workflows/soap-poster.webp",
+      "sha256": "9e14ef35593a82ea63f04eb7d488b7d3f1cefadfe74e5883d8f18bcfd0e38c1c"
+    },
+    {
+      "path": "site/media/workflows/soap-web.mp4",
+      "sha256": "84a9700acc9ebad7af49b250ee07ca69ea93a2af225ea878ac7b904d66ecb120"
+    },
+    {
+      "path": "site/media/workflows/soap.webm",
+      "sha256": "9aa546d6cb24ece57211ac45f8017381a7a4ca0381da8a5e6088c25684a90917"
+    },
+    {
+      "path": "site/media/workflows/soap.webp",
+      "sha256": "75583e1e3f8ab1e85e74d1e404320dfbcc13142e8fcb8099c44a98ba258da0aa"
+    },
+    {
+      "path": "site/vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
+      "sha256": "3104b7623d267eedae62cbd065d0a9437dc8a4d822c209704bbbb88c80afcc9a"
+    },
+    {
+      "path": "site/vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff",
+      "sha256": "bb1de989b83970f6f4e54de1cd974c5cba55b73582da5e1b225a6d0edf029483"
+    },
+    {
+      "path": "site/vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2",
+      "sha256": "476adf42b40325098fcfa8b36ab3e769186bb4f6ce6a249753e2e1a9c22bf99e"
+    },
+    {
+      "path": "site/vendor/cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css",
+      "sha256": "d85327d99c7a3ee1f9b5d0500d1370acea3ad2db39c163c2f51f232baedbdede"
+    },
+    {
+      "path": "site/vendor/cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js",
+      "sha256": "e4fd49181388c48ec5040bd3fe66f57c29c8e67fcd8502b3354b96ec7ab47cc7"
+    },
+    {
+      "path": "site/vendor/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css",
+      "sha256": "50ad448a8a5720bf8a5617db15af31ae60163de06331576f60c6244c012ffc72"
+    },
+    {
+      "path": "site/vendor/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js",
+      "sha256": "0c7178cc6ca34fb18e30f070a5e7a1c287b2d7ccfcba2cfdf06e0f46eda55740"
+    },
+    {
+      "path": "source/faq/index.html",
+      "sha256": "01148c759ade87f0e663497940813727b2e630f8673137b8488216bbe0c9ad68"
+    },
+    {
+      "path": "source/index.html",
+      "sha256": "a99542f03e3b40714e03e1cdcccec05be70a9ab9b545a57bc732224d13bc3d3f"
+    }
+  ]
+}

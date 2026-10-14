@@ -1,0 +1,98 @@
+[
+  {
+    "id": "soap",
+    "title": "Catatan SOAP",
+    "width": 2800,
+    "height": 1576,
+    "states": [
+      "soap-input.png",
+      "soap-draft.png",
+      "soap-review.png"
+    ],
+    "labels": [
+      "Informasi kasus",
+      "Draft lokal",
+      "Peninjauan dokter"
+    ]
+  },
+  {
+    "id": "mira",
+    "title": "MIRA",
+    "width": 2800,
+    "height": 1268,
+    "states": [
+      "mira-input.png",
+      "mira-context.png",
+      "mira-analysis-form.png"
+    ],
+    "labels": [
+      "Workspace analisis",
+      "Form konteks tambahan",
+      "Persiapan analisis â€” tanpa hasil diagnosis"
+    ]
+  },
+  {
+    "id": "anamnesis",
+    "title": "Anamnesis",
+    "width": 2800,
+    "height": 1600,
+    "states": [
+      "anamnesis-input.png",
+      "anamnesis-draft.png",
+      "anamnesis-source.png"
+    ],
+    "labels": [
+      "Riwayat yang dicatat",
+      "Draft anamnesis",
+      "Sumber input"
+    ]
+  },
+  {
+    "id": "referral",
+    "title": "Surat Rujukan",
+    "width": 2800,
+    "height": 1770,
+    "states": [
+      "referral-input.png",
+      "referral-draft.png",
+      "referral-review.png"
+    ],
+    "labels": [
+      "Pilihan templat rujukan",
+      "Konteks rujukan",
+      "Draft surat untuk ditinjau"
+    ]
+  },
+  {
+    "id": "education",
+    "title": "Edukasi Pasien",
+    "width": 2800,
+    "height": 1574,
+    "states": [
+      "education-input.png",
+      "education-draft.png",
+      "education-review.png"
+    ],
+    "labels": [
+      "Materi dari dokter",
+      "Draft edukasi",
+      "Peninjauan isi"
+    ]
+  },
+  {
+    "id": "sbar",
+    "title": "Handoff SBAR",
+    "width": 2800,
+    "height": 1576,
+    "states": [
+      "sbar-input.png",
+      "sbar-draft.png",
+      "sbar-review.png"
+    ],
+    "labels": [
+      "Form serah terima",
+      "Situasi dan konteks sintetis",
+      "Peninjauan sebelum komunikasi"
+    ]
+  }
+]

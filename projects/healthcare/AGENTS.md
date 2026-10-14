@@ -23,6 +23,7 @@ It therefore holds only two files: `AGENTS.md` (this file) and `README.md`.
 | [`sentraverse`](./sentraverse/AGENTS.md) | Public Sentra marketing website and platform hub (Next.js) |
 | [`sentraverse-neural`](./sentraverse-neural/AGENTS.md) | Sentraverse neural journey: the cinematic GSAP story of Sentra as its own site (Next.js) |
 | [`assistverse`](./assistverse/AGENTS.md) | Public Sentra Assist website (Next.js) |
+| [`sentrapedia-website`](./sentrapedia-website/AGENTS.md) | Public Sentrapedia marketing website (static Node.js) |
 | [`referralink`](./referralink/AGENTS.md) | MEDLINK sandbox for differential diagnosis, ICD-10 mapping, and referral (Vite) |
 | [`healthsphere`](./healthsphere/AGENTS.md) | Public website of UPTD Puskesmas PONED Balowerti Kediri (app in `website/`) |
 | [`med-assist`](./med-assist/AGENTS.md) | Chrome side-panel extension for FKTP clinicians in ePuskesmas (WXT) |

@@ -1,0 +1,97 @@
+{
+  "description": "Approved Sentrapedia presentation. Asset paths, product identifiers and line endings on changed lines normalized; CSS declarations, fonts and media preserved.",
+  "files": [
+    {
+      "path": "assets/theme/css/main1509.css",
+      "sha256": "94953e56933c033ef688ff222aa3c3c91ce6e1c6707307fe7a072c3ca88b6847"
+    },
+    {
+      "path": "assets/theme/css/responsive.css",
+      "sha256": "0472f17db7e7ae6716e89120db6f2bc3a50c1fe3e22611aeb906f3d5d7da47dd"
+    },
+    {
+      "path": "assets/theme/fonts/Inter_28pt-Bold.ttf",
+      "sha256": "ceec73bdfc78d352bcc222b9ac28e752a20b4a339daefc69bc67f49380425c0c"
+    },
+    {
+      "path": "assets/theme/fonts/Inter_28pt-Regular.ttf",
+      "sha256": "3081ede8389f3516e8616d2b2fe60cac639b341640dff0250d253d3aac5e613f"
+    },
+    {
+      "path": "assets/theme/fonts/Inter_28pt-SemiBold.ttf",
+      "sha256": "cedce7a9bfdea18077a12cda546db5683e7763b7a3a876b75a52c7eef11cecb2"
+    },
+    {
+      "path": "assets/theme/js/custom55e2.js",
+      "sha256": "ec1eeb5c499f8854b961901c83a61018a9d1c1cd791029496bdac9b0f241dfb1"
+    },
+    {
+      "path": "assets/theme/img/arrow-down.svg",
+      "sha256": "3aab7a579cd28b743d6ee92f1e9548c9a6b876994f69c18b5b55fee05895da21"
+    },
+    {
+      "path": "assets/theme/img/sentrapedia-hero.webm",
+      "sha256": "5f8295df5d536578442ab0ebe0f8954230fd1348fe83025fcceec95d90fbc30e"
+    },
+    {
+      "path": "assets/theme/img/sentrapedia-wordmark-compact.svg",
+      "sha256": "e333f84fe525ee5f6b17d4cb31b886c1dde2fba2feaa301f65c2dd776cd8609f"
+    },
+    {
+      "path": "assets/theme/img/sentrapedia-wordmark-header.svg",
+      "sha256": "46fa4bb751285699fc36ab67331d86a31b412947f9e21fb53eb206b9b6258879"
+    },
+    {
+      "path": "assets/theme/img/sentrapedia-wordmark-big.svg",
+      "sha256": "2578b295b9ca28f8087ee81cbb27a594cbae2cb32ed145416d8709b905770e20"
+    },
+    {
+      "path": "assets/theme/img/sentrapedia-wordmark-footer.svg",
+      "sha256": "30dd382c21273aa0c457662bf2b000f14fa20b0eda5ea04aa2314372d83edd79"
+    },
+    {
+      "path": "vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
+      "sha256": "3104b7623d267eedae62cbd065d0a9437dc8a4d822c209704bbbb88c80afcc9a"
+    },
+    {
+      "path": "vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff",
+      "sha256": "bb1de989b83970f6f4e54de1cd974c5cba55b73582da5e1b225a6d0edf029483"
+    },
+    {
+      "path": "vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2",
+      "sha256": "476adf42b40325098fcfa8b36ab3e769186bb4f6ce6a249753e2e1a9c22bf99e"
+    },
+    {
+      "path": "vendor/cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css",
+      "sha256": "d85327d99c7a3ee1f9b5d0500d1370acea3ad2db39c163c2f51f232baedbdede"
+    },
+    {
+      "path": "vendor/cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js",
+      "sha256": "e4fd49181388c48ec5040bd3fe66f57c29c8e67fcd8502b3354b96ec7ab47cc7"
+    },
+    {
+      "path": "vendor/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css",
+      "sha256": "50ad448a8a5720bf8a5617db15af31ae60163de06331576f60c6244c012ffc72"
+    },
+    {
+      "path": "vendor/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js",
+      "sha256": "0c7178cc6ca34fb18e30f070a5e7a1c287b2d7ccfcba2cfdf06e0f46eda55740"
+    },
+    {
+      "path": "assets/vendor/contact-form.css",
+      "sha256": "a3b9f5df6bf638a4cb583480bed6e18a84ad7141cc3d75b81094f91dd7b82f32"
+    },
+    {
+      "path": "assets/vendor/language-menu.css",
+      "sha256": "19fb8fd435c0bce0c7b49c24d128cce686d4a6bba0de63d34d5effa4e1f644f4"
+    },
+    {
+      "path": "assets/vendor/jquery.min.js",
+      "sha256": "cb6f2d32c49d1c2b25e9ffc9aaafa3f83075346c01bcd4ae6eb187392a4292cf"
+    },
+    {
+      "path": "assets/vendor/jquery-migrate.min.js",
+      "sha256": "5274f11e6fb32ae0cf2dfb9f8043272865c397a7c4223b4cfa7d50ea52fbde89"
+    }
+  ]
+}
