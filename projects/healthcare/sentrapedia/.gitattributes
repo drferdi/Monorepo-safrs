@@ -1,2 +1,4 @@
 # TheOracle vectors are binary and rebuilt as a whole; keep them out of regular git history.
 theoracle/index/vectors.f32 filter=lfs diff=lfs merge=lfs -text
+# PNGs are stored as LFS pointers; the standalone repo needs this rule, since the monorepo root .gitattributes is not exported.
+*.png filter=lfs diff=lfs merge=lfs -text
