@@ -9,7 +9,8 @@
 - Cause of the MIRA failure (`test_packaging.py`, `service/menu.py`): the working copy has CRLF while `.gitattributes` says `eol=lf`; the Git blob hashes to the recorded `f9f661f4…`. Not a repo defect, so a fresh clone should pass. `git ls-files --eol` shows 8 such files (6 under `mira/`, `tests/mira-composer.test.ts`, `apps/site/docs/migration-manifest.json`).
 - Contract fix committed in `2506cdee`. With Gaffer's approval the 8 files were then re-checked out with LF (Git diff empty; `menu.py` hashes to `f9f661f4…`; `test_packaging.py` 2/2).
 - Run 3: install, lint, typecheck, test, build, artifacts, deployDryRun and cleanup PASS. Only the HTTP smoke failed: `run-system.mjs start` exits with "OPENROUTER_API_KEY belum tersedia", because the verifier sanitizes the environment and `.env.local` is never copied. This is the declared required secret, not a portability defect.
-- Open: a full extraction PASS needs the key supplied to the extracted run, which is Gaffer's call (it sends the key to the verifier process; startup only reads OpenRouter public metadata, no paid inference). No push.
+- The verifier cannot pass the key: its environment allowlist holds only system variables (PATH, TEMP, COMSPEC and similar). Gaffer chose a manual smoke instead. 901 tracked files were copied to a scratch folder with no `.env.local`; `npm ci` and `build` exited 0 there. Gaffer then copied the key in himself, ran the smoke script (`SMOKE PASS (HTTP 200)` at `127.0.0.1:3101/`) and removed the copy. The agent never handled the key.
+- Result: every lifecycle stage plus the HTTP smoke is proven for the extracted capsule. The smoke is manual evidence, not a verifier PASS. Passing declared secrets to the verifier would be a separate `tools/` change. No push or merge yet.
 
 ## Public site integrated into the product capsule - 2026-10-14 Asia/Jakarta
 
