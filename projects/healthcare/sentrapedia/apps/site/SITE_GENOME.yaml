@@ -1,0 +1,52 @@
+schema_version: "1.0.0"
+project_id: "healthcare/sentrapedia/apps/site"
+title: "Sentrapedia Public Site"
+status: "integrated-subsystem"
+authority: "Gaffer"
+owner: "dr. Ferdi Iskandar"
+version: "1.0.0"
+created: "2026-10-14"
+last_verified: "2026-10-14"
+source_of_truth: true
+classification: "SENTRA"
+purpose: >-
+  Provide a public, reviewable Sentrapedia marketing experience for physicians
+  and institutions while preserving physician authority and avoiding unsupported
+  clinical claims.
+authority_order:
+  - "SITE_GENOME.yaml"
+  - "docs/spds/purpose_contract.md"
+  - "docs/spds/authority_and_decision_rights.md"
+  - "docs/spds/prd.md"
+  - "docs/spds/architecture.md"
+  - "source and assets"
+  - "docs/spds/verification_evidence_index.md"
+  - "docs/spds/current_state_snapshot.md"
+agent_entry_points:
+  - "docs/spds/read_first.md"
+  - "../../.agents/HANDOFF.md"
+  - "../../.agents/CONTEXT.md"
+  - "../../.agents/DECISIONS.md"
+constraints:
+  - "No real patient data or credentials in Git."
+  - "No clinical decision, diagnosis, treatment, or medical-device function."
+  - "No monorepo-root or cross-capsule runtime dependency; integration stays inside the Sentrapedia capsule."
+  - "Publication, production delivery, and risk acceptance require Gaffer."
+evidence_locations:
+  - "scripts/*.test.mjs"
+  - "tests/migration-boundary.test.mjs"
+  - "reference/design-integrity.json"
+  - "reference/verification.json"
+  - "docs/migration-manifest.json"
+  - "docs/migration-report.md"
+overlays:
+  core: true
+  healthcare_non_device: true
+  data_privacy_security: true
+  operations: true
+  ai: false
+  agentic: false
+unknowns:
+  - "Production host, URL, TLS, monitoring, rollback, and support owner."
+  - "Approved contact sender, retention, legal basis, and live delivery evidence."
+  - "Complete third-party asset redistribution rights."

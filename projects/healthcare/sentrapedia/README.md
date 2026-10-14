@@ -26,6 +26,10 @@ The application speaks primarily in **Bahasa Indonesia**, retaining familiar Eng
 
 **Outside scope:** real patient records, prescribing automation, autonomous medical decisions, production EHR integration, clinical certification and live clinical deployment.
 
+### Repository layout
+
+Sentrapedia is one sovereign product capsule and one future repository. The clinical workspace currently remains at the capsule root. The public marketing website lives in [`apps/site`](apps/site/README.md), with its own static source, assets, site-specific SPDS documentation, and local verification scripts. A future demo belongs under `apps/demo/` as configuration plus synthetic data around shared product code.
+
 ---
 
 **01 / WORKSPACE** — Organize fictional cases, notes, templates, tasks, drafts and revisions.

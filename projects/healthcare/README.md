@@ -12,7 +12,7 @@ Healthcare systems that share compliance context and patient-data handling.
 | [`sentraverse`](./sentraverse/README.md) | Public Sentra marketing website and platform hub (Next.js) |
 | [`sentraverse-neural`](./sentraverse-neural/README.md) | Sentraverse neural journey: the cinematic GSAP story of Sentra as its own site (Next.js) |
 | [`assistverse`](./assistverse/README.md) | Public Sentra Assist website (Next.js) |
-| [`sentrapedia-website`](./sentrapedia-website/README.md) | Public Sentrapedia marketing website (static Node.js) |
+| [`sentrapedia`](./sentrapedia/README.md) | Sentrapedia clinical workspace with its public marketing site under `apps/site/` |
 | [`referralink`](./referralink/README.md) | MEDLINK sandbox for differential diagnosis, ICD-10 mapping, and referral (Vite) |
 | [`healthsphere`](./healthsphere/README.md) | Public website of UPTD Puskesmas PONED Balowerti Kediri (app in `website/`) |
 | [`med-assist`](./med-assist/README.md) | Chrome side-panel extension for FKTP clinicians in ePuskesmas (WXT) |
