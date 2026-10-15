@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, worktree cleanup merges into local `main`)
+Last updated: 2026-10-15 (Claude Code, `fix/prepush-gate` dropped)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,16 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `docs/prepush-gate-decision`, Gaffer chose option a): pre-push gate
+  stays removed (DECISIONS 2026-10-15). Removed worktree `claude-path-scoped-rules` (`--force`,
+  4 uncommitted files) and branch `fix/prepush-gate` (`-D`, was `37e70714`; reflog recovery:
+  `git branch fix/prepush-gate 37e70714`). Evidence: `git worktree list` no longer shows it and
+  `git branch --list fix/prepush-gate` is empty. DECISIONS entry `1b5dc434` fast-forwarded into
+  local `main` on Gaffer's go; `pnpm governance` PASS on that commit. This entry was committed on
+  Gaffer's order while `TASK-20261015-COMPACT-AGENTS-BRIEFING` (Kilo) still claims this file, so
+  `check_task_ownership` fails on this branch until that claim is released. Open risk: no hook or guard rule stops a plain
+  `git push` of local `main` (unpublished history with real numbers); safety rests on the written
+  rules and Gaffer's approval. Nothing pushed or fetched.
 - 2026-10-15 (Claude Code, worktree cleanup on Gaffer's go): local `main` merged
   `codex/sentrapedia-website-docs` (`67b1c045`), `chore/claude-skills-docs` (`313efb5a`) and
   `chore/cursor-agents-readonly` (`a33cb861`); HANDOFF conflicts kept both entries. Removed
