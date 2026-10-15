@@ -21,6 +21,18 @@ const TERMINAL_STATES = new Set([
   "SUPERSEDED",
 ]);
 
+const SCOPE_BEARING = new Set(["CLAIM", "RECLAIM", "SCOPE_AMEND"]);
+
+function sameScopeSet(left, right) {
+  const normalize = (prefixes) =>
+    [...prefixes].map((prefix) => normalizeScope(prefix).toLowerCase()).sort();
+  const a = normalize(left);
+  const b = normalize(right);
+  return (
+    a.length === b.length && a.every((prefix, index) => prefix === b[index])
+  );
+}
+
 export function scopeDigest(prefixes) {
   const normalized = [...prefixes]
     .map((prefix) => normalizeScope(prefix).toLowerCase())
@@ -67,14 +79,17 @@ export function replayState(events) {
     .find(
       (event) => event.event_type === "CLAIM" || event.event_type === "RECLAIM",
     );
+  const lastScope = [...events]
+    .reverse()
+    .find((event) => SCOPE_BEARING.has(event.event_type));
   return {
     task_id: last.task_id,
     lease_id: lastClaim?.lease_id ?? last.lease_id,
     actor: lastClaim?.actor ?? last.actor,
     worktree_id: lastClaim?.worktree_id ?? last.worktree_id,
     fencing_token: last.fencing_token,
-    scope_digest: lastClaim?.scope_digest ?? last.scope_digest,
-    scope_prefixes: lastClaim?.scope_prefixes ?? last.scope_prefixes,
+    scope_digest: lastScope?.scope_digest ?? last.scope_digest,
+    scope_prefixes: lastScope?.scope_prefixes ?? last.scope_prefixes,
     expires_at: last.expires_at ?? lastClaim?.expires_at ?? null,
     next_state: last.next_state,
     sequence: last.sequence,
@@ -135,6 +150,84 @@ export function nextEvent(chain, request, context) {
         previous_state: state?.next_state ?? null,
         next_state: "CLAIMED",
         expires_at: request.expires_at,
+      }),
+    };
+  }
+
+  if (action === "SCOPE_AMEND") {
+    if (!state || state.terminal) {
+      return deny(`no active lease for ${action}`);
+    }
+    if (request.fencing_token !== state.fencing_token) {
+      return deny(
+        `fencing token mismatch: held ${request.fencing_token}, current ${state.fencing_token}`,
+      );
+    }
+    if (isExpired(state, context.occurred_at)) {
+      return deny("lease expired; a fresh CLAIM or RECLAIM is required");
+    }
+    const operationId = request.transfer_operation_id;
+    const reason = request.transfer_reason;
+    const authorizedActor = request.authorized_actor;
+    const previousPrefixes = request.previous_scope_prefixes;
+    const updatedPrefixes = request.updated_scope_prefixes;
+    if (
+      typeof operationId !== "string" ||
+      !/^TRANSFER-[0-9]{8}-[A-Z0-9-]+$/u.test(operationId)
+    ) {
+      return deny("SCOPE_AMEND requires a transfer operation id");
+    }
+    if (typeof reason !== "string" || !reason.trim()) {
+      return deny("SCOPE_AMEND requires a transfer reason");
+    }
+    if (typeof authorizedActor !== "string" || !authorizedActor.trim()) {
+      return deny("SCOPE_AMEND requires an authorized actor");
+    }
+    if (!Array.isArray(previousPrefixes) || !Array.isArray(updatedPrefixes)) {
+      return deny("SCOPE_AMEND requires previous and updated scope prefixes");
+    }
+    if (updatedPrefixes.length === 0) {
+      return deny("SCOPE_AMEND cannot leave a task with an empty scope");
+    }
+    let previousDigest;
+    let updatedDigest;
+    try {
+      previousDigest = scopeDigest(previousPrefixes);
+      updatedDigest = scopeDigest(updatedPrefixes);
+    } catch (error) {
+      return deny(error instanceof Error ? error.message : String(error));
+    }
+    if (
+      request.previous_scope_digest !== previousDigest ||
+      request.updated_scope_digest !== updatedDigest
+    ) {
+      return deny("SCOPE_AMEND digest does not match its scope prefixes");
+    }
+    if (
+      previousDigest !== state.scope_digest ||
+      !sameScopeSet(previousPrefixes, state.scope_prefixes)
+    ) {
+      return deny("SCOPE_AMEND previous scope does not match the active lease");
+    }
+    return {
+      event: buildLeaseEvent({
+        ...base,
+        actor: authorizedActor,
+        worktree_id: state.worktree_id,
+        scope_prefixes: updatedPrefixes.map((prefix) => normalizeScope(prefix)),
+        scope_digest: updatedDigest,
+        previous_scope_prefixes: previousPrefixes.map((prefix) =>
+          normalizeScope(prefix),
+        ),
+        previous_scope_digest: previousDigest,
+        updated_scope_digest: updatedDigest,
+        transfer_operation_id: operationId,
+        transfer_reason: reason,
+        authorized_actor: authorizedActor,
+        fencing_token: state.fencing_token,
+        previous_state: state.next_state,
+        next_state: state.next_state,
+        expires_at: state.expires_at ?? null,
       }),
     };
   }

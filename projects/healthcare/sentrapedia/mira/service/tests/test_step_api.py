@@ -432,6 +432,15 @@ def test_fast_assessment_uses_the_other_copy_when_one_fails(make_client, example
     assert body["differential"]["likely"][0]["icd10"] == "K35.8"
 
 
+def test_failed_copies_of_a_part_that_succeeds_do_not_pause_the_service(make_client, example_request, caplog):
+    ok = [completion(workup_part(), "gpt-4o")]
+    outputs = fast_outputs([RuntimeError("rate limited"), RuntimeError("rate limited"), completion(diagnosis_part(), "gpt-4o")], ok)
+    outputs += fast_outputs([completion(diagnosis_part(), "gpt-4o")], ok)
+    client, _ = make_client(outputs, fast_assessment=True, max_consecutive_api_errors=2)
+    assert [post(client, example_request).json()["status"] for _ in range(2)] == ["ok", "ok"]
+    assert "diagnosis call failed: RuntimeError" in caplog.text
+
+
 def test_fast_assessment_is_unavailable_when_both_copies_fail(make_client, example_request):
     outputs = fast_outputs(
         [],
@@ -589,6 +598,14 @@ def test_therapy_rules_ask_for_pre_referral_drugs():
 
     rules = " ".join(FAST_THERAPY_RULES.split())
     assert "A surgical or referral diagnosis still gets its pre-referral drugs" in rules
+
+
+def test_therapy_rules_never_take_a_frequency_alone_as_a_dose():
+    from service.prompts import FAST_THERAPY_RULES
+
+    rules = " ".join(FAST_THERAPY_RULES.split())
+    assert "never a frequency alone such as 1x or 2-3x" in rules
+    assert "a single dose is 1x." not in rules
 
 
 def test_grounding_reaches_fast_diagnosis_workup_and_therapy_prompts(make_client, example_request):

@@ -1,5 +1,7 @@
 # Sentrapedia context
 
+- Product topology (2026-10-14): one sovereign capsule and repository. The clinical workspace remains at the capsule root; the public marketing surface lives in `apps/site/`. A future demo belongs in `apps/demo/` and must reuse product code with synthetic data rather than fork it.
+
 - Current runtime (2026-10-10): MIRA is bundled under `mira/`; npm ci installs
   the capsule-local Python environment; dev/start supervise MIRA + Next together.
   No external MiraRoot or manual service setup. Node24+, Python3.11+, provider key.

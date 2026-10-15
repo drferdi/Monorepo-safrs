@@ -1,49 +1,9 @@
 #!/usr/bin/env sh
-# Publish gate (Chief, 2026-08-24): riwayat repo memuat nomor/JID asli, dan
-# insiden 2026-08-24 mempublikasikannya ke remote publik. Push = keputusan
-# Chief, satu variabel untuk membuka:
-#   CHIEF_PUSH_OK=1 git push ...
-#
-# Capsule gate (Chief, 2026-08-25): isi projects/ (kode capsule) tidak boleh
-# dipublikasikan lewat remote monorepo. Push yang range keluarnya menyentuh
-# projects/** diblokir; pengecualian sadar:
-#   CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push ...
-
-if [ "${CHIEF_PUSH_OK:-0}" != "1" ]; then
-  echo "PUSH DIBLOKIR (publish gate). Buka dengan: CHIEF_PUSH_OK=1 git push ..." >&2
-  echo "Alasan: riwayat memuat nomor/JID asli; publikasi hanya atas keputusan Chief." >&2
-  exit 1
-fi
-
-# stdin: <local_ref> <local_sha> <remote_ref> <remote_sha> per baris.
-# Dibaca sekali karena gate capsule dan Git LFS sama-sama membutuhkannya.
-refs=$(cat)
-if [ "${CHIEF_PUSH_PROJECTS_OK:-0}" != "1" ]; then
-  zero=0000000000000000000000000000000000000000
-  while read -r local_ref local_sha remote_ref remote_sha; do
-    [ -z "$local_sha" ] && continue
-    [ "$local_sha" = "$zero" ] && continue # penghapusan ref: tidak membawa isi
-    if [ "$remote_sha" = "$zero" ]; then
-      range="$local_sha"        # ref baru: seluruh riwayat lokal ref itu
-    else
-      range="$remote_sha..$local_sha"
-    fi
-    touched=$(git rev-list "$range" -- projects/ 2>/dev/null | head -1)
-    if [ -n "$touched" ]; then
-      echo "PUSH DIBLOKIR (capsule gate): range keluar menyentuh projects/** (mis. commit $touched)." >&2
-      echo "Kode capsule tidak dipublikasikan lewat remote monorepo (perintah Chief 2026-08-25)." >&2
-      echo "Pengecualian sadar: CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push ..." >&2
-      exit 1
-    fi
-  done <<EOF
-$refs
-EOF
-fi
-
 # Git LFS: core.hooksPath menunjuk ke husky, jadi hook pre-push milik LFS
 # tidak pernah dipasang. Tanpa baris ini objek LFS tidak ikut ter-upload.
+# Publish gate dan capsule gate dihapus atas perintah Gaffer (2026-10-13).
 if ! command -v git-lfs >/dev/null 2>&1; then
   echo "PUSH DIBLOKIR: git-lfs tidak ditemukan, padahal repo ini memakai Git LFS." >&2
   exit 1
 fi
-printf '%s\n' "$refs" | git lfs pre-push "$@"
+git lfs pre-push "$@"

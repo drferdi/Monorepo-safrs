@@ -1,0 +1,77 @@
+#home-bottom .clinical-pricing {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: 112px;
+  padding: 80px 0 52px;
+  background: var(--sp-ink);
+  color: #f4f8f6;
+}
+#home-bottom .clinical-pricing-inner { position: relative; }
+#home-bottom .clinical-pricing-kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(244, 248, 246, .65);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+#home-bottom .clinical-pricing-kicker span { color: #40e0d0; font-size: 9px; letter-spacing: .1em; }
+#home-bottom .clinical-pricing-intro { display: flex; align-items: end; justify-content: space-between; gap: 48px; margin: 52px 0 64px; }
+#home-bottom .clinical-pricing-intro h2 {
+  margin: 0;
+  font-size: clamp(54px, 7.2vw, 110px);
+  font-weight: 600;
+  line-height: .99;
+  letter-spacing: -.07em;
+}
+#home-bottom .clinical-pricing-intro h2 span { color: #40e0d0; }
+#home-bottom .clinical-pricing-intro > p { max-width: 31ch; margin: 0 0 7px; color: #b8c8c5; font-size: 16px; line-height: 1.65; }
+#home-bottom .clinical-pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+#home-bottom .clinical-price-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 560px;
+  padding: 28px;
+  border: 1px solid rgba(244, 248, 246, .22);
+  background: #242a29;
+  will-change: transform;
+}
+#home-bottom .clinical-price-card-pro { border-color: #40e0d0; background: #242a29; }
+#home-bottom .clinical-price-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #b8c8c5; font-size: 10px; font-weight: 600; letter-spacing: .12em; }
+#home-bottom .clinical-price-signal { width: 7px; height: 7px; border-radius: 50%; background: #40e0d0; box-shadow: 0 0 14px rgba(64, 224, 208, .75); }
+#home-bottom .clinical-price-card h3 { min-height: 2.15em; margin: 60px 0 8px; font-size: clamp(45px, 4.25vw, 66px); font-weight: 500; line-height: 1.06; letter-spacing: -.065em; }
+#home-bottom .clinical-price-dash { color: #40e0d0; }
+#home-bottom .clinical-price-kind { margin: 0; color: #b8c8c5; font-size: 13px; line-height: 1.5; }
+#home-bottom .clinical-price-value { display: flex; align-items: baseline; gap: 16px; margin-top: 40px; color: #f4f8f6; }
+#home-bottom .clinical-price-value > span { font-size: 22px; letter-spacing: -.04em; }
+#home-bottom .clinical-price-value strong { font-size: clamp(78px, 8vw, 118px); font-weight: 400; line-height: .72; }
+#home-bottom .clinical-price-status { margin: 22px 0 0; color: #40e0d0; font-size: 11px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; }
+#home-bottom .clinical-price-card-bottom { margin-top: auto; padding-top: 38px; }
+#home-bottom .clinical-price-card-bottom p { min-height: 2.8em; margin: 0 0 20px; color: #b8c8c5; font-size: 13px; line-height: 1.5; }
+#home-bottom .clinical-price-card-bottom a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 13px 15px; border: 1px solid rgba(244, 248, 246, .6); color: #f4f8f6; font-size: 13px; text-decoration: none; }
+#home-bottom .clinical-price-card-pro .clinical-price-card-bottom a { border-color: #40e0d0; background: #40e0d0; color: #111c1d; }
+#home-bottom .clinical-price-card-bottom a:focus-visible { outline: 2px solid #40e0d0; outline-offset: 4px; }
+#home-bottom .clinical-pricing-footnote { margin: 32px 0 0; color: #9aafab; font-size: 11px; line-height: 1.6; }
+@media (max-width: 1000px) {
+  #home-bottom .clinical-pricing-intro { align-items: start; flex-direction: column; gap: 24px; }
+  #home-bottom .clinical-pricing-grid { grid-template-columns: 1fr; }
+  #home-bottom .clinical-price-card { min-height: 440px; }
+  #home-bottom .clinical-price-card h3 { min-height: 0; margin-top: 44px; }
+}
+@media (max-width: 600px) {
+  #home-bottom .clinical-pricing { margin-top: 72px; padding: 56px 0 44px; }
+  #home-bottom .clinical-pricing-kicker { font-size: 8px; }
+  #home-bottom .clinical-pricing-kicker span { font-size: 7px; }
+  #home-bottom .clinical-pricing-intro { margin: 42px 0 40px; }
+  #home-bottom .clinical-pricing-intro h2 { font-size: clamp(43px, 11vw, 60px); }
+  #home-bottom .clinical-pricing-intro > p { font-size: 14px; }
+  #home-bottom .clinical-price-card { min-height: 435px; padding: 22px; }
+  #home-bottom .clinical-price-card h3 { font-size: 52px; }
+  #home-bottom .clinical-price-value { margin-top: 30px; }
+  #home-bottom .clinical-price-value strong { font-size: 92px; }
+}

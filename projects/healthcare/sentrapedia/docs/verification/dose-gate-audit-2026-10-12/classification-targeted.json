@@ -1,0 +1,556 @@
+{
+ "source": "MIRA audit log 2026-10-11, 61 targeted therapy replies, gate at 0a708b4e",
+ "rows": [
+  {
+   "id": "lay_terms-03",
+   "traceId": "8c345ae6-0c1e-4ed0-a919-2b331efa2b39",
+   "diagnosis": {
+    "icd10": "B36.0",
+    "label": "Pityriasis versicolor"
+   },
+   "drug": "Flukonazol",
+   "dose": "1x50mg",
+   "route": "PO",
+   "duration": "14-30 hari",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "F",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": true,
+   "verifiedWithDxBundle": false,
+   "evidence": "50 mg comes from a PERDOSKI azole list for candidiasis/deep mycosis that does not name versicolor; no versicolor passage in the corpus doses flukonazol."
+  },
+  {
+   "id": "lay_terms-05",
+   "traceId": "b34bd0f8-e058-45cd-9841-78a85602d0f6",
+   "diagnosis": {
+    "icd10": "H81.1",
+    "label": "Benign paroxysmal positional vertigo (BPPV)"
+   },
+   "drug": "Betahistin mesilat",
+   "dose": "3x6mg",
+   "route": "PO",
+   "duration": "1 minggu",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "D",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "BPPV note says 'Betahistin mesilat 3 x 6-12 mg'; the gate needs the exact strength, so 6 mg inside the source range 6-12 mg fails."
+  },
+  {
+   "id": "lay_terms-08",
+   "traceId": "c8c8b2f5-1295-4954-9572-6f8a9372a15d",
+   "diagnosis": {
+    "icd10": "L50",
+    "label": "Urticaria"
+   },
+   "drug": "Antihistamin H1 generasi kedua (non-sedatif)",
+   "dose": "1x",
+   "route": "PO",
+   "duration": "sesuai kebutuhan",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "A",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "A drug class, not a drug; PERDOSKI 2017/2021 give the class without a dose."
+  },
+  {
+   "id": "lay_terms-09",
+   "traceId": "333c6d91-910a-4061-b63d-5aa853d59798",
+   "diagnosis": {
+    "icd10": "B01.9",
+    "label": "Varicella without complication"
+   },
+   "drug": "Parasetamol",
+   "dose": "1x",
+   "route": "PO",
+   "duration": "bila demam",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "A",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Varicella note names parasetamol as antipyretic without a dose; no other varicella passage doses it."
+  },
+  {
+   "id": "lay_terms-09",
+   "traceId": "333c6d91-910a-4061-b63d-5aa853d59798",
+   "diagnosis": {
+    "icd10": "B01.9",
+    "label": "Varicella without complication"
+   },
+   "drug": "Losion Kalamin",
+   "dose": "secukupnya",
+   "route": "topikal",
+   "duration": "sesuai kebutuhan",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "A",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Topical applied as needed; the source has no numeric dose."
+  },
+  {
+   "id": "lay_terms-13",
+   "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+   "diagnosis": {
+    "icd10": "I84.9",
+    "label": "Haemorrhoids, unspecified"
+   },
+   "drug": "Diosmin",
+   "dose": "3x450mg",
+   "route": "PO",
+   "duration": "4 hari",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "H1",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Source: MPFF (diosmin 450 mg + hesperidin 50 mg) 3 x 2 tablet for 4 days, then 2 x 2 tablet. The model wrote one tablet's content as the dose; blocked by the tablet-content rule. Also: label 'Haemorrhoids' (I84.9) shares no word with 'hemoroid' and the catalog lists hemoroid under K64."
+  },
+  {
+   "id": "lay_terms-13",
+   "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+   "diagnosis": {
+    "icd10": "I84.9",
+    "label": "Haemorrhoids, unspecified"
+   },
+   "drug": "Hesperidin",
+   "dose": "3x50mg",
+   "route": "PO",
+   "duration": "4 hari",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "H1",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "As diosmin: tablet content written as the per-dose amount."
+  },
+  {
+   "id": "lay_terms-13",
+   "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+   "diagnosis": {
+    "icd10": "I84.9",
+    "label": "Haemorrhoids, unspecified"
+   },
+   "drug": "Diosmin",
+   "dose": "2x450mg",
+   "route": "PO",
+   "duration": "3 hari",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "H1",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Source: MPFF (diosmin 450 mg + hesperidin 50 mg) 3 x 2 tablet for 4 days, then 2 x 2 tablet. The model wrote one tablet's content as the dose; blocked by the tablet-content rule. Also: label 'Haemorrhoids' (I84.9) shares no word with 'hemoroid' and the catalog lists hemoroid under K64."
+  },
+  {
+   "id": "lay_terms-13",
+   "traceId": "3edaca74-436d-4010-8d66-bdb21bf15302",
+   "diagnosis": {
+    "icd10": "I84.9",
+    "label": "Haemorrhoids, unspecified"
+   },
+   "drug": "Hesperidin",
+   "dose": "2x50mg",
+   "route": "PO",
+   "duration": "3 hari",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "H1",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "As diosmin: tablet content written as the per-dose amount."
+  },
+  {
+   "id": "abbreviations-01",
+   "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+   "diagnosis": {
+    "icd10": "J44.1",
+    "label": "Chronic obstructive pulmonary disease with acute exacerbation"
+   },
+   "drug": "Salbutamol",
+   "dose": "1x",
+   "route": "PO",
+   "duration": "sesuai kebutuhan",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "H2",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Model wrote dose '1x' with no amount, route PO 'as needed'. Sources dose salbutamol (FKTP: oral 1 mg with aminofilin for maintenance; GOLD: inhaled). Oral as-needed salbutamol for an acute exacerbation is not the guideline route."
+  },
+  {
+   "id": "abbreviations-01",
+   "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+   "diagnosis": {
+    "icd10": "J44.1",
+    "label": "Chronic obstructive pulmonary disease with acute exacerbation"
+   },
+   "drug": "Aminofilin",
+   "dose": "1x",
+   "route": "PO",
+   "duration": "sesuai kebutuhan",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "H2",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Dose '1x' with no amount; FKTP gives aminofilin/teofilin 100-150 mg for maintenance."
+  },
+  {
+   "id": "abbreviations-01",
+   "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+   "diagnosis": {
+    "icd10": "J44.1",
+    "label": "Chronic obstructive pulmonary disease with acute exacerbation"
+   },
+   "drug": "Prednisone",
+   "dose": "1x30mg",
+   "route": "PO",
+   "duration": "maksimal 2 minggu",
+   "note": "",
+   "gateStatus": "removed",
+   "category": "H1",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "No prednison passage in the therapy bundle (retrieval miss), and the corpus COPD sources say prednison 40 mg/day for 5 days (PDPI 2019, GOLD 2024); the model wrote 30 mg up to 2 weeks."
+  },
+  {
+   "id": "abbreviations-01",
+   "traceId": "7a1d1781-ceda-45d5-901e-9de7cc3e0f73",
+   "diagnosis": {
+    "icd10": "J44.1",
+    "label": "Chronic obstructive pulmonary disease with acute exacerbation"
+   },
+   "drug": "Ambroxol",
+   "dose": "1x",
+   "route": "PO",
+   "duration": "sesuai kebutuhan",
+   "note": "bila sputum mukoid",
+   "gateStatus": "doseRemoved",
+   "category": "A",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "IDI 2017 and FKTP 2022 name ambroxol for mucoid sputum without a dose; the only ambroxol dose in the corpus is in the acute bronchitis note."
+  },
+  {
+   "id": "abbreviations-04",
+   "traceId": "b1021933-670f-4271-b8de-ed2b605f5359",
+   "diagnosis": {
+    "icd10": "H66.9",
+    "label": "Otitis media akut, unspecified"
+   },
+   "drug": "Amoksisilin",
+   "dose": "2x250mg",
+   "route": "PO",
+   "duration": "7-10 hari",
+   "note": "Dosis anak 80-90 mg/kgBB/hari",
+   "gateStatus": "doseRemoved",
+   "category": "H1",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": true,
+   "verifiedWithDxBundle": false,
+   "evidence": "OMA note: amoksisilin 3 x 500 mg (adult) or 80-90 mg/kgBB/day (child). The model wrote 2 x 250 mg, which matches neither; 250 mg is only in FORNAS strengths and the tonsillitis guideline."
+  },
+  {
+   "id": "abbreviations-08",
+   "traceId": "31d1f7ed-6ec3-41f8-a26d-d0fedeedf9b8",
+   "diagnosis": {
+    "icd10": "E11",
+    "label": "Diabetes mellitus tipe 2"
+   },
+   "drug": "Metformin",
+   "dose": "1x500mg",
+   "route": "PO",
+   "duration": "jangka panjang",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "B",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "PAPDI 2024 has 'Metformin 500 mg diberikan 1-3x sehari' in a diabetes chunk, but the therapy bundle held other PAPDI/FORNAS chunks without the dose."
+  },
+  {
+   "id": "abbreviations-11",
+   "traceId": "15de99fe-e4ee-475b-acf8-09779873cb33",
+   "diagnosis": {
+    "icd10": "F41.1",
+    "label": "Generalized anxiety disorder"
+   },
+   "drug": "Sertraline",
+   "dose": "1x25mg",
+   "route": "PO",
+   "duration": "jangka panjang",
+   "note": "Dosis dapat ditingkatkan hingga 50mg/hari",
+   "gateStatus": "doseRemoved",
+   "category": "D",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "GAD note: 'Sertralin 1 x 25-50 mg/hari'; 25 mg is the lower end of the source range, which the exact-strength rule does not accept."
+  },
+  {
+   "id": "abbreviations-11",
+   "traceId": "15de99fe-e4ee-475b-acf8-09779873cb33",
+   "diagnosis": {
+    "icd10": "F41.1",
+    "label": "Generalized anxiety disorder"
+   },
+   "drug": "Diazepam",
+   "dose": "1x2mg",
+   "route": "PO",
+   "duration": "2-4 minggu",
+   "note": "Untuk kecemasan akut, dapat 1-2x/hari",
+   "gateStatus": "doseRemoved",
+   "category": "D",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": true,
+   "verifiedWithDxBundle": false,
+   "evidence": "GAD note: 'Diazepam 2-5 mg 1-2x/hari'; 2 mg inside the range fails. The FORNAS 'tab 2 mg' passage is correctly not accepted (not about GAD)."
+  },
+  {
+   "id": "abbreviations-13",
+   "traceId": "93930213-046c-4544-af0d-29efe2eadbc2",
+   "diagnosis": {
+    "icd10": "H81.1",
+    "label": "Benign paroxysmal positional vertigo"
+   },
+   "drug": "Betahistin mesilat",
+   "dose": "3x6mg",
+   "route": "PO",
+   "duration": "1 minggu",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "D",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Same as lay_terms-05."
+  },
+  {
+   "id": "mixed_id_en-06",
+   "traceId": "d982f64e-5669-476d-b647-f8d08e9eae98",
+   "diagnosis": {
+    "icd10": "L20.8",
+    "label": "Other atopic dermatitis"
+   },
+   "drug": "Ceramide",
+   "dose": "minimal 2-3x",
+   "route": "topikal",
+   "duration": "jangka panjang",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "A",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Emollient, applied 2-3 times a day; no numeric dose exists."
+  },
+  {
+   "id": "mixed_id_en-06",
+   "traceId": "d982f64e-5669-476d-b647-f8d08e9eae98",
+   "diagnosis": {
+    "icd10": "L20.8",
+    "label": "Other atopic dermatitis"
+   },
+   "drug": "Chlorpheniramine",
+   "dose": "3x4mg",
+   "route": "PO",
+   "duration": "sesuai kebutuhan",
+   "note": "bila gatal",
+   "gateStatus": "removed",
+   "category": "D",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Spelling normalization: spell('chlorpheniramine') = 'khlorfeniramin', the corpus writes 'klorfeniramin', so no passage names the drug and it is removed. IDI 2017 doses klorfeniramin maleat 3 x 4 mg; that chunk was also not in the bundle."
+  },
+  {
+   "id": "mixed_id_en-09",
+   "traceId": "79f9aaf1-9355-432b-ada6-5607f02b7be8",
+   "diagnosis": {
+    "icd10": "A41.9",
+    "label": "Sepsis, unspecified"
+   },
+   "drug": "albumin serum normal (human albumin)",
+   "dose": "1x",
+   "route": "IV",
+   "duration": "Diberikan selama 24 jam",
+   "note": "Perhitungkan kebutuhan albumin berdasarkan BB",
+   "gateStatus": "doseRemoved",
+   "category": "G",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Dose is individualized; the only source is a FORNAS entry (inj 5%) whose restriction is for burns. The model copied that restriction text into duration/note."
+  },
+  {
+   "id": "mixed_id_en-13",
+   "traceId": "b3bbd9ea-7c22-46d6-9165-63cc16ac9e52",
+   "diagnosis": {
+    "icd10": "Z21",
+    "label": "Asymptomatic human immunodeficiency virus [HIV] infection status"
+   },
+   "drug": "Tenofovir disoproksil fumarat",
+   "dose": "1x300mg",
+   "route": "PO",
+   "duration": "seumur hidup",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "B",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": true,
+   "verifiedWithDxBundle": true,
+   "evidence": "Verifies when the diagnosis bundle is added: a passage there names tenofovir, HIV and 300 mg. The targeted gate only reads the therapy bundle."
+  },
+  {
+   "id": "mixed_id_en-13",
+   "traceId": "b3bbd9ea-7c22-46d6-9165-63cc16ac9e52",
+   "diagnosis": {
+    "icd10": "Z21",
+    "label": "Asymptomatic human immunodeficiency virus [HIV] infection status"
+   },
+   "drug": "Efavirenz",
+   "dose": "1x600mg",
+   "route": "PO",
+   "duration": "seumur hidup",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "D",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": true,
+   "verifiedWithDxBundle": false,
+   "evidence": "IDI 2017 'Efavirenz (EFV) 600 mg sekali sehari' and FORNAS KDT carry the dose but say ODHA/antiretroviral, not HIV, so the diagnosis-word check rejects them."
+  },
+  {
+   "id": "typos-11",
+   "traceId": "da49ce4f-5e25-46c0-81cd-09e3b93cefc7",
+   "diagnosis": {
+    "icd10": "D56.1",
+    "label": "Beta thalassemia"
+   },
+   "drug": "Deferasiroks",
+   "dose": "1x250mg",
+   "route": "PO",
+   "duration": "seumur hidup",
+   "note": "Dosis awal 25mg/kgBB/hari, disesuaikan dengan respons dan toleransi",
+   "gateStatus": "doseRemoved",
+   "category": "E",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Weight-based chelation (note: 25 mg/kgBB/day); 250 mg is a tablet strength. No weight in the case; no thalassemia passage gives a fixed dose."
+  },
+  {
+   "id": "typos-11",
+   "traceId": "da49ce4f-5e25-46c0-81cd-09e3b93cefc7",
+   "diagnosis": {
+    "icd10": "D56.1",
+    "label": "Beta thalassemia"
+   },
+   "drug": "Deferipron",
+   "dose": "3x500mg",
+   "route": "PO",
+   "duration": "seumur hidup",
+   "note": "Dosis awal 75mg/kgBB/hari, disesuaikan dengan respons dan toleransi",
+   "gateStatus": "doseRemoved",
+   "category": "E",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": true,
+   "verifiedWithDxBundle": false,
+   "evidence": "FORNAS: tab 500 mg, 50-75 mg/kgBB/day, start by a haematologist. 500 mg is the tablet strength, not a dose; no weight in the case."
+  },
+  {
+   "id": "typos-14",
+   "traceId": "647c62d8-f232-47e4-9f5b-7929efa812c1",
+   "diagnosis": {
+    "icd10": "R04.0",
+    "label": "Epistaxis"
+   },
+   "drug": "Adrenalin",
+   "dose": "1x",
+   "route": "topikal",
+   "duration": "10-15 menit",
+   "note": "1:10.000, dibasahi kapas",
+   "gateStatus": "doseRemoved",
+   "category": "H2",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Dose '1x'; the concentration is in the note as a ratio (1:10.000), a format the gate does not read. Source: epistaksis note, adrenalin 1:10.000 on cotton."
+  },
+  {
+   "id": "typos-14",
+   "traceId": "647c62d8-f232-47e4-9f5b-7929efa812c1",
+   "diagnosis": {
+    "icd10": "R04.0",
+    "label": "Epistaxis"
+   },
+   "drug": "Lidokain",
+   "dose": "1x",
+   "route": "topikal",
+   "duration": "10-15 menit",
+   "note": "2%, dibasahi kapas",
+   "gateStatus": "doseRemoved",
+   "category": "H2",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Dose '1x'; '2%' is in the note, which the gate keeps because the epistaksis note carries 2%. The concentration still reaches the reader."
+  },
+  {
+   "id": "typos-15",
+   "traceId": "bf7eadf0-eb29-47d5-86f1-fbd379b012e1",
+   "diagnosis": {
+    "icd10": "L01.0",
+    "label": "Impetigo"
+   },
+   "drug": "Mupirocin",
+   "dose": "2-3x",
+   "route": "topikal",
+   "duration": "7-10 hari",
+   "note": "",
+   "gateStatus": "doseRemoved",
+   "category": "H2",
+   "gateWasRight": true,
+   "verifiedIfAboutForced": false,
+   "verifiedWithDxBundle": false,
+   "evidence": "Dose '2-3x'; the model left out the concentration. Source: mupirosin 2%, 2-3 times a day for 7-10 days."
+  },
+  {
+   "id": "typos-15",
+   "traceId": "bf7eadf0-eb29-47d5-86f1-fbd379b012e1",
+   "diagnosis": {
+    "icd10": "L01.0",
+    "label": "Impetigo"
+   },
+   "drug": "Amoxicillin dan asam klavulanat",
+   "dose": "3x250-500mg",
+   "route": "PO",
+   "duration": "minimal 7 hari",
+   "note": "dewasa",
+   "gateStatus": "doseRemoved",
+   "category": "B",
+   "gateWasRight": false,
+   "verifiedIfAboutForced": true,
+   "verifiedWithDxBundle": true,
+   "evidence": "Verifies when the diagnosis bundle is added (impetigo note); the therapy bundle held PERDOSKI pyoderma chunks that do not say impetigo."
+  }
+ ]
+}

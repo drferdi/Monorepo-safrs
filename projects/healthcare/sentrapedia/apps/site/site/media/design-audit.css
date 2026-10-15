@@ -1,0 +1,284 @@
+:root {
+    /* Local snapshot of Sentra semantic canvas token; see docs/design-tokens.md. */
+    --color-background-canvas: #ffffff;
+    --sp-ink: #191c1c;
+    --sp-surface: var(--color-background-canvas);
+    --sp-surface-soft: var(--color-background-canvas);
+    --sp-muted: #4a5956;
+    --sp-action: #13786e;
+    --sp-decorative: #40e0d0;
+    --sp-border: #a8bfba;
+    --sp-focus: #40e0d0;
+    --accent: var(--sp-action);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    color: var(--sp-ink);
+}
+
+#intro {
+    background: var(--sp-surface-soft);
+}
+
+#intro .hero-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: min(740px, calc(100dvh - 80px));
+}
+
+#intro .hero-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    min-height: 0;
+    text-align: center;
+}
+
+#intro .hero-stage-logo {
+    display: block;
+    width: clamp(170px, 22vw, 280px);
+    height: auto;
+}
+
+#intro .hero-stage-wordmark {
+    margin: 0;
+    max-width: 100%;
+    color: var(--sp-ink);
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 600;
+    letter-spacing: -.07em;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    #intro .hero-stage-logo {
+        animation: neuron-arrive 780ms cubic-bezier(.16, 1, .3, 1) both;
+    }
+
+    #intro .hero-stage-wordmark {
+        animation: wordmark-arrive 620ms cubic-bezier(.16, 1, .3, 1) 820ms both;
+    }
+}
+
+@keyframes neuron-arrive {
+    from { opacity: 0; transform: translate3d(0, 18px, 0) scale(.82) rotate(-7deg); }
+    to { opacity: 1; transform: translate3d(0, 0, 0) scale(1) rotate(0); }
+}
+
+@keyframes wordmark-arrive {
+    from { opacity: 0; transform: translate3d(0, 16px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+header a:focus-visible,
+footer a:focus-visible,
+footer input:focus-visible,
+footer textarea:focus-visible,
+footer button:focus-visible {
+    outline: 3px solid var(--sp-focus);
+    outline-offset: 3px;
+}
+
+header a:focus-visible {
+    box-shadow: 0 0 0 2px var(--sp-ink);
+}
+
+#home-text h3,
+#featured-projects .section-subtitle,
+#home-bottom .section-subtitle {
+    color: var(--sp-muted);
+}
+
+#featured-projects,
+#home-bottom {
+    background: var(--sp-surface-soft);
+}
+
+.proj-card:focus-within {
+    outline: 3px solid var(--sp-action);
+    outline-offset: -3px;
+}
+
+.card-closed:focus-visible {
+    outline: 3px solid var(--sp-focus);
+    outline-offset: -3px;
+}
+
+footer {
+    background: var(--sp-ink);
+}
+
+footer .footer-p-light,
+footer input[type=checkbox] + .wpcf7-list-item-label,
+footer .second-row .menu li a:hover,
+footer .second-row a:hover,
+.bottom-row a:hover {
+    color: #c6d5d1;
+}
+
+footer input:not([type=checkbox]) {
+    border-bottom-color: var(--sp-border);
+}
+
+footer input::placeholder,
+footer textarea::placeholder {
+    color: #c6d5d1;
+    opacity: 1;
+}
+
+footer .sentrapedia-contact-form .field-label {
+    display: block;
+    margin-bottom: .4rem;
+    color: #eef5f3;
+    font-size: .875rem;
+    font-weight: 600;
+}
+
+footer .field-optional,
+footer .contact-helper {
+    color: #c6d5d1;
+    font-size: .875rem;
+}
+
+footer .contact-status {
+    min-height: 1.5rem;
+    color: #ffffff;
+    transition: opacity 220ms ease;
+}
+
+footer .contact-status[data-state] {
+    margin: .75rem 0 0;
+    padding: .75rem 0;
+}
+
+footer .contact-status[data-state="error"] {
+    color: #ffd3c6;
+}
+
+footer .contact-status[data-state="success"] {
+    color: #a4f0dc;
+}
+
+footer .contact-honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+#mobile-menu-open {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+#mobile-menu-open:focus-visible,
+#mobile-menu a:focus-visible {
+    outline: 3px solid var(--sp-focus);
+    outline-offset: 3px;
+}
+
+#mobile-menu {
+    z-index: 999;
+}
+
+footer form[data-attempted="true"] .sentrapedia-contact-form :is(input, textarea):invalid:not(:focus) {
+    border-bottom-color: #f0a48e;
+}
+
+footer .sentrapedia-contact-form input:not([type=checkbox]),
+footer .sentrapedia-contact-form textarea {
+    width: 100%;
+    padding: .5rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--sp-border);
+    border-radius: 0;
+    background: transparent;
+    color: #ffffff;
+}
+
+footer .sentrapedia-contact-form textarea {
+    min-height: 6rem;
+    resize: vertical;
+}
+
+footer .sentrapedia-contact-form input[type=submit] {
+    width: auto;
+    margin-top: 1rem;
+    padding: .75rem 1.25rem;
+    border: 2px solid var(--sp-decorative);
+    background: var(--sp-decorative);
+    color: var(--sp-ink);
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 220ms ease, color 220ms ease, transform 220ms ease;
+}
+
+footer .sentrapedia-contact-form input[type=submit]:hover {
+    background: transparent;
+    color: var(--sp-decorative);
+    transform: translateY(-2px);
+}
+
+footer .sentrapedia-contact-form input[type=submit]:disabled {
+    border-color: #82928e;
+    background: #82928e;
+    color: var(--sp-ink);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.audit-reveal.is-revealed {
+    animation: audit-reveal 280ms ease-out both;
+}
+
+@keyframes audit-reveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 767px) {
+    #intro {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    #intro .hero-layout {
+        min-height: calc(100dvh - 14rem);
+    }
+
+    #intro .hero-stage {
+        gap: 1.25rem;
+    }
+
+    #intro .hero-stage-logo {
+        width: clamp(150px, 42vw, 220px);
+    }
+
+    #intro .hero-stage-wordmark {
+        font-size: clamp(2.25rem, 10vw, 3.75rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .audit-reveal.is-revealed { animation: none; }
+    footer .sentrapedia-contact-form input[type=submit],
+    footer .contact-status { transition: none; }
+    footer .sentrapedia-contact-form input[type=submit]:hover { transform: none; }
+}

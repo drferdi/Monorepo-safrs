@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import time
 from dataclasses import replace
 
@@ -33,6 +34,7 @@ from .prompts import (
 )
 from .settings import Settings
 
+log = logging.getLogger("mira_service")
 MAX_CALLS_PER_STEP = 2
 # fast assessment: each of its two parts is sent this many times and the first answer wins
 FAST_COPIES = 3
@@ -113,7 +115,9 @@ class StepEngine:
         cost = round(guard.cost_usd, 6) if guard else 0.0
         return unavailable_response(code, message, self.version, self.model, cost)
 
-    async def _call(self, guard: ApiGuard, role: str, model: str, deadline: float, **kwargs) -> str:
+    async def _call(self, guard: ApiGuard, role: str, model: str, deadline: float, count_failure: bool = True, **kwargs) -> str:
+        """One model call. A race passes count_failure=False and counts its part once, so failed copies of a part that
+        another copy answers never pause the service."""
         guard.before_call()
         if self.settings.llm_provider == "openrouter":
             kwargs["extra_body"] = openrouter_extra_body(
@@ -131,7 +135,10 @@ class StepEngine:
             if is_policy_failure(exc):
                 # No provider meets the privacy policy. Not an outage: no pause, no retry without it.
                 raise StepFailed("PROVIDER_POLICY", f"{role} call: no provider meets the privacy policy") from None
-            self.breaker.failure()
+            # The class and HTTP status say whether it was a rate limit, an outage or credit; the message may echo input.
+            log.warning("%s call failed: %s %s", role, type(exc).__name__, getattr(exc, "status_code", ""))
+            if count_failure:
+                self.breaker.failure()
             raise StepFailed("MODEL_ERROR", f"{role} call failed: {type(exc).__name__}") from None
         self.breaker.success()
         guard.record_success(model, role, response, started)
@@ -165,7 +172,7 @@ class StepEngine:
                     })
             return content
 
-        tasks = [asyncio.create_task(self._call(guard, role, model, deadline, **copy(n))) for n in range(FAST_COPIES)]
+        tasks = [asyncio.create_task(self._call(guard, role, model, deadline, count_failure=False, **copy(n))) for n in range(FAST_COPIES)]
         try:
             failure, fallback, grace_until = None, None, None
             pending = set(tasks)
@@ -189,6 +196,8 @@ class StepEngine:
                         fallback, grace_until = content, time.monotonic() + FALLBACK_GRACE_S
             if fallback is not None:
                 return settle(fallback)
+            if failure.code == "MODEL_ERROR":
+                self.breaker.failure()
             raise failure
         finally:
             for task in tasks:

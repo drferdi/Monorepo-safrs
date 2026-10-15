@@ -1,0 +1,1083 @@
+{
+ "_meta": {
+  "description": "Gap fill from ISO Indonesia Vol. 53 (2021), PT Pharma Tekno Solusi / IAI. Per-drug dosing text parsed mechanically from the 'Ds:' field of product monographs (pdftotext), cited by PDF page and brand. These are general per-drug doses, NOT disease-specific first-line regimens. Matching basis is stated per row. NOT clinician reviewed.",
+  "generated": "2026-10-11",
+  "note": "Keyword matching is noisy; clearly unrelated matches were removed by hand (fracture, acute kidney injury, scrofuloderma, parts of cerebral palsy / corneal ulcer / vitamin deficiency)."
+ },
+ "groups": [
+  {
+   "disease": "Appendisitis (Usus Buntu)",
+   "icd10": "K35",
+   "rows": [
+    {
+     "iso_page": 144,
+     "generic": "metronidazole",
+     "dose_text": "Dewasa: 500 mg melalui IV infus setiap 8 jam, anak 7,5 mg/kgBB tiap 8 jam. Pencegahan infeksi paska operasi abdomen atau ginekologi: Dewasa 500 mg IV sebelum operasi, lalu 500 mg peroral tiap 8 jam, anak 7.5 mg/ kgBB/8 jam. Dosis diberikan melalui infus dengan kecepatan 5 mL/min.",
+     "brand": "FIONDAZOL",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Urethritis dan vaginitis, amebiasis, pencegahan infeksi anaerob paska operasi, Giardiasis."
+    },
+    {
+     "iso_page": 185,
+     "generic": "metronidazole",
+     "dose_text": "Amoeblasis Dewasa: 150 mg: 3x1 selama 5-10 hari. Anak: 35-50 mg/ kg BB dibagi 3 dosis. Trichomoniasis: sehari Single dosis 1-2 g 2x: 7 hari 250mg 3x sehari. Anaerobic Infection: Dewasa: 7,5 mg/kgBB/tiap 6jam selama 7-10 hari. Glardiasis:Dewasa: sehari 3 x 250 mg selama 7 hari.",
+     "brand": "GRAFAZOL",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Amubiasis intestinal, ekstraintestinal, trikomoniasis, giardiasis, lamliasis, infeksi bakteri anaerobik."
+    },
+    {
+     "iso_page": 403,
+     "generic": "piperacillin",
+     "dose_text": "Tazam harus diberikan melalui infus IV lambat (dalam waktu 20 - 30 menit) atau injeksi IV lambat (dalam waktu sekurangnya 3 - 5 menit). Dewasa dan Anak ≥12 Tahun: Secara umum, dosis total yang direkomendasikan adalah 12 g piperasillin/1,5 g tazobaktam diberikan dalam dosis terbagi setiap 6 atau 8 jam. Dosis maksimal se",
+     "brand": "TAZAM",
+     "basis": "indikasi ISO menyebut \"appendisitis\"",
+     "indication": "Appendisitis dan peritonitis, Infeksi kulit dan struktur kulit dengan atau tanpa komplikasi, termasuk selulitis, abses kutaneus, dan infeksi kaki diabetik/iskem"
+    }
+   ]
+  },
+  {
+   "disease": "Defisiensi mineral",
+   "icd10": "E63",
+   "rows": [
+    {
+     "iso_page": 106,
+     "generic": "ferrous fumarate",
+     "dose_text": "1 kapsul 1 kali sehari.",
+     "brand": "CYMAFORT",
+     "basis": "indikasi ISO menyebut \"kekurangan zat besi\"",
+     "indication": "Anemia karena kekurangan zat besi, anemia megaloblastic dan anemia pernisiosa."
+    },
+    {
+     "iso_page": 279,
+     "generic": "ferrous fumarate",
+     "dose_text": "Sehari 1 kap stlh makan.",
+     "brand": "OMEGAVIT",
+     "basis": "indikasi ISO menyebut \"kekurangan zat besi\"",
+     "indication": "Anemia disebabkan kekurangan zat besi dan mineral, juga membantu menambah darah."
+    }
+   ]
+  },
+  {
+   "disease": "Defisiensi vitamin",
+   "icd10": "E56",
+   "rows": [
+    {
+     "iso_page": 185,
+     "generic": "thiamine nitrate",
+     "dose_text": "Sehari 1 tab.",
+     "brand": "GRAHABION",
+     "basis": "indikasi ISO menyebut \"defisiensi vitamin\"",
+     "indication": "Defisiensi vitamin B1, B6, B12 seperti pada polineuritis."
+    },
+    {
+     "iso_page": 442,
+     "generic": "vitamin c",
+     "dose_text": "Dewasa: 100-200 mg, 1-2 kali sehari selama beberapa hari. Pada kasus yang berat dapat diberikan dosis 1000 mg-2000 mg sehari.",
+     "brand": "VITAFION-C",
+     "basis": "indikasi ISO menyebut \"defisiensi vitamin\"",
+     "indication": "Pengobatan defisiensi vitamin C,   Antioxidan"
+    },
+    {
+     "iso_page": 213,
+     "generic": "vitamin b12",
+     "dose_text": "Sehari 1 tablet salut gula atau menurut petunjuk dokter.",
+     "brand": "KALBION",
+     "basis": "indikasi ISO menyebut \"kekurangan vitamin\"",
+     "indication": "Untuk pengobatan kekurangan Vitamin B1, B6 dan B12 seperti pada polineuritis. Perh.: Sebaiknya tidak digunakan untuk pasien yang sedang menerima terapi levodopa"
+    }
+   ]
+  },
+  {
+   "disease": "Folikulitis superfisialis",
+   "icd10": "L73",
+   "rows": [
+    {
+     "iso_page": 296,
+     "generic": "mupirocin",
+     "dose_text": "Anak-anak <2 tahun; sesuai petunjuk dokter. Usia 2-6 tahun; 3x1 sendok takar. Usia 6-12 tahun; 3x2 sendok takar.",
+     "brand": "PIBAKSIN",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "untuk infeksi kulit seperti impetigo, folikulitis, dan furunkulosis yang disebabkan oleh bakteri-bakteri yang sensitif terhadap Mupirocin seperti Staphylococcus"
+    },
+    {
+     "iso_page": 125,
+     "generic": "bacitracin zinc",
+     "dose_text": "Oleskan atau taburkan sehari 2-3x.",
+     "brand": "ENBATIC",
+     "basis": "indikasi ISO menyebut \"folikulitis\"",
+     "indication": "Infeksi kulit oleh kuman gram positif dan negatif, luka bakar, luka operasi, anak-anak utk omfalitis, pioderma, dan folikulitis."
+    },
+    {
+     "iso_page": 125,
+     "generic": "bacitracin zinc",
+     "dose_text": "Taburkan pd kulit yg sakit 2-3 x sehari.",
+     "brand": "ENBATIC POWDER",
+     "basis": "indikasi ISO menyebut \"folikulitis\"",
+     "indication": "Infeksi kulit oleh kuman gram positif dan negatif, luka bakar, luka operasi, pioderma dan folikulitis."
+    },
+    {
+     "iso_page": 165,
+     "generic": "fusidic acid",
+     "dose_text": "Oleskan tipis dan rata di atas kulit yang mengalami infeksi sehari 3-4x.",
+     "brand": "FUCILEX",
+     "basis": "indikasi ISO menyebut \"folikulitis\"",
+     "indication": "Luka dikulit yang mengalami infeksi bakteri seperti abses, furun-kulosis, karbunkel, folikulitis, pioderma, impetigo."
+    },
+    {
+     "iso_page": 341,
+     "generic": "gentamicin   gentamicin basa",
+     "dose_text": "Oleskan sehari 3-4 x pada kulit yang sakit scr merata.",
+     "brand": "SALGEN",
+     "basis": "indikasi ISO menyebut \"folikulitis\"",
+     "indication": "Infeksi kulit primer, impetigo, kontaginosa, folikulitis permukaan, furunkulosis, sikosis barbae, pioderma ganggrenosum, infeksi kulit sekunder, dermatitis eksi"
+    }
+   ]
+  },
+  {
+   "disease": "Infeksi Intraabdominal",
+   "icd10": "K65",
+   "rows": [
+    {
+     "iso_page": 68,
+     "generic": "cefepime",
+     "dose_text": "Dewasa Dosis yang dianjurkan untuk dewasa serta rute pemakaiannya dijelaskan pada tabel berikut ini. CAPRIFIM sebaiknya digunakan secara intravena selama kira-kira lebih dari 30 menit. Dosis CAPRIFIM yang  In (ID/EN) = Indikasi KI (ID): CI (EN) = Kontra Indikasi Perh (ID): SP (EN) = Perhatian dan Peringatan ES (ID): AR",
+     "brand": "CAPRIFIM",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Dewasa ≥16 tahun: CAPRIFIM diindikasikan untuk pengobatan infeksi yang disebabkan oleh bakteri yang sensitif seperti tersebut di bawah ini: Infeksi saluran pern"
+    },
+    {
+     "iso_page": 108,
+     "generic": "cefepime",
+     "dose_text": "Dewasa ISK (infeksi saluran kemih) Ringan sampai sedang: 500 mg-1 g IV/ IM setiap 12 jam. Infeksi ringan hingga sedang selain ISK: 1 g IV/IM setiap 12 jam. Infeksi parah 2 g IV setiap 12 jam. Infeksi yang sangat parah atau mengancam jiwa: 2 g IV setiap 8 jam. Anak 2 bln - 16 thn Jangan melebihi dosis dewasa. Anak hingg",
+     "brand": "DARYACEF",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Pengobatan infeksi yang disebabkan oleh bakteri yang rentan pada saluran pernapasan bawah termasuk pneumonia & bronkopneumonia, ISK lebih rendah termasuk pielon"
+    },
+    {
+     "iso_page": 109,
+     "generic": "doripenem",
+     "dose_text": "Infus IV Infeksi intraabdomen komplikasi 500 mg 8 jam. Lama pengobatan: 5-14 hari. ISK komplikasi 500 mg 8 jam. Lama pengobatan: 5-10 hari.",
+     "brand": "DARYAVEN",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Infeksi intra-abdominal komplikasi & Infeksi Saluran Kemih"
+    },
+    {
+     "iso_page": 203,
+     "generic": "moxifloxacin",
+     "dose_text": "400 mg 1 kali sehari.",
+     "brand": "INFIMOX",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Eksaserbasi akut bronkitis kronis; Community acquired pneumonia, Sinusitis akut; Komplikasi infeksiintra-abdomen; Komplikasi infeksi kulit dan struktur kulit. l"
+    },
+    {
+     "iso_page": 244,
+     "generic": "meropenem",
+     "dose_text": "IV bolus inj over approx 5 min or IV infusion over approx 15-30 min. Adult Pneumonia, UTI, gynecological infections eg, endometritis, skin & skin structure infections 500 mg IV 8 hrly. Nosocomial pneumonias, peritonitis, presumed infections in neutropenic patients, septicemia 1 g IV 8 hrly. Meningitis 2 g 8 hrly. Child",
+     "brand": "MERONEM",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Pneumonia including nosocomial pneumonias; UTI; intra-abdominal infections; gynecological infections eg, endometritis, skin & skin structure infections; meningi"
+    },
+    {
+     "iso_page": 245,
+     "generic": "meropenem",
+     "dose_text": "Dewasa: Untuk terapi pneumonia, infeksi saluran kemih, infeksi ginekologik 500 mg IV setiap 8 jam. Untuk terapi pneumonia nosocomial, peritonitis, dugaan infeksi pada pasien neutropenia, septicemia 2 g IV setiap 8 jam. Meningitis 2 g setiap 8 jam. Dewasa dengan gangguan fungsi ginjal: klirens kreatinin 26-50 mL/ menit ",
+     "brand": "MEROPENEM TRIHYDRATE",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Terapi tunggal, pada orang dewasa dan anak-anak, untuk pengobatan infeksi yang disebabkan oleh strain yang peka, baik tunggal maupun multiple, dari mikroorganis"
+    },
+    {
+     "iso_page": 256,
+     "generic": "moxifloxacin",
+     "dose_text": "Pneumonia: Dewasa: 400 mg sekali sehari selama 10 hari. Eksaserbasi bakteri akut pada bronkitis kronis: Dewasa: 400 mg 1 x/hr selama 5-10 hari. Sinusitis bakteri akut: Dewasa: 400 mg sekali sehari selama 7 hari. Infeksi kulit dan struktur kulit yang rumit: Dewasa: 400 mg 1 x/hr selama 7-21 hari.",
+     "brand": "MOXIFLOXACIN HCL",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Eksaserbasi akut bronkitis kronis; Community acquired pneumonia, Sinusitis akut; Komplikasi infeksiintra-abdomen; Komplikasi infeksi kulit dan struktur kulit."
+    },
+    {
+     "iso_page": 328,
+     "generic": "doripenem",
+     "dose_text": "Pneumonia nosokomial: 500 mg tiap 8 jam, diberikan melalui infus selama 1 atau 4 jam. Infeksi intra-abdominal dengan komplikasi: 500 mg tiap 8 jam, diberikan melalui infus selama 1 jam.",
+     "brand": "RIBACTER",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Pneumonia nosokomial, Infeksi intra-abdominal dengan komplikasi."
+    },
+    {
+     "iso_page": 396,
+     "generic": "sulbactam",
+     "dose_text": "Adult 2-4 g Sulperazon daily in 2 divided doses 12 hrly, may be increased up to 8 g daily in severe or refractory infections. Childn 40-80 mg/kg daily in divided doses 6-12 hrly. Dose may be increased up to 160 mg/kg daily in severe or refractory infections. A: P: Box, 1 vial @ 1 gram + 1 vial solvent @ 5 mL.",
+     "brand": "SULPERAZON",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "Upper & lower resp tract infections, UTI, peritonitis, cholecystitis, cholangitis & other intra-abdominal infections, skin & soft tissue infections. CI: Known a"
+    },
+    {
+     "iso_page": 453,
+     "generic": "ceftazidime",
+     "dose_text": "Dewasa: 1 g diberikan secara i.v. atau i.m. tiap 8-12 jam. Dosis dan cara pemberian, ditentukan oleh sensitivitas organisme penyebab, beratnya infeksi, kondisi dan fungsi ginjal penderita. Dewasa: Dosis lazim yang dianjurkan 1 g i.v. atau i.m. tiap 8-12 jam. Infeksi saluran kemih tidak terkomplikasi 250 mg i.v. atau i.",
+     "brand": "ZIDIFEC",
+     "basis": "indikasi ISO menyebut \"intra-abdom\"",
+     "indication": "ZIDIFEC diindikasikan untuk pengobatan infeksi yang disebabkan oleh strain-strain yang sensitif dari mikroorganisme pada penyakit sebagai berikut: Infeksi salur"
+    },
+    {
+     "iso_page": 82,
+     "generic": "cefoperazone",
+     "dose_text": "Dewasa 2-4 g sehari tiap 12 jam. Infeksi berat, dapat ditingkatkan sampai 8 g sehari.",
+     "brand": "CEFOPERAZONE SODIUM-SULBACTAM SODIUM",
+     "basis": "indikasi ISO menyebut \"intraabdom\"",
+     "indication": "Infeksi saluran napas (atas dan bawah), infeksi saluran kemih (atas dan bawah), peritonitis, kolesistitis, kolangitis, infeksi intraabdominal, infeksi kulit dan"
+    },
+    {
+     "iso_page": 86,
+     "generic": "cefotaxime",
+     "dose_text": "Dewasa dan anak >12 tahun, IV/ IM 1 g tiap 12 jam. Dalam infeksi berat, dosis dapat di tingkatkan mencapai 12 g perhari. Anak dan remaja: 1 bulan – 12 tahun (BB <50 kg) 50-180 mg/kgBB/hari IM/IV dalam 2-4 dosis terbagi.",
+     "brand": "CEPOFION",
+     "basis": "indikasi ISO menyebut \"intraabdom\"",
+     "indication": "Infeksi saluran napas bagian bawah, saluran kemih dan kelamin, ginekologik, kulit dan struktur kulit, tulang dan sendi, intraabdominal, sepsis, meningitis, sept"
+    }
+   ]
+  },
+  {
+   "disease": "Kandidosis mukokutan ringan",
+   "icd10": "B35",
+   "rows": [
+    {
+     "iso_page": 143,
+     "generic": "ketoconazol",
+     "dose_text": "Dioleskan 1x sehari pada daerah yang terinfeksi dan sekitarnya pada penderita kandidosis kutis, kantinea korporis, kantinea kroris, kantinea manus pedis dan tinea (pityriasis) versikolor. Pada penderita dermatitis seboroik 1-2x sehari. Lama pengobatan tinea versikolor 2-3 minggu, infeksi ragi 2-3 minggu, tinea kruris 2",
+     "brand": "FEXAZOL",
+     "basis": "indikasi ISO menyebut \"kandidiasis\"",
+     "indication": "Kandidiasis mukokutan kronis yang tdk responsif terhadap oral nistatin/griseofulvin atau obat lain, infeksi mikosis sistemik."
+    },
+    {
+     "iso_page": 152,
+     "generic": "fluconazol",
+     "dose_text": "Untuk meningitis kriptokokal dan infeksi kriptokokal laIn:400 mg pada hari pertama, selanjutnya 200mg-400mg sehari 1x. Untuk mencegah kekambuhan pada pasien AIDS, setelah satu kuur terapi lengkap, berikan sehari 200 mg. Untuk kandidemia: umumnya diawali dengan dosis 400 mg dihari pertama, diikuti dengan 200 mg/hari. Do",
+     "brand": "FLUCORAL",
+     "basis": "indikasi ISO menyebut \"kandidiasis\"",
+     "indication": "Cryptococcosis, termasuk meningitis kriptokokal dan infeksi pada tempat lain. Terapi dapat diberikan pada pasien umum dan pasien AIDS, transplantasi organ, atau"
+    },
+    {
+     "iso_page": 236,
+     "generic": "t/k ketoconazole",
+     "dose_text": "Krim: Oleskan sehari 1-2 x.",
+     "brand": "LUSANOC",
+     "basis": "indikasi ISO menyebut \"kandidiasis\"",
+     "indication": "Infeksi dermatofit pada kulit spt tinea corporis, tinea cruris, tinea manus dan tinea pedis, tinea versicolor, kutaneus kandidiasis."
+    },
+    {
+     "iso_page": 254,
+     "generic": "miconazole",
+     "dose_text": "Oleskan Sehari 1-2 x pada bagian yang sakit; infeksi kandidiasis, tinea kruris dan tinea korporis pengobatan dilakukan selama 2 minggu, tinea pedis selama 1 bulan.",
+     "brand": "MOLADERM",
+     "basis": "indikasi ISO menyebut \"kandidiasis\"",
+     "indication": "Tinea kapitis, tinea korporis, tinea manum, tinea pedis, tinea barbae dan kruris, tinea unguium atau onikhomikosispitiriasis versikolor, kandidiasis kulit dan k"
+    },
+    {
+     "iso_page": 266,
+     "generic": "nistatin",
+     "dose_text": "Dws 5 mL, bayi & anak 1-2 mL. Semua dosis diberikan 4x /hr.",
+     "brand": "NOCANDIS",
+     "basis": "indikasi ISO menyebut \"kandidiasis\"",
+     "indication": "Kandidiasis pada rongga mulut. K: Obat Keras T: Obat Bebas Terbatas B: Obat Bebas P: Obat Psikotropika   ISO Indonesia, Edisi 53/ Tahun 2021"
+    },
+    {
+     "iso_page": 415,
+     "generic": "ketoconazole",
+     "dose_text": "Dewasa: Infeksi kulit, saluran cerna dan sistemik: sehari 1x 1 tab 200 mg pada waktu makan, bila tidak ada reaksi dosis dapat ditingkatkan menjadi 400 mg; kandidiasis vagina, sehari 1 x 400 mg pada waktu makan. Anak BB <15 kg: sehari 3x 20 mg pada waktu makan; anak 15-30 kg, sehari 1x 100 mg pada waktu makan; anak >30 ",
+     "brand": "TOKASID",
+     "basis": "indikasi ISO menyebut \"kandidiasis\"",
+     "indication": "Infeksi kulit, rambut dan kuku kecuali kuku kaki disebabkan dermatofit dan atau ragi, infeksi ragi pada rongga pencernaan, vaginal kandidiasis kronik dan rekure"
+    },
+    {
+     "iso_page": 454,
+     "generic": "ketoconazole",
+     "dose_text": "Kandidiasis vaginalis: 2 tablet dosis tunggal selama 5 hari. Indikasi lainnya: 1 tablet dosis tunggal sampai gejala hilang dan diteruskan satu minggu lagi.",
+     "brand": "ZORALIN TABLET",
+     "basis": "indikasi ISO menyebut \"kandidiasis\"",
+     "indication": "Kandidiasis vaginalis, K. Oral, K. Gastro intestinal, Dermatofitosis"
+    },
+    {
+     "iso_page": 261,
+     "generic": "clotrimazole",
+     "dose_text": "Topikal, cuci bersih pada bagian kulit sebelum dioleskan, sehari 2-3x.",
+     "brand": "NEO ULTRASILINE",
+     "basis": "indikasi ISO menyebut \"candidiasis\"",
+     "indication": "Untuk pengobatan topikal dari Candidiasis yang disebabkan Candida Albicans, Pityriasis versicolor yang disebabkan oleh Malassezia furfur, Tinea pedis, Tinea cru"
+    },
+    {
+     "iso_page": 439,
+     "generic": "voriconazole",
+     "dose_text": "Tab May be given once the patient can tolerate medication given by mouth. Adult & adolescent (1216 yr), Patient >40 kg Maintenance dose: 200 mg 12 hrly. Dose may be increased to 300 mg 12 hrly if response is inadequate. Dose may be reduced by 50 mg steps to min of 200 mg 12 hrly if unable to tolerate treatment. Loading",
+     "brand": "VFEND",
+     "basis": "indikasi ISO menyebut \"candidiasis\"",
+     "indication": "Invasive aspergillosis; candidemia in non-neutropenic patients; serious invasive Candida infections including C. krusei; esophageal candidiasis; serious fungal "
+    }
+   ]
+  },
+  {
+   "disease": "Kelumpuhan Serebral (Cerebral Palsy)",
+   "icd10": "G80",
+   "rows": [
+    {
+     "iso_page": 414,
+     "generic": "tizanidine",
+     "dose_text": "Spasme otot yang terasa nyeri: 2-4 mg 3 kali sehari. Kasus-kasus berat: suatu dosis tambahan sebesar 2 atau 4 mg mungkin diberikan pada malam hari. Pengobatan tambahan untuk spastisitas akibat gangguan neurologis: dosis awal tidak boleh lebih dari 6 mg sehari dalam 3 dosis terbagi. Bisa ditingkatkan secara bertahap dal",
+     "brand": "TIZACOM",
+     "basis": "indikasi ISO menyebut \"spastisitas\"",
+     "indication": "Spasme/kejang otot yang terasa nyeri: berhubungan dengan gangguan tulang belakang statis dan fungsional (sindroma leher dan pinggang), setelah operasi seperti d"
+    }
+   ]
+  },
+  {
+   "disease": "Kolesistitis Kronik",
+   "icd10": "K81.1",
+   "rows": [
+    {
+     "iso_page": 80,
+     "generic": "ceftizoxime na",
+     "dose_text": "Dws: IM/IV sehari 0.5-2 g terbagi dlm 2-4 dosis. Infeksi berat dan sulit: ditambah sampai dgn sehari 4 g. Anak >6 bln: 40-80 mg/kgBB/hari. IM: sehari 0.5-2 g terbagi dlm 2-4 dosis.",
+     "brand": "CEFIZOX",
+     "basis": "indikasi ISO menyebut \"kolesistitis\"",
+     "indication": "Septikemia, endokarditis bakteri, infeksi sekunder luka dan luka bakar, bronkitis, infeksi sekunder peny. sal napas kronik, pneumonia, supurasi pada pulmonal, p"
+    },
+    {
+     "iso_page": 82,
+     "generic": "cefoperazone",
+     "dose_text": "Dewasa 2-4 g sehari tiap 12 jam. Infeksi berat, dapat ditingkatkan sampai 8 g sehari.",
+     "brand": "CEFOPERAZONE SODIUM-SULBACTAM SODIUM",
+     "basis": "indikasi ISO menyebut \"kolesistitis\"",
+     "indication": "Infeksi saluran napas (atas dan bawah), infeksi saluran kemih (atas dan bawah), peritonitis, kolesistitis, kolangitis, infeksi intraabdominal, infeksi kulit dan"
+    },
+    {
+     "iso_page": 82,
+     "generic": "cefoperazone",
+     "dose_text": "Dewasa: Dosis diberikan setiap 12 jam dalam dosis terbagi yang sama. Anak-anak: Dosis diberikan setiap 6-12 jam dalam dosis terbagi yang sama.",
+     "brand": "SULBAC-",
+     "basis": "indikasi ISO menyebut \"kolesistitis\"",
+     "indication": "Infeksi saluran napas (atas dan bawah). Infeksi saluran kemih (atas dan bawah). Peritonitis, kolesistitis, kolangitis, dan infeksi intra abdominal lainnya."
+    },
+    {
+     "iso_page": 234,
+     "generic": "cefoperazone    cefoperazone",
+     "dose_text": "Dws: sehari 2-4 g IM atau IV, dalam 2 dosis bagi; infeksi berat: sehari 6-12 g, dalam 2-4 dosis bagi; gonokokal uretritis tanpa komplikasi, 500 mg IM sebagai dosis tunggal; pencegahan infeksi pada op, 1-2 g IV 30-90 menit sebelum op, dosis diberikan setiap 12 jam dan diteruskan sampai 72 jam setelah op.",
+     "brand": "LOGAFOX",
+     "basis": "indikasi ISO menyebut \"kolesistitis\"",
+     "indication": "Infeksi saluran nafas, infeksi saluran urin, peritonitis, kolesistitis dan infeksi intraabdominal lain, septikemia, meningitis, infeksi kulit dan jaringan lunak"
+    },
+    {
+     "iso_page": 396,
+     "generic": "cefoperazone dan sulbactam",
+     "dose_text": "Dewasa 2-4 g sehari tiap 12 jam. Infeksi berat, dapat ditingkatkan sampai 8 g sehari.",
+     "brand": "SULPEFION",
+     "basis": "indikasi ISO menyebut \"kolesistitis\"",
+     "indication": "Infeksi saluran napas (atas dan bawah), infeksi saluran kemih (atas dan bawah), peritonitis, kolesistitis, kolangitis, infeksi intraabdominal, infeksi kulit dan"
+    },
+    {
+     "iso_page": 110,
+     "generic": "ursodeoxycholic acid",
+     "dose_text": "8-10 mg/kg berat badan per hari dibagi dalam 2 atau 3 dosis, diminum dengan susu atau makanan (biasanya diberikan 250 mg pada waktu pagi dan sore hari). Obat harus diminum secara teratur bila pengobatan dengan asam ursodeoxycholic ingin berhasil. Interupsi pemberian asam ursodeoxycholic selama 4 minggu berarti pengobat",
+     "brand": "DEOLIT",
+     "basis": "indikasi ISO menyebut \"batu empedu\"",
+     "indication": "Batu empedu yang tembus sinar X dengan ukuran kecil dan sedang (diameter tidak lebih dari 20 mm); Pasien dengan resiko tinggi terhadap operasi atau yang menolak"
+    },
+    {
+     "iso_page": 429,
+     "generic": "ursodeoxycholic acid",
+     "dose_text": "8-10 mg/kgBB/hr terbagi dlm 2-3 dosis.",
+     "brand": "URDAFALK",
+     "basis": "indikasi ISO menyebut \"batu empedu\"",
+     "indication": "Hepatitis kolestatis, hepatitis aktif kronik (sirosis bilier primer/PBC, kolangitis sklerosing primer). Batu empedu kolesterol radiolusen yg diameternya tdk leb"
+    }
+   ]
+  },
+  {
+   "disease": "Luka bakar derajat 1 dan 2",
+   "icd10": "R12",
+   "rows": [
+    {
+     "iso_page": 61,
+     "generic": "sulfadiazine silver",
+     "dose_text": "sehari 1 hingga4 kali pada kasa steril, luka terbuka, langsung pada luka, suatu lapisan krim setebal 2-3 mm",
+     "brand": "BURNAZIN CREAM",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Obat antimikrobial topikal yang   diindikasikan untuk pencegahan dan pengobatan sepsis luka pada pasien dengan tingkat luka bakar kedua dan ketiga."
+    },
+    {
+     "iso_page": 80,
+     "generic": "ceftizoxime na",
+     "dose_text": "Dws: IM/IV sehari 0.5-2 g terbagi dlm 2-4 dosis. Infeksi berat dan sulit: ditambah sampai dgn sehari 4 g. Anak >6 bln: 40-80 mg/kgBB/hari. IM: sehari 0.5-2 g terbagi dlm 2-4 dosis.",
+     "brand": "CEFIZOX",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Septikemia, endokarditis bakteri, infeksi sekunder luka dan luka bakar, bronkitis, infeksi sekunder peny. sal napas kronik, pneumonia, supurasi pada pulmonal, p"
+    },
+    {
+     "iso_page": 84,
+     "generic": "ceftazidime",
+     "dose_text": "Dws: 1-6 g/hari dapat diberikan dosis masing-masing 500 mg, 1 g/12 jam atau 8 jam secara IV/IM. Untuk inf. Sal. Kemih dan inf. yg kurang serius, dosi 500 mg atau 1 g/12 jam. Untuk sebagian besar inf sebaiknya diberikan dosis 1 g/8 jam atau 2 g/12 jam. Untuk inf yg parah terutama untuk penderita ‘immunocompromised” term",
+     "brand": "CELODIM",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Infeksi-infeksi yang disebabkan oleh mikroorganisme yang peka antara lain, Infeksi umum: septikemia, bakteremia, peritonitis, meningitis, penderita di ICU denga"
+    },
+    {
+     "iso_page": 87,
+     "generic": "cetrimide",
+     "dose_text": "Sehari 2-3x oleskan pada tempat yang sakit.",
+     "brand": "CETRICILLIN",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Antiseptik utk luka ringan, luka bakar ringan, karena sengatan matahari."
+    },
+    {
+     "iso_page": 125,
+     "generic": "bacitracin zinc",
+     "dose_text": "Oleskan atau taburkan sehari 2-3x.",
+     "brand": "ENBATIC",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Infeksi kulit oleh kuman gram positif dan negatif, luka bakar, luka operasi, anak-anak utk omfalitis, pioderma, dan folikulitis."
+    },
+    {
+     "iso_page": 125,
+     "generic": "bacitracin zinc",
+     "dose_text": "Taburkan pd kulit yg sakit 2-3 x sehari.",
+     "brand": "ENBATIC POWDER",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Infeksi kulit oleh kuman gram positif dan negatif, luka bakar, luka operasi, pioderma dan folikulitis."
+    },
+    {
+     "iso_page": 181,
+     "generic": "amikacin   amikacin",
+     "dose_text": "Untuk infeksi yang tidak terkomplikasi dan disebabkan oleh organisme sensitif, dosis yang dianjurkan akan memberikan efek terapi 24-48 jam. Bila repons klinis tidak terjadi dalam 3-5 hari, sebaiknya pertimbangkan alternatif terapi yang lain. Pemberian intramuskuler atau intravena: Untuk beberapa penyakit infeksi, injek",
+     "brand": "GLYBOTIC 250",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Terapi infeksi berat jangka pendek yang disebabkan oleh Gram-negatif yang peka, seperti Enterobacteriaceae (misalnya Escherichia coli) dan Pseudomonas sp. Efekt"
+    },
+    {
+     "iso_page": 182,
+     "generic": "amikacin   amikacin",
+     "dose_text": "Untuk infeksi yang tidak terkomplikasi dan disebabkan oleh organisme sensitif, dosis yang dianjurkan akan memberikan efek terapi 24-48 jam. Bila repons klinis tidak terjadi dalam 3-5 hari, sebaiknya pertimbangkan alternatif terapi yang lain. Pemberian intramuskuler atau intravena: Untuk beberapa penyakit infeksi, injek",
+     "brand": "GLYBOTIC 500",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Terapi infeksi berat jangka pendek yang disebabkan oleh Gram-negatif yang peka, seperti Enterobacteriaceae (misalnya Escherichia coli) dan Pseudomonas sp. Efekt"
+    },
+    {
+     "iso_page": 251,
+     "generic": "amikacin",
+     "dose_text": "15 mg/kgBB/hari, terbagi dalam 2-3 dosis. Diberikan secara intravena.",
+     "brand": "MIKASIN",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "Septikemia, infeksi saluran napas, infeksi tulang dan sendi, infeksi susunan saraf pusat, infeksi intraabdomen, infeksi luka bakar, infeksi pasca bedah, infeksi"
+    },
+    {
+     "iso_page": 388,
+     "generic": "kasa steril yang diresapi  antibiotik framycetin",
+     "dose_text": "Jika perlu dan memungkinkan, bersihkan lesi lebih dahulu sebelum ditutup dengan selapis sofra-tulle. Kemudian dibalut sbg mana mestinya. Untuk ulkus, Sofra-tulle digunting lebih dahulu sebatas luka ulkus. Jika lesi merupakan lesi basah dengan banyak eksudat, dianjurkan mengganti Sofra-tulle sekurang-kurangnya sekali se",
+     "brand": "SOFRA-TULLE",
+     "basis": "indikasi ISO menyebut \"luka bakar\"",
+     "indication": "bermacam lesi infeksi, luka bakar, traumatik, (laserasi, abrasi, luka gigit, luka terkoyak), infeksi kulit sekunder (seperti eksema, dermatitis, herpes zoster)."
+    }
+   ]
+  },
+  {
+   "disease": "Luka Diabetik (Diabetic Foot Ulcer)",
+   "icd10": "L97, E11.5",
+   "rows": [
+    {
+     "iso_page": 403,
+     "generic": "piperacillin",
+     "dose_text": "Tazam harus diberikan melalui infus IV lambat (dalam waktu 20 - 30 menit) atau injeksi IV lambat (dalam waktu sekurangnya 3 - 5 menit). Dewasa dan Anak ≥12 Tahun: Secara umum, dosis total yang direkomendasikan adalah 12 g piperasillin/1,5 g tazobaktam diberikan dalam dosis terbagi setiap 6 atau 8 jam. Dosis maksimal se",
+     "brand": "TAZAM",
+     "basis": "indikasi ISO menyebut \"kaki diabet\"",
+     "indication": "Appendisitis dan peritonitis, Infeksi kulit dan struktur kulit dengan atau tanpa komplikasi, termasuk selulitis, abses kutaneus, dan infeksi kaki diabetik/iskem"
+    }
+   ]
+  },
+  {
+   "disease": "nongonore)",
+   "icd10": "A54",
+   "rows": [
+    {
+     "iso_page": 136,
+     "generic": "eritromisin",
+     "dose_text": "Dewasa: 400 mg 4 kali sehari atau 600-800 mg tiap 12 jam; Anak: 30-50 mg/kgBB sehari dalam 4 dosis bagi.",
+     "brand": "ERYSANBE 200",
+     "basis": "indikasi ISO menyebut \"uretritis non\"",
+     "indication": "Untuk infeksi ringan hingga sedang: Infeksi saluran pernapasan bagian atas yang disebabkan oleh Streptococcus pyogenes dan Streptococcus pneumonia; Infeksi salu"
+    },
+    {
+     "iso_page": 136,
+     "generic": "eritromisin",
+     "dose_text": "Dewasa: 250 mg tiap 6 jam atau 500 mg tiap 12 jam; Anak-anak: 30-50 mg/kg berat badan sehari dalam 3-4 dosis terbagi. Dosis maksimum yang dihitung untuk anak-anak jangan melampaui dosis maksimum dewasa.",
+     "brand": "ERYSANBE 250",
+     "basis": "indikasi ISO menyebut \"uretritis non\"",
+     "indication": "Untuk infeksi ringan hingga sedang: Infeksi saluran pernapasan bagian atas yang disebabkan oleh Streptococcus pyogenes dan Streptococcus pneumonia; Infeksi salu"
+    },
+    {
+     "iso_page": 384,
+     "generic": "doksisiklin",
+     "dose_text": "Dewasa dan anak-anak diatas umur 8 tahun dengan berat badan>45 kg: Hari pertama 200 mg, diberikan dosis tunggal atau 100 mg 2 kali sehari, dilanjutkan dengan dosis pemeliharaan yang dapat diberikan 100 mg sehari atau 50 mg 2 kali sehari. Untuk infeksi yang lebih berat, terutama infeksi kronis saluran kemih sebaiknya di",
+     "brand": "SICLIDON",
+     "basis": "indikasi ISO menyebut \"uretritis non\"",
+     "indication": "Infeksi saluran pernapasan: Infeksi saluran pernapasan bawah termasuk pneumonia yang disebabkan Haemophilus influenzae, Klebsiella sp., Streptococcus pneumoniae"
+    }
+   ]
+  },
+  {
+   "disease": "Penyakit Katup Jantung Reumatik",
+   "icd10": "I05-I09",
+   "rows": [
+    {
+     "iso_page": 62,
+     "generic": "methylprednisolone",
+     "dose_text": "Pada pengobatan awal diberikan dosis tinggi komparatif yang kemudian dikurangi pada pemberian berikutnya hingga diperoleh hasil terapi yang memuaskan. Untuk melanjutkan dosis awal yang memuaskan dosis   diturunkan secara bertahap sampai mencapai dosis efektif minimum untuk pemeliharaan. Pemberian pada anak-anak terbata",
+     "brand": "CAMELON",
+     "basis": "indikasi ISO menyebut \"demam reumatik\"",
+     "indication": "CAMELON diindikasikan untuk mengobati keadaan sebagai berikut: asma bronkial (dimana pengobatan dengan simpatomimetik atau teofilin, gagal mencapai hasil yang d"
+    },
+    {
+     "iso_page": 244,
+     "generic": "methylprednisolone",
+     "dose_text": "Dosis awal: Anak: 0.4-1.6 mg/ kgBB/hari; Dws: 4-48 mg/hari, tergantung penyakit yang akan diobati.",
+     "brand": "MEPROSON",
+     "basis": "indikasi ISO menyebut \"demam rematik\"",
+     "indication": "Asma bronkial, rinitis alergi, urtikaria, eksema atau dermatitis, demam rematik akut, rematik artikular dan maskular, anemia hemolitik, trombopenia idiopatik, m"
+    }
+   ]
+  },
+  {
+   "disease": "Pielonefritis tanpa komplikasi",
+   "icd10": "N12",
+   "rows": [
+    {
+     "iso_page": 43,
+     "generic": "Tiap 5 mL mengandung Sulfamethoxazole 20",
+     "dose_text": "Untuk usia 2 bulan atau lebih: Berat badan 10 kg: 5 mL (1 sendok takar) setiap 12 jam; Berat badan 20 kg: 10 mL (2 sendok takar) setiap 12 jam; Berat badan 30 kg: 15 mL (3 sendok takar) setiap 12 jam; Berat badan 40 kg: 20 mL (4 sendok takar) setiap 12 jam. PENGGUNAAN PADA POPULASI KHUSUS: Untuk penderita gangguan fung",
+     "brand": "BACTOPRIM COMBI",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Infeksi traktus urinarius seperti pielonefritis, pielitis, dan prostates akut dan kronik oleh kuman yang sensitif seperti: E. coli, Klebsiela enterobacter dan P"
+    },
+    {
+     "iso_page": 44,
+     "generic": "sulfamethoxazole",
+     "dose_text": "Untuk usia 2 bulan atau lebih: Berat badan 20 kg: ½ kaplet setiap 12 jam; Berat badan 30 kg: ¾ kaplet setiap 12 jam; Berat badan 40 kg: 1 kaplet setiap 12 jam. Dewasa dan anak-anak di atas 12 tahun: Dosis Lazim: 2  In (ID/EN) = Indikasi KI (ID): CI (EN) = Kontra Indikasi Perh (ID): SP (EN) = Perhatian dan Peringatan ES",
+     "brand": "BACTOPRIM COMBI FORTE",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Infeksi traktus urinarius seperti pielonefritis, pielitis, dan prostates akut dan kronik oleh kuman yang sensitif seperti: E. coli, Klebsiela enterobacter dan P"
+    },
+    {
+     "iso_page": 68,
+     "generic": "cefepime",
+     "dose_text": "Dewasa Dosis yang dianjurkan untuk dewasa serta rute pemakaiannya dijelaskan pada tabel berikut ini. CAPRIFIM sebaiknya digunakan secara intravena selama kira-kira lebih dari 30 menit. Dosis CAPRIFIM yang  In (ID/EN) = Indikasi KI (ID): CI (EN) = Kontra Indikasi Perh (ID): SP (EN) = Perhatian dan Peringatan ES (ID): AR",
+     "brand": "CAPRIFIM",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Dewasa ≥16 tahun: CAPRIFIM diindikasikan untuk pengobatan infeksi yang disebabkan oleh bakteri yang sensitif seperti tersebut di bawah ini: Infeksi saluran pern"
+    },
+    {
+     "iso_page": 80,
+     "generic": "ceftizoxime na",
+     "dose_text": "Dws: IM/IV sehari 0.5-2 g terbagi dlm 2-4 dosis. Infeksi berat dan sulit: ditambah sampai dgn sehari 4 g. Anak >6 bln: 40-80 mg/kgBB/hari. IM: sehari 0.5-2 g terbagi dlm 2-4 dosis.",
+     "brand": "CEFIZOX",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Septikemia, endokarditis bakteri, infeksi sekunder luka dan luka bakar, bronkitis, infeksi sekunder peny. sal napas kronik, pneumonia, supurasi pada pulmonal, p"
+    },
+    {
+     "iso_page": 84,
+     "generic": "ceftazidime",
+     "dose_text": "Dws: 1-6 g/hari dapat diberikan dosis masing-masing 500 mg, 1 g/12 jam atau 8 jam secara IV/IM. Untuk inf. Sal. Kemih dan inf. yg kurang serius, dosi 500 mg atau 1 g/12 jam. Untuk sebagian besar inf sebaiknya diberikan dosis 1 g/8 jam atau 2 g/12 jam. Untuk inf yg parah terutama untuk penderita ‘immunocompromised” term",
+     "brand": "CELODIM",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Infeksi-infeksi yang disebabkan oleh mikroorganisme yang peka antara lain, Infeksi umum: septikemia, bakteremia, peritonitis, meningitis, penderita di ICU denga"
+    },
+    {
+     "iso_page": 104,
+     "generic": "levofloxacin",
+     "dose_text": "Tablet/kaplet: 250 mg - 750 mg yang diberikan per oral setiap 24 jam, sesuai indikasi. Injeksi: 250 mg atau 500 mg diberikan secara infus lambat selama lebih dari 60 menit setiap 24 jam atau 750 mg yang diberikan secara infus lambat selama lebih dari  In (ID/EN) = Indikasi KI (ID): CI (EN) = Kontra Indikasi Perh (ID): ",
+     "brand": "CRAVIT",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Sinusitis bakterial akut, eksaserbasi bakteri akut dari bronkitis kronik karena pneumonia nosokomial, pneumonia yang didapat dari masyarakat, prostatitis bakter"
+    },
+    {
+     "iso_page": 108,
+     "generic": "cefepime",
+     "dose_text": "Dewasa ISK (infeksi saluran kemih) Ringan sampai sedang: 500 mg-1 g IV/ IM setiap 12 jam. Infeksi ringan hingga sedang selain ISK: 1 g IV/IM setiap 12 jam. Infeksi parah 2 g IV setiap 12 jam. Infeksi yang sangat parah atau mengancam jiwa: 2 g IV setiap 8 jam. Anak 2 bln - 16 thn Jangan melebihi dosis dewasa. Anak hingg",
+     "brand": "DARYACEF",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Pengobatan infeksi yang disebabkan oleh bakteri yang rentan pada saluran pernapasan bawah termasuk pneumonia & bronkopneumonia, ISK lebih rendah termasuk pielon"
+    },
+    {
+     "iso_page": 138,
+     "generic": "levofloxacin",
+     "dose_text": "Dewasa, sehari 1x, selama 7-14 hari disesuaikan dengan jenis infeksi penyakitnya, sinusitis maksilari akut 500 mg, bronkitis kronik eksaserbasi akut 500 mg, pneumonia 500 mg, infeksi kulit dan jaringan kulit terkomplikasi 750 mg, infeksi kulit dan jaringan kulit tidak terkomplikasi 500 mg. Levofloxacin IV diberikan den",
+     "brand": "EVOFION",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Sinusitis maksilari akut, Bronkitis kronik eksaserbasi akut, pneumonia, infeksi kulit dan jaringan kulit, infeksi saluran kemih terkomplikasi dan tidak terkompl"
+    },
+    {
+     "iso_page": 149,
+     "generic": "levofloxacin hemihydrate infus",
+     "dose_text": "Dosis lazim pada penderita dengan fungsi ginjal normal adalah: 250-500 mg satu kali sehari (tergantung jenis, keparahan infeksi dan sensitifitas patogen penyebab infeksi). Levofloksasin biasanya diberikan selama 7-14 hari tergantung tingkat keparahan penyakit. Pengobatan awal i.v. setelah beberapa hari memungkinkan unt",
+     "brand": "FLOXACAP",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Pengobatan infeksi untuk penderita usia ≥18 tahun yang disebabkan oleh mikroorganisme yang peka terhadap Levofloksasin seperti pada keadaan-keadaan berikut: Sin"
+    },
+    {
+     "iso_page": 150,
+     "generic": "levofloxacin hemihydrate",
+     "dose_text": "Dosis lazim adalah 250-500 mg (oral) 1 x sehari (tiap 24 jam) pada pasien dengan fungsi ginjal normal (bersihan kreatinin >80 mL/menit). Waktu pemberian antara 7-14 hari (tergantung beratnya infeksi). Bronkitis kronik dengan eksaserbasi akut: 500 mg tiap 24 jam selama 7 hari dengan dosis harian 500 mg; Community-acquir",
+     "brand": "FLOXACAP 500",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Pengobatan infeksi yang disebabK: Obat Keras T: Obat Bebas Terbatas B: Obat Bebas P: Obat Psikotropika   kan oleh mikroorganisme yang peka terhadap Levofloksasi"
+    },
+    {
+     "iso_page": 222,
+     "generic": "levofloxacin hemihydrate  levofloxacin",
+     "dose_text": "Dosis untuk penderita dengan fungsi ginjal normal (bersihan kreatinin >80 mL/menit): Sinusitis maksilaris akut: dosis 500 mg tiap 24 jam, lama pengobatan 10-14 hari; Eksaserbasi akut bronkitis kronis: dosis 500 mg tiap 24 jam, lama pengobatan 7 hari; Community-acquired pneumonia: dosis 500 mg tiap 24 jam, lama pengobat",
+     "brand": "LEVOCIN 500",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Pengobatan infeksi yang disebabkan oleh mikroorganisme yang peka terhadap Levofloxacin seperti pada keadaan-keadaan berikut: Sinusitis maksilaris akut; Eksaserb"
+    },
+    {
+     "iso_page": 244,
+     "generic": "trimethoprim dan sulfamethoxazole",
+     "dose_text": "MEPROTRIN Suspensi: Anak-anak ½-5 tahun: Sehari 2 kali ½-1 sendok takar. Anak-anak 6-12 tahun: Sehari 2 kali 1-2 sendok takar. Anak-anak di atas 12 tahun: Sehari 2 kali 4 sendok takar. MEPROTRIN® Tablet: Dewasa: Sehari 2 kali 2 tablet. MEPROTRIN® Forte tablet: Dewasa: Sehari 2 kali 1 tablet. Atau menurut petunjuk dokte",
+     "brand": "MEPROTRIN",
+     "basis": "indikasi ISO menyebut \"pielonefritis\"",
+     "indication": "Infeksi traktus urinarius seperti pielonefritis dan pielitis oleh kuman yang sensitif seperti E. coli, Klebsiella, Enterobacter dan Proteus. Infeksi traktus gas"
+    }
+   ]
+  },
+  {
+   "disease": "Sepsis",
+   "icd10": "A41",
+   "rows": [
+    {
+     "iso_page": 61,
+     "generic": "sulfadiazine silver",
+     "dose_text": "sehari 1 hingga4 kali pada kasa steril, luka terbuka, langsung pada luka, suatu lapisan krim setebal 2-3 mm",
+     "brand": "BURNAZIN CREAM",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Obat antimikrobial topikal yang   diindikasikan untuk pencegahan dan pengobatan sepsis luka pada pasien dengan tingkat luka bakar kedua dan ketiga."
+    },
+    {
+     "iso_page": 83,
+     "generic": "ceftriaxone vial",
+     "dose_text": "Dewasa dan anak-anak >12 thn umumnya 1-2 gram 1x sehari (tiap 24 jam sekali); Neonatus, bayi, dan anak <12 thn sesuai dosis yang dianjurkan untuk pemakaian 1x sehari; neonatus (<14 hari) dosis sehari 20-50 mg/kg BB tidak boleh melebihi 50 mg/kg BB; bayi dan anak-anak (15 hari sampai 12 thn) 20-80 mg/kg BB/hari dan untu",
+     "brand": "CEFTRIAXONE",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "infeksi saluran napas, infeksi THT, infeksi saluran kemih, sepsis, meningitis, infeksi tulang, sendi dan jaringan lunak, infeksi intra abdominal dll."
+    },
+    {
+     "iso_page": 86,
+     "generic": "cefotaxime",
+     "dose_text": "Dewasa dan anak >12 tahun, IV/ IM 1 g tiap 12 jam. Dalam infeksi berat, dosis dapat di tingkatkan mencapai 12 g perhari. Anak dan remaja: 1 bulan – 12 tahun (BB <50 kg) 50-180 mg/kgBB/hari IM/IV dalam 2-4 dosis terbagi.",
+     "brand": "CEPOFION",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Infeksi saluran napas bagian bawah, saluran kemih dan kelamin, ginekologik, kulit dan struktur kulit, tulang dan sendi, intraabdominal, sepsis, meningitis, sept"
+    },
+    {
+     "iso_page": 95,
+     "generic": "kapl salut selaput : amoksisillin    amoksisillin",
+     "dose_text": "Kaplet salut selaput: Dewasa dan anak >12 tahun: sehari 3x 1 kapl. Sirup: Anak <1 tahun: sehari 3x 2 mL. Anak 1-6 tahun (10 - 18 kg): sehari 3x 5 mL. Anak >6 tahun (18-40 kg): sehari 3x 10 mL. Dosis yang direkomendasikan untuk anak 25 mg/kg/hari dalam dosis terbagi setiap 8 jam. (Setiap 25 mg sirup CLAVAMOX mengandung ",
+     "brand": "CLAVAMOX",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Infeksi saluran napas atas, infeksi saluran napas bawah, infeksi saluran urogenital, infeksi kulit dan jaringan lunak, infeksi tulang dan sendi, infeksi gigi, s"
+    },
+    {
+     "iso_page": 125,
+     "generic": "cefotaxime    cefotaxime",
+     "dose_text": "Dws dan anak >12 thn: 2x1 g; infeksi serius/infeksi yg mengancam  In (ID/EN) = Indikasi KI (ID): CI (EN) = Kontra Indikasi Perh (ID): SP (EN) = Perhatian dan Peringatan ES (ID): AR (EN) = Kejadian yang Tidak Diinginkan  Ds (ID/EN) = Dosis Km (ID): P/P = Sediaan IO (ID): INT (EN) = Interaksi Obat A (EN) = Waktu Pengguna",
+     "brand": "EFOTAX",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Infeksi saluran pernafasan termasuk hidung dan tenggorokan, infeksi pada telinga, infeksi saluran kencing, infeksi kulit dan jaringan lunak, infeksi tulang dan "
+    },
+    {
+     "iso_page": 181,
+     "generic": "amikacin   amikacin",
+     "dose_text": "Untuk infeksi yang tidak terkomplikasi dan disebabkan oleh organisme sensitif, dosis yang dianjurkan akan memberikan efek terapi 24-48 jam. Bila repons klinis tidak terjadi dalam 3-5 hari, sebaiknya pertimbangkan alternatif terapi yang lain. Pemberian intramuskuler atau intravena: Untuk beberapa penyakit infeksi, injek",
+     "brand": "GLYBOTIC 250",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Terapi infeksi berat jangka pendek yang disebabkan oleh Gram-negatif yang peka, seperti Enterobacteriaceae (misalnya Escherichia coli) dan Pseudomonas sp. Efekt"
+    },
+    {
+     "iso_page": 182,
+     "generic": "amikacin   amikacin",
+     "dose_text": "Untuk infeksi yang tidak terkomplikasi dan disebabkan oleh organisme sensitif, dosis yang dianjurkan akan memberikan efek terapi 24-48 jam. Bila repons klinis tidak terjadi dalam 3-5 hari, sebaiknya pertimbangkan alternatif terapi yang lain. Pemberian intramuskuler atau intravena: Untuk beberapa penyakit infeksi, injek",
+     "brand": "GLYBOTIC 500",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Terapi infeksi berat jangka pendek yang disebabkan oleh Gram-negatif yang peka, seperti Enterobacteriaceae (misalnya Escherichia coli) dan Pseudomonas sp. Efekt"
+    },
+    {
+     "iso_page": 208,
+     "generic": "ceftriaxone",
+     "dose_text": "Dosis standar Dewasa dan anak diatas 12 tahun: Dosis lazim 1-2 g, diberikan sekali sehari (setiap 24 jam). Pada kasus berat atau infeksi berat yang dise-babkan oleh organisme moderat sensitif, dosis dapat ditingkatkan sampai maksimum 4 g perhari. Neonatus, bayi dan anak sampai usia 12 tahun: Dianjurkan untuk pemakaian ",
+     "brand": "INTRICEF",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Infeksi yang disebabkan oleh bakteri patogen yang sensitif terhadap INTRICEF: Sepsis; Meningitis; Infeksi abdomen (peritonitis, infeksi kandung empedu dan salur"
+    },
+    {
+     "iso_page": 408,
+     "generic": "seftriakson  anhydrate  seftriakson",
+     "dose_text": "Dosis standar: Dewasa dan anak di atas 12 tahun: Dosis lazim 1- 2 g, diberikan sekali sehari (setiap 24 jam). Pada kasus berat atau infeksi berat yang disebabkan organisme yang moderat sensitif, dosis dapat ditingkatkan sampai 4 g, diberikan sekali sehari. Neonatus, bayi, dan anak sampai 12 tahun: Dianjurkan untuk pemb",
+     "brand": "TERFACEF 1",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Infeksi yang disebabkan oleh patogen yang sensitif terhadap Seftriakson: Sepsis; Meningitis; Infeksi abdomen (peritonitis, infeksi kandung empedu, dan saluran p"
+    },
+    {
+     "iso_page": 427,
+     "generic": "tizanidine",
+     "dose_text": "Dewasa: Dosis umum: 1 – 2 g sehari dalam dosis tunggal (atau terbagi dalam dua dosis). Dosis maksimum: tidak lebih dari 4 g. Infeksi gonokokal: 250 mg sehari dalam dosis tunggal, diberikan secara im. Untuk pencegahan infeksi selama pembedahan: 1 g dalam dosis tunggal ½ - 2 jam i.v. sebelum pembedahan. Anak-anak: Untuk ",
+     "brand": "TYAZON",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Sepsis, Meningitis, Infeksi abdominal (peritonitis, infeksi kandung empedu dan saluran pencernaan), Infeksi tulang, persendian dan jaringan lunak, Pencegahan in"
+    },
+    {
+     "iso_page": 452,
+     "generic": "ceftriaxone",
+     "dose_text": "Dewasa dan anak >12 tahun: 1-2 gram satu kali sehari. dosis dapat dinaikkan sampai 4 gram/1 x sehari; Bayi sampai 14 hari: sekali sehari 2050 mg/kg bb tidak boleh lebih dari 50 mg/kgBB; Bayi 15 hari-12 tahun: sekali sehari 20-80 mg/kgBB.",
+     "brand": "ZEFTRIX",
+     "basis": "indikasi ISO menyebut \"sepsis\"",
+     "indication": "Infeksi saluran napas, infeksi THT, infeksi saluran kemih, sepsis, meningitis, infeksi tulang, sendi dan jaringan lunak, infeksi intra abdominal, infeksi genita"
+    },
+    {
+     "iso_page": 80,
+     "generic": "ceftizoxime na",
+     "dose_text": "Dws: IM/IV sehari 0.5-2 g terbagi dlm 2-4 dosis. Infeksi berat dan sulit: ditambah sampai dgn sehari 4 g. Anak >6 bln: 40-80 mg/kgBB/hari. IM: sehari 0.5-2 g terbagi dlm 2-4 dosis.",
+     "brand": "CEFIZOX",
+     "basis": "indikasi ISO menyebut \"septikemia\"",
+     "indication": "Septikemia, endokarditis bakteri, infeksi sekunder luka dan luka bakar, bronkitis, infeksi sekunder peny. sal napas kronik, pneumonia, supurasi pada pulmonal, p"
+    }
+   ]
+  },
+  {
+   "disease": "Sinusitis Kronik THT",
+   "icd10": "J32",
+   "rows": [
+    {
+     "iso_page": 43,
+     "generic": "Tiap 5 mL mengandung Sulfamethoxazole 20",
+     "dose_text": "Untuk usia 2 bulan atau lebih: Berat badan 10 kg: 5 mL (1 sendok takar) setiap 12 jam; Berat badan 20 kg: 10 mL (2 sendok takar) setiap 12 jam; Berat badan 30 kg: 15 mL (3 sendok takar) setiap 12 jam; Berat badan 40 kg: 20 mL (4 sendok takar) setiap 12 jam. PENGGUNAAN PADA POPULASI KHUSUS: Untuk penderita gangguan fung",
+     "brand": "BACTOPRIM COMBI",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Infeksi traktus urinarius seperti pielonefritis, pielitis, dan prostates akut dan kronik oleh kuman yang sensitif seperti: E. coli, Klebsiela enterobacter dan P"
+    },
+    {
+     "iso_page": 44,
+     "generic": "sulfamethoxazole",
+     "dose_text": "Untuk usia 2 bulan atau lebih: Berat badan 20 kg: ½ kaplet setiap 12 jam; Berat badan 30 kg: ¾ kaplet setiap 12 jam; Berat badan 40 kg: 1 kaplet setiap 12 jam. Dewasa dan anak-anak di atas 12 tahun: Dosis Lazim: 2  In (ID/EN) = Indikasi KI (ID): CI (EN) = Kontra Indikasi Perh (ID): SP (EN) = Perhatian dan Peringatan ES",
+     "brand": "BACTOPRIM COMBI FORTE",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Infeksi traktus urinarius seperti pielonefritis, pielitis, dan prostates akut dan kronik oleh kuman yang sensitif seperti: E. coli, Klebsiela enterobacter dan P"
+    },
+    {
+     "iso_page": 100,
+     "generic": "clarithromycin",
+     "dose_text": "Dosis harian Comtro Sirup Kering yang direkomendasikan untuk anak-anak adalah 7,5 mg/kg dua kali sehari hingga maksimum 500 mg dua kali sehari pada kondisi infeksi berat. Lama pengobatan umumnya selama 5-10 hari tergantung pada jenis patogen dan tingkat keparahan kondisi pasien; Pengobatan untuk Streptococcal pharyngit",
+     "brand": "COMTRO",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Mengobati infeksi ringan dan sedang yang disebabkan oleh strain mikroorganisme yang peka, pada kondisi dibawah ini: Infeksi saluran pernapasan bagian atas, yang"
+    },
+    {
+     "iso_page": 104,
+     "generic": "levofloxacin",
+     "dose_text": "Tablet/kaplet: 250 mg - 750 mg yang diberikan per oral setiap 24 jam, sesuai indikasi. Injeksi: 250 mg atau 500 mg diberikan secara infus lambat selama lebih dari 60 menit setiap 24 jam atau 750 mg yang diberikan secara infus lambat selama lebih dari  In (ID/EN) = Indikasi KI (ID): CI (EN) = Kontra Indikasi Perh (ID): ",
+     "brand": "CRAVIT",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Sinusitis bakterial akut, eksaserbasi bakteri akut dari bronkitis kronik karena pneumonia nosokomial, pneumonia yang didapat dari masyarakat, prostatitis bakter"
+    },
+    {
+     "iso_page": 138,
+     "generic": "levofloxacin",
+     "dose_text": "Dewasa, sehari 1x, selama 7-14 hari disesuaikan dengan jenis infeksi penyakitnya, sinusitis maksilari akut 500 mg, bronkitis kronik eksaserbasi akut 500 mg, pneumonia 500 mg, infeksi kulit dan jaringan kulit terkomplikasi 750 mg, infeksi kulit dan jaringan kulit tidak terkomplikasi 500 mg. Levofloxacin IV diberikan den",
+     "brand": "EVOFION",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Sinusitis maksilari akut, Bronkitis kronik eksaserbasi akut, pneumonia, infeksi kulit dan jaringan kulit, infeksi saluran kemih terkomplikasi dan tidak terkompl"
+    },
+    {
+     "iso_page": 149,
+     "generic": "levofloxacin hemihydrate infus",
+     "dose_text": "Dosis lazim pada penderita dengan fungsi ginjal normal adalah: 250-500 mg satu kali sehari (tergantung jenis, keparahan infeksi dan sensitifitas patogen penyebab infeksi). Levofloksasin biasanya diberikan selama 7-14 hari tergantung tingkat keparahan penyakit. Pengobatan awal i.v. setelah beberapa hari memungkinkan unt",
+     "brand": "FLOXACAP",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Pengobatan infeksi untuk penderita usia ≥18 tahun yang disebabkan oleh mikroorganisme yang peka terhadap Levofloksasin seperti pada keadaan-keadaan berikut: Sin"
+    },
+    {
+     "iso_page": 150,
+     "generic": "levofloxacin hemihydrate",
+     "dose_text": "Dosis lazim adalah 250-500 mg (oral) 1 x sehari (tiap 24 jam) pada pasien dengan fungsi ginjal normal (bersihan kreatinin >80 mL/menit). Waktu pemberian antara 7-14 hari (tergantung beratnya infeksi). Bronkitis kronik dengan eksaserbasi akut: 500 mg tiap 24 jam selama 7 hari dengan dosis harian 500 mg; Community-acquir",
+     "brand": "FLOXACAP 500",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Pengobatan infeksi yang disebabK: Obat Keras T: Obat Bebas Terbatas B: Obat Bebas P: Obat Psikotropika   kan oleh mikroorganisme yang peka terhadap Levofloksasi"
+    },
+    {
+     "iso_page": 203,
+     "generic": "moxifloxacin",
+     "dose_text": "400 mg 1 kali sehari.",
+     "brand": "INFIMOX",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Eksaserbasi akut bronkitis kronis; Community acquired pneumonia, Sinusitis akut; Komplikasi infeksiintra-abdomen; Komplikasi infeksi kulit dan struktur kulit. l"
+    },
+    {
+     "iso_page": 222,
+     "generic": "levofloxacin hemihydrate  levofloxacin",
+     "dose_text": "Dosis untuk penderita dengan fungsi ginjal normal (bersihan kreatinin >80 mL/menit): Sinusitis maksilaris akut: dosis 500 mg tiap 24 jam, lama pengobatan 10-14 hari; Eksaserbasi akut bronkitis kronis: dosis 500 mg tiap 24 jam, lama pengobatan 7 hari; Community-acquired pneumonia: dosis 500 mg tiap 24 jam, lama pengobat",
+     "brand": "LEVOCIN 500",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Pengobatan infeksi yang disebabkan oleh mikroorganisme yang peka terhadap Levofloxacin seperti pada keadaan-keadaan berikut: Sinusitis maksilaris akut; Eksaserb"
+    },
+    {
+     "iso_page": 256,
+     "generic": "moxifloxacin",
+     "dose_text": "Pneumonia: Dewasa: 400 mg sekali sehari selama 10 hari. Eksaserbasi bakteri akut pada bronkitis kronis: Dewasa: 400 mg 1 x/hr selama 5-10 hari. Sinusitis bakteri akut: Dewasa: 400 mg sekali sehari selama 7 hari. Infeksi kulit dan struktur kulit yang rumit: Dewasa: 400 mg 1 x/hr selama 7-21 hari.",
+     "brand": "MOXIFLOXACIN HCL",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Eksaserbasi akut bronkitis kronis; Community acquired pneumonia, Sinusitis akut; Komplikasi infeksiintra-abdomen; Komplikasi infeksi kulit dan struktur kulit."
+    },
+    {
+     "iso_page": 273,
+     "generic": "trimethoprim",
+     "dose_text": "Usia >2 bln: BB 20 kg ½ tab tiap 12 jam; BB 30 kg 1 tab tiap 12 jam; BB 40 kg 1½ tab tiap 12 jam; Dws dan Anak-anak >12 thn: Dosis lazim: sehari 2x1 tab selama 10-14 hari; Infeksi berat: K: Obat Keras T: Obat Bebas Terbatas B: Obat Bebas P: Obat Psikotropika   sehari 2x1 ½ tab; Gonorrhoea tdk terkompilasi: sehari 2x2 t",
+     "brand": "NOVATRIM",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Infeksi traktus urinarius spt pielonefritis, pielitis dan prostates akut dan kronik yg disebabkan oleh kuman yg sensitif spt E.coli, Klebsiella sp, Enterobacter"
+    },
+    {
+     "iso_page": 312,
+     "generic": "levofloxacin hemihydrate",
+     "dose_text": "Dosis lazim: sehari 1x 250-500 mg selama 7-14 hari; penderita dgn gangguan fungsi ginjal, klirens kreatinin 50-80 mL/mnt: tdk memerlukan penyesuaian dosis; klirens kreatinin 20-40 mL/mnt: dosis awal 500 mg, selanjutnya 25 mg tiap 24 jam; klirens kreatinin 10-19 mL/mnt, hemodialisa, dialisa peritoneal kronis: dosis awal",
+     "brand": "PROLEVOX",
+     "basis": "indikasi ISO menyebut \"sinusitis\"",
+     "indication": "Sinusitis maksilaris akut, bronkitis kronis akserbasi bakterial akut, community acquired pneumonia, ISK terkomplikasi, pielonefritis akut."
+    }
+   ]
+  },
+  {
+   "disease": "Tatalaksana Ulkus Kornea Bakteri",
+   "icd10": "H16.0",
+   "rows": [
+    {
+     "iso_page": 132,
+     "generic": "kloramfenikol",
+     "dose_text": "Tetes mata: sehari 3-4 x 2 tetes. Salep mata: Oleskan sehari 3-4 x selama 10-15 hari.",
+     "brand": "ERLAMYCETIN",
+     "basis": "indikasi ISO menyebut \"keratitis\"",
+     "indication": "Tts mata: Iritis, uvetis, konjungtivitis, keratitis, dacryocystitis. Salep mata: blepharitis catarrhae, konjungtivitis bernanah, traumatik keratitis."
+    },
+    {
+     "iso_page": 132,
+     "generic": "kloramfenikol",
+     "dose_text": "Teteskan pada mata yang sakit sehari 1-4x 1 tetes. Untuk infeksi akut: 1 tetes tiap jam.",
+     "brand": "ERLAMYCETIN PLUS",
+     "basis": "indikasi ISO menyebut \"keratitis\"",
+     "indication": "Keratitis akut maupun kronis dan konjungtivitis akibat infeksi disertai pembengkakan hebat, iritis, iriocyclitis, scleritis, episcleritis, sympathetic ophthalmi"
+    },
+    {
+     "iso_page": 168,
+     "generic": "gatifloxacin sesquihydrate",
+     "dose_text": "Konjungtivitis bakterialis: Hari 1 dan 2: 1 tetes pada mata yang sakit (dimulai saat bangun tidur) tiap 2 jam sampai 8 kali sehari. Hari 3-7: 1 tetes pada mata yang sakit (dimulai saat bangun tidur) hingga 4 kali sehari. Keratitis bakterialis: 1 tetes tiap 1 jam pada mata yang sakit (dimulai saat bangun tidur hingga se",
+     "brand": "GAFORIN",
+     "basis": "indikasi ISO menyebut \"keratitis\"",
+     "indication": "GAFORIN diindikasikan untuk pengobatan infeksi okular eksternal seperti konjungtivitis dan keratitis bakterialis yang disebabkan oleh mikroorganisme yang peka t"
+    }
+   ]
+  },
+  {
+   "disease": "Tinea fasialis",
+   "icd10": "B35",
+   "rows": [
+    {
+     "iso_page": 31,
+     "generic": "ketoconazole",
+     "dose_text": "Dewasa: Infeksi kulit: 1 tablet (200 mg) sekali sehari pada waktu makan. Apabila tidak ada reaksi dengan dosis ini, dosis ditingkatkan menjadi 2 tablet (400 mg sehari). Anak-anak: berat badan kurang dari 15 kg: 20 mg 3 kali sehari pada waktu makan. berat badan 15 – 20 kg: 100 mg sekali sehari pada waktu makan. Berat ba",
+     "brand": "ANFUHEX",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Infeksi jamur pada kulit, rambut, dan mukosa yang disebabkan oleh dermatophyte dan/atau ragi (dermatophytosis, pityriasis versicolor, pityrosporum folliculitis,"
+    },
+    {
+     "iso_page": 166,
+     "generic": "ketoconazole",
+     "dose_text": "Dws infeksi jamur pada kulit,gigi dan kandidosis sistemik sehari 1x 200 mg, dpt ditingkatkan menjadi sehari 400 mg. Kandidosis vag sehari 1x 400 mg. Anak <15 kg sehari 3x 20 mg, 1530 kg: sehari 1x 100 mg, >30 kg dosis dws. Lama terapi; kandidosis vag 5 hari. Mikosis kulit karena dermatofita < 4 minggu. Pitiriasis versi",
+     "brand": "FUNGORAL",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Lihat pada dosis."
+    },
+    {
+     "iso_page": 197,
+     "generic": "ketoconazole",
+     "dose_text": "Dioleskan 1 x sehari pada daerah yang terinfeksi dan sekitarnya pada penderita kandidosis kutis, tinea korporis, tinea manus, tinea pedis dan tinea (ptyriasis) versikolor. Pada penderita seboroik dermatitis 1 x / 2 x sehari.",
+     "brand": "HUFAZOLE",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Untuk penggunaan topikal pada pengobatan infeksi dermatofit pada kulit, seperti tinea korporis, tinea kruris, tinea manus dan tinea pedis yang disebabkan oleh T"
+    },
+    {
+     "iso_page": 214,
+     "generic": "miconazole",
+     "dose_text": "Dioleskan pada kulit yang terkena penyakit jamur, 2 kali sehari. Gosokkan krim dengan jari sampai krim menyerap ke dalam kulit. Lamanya terapi bervariasi antara 2-6 minggu tergantung dari tempat dan berat ringannya penyakit. Agar penyakit tidak kambuh lagi, pengobatan harus dilanjutkan 10 hari setelah semua gejala hila",
+     "brand": "KALBE FARMA",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Infeksi kulit yang disebabkan oleh dermatofit atau ragi, jamur lainnya seperti: Pityriasis versicolor (panu), Tinea corporis (kurap di leher/ badan), Tinea crus"
+    },
+    {
+     "iso_page": 236,
+     "generic": "t/k ketoconazole",
+     "dose_text": "Krim: Oleskan sehari 1-2 x.",
+     "brand": "LUSANOC",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Infeksi dermatofit pada kulit spt tinea corporis, tinea cruris, tinea manus dan tinea pedis, tinea versicolor, kutaneus kandidiasis."
+    },
+    {
+     "iso_page": 254,
+     "generic": "miconazole",
+     "dose_text": "Oleskan Sehari 1-2 x pada bagian yang sakit; infeksi kandidiasis, tinea kruris dan tinea korporis pengobatan dilakukan selama 2 minggu, tinea pedis selama 1 bulan.",
+     "brand": "MOLADERM",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Tinea kapitis, tinea korporis, tinea manum, tinea pedis, tinea barbae dan kruris, tinea unguium atau onikhomikosispitiriasis versikolor, kandidiasis kulit dan k"
+    },
+    {
+     "iso_page": 261,
+     "generic": "clotrimazole",
+     "dose_text": "Topikal, cuci bersih pada bagian kulit sebelum dioleskan, sehari 2-3x.",
+     "brand": "NEO ULTRASILINE",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Untuk pengobatan topikal dari Candidiasis yang disebabkan Candida Albicans, Pityriasis versicolor yang disebabkan oleh Malassezia furfur, Tinea pedis, Tinea cru"
+    },
+    {
+     "iso_page": 310,
+     "generic": "tioconazole",
+     "dose_text": "Oleskan sehari 1-2 x sehari.",
+     "brand": "PRODERMAL",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Infeksi kulit disebabkan dermatofit dan ragi spt Tinea pedis, Tinea cruris, Tinea corporis."
+    },
+    {
+     "iso_page": 454,
+     "generic": "ketoconazole",
+     "dose_text": "Oleskan tipis-tipis sekali sehari pada daerah infeksi. Untuk infeksi berat dan resisten, dioleskan 2 kali sehari.",
+     "brand": "ZORALIN KRIM",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Tinea korporis, T. krunis, T. barbae, T. interdigital, Kandidosis kulit."
+    }
+   ]
+  },
+  {
+   "disease": "Tinea kapitis",
+   "icd10": "B35",
+   "rows": [
+    {
+     "iso_page": 31,
+     "generic": "ketoconazole",
+     "dose_text": "Dewasa: Infeksi kulit: 1 tablet (200 mg) sekali sehari pada waktu makan. Apabila tidak ada reaksi dengan dosis ini, dosis ditingkatkan menjadi 2 tablet (400 mg sehari). Anak-anak: berat badan kurang dari 15 kg: 20 mg 3 kali sehari pada waktu makan. berat badan 15 – 20 kg: 100 mg sekali sehari pada waktu makan. Berat ba",
+     "brand": "ANFUHEX",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Infeksi jamur pada kulit, rambut, dan mukosa yang disebabkan oleh dermatophyte dan/atau ragi (dermatophytosis, pityriasis versicolor, pityrosporum folliculitis,"
+    },
+    {
+     "iso_page": 166,
+     "generic": "ketoconazole",
+     "dose_text": "Dws infeksi jamur pada kulit,gigi dan kandidosis sistemik sehari 1x 200 mg, dpt ditingkatkan menjadi sehari 400 mg. Kandidosis vag sehari 1x 400 mg. Anak <15 kg sehari 3x 20 mg, 1530 kg: sehari 1x 100 mg, >30 kg dosis dws. Lama terapi; kandidosis vag 5 hari. Mikosis kulit karena dermatofita < 4 minggu. Pitiriasis versi",
+     "brand": "FUNGORAL",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Lihat pada dosis."
+    },
+    {
+     "iso_page": 214,
+     "generic": "miconazole",
+     "dose_text": "Dioleskan pada kulit yang terkena penyakit jamur, 2 kali sehari. Gosokkan krim dengan jari sampai krim menyerap ke dalam kulit. Lamanya terapi bervariasi antara 2-6 minggu tergantung dari tempat dan berat ringannya penyakit. Agar penyakit tidak kambuh lagi, pengobatan harus dilanjutkan 10 hari setelah semua gejala hila",
+     "brand": "KALBE FARMA",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Infeksi kulit yang disebabkan oleh dermatofit atau ragi, jamur lainnya seperti: Pityriasis versicolor (panu), Tinea corporis (kurap di leher/ badan), Tinea crus"
+    },
+    {
+     "iso_page": 254,
+     "generic": "miconazole",
+     "dose_text": "Oleskan Sehari 1-2 x pada bagian yang sakit; infeksi kandidiasis, tinea kruris dan tinea korporis pengobatan dilakukan selama 2 minggu, tinea pedis selama 1 bulan.",
+     "brand": "MOLADERM",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Tinea kapitis, tinea korporis, tinea manum, tinea pedis, tinea barbae dan kruris, tinea unguium atau onikhomikosispitiriasis versikolor, kandidiasis kulit dan k"
+    },
+    {
+     "iso_page": 189,
+     "generic": "griseofulvin",
+     "dose_text": "Dws: 500 mg perhari dosis atau dosis terbagi, utk infeksi yg lebih berat 750-1000 mg perhari dlm dosis terbagi. Anak: 10 mg/kg BB dlm dosis tunggal atau dosis terbagi. Anak-anak dan bayi yg kurang dari 2 thn: Bila ada dosis yg direkomendasikan, obat diberikan bersamaan dgn makanan. Lama pengobatan: Tinea capitis: 2-4 m",
+     "brand": "GRICIN",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Pengobatan infeksi jamur pada kulit, kulit kepala dan kuku bila pengobatan scr topikal gagal."
+    }
+   ]
+  },
+  {
+   "disease": "Tinea manus",
+   "icd10": "B35",
+   "rows": [
+    {
+     "iso_page": 31,
+     "generic": "ketoconazole",
+     "dose_text": "Dewasa: Infeksi kulit: 1 tablet (200 mg) sekali sehari pada waktu makan. Apabila tidak ada reaksi dengan dosis ini, dosis ditingkatkan menjadi 2 tablet (400 mg sehari). Anak-anak: berat badan kurang dari 15 kg: 20 mg 3 kali sehari pada waktu makan. berat badan 15 – 20 kg: 100 mg sekali sehari pada waktu makan. Berat ba",
+     "brand": "ANFUHEX",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Infeksi jamur pada kulit, rambut, dan mukosa yang disebabkan oleh dermatophyte dan/atau ragi (dermatophytosis, pityriasis versicolor, pityrosporum folliculitis,"
+    },
+    {
+     "iso_page": 166,
+     "generic": "ketoconazole",
+     "dose_text": "Dws infeksi jamur pada kulit,gigi dan kandidosis sistemik sehari 1x 200 mg, dpt ditingkatkan menjadi sehari 400 mg. Kandidosis vag sehari 1x 400 mg. Anak <15 kg sehari 3x 20 mg, 1530 kg: sehari 1x 100 mg, >30 kg dosis dws. Lama terapi; kandidosis vag 5 hari. Mikosis kulit karena dermatofita < 4 minggu. Pitiriasis versi",
+     "brand": "FUNGORAL",
+     "basis": "obat disebut di narasi gudang; dosis umum obat menurut ISO",
+     "indication": "Lihat pada dosis."
+    },
+    {
+     "iso_page": 197,
+     "generic": "ketoconazole",
+     "dose_text": "Dioleskan 1 x sehari pada daerah yang terinfeksi dan sekitarnya pada penderita kandidosis kutis, tinea korporis, tinea manus, tinea pedis dan tinea (ptyriasis) versikolor. Pada penderita seboroik dermatitis 1 x / 2 x sehari.",
+     "brand": "HUFAZOLE",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Untuk penggunaan topikal pada pengobatan infeksi dermatofit pada kulit, seperti tinea korporis, tinea kruris, tinea manus dan tinea pedis yang disebabkan oleh T"
+    },
+    {
+     "iso_page": 214,
+     "generic": "miconazole",
+     "dose_text": "Dioleskan pada kulit yang terkena penyakit jamur, 2 kali sehari. Gosokkan krim dengan jari sampai krim menyerap ke dalam kulit. Lamanya terapi bervariasi antara 2-6 minggu tergantung dari tempat dan berat ringannya penyakit. Agar penyakit tidak kambuh lagi, pengobatan harus dilanjutkan 10 hari setelah semua gejala hila",
+     "brand": "KALBE FARMA",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Infeksi kulit yang disebabkan oleh dermatofit atau ragi, jamur lainnya seperti: Pityriasis versicolor (panu), Tinea corporis (kurap di leher/ badan), Tinea crus"
+    },
+    {
+     "iso_page": 236,
+     "generic": "t/k ketoconazole",
+     "dose_text": "Krim: Oleskan sehari 1-2 x.",
+     "brand": "LUSANOC",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Infeksi dermatofit pada kulit spt tinea corporis, tinea cruris, tinea manus dan tinea pedis, tinea versicolor, kutaneus kandidiasis."
+    },
+    {
+     "iso_page": 254,
+     "generic": "miconazole",
+     "dose_text": "Oleskan Sehari 1-2 x pada bagian yang sakit; infeksi kandidiasis, tinea kruris dan tinea korporis pengobatan dilakukan selama 2 minggu, tinea pedis selama 1 bulan.",
+     "brand": "MOLADERM",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Tinea kapitis, tinea korporis, tinea manum, tinea pedis, tinea barbae dan kruris, tinea unguium atau onikhomikosispitiriasis versikolor, kandidiasis kulit dan k"
+    },
+    {
+     "iso_page": 261,
+     "generic": "clotrimazole",
+     "dose_text": "Topikal, cuci bersih pada bagian kulit sebelum dioleskan, sehari 2-3x.",
+     "brand": "NEO ULTRASILINE",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Untuk pengobatan topikal dari Candidiasis yang disebabkan Candida Albicans, Pityriasis versicolor yang disebabkan oleh Malassezia furfur, Tinea pedis, Tinea cru"
+    },
+    {
+     "iso_page": 310,
+     "generic": "tioconazole",
+     "dose_text": "Oleskan sehari 1-2 x sehari.",
+     "brand": "PRODERMAL",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Infeksi kulit disebabkan dermatofit dan ragi spt Tinea pedis, Tinea cruris, Tinea corporis."
+    },
+    {
+     "iso_page": 454,
+     "generic": "ketoconazole",
+     "dose_text": "Oleskan tipis-tipis sekali sehari pada daerah infeksi. Untuk infeksi berat dan resisten, dioleskan 2 kali sehari.",
+     "brand": "ZORALIN KRIM",
+     "basis": "indikasi ISO menyebut \"tinea\"",
+     "indication": "Tinea korporis, T. krunis, T. barbae, T. interdigital, Kandidosis kulit."
+    }
+   ]
+  }
+ ]
+}

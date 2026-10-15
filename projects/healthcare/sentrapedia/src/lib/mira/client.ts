@@ -1,7 +1,7 @@
 import { containsIdentity, validCase, validResult, type MiraAnalysis } from "./contract";
 import type { CaseState } from "./types";
 import { validTheOracleGrounding } from "../theoracle-grounding-types";
-import { gateTherapy, validGate } from "../theoracle-evidence-gate";
+import { gateEvidence, gateTherapy, validGate } from "../theoracle-evidence-gate";
 
 export async function requestMiraAnalysis(caseData: CaseState, options: { synthetic: boolean; signal?: AbortSignal; fetchFn?: typeof fetch }): Promise<MiraAnalysis> {
   if (!options.synthetic) throw new Error("Konfirmasi bahwa keluhan dan konteks menggunakan data fiktif tanpa identitas pribadi.");
@@ -24,7 +24,7 @@ export async function requestMiraAnalysis(caseData: CaseState, options: { synthe
   if (evidenceGate !== undefined && !validGate(evidenceGate)) throw new Error("Respons analisis tidak dapat diverifikasi.");
   // Therapy without a gate report (an older or faulty server) is gated here as the gateway does, so no unchecked dose reaches a draft.
   const likely = data.result.differential.likely[0];
-  const late = data.result.therapy && !evidenceGate ? gateTherapy(data.result.therapy, validTheOracleGrounding(therapyGrounding) ? therapyGrounding : data.grounding, likely && { icd10: likely.icd10, label: likely.label }) : undefined;
+  const late = data.result.therapy && !evidenceGate ? gateTherapy(data.result.therapy, gateEvidence(therapyGrounding, data.grounding), likely && { icd10: likely.icd10, label: likely.label }) : undefined;
   const result = late?.therapy ? { ...data.result, therapy: late.therapy } : { ...data.result };
   if (late && !late.therapy) delete result.therapy;
   const gate = late ? late.report : evidenceGate;

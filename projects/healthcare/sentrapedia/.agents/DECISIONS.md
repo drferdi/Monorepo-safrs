@@ -1,5 +1,13 @@
 # Sentrapedia decisions
 
+## 2026-10-14 - One product capsule with a public site subsystem
+
+- Gaffer superseded the temporary sibling `sentrapedia-website` capsule placement.
+- The public website lives at `apps/site/` inside the sovereign `projects/healthcare/sentrapedia` capsule and future standalone repository.
+- The clinical workspace remains at the capsule root for this bounded migration. Moving it to `apps/web/` would be a separate architecture change with no current functional benefit.
+- A future demo belongs at `apps/demo/` as environment configuration and synthetic data using shared product code, never as a copied implementation.
+- Parent install, build, lint, test, and deploy dry-run commands include the site lifecycle.
+
 ## 2026-10-08 — Standalone Glass recreation
 
 - Keep all application dependencies, configs, tokens, lock state, tests, and deployment assets capsule-local. Empirical extraction passed outside Monorepo.

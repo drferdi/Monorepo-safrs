@@ -94,5 +94,16 @@
     "parser": {
       "tailwindDirectives": true
     }
-  }
+  },
+  "overrides": [
+    {
+      // fallow membaca .fallowrc.json sebagai JSONC (berisi komentar).
+      "includes": [".fallowrc.json"],
+      "json": {
+        "parser": {
+          "allowComments": true
+        }
+      }
+    }
+  ]
 }

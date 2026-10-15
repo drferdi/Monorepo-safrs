@@ -33,7 +33,7 @@ The hook translates the payload with `tools/automation/src/adapters/claude.mjs` 
 the shared guard (`tools/automation/src/guard.mjs`), so Claude reaches the same verdict as
 Cursor and Codex.
 
-- **Shell commands:** force-push, self-granted publication (`CHIEF_PUSH_OK`,
+- **Shell commands:** force-push, hook bypasses (
   `--no-verify`, `core.hooksPath`), and credential-file access are denied. `git merge`,
   `git pull`, fast-forwarding `main`, `gh pr merge`, `git reset --hard`, and destructive
   database commands **ask**: Claude Code shows a permission prompt

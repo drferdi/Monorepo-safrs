@@ -1,14 +1,34 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-12 (Claude Code, `feat/claude-path-scoped-rules`)
+Last updated: 2026-10-13 (Cursor, `feat/prompt-template-metaprompt`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
-This file is overwritten with current state, not appended; keep it short (it is a MUST read).
+Overwrite this file only for control-plane work. Keep another live session's open claim. Keep it short (it is a MUST read).
 
 ## Current state
 
+- 2026-10-13 (Cursor): Fallow no longer reports `@ai-sdk/google` as an unlisted root dependency. The import lives in Assistverse, whose `package.json` already depends on it; `.fallowrc.json` `ignorePatterns` skips that standalone capsule so a root run does not attribute the import to the root manifest. Evidence: `npx fallow@3.33.1 dead-code --unlisted-deps` no longer lists `@ai-sdk/google`; the same command with `--root projects/healthcare/assistverse` reports 0 unlisted dependencies.
+- 2026-10-13 (Kilo): Kilo adapter setup implemented per `docs/bootstrap/KILO_SETUP.md` — four
+  custom commands (`.kilo/command/{safrs-verify,capsule-verify,doctor,capsule-status}.md`), a
+  read-only `safrs-auditor` subagent (`.kilo/agent/safrs-auditor.md`), and a `commit_message.prompt`
+  in `.kilo/kilo.jsonc` that auto-appends `Co-Authored-By: Kilo Code <noreply@kilo.ai>`. Gap
+  surfaced (not changed): `.kilo/**` is absent from `.safrs/sensitive-paths.json`; registering it as
+  an R2 pattern is a separate change. Known: this Kilo build cannot parse frontmatter under
+  `.kilo/command/` / `.kilo/agent/` (repro: minimal `---`/JSON/TOML probes all fail with
+  "No context found for instance"; `.agents/skills/*/SKILL.md` parses fine) — flagged to Gaffer.
+  `docs/bootstrap/KILO_SETUP.md` is untracked in this worktree.
+- This worktree is `feat/prompt-template-metaprompt` at `66ba2ed9`. Control-plane patch: scope-owned HANDOFF, SAFRS over vendor skills, Windows governance command `pnpm governance` (not full quality verification), and Firecrawl recorded absent from `.cursor/mcp.json`. `pnpm governance` on 2026-10-13 failed at `check_task_ownership.py`: `.agents/BOUNDARIES.md` has no active owner in `main` because `TASK-20261011-GAFFER-ADDRESS` (REVIEW, other worktree) already holds that path. Cursor rule files are claimed by `TASK-20261013-CAPABILITY-AWARENESS`. Claims from 2026-10-12 below stay open.
+- 2026-10-13 (Claude Code, Gaffer's split): docs/rules part committed as `bbc3fc51`. The
+  `pnpm task transfer` / `SCOPE_AMEND` feature (`tools/task/**`, `tools/automation/src/leases.mjs`,
+  `tools/safrs/check_lifecycle.py`, lease schema, tests) committed as `a5b07642` on Gaffer's
+  explicit R3 go: it changes a verification control and the code it governs together. Fixed first:
+  transfer accepted source and destination tasks from any worktree, so a session could take another
+  session's claim (`--actor` is a free string). It now rejects any task not bound to the current
+  worktree, like `task state`/`close`; new test covers source and destination. Evidence: transfer
+  17/17, leases 12/12, lifecycle unittest 3/3, biome 0, `check_lifecycle.py` OK. Open: `--actor`
+  is still unauthenticated (recorded, not verified).
 - Local `main` is `a54ee055` (fast-forwarded on Gaffer's go, local only) and contains
   `origin/main` `b2d3a022`. The main checkout is on `main`, so today's guards and hooks are active
   there. `docs/refresh-2026-10-12` (worktree `main-merge-tmp`) is ahead with the docs refresh;

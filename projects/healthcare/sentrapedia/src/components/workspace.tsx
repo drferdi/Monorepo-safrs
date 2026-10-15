@@ -23,7 +23,6 @@ import { diagnosisContent, miraMessage } from "../lib/mira/presentation";
 import type { MiraAnalysis } from "../lib/mira/contract";
 import { composerCase, composerUsesMira, composerMiraMessages } from "../lib/mira/composer";
 import { requestMiraAnalysis } from "../lib/mira/client";
-import { sendDifyChatMessage } from "../lib/dify/client";
 import { ThinkingCard } from "./thinking-card";
 import { smooth } from "./smooth";
 import { WorkspaceGreeting } from "./workspace-greeting";
@@ -116,59 +115,14 @@ export function WorkspaceApp() {
     if (analysisController.current) return;
     const controller = new AbortController(); analysisController.current = controller;
     setBusy(true); setAnalysisError(""); pendingText.current = text.trim(); setPendingQuestion(text.trim()); setPrompt("");
+    // The home composer gives way to the chat composer; keep typing where the reader is.
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".chat-composer textarea")?.focus());
     try {
-      let difyHandled = false;
-      const userMessageId = newId();
-      const asstMessageId = newId();
-      const targetEncounter = encounter ?? { ...current, title: text.trim().slice(0, 48) };
-
-      try {
-        if (!encounter) dispatch({ type: "encounter.add", encounter: targetEncounter });
-        dispatch({
-          type: "message.add",
-          encounterId: targetEncounter.id,
-          messages: [
-            { id: userMessageId, role: "user", content: text.trim(), mode: selectedMode, createdAt: new Date().toISOString() },
-            { id: asstMessageId, role: "assistant", content: "", mode: selectedMode, createdAt: new Date().toISOString(), reviewStatus: "draft" },
-          ],
-        });
-        dispatch({ type: "encounter.select", id: targetEncounter.id });
-        setPendingQuestion(null);
-
-        let accumulated = "";
-        await sendDifyChatMessage(
-          { query: text.trim(), user: "drferdi" },
-          {
-            onChunk: (chunk) => {
-              accumulated += chunk;
-              dispatch({ type: "message.edit", encounterId: targetEncounter.id, messageId: asstMessageId, content: accumulated });
-            },
-            onResource: (resources) => {
-              if (resources.length > 0) {
-                const citations = "\n\n---\n**Referensi Knowledge Base:**\n" +
-                  resources.map((r) => `• ${r.document_name} (${Math.round(r.score * 100)}%)`).join("\n");
-                accumulated += citations;
-                dispatch({ type: "message.edit", encounterId: targetEncounter.id, messageId: asstMessageId, content: accumulated });
-              }
-            },
-          },
-          { signal: controller.signal }
-        );
-        difyHandled = true;
-      } catch (difyError: unknown) {
-        if (controller.signal.aborted) return;
-        // If Dify returned empty or failed, fallback to local MIRA engine
-        console.warn("Dify gateway fallback:", difyError);
-      }
-
-      if (!difyHandled && !controller.signal.aborted) {
-        const analysis = await requestMiraAnalysis(composerCase(text, current.context, patient), { synthetic: true, signal: controller.signal });
-        if (controller.signal.aborted || analysisController.current !== controller) return;
-        if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
-        dispatch({ type: "message.add", encounterId: current.id, messages: composerMiraMessages(analysis, text, selectedMode, state.reviewDefaults) });
-        dispatch({ type: "encounter.select", id: current.id });
-      }
+      const analysis = await requestMiraAnalysis(composerCase(text, current.context, patient), { synthetic: true, signal: controller.signal });
+      if (controller.signal.aborted || analysisController.current !== controller) return;
+      if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
+      dispatch({ type: "message.add", encounterId: current.id, messages: composerMiraMessages(analysis, text, selectedMode, state.reviewDefaults) });
+      dispatch({ type: "encounter.select", id: current.id });
     } catch (error) {
       if (!controller.signal.aborted) { setAnalysisError(error instanceof Error ? error.message : "Analisis belum tersedia. Keluhan tetap tersedia."); setPrompt(text); }
     } finally {

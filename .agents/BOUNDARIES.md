@@ -18,10 +18,9 @@
   `git log --all -S"@g.us" --oneline` and grep staged history for phone-number
   patterns (`62\d{9,}`); a hit means stop and surface to Gaffer first.
 - **Capsule gate (Gaffer, 2026-08-25):** capsule code under `projects/**` is never
-  published through the monorepo remote. The pre-push hook blocks any outgoing
-  range touching `projects/**`; conscious exception only via
-  `CHIEF_PUSH_PROJECTS_OK=1` together with `CHIEF_PUSH_OK=1`. Capsules publish
-  through their own dedicated remotes (e.g. the `avery` remote), never `origin`.
+  published through the monorepo remote; check this by hand before a push.
+  Capsules publish through their own dedicated remotes (e.g. the `avery` remote),
+  never `origin`.
   **Executed 2026-08-25 (Gaffer-ordered):** `origin/main` was history-rewritten —
   `projects/**` stripped from ALL public history and PII (JID/MSISDN) redacted —
   then force-pushed (`main` @ `5b6b808`), stale remote branches deleted, branch
@@ -43,10 +42,12 @@
 - Another session's LOCAL (unpushed) commits are that session's property:
   merging, rebasing, stashing, or publishing them is out of scope unless Gaffer
   orders it explicitly. If they block you, report — do not absorb them.
-- `.agents/HANDOFF.md`: append/update your own workstream section; never rewrite
-  or delete another session's section. Gaffer's own uncommitted edits (root
-  `AGENTS.md`, `.safrs/**`, `.agents/CONTEXT.md`) are never committed, stashed,
-  or reverted by any session.
+- HANDOFF ownership follows ADR 0007. Overwrite only the `HANDOFF.md` of the
+  scope this session owns (capsule: `projects/<domain>/<capsule>/.agents/HANDOFF.md`;
+  root `.agents/HANDOFF.md` only for control-plane work). Never write another
+  scope's HANDOFF. When overwriting, keep another live session's open claim.
+  Gaffer's own uncommitted edits (root `AGENTS.md`, `.safrs/**`,
+  `.agents/CONTEXT.md`) are never committed, stashed, or reverted by any session.
 
 ## 3. Sensitive data
 

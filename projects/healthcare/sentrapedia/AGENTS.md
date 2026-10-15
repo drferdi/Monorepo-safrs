@@ -4,6 +4,14 @@
 - Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
 - Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
 
+## Product topology
+
+- This directory is the single sovereign Sentrapedia capsule and future repository boundary.
+- The clinical workspace remains at the capsule root (`src/`, `mira/`, `theoracle/`).
+- `apps/site/` owns the public marketing website and its site-specific SPDS record.
+- A future demo belongs under `apps/demo/` as configuration and synthetic data around shared application code, never as a forked capsule.
+- Root lifecycle commands must cover every shipped subsystem; run site-only commands from `apps/site/` when working exclusively on that surface.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

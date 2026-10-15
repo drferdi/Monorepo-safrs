@@ -1,0 +1,17 @@
+{
+  "name": "@sentrapedia/site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "install:check": "node tools/install-check.mjs",
+    "build": "node scripts/transform.mjs",
+    "test": "node --test",
+    "verify": "node scripts/verify.mjs",
+    "docs:verify": "node tools/verify-spds.mjs",
+    "lint": "node tools/lint.mjs",
+    "start": "node scripts/serve.mjs",
+    "deploy:dry-run": "node tools/deploy-dry-run.mjs"
+  }
+}

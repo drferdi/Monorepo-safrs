@@ -1078,8 +1078,8 @@ auto-merge. The shared guard enforces this for every spelling (`git.exe`,
 `git -C <path>`, `git -c key=value`): Claude Code shows a permission prompt,
 Codex asks through its own approval prompt (`~/.codex/rules/safrs-merge.rules`)
 and otherwise blocks, and fast-forwarding `main` from Codex always blocks. The
-guard also asks before `git reset --hard`, and denies force-push, self-granted
-publication (`CHIEF_PUSH_OK`, `--no-verify`, `core.hooksPath`), and agent
+guard also asks before `git reset --hard`, and denies force-push, hook
+bypasses (`--no-verify`, `core.hooksPath`), and agent
 writes to the guard's own files.
 
 Additional optional capabilities (see `tools/capabilities/manifests/` for the

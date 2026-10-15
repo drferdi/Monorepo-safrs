@@ -1,0 +1,7 @@
+# Migration manifest records the source bytes, including original line endings.
+# Keep the carried closure byte-identical after clone and during Git export.
+assets/** -text
+source/** -text
+site/** -text
+scripts/** -text
+reference/design-integrity.json -text
