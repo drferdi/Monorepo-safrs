@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, AGENTS briefing compaction)
+Last updated: 2026-10-15 (Claude Code, stale MUST read lists)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,17 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `docs/stale-must-lists`, `TASK-20261015-STALE-MUST-LISTS` plus
+  `-HANDOFF` for this file): `b8ba1c25` points abyss-review (both copies) and the Cursor context
+  agent at the generated Always (MUST) routing block instead of their own lists, which still named
+  `03_ARCHITECTURE.md` after `88c99aba`. The AGENTS compaction (`a11483ce`, `697b6da9`) is in local
+  `main`; its task is CLOSED and its worktree and branch are removed. On Gaffer's order
+  `TASK-20261011-GAFFER-ADDRESS` (REVIEW, work already in `main` via `1a16acae`) went to CLOSED,
+  releasing its 87 paths. Finding, not yet decided: that task was bound to worktree ID
+  `worktrees/main-merge-tmp`, the name sessions reuse for temporary merge worktrees, so any such
+  worktree could mutate it; no active task is bound there now. Open follow-ups: a trigger for the
+  demoted architecture reads outside Claude Code, and `check_handoff.py`'s reference to the removed
+  "Task Lifecycle & Documentation" heading.
 - 2026-10-15 (Kilo GPT-6.1 Sol, finished by Claude Code, `docs/compact-agents-briefing`,
   `TASK-20261015-COMPACT-AGENTS-BRIEFING`): root `AGENTS.md` handwritten briefing compacted
   (956 -> 688 words by `wc -w` above the routing marker); the generated routing block is
