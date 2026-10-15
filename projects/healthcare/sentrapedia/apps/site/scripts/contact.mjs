@@ -78,7 +78,8 @@ export function createContactHandler({
       json(res, 415, { status: 'invalid', message: 'Format formulir tidak didukung.' });
       return;
     }
-    const ip = req.socket.remoteAddress || 'unknown';
+    // Behind a proxy (Vercel) the socket is the proxy; the first forwarded address is the visitor.
+    const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
     const recent = (attempts.get(ip) || []).filter(time => now() - time < WINDOW_MS);
     if (recent.length >= MAX_ATTEMPTS) {
       json(res, 429, { status: 'limited', message: 'Terlalu banyak percobaan. Coba lagi nanti.' });

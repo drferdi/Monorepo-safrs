@@ -6,7 +6,7 @@ authority: "Gaffer"
 owner: "dr. Ferdi Iskandar"
 version: "1.0.0"
 created: "2026-10-14"
-last_verified: "2026-10-14"
+last_verified: "2026-10-15"
 source_of_truth: true
 classification: "SENTRA"
 purpose: >-
@@ -47,6 +47,6 @@ overlays:
   ai: false
   agentic: false
 unknowns:
-  - "Production host, URL, TLS, monitoring, rollback, and support owner."
+  - "Monitoring, custom domain, Git-connected deploys, and support owner (host is Vercel, https://sentrapedia.vercel.app, since 2026-10-15)."
   - "Approved contact sender, retention, legal basis, and live delivery evidence."
   - "Complete third-party asset redistribution rights."

@@ -12,7 +12,7 @@ async function collect(directory) {
     else if (/\.(?:mjs|js)$/.test(entry.name) && !entry.name.endsWith('.min.js')) files.push(relative);
   }
 }
-for (const directory of ['assets', 'scripts', 'tools', 'tests']) await collect(directory);
+for (const directory of ['api', 'assets', 'scripts', 'tools', 'tests']) await collect(directory);
 for (const file of files) {
   const result = spawnSync(process.execPath, ['--check', file], { cwd: root, stdio: 'inherit' });
   if (result.status !== 0) process.exit(result.status ?? 1);

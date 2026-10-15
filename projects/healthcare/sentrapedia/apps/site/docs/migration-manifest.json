@@ -228,7 +228,7 @@
     },
     {
       "path": "scripts/contact.mjs",
-      "sha256": "0eea0e9f0b4756bcc5af38ca1a9e620d7b0bc1fcc0a11a77fcdf4c19f2ffec80"
+      "sha256": "a7e32601a7c267e83bd557a284c13c5f2ff23f2e7dcb02159d708e41b6ca94b2"
     },
     {
       "path": "scripts/contact.test.mjs",
