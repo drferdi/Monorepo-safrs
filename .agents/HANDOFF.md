@@ -17,7 +17,7 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   `ask_human`/`stop_retry`, with Jev's decision in `agent_message`; everything else and any
   failure allow. Web search is not gated (tool names undocumented). Verification-control-only
   change set (`SAFRS_RISK=R2`). Rebased onto local `main` `56d60b3a` as `9b4a771d` (HANDOFF
-  conflict, both sides kept). Independent `safrs-auditor` review (read-only, not the author) of
+  conflict, both sides kept), then onto `fe28f7c0` (HANDOFF only) before merge. Independent `safrs-auditor` review (read-only, not the author) of
   `9b4a771d`: ACCEPT WITH FIXES, no blockers. Fixed in the next commit: 15 s timeout on the Jev
   call and 5 s on git (under Cursor's 20 s), no consult without a `conversation_id` (would share
   the `nosession` marker), and the `mode=` match anchored so a reason text cannot fake active mode.
