@@ -191,6 +191,11 @@ test("Codex cannot modify its own enforcement boundary", () => {
     ".husky/pre-push",
     "tools/automation/src/guard.mjs",
     "tools/automation/src/adapters/codex.mjs",
+    ".devin/hooks.v1.json",
+    ".devin/hooks/safrs-guard.mjs",
+    ".devin/config.json",
+    ".grok/hooks/safrs-guard.mjs",
+    ".grok/hooks/safrs-guard.json",
   ];
   for (const target of protectedPaths) {
     const verdict = authorize(

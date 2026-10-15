@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, `chore/agent-guard-closeout`)
+Last updated: 2026-10-16 (Claude Code, `chore/register-devin-grok-controls`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -21,9 +21,16 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   don't load (`safe.directory` case mismatch), which the user-level guard does not need.
   `jev_hook.py` now gates `spawn_subagent` and logs a Grok call only under `--agent grok`. The Devin
   adapter (`.devin/`) is merged but unverified in Devin's own agent; Gaffer uses Grok there. Tests:
-  Devin 23/23, Grok 20/20. Open (separate `.safrs/**` changes): `.devin/**` and `.grok/**` in
-  sensitive paths, both hook sets in `SELF_GUARD_PATTERNS`. Docs: `docs/bootstrap/GROK_SETUP.md`,
-  `docs/bootstrap/DEVIN_SETUP.md`.
+  Devin 23/23, Grok 20/20. Docs: `docs/bootstrap/GROK_SETUP.md`, `docs/bootstrap/DEVIN_SETUP.md`.
+- 2026-10-16 (Claude Code, `chore/register-devin-grok-controls`, `TASK-20261016-REGISTER-AGENT-CONTROLS`,
+  Gaffer's order): `.devin/**` and `.grok/**` are R2 sensitive paths; `.devin/hooks.v1.json`,
+  `.devin/hooks/**`, `.devin/config.json`, and `.grok/hooks/**` are verification controls and in the
+  guard's `SELF_GUARD_PATTERNS` (deny message now names any agent, not only Codex). Control-only
+  change set. `.safrs/sensitive-paths.json` moved from the stale `TASK-20260927-HEALTHCARE-MIGRATION`
+  claim (last update 2026-09-26; its change landed as `bce602c9`) by `pnpm task transfer`
+  `TRANSFER-20261016-SENSITIVE-PATHS`; that task keeps `projects/healthcare/`. Evidence: guard,
+  adapters-parity, automation-policy, Devin and Grok hook tests 81/81; sensitive classification and
+  verifier parity unittests 27/27. Editing the Devin or Grok hooks now needs Gaffer's hand.
 - 2026-10-15 (Claude Code, `chore/cursor-jev-task-hook`, `TASK-20261015-CURSOR-JEV-TASK-HOOK`):
   Cursor `preToolUse` (matcher `Task`, timeout 20 s, not failClosed) runs
   `.cursor/hooks/jev-before-task.mjs`. That script wraps `tools/typesafe-jev/mcp/jev_hook.py`
