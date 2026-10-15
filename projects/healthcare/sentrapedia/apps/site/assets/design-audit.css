@@ -282,3 +282,50 @@ footer .sentrapedia-contact-form input[type=submit]:disabled {
     footer .contact-status { transition: none; }
     footer .sentrapedia-contact-form input[type=submit]:hover { transform: none; }
 }
+
+/* Logo middle: the meaning under the big wordmark. The SVG carries its own whitespace (16.6% of its width
+   below the artwork, artwork centred at 47.5%), so the lines tuck up by a share of the lockup width and sit
+   on the artwork's own axis. Block flow on purpose: a negative margin inside a grid stretches the row. */
+#logo-middle .logo-middle-lockup {
+    width: fit-content;
+    max-width: 100%;
+    text-align: center;
+}
+
+#logo-middle .logo-middle-claim,
+#logo-middle .logo-middle-origin {
+    position: relative;
+    left: -2.5%;
+    max-width: 36ch;
+    margin: 0 auto;
+    letter-spacing: -.01em;
+    line-height: 1.45;
+}
+
+#logo-middle .logo-middle-claim {
+    margin-top: calc(-10% + .75rem);
+    color: var(--sp-ink);
+    font-size: clamp(1.05rem, 1.7vw, 1.5rem);
+    font-weight: 500;
+}
+
+#logo-middle .logo-middle-origin {
+    margin-top: .9em;
+    color: var(--sp-muted);
+    font-size: clamp(.95rem, 1.3vw, 1.125rem);
+}
+
+#logo-middle .logo-middle-origin a {
+    color: var(--sp-action);
+    text-decoration: underline;
+    text-underline-offset: .18em;
+}
+
+#logo-middle .logo-middle-origin a:hover {
+    color: var(--sp-ink);
+}
+
+#logo-middle .logo-middle-origin a:focus-visible {
+    outline: 3px solid var(--sp-focus);
+    outline-offset: 3px;
+}

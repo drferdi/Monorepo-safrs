@@ -52,7 +52,7 @@
     },
     {
       "path": "assets/design-audit.css",
-      "sha256": "56f7d6d2c6b86bc669c24c7235a80292e9fd55ff1bd5f7496879efa3f224cf56"
+      "sha256": "c99399dcbfe0b86e8af991b888e4ffad5d7f4b51df4b4652109168b3a5a64fbe"
     },
     {
       "path": "assets/design-audit.js",
@@ -264,7 +264,7 @@
     },
     {
       "path": "scripts/verify.mjs",
-      "sha256": "02269bb0e44124993b5519d30824119b2e5f8582cd949ead1c41ee65c3f401c7"
+      "sha256": "f05959c17fe82aa12ba2724a403da222f17359d6e8236a845bf66e56e5268a2c"
     },
     {
       "path": "scripts/workflow-playback.test.mjs",
@@ -340,7 +340,7 @@
     },
     {
       "path": "site/index.html",
-      "sha256": "6f30b8ab8959a39cfa0ae512581a5b5ac7394c716f526ea6bb9f05f560e6fc2c"
+      "sha256": "afd968970d49f70aaddf1dfdb1835d6108aa2978def505a70e1e90547aec2bb1"
     },
     {
       "path": "site/media/clinical-product/anamnesis-source.png",
@@ -364,7 +364,7 @@
     },
     {
       "path": "site/media/design-audit.css",
-      "sha256": "56f7d6d2c6b86bc669c24c7235a80292e9fd55ff1bd5f7496879efa3f224cf56"
+      "sha256": "c99399dcbfe0b86e8af991b888e4ffad5d7f4b51df4b4652109168b3a5a64fbe"
     },
     {
       "path": "site/media/design-audit.js",
@@ -560,7 +560,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "6f30b8ab8959a39cfa0ae512581a5b5ac7394c716f526ea6bb9f05f560e6fc2c"
+      "sha256": "afd968970d49f70aaddf1dfdb1835d6108aa2978def505a70e1e90547aec2bb1"
     }
   ]
 }

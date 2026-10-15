@@ -175,3 +175,10 @@
 - Gaffer's follow-up on the mid-dissolve capture: no black bars above and below, the film shows as the
   tablet only. The film layer therefore shares the simulation's device frame (bezel, radius, 3:2 screen,
   4:5 on phones) and the clip is cropped to that screen, never letterboxed.
+
+## 2026-10-16 — Meaning under the big wordmark
+- `#logo-middle` now states who builds Sentrapedia and where: "Architected and built by professional
+  doctors." and "Dikembangkan di RSIA Melinda DHAI.", the hospital name linking to https://melinda.co.id/
+  (Gaffer's copy and link).
+- The site's no-external-target gate stays. It carries a one-entry allowlist (`outboundLinks` in
+  `scripts/verify.mjs`) for that link; any further outbound link is a new decision and a new entry.

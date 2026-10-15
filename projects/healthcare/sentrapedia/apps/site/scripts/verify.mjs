@@ -16,11 +16,12 @@ const current = await fs.readFile(path.join(site, 'index.html'), 'utf8');
 if (current !== await fs.readFile(path.join(root, 'source/index.html'), 'utf8')) errors.push('Homepage differs from source template');
 if (!current.includes('<title>Sentrapedia</title>') || !current.includes('kewenangan dokter yang menangani')) errors.push('Product identity or physician ownership copy missing');
 const ids = new Set([...current.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]));
+const outboundLinks = new Set(['https://melinda.co.id/']); // Gaffer-approved outbound links; every other target stays self-hosted
 let localTargets = 0;
 for (const match of current.matchAll(/\b(?:src|href|poster|srcset)\s*=\s*(["'])(.*?)\1/gis)) {
   const value = match[2].replaceAll('&amp;', '&');
   if (/^(data:|mailto:|tel:)/i.test(value)) continue;
-  if (/^(https?:|\/\/)/i.test(value)) { errors.push(`External target: ${value}`); continue; }
+  if (/^(https?:|\/\/)/i.test(value)) { if (!outboundLinks.has(value)) errors.push(`External target: ${value}`); continue; }
   if (value.startsWith('#')) {
     if (value.length > 1 && !ids.has(value.slice(1))) errors.push(`Missing anchor: ${value}`);
     continue;
