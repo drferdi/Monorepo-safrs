@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, routing triggers)
+Last updated: 2026-10-15 (Claude Code, dangling task cleanup)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,16 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `docs/dangling-task-cleanup`, Gaffer's go): the 11 tasks left bound to
+  the removed `claude-path-scoped-rules` worktree are CLOSED, closed from a recreated temporary
+  worktree of that name, now removed again (no active task bound to it). The 4 MERGED ones were
+  closed directly. Each of the 7 REVIEW ones went REVIEW -> MERGED -> CLOSED only after a matching
+  2026-10-12 commit on `feat/claude-path-scoped-rules` was confirmed in `main`:
+  CODEX-AGENTS-HYGIENE `1663688a`, LESSON-HEREDOC `8e3a25e2`, CONTROL-CENTER-BIOME `da9eeef8`,
+  CONTROL-CENTER-A11Y `74ef42fc`, CONTROL-CENTER-HANDOFF `6797b570`, CODEX-MERGE-PROMPT `2db20bad`,
+  PROVIDER-PROOF-FIXTURES `a210d52d`. These had waited on an integrity review that was never
+  recorded. MERGED here means "in `main`", not "reviewed", so their review debt joins the open
+  `verification-integrity.json` debt (still bound to `52750786`).
 - 2026-10-15 (Claude Code, `docs/routing-arch-triggers`, `TASK-20261015-ROUTING-ARCH-TRIGGERS`):
   the generated routing block names each task scope's trigger paths (DECISIONS 2026-10-15), so
   agents without path-scoped rules know when `task:architecture` and the other scopes apply.
