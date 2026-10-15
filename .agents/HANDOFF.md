@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, Kilo config cleanup merged)
+Last updated: 2026-10-15 (Claude Code, AGENTS briefing compaction)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,20 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Kilo GPT-6.1 Sol, finished by Claude Code, `docs/compact-agents-briefing`,
+  `TASK-20261015-COMPACT-AGENTS-BRIEFING`): root `AGENTS.md` handwritten briefing compacted
+  (956 -> 688 words by `wc -w` above the routing marker); the generated routing block is
+  byte-identical. Plan: `.kilo/plans/1792028769299-compact-agents-briefing.md` (gitignored, primary
+  checkout). Integrity review by `safrs-auditor` (read-only, not the author) of this diff plus
+  `88c99aba` (MUST demotion): ACCEPT WITH FIXES, no blockers. Applied: the merge rule again says
+  what counts as Gaffer's go. Not formal human acceptance: `.safrs/reviews/verification-integrity.json`
+  is still bound to `52750786`, so review debt for this change and `88c99aba` stays open until
+  Gaffer records one. Dropped on purpose, not relocated: dashboard copy, pnpm 9 overrides advice,
+  the remediation-sequence prose, and the embedded Jev fallback code. Split off: stale
+  `03_ARCHITECTURE` MUST lists in abyss-review skills and the Cursor context agent (scope of
+  `TASK-20261011-GAFFER-ADDRESS`), the non-Claude trigger for the demoted reads, and
+  `check_handoff.py`'s stale heading reference. `pnpm governance` still fails at lifecycle on
+  inherited lease digests (no ledger or checker change).
 - 2026-10-15 (Claude Code, `chore/kilo-config-cleanup`, `TASK-20261015-KILO-CONFIG-CLEANUP`):
   `0cb4acf5` on local `main`: `.kilo/kilo.jsonc` loads `.kilo/rules/master-engineering.md` and
   `commit_message.prompt` writes a conventional commit with exactly one

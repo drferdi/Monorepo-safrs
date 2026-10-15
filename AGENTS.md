@@ -1,66 +1,44 @@
-# AGENTS.md — SAFRS v1.1 Repository Router
+# AGENTS.md - SAFRS v1.1 Repository Briefing
 
-## Mission & Core Principles
-- **SAFRS v1.1:** Human-Governed · Agent-Executed · Machine-Enforced.
-- Monorepo root is an optional AI control/automation plane; never a runtime, build, config, path, tooling, or infra dependency for capsules.
-- Primary goal: Reduce Gaffer workload; never degrade Gaffer into a terminal operator or janitor.
-- **Epistemic Principle:** Canonical architecture & approved purpose > Existing code patterns/git history. Violating legacy patterns are systemic non-conformance, not precedents.
-- Authority order: (1) Explicit human input, (2) L1 Constitution/SAFRS, (3) `docs/architecture/MONOREPO_PURPOSE.md`, (4) Root `AGENTS.md`, (5) Nested `AGENTS.md`, (6) Task docs, (7) Low-impact assumptions. Report conflicts immediately.
+## Identity And Boundaries
+Reduce Gaffer's workload through an optional AI control plane, never a capsule lifecycle dependency. Authority: explicit human input > L1 Constitution/[SAFRS](SAFRS_SPEC.md) > [approved purpose](docs/architecture/MONOREPO_PURPOSE.md) > root AGENTS > nested AGENTS > task docs > low-impact assumptions. Report conflicts immediately; canonical purpose overrides legacy patterns.
 
-## Language, Tone & Reporting
-- Language: Bahasa Indonesia mixed with English (~70:30). Direct address: **Gaffer** (or **Doc**). Forbidden pronouns: *kamu, elu, elo, gua, gue*.
-- Control Center: UI sidebar/titles in English; status/descriptions in concise Indonesian. Display original repo name alongside labels.
-- Home Dashboard: **SAFRS Dashboard** (not "Overview"). Scope: Gaffer orchestration, product capsules, shared/standalone tools.
-- Mandatory 3-line execution summary at final report end:
-  `Orchestrator: <model> <reasoning tier>`
-  `Worker: <model> <reasoning tier|none>`
-  `Result: <Success|Partial|Blocked> / <Verified|Unverified>`
-  *(Populate per active model/tier. Claim `Verified` only when verification execution is directly observed).*
+Capsules at `projects/<domain>/<capsule>/` own their toolchain, lockfile, configuration, tests, and lifecycle. Domain folders hold only `AGENTS.md`/`README.md`, never application code. Root workspace/catalog/lockfile/configuration/paths/scripts/tools/packages/infrastructure and cross-capsule source/path imports or links are forbidden lifecycle dependencies, including runtime, build, test, and deploy. Reuse capsule-local code or pinned versioned artifacts. Existing coupling is non-conformance, not precedent, even when documented; root has no demonstrator. Sentra tokens: local snapshot or pinned artifact, never root `packages/token`; see `docs/design-system/reference/`.
 
-## Topology & Capsule Standalone Contract
-- Topology: `projects/<domain>/<capsule>/`. Domain directories (`healthcare`, `academic`, `corporate`, `internal`, `product`) store nav/docs only (`AGENTS.md`, `README.md`); application code is strictly prohibited.
-- Capsule rules: `docs/governance/SAFRS_PROJECT_CAPSULES.md`. Shared/Tooling: `tools/` (repo tools), `tests/` (cross-project integration).
-- Reusable logic: Pin via versioned external package or localize inside capsule. Never consume root `packages/` via source/path dependencies.
-- **Independent Contract (Mandatory from capsule root via argv `[program, args]`):**
-  - Must pass: `install`, `build`, `test`, `run`, `deployDryRun` (no side-effects). Cannot be `N/A`.
-  - `lint` & `typecheck` may be `N/A` only with non-empty justification.
-- **Capsule Invariants (Strict Isolation):**
-  - Forbidden: Consuming root workspace, lockfile, catalog, configs, scripts, tools, or packages.
-  - Forbidden: Cross-capsule imports or linking during runtime, build, test, or deploy.
-- **Standalone Proof:** Must pass structural verification (paths/deps) AND empirical extraction verification (isolate capsule to temp dir + execute commands). Extraction pass is absolute ground truth.
-- **Design Tokens:** Use Sentra tokens via local snapshot or pinned distributed package. Extractions must never resolve root `packages/token`. Ref: `docs/design-system/reference/`.
+[Capsule contract](docs/governance/SAFRS_PROJECT_CAPSULES.md): run argv `[program, args]` from the capsule root. `install`, `build`, `test`, `run`, `deployDryRun` must pass (dry-run without side effects); only `lint`/`typecheck` permit `N/A` with non-empty justification. Require structural AND isolated extraction proof; extraction is decisive.
 
-## Agent Behavior, Scope & Governance
-- **Local Autonomy (Scoped Sandbox):** Unrestricted read/search, recoverable file edit/delete, run tools/linters/tests/builds, local docker/services, in-scope refactors, disposable migrations.
-- **Escalate to Gaffer ONLY for:** Material scope creep, canonical ambiguity, active mutation collisions, R3/high-impact operations, prod credentials/access, prod deployments, irreversible real-data mutations, safety/clinical logic. Never escalate deterministic housekeeping.
-- **Deterministic Resolution:**
-  - *Stale/Orphan Claims:* Document evidence -> mark `SUPERSEDED` -> resume task.
-  - *Inherited Failures:* Log baseline -> evaluate delta -> prevent new regressions -> proceed.
-  - *Active Collision:* Halt mutations on conflicting path -> identify conflict -> resolve ownership. Single-writer applies per bounded scope, not globally.
-- **Git Worktrees:** Create parallel worktrees strictly under `../Monorepo.worktrees/<branch-name>`. Never inside repo root.
-- **Windows Shell Quirks:** A user-level RTK hook rewrites Shell `git` to `rtk git` and may filter output; use `git.exe` for raw diffs. Worktree "uncommitted edits" are often CRLF-only; confirm with `git.exe diff --ignore-cr-at-eol --stat` before discarding.
-- **pnpm Overrides:** pnpm 9.x ignores `overrides` in `pnpm-workspace.yaml`; capsules on pnpm 9 put overrides in `package.json` `pnpm.overrides`.
-- **Attribution:** Every agent git commit must include trailer: `Co-Authored-By: <Agent/Vendor> <email>`.
-- **Merge only on Gaffer's go:** Before any merge (`git merge`, `git pull`, fast-forwarding `main`, `gh pr merge`), ask Gaffer and wait. "go", "merge it", or any clear agreement in the current conversation approves that merge only. Never enable auto-merge. The shared guard asks on these commands. Codex asks through its own approval prompt (`~/.codex/rules/safrs-merge.rules`, `approval_policy = "on-request"`); without that file, or for fast-forwarding `main`, Codex stops and Gaffer runs the merge.
+## Commands
+Root: pnpm **11.21.0**, Node **>=24.18.0 <25**; capsules use their own declared versions.
 
-## Risk Tiers (`.safrs/policy.json`)
-- **R0:** Read-only analysis.
-- **R1:** Reversible local modifications.
-- **R2:** Boundary-affecting (deps, shared APIs, non-prod auth, migrations, CI/CD, governance). Review per boundary work package, not per command. Token schema change = R2.
-- **R3:** High-impact / irreversible (prod infra/data, prod credentials, clinical logic, prod deploy). Requires explicit Gaffer approval prior to execution.
+- Optional root diagnostics/setup: `pnpm run doctor` -> `pnpm run setup` -> `pnpm dev`; never capsule prerequisites.
+- Root/governance/cross-project merge gate: `pnpm run governance` (cross-platform), or `bash scripts/safrs-verify.sh`; not full quality verification.
+- Full root quality: `pnpm check` = governance -> check:tokens -> lint -> typecheck -> test -> build. CI adds checks and explicit package exclusions; root checks do not prove excluded-capsule quality.
+- Focused repository test: `node --test tests/repository/workspace-config.test.mjs`; substitute existing paths for other focused tests.
+- Capsules: local verification first; `pnpm project:status` discovers structural status; `pnpm project:verify <domain/capsule>` proves extraction by running installs/lifecycle commands, not read-only analysis.
+- Root `pnpm test` enables database integration; configure a disposable database (`DATABASE_URL`). Never print environment values or prescribe destructive resets.
+
+## Execution Safeguards
+- Autonomously perform scoped, reversible local engineering, tools/tests/builds, local services, and disposable migrations; never make Gaffer a terminal operator or housekeeping approver.
+- One writer per bounded scope; isolate worktrees under `../Monorepo.worktrees/<branch-name>`, never inside this repo. Stop conflicting-path mutations; resolve ownership. Document stale/orphan evidence before `SUPERSEDED`. Record inherited failures, compare delta, prevent regressions, proceed.
+- Risk: R0 read-only; R1 reversible local; R2 boundary changes (dependencies/APIs/auth/migrations/CI/governance/token schema), reviewed per boundary package; R3 production data/infrastructure/credentials/deployments, irreversible data mutations, and safety/clinical logic require prior explicit Gaffer approval. Escalate material scope creep, canonical ambiguity, active collisions, and high-impact operations, not deterministic housekeeping. See `.safrs/policy.json`; no self-approval of verification-control integrity.
+- Ask and wait for Gaffer's approval for **each** merge, including pull, fast-forwarding `main`, and PR merge; "go", "merge it", or any clear agreement in the current conversation approves that merge only. Never enable auto-merge. Codex: without `~/.codex/rules/safrs-merge.rules`, or for fast-forwarding `main`, stop; Gaffer performs the merge. Publication requires separate authority under [.agents/BOUNDARIES.md](.agents/BOUNDARIES.md); missing gates never imply permission.
+- Agent commits require `Co-Authored-By: <Agent/Vendor> <email>`.
+- Windows: RTK may filter `git`; use `git.exe` for raw diffs. Check `git.exe diff --ignore-cr-at-eol --stat` before treating edits as substantive; never discard others' work.
 
 ## Jev Decision Layer
-- **MUST call Jev before**: the first web search or browse in a task, spawning a subagent, retrying an approach that already failed, any consequential or approval-needing action, or choosing between materially different routes. Skip for simple answers, deterministic calculations, routine file edits, or `bypass jev`. Keep irreversible actions behind human confirmation.
-- **How**: use the `jev_route` MCP tool (one-line English goal, no secrets). Server and setup: `tools/typesafe-jev/README.md`. Fallback on Windows, from `tools/typesafe-jev/playbook`: `.venv/Scripts/python.exe -c "import json; from src.router import route_task; print(json.dumps(route_task({'goal':'<goal>','kind':'coding','cached_artifact':False,'cached_note':'','prior_error':'','same_error_count':0,'sources_found':0,'constraints':''})))"` — never the JSON CLI entry point (this shell strips its quotes).
-- Honor `route.action` only when a live call returns `jev_used: true` and `mode: active`. Jev never grants authority to expose secrets, change permissions, execute production actions, or perform irreversible operations. On error or timeout, continue through the normal safe path.
-- Review the first 20–50 active decisions. Demote or rewrite the pack if high-confidence accuracy is below 9/10, accuracy is below 90% over at least 30 decisions, or routing cost/latency exceeds the work it gates.
+All agents: call `jev_route` before first web search/browse, subagents, failed-approach retries, consequential/approval-needing actions, or materially different routes; skip simple answers, calculations, routine edits, or `bypass jev`. Send no secrets; [setup](tools/typesafe-jev/README.md). Honor actions only for live `jev_used: true`, `mode: active`; errors/timeouts use the normal safe path. Jev cannot authorize secret exposure, permission changes, production, or irreversible actions.
 
-## Task Lifecycle & Documentation
-- Lifecycle: `PROPOSED → CLAIMED → PLANNED → EXECUTING → VERIFYING → REVIEW → MERGED → CLOSED`.
-- Exceptions: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
-- Active plans: `docs/plans/active/` (move to `docs/plans/completed/` on close). Decisions: ADR. Stable docs: Canonical docs.
-- **Capsule memory (ADR 0007 decision 7):** Capsule-scoped work reads `projects/<domain>/<capsule>/.agents/HANDOFF.md` then `CONTEXT.md` first; it overwrites that `HANDOFF.md` and appends capsule-only decisions to that `DECISIONS.md`. `check_handoff.py` requires the handoff of every scope a change set touches; a capsule-only change set never needs the root handoff.
-- Root `.agents/*` (`HANDOFF`, `DECISIONS`, `PROGRESS`) is control-plane only (root tooling, governance, CI, `packages/`, cross-capsule orchestration); scope workers update it only when explicitly tasked with repo coordination.
+Review first 20-50 active decisions; demote/rewrite below 9/10 high-confidence accuracy, below 90% over at least 30 decisions, or when cost/latency exceeds gated work.
+
+## Memory And Reporting
+ADR 0007 decision 7: capsule work reads its `.agents/HANDOFF.md`, then `CONTEXT.md` first; overwrites its HANDOFF and appends capsule-only DECISIONS. Update every touched scope's HANDOFF; capsule-only changes need no root handoff. Root `.agents/*` is control-plane only, updated by scope workers only for explicit repo coordination. Preserve others' open claims. Lifecycle: [SAFRS](SAFRS_SPEC.md#9-multi-agent-protocol); plans in `docs/plans/active/`, completed in `docs/plans/completed/`; architecture decisions in ADRs.
+
+Chat: Bahasa Indonesia/English ~70:30; address **Gaffer** (or **Doc**); never *kamu, elu, elo, gua, gue*. Repository docs: English. End final reports with actual model/tier and directly observed verification only:
+```text
+Orchestrator: <model> <reasoning tier>
+Worker: <model> <reasoning tier|none>
+Result: <Success|Partial|Blocked> / <Verified|Unverified>
+```
 
 ## Context Hydration & Read Order
 <!-- SAFRS:ROUTING:BEGIN -->
@@ -95,17 +73,3 @@ Read only the context required for the task.
 
 Then read the nearest nested `AGENTS.md` for the project/module being modified.
 <!-- SAFRS:ROUTING:END -->
-
-## Known Non-Conformance & Remediation
-- Root-coupled repos/demonstrators are current-state defects, not templates or precedents.
-- Root has no demonstrator (Gaffer, 2026-09-25): `projects/internal/golden-path` is excluded from the root workspace and is a capsule like any other. Optional root debug commands: `pnpm run doctor` -> `pnpm run setup` -> `pnpm dev` (governance: `pnpm run governance`).
-- Remediation sequence: Isolate dependency closure -> localize/pin external dependencies -> local verification -> empirical extraction verification -> declare standalone.
-
-## Completion & Verification Gate
-1. Local project verification passes from capsule root.
-2. Extraction test confirms capsule autonomy without root leakage.
-3. For root, governance, or cross-project merges, execute repository verifier:
-   ```bash
-   bash scripts/safrs-verify.sh
-   ```
-   Windows: `pnpm governance`.
