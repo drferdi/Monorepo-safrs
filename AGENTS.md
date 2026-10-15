@@ -60,11 +60,11 @@ Read only the context required for the task.
 
 **Task-scoped (SHOULD):**
 
-- `task:architecture` → `.agents/knowledge/03_ARCHITECTURE.md`, `docs/architecture/MONOREPO_PURPOSE.md`
-- `task:decision` → `.agents/knowledge/08_DECISIONS.md`, `.agents/DECISIONS.md`
-- `task:documentation` → `.agents/knowledge/07_DOCUMENTATION.md`
-- `task:governance` → `docs/governance/AGENT_AUTONOMY_MODEL.md`, `docs/governance/SAFRS_OPERATIONAL_SOP.md`
-- `task:implementation` → `.agents/knowledge/05_ENGINEERING.md`, `.agents/knowledge/06_CODING.md`, `docs/governance/CAPSULE_SOVEREIGNTY.md`
+- `task:architecture` (when changing `package.json`, `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.json`, `biome.jsonc`, `**/package.json`, `**/pnpm-lock.yaml`, `**/tsconfig*.json`, `packages/**`, `.safrs/**`, `tools/**`, `scripts/**`, `projects/**/AGENTS.md`) → `.agents/knowledge/03_ARCHITECTURE.md`, `docs/architecture/MONOREPO_PURPOSE.md`
+- `task:decision` (when changing `docs/adrs/**`) → `.agents/knowledge/08_DECISIONS.md`, `.agents/DECISIONS.md`
+- `task:documentation` (when changing `**/*.md`) → `.agents/knowledge/07_DOCUMENTATION.md`
+- `task:governance` (when changing `.safrs/**`, `tools/safrs/**`, `scripts/safrs-verify.*`) → `docs/governance/AGENT_AUTONOMY_MODEL.md`, `docs/governance/SAFRS_OPERATIONAL_SOP.md`
+- `task:implementation` (when changing `**/*.{ts,tsx,js,jsx,mjs,cjs,py}`) → `.agents/knowledge/05_ENGINEERING.md`, `.agents/knowledge/06_CODING.md`, `docs/governance/CAPSULE_SOVEREIGNTY.md`
 - `task:planning` → `.agents/PROGRESS.md`
 - `task:product` → `.agents/knowledge/09_PRODUCTS.md`
 - `task:review` → `.agents/knowledge/99_SELF_AUDIT.md`, `docs/governance/PURPOSE_DRIVEN_AUDIT.md`

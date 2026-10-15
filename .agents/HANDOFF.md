@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, stale MUST read lists)
+Last updated: 2026-10-15 (Claude Code, routing triggers)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,18 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `docs/routing-arch-triggers`, `TASK-20261015-ROUTING-ARCH-TRIGGERS`):
+  the generated routing block names each task scope's trigger paths (DECISIONS 2026-10-15), so
+  agents without path-scoped rules know when `task:architecture` and the other scopes apply.
+  Unblocked by closing `TASK-20261012-CLAUDE-PATH-RULES-WT` (REVIEW -> MERGED -> CLOSED on Gaffer's
+  order; `feat/claude-path-scoped-rules` is in `main`) from a recreated temporary
+  `claude-path-scoped-rules` worktree. Open: removing that worktree earlier today, without listing
+  its bound tasks first, left 11 more active tasks bound to it (MERGED: AUDIT-A6-A7, LFS-PRE-PUSH,
+  MERGE-ASK, POWERSHELL-GUARD; REVIEW: CODEX-AGENTS-HYGIENE, LESSON-HEREDOC, CONTROL-CENTER-BIOME,
+  -A11Y, -HANDOFF, CODEX-MERGE-PROMPT, PROVIDER-PROOF-FIXTURES), all `TASK-20261012-*`; Gaffer
+  wants them closed in a separate cleanup after each is checked against `main`. Second instance
+  of the worktree-name-as-handle finding (see the stale MUST lists entry). Rule followed from now
+  on: list the tasks bound to a worktree before removing it.
 - 2026-10-15 (Claude Code, `docs/stale-must-lists`, `TASK-20261015-STALE-MUST-LISTS` plus
   `-HANDOFF` for this file): `b8ba1c25` points abyss-review (both copies) and the Cursor context
   agent at the generated Always (MUST) routing block instead of their own lists, which still named
