@@ -16,10 +16,17 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   (cursor.com/docs/agent/hooks), so the hook denies once per conversation only on active-mode
   `ask_human`/`stop_retry`, with Jev's decision in `agent_message`; everything else and any
   failure allow. Web search is not gated (tool names undocumented). Verification-control-only
-  change set (`SAFRS_RISK=R2`) → needs independent integrity review. Evidence: hook boundary
-  tests (non-Task, malformed, real Jev twice, stubbed ask_human/stop_retry/shadow/allow) all as
-  expected; Biome, `check_sensitive_changes`, `check_task_ownership`, `check_handoff` exit 0.
-  Three test rows (`agent: cursor`) sit in the Jev logs. Not verified end to end: Cursor's
+  change set (`SAFRS_RISK=R2`). Rebased onto local `main` `56d60b3a` as `9b4a771d` (HANDOFF
+  conflict, both sides kept). Independent `safrs-auditor` review (read-only, not the author) of
+  `9b4a771d`: ACCEPT WITH FIXES, no blockers. Fixed in the next commit: 15 s timeout on the Jev
+  call and 5 s on git (under Cursor's 20 s), no consult without a `conversation_id` (would share
+  the `nosession` marker), and the `mode=` match anchored so a reason text cannot fake active mode.
+  Evidence after fixes: boundary inputs (non-Task, garbage, empty, `null`, no or empty
+  `conversation_id`) all allow, exit 0; Biome, `check_handoff`, `check_task_ownership`,
+  `check_sensitive_changes` (R2, controls only), `check_docs`, `node scripts/safrs-verify.mjs`,
+  `automation-policy.test.mjs`, `test_sensitive_classification` exit 0. Merge goes through a
+  temporary worktree `main-merge-2ea318e7`. Three earlier test rows (`agent: cursor`) sit in the
+  Jev logs. Not verified end to end: Cursor's
   `Task` `tool_input` shape is undocumented. After merge, reload Cursor, spawn one subagent, and
   read the newest `runs.jsonl` goal; a bare `Spawn subagent for: Task` means the field mapping
   needs one line. `CURSOR_SETUP.md` (Cursor's task) still lists `preToolUse` as not installed.

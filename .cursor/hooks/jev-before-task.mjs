@@ -30,7 +30,9 @@ try {
 } catch {
   allow();
 }
-if (payload?.tool_name !== "Task") {
+// Without a conversation id, jev_hook.py would share one marker across all
+// conversations, so skip the consult instead.
+if (payload?.tool_name !== "Task" || !payload.conversation_id) {
   allow();
 }
 
@@ -38,7 +40,7 @@ if (payload?.tool_name !== "Task") {
 const commonDir = spawnSync(
   "git",
   ["rev-parse", "--path-format=absolute", "--git-common-dir"],
-  { encoding: "utf8" },
+  { encoding: "utf8", timeout: 5000 },
 ).stdout?.trim();
 if (!commonDir) {
   allow();
@@ -63,9 +65,12 @@ const result = spawnSync(
     input: JSON.stringify({
       tool_name: "Task",
       tool_input: payload.tool_input ?? {},
-      session_id: payload.conversation_id ?? "",
+      session_id: payload.conversation_id,
     }),
     encoding: "utf8",
+    // Stay under Cursor's 20 s hook timeout; a timeout leaves stdout empty, so the spawn is allowed.
+    timeout: 15000,
+    killSignal: "SIGKILL",
   },
 );
 if (result.stderr) {
@@ -79,7 +84,8 @@ try {
   allow();
 }
 const action = /action=(\w+)/.exec(context)?.[1];
-const mode = /mode=(\w+)/.exec(context)?.[1];
+// Anchored on the fixed text after mode, so a reason containing "mode=" cannot set it.
+const mode = /mode=(\w+)\. In active mode/.exec(context)?.[1];
 if (mode !== "active" || !DENY_ACTIONS.has(action)) {
   allow();
 }
