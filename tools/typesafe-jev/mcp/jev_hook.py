@@ -19,7 +19,7 @@ import tempfile
 
 # Claude Code, Factory Droid (FetchUrl) and Grok (snake_case tool ids) names.
 RESEARCH_TOOLS = {"WebSearch", "WebFetch", "FetchUrl", "web_search", "web_fetch"}
-SUBAGENT_TOOLS = {"Agent", "Task", "task"}
+SUBAGENT_TOOLS = {"Agent", "Task", "task", "spawn_subagent"}
 
 
 def trigger_for(tool_name: str) -> str | None:
@@ -57,6 +57,9 @@ def main() -> int:
     try:
         event = json.load(sys.stdin)
     except Exception:
+        return 0
+    # Grok also runs a trusted repo's Claude hooks; only Grok's own hook may log Grok's call.
+    if "toolName" in event and opts.agent != "grok":
         return 0
     tool_name = event.get("tool_name", "")
     trigger = trigger_for(tool_name)
