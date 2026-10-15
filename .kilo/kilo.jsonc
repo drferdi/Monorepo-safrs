@@ -1,8 +1,11 @@
 {
   "$schema": "https://app.kilo.ai/config.json",
-  "instructions": [".kilo/instructions/*.md"],
+  "instructions": [
+    ".kilo/instructions/*.md",
+    ".kilo/rules/master-engineering.md"
+  ],
   "commit_message": {
-    "prompt": "Append the SAFRS attribution trailer `Co-Authored-By: Kilo Code <noreply@kilo.ai>` to the end of every commit message (AGENTS.md mandate, SAFRS-09)."
+    "prompt": "Generate a concise conventional commit message from the supplied diff. Describe the actual change with an imperative subject in the form type(scope): description, omitting the scope when it is not appropriate. Add a brief body only when needed to explain the change. Output only the commit message, without Markdown fences or commentary. Append exactly one Co-Authored-By: Kilo Code <noreply@kilo.ai> trailer at the end, separated from the preceding message by one blank line. Do not repeat the trailer."
   },
   "snapshot": false
 }
