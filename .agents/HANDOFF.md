@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, unique worktree names)
+Last updated: 2026-10-15 (Claude Code, orphaned tasks closed)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,20 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `docs/orphan-tasks-closeout-1f012894`, worktree
+  `orphan-tasks-1f012894`, `TASK-20261015-ORPHAN-TASKS-CLOSEOUT`, Gaffer's go per task): the four
+  tasks the 2026-10-15 unique-suffix DECISIONS entry listed are final. Each was moved from a
+  deliberately recreated worktree of exactly its bound name (detached at `main` `56d60b3a`),
+  preview before every write, bound tasks listed, worktree removed again (all clean):
+  `claude-skills-docs`: CLAUDE-CAPSULE-EXTRACT REVIEW -> MERGED -> CLOSED (`313efb5a` in `main`,
+  scope diff to `main` empty); `cursor-agents-readonly`: CURSOR-AGENTS-READONLY same path
+  (`a33cb861`); `wt-kediri-gsap`: KEDIRI-GSAP-PRODUCTION-HARDENING same path (`884f7ea0`,
+  `dba377cd`); `standalone-root`: SENTRABOT-SOURCE-RECOVERY EXECUTING -> SUPERSEDED (no commits;
+  its root `packages/*` scope never existed in `main`; replaced by ADR 0007 capsule extraction,
+  `d0a24a96`, `1b8885da`). Every other task bound to those four names was already terminal. Each
+  close warned "no active lease for RELEASE" (lease long expired); closes still wrote. Open:
+  capsule `projects/product/sentrabot/packages/auth` trails `sentrabot/main` (`d3e06cca`, not
+  fetched), proposed as a separate session.
 - 2026-10-15 (Claude Code, `docs/worktree-unique-names`, worktree `worktree-names-97e699c7`,
   `TASK-20261015-WORKTREE-UNIQUE-NAMES`): DECISIONS records Gaffer's rule that temporary worktrees
   are named `<purpose>-<session suffix>` and the full name goes into the HANDOFF entry (this entry
