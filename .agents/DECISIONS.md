@@ -3,6 +3,19 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-10-15 - Pre-push gate stays removed; `fix/prepush-gate` dropped
+
+Gaffer chose option (a): `main` keeps the direction of `89e6d2c2` (pre-push publish and capsule
+gates removed on Gaffer's order, 2026-10-13; the hook only runs `git lfs pre-push`). That
+commit's DECISIONS entry was later deleted by `a8b648fd`; this entry restores the record. The
+"pre-push publish and capsule gates refuse it" wording in the 2026-10-13 entry below no longer
+holds: no hook blocks such a push, so the clean-branch rule is checked by hand. Dropped: branch
+`fix/prepush-gate` (`e5a66378`, `37e70714`: guard asks on `git push`, hook scans outgoing commits
+read from the remote's live refs) and its uncommitted variant (every push needs `CHIEF_PUSH_OK`);
+worktree `claude-path-scoped-rules` removed. Accepted risk: push safety on `main` rests on the
+written rules and Gaffer's approval; the guard still denies `--no-verify`, `core.hooksPath`
+bypasses, and force pushes.
+
 ## 2026-10-13 - Monorepo GitHub push carries only the changed files
 
 Gaffer: the GitHub monorepo (`origin`, `drferdi/Monorepo-safrs`, public) does not include the
