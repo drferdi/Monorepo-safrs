@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, dangling task cleanup)
+Last updated: 2026-10-15 (Claude Code, check_handoff heading)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,11 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `fix/check-handoff-heading`, `TASK-20261015-CHECK-HANDOFF-HEADING`):
+  `check_handoff.py`'s failure message now points at the AGENTS.md "Memory And Reporting" section;
+  the "Task Lifecycle & Documentation" heading it named was removed by the AGENTS compaction. Message
+  text only, no logic change. The follow-ups named in the earlier entries (#2 stale MUST lists,
+  #3 routing triggers, #4 dangling tasks, #6 this one) are all done.
 - 2026-10-15 (Claude Code, `docs/dangling-task-cleanup`, Gaffer's go): the 11 tasks left bound to
   the removed `claude-path-scoped-rules` worktree are CLOSED, closed from a recreated temporary
   worktree of that name, now removed again (no active task bound to it). The 4 MERGED ones were
