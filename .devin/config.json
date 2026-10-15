@@ -1,0 +1,34 @@
+{
+  "read_config_from": {
+    "cursor": false
+  },
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*.pem)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/*.key)",
+      "Read(**/id_rsa*)",
+      "Read(**/id_ed25519*)",
+      "Read(**/credentials.json)",
+      "Read(**/secrets.json)"
+    ],
+    "allow": [
+      "Exec(pnpm lint)",
+      "Exec(pnpm typecheck)",
+      "Exec(pnpm test)",
+      "Exec(pnpm test:contracts)",
+      "Exec(pnpm build)",
+      "Exec(pnpm governance)",
+      "Exec(pnpm check:tokens)",
+      "Exec(pnpm doctor)",
+      "Exec(git status)",
+      "Exec(git diff)",
+      "Exec(git log)"
+    ]
+  }
+}
