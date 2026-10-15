@@ -182,3 +182,20 @@
   (Gaffer's copy and link).
 - The site's no-external-target gate stays. It carries a one-entry allowlist (`outboundLinks` in
   `scripts/verify.mjs`) for that link; any further outbound link is a new decision and a new entry.
+
+## 2026-10-16 — Logo middle: the pinned block starts at the artwork
+- The wordmark SVG's built-in whitespace no longer positions the sticky block: `.logo-middle-art` crops
+  the SVG to its artwork band, so under the fixed header the wordmark starts at once and the meaning
+  lines get their own scroll time before `#featured-projects` covers them. The hash-protected theme CSS
+  stays untouched; the crop and the spacing live in `design-audit.css`.
+
+## 2026-10-16 — Capabilities intro: the chat with Audrey is a Higgsfield render
+- The visual beside "Dari encounter hingga referensi." is a generated product render (GPT Image 2.5,
+  the studio family of the other renders) of a doctor-Audrey conversation on a synthetic measles case,
+  not a hand-coded chat UI: Gaffer rejected the HTML panel and asked for Higgsfield "untuk hasil terbaik".
+- Every Audrey reply is tagged with a shipped capability (Fast Assessment, Mesin Dokumentasi, Sentrapedia
+  Library / ICD-10); clinical specifics stay structural (no doses, no guideline titles); the render closes
+  with "Draf lokal · keputusan tetap pada dokter."
+- "Audrey" as the assistant's name exists only in this render; registering it (SPDS, brand) is a separate
+  decision for Gaffer. Credits: 4.5 (105 -> 100.5). The DrawSVG route line and the other motion options
+  are dropped.
