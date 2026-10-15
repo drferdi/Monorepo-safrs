@@ -29,6 +29,60 @@
 - **Website verification observed:** `install:check`, `build`, `docs:verify` (96 documents, 0 errors), `lint` (23 authored JavaScript files), `test` (13/13), `verify` (23 protected presentation files and 48 targets, 0 errors), and `deploy:dry-run` all passed from `apps/site/`. Parent `typecheck` passed; isolated parent `eslint src tests` and site lint both exited 0.
 - **Scope boundary:** MIRA belongs to the clinical system, not the website. A broad `npm run test:all` was mistakenly attempted and reached an unrelated pre-existing hash mismatch in `mira/service/menu.py`. Do not modify MIRA or its provenance for this website/topology task. No tracked MIRA file changed; the locally installed `.runtime/mira` and `theoracle/model` are ignored environment artifacts.
 - **Current Git state:** topology migration and documentation updates are still uncommitted on branch `codex/sentrapedia-website-docs`. Review/stage only `projects/healthcare/sentrapedia`, the deletion of `projects/healthcare/sentrapedia-website`, and the two healthcare domain navigation files. Then create the pending local commit. No push, merge, deployment, paid inference, or live contact submission is authorized.
+## Dose gate audit: corrections applied, three reviews, phase 4 - 2026-10-12 Asia/Jakarta
+
+- Gaffer approved all seven corrections from the audit REPORT section 4, and phase 4 after the gate fixes.
+- Commits (all R2):
+  - `27b7f108` ch->k
+  - `86a8cec7` targeted gate reads the diagnosis passages too (`gateEvidence`)
+  - `5e31f714` a strength verifies only the drug it follows
+  - `604e286c` a single strength inside a source range
+  - `f3966c0f` ODHA = HIV, I84 = K64
+  - `12efd483` MIRA breaker counts one failure per part and logs the provider error and status
+  - `4d902a4d` the fast therapy prompt asks for an amount in every dose
+  - `d6e0768a`, `ee5bc240`, `16e83955` fix the findings of three Opus reviews of the dose window
+- The window rule is now: after a cut point, every word up to the next strength must be on a known-word list or be the drug's own name, otherwise the window ends (fails safe). A "+" partner is masked. A daily total does not verify each of several doses.
+- Offline replay of the same 122 replies: legacy 42 -> 48, targeted 42 -> 48 at `ae480804`, with no wrong-disease or wrong-drug verification left among them. Against the 49/49 peak: the impetigo amoxicillin-clavulanate row was another drug's range (a correct block), and legacy isoniazid 300 mg came from an MDR weight-band table (a fail-safe blank).
+- Tests: gate 91/91, the 7 gate test files 181/181, MIRA 180 passed + 1 skipped. `tsc` 0, `eslint` 0 on the touched files.
+- Live eval: the third run reached 8/61. The new engine log shows the cause of all three failed runs: OpenRouter HTTP 402 (credit exhausted). The earlier rate-limit reading was wrong. The live before/after and the effect of the prompt change wait for Gaffer to top up the credit.
+- Phase 4, REPORT section 7: no wrong dose in the 10 Gaffer-approved tatalaksana documents against PNPK, IDSA/SIS, ADA and AAO-HNS.
+  - Six coverage gaps, among them the asphyxia ETT dose and 1:10.000 concentration, and the Hirschsprung irrigation of 10-20 mL/kgBB.
+  - Three doses are unverified: oxymetazoline, topical TXA, and pip-tazo 4,5 g / meropenem.
+  - Editing the documents is Gaffer's clinical decision.
+- Known limits (REPORT section 6):
+  - Two drugs with no cut point between them share a window.
+  - The FORNAS sentence-end case blanks citations.
+  - Section 3 design items 1-4 are unchanged.
+- Review 4 of `16e83955` returned FIX with three new leak categories: slash-positional combination strengths, a model-written combined name, and a "+" partner with two strengths (REPORT section 6). Gaffer chose a drug-name lexicon: `2327700f` (837 words, `scripts/build-drug-words.mjs`), tests 89, replay 49/48. Review 5 returned FIX with three new categories: lexicon misses fail open (metformin, simvastatin, lamivudin, INH...), salt-only drug names, and slash alternatives with different doses. Gaffer then chose a per-strength fail-safe rule: `ea2fe8f8` (a strength counts only when the last name-like word before it is the drug's own; any unknown word fails safe; lexicon removed) and `ae480804` (review-6 fixes: alias bracket, partner after a separator, 4+ letter own names, vitamin codes, FORNAS form reset only in FORNAS passages, column tables). Review 7 (class A only) was fixed in the following commit, which has not been reviewed itself. Tests 91, gate test files 181/181, replay legacy 48 / targeted 48 (two fail-safe blanks, REPORT section 6).
+- Harness: `.runtime/audit/` (git-ignored), rows-review.json (49/49 baseline), rows-rereview.json, rows-round3.json.
+- Published 2026-10-12 with Gaffer's approval ("commit and push"):
+  - The dose gate audit plan is now tracked: `docs/plans/active/Audit_actions.md` (`c1acef29`).
+  - Split `9a6e2dc0` (from `c1acef29`) was not a fast-forward of `sentrapedia/main` `c0ef8ba6`, because GitHub main holds the README edits. It was merged in the temporary worktree `D:\DEV\monorepo.worktrees\sentrapedia-publish` (only `README.md` differs from the split) and pushed as `cebb6753`, a fast-forward. No force push.
+  - Before the push, the repo was checked as private (the anonymous GitHub API returns 404), so `data/dose-inventory/iso_gap_fill.json` (ISO excerpts) is not public. A leak scan of the split found no key or token; the only env file is `.env.example`.
+  - GitHub reports 1 high Dependabot alert on the default branch (`security/dependabot/1`). It was not read, because `gh` is not authenticated.
+  - Main checkout `D:\DEV\monorepo` (`chore/tools-closeout`): the `tools/retriever` handoff edits were committed as `eefe8982`. The stale sentrapedia copies there (older `SOURCE.json` and `test_packaging.py`, the HANDOFF sections already ported, the `next-env.d.ts` dev touch, and the audit plan, now tracked) were stashed, not deleted: `stash@{0}` "superseded by feat/sentrapedia-dify-theoracle @c1acef29". The `next-env.d.ts` dev touch in this worktree was restored.
+  - Then this note was committed and published again with the same merge step.
+
+## Dose gate audit, phase 2-3 (offline) - 2026-10-12 Asia/Jakarta
+
+- Gaffer approved the audit of `docs/plans/active/Audit_actions.md` (main checkout, untracked), then chose to continue offline after two failed live runs.
+- Live 61-case eval failed twice (18/61, 12/61; about $0.29). The MIRA API-error breaker opened after consecutive provider errors and paused calls for 60 s. It counts failed parallel copies too; the provider error type is not logged. Committed eval files were restored after each run.
+- Offline harness in `.runtime/audit/` (git-ignored): `extract.py`, `replay.test.ts` (run with `REPLAY_IN`/`REPLAY_OUT` and `npx vitest run .runtime/audit/replay.test.ts`), `corpus_scan.py`, `classify.py`. It reproduces the 2026-10-11 replay exactly: 42 verified on both paths.
+- Result in `docs/verification/dose-gate-audit-2026-10-12/` (`REPORT.md`, `classification-targeted.json`): 29 non-verified targeted drugs. 20 are correct blocks (A 5, E 2, F 1, G 1, H1 6, H2 5); 9 are correct doses not shown (B 3, D 6). Confirmed defect: `spell()` maps "ch" to "kh", so chlorpheniramine never matches klorfeniramin.
+- Verified doses (42): one unsupported, lamivudin 300 mg verified by zidovudin 300 mg in the same FORNAS passage. Design limits: a concentration or a FORNAS strength counts as a dose, frequency is not checked, population is not checked.
+- No code changed. Six bounded corrections are proposed in REPORT section 4, awaiting Gaffer.
+- Not done: live reproduction, the 10-disease benchmark (phase 4).
+- Not pushed.
+
+## Dify out of the main composer; dose inventory tracked - 2026-10-12 Asia/Jakarta
+
+- Gaffer: Dify is only a side chatbot, not part of the main system; the main system is MIRA diagnosis and therapy accuracy. Gaffer chose this branch for the work and to track the inventory without the legacy files.
+- `0a708b4e` (R2): `analyzeMain` in `src/components/workspace.tsx` calls MIRA only. The block is restored byte for byte from `0ebd2abf^` (checked with `diff`). Before, with `DIFY_API_KEY` set, every MIRA-mode question was answered by Dify and skipped grounding, postchecks and the evidence gate. The `/dify` page, `api/dify/*` and the sidebar entry are unchanged.
+- Dose inventory: five files copied from the main checkout's `.runtime/dose-inventory/` to `data/dose-inventory/` (SHA-256 identical), plus a README. `penyakit.json` and `drug_mapping.json` stay untracked. `build_inventory.py` cannot rerun on this branch: `oracle-ii/knowledge_base/json/` is not here.
+- Main checkout (`chore/tools-closeout`): its four uncommitted MIRA files are an older copy of this branch (`postchecks.py`, `test_components.py` identical; `test_packaging.py`, `SOURCE.json` older). Left untouched; Gaffer decides whether to discard them.
+- Verified: `tsc` 0, `eslint src/components/workspace.tsx` 0, `vitest tests/workspace.test.ts tests/mira-composer.test.ts` 47/47. Full suite, build and browser check not run.
+- Open: `iso_gap_fill.json` holds verbatim ISO Indonesia excerpts; decide before pushing to a public remote. Next dose-gate work is `docs/plans/active/Audit_actions.md` in the main checkout (untracked there), which needs paid eval calls.
+- Not pushed.
 
 ## Eval: ICD-10 label-to-name overlap (M5) - 2026-10-12 Asia/Jakarta
 

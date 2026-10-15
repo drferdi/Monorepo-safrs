@@ -5,7 +5,7 @@ import { newId, type Message } from "../workspace";
 import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
-import { gateTherapy, unstrength, validGate, type EvidenceGateReport, type GateStatus } from "../theoracle-evidence-gate";
+import { gateEvidence, gateTherapy, unstrength, validGate, type EvidenceGateReport, type GateStatus } from "../theoracle-evidence-gate";
 
 const gateLine: Record<GateStatus, string> = { verified: "dosis terverifikasi", doseRemoved: "dosis tidak ditemukan di TheOracle, cek pedoman", removed: "tidak ditampilkan, indikasi tidak terverifikasi di TheOracle" };
 const passages = (bundle: TheOracleGroundingBundle) => bundle.evidence.map(item => `- ${item.source.title} [${item.evidenceId}] · kemiripan ${item.similarity}\n  ${item.text}`).join("\n\n");
@@ -152,7 +152,7 @@ export function diagnosisContent(message: Pick<Message, "content" | "originalCon
     // Saved therapy is gated again with the current gate against its stored bundle, as the gateway does: a draft saved before
     // the gate holds the model's doses unchecked, and an earlier gate may have verified a dose a later one rejects.
     const likely = source.result.differential.likely[0];
-    const late = source.result.therapy ? gateTherapy(source.result.therapy, validTheOracleGrounding(therapyGrounding) ? therapyGrounding : validTheOracleGrounding(grounding) ? grounding : undefined, likely && { icd10: likely.icd10, label: likely.label }) : undefined;
+    const late = source.result.therapy ? gateTherapy(source.result.therapy, gateEvidence(therapyGrounding, grounding), likely && { icd10: likely.icd10, label: likely.label }) : undefined;
     const withoutTherapy = { ...source.result };
     delete withoutTherapy.therapy;
     // An earlier gate's report keeps its removals and safety items; only doses the current gate no longer verifies are downgraded.

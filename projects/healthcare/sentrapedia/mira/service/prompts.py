@@ -166,7 +166,10 @@ FAST_THERAPY_RULES = """
 - forDiagnosis: that diagnosis's WHO ICD-10 code and English label.
 - regimen: one entry per drug, at most 4. drug is the generic name only; never repeat the strength
   in drug. dose is frequency x strength with no spaces, for example 1x500mg, 3x500mg, 2x1g, 1x10mg;
-  a single dose is 1x. route is PO, IV, IM, SC, topikal or inhalasi. duration in Bahasa Indonesia,
+  a topical or drop states its concentration or count, for example 2-3x2%, 3x2tetes; a single dose is
+  1x with its strength, for example 1x3g; never a frequency alone such as 1x or 2-3x. Do not write a
+  tablet's content as the dose when one dose is several tablets: write the count, for example 3x2tablet.
+  route is PO, IV, IM, SC, topikal or inhalasi. duration in Bahasa Indonesia,
   for example "dosis tunggal", "5 hari", "bila demam". note holds a weight, age or condition
   adjustment in Bahasa Indonesia, for example "1g bila >=150kg", otherwise an empty string. Use
   adult doses unless the case gives a child's age, then dose by weight or age.

@@ -1,5 +1,5 @@
 import { containsIdentity, validCase, validResult, type MiraResult } from "./contract";
-import { gateTherapy, type EvidenceGateReport } from "../theoracle-evidence-gate";
+import { gateEvidence, gateTherapy, type EvidenceGateReport } from "../theoracle-evidence-gate";
 import { miraServiceVersion } from "./model-profile";
 import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
 import type { CaseState } from "./types";
@@ -161,7 +161,7 @@ export function createMiraGateway(options: Options = {}) {
           }
         }
         if (final.therapy) {
-          const gated = await timed("gate", async () => gateTherapy(final.therapy!, targeted ? therapyGrounding : grounding, target));
+          const gated = await timed("gate", async () => gateTherapy(final.therapy!, gateEvidence(therapyGrounding, grounding), target));
           evidenceGate = gated.report;
           const withoutTherapy = { ...final };
           delete withoutTherapy.therapy;

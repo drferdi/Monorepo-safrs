@@ -1,0 +1,967 @@
+{
+  "summary": {
+    "label": "targeted",
+    "measuredAt": "2026-10-12T04:09:54.857Z",
+    "cases": 61,
+    "ok": 8,
+    "latencyMs": {
+      "p50": 4792,
+      "p95": 8108,
+      "stages": {
+        "retrieve_dx": {
+          "p50": 86,
+          "p95": 3175
+        },
+        "mira_dx": {
+          "p50": 2703,
+          "p95": 3079
+        },
+        "retrieve_tx": {
+          "p50": 46,
+          "p95": 47
+        },
+        "mira_tx": {
+          "p50": 1993,
+          "p95": 2251
+        },
+        "gate": {
+          "p50": 3,
+          "p95": 5
+        }
+      }
+    },
+    "icd10": {
+      "valid": 1,
+      "nameMatch": 1,
+      "correctTop1VsDraftGold": 1
+    },
+    "dose": {
+      "written": 10,
+      "supportedByPassages": 10,
+      "supportedRate": 1,
+      "displayed": 8,
+      "verified": 8,
+      "doseRemoved": 2,
+      "removed": 0
+    },
+    "retrievalSuccess": 1,
+    "costUsd": 0.071
+  },
+  "rows": [
+    {
+      "id": "lay_terms-01",
+      "ok": true,
+      "ms": 8108,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "1296096a-cfce-46fe-ba78-905a60284976",
+          "stage": "retrieve_dx",
+          "ms": 3175,
+          "ok": true
+        },
+        {
+          "traceId": "1296096a-cfce-46fe-ba78-905a60284976",
+          "stage": "mira_dx",
+          "ms": 2849,
+          "ok": true
+        },
+        {
+          "traceId": "1296096a-cfce-46fe-ba78-905a60284976",
+          "stage": "retrieve_tx",
+          "ms": 47,
+          "ok": true
+        },
+        {
+          "traceId": "1296096a-cfce-46fe-ba78-905a60284976",
+          "stage": "mira_tx",
+          "ms": 1993,
+          "ok": true
+        },
+        {
+          "traceId": "1296096a-cfce-46fe-ba78-905a60284976",
+          "stage": "gate",
+          "ms": 5,
+          "ok": true
+        }
+      ],
+      "icd10": "B80",
+      "diagnosis": "Enterobiasis",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.011226,
+      "verifiedEvidence": [
+        {
+          "drug": "Pirantel pamoat",
+          "dose": "1x10mg/kgBB",
+          "passages": [
+            {
+              "id": "c8a0b634-008e-4366-b848-c984dfeb8805",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "Diagnosis Banding: jenis kecacingan lainnya Komplikasi: anemia defisiensi besi Penatalaksanaan Komprehensif (Plan) Penatalaksanaan 1. Memberi pengetahuan kepada masyarakat akan pentingnya kebersihan diri dan lingkungan, antara lain: a. Kebiasaan mencuci tangan dengan sabun dan air mengalir b. Menutup makanan c. Masing-masing keluarga memiliki jamban keluarga d. Tidak menggunakan tinja sebagai pupuk e. Kondisi rumah dan lingkungan dijaga agar tetap bersih dan tidak lembab. 2. Farmakologis a. Pirantel pamoat 10 mg/kg BB/hari, dosis tunggal, atau b. Mebendazol, dosis 100 mg, dua kali sehari, dibe"
+            },
+            {
+              "id": "8c294eef-0ab6-4223-a925-bd16ae127fbe",
+              "title": "oksiuriasis-enterobiasis-cacing-kremi.md",
+              "text": "# Oksiuriasis (Enterobiasis / Cacing Kremi) ## Definisi Oksiuriasis adalah infeksi usus yang disebabkan oleh cacing kremi Enterobius vermicularis, sangat menular antaranggota keluarga melalui autoinfeksi dan kontak feses-oral. ## Gejala - Pruritus ani nokturnal (gatal hebat di area perianal terutama malam hari) - Tidur gelisah dan rewel pada anak - Ekskoriasi lecet kulit perianal akibat garukan - Kadang terlihat cacing kecil putih seperti benang bergerak di perianal/tinja ## Diagnosis Diagnosis ditegakkan dari keluhan gatal perianal malam hari. Penegakan pasti menggunakan metode Graham tape te"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-02",
+      "ok": true,
+      "ms": 5334,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "a7f3a66e-7144-4c44-8c4b-74651612c8f5",
+          "stage": "retrieve_dx",
+          "ms": 76,
+          "ok": true
+        },
+        {
+          "traceId": "a7f3a66e-7144-4c44-8c4b-74651612c8f5",
+          "stage": "mira_dx",
+          "ms": 2948,
+          "ok": true
+        },
+        {
+          "traceId": "a7f3a66e-7144-4c44-8c4b-74651612c8f5",
+          "stage": "retrieve_tx",
+          "ms": 38,
+          "ok": true
+        },
+        {
+          "traceId": "a7f3a66e-7144-4c44-8c4b-74651612c8f5",
+          "stage": "mira_tx",
+          "ms": 2251,
+          "ok": true
+        },
+        {
+          "traceId": "a7f3a66e-7144-4c44-8c4b-74651612c8f5",
+          "stage": "gate",
+          "ms": 3,
+          "ok": true
+        }
+      ],
+      "icd10": "B86",
+      "diagnosis": "Scabies",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 1,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.010095,
+      "verifiedEvidence": [
+        {
+          "drug": "Permetrin",
+          "dose": "1x5%",
+          "passages": [
+            {
+              "id": "d2077e57-17e1-4877-b9a3-5dbbffd8bd6f",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "304 PANDUAN PRAKTIK KLINIS BAGI DOKTER DI FASILITAS PELAYANAN KESEHATAN TINGKAT PERTAMA menyeluruh pada seluruh kelompok orang yang ada di sekitar penderita skabies. Terapi diberikan dengan salah satu obat topikal (skabisid) di bawah ini: a. Salep 2-4 dioleskan di seluruh tubuh, selama 3 hari berturut- turut, dipakai setiap habis mandi. b. Krim permetrin 5% di seluruh tubuh. Setelah 10 jam, krim permetrin dibersihkan dengan sabun. Terapi skabies ini tidak dianjurkan pada anak < 2 tahun. Konseling dan Edukasi Dibutuhkan pemahaman bersama agar upaya eradikasi skabies bisa melibatkan semua pihak."
+            },
+            {
+              "id": "c5af95e3-e6ec-4514-9e0c-1a492ca5ca0e",
+              "title": "skabies-kudis.md",
+              "text": "# Skabies (Kudis) ## Definisi Skabies adalah penyakit kulit menular yang disebabkan oleh infestasi dan sensitisasi terhadap tungau Sarcoptes scabiei var. hominis, yang membuat terowongan di stratum korneum kulit manusia. ## Gejala - Pruritus nokturnal (gatal hebat memuncak pada malam hari) - Menyerang sekelompok orang yang tinggal bersama (asrama, pesantren, satu keluarga) - Kanikulus (terowongan halus putih keabu-abuan berkelok) dengan vesikel di ujungnya - Predileksi khas: sela-sela jari tangan, pergelangan tangan ventral, siku, ketiak, areola mammae, umbilikus, genitalia eksterna pria ## Di"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-03",
+      "ok": true,
+      "ms": 4450,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "fbfaa185-3947-4224-9ccc-b0ed3e561536",
+          "stage": "retrieve_dx",
+          "ms": 86,
+          "ok": true
+        },
+        {
+          "traceId": "fbfaa185-3947-4224-9ccc-b0ed3e561536",
+          "stage": "mira_dx",
+          "ms": 2278,
+          "ok": true
+        },
+        {
+          "traceId": "fbfaa185-3947-4224-9ccc-b0ed3e561536",
+          "stage": "retrieve_tx",
+          "ms": 46,
+          "ok": true
+        },
+        {
+          "traceId": "fbfaa185-3947-4224-9ccc-b0ed3e561536",
+          "stage": "mira_tx",
+          "ms": 2025,
+          "ok": true
+        },
+        {
+          "traceId": "fbfaa185-3947-4224-9ccc-b0ed3e561536",
+          "stage": "gate",
+          "ms": 3,
+          "ok": true
+        }
+      ],
+      "icd10": "B36.0",
+      "diagnosis": "Pityriasis versicolor",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 0,
+      "doseRemoved": 1,
+      "removed": 0,
+      "displayedDoses": 0,
+      "costUsd": 0.010077,
+      "verifiedEvidence": []
+    },
+    {
+      "id": "lay_terms-04",
+      "ok": true,
+      "ms": 4792,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "74cca217-1043-4988-912c-72d30526ce11",
+          "stage": "retrieve_dx",
+          "ms": 89,
+          "ok": true
+        },
+        {
+          "traceId": "74cca217-1043-4988-912c-72d30526ce11",
+          "stage": "mira_dx",
+          "ms": 2569,
+          "ok": true
+        },
+        {
+          "traceId": "74cca217-1043-4988-912c-72d30526ce11",
+          "stage": "retrieve_tx",
+          "ms": 38,
+          "ok": true
+        },
+        {
+          "traceId": "74cca217-1043-4988-912c-72d30526ce11",
+          "stage": "mira_tx",
+          "ms": 2081,
+          "ok": true
+        },
+        {
+          "traceId": "74cca217-1043-4988-912c-72d30526ce11",
+          "stage": "gate",
+          "ms": 4,
+          "ok": true
+        }
+      ],
+      "icd10": "H00.0",
+      "diagnosis": "Hordeolum",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 2,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 2,
+      "costUsd": 0.010536,
+      "verifiedEvidence": [
+        {
+          "drug": "Kloramfenikol",
+          "dose": "3x1%",
+          "passages": [
+            {
+              "id": "4135a345-be9f-45f7-891f-2ce758d50d62",
+              "title": "hordeolum-bintitan.md",
+              "text": "# Hordeolum (Bintitan) ## Definisi Hordeolum adalah infeksi supuratif akut fokal pada kelenjar di kelopak mata, paling sering disebabkan oleh bakteri Staphylococcus aureus. Hordeolum internum mengenai kelenjar Meibom; hordeolum eksternum mengenai kelenjar Zeiss atau Moll. ## Gejala - Bintil kemerahan yang nyeri pada kelopak mata - Nyeri berdenyut saat kelopak mata disentuh atau berkedip - Edema dan eritema fokal palpebra - Titik nanah kuning (pointing) di pangkal bulu mata atau konjungtiva tarsal ## Diagnosis Ditegakkan secara inspeksi dan palpasi kelopak mata: benjolan fokal eritematosa yang "
+            },
+            {
+              "id": "d709c4d4-6874-474b-a176-d18b832b65b2",
+              "title": "blefaritis.md",
+              "text": "# Blefaritis ## Definisi Blefaritis adalah peradangan kronik pada margo (tepi) kelopak mata. Blefaritis anterior melibatkan pangkal bulu mata (etiologi stafilokokus atau seboroik); blefaritis posterior melibatkan disfungsi kelenjar Meibom (MGD). ## Gejala - Tepi kelopak mata merah, bengkak, dan gatal - Keropeng/krusta kering seperti ketombe di pangkal bulu mata - Sensasi terbakar dan mengganjal di mata - Bulu mata rontok (madarosis) atau tumbuh ke dalam (trikiasis) pada kasus kronik ## Diagnosis Pemeriksaan mata luar dengan slit lamp atau kaca pembesar/senter: eritema margo palpebra, krusta be"
+            }
+          ]
+        },
+        {
+          "drug": "Parasetamol",
+          "dose": "1x500mg",
+          "passages": [
+            {
+              "id": "4135a345-be9f-45f7-891f-2ce758d50d62",
+              "title": "hordeolum-bintitan.md",
+              "text": "# Hordeolum (Bintitan) ## Definisi Hordeolum adalah infeksi supuratif akut fokal pada kelenjar di kelopak mata, paling sering disebabkan oleh bakteri Staphylococcus aureus. Hordeolum internum mengenai kelenjar Meibom; hordeolum eksternum mengenai kelenjar Zeiss atau Moll. ## Gejala - Bintil kemerahan yang nyeri pada kelopak mata - Nyeri berdenyut saat kelopak mata disentuh atau berkedip - Edema dan eritema fokal palpebra - Titik nanah kuning (pointing) di pangkal bulu mata atau konjungtiva tarsal ## Diagnosis Ditegakkan secara inspeksi dan palpasi kelopak mata: benjolan fokal eritematosa yang "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-05",
+      "ok": true,
+      "ms": 4639,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "2a3dcf18-e668-4427-aaf4-244ee9b8b6f3",
+          "stage": "retrieve_dx",
+          "ms": 78,
+          "ok": true
+        },
+        {
+          "traceId": "2a3dcf18-e668-4427-aaf4-244ee9b8b6f3",
+          "stage": "mira_dx",
+          "ms": 2703,
+          "ok": true
+        },
+        {
+          "traceId": "2a3dcf18-e668-4427-aaf4-244ee9b8b6f3",
+          "stage": "retrieve_tx",
+          "ms": 47,
+          "ok": true
+        },
+        {
+          "traceId": "2a3dcf18-e668-4427-aaf4-244ee9b8b6f3",
+          "stage": "mira_tx",
+          "ms": 1798,
+          "ok": true
+        },
+        {
+          "traceId": "2a3dcf18-e668-4427-aaf4-244ee9b8b6f3",
+          "stage": "gate",
+          "ms": 2,
+          "ok": true
+        }
+      ],
+      "icd10": "H81.1",
+      "diagnosis": "Benign paroxysmal positional vertigo",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.009601,
+      "verifiedEvidence": [
+        {
+          "drug": "Betahistin mesilat",
+          "dose": "3x6mg",
+          "passages": [
+            {
+              "id": "bbba24c6-6e14-4c6c-848e-f87744fe9215",
+              "title": "vertigo-posisi-paroksismal-jinak-bppv.md",
+              "text": "# Vertigo Posisi Paroksismal Jinak (BPPV) ## Definisi BPPV adalah gangguan sistem vestibular perifer tersering yang ditandai dengan sensasi berputar paroksismal singkat (< 1 menit) yang dipicu oleh perubahan posisi kepala terhadap gravitasi, diakibatkan oleh perpindahan partikel otokonia kalsium karbonat ke dalam kanalis semisirkularis (paling sering kanalis posterior). ## Gejala - Sensasi berputar hebat mendadak saat memutar kepala di tempat tidur, bangun tidur, atau mendongak - Durasi serangan singkat (< 30-60 detik) - Mual dan muntah - Ketidakseimbangan gait sesaat pasca-serangan - Tidak ad"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-06",
+      "ok": true,
+      "ms": 4429,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "5a18153f-991f-480e-9cd1-fcc102a4fe37",
+          "stage": "retrieve_dx",
+          "ms": 72,
+          "ok": true
+        },
+        {
+          "traceId": "5a18153f-991f-480e-9cd1-fcc102a4fe37",
+          "stage": "mira_dx",
+          "ms": 2563,
+          "ok": true
+        },
+        {
+          "traceId": "5a18153f-991f-480e-9cd1-fcc102a4fe37",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "5a18153f-991f-480e-9cd1-fcc102a4fe37",
+          "stage": "mira_tx",
+          "ms": 1739,
+          "ok": true
+        },
+        {
+          "traceId": "5a18153f-991f-480e-9cd1-fcc102a4fe37",
+          "stage": "gate",
+          "ms": 3,
+          "ok": true
+        }
+      ],
+      "icd10": "G44.2",
+      "diagnosis": "Tension-type headache",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.007877,
+      "verifiedEvidence": [
+        {
+          "drug": "Parasetamol",
+          "dose": "1x1000mg",
+          "passages": [
+            {
+              "id": "b9d52dcf-ed9d-43f9-8cb3-8553cbde7956",
+              "title": "patologi-klinik-anatomik-unair.pdf",
+              "text": "342 merupakan suatu gold standard evaluasi serangan, frekuensi, lama, beratnya serangan, disabilitas, dan respons obat. Terapi Farmakologis Tension-type headache (4,5,9) Obat Dosis harian Level Rekomendasi Akut Ibuprofen 200–800 mg A Ketoprofen 25 mg A Aspirin 500–1000 mg A Diklofenak 12,5–100 mg A Parasetamol 1000 mg (oral) A Kombinasi kafein 65–200 mg B Profilaksis Amitriptyline 10-100 mg A Nortriptyline 10-100 mg A Terapi Farmakologis Akut Migrain (4,5,10,11) Tipe Terapi Akut (Abortif) Lini pertama Ibuprofen 400 mg, ASA 1000 mg, Sodium naproksen 500- 550 mg, Asetaminofen 1000 mg, Sodium dan"
+            },
+            {
+              "id": "ba4110d9-6fb9-4baa-b4f8-181f3f7933cd",
+              "title": "tension-type-headache-tth.md",
+              "text": "# Tension-Type Headache (TTH) ## Definisi Tension-Type Headache (nyeri kepala tegang) adalah bentuk nyeri kepala primer tersering, ditandai dengan nyeri kepala bilateral seperti diikat tali kencang atau ditekan beban berat di dahi/oksipital, berhubungan erat dengan stres psikologis, kelelahan, dan ketegangan otot perikranial. ## Gejala - Nyeri kepala bilateral tumpul menekan atau mengikat (tight band-like) - Intensitas ringan hingga sedang - Nyeri tidak berdenyut dan tidak diperberat aktivitas fisik rutin (berjalan/naik tangga) - Nyeri tekan pada otot perikranial (trapezius, leher, oksipital) "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-07",
+      "ok": true,
+      "ms": 4385,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "9cf86ac4-4102-48a2-a9ce-b336466ba270",
+          "stage": "retrieve_dx",
+          "ms": 86,
+          "ok": true
+        },
+        {
+          "traceId": "9cf86ac4-4102-48a2-a9ce-b336466ba270",
+          "stage": "mira_dx",
+          "ms": 2532,
+          "ok": true
+        },
+        {
+          "traceId": "9cf86ac4-4102-48a2-a9ce-b336466ba270",
+          "stage": "retrieve_tx",
+          "ms": 42,
+          "ok": true
+        },
+        {
+          "traceId": "9cf86ac4-4102-48a2-a9ce-b336466ba270",
+          "stage": "mira_tx",
+          "ms": 1714,
+          "ok": true
+        },
+        {
+          "traceId": "9cf86ac4-4102-48a2-a9ce-b336466ba270",
+          "stage": "gate",
+          "ms": 2,
+          "ok": true
+        }
+      ],
+      "icd10": "H61.2",
+      "diagnosis": "Impacted cerumen",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.005221,
+      "verifiedEvidence": [
+        {
+          "drug": "Carbamide peroxide",
+          "dose": "2x5-10tetes",
+          "passages": [
+            {
+              "id": "a7a22454-e1cb-1271-8882-dc1855e629fd",
+              "title": "serumen-prop-tatalaksana.md",
+              "text": "# Serumen prop (impaksi serumen) — tatalaksana Kode ICD-10: H61.2 (serumen impaksi). Status: direview dan disetujui Gaffer, 2026-10-11. ## Terapi farmakologis — serumen prop - Carbamide peroxide 6,5% tetes telinga: 5–10 tetes, dua kali sehari hingga 4 hari, usia di atas 12 tahun, untuk melunakkan serumen. - Sodium bicarbonate tetes telinga: sesuai konsentrasi dan petunjuk produk, alternatif cerumenolytic. - Mineral oil tetes telinga: beberapa tetes sesuai kebutuhan dan protokol klinis, untuk pelunakan serumen."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-08",
+      "ok": true,
+      "ms": 4872,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "7d0aadc3-47f1-4ea3-a6e2-eb76bf979505",
+          "stage": "retrieve_dx",
+          "ms": 78,
+          "ok": true
+        },
+        {
+          "traceId": "7d0aadc3-47f1-4ea3-a6e2-eb76bf979505",
+          "stage": "mira_dx",
+          "ms": 3079,
+          "ok": true
+        },
+        {
+          "traceId": "7d0aadc3-47f1-4ea3-a6e2-eb76bf979505",
+          "stage": "retrieve_tx",
+          "ms": 46,
+          "ok": true
+        },
+        {
+          "traceId": "7d0aadc3-47f1-4ea3-a6e2-eb76bf979505",
+          "stage": "mira_tx",
+          "ms": 1658,
+          "ok": true
+        },
+        {
+          "traceId": "7d0aadc3-47f1-4ea3-a6e2-eb76bf979505",
+          "stage": "gate",
+          "ms": 2,
+          "ok": true
+        }
+      ],
+      "icd10": "L50.0",
+      "diagnosis": "Allergic urticaria",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.006403,
+      "verifiedEvidence": [
+        {
+          "drug": "Loratadine",
+          "dose": "1x10mg",
+          "passages": [
+            {
+              "id": "d2140331-17a6-433f-8f91-75206e00ccec",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "346 PANDUAN PRAKTIK KLINIS BAGI DOKTER DI FASILITAS PELAYANAN KESEHATAN TINGKAT PERTAMA alkohol, dan agen fisik. b. Penggunaan antibiotik penisilin, aspirin, NSAID, dan ACE inhibitor. c. Agen lain yang diperkirakan dapat menyebabkan urtikaria. 2. Pemberian farmakoterapi dengan: a. Antihistamin oral nonsedatif, misalnya loratadin 1 x 10 mg per hari selama 1 minggu. b. Bila tidak berhasil dikombinasi dengan Hidroksisin 3 x 25 mg atau Difenhidramin 4 x 25-50 mg per hari selama 1 minggu. c. Apabila urtikaria karena dingin, diberikan Siproheptadin 3 x 4 mg per hari lebih efektif selama 1 minggu ter"
+            },
+            {
+              "id": "b04f2dde-03d6-4002-80bd-899e45398501",
+              "title": "urtikaria-akut.md",
+              "text": "# Urtikaria Akut ## Definisi Urtikaria akut (biduran / kaligata) adalah erupsi kulit vaskular akut berdurasi kurang dari 6 minggu yang ditandai dengan bentol eritematosa edematosa (wheal) yang sangat gatal, timbul akibat degranulasi sel mast dan pelepasan histamin yang memicu vasodilatasi serta peningkatan permeabilitas vaskular. ## Gejala - Bentol edema kemerahan berbatas tegas dengan bagian tengah pucat (urtika) - Gatal hebat yang menusuk/terbakar - Lesi bersifat sementara (evanescent): satu bentol bertahan < 24 jam lalu menghilang tanpa bekas parut, namun bentol baru dapat muncul di lokasi "
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lay_terms-09",
+      "ok": false,
+      "status": 502,
+      "code": "MODEL_ERROR",
+      "ms": 569
+    },
+    {
+      "id": "lay_terms-10",
+      "ok": false,
+      "status": 502,
+      "code": "MODEL_ERROR",
+      "ms": 645
+    },
+    {
+      "id": "lay_terms-11",
+      "ok": false,
+      "status": 502,
+      "code": "MODEL_ERROR",
+      "ms": 470
+    },
+    {
+      "id": "lay_terms-12",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 101
+    },
+    {
+      "id": "lay_terms-13",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 91
+    },
+    {
+      "id": "lay_terms-14",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 101
+    },
+    {
+      "id": "lay_terms-15",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 93
+    },
+    {
+      "id": "lay_terms-16",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 92
+    },
+    {
+      "id": "abbreviations-01",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 92
+    },
+    {
+      "id": "abbreviations-02",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 83
+    },
+    {
+      "id": "abbreviations-03",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 92
+    },
+    {
+      "id": "abbreviations-04",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 87
+    },
+    {
+      "id": "abbreviations-05",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 76
+    },
+    {
+      "id": "abbreviations-06",
+      "ok": false,
+      "status": 503,
+      "code": "API_ERRORS",
+      "ms": 94
+    },
+    {
+      "id": "abbreviations-07",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 91
+    },
+    {
+      "id": "abbreviations-08",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 90
+    },
+    {
+      "id": "abbreviations-09",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 87
+    },
+    {
+      "id": "abbreviations-10",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 87
+    },
+    {
+      "id": "abbreviations-11",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 83
+    },
+    {
+      "id": "abbreviations-12",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 79
+    },
+    {
+      "id": "abbreviations-13",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 88
+    },
+    {
+      "id": "abbreviations-14",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 78
+    },
+    {
+      "id": "abbreviations-15",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 79
+    },
+    {
+      "id": "mixed_id_en-01",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 83
+    },
+    {
+      "id": "mixed_id_en-02",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 88
+    },
+    {
+      "id": "mixed_id_en-03",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 74
+    },
+    {
+      "id": "mixed_id_en-04",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 81
+    },
+    {
+      "id": "mixed_id_en-05",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 80
+    },
+    {
+      "id": "mixed_id_en-06",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 97
+    },
+    {
+      "id": "mixed_id_en-07",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 82
+    },
+    {
+      "id": "mixed_id_en-08",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 89
+    },
+    {
+      "id": "mixed_id_en-09",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 72
+    },
+    {
+      "id": "mixed_id_en-10",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 86
+    },
+    {
+      "id": "mixed_id_en-11",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 77
+    },
+    {
+      "id": "mixed_id_en-12",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 85
+    },
+    {
+      "id": "mixed_id_en-13",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 82
+    },
+    {
+      "id": "mixed_id_en-14",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 90
+    },
+    {
+      "id": "mixed_id_en-15",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 81
+    },
+    {
+      "id": "typos-01",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 81
+    },
+    {
+      "id": "typos-02",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 81
+    },
+    {
+      "id": "typos-03",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 85
+    },
+    {
+      "id": "typos-04",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 90
+    },
+    {
+      "id": "typos-05",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 89
+    },
+    {
+      "id": "typos-06",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 85
+    },
+    {
+      "id": "typos-07",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 87
+    },
+    {
+      "id": "typos-08",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 81
+    },
+    {
+      "id": "typos-09",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 80
+    },
+    {
+      "id": "typos-10",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 88
+    },
+    {
+      "id": "typos-11",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 89
+    },
+    {
+      "id": "typos-12",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 89
+    },
+    {
+      "id": "typos-13",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 96
+    },
+    {
+      "id": "typos-14",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 91
+    },
+    {
+      "id": "typos-15",
+      "ok": false,
+      "status": 502,
+      "code": "SERVICE",
+      "ms": 93
+    }
+  ]
+}

@@ -22,7 +22,7 @@ The application speaks primarily in **Bahasa Indonesia**, retaining familiar Eng
 
 **Designed for:** clinicians and developers exploring synthetic clinical cases and documentation workflows. **Final authority:** the reviewing clinician for clinical interpretation; the authorized owner for high-impact system decisions.
 
-**Current scope:** fictional patients and encounters, drafts and templates, clinical work tasks, optional dictation, local exports, Oracle reference search, Oracle II source grounding, managed MIRA analysis and human review.
+**Current scope:** fictional patients and encounters, drafts and templates, clinical work tasks, optional dictation, local exports, Oracle reference search, TheOracle source grounding, managed MIRA analysis and human review.
 
 **Outside scope:** real patient records, prescribing automation, autonomous medical decisions, production EHR integration, clinical certification and live clinical deployment.
 
@@ -34,7 +34,7 @@ Sentrapedia is one sovereign product capsule and one future repository. The clin
 
 **01 / WORKSPACE** — Organize fictional cases, notes, templates, tasks, drafts and revisions.
 
-**02 / ORACLE + ORACLE II** — Search the bundled disease catalog and trace supporting source evidence with explicit review limits.
+**02 / ORACLE + THEORACLE** — Search the bundled disease catalog and trace supporting source evidence with explicit review limits.
 
 **03 / MIRA** — Produce structured case-analysis drafts through a managed engine; retain validation and clinician review as separate steps.
 
@@ -67,7 +67,7 @@ The following is an **illustrative operator journey**, not a recorded clinical v
 1. **Capture context.** Open a fictional encounter and enter a non-identifying chief complaint, chronology, examination findings and relevant simulated history.
 2. **Ask a focused clinical question.** Use the clinical Q&A or differential mode to turn that context into a structured inquiry, not a final diagnosis.
 3. **Explore the possibilities.** Examine provisional alternatives, missing discriminating information and any warnings or uncertainty presented in the draft.
-4. **Inspect the evidence.** Review Oracle disease catalog context and Oracle II provenance-linked passages where valid sources are available; source presence does not establish source correctness.
+4. **Inspect the evidence.** Review Oracle disease catalog context and TheOracle provenance-linked passages where valid sources are available; source presence does not establish source correctness.
 5. **Draft the next artifact.** Use a workup or referral-assessment inquiry, then shape the results into an appropriate editable documentation format.
 6. **Review and revise.** Inspect source snapshots, trace metadata and the clinical content itself. The model's schema checks are not a clinical sign-off.
 7. **Keep accountability visible.** The fictional case remains subject to clinician review; nothing in this sequence permits deployment for real patient decisions.
@@ -76,14 +76,14 @@ The following is an **illustrative operator journey**, not a recorded clinical v
 
 - **Language and workflow:** the interface is primarily Bahasa Indonesia and is framed around clinician-readable medical documentation rather than generic AI chat responses.
 - **Clinical reasoning as the center:** question answering, differential analysis, source inspection and drafting are adjacent activities rather than unrelated text-generation demos.
-- **Evidence transparency:** Oracle II retains source/page/hash metadata so operators can examine provenance and recognize when retrieval is missing or uncertain.
+- **Evidence transparency:** TheOracle retains index, embedding-model and chunk-hash metadata so operators can examine provenance and recognize when retrieval is missing or uncertain.
 - **Professional accountability:** the product keeps the reviewing clinician in the decision loop; the agent proposes, the operator evaluates.
 - **Important distinction:** Indonesia-first **does not mean** the available corpus has been exhaustively validated against Indonesian national guidelines, that terminology/coding is certified, or that the software integrates with SATUSEHAT, BPJS or a production RME.
 
 <details>
 <summary><b><code>PRODUCT HORIZON // VISION VS. CURRENT BUILD</code></b></summary>
 
-**Implemented or configured in this repository:** local synthetic encounter workspace; document templates; Oracle disease catalog; Oracle II read-only evidence retrieval; bundled MIRA case modes; schema/identity gates; edit-and-review workflows; local exports and limited runtime trace information.
+**Implemented or configured in this repository:** local synthetic encounter workspace; document templates; Oracle disease catalog; TheOracle read-only local vector retrieval; bundled MIRA case modes; schema/identity gates; edit-and-review workflows; local exports and limited runtime trace information.
 
 **Still requires independent engineering and validation before any real-world clinical application:** secure patient identity and access controls; compliant personal-data processing and retention; formally curated Indonesian clinical evidence; evaluation of medical correctness, bias, red flags and failure modes; oversight and regulatory assessment; robust multiuser infrastructure; institution-approved RME interoperability; real-case pilots and explicit clinician/owner authorization.
 
@@ -174,7 +174,7 @@ flowchart TB
 <table width="100%">
 <tr>
 <td width="50%" valign="top"><small><b><code>01 · WORKSPACE</code></b></small><br /><small>Fictional patients, lists, encounters, tasks, templates, draft review and backups.</small><br /><sub>IMPLEMENTED · src/components · src/lib/workspace.ts</sub></td>
-<td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>144 disease records across 15 categories, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/theoracle.ts</sub></td>
+<td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>144 disease records across 15 categories, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/oracle.ts</sub></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><small><b><code>03 · THEORACLE</code></b></small><br /><small>Local vector retrieval (EmbeddingGemma-300m on this machine) with index, model and per-passage hashes and bounded passages.</small><br /><sub>IMPLEMENTED · theoracle · src/lib/theoracle-grounding.ts</sub></td>
@@ -194,8 +194,8 @@ flowchart TB
 | <small>18 built-in document modes</small> | <small>IMPLEMENTED</small> | <small>`src/lib/drafts.ts`</small> | <small>Not every mode uses AI</small> |
 | <small>Five MIRA-routed modes: question, DDx, workup, referral review, ICD-10</small> | <small>IMPLEMENTED</small> | <small>`src/lib/mira/composer.ts`</small> | <small>Fictional cases only</small> |
 | <small>Templates, revisions, checklist, export</small> | <small>IMPLEMENTED</small> | <small>`src/lib/workflow.ts` · `src/components/workspace.tsx`</small> | <small>Review status is not clinical authorization</small> |
-| <small>Oracle local disease search</small> | <small>IMPLEMENTED</small> | <small>`src/lib/theoracle.ts`</small> | <small>Narratives not certified PNPK citations</small> |
-| <small>Oracle II grounding / provenance</small> | <small>IMPLEMENTED</small> | <small>`src/lib/theoracle-grounding.ts`</small> | <small>Unreviewed candidates not approved clinical facts</small> |
+| <small>Oracle local disease search</small> | <small>IMPLEMENTED</small> | <small>`src/lib/oracle.ts`</small> | <small>Narratives not certified PNPK citations</small> |
+| <small>TheOracle grounding / provenance</small> | <small>IMPLEMENTED</small> | <small>`src/lib/theoracle-grounding.ts`</small> | <small>Unreviewed candidates not approved clinical facts</small> |
 | <small>Managed MIRA standalone lifecycle</small> | <small>HISTORICALLY VERIFIED</small> | <small>`docs/verification/2026-10-10-integrated-mira.md`</small> | <small>Local/extracted runtime proof only</small> |
 | <small>Optional browser dictation</small> | <small>IMPLEMENTED</small> | <small>`src/components/use-dictation.ts`</small> | <small>Vendor-dependent speech privacy</small> |
 | <small>Production auth, EHR integration, clinical validation</small> | <small>NOT ESTABLISHED</small> | <small>`docs/data.md` · `docs/mira-integration.md`</small> | <small>Not for real patient care</small> |
@@ -299,7 +299,7 @@ Sentrapedia/
 │   ├── app/icon.png             # Product icon, Git LFS
 │   ├── components/              # Clinical UI
 │   ├── lib/mira/                # Client, contract, gateway, presentation
-│   ├── lib/theoracle-grounding.ts  # Read-only retrieval
+│   ├── lib/oracle-grounding.ts  # Read-only retrieval
 │   └── app/sentra-tokens.css    # Local token snapshot
 ├── oracle/                      # Disease reference JSON
 ├── theoracle/                   # TheOracle: index (chunks, vectors, manifest), model (installed), provenance
@@ -349,7 +349,7 @@ flowchart TB
   class STOP danger;
 ```
 
-The client constructs a case from the complaint, any recorded numeric age/sex, encounter context and notes—not patient name/ID. The client, same-origin gateway and Python service enforce layered input checks. Oracle II retrieves no more than six bounded source passages and verifies evidence provenance before a synthetic-tagged call. The returned structure and model/cost metadata are checked before saving a reviewable draft with trace, timestamp and source snapshot.
+The client constructs a case from the complaint, any recorded numeric age/sex, encounter context and notes—not patient name/ID. The client, same-origin gateway and Python service enforce layered input checks. TheOracle retrieves no more than six bounded source passages (two per document) and verifies index and model hashes before a synthetic-tagged call. The returned structure and model/cost metadata are checked before saving a reviewable draft with trace, timestamp and source snapshot.
 
 Missing source matches, budget exhaustion, bad output, provider failure, identity-pattern rejection and cancellation do not create fabricated draft responses; the prompt is preserved for review. **Identity regexes are not certified anonymization.** Other document modes and personal templates can use deterministic formatting without paid inference.
 
@@ -552,7 +552,7 @@ The project declares `rootDependencies: []`, carries its own npm/Python locks an
 | <small>Method</small> | <small>Route / channel</small> | <small>Purpose</small> | <small>Trust / failure</small> |
 |---|---|---|---|
 | <small>GET</small> | <small>`/api/mira`</small> | <small>Service/profile/grounding readiness</small> | <small>No paid inference; health is not clinical validity</small> |
-| <small>POST</small> | <small>`/api/mira`</small> | <small>Validate fictional case, retrieve Oracle II, forward and verify result</small> | <small>Same origin, body bound, identity and response checks</small> |
+| <small>POST</small> | <small>`/api/mira`</small> | <small>Validate fictional case, retrieve TheOracle, forward and verify result</small> | <small>Same origin, body bound, identity and response checks</small> |
 | <small>GET</small> | <small>`/healthz` (private MIRA loopback)</small> | <small>Contract/version/capability probe</small> | <small>Not a public API</small> |
 | <small>POST</small> | <small>`/v1/diagnosis/step` (private MIRA)</small> | <small>Synthetic contract-v1 assessment</small> | <small>Ephemeral token, data policy and budget</small> |
 | <small>External</small> | <small>OpenRouter</small> | <small>Model metadata and paid AI inference</small> | <small>Provider availability, price, quota and retention caveats</small> |
@@ -580,7 +580,7 @@ The account dialog supports JSON export and clearing browser-local records, but 
 
 - **Browser:** synthetic patient/encounter and draft state is kept in localStorage. This is not an encrypted clinical database, shared patient chart or backup strategy.
 - **Application gateway:** same-origin and synthetic-only input rules reduce unintended use; pattern-based identity screening cannot guarantee anonymization.
-- **Grounding corpus:** bundled Oracle II material is indexed locally and should be reviewed for extraction quality, licensing and clinical relevance before being relied upon.
+- **Grounding corpus:** bundled TheOracle material is indexed locally and should be reviewed for extraction quality, licensing and clinical relevance before being relied upon.
 - **External inference:** prompts sent beyond the local process cross a trust boundary. The configured runtime does not assert zero data retention.
 - **Human outputs:** editable notes are drafts, without authenticated signatures, chart finalization, prescribing authority, or automatic EHR submission.
 

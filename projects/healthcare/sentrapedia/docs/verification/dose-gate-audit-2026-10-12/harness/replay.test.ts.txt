@@ -1,0 +1,39 @@
+// Gate replay over extracted audit items (see extract.py). Not a regression test: run on demand with
+// REPLAY_IN=<items.json> REPLAY_OUT=<rows.json> npx vitest run .runtime/audit/replay.test.ts
+import { readFileSync, writeFileSync } from "node:fs";
+import { it } from "vitest";
+import { gateTherapy } from "../../src/lib/theoracle-evidence-gate";
+import type { TheOracleGroundingBundle } from "../../src/lib/theoracle-grounding-types";
+import type { MiraTherapy } from "../../src/lib/mira/contract";
+
+interface Item { id: string; path: string; traceId: string; query: string; diagnosis: { icd10: string; label: string } | null; therapy: MiraTherapy | null; bundle: TheOracleGroundingBundle; dxBundle: TheOracleGroundingBundle | null }
+
+const MARK = "zzqdiag";
+// Every passage made "about" the diagnosis: a drug that verifies now was blocked only by the diagnosis-word filter.
+const aboutAll = (bundle: TheOracleGroundingBundle): TheOracleGroundingBundle => ({ ...bundle, evidence: bundle.evidence.map(e => ({ ...e, source: { ...e.source, title: `${MARK} ${e.source.title}` } })) });
+const merged = (a: TheOracleGroundingBundle, b: TheOracleGroundingBundle | null): TheOracleGroundingBundle => b ? { ...a, evidence: [...a.evidence, ...b.evidence.filter(e => !a.evidence.some(x => x.text === e.text))] } : a;
+
+it("replays the gate", () => {
+  const { items } = JSON.parse(readFileSync(process.env.REPLAY_IN!, "utf8")) as { items: Item[] };
+  const rows = [];
+  const summary: Record<string, Record<string, number>> = {};
+  for (const item of items) {
+    if (!item.therapy || !item.diagnosis) continue;
+    const head = gateTherapy(item.therapy, item.bundle, item.diagnosis).report;
+    const forced = gateTherapy(item.therapy, aboutAll(item.bundle), { icd10: item.diagnosis.icd10, label: `${item.diagnosis.label} ${MARK}` }).report;
+    const withDx = gateTherapy(item.therapy, merged(item.bundle, item.dxBundle), item.diagnosis).report;
+    head.drugs.forEach((d, i) => {
+      const count = (summary[item.path] ??= {});
+      count[d.status] = (count[d.status] ?? 0) + 1;
+      const regimen = item.therapy!.regimen[i];
+      rows.push({
+        id: item.id, path: item.path, traceId: item.traceId, query: item.query, diagnosis: item.diagnosis, forDiagnosis: item.therapy!.forDiagnosis,
+        drug: d.drug, dose: d.dose, route: regimen.route, duration: regimen.duration, note: regimen.note, status: d.status, reason: head.reason,
+        evidenceIds: d.evidenceIds, verifiedIfAboutForced: forced.drugs[i].status === "verified", verifiedWithDxBundle: withDx.drugs[i].status === "verified",
+        namingPassages: d.evidenceIds.map(id => { const e = item.bundle.evidence.find(x => x.evidenceId === id); return e && { id, title: e.source.title, text: e.text }; }),
+      });
+    });
+  }
+  writeFileSync(process.env.REPLAY_OUT!, JSON.stringify({ summary, rows }, null, 1));
+  console.log(JSON.stringify(summary));
+});

@@ -68,7 +68,7 @@
       "source": "assist/service/engine.py",
       "path": "service/engine.py",
       "sourceSha256": "dd1b854c8c068b13f8f398cde27b94ed9239ab910f592f3fc8f9390795dbe829",
-      "packagedSha256": "796beb1bf2b1eec5ca20bc9a7e36acb6a2279ae42c67403324e2192c909f51d2"
+      "packagedSha256": "e9b174d2ebcf1eaba81477764abc9a427216f68f7e3d9e12cd982a7f4c6c31d9"
     },
     {
       "source": "assist/service/HANDOFF_NOTES.md",
@@ -98,7 +98,7 @@
       "source": "assist/service/prompts.py",
       "path": "service/prompts.py",
       "sourceSha256": "15c1e5e6960279971439ce9c3e391e0c7e3609df8a20c02176d81ace872d7c9e",
-      "packagedSha256": "5d8efcb2df7f3a700739fe64ed6285de3972d78a713df69251a3c6bb16ee74a8"
+      "packagedSha256": "e92e79c4fad73b2cff08b977b37d27c2612bef0a77efe7f8aa6e93ecbf0fb6cc"
     },
     {
       "source": "assist/service/README.md",
@@ -200,7 +200,7 @@
       "source": "assist/service/tests/test_step_api.py",
       "path": "service/tests/test_step_api.py",
       "sourceSha256": "f099ac554aa196548f4dce77f9d695d88a081e16038eb7d96132e7a430064f2f",
-      "packagedSha256": "58c58315364a4d85c0481df317ae1bc00142ce82b00448733c958e16bd5052a3"
+      "packagedSha256": "3f11220c477976648fdbfb3c8cccd99b03063f18a3d8640477377b0010047ed7"
     },
     {
       "source": "assist/service/tests/__init__.py",
