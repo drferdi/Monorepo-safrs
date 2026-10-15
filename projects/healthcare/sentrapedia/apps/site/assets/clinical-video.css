@@ -90,7 +90,7 @@
 #home-bottom .clinical-product-visual img { display: block; width: 100%; height: auto; }
 #home-bottom .clinical-product-visual figcaption { margin-top: 12px; color: var(--clinical-muted); font-size: 9px; line-height: 1.6; letter-spacing: .04em; }
 #home-bottom .clinical-product-intro { grid-column: 2; grid-row: 2 / 4; }
-#home-bottom .clinical-product-intro img { aspect-ratio: 1672 / 941; object-fit: cover; }
+#home-bottom .clinical-product-intro img { aspect-ratio: 2048 / 1360; object-fit: cover; }
 #home-bottom .clinical-capability > .clinical-product-visual { grid-column: 2 / -1; width: min(100%, 680px); margin-top: 32px; }
 #home-bottom .clinical-capability-viewport { background: #fff; }
 #home-bottom .clinical-rail-header { display: none; }

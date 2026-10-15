@@ -27,7 +27,7 @@ for (const filename of ['hero-workspace.css', 'hero-workspace.js', 'hero-film.mp
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
 await fs.mkdir(path.join(site, 'media/clinical-product'), { recursive: true });
-for (const filename of ['workspace.png', 'document-review.png', 'anamnesis-source.png']) {
+for (const filename of ['workspace.png', 'document-review.png', 'anamnesis-source.png', 'audrey-chat.png']) {
   await fs.copyFile(path.join(root, 'assets/clinical-product', filename), path.join(site, 'media/clinical-product', filename));
 }
 await fs.mkdir(path.join(site, 'media/workflows'), { recursive: true });

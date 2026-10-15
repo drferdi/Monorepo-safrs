@@ -41,6 +41,9 @@ test('clinical narrative preserves video, content and local assets', async () =>
     assert.match(section, /class="clinical-capability-viewport"/);
     assert.match(section, /href="#clinical-principles">Lanjut ke fondasi/);
     assert.equal([...section.matchAll(/class="clinical-product-visual\b/g)].length, 3);
+    const intro = section.slice(section.indexOf('class="clinical-index-intro"'), section.indexOf('class="clinical-capability-viewport"'));
+    assert.match(intro, /<img src="\/media\/clinical-product\/audrey-chat\.png" width="2048" height="1360" loading="lazy" decoding="async" alt="Ilustrasi percakapan dokter dengan Audrey[^"]*keputusan tetap pada dokter\."/);
+    assert.doesNotMatch(intro, /workspace\.png/);
     for (const title of ['Clinical Cockpit Interface', 'Document Studio', 'Cloud Agent Gateway', 'Fast Assessment', 'Ministry ICD-10 Resolution', 'Mesin Dokumentasi 18 Mode Klinis', 'Ambient Scribing &amp; Speech Dictation', 'Power Navigation &amp; Developer/Clinician UI', 'Privacy-by-Design', 'Sentrapedia Library']) {
       assert.ok(section.includes('<h4>' + title + '</h4>'), title);
     }
@@ -57,7 +60,7 @@ test('clinical narrative preserves video, content and local assets', async () =>
     assert.match(section, /Diagnosis, terapi, dan rujukan tetap menjadi kewenangan dokter/);
     assert.match(section, /href="#clinical-note" data-clinical-skip>Lewati animasi/);
     assert.doesNotMatch(section, /feature-card|clinical-feature-list|2,9 detik|validator e-Klaim/);
-    for (const asset of ['gsap.min.js', 'ScrollTrigger.min.js', 'SplitText.min.js', 'DrawSVGPlugin.min.js', 'fonts/Caveat-Variable.ttf', 'clinical-video.js', 'clinical-video.css', 'pricing.js', 'pricing.css', 'clinical-product/workspace.png', 'clinical-product/document-review.png', 'clinical-product/anamnesis-source.png']) {
+    for (const asset of ['gsap.min.js', 'ScrollTrigger.min.js', 'SplitText.min.js', 'DrawSVGPlugin.min.js', 'fonts/Caveat-Variable.ttf', 'clinical-video.js', 'clinical-video.css', 'pricing.js', 'pricing.css', 'clinical-product/workspace.png', 'clinical-product/document-review.png', 'clinical-product/anamnesis-source.png', 'clinical-product/audrey-chat.png']) {
       const response = await fetch(base + '/media/' + asset);
       assert.equal(response.status, 200, asset);
       const served = new Uint8Array(await response.arrayBuffer());

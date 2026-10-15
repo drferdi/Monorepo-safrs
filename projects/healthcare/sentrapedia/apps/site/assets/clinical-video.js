@@ -152,10 +152,10 @@
       const capabilityItems = [...track.querySelectorAll('.clinical-capability')];
       const counter = capabilityViewport.querySelector('[data-clinical-capability-count]');
       gsap.fromTo(root.querySelector('.clinical-product-intro img'), {
-        clipPath: 'inset(0 0 12% 0)', scale: 1.035
+        clipPath: 'inset(0 0 100% 0)', scale: 1.02
       }, {
         clipPath: 'inset(0 0 0% 0)', scale: 1, ease: 'none',
-        scrollTrigger: { id: 'clinical-product-intro', trigger: root.querySelector('.clinical-index-intro'), start: 'top 85%', end: 'bottom 55%', scrub: 0.45 }
+        scrollTrigger: { id: 'clinical-product-intro', trigger: root.querySelector('.clinical-index-intro'), start: 'top 88%', end: 'top 30%', scrub: 0.45 }
       });
       if (context.conditions.desktop) {
         capabilityViewport.classList.add('is-horizontal');

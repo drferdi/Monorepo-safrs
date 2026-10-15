@@ -35,6 +35,10 @@
       "sha256": "0ee11bec25403915b989aa66ecd723df0928495bc98e8096ed2d7a18f57faf59"
     },
     {
+      "path": "assets/clinical-product/audrey-chat.png",
+      "sha256": "a89cffa3132b5b22aeb206b25842942842b40cb56d986605b77c7d702aac1b70"
+    },
+    {
       "path": "assets/clinical-product/document-review.png",
       "sha256": "8a1dede345f859f0e8efaba5751ee655088b99cd7bed95455f1a86f28e2ac4e8"
     },
@@ -44,11 +48,11 @@
     },
     {
       "path": "assets/clinical-video.css",
-      "sha256": "a0446af09eb0b4ecd1a61c6a6caf46249f55339fb8e28d4f4adde7265d4234b0"
+      "sha256": "bf910b5745bdb9e871013bf94a6f82168c6ccf235e3303128347922beea43244"
     },
     {
       "path": "assets/clinical-video.js",
-      "sha256": "8ff376ae1e89fe02ffdcfc5b16d0ddca17f09b1d37687b4e877007b63b998645"
+      "sha256": "eb18382acfbf462d485c7be335452cc841f5ae681d4b30f416c8b686360096f3"
     },
     {
       "path": "assets/design-audit.css",
@@ -232,7 +236,7 @@
     },
     {
       "path": "scripts/clinical-video.test.mjs",
-      "sha256": "7184e9b9445769bffd2103b800b971d1e4edecb87aae469d08dfd49d8049b72f"
+      "sha256": "d28c03306e6cd46a620951fa8977feea6c7950d3e48689e117529a28bb4fd461"
     },
     {
       "path": "scripts/contact.mjs",
@@ -260,7 +264,7 @@
     },
     {
       "path": "scripts/transform.mjs",
-      "sha256": "d51f74e8cbb80b6db371e5fa3e5c03d2ae627a1ccaae38aa8494554ffa58374e"
+      "sha256": "bfb3216fe03aa5f47472550b5900eaaaa9ce786a3064166a41fb4904b13c874e"
     },
     {
       "path": "scripts/verify.mjs",
@@ -340,11 +344,15 @@
     },
     {
       "path": "site/index.html",
-      "sha256": "adb83a84a13d96c8ba089916b72daf39748878b6deec8c6bf68af0ea4593bf99"
+      "sha256": "69fd0699225c66e728e96f90e9aecd9765fbc01f5f293088ab3868db11dba056"
     },
     {
       "path": "site/media/clinical-product/anamnesis-source.png",
       "sha256": "0ee11bec25403915b989aa66ecd723df0928495bc98e8096ed2d7a18f57faf59"
+    },
+    {
+      "path": "site/media/clinical-product/audrey-chat.png",
+      "sha256": "a89cffa3132b5b22aeb206b25842942842b40cb56d986605b77c7d702aac1b70"
     },
     {
       "path": "site/media/clinical-product/document-review.png",
@@ -356,11 +364,11 @@
     },
     {
       "path": "site/media/clinical-video.css",
-      "sha256": "a0446af09eb0b4ecd1a61c6a6caf46249f55339fb8e28d4f4adde7265d4234b0"
+      "sha256": "bf910b5745bdb9e871013bf94a6f82168c6ccf235e3303128347922beea43244"
     },
     {
       "path": "site/media/clinical-video.js",
-      "sha256": "8ff376ae1e89fe02ffdcfc5b16d0ddca17f09b1d37687b4e877007b63b998645"
+      "sha256": "eb18382acfbf462d485c7be335452cc841f5ae681d4b30f416c8b686360096f3"
     },
     {
       "path": "site/media/design-audit.css",
@@ -560,7 +568,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "adb83a84a13d96c8ba089916b72daf39748878b6deec8c6bf68af0ea4593bf99"
+      "sha256": "69fd0699225c66e728e96f90e9aecd9765fbc01f5f293088ab3868db11dba056"
     }
   ]
 }
