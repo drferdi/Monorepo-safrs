@@ -23,6 +23,9 @@ for (const filename of ['design-audit.css', 'design-audit.js']) {
 for (const filename of ['pricing.css', 'pricing.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
+for (const filename of ['hero-workspace.css', 'hero-workspace.js', 'hero-film.mp4']) {
+  await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
+}
 await fs.mkdir(path.join(site, 'media/clinical-product'), { recursive: true });
 for (const filename of ['workspace.png', 'document-review.png', 'anamnesis-source.png']) {
   await fs.copyFile(path.join(root, 'assets/clinical-product', filename), path.join(site, 'media/clinical-product', filename));
@@ -41,7 +44,6 @@ await fs.mkdir(path.join(site, 'media/fonts'), { recursive: true });
 for (const filename of ['Caveat-Variable.ttf', 'Caveat-OFL.txt']) {
   await fs.copyFile(path.join(root, 'assets/fonts', filename), path.join(site, 'media/fonts', filename));
 }
-await fs.copyFile(path.join(root, 'assets/sentrapedia-hero.webm'), path.join(site, 'assets/theme/img/sentrapedia-hero.webm'));
 await fs.copyFile(path.join(root, 'assets/branding/sentra-neuron-ink.png'), path.join(site, 'assets/brand/favicon.png'));
 for (const filename of await fs.readdir(path.join(root, 'assets/branding'))) {
   if (/^sentrapedia-wordmark-[a-z]+\.svg$/.test(filename)) await fs.copyFile(path.join(root, 'assets/branding', filename), path.join(site, 'assets/theme/img', filename));

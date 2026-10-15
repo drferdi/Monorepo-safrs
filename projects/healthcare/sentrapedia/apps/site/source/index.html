@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="assets/theme/css/responsive.css">
     <link rel="stylesheet" href="/media/clinical-video.css">
     <link rel="stylesheet" href="/media/design-audit.css">
+    <link rel="stylesheet" href="/media/hero-workspace.css">
     <link rel="stylesheet" href="/media/pricing.css">
     <title>Sentrapedia</title>
 <meta name='robots' content='max-image-preview:large' />
@@ -156,6 +157,150 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
                 <div class="hero-stage" aria-label="Identitas Sentrapedia">
                     <img class="hero-stage-logo" src="/assets/brand/favicon.png" alt="" width="943" height="735">
                     <h1 class="hero-stage-wordmark">Sentrapedia</h1>
+                </div>
+
+                <div class="hero-workspace" data-hero-workspace>
+                    <div class="hero-workspace-stage" role="img" aria-label="Film singkat ruang kerja Sentrapedia, lalu simulasi dengan kasus fiktif: analisis diagnosis banding, draf catatan SOAP, peninjauan oleh dokter, dan draf surat rujukan. Keputusan tetap pada dokter.">
+                    <div class="hero-workspace-film" aria-hidden="true">
+                        <video muted playsinline preload="auto" poster="/media/clinical-product/workspace.png" tabindex="-1"><source src="/media/hero-film.mp4" type="video/mp4"></video>
+                    </div>
+                    <div class="hero-workspace-frame" aria-hidden="true">
+                        <div class="hw-screen">
+                            <svg class="hw-cursor" data-hw="cursor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 3.2 19.3 12.4l-6.1 1.3-3.3 5.4Z" fill="#191c1c" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>
+                            <div class="hw-sidebar">
+                                <p class="hw-brand"><img src="/assets/brand/favicon.png" alt="" width="943" height="735"><span>Sentrapedia</span><i class="bi bi-layout-sidebar"></i></p>
+                                <p class="hw-group">Mulai</p>
+                                <ul class="hw-nav">
+                                    <li><i class="bi bi-plus-lg"></i>Baru</li>
+                                    <li><i class="bi bi-person"></i>Buat Pasien</li>
+                                    <li><i class="bi bi-list-ul"></i>Buat daftar Pasien</li>
+                                </ul>
+                                <p class="hw-group">Alat kerja</p>
+                                <ul class="hw-nav">
+                                    <li><i class="bi bi-list-task"></i>Antrean kerja</li>
+                                    <li><i class="bi bi-star"></i>Templat dan favorit</li>
+                                    <li><i class="bi bi-book"></i>Pustaka Klinis</li>
+                                    <li><i class="bi bi-cpu"></i>Dify AI Agent</li>
+                                    <li><i class="bi bi-mic"></i>Mode suara</li>
+                                </ul>
+                                <p class="hw-group">Sistem</p>
+                                <ul class="hw-nav">
+                                    <li><i class="bi bi-command"></i>Pusat perintah</li>
+                                    <li><i class="bi bi-search"></i>Cari</li>
+                                    <li><i class="bi bi-sliders"></i>Pengaturan Agent</li>
+                                </ul>
+                                <p class="hw-group hw-group-list"><span>Semua Encounter</span><span>2</span></p>
+                                <ul class="hw-nav hw-encounters">
+                                    <li>Kasus sintetis untuk demonstrasi</li>
+                                    <li class="is-active" data-hw="encounter">Encounter (10/08 09:03)</li>
+                                </ul>
+                                <p class="hw-sidebar-foot"><span>Sentrapedia</span><span class="hw-pill">Lite</span></p>
+                            </div>
+                            <div class="hw-main">
+                                <div class="hw-topbar">
+                                    <span class="hw-crumb"><img src="/assets/brand/favicon.png" alt="" width="943" height="735">Selamat siang</span>
+                                    <span class="hw-topbar-tools"><i class="bi bi-command"></i><i class="bi bi-arrows-angle-expand"></i><i class="bi bi-layout-sidebar-reverse"></i><span class="hw-subscribe">Berlangganan</span></span>
+                                </div>
+                                <div class="hw-stage">
+                                    <div class="hw-scene hw-home" data-hw="home">
+                                        <div class="hw-headlines">
+                                            <div class="hw-headline is-current" data-hw="headline-ask"><p class="hw-title">Analisis kasus klinis.</p><p class="hw-lead">Telaah kasus kompleks berdasarkan bukti medis.</p></div>
+                                            <div class="hw-headline" data-hw="headline-document"><p class="hw-title">Susun dokumentasi klinis.</p><p class="hw-lead">Susun catatan klinis yang jelas dan siap ditinjau.</p></div>
+                                            <div class="hw-headline" data-hw="headline-plan"><p class="hw-title">Rencanakan asesmen dan tindak lanjut.</p><p class="hw-lead">Organisasikan masalah klinis dan rencana penanganan.</p></div>
+                                        </div>
+                                        <div class="hw-tabs">
+                                            <span class="hw-tab is-active" data-hw="tab-ask" data-placeholder="Diskusikan kasus yang sedang Anda tangani.">Analisis</span>
+                                            <span class="hw-tab" data-hw="tab-document" data-placeholder="Tuliskan anamnesis, pemeriksaan, dan temuan untuk disusun menjadi catatan.">Dokumentasi</span>
+                                            <span class="hw-tab" data-hw="tab-plan" data-placeholder="Tuliskan asesmen dan rencana tata laksana yang ingin Anda susun.">Rencana</span>
+                                            <span class="hw-tab" data-hw="tab-communicate" data-placeholder="Tuliskan informasi yang ingin disampaikan kepada pasien atau sejawat.">Komunikasi</span>
+                                        </div>
+                                        <div class="hw-composer" data-hw="composer" data-referral-text="Rujuk untuk pemantauan hematokrit dan trombosit serial; dengue tanpa syok; fasilitas pemantauan di sini terbatas.">
+                                            <p class="hw-composer-text"><span class="hw-placeholder" data-hw="placeholder">Diskusikan kasus yang sedang Anda tangani.</span><span data-hw="typed">Laki-laki, 24 th. Demam 4 hari, nyeri kepala, mual. Gusi berdarah. TD 110/70, trombosit 75.000/µL, Ht 40 → 48%, NS1 positif.</span><span class="hw-caret"></span></p>
+                                            <p class="hw-composer-bar">
+                                                <span class="hw-composer-meta"><i class="bi bi-mic"></i><i class="bi bi-paperclip"></i><span>Tanpa pasien · belum ada konteks</span></span>
+                                                <span class="hw-composer-actions"><span class="hw-select">Standar <i class="bi bi-chevron-down"></i></span><span class="hw-send" data-hw="send"><i class="bi bi-arrow-up"></i></span></span>
+                                            </p>
+                                        </div>
+                                        <div class="hw-below">
+                                            <div class="hw-quick" data-hw="quick">
+                                                <p class="hw-quick-label">Tindakan cepat</p>
+                                                <div class="hw-chips is-current" data-hw="chips-ask">
+                                                    <span class="hw-chip">Pertanyaan Klinis (PICO)</span>
+                                                    <span class="hw-chip" data-hw="chip-ddx" data-placeholder="Jelaskan Presentation, History, dan temuan utama...">Diagnosis Banding (DDx)</span>
+                                                    <span class="hw-chip">Pemeriksaan Penunjang</span>
+                                                    <span class="hw-chip">Pengodean Diagnosis (ICD-10)</span>
+                                                    <span class="hw-chip hw-chip-more">Templat lain <i class="bi bi-chevron-down"></i></span>
+                                                </div>
+                                                <div class="hw-chips" data-hw="chips-document">
+                                                    <span class="hw-chip" data-hw="chip-soap" data-placeholder="Tambahkan History, Examination, Assessment, dan Plan...">Catatan Klinis (SOAP)</span>
+                                                    <span class="hw-chip">Anamnesis (HPI)</span>
+                                                    <span class="hw-chip">Catatan Penyakit Kronis</span>
+                                                    <span class="hw-chip">Serah Terima Klinis (SBAR)</span>
+                                                    <span class="hw-chip hw-chip-more">Templat lain <i class="bi bi-chevron-down"></i></span>
+                                                </div>
+                                                <div class="hw-chips" data-hw="chips-plan">
+                                                    <span class="hw-chip">Asesmen dan Rencana (A&amp;P)</span>
+                                                    <span class="hw-chip">Daftar Tugas Klinis</span>
+                                                    <span class="hw-chip" data-hw="chip-referral" data-placeholder="Masukkan tujuan rujukan, alasan rujukan, dan temuan relevan...">Surat Rujukan</span>
+                                                    <span class="hw-chip">Pemantauan Klinis</span>
+                                                    <span class="hw-chip hw-chip-more">Templat lain <i class="bi bi-chevron-down"></i></span>
+                                                </div>
+                                            </div>
+                                            <p class="hw-working" data-hw="working"><span></span><span></span><span></span>Menyusun draf lokal…</p>
+                                            <div class="hw-card" data-hw="draft">
+                                                <p class="hw-card-head"><span class="hw-card-title"><img src="/assets/brand/favicon.png" alt="" width="943" height="735">Diagnosis Banding (DDx)</span><span class="hw-badge">Draf lokal</span></p>
+                                                <div class="hw-section" data-hw="draft-line"><p class="hw-section-label">Temuan yang disampaikan</p><p>Laki-laki 24 tahun, demam hari ke-4, nyeri kepala, mual, gusi berdarah. Trombosit 75.000/µL, Ht 40 → 48%, NS1 positif.</p></div>
+                                                <div class="hw-section" data-hw="draft-line"><p class="hw-section-label">Differential Diagnosis untuk ditinjau Clinician</p><ul class="hw-ddx"><li>Demam berdarah dengue</li><li>Demam tifoid</li><li>Malaria</li><li>Leptospirosis</li></ul></div>
+                                                <div class="hw-section" data-hw="draft-line"><p class="hw-section-label">Temuan pendukung / penyangkal</p><p>Demam akut, trombositopenia, hemokonsentrasi, dan NS1 positif tercatat; penyangkal untuk diagnosis lain belum disampaikan.</p></div>
+                                                <div class="hw-section" data-hw="draft-line"><p class="hw-unfilled">Belum diisi: <span>Informasi dan pemeriksaan yang belum tersedia</span> · <span>Prioritas penilaian oleh klinisi</span></p></div>
+                                                <p class="hw-card-foot">Perlu tinjauan dokter · tinjau sebelum digunakan</p>
+                                            </div>
+                                            <div class="hw-card hw-card-referral" data-hw="referral">
+                                                <p class="hw-card-head"><span class="hw-card-title"><img src="/assets/brand/favicon.png" alt="" width="943" height="735">Surat Rujukan</span><span class="hw-badge">Draf lokal</span></p>
+                                                <div class="hw-section" data-hw="referral-line"><p class="hw-section-label">Alasan rujukan</p><p>Pemantauan hematokrit dan trombosit serial pada dengue tanpa syok; fasilitas pemantauan di layanan primer terbatas.</p></div>
+                                                <div class="hw-section" data-hw="referral-line"><p class="hw-section-label">Informasi Clinical relevan</p><p>Demam hari ke-4, gusi berdarah, trombosit 75.000/µL, Ht 40 → 48%, NS1 positif.</p></div>
+                                                <div class="hw-section" data-hw="referral-line"><p class="hw-unfilled">Belum diisi: <span>Temuan / Examination</span> · <span>Previous management</span> · <span>Masukan Specialist yang diminta</span></p></div>
+                                                <p class="hw-card-foot">Perlu tinjauan dokter · tinjau sebelum digunakan</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hw-scene hw-doc" data-hw="doc">
+                                        <p class="hw-doc-head"><span class="hw-card-title"><img src="/assets/brand/favicon.png" alt="" width="943" height="735">Catatan Klinis (SOAP)</span><span class="hw-badge">Draf lokal</span><span class="hw-status">Status <span class="hw-select" data-hw="status-select"><span data-hw="status">Draf</span> <i class="bi bi-chevron-down"></i></span></span></p>
+                                        <p class="hw-doc-tabs">
+                                            <span class="is-active" data-hw="doctab-document"><i class="bi bi-file-text"></i>Dokumen</span>
+                                            <span><i class="bi bi-journal-text"></i>Sumber</span>
+                                            <span><i class="bi bi-arrow-left-right"></i>Perubahan</span>
+                                            <span><i class="bi bi-clock-history"></i>Riwayat</span>
+                                            <span data-hw="doctab-review"><i class="bi bi-ui-checks"></i>Peninjauan</span>
+                                        </p>
+                                        <div class="hw-doc-panels">
+                                            <div class="hw-doc-body" data-hw="doc-body">
+                                                <div class="hw-section" data-hw="doc-line"><p class="hw-section-label">Keluhan Utama</p><p>Demam 4 hari, nyeri kepala, mual.</p></div>
+                                                <div class="hw-section" data-hw="doc-line"><p class="hw-section-label">Riwayat Penyakit</p><p>Demam sejak 4 hari; digali: nyeri perut, muntah, dan gusi berdarah.</p></div>
+                                                <div class="hw-section" data-hw="doc-line"><p class="hw-section-label">Pemeriksaan Fisik</p><p>TD 110/70. Trombosit 75.000/µL. Ht 40 → 48%. NS1 positif.</p></div>
+                                                <div class="hw-section" data-hw="doc-line"><p class="hw-unfilled">Belum diisi: <span>Riwayat Pengobatan / Alergi</span> · <span>Assessment</span> · <span>Tata Laksana</span></p></div>
+                                            </div>
+                                            <div class="hw-review" data-hw="review">
+                                                <p class="hw-review-note">Tanda peninjauan pengguna untuk isi saat ini. Ini bukan validasi klinis.</p>
+                                                <ul class="hw-checklist">
+                                                    <li data-hw="check"><span class="hw-check"><i class="bi bi-check-lg"></i></span><span>Identitas dan kaitan Encounter diperiksa <em>Wajib</em></span><span class="hw-link">Lihat bagian</span></li>
+                                                    <li data-hw="check"><span class="hw-check"><i class="bi bi-check-lg"></i></span><span>Sumber dan isi ditinjau <em>Wajib</em></span><span class="hw-link">Lihat bagian</span></li>
+                                                    <li data-hw="check"><span class="hw-check"><i class="bi bi-check-lg"></i></span><span>Bagian kosong diperhatikan <em>Wajib</em></span><span class="hw-link">Lihat bagian</span></li>
+                                                    <li data-hw="check"><span class="hw-check"><i class="bi bi-check-lg"></i></span><span>Bahasa dan format diperiksa <em>Wajib</em></span><span class="hw-link">Lihat bagian</span></li>
+                                                </ul>
+                                                <p class="hw-review-foot"><span class="hw-outline">Atur checklist dokumen</span><span>Tinjau sebelum digunakan</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="hero-workspace-foot">
+                        <p class="hero-workspace-caption">Film produk dan simulasi visual · kasus sintetis · keputusan dokter</p>
+                        <button type="button" class="hero-workspace-toggle" aria-label="Jeda simulasi" aria-pressed="false" hidden>Jeda</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -616,6 +761,7 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 <script src="/media/DrawSVGPlugin.min.js" defer></script>
 <script src="/media/clinical-video.js" defer></script>
 <script src="/media/design-audit.js" defer></script>
+<script src="/media/hero-workspace.js" defer></script>
 <script src="/media/pricing.js" defer></script>
 </body>
 

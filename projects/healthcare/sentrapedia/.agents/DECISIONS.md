@@ -150,3 +150,16 @@
   The monorepo is the governance/work framework only; no architectural dependency on it unless documented.
 - History is published by `git subtree split` of `projects/healthcare/sentrapedia`, keeping the capsule history.
   Every push to it still passes the monorepo publish gate by Gaffer's decision.
+
+## 2026-10-16 — Hero motion
+- The hero intro keeps only the neuron and the wordmark. The unrendered `sentrapedia-hero.webm` and the
+  uncommitted carousel WIP are gone (a copy of the WIP sits in the session scratchpad only). In their place:
+  a short product film (Higgsfield, Kling 3.0 Turbo, image-to-video from the studio render `workspace.png`)
+  that dissolves into a GSAP simulation of the real workspace with a visible pointer, then loops.
+- Desktop layout is side by side (identity lockup left, device right). Gaffer's arrival order: the neuron
+  alone in the centre, slide left as the wordmark joins it, slide left again as the device enters.
+- The simulation shows only shipped features (DDx, SOAP, review checklist, referral) on a synthetic case;
+  every draft stays "Draf lokal" until the physician reviews it. Reduced motion gets the static composition
+  with no film; the "Jeda/Putar" control pauses both film and simulation.
+- Higgsfield spend: one Kling 3.0 Turbo draft at 720p (7.5 credits, 120 -> 112.5). Seedance 2.5 needs a Pro
+  plan on this account; any further generation or a final-quality render is a separate decision.

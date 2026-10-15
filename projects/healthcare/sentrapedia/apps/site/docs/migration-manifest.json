@@ -83,6 +83,18 @@
       "sha256": "dd7dc87e023b3480f9707296342565ca2e361c8393cabb30f9557e06eb1bed4d"
     },
     {
+      "path": "assets/hero-film.mp4",
+      "sha256": "1b474a487b040527e4bb37b66bdc35d7608179f181e9b45379250eb8f8732a39"
+    },
+    {
+      "path": "assets/hero-workspace.css",
+      "sha256": "7582e3982565f2e87f93989b26dd62397e24dee8004d4103a619f50a5d2d8d68"
+    },
+    {
+      "path": "assets/hero-workspace.js",
+      "sha256": "ac53b9339c5fb8bd598a2d4673a44fde0e0f939e399603ab6d54eef4eaa123eb"
+    },
+    {
       "path": "assets/pricing.css",
       "sha256": "a3c4f2bf4024f00c12c1921526d14213ea2da158f223c1172622cc2f49d66ece"
     },
@@ -93,10 +105,6 @@
     {
       "path": "assets/ScrollTrigger.min.js",
       "sha256": "ba6ffe7b85ddcc7b891b91a430f88640dff41017874bceedf071ca156ccccefa"
-    },
-    {
-      "path": "assets/sentrapedia-hero.webm",
-      "sha256": "5f8295df5d536578442ab0ebe0f8954230fd1348fe83025fcceec95d90fbc30e"
     },
     {
       "path": "assets/sentrapedia-solusi.mp4",
@@ -212,7 +220,7 @@
     },
     {
       "path": "reference/design-integrity.json",
-      "sha256": "669846077e250ac680053eadc0bd4078be713ced94c2c45c7a27743bd8c713b0"
+      "sha256": "09a857b18b4cbcae41d773ca906955e23bb14b7148d8814ee07d608f724a072c"
     },
     {
       "path": "scripts/clinical-neuron.mjs",
@@ -240,7 +248,7 @@
     },
     {
       "path": "scripts/hero.test.mjs",
-      "sha256": "04192f598666c37a4a418f41e834da64ec73d19f66ac626bf0da56025ab530d0"
+      "sha256": "d1d50bfafac7aed194880fb809e022fed61d01671c3df2b1f51a9fdc0aa4320b"
     },
     {
       "path": "scripts/serve.mjs",
@@ -252,11 +260,11 @@
     },
     {
       "path": "scripts/transform.mjs",
-      "sha256": "24a81ec3c224d0f01e61472e9df68c43e58b7b80e44cfcf1f29e3b981ce4de78"
+      "sha256": "d51f74e8cbb80b6db371e5fa3e5c03d2ae627a1ccaae38aa8494554ffa58374e"
     },
     {
       "path": "scripts/verify.mjs",
-      "sha256": "3d9b79bc9c64b00ed1a70fc95ce2b6759f89ac3750083f11c87ab9985e79b754"
+      "sha256": "02269bb0e44124993b5519d30824119b2e5f8582cd949ead1c41ee65c3f401c7"
     },
     {
       "path": "scripts/workflow-playback.test.mjs",
@@ -289,10 +297,6 @@
     {
       "path": "site/assets/theme/img/arrow-down.svg",
       "sha256": "3aab7a579cd28b743d6ee92f1e9548c9a6b876994f69c18b5b55fee05895da21"
-    },
-    {
-      "path": "site/assets/theme/img/sentrapedia-hero.webm",
-      "sha256": "5f8295df5d536578442ab0ebe0f8954230fd1348fe83025fcceec95d90fbc30e"
     },
     {
       "path": "site/assets/theme/img/sentrapedia-wordmark-big.svg",
@@ -336,7 +340,7 @@
     },
     {
       "path": "site/index.html",
-      "sha256": "2de7a370fdc0baeb7782b552a1e47a02e68b21f956f3fc2873d10621c91452d5"
+      "sha256": "814da4adb1b5ac8db794737b534a760df8a6cd859a4c471a4638d8079b3e1f3f"
     },
     {
       "path": "site/media/clinical-product/anamnesis-source.png",
@@ -389,6 +393,18 @@
     {
       "path": "site/media/gsap.min.js",
       "sha256": "dd7dc87e023b3480f9707296342565ca2e361c8393cabb30f9557e06eb1bed4d"
+    },
+    {
+      "path": "site/media/hero-film.mp4",
+      "sha256": "1b474a487b040527e4bb37b66bdc35d7608179f181e9b45379250eb8f8732a39"
+    },
+    {
+      "path": "site/media/hero-workspace.css",
+      "sha256": "7582e3982565f2e87f93989b26dd62397e24dee8004d4103a619f50a5d2d8d68"
+    },
+    {
+      "path": "site/media/hero-workspace.js",
+      "sha256": "ac53b9339c5fb8bd598a2d4673a44fde0e0f939e399603ab6d54eef4eaa123eb"
     },
     {
       "path": "site/media/pricing.css",
@@ -544,7 +560,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "2de7a370fdc0baeb7782b552a1e47a02e68b21f956f3fc2873d10621c91452d5"
+      "sha256": "814da4adb1b5ac8db794737b534a760df8a6cd859a4c471a4638d8079b3e1f3f"
     }
   ]
 }

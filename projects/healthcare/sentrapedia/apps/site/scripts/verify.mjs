@@ -38,7 +38,9 @@ for (const entry of manifest.files.filter(entry => entry.path.endsWith('.css')))
     if (!await fs.stat(target).catch(() => null)) errors.push(`Missing CSS resource: ${resource}`);
   }
 }
-if (sha(await fs.readFile(path.join(root, 'assets/sentrapedia-hero.webm'))) !== sha(await fs.readFile(path.join(site, 'assets/theme/img/sentrapedia-hero.webm')))) errors.push('Hero source differs');
+for (const filename of ['hero-workspace.css', 'hero-workspace.js', 'hero-film.mp4']) {
+  if (sha(await fs.readFile(path.join(root, 'assets', filename))) !== sha(await fs.readFile(path.join(site, 'media', filename)))) errors.push(`Hero workspace source differs: ${filename}`);
+}
 const workflows = JSON.parse(await fs.readFile(path.join(root, 'assets/workflows.json'), 'utf8'));
 const motionAssets = [];
 if (sha(await fs.readFile(path.join(root, 'assets/workflow-playback.js'))) !== sha(await fs.readFile(path.join(site, 'media/workflow-playback.js')))) errors.push('Playback controller source differs from served file');
@@ -64,13 +66,11 @@ const server = createServer(site);
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 try {
   const base = `http://127.0.0.1:${server.address().port}`;
-  for (const route of ['/', '/assets/theme/img/sentrapedia-wordmark-big.svg', '/assets/theme/img/sentrapedia-hero.webm']) {
+  for (const route of ['/', '/assets/theme/img/sentrapedia-wordmark-big.svg', '/media/hero-workspace.css', '/media/hero-workspace.js', '/media/hero-film.mp4']) {
     const response = await fetch(base + route);
     if (response.status !== 200) errors.push(`HTTP ${response.status}: ${route}`);
     await response.arrayBuffer();
   }
-  const media = await fetch(base + '/assets/theme/img/sentrapedia-hero.webm', { headers: { Range: 'bytes=0-31' } });
-  if (media.status !== 206 || media.headers.get('content-type') !== 'video/webm') errors.push('Hero media range or MIME failed');
   if ((await fetch(base + '/api/unavailable', { method: 'POST' })).status !== 501) errors.push('Real submissions must remain unavailable');
   for (const workflow of workflows) for (const [suffix, mime] of [['.webp', 'image/webp'], ['-poster.webp', 'image/webp'], ['.webm', 'video/webm'], ['-web.mp4', 'video/mp4']]) {
     const response = await fetch(base + `/media/workflows/${workflow.id}${suffix}`);
@@ -80,6 +80,10 @@ try {
   for (const workflow of workflows) {
     const response = await fetch(base + `/media/workflows/${workflow.id}-web.mp4`, { headers: { Range: 'bytes=0-31' } });
     if (response.status !== 206 || response.headers.get('content-type') !== 'video/mp4' || (await response.arrayBuffer()).byteLength !== 32) errors.push(`Workflow video range failed: ${workflow.id}`);
+  }
+  {
+    const response = await fetch(base + '/media/hero-film.mp4', { headers: { Range: 'bytes=0-31' } });
+    if (response.status !== 206 || response.headers.get('content-type') !== 'video/mp4' || (await response.arrayBuffer()).byteLength !== 32) errors.push('Hero film range failed');
   }
 } finally { await new Promise(resolve => server.close(resolve)); }
 const result = { presentationFilesUnchanged: manifest.files.length, localTargets, motionAssets, errors };
