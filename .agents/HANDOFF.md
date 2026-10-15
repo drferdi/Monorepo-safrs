@@ -21,8 +21,9 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   the remediation-sequence prose, and the embedded Jev fallback code. Split off: stale
   `03_ARCHITECTURE` MUST lists in abyss-review skills and the Cursor context agent (scope of
   `TASK-20261011-GAFFER-ADDRESS`), the non-Claude trigger for the demoted reads, and
-  `check_handoff.py`'s stale heading reference. `pnpm governance` still fails at lifecycle on
-  inherited lease digests (no ledger or checker change).
+  `check_handoff.py`'s stale heading reference. After rebasing on `main` `f0e65064`: routing,
+  docs, ownership, handoff and sensitive-change checks exit 0 (R2, control only), and
+  `pnpm governance` passes (lifecycle OK); the earlier lease-digest failure no longer reproduces.
 - 2026-10-15 (Claude Code, `chore/kilo-config-cleanup`, `TASK-20261015-KILO-CONFIG-CLEANUP`):
   `0cb4acf5` on local `main`: `.kilo/kilo.jsonc` loads `.kilo/rules/master-engineering.md` and
   `commit_message.prompt` writes a conventional commit with exactly one
