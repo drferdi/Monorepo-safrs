@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, `fix/prepush-gate` dropped)
+Last updated: 2026-10-15 (Claude Code, Kilo config cleanup merged)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,18 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `chore/kilo-config-cleanup`, `TASK-20261015-KILO-CONFIG-CLEANUP`):
+  `0cb4acf5` on local `main`: `.kilo/kilo.jsonc` loads `.kilo/rules/master-engineering.md` and
+  `commit_message.prompt` writes a conventional commit with exactly one
+  `Co-Authored-By: Kilo Code <noreply@kilo.ai>` trailer (SAFRS-09 kept). The rule file stays local
+  on Gaffer's call: `.gitignore` ignores `.kilo/`, so the reference resolves only where the file
+  was copied (`.kilo/README_INSTALL.md` step 3). The task scope still names
+  `master-coding-instructions.md` (identical content). `check_sensitive_changes` rates `.kilo/**`
+  R1 because it is not in `.safrs/sensitive-paths.json` (known gap). The branch pointer was moved
+  to `main` before the commit so the check diffs against local `main`, not `origin/main`. The
+  duplicate `instructions` edit in the main checkout was discarded; worktree
+  `kilo-config-cleanup` and its branch are removed with this merge. Evidence:
+  `check_sensitive_changes`, `check_task_ownership`, `check_docs` exit 0. Nothing pushed or fetched.
 - 2026-10-15 (Claude Code, `docs/prepush-gate-decision`, Gaffer chose option a): pre-push gate
   stays removed (DECISIONS 2026-10-15). Removed worktree `claude-path-scoped-rules` (`--force`,
   4 uncommitted files) and branch `fix/prepush-gate` (`-D`, was `37e70714`; reflog recovery:
