@@ -48,6 +48,10 @@ const SELF_GUARD_PATTERNS = [
   ".husky/pre-push",
   "tools/automation/src/guard.mjs",
   "tools/automation/src/adapters/codex.mjs",
+  ".devin/hooks.v1.json",
+  ".devin/hooks/**",
+  ".devin/config.json",
+  ".grok/hooks/**",
 ];
 
 /** Template filenames are always safe; remove them before pattern tests so
@@ -235,7 +239,7 @@ export function authorize(event, context = {}) {
         return {
           decision: "deny",
           reasonCode: "SELF_GUARD_MODIFICATION",
-          message: `Codex may not modify its own enforcement boundary: ${target}`,
+          message: `an agent may not modify an enforcement boundary: ${target}`,
         };
       }
       if (target.startsWith("../") || path.isAbsolute(target)) {

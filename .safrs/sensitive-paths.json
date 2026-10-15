@@ -69,7 +69,9 @@
     "projects/healthcare/sidelab-src/sidelab-engine/sidelab/**",
     "projects/healthcare/sidelab-src/sidelab-engine/tests/clinical/**",
     "projects/healthcare/mantra/apps/sentra_mantra_integrations/**",
-    "projects/healthcare/mantra/apps/sentra_mantra_hospital/**"
+    "projects/healthcare/mantra/apps/sentra_mantra_hospital/**",
+    ".devin/**",
+    ".grok/**"
   ],
   "verification_control_patterns": [
     ".safrs/**",
@@ -112,7 +114,11 @@
     "tests/architecture/**",
     "tests/security/**",
     ".github/CODEOWNERS",
-    ".github/pull_request_template.md"
+    ".github/pull_request_template.md",
+    ".devin/hooks.v1.json",
+    ".devin/hooks/**",
+    ".devin/config.json",
+    ".grok/hooks/**"
   ],
   "risk_overrides": [
     {
