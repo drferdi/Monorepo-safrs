@@ -283,13 +283,25 @@ footer .sentrapedia-contact-form input[type=submit]:disabled {
     footer .sentrapedia-contact-form input[type=submit]:hover { transform: none; }
 }
 
-/* Logo middle: the meaning under the big wordmark. The SVG carries its own whitespace (16.6% of its width
-   below the artwork, artwork centred at 47.5%), so the lines tuck up by a share of the lockup width and sit
-   on the artwork's own axis. Block flow on purpose: a negative margin inside a grid stretches the row. */
+/* Logo middle: the meaning under the big wordmark. The SVG (1380x650) carries 229px of whitespace above and
+   below its artwork, which kept the sticky block low and let the next section cover the lines at once. The
+   art box crops the SVG to its artwork band (y 195-455 of 650), so the pinned block starts at the artwork;
+   the lines sit on the artwork's own axis (centred at 47.5%). Block flow on purpose. */
 #logo-middle .logo-middle-lockup {
     width: fit-content;
     max-width: 100%;
     text-align: center;
+}
+
+#logo-middle .logo-middle-art {
+    overflow: hidden;
+    aspect-ratio: 1380 / 260;
+}
+
+#logo-middle .logo-middle-art img {
+    display: block;
+    width: 100%;
+    margin-top: -14.13%;
 }
 
 #logo-middle .logo-middle-claim,
@@ -303,7 +315,7 @@ footer .sentrapedia-contact-form input[type=submit]:disabled {
 }
 
 #logo-middle .logo-middle-claim {
-    margin-top: calc(-10% + .75rem);
+    margin-top: calc(5% + .25rem);
     color: var(--sp-ink);
     font-size: clamp(1.05rem, 1.7vw, 1.5rem);
     font-weight: 500;
