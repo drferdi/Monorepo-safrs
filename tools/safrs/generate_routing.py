@@ -51,7 +51,7 @@ def build_block(root: Path = ROOT) -> str:
             # Same trigger paths as the Claude rules, so agents without
             # path-scoped rules know when the task scope applies.
             triggers = list(dict.fromkeys(p for d in task_scoped[scope] for p in d.get('paths', [])))
-            when = f" (when changing {', '.join(f'`{p}`' for p in triggers)})" if triggers else ''
+            when = f" (also when changing {', '.join(f'`{p}`' for p in triggers)})" if triggers else ''
             lines.append(f'- `{scope}`{when} → {paths}')
     if may:
         lines += ['', '**Reference (MAY):** ' + ', '.join(f"`{d['path']}`" for d in may)]

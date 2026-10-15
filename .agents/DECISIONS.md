@@ -7,13 +7,14 @@ Major architectural decisions also get an ADR in `docs/adrs/`.
 
 `88c99aba` demoted `MONOREPO_PURPOSE.md` and `03_ARCHITECTURE.md` to `task:architecture` SHOULD;
 only Claude Code got a trigger (path-scoped `.claude/rules/`), so Cursor, Codex and Kilo read them
-only if they declared the task scope themselves. Gaffer chose, of four options (generated routing
-triggers, generated Cursor glob rules, a handwritten AGENTS line, or accepting the gap), the first:
-`tools/safrs/generate_routing.py` now writes each task scope's registry `paths` into its line in
-the AGENTS.md routing block ("when changing …"). The registry stays the single source for both the
-Claude rules and the routing block; every task scope with `paths` gets its triggers, not only
-architecture. Kilo loading root AGENTS.md is taken from `docs/bootstrap/KILO_SETUP.md`, not
-verified in Kilo itself.
+only if they declared the task scope themselves. Gaffer chose in the 2026-10-15 Claude Code session,
+of four options (generated routing triggers, generated Cursor glob rules, a handwritten AGENTS line,
+or accepting the gap), the first: `tools/safrs/generate_routing.py` now writes each task scope's
+registry `paths` into its line in the AGENTS.md routing block ("also when changing …": an extra
+trigger, so a task of that kind still applies without touching those paths). The registry stays the
+single source for both the Claude rules and the routing block; every task scope with `paths` gets
+its triggers, not only architecture. Kilo coverage rests on `docs/bootstrap/KILO_SETUP.md`, which
+says `.kilo/` "points at root AGENTS.md"; Kilo loading it was not verified in Kilo itself.
 
 ## 2026-10-15 - Pre-push gate stays removed; `fix/prepush-gate` dropped
 

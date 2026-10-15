@@ -12,6 +12,8 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 - 2026-10-15 (Claude Code, `docs/routing-arch-triggers`, `TASK-20261015-ROUTING-ARCH-TRIGGERS`):
   the generated routing block names each task scope's trigger paths (DECISIONS 2026-10-15), so
   agents without path-scoped rules know when `task:architecture` and the other scopes apply.
+  Independent `safrs-auditor` review: ACCEPT WITH FIXES; fixed: "also when changing" wording (the
+  paths add a trigger, they do not narrow the scope) and the DECISIONS sources.
   Unblocked by closing `TASK-20261012-CLAUDE-PATH-RULES-WT` (REVIEW -> MERGED -> CLOSED on Gaffer's
   order; `feat/claude-path-scoped-rules` is in `main`) from a recreated temporary
   `claude-path-scoped-rules` worktree. Open: removing that worktree earlier today, without listing
