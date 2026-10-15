@@ -8,7 +8,8 @@
 - Contact form: `api/contact.mjs` (Vercel Function) reuses `scripts/contact.mjs`; rate limit keys on `X-Forwarded-For`. `CONTACT_PUBLIC_ORIGIN` is set on Vercel. Live matrix: GET 405, wrong type 415, foreign origin 403, patient-like 400, valid 503 "Layanan pengiriman belum tersedia". To turn delivery on, Gaffer adds `RESEND_API_KEY` and `RESEND_FROM_EMAIL` himself (Vercel env, production), then redeploys.
 - Site SPDS updated (deployment architecture, acceptance, risk register, snapshot, genome unknowns); `docs:verify` 96 documents, 0 errors.
 - Blocked on Gaffer's Vercel dashboard login (Google loop): Git-connected deploys need a GitHub login connection (then Root Directory `apps/site`, Git LFS on) or a `VERCEL_TOKEN` for GitHub Actions. Not built, since neither can be tested now.
-- Still open: local monorepo `main` does not contain branch `codex/sentrapedia-website-docs` (separate merge, needs Gaffer's go); third-party license register for the site; monitoring.
+- Local monorepo `main` now contains branch `codex/sentrapedia-website-docs`: merge commit `67b1c045` (`--no-ff`, 0 conflicts, all 32 branch commits including the non-Sentrapedia ones, by Gaffer's choice). After the merge `check_topology.py` and `check_project_independence.py` passed. Not pushed.
+- Still open: third-party license register for the site; monitoring.
 
 ## Standalone extraction after the site move - 2026-10-14 Asia/Jakarta
 
