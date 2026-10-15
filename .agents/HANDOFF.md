@@ -29,7 +29,8 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   Jev logs. Not verified end to end: Cursor's
   `Task` `tool_input` shape is undocumented. After merge, reload Cursor, spawn one subagent, and
   read the newest `runs.jsonl` goal; a bare `Spawn subagent for: Task` means the field mapping
-  needs one line. `CURSOR_SETUP.md` (Cursor's task) still lists `preToolUse` as not installed.
+  needs one line, and no new row at all means `conversation_id` does not arrive (the hook then
+  allows without consulting). `CURSOR_SETUP.md` (Cursor's task) still lists `preToolUse` as not installed.
 - 2026-10-15 (Claude Code, `docs/orphan-tasks-closeout-1f012894`, worktree
   `orphan-tasks-1f012894`, `TASK-20261015-ORPHAN-TASKS-CLOSEOUT`, Gaffer's go per task): the four
   tasks the 2026-10-15 unique-suffix DECISIONS entry listed are final. Each was moved from a
