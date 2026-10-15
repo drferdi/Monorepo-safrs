@@ -336,7 +336,7 @@
     },
     {
       "path": "site/index.html",
-      "sha256": "a99542f03e3b40714e03e1cdcccec05be70a9ab9b545a57bc732224d13bc3d3f"
+      "sha256": "2de7a370fdc0baeb7782b552a1e47a02e68b21f956f3fc2873d10621c91452d5"
     },
     {
       "path": "site/media/clinical-product/anamnesis-source.png",
@@ -544,7 +544,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "a99542f03e3b40714e03e1cdcccec05be70a9ab9b545a57bc732224d13bc3d3f"
+      "sha256": "2de7a370fdc0baeb7782b552a1e47a02e68b21f956f3fc2873d10621c91452d5"
     }
   ]
 }

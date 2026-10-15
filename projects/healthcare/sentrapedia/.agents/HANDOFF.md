@@ -1,5 +1,12 @@
 # Sentrapedia handoff
 
+## Public site on Vercel, WIP notice - 2026-10-15 Asia/Jakarta
+
+- Published to `drferdi/Sentrapedia` main as `9b8e4746` (Gaffer pushed from the temporary worktree `D:\DEV\monorepo.worktrees\sentrapedia-publish`; split branch `sentrapedia-site-split`). The merged tree passed typecheck, lint, `test:all` (288 + site 13 + system 8 + MIRA 180/1 skipped), build and deploy dry-run. The monorepo capsule still lacks the 38 dose-gate commits that live only on GitHub main; future monorepo extraction runs test that older clinical code until they are synced back.
+- Vercel: project `sentrapedia` (`prj_tJejwcrthTPy78qBtdqbnYoyRvcW`, team Sentraverse), site only (`apps/site`), build `node scripts/transform.mjs`, output `site`. No Git link: the Vercel account has no GitHub login connection and Gaffer's dashboard login loops, so deploys go through the CLI from `apps/site` with `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` set (no `.vercel/` folder is written). The first CLI deploy became production automatically.
+- `https://sentrapedia.vercel.app` is public (protection `all_except_custom_domains` leaves the production domain open); per-deployment URLs require Vercel login. Gaffer chose to keep it public with a "Work in progress · Persiapan beta" strip above the header (inline style in `source/index.html`, protected theme CSS untouched; manifest hashes for `source/index.html` and `site/index.html` updated). The `/api/contact` form does not work on static Vercel.
+- Open: the site SPDS (`acceptance_report.md`, `deployment_architecture.md`) still says hosting is unknown and production is not granted; update it with Gaffer's decision. Connect Git once the Vercel GitHub login connection exists (then set Root Directory `apps/site` and Git LFS on).
+
 ## Standalone extraction after the site move - 2026-10-14 Asia/Jakarta
 
 - The site move landed in `d9dfa44c` (Codex, not pushed). The "still uncommitted" note below is superseded.
