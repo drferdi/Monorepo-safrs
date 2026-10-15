@@ -241,7 +241,7 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   `b2d3a022`, created by another session). Not removed; Gaffer decides.
 - Log in to Grok and Antigravity once so their Jev use can be verified. Upload the corrected
   `audit-monorepo-agent` skill (`~/Downloads/audit-monorepo-agent.zip`) in claude.ai.
-- Audit actions (`verify-report/agent-audit-2026-10-10.txt` §7), status 2026-10-12: A-3, A-6, A-7,
+- Audit actions (`D:\DEV\Monorepo.artifacts\verify-report\agent-audit-2026-10-10.txt` §7, outside the repo, untracked, moved there 2026-10-13), status 2026-10-12: A-3, A-6, A-7,
   A-17, A-18 done; A-4, A-13, A-19 partly done; A-2, A-5, A-11, A-14, A-15, A-16 still open and not
   approved. A-1 (key rotation) and A-2 (repo is public) are Gaffer's own jobs.
 - Gaffer's rule (2026-10-12): merges into `main` happen only on Gaffer's command. GitHub ruleset
