@@ -113,25 +113,45 @@
     width: 100%;
 }
 
-/* Same footprint as the device frame (3:2, bezel colour), so the dissolve into the simulation does not jump;
-   the 16:9 film sits letterboxed inside it. */
+/* The film sits in the same device frame as the simulation (bezel, radius, 3:2 screen), so the dissolve
+   only changes what is on the screen; the 16:9 clip is cropped to the screen, never letterboxed. */
 .hero-workspace-film {
-    aspect-ratio: 3 / 2;
-    overflow: hidden;
-    border-radius: clamp(12px, 2vw, 20px);
+    padding: clamp(6px, 1.1vw, 11px);
     background: var(--hw-ink);
+    border-radius: clamp(12px, 2vw, 20px);
     box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .08),
         0 36px 70px -34px rgba(25, 28, 28, .5),
         0 0 0 1px rgba(25, 28, 28, .08);
     opacity: 0;
     visibility: hidden;
 }
 
+.hw-film-screen {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: clamp(5px, .9vw, 9px);
+    background: #e9edec;
+}
+
 .hero-workspace-film video {
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    /* The dissolve keeps zooming the video toward the screen in the film's last frame. */
+    transform-origin: var(--hw-film-focus, 50% 50%);
+}
+
+/* Narrow screens: the device screen is 4:5 there, so the film screen follows it. */
+@media (max-width: 767px) {
+    .hw-film-screen {
+        aspect-ratio: 4 / 5;
+    }
+
+    .hero-workspace-film video {
+        object-position: 58% 50%;
+    }
 }
 
 .hero-workspace-frame {

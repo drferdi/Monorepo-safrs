@@ -163,3 +163,15 @@
   with no film; the "Jeda/Putar" control pauses both film and simulation.
 - Higgsfield spend: one Kling 3.0 Turbo draft at 720p (7.5 credits, 120 -> 112.5). Seedance 2.5 needs a Pro
   plan on this account; any further generation or a final-quality render is a separate decision.
+
+## 2026-10-16 — Hero film: push-in match cut
+- Gaffer judged the first film-to-simulation dissolve disconnected. The clip was regenerated as a single
+  continuous push-in from the wide studio shot to the monitor screen (Kling 3.0 Turbo via the Higgsfield
+  MCP, 7.5 credits, 112.5 -> 105), and the dissolve now continues that zoom instead of freezing first.
+- The MCP's preset suggestion ("IN THE DARK") was declined: the hero uses a literal camera move on the
+  product render, never a stylised effect.
+- A tighter, pixel-matched cut (Kling 3.0 with start and end frames, 10 credits) stays a separate
+  decision; the current 15 of 18 approved credits are spent.
+- Gaffer's follow-up on the mid-dissolve capture: no black bars above and below, the film shows as the
+  tablet only. The film layer therefore shares the simulation's device frame (bezel, radius, 3:2 screen,
+  4:5 on phones) and the clip is cropped to that screen, never letterboxed.

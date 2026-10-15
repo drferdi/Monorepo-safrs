@@ -84,15 +84,15 @@
     },
     {
       "path": "assets/hero-film.mp4",
-      "sha256": "1b474a487b040527e4bb37b66bdc35d7608179f181e9b45379250eb8f8732a39"
+      "sha256": "fe4666a24593a2143ea0898bcadf8c742ce324d848cdcde680980d21d2e8bcac"
     },
     {
       "path": "assets/hero-workspace.css",
-      "sha256": "7582e3982565f2e87f93989b26dd62397e24dee8004d4103a619f50a5d2d8d68"
+      "sha256": "dcbe94751ad655c52155d32118868fea97bdb2723f67b13caad967d124f30d7d"
     },
     {
       "path": "assets/hero-workspace.js",
-      "sha256": "ac53b9339c5fb8bd598a2d4673a44fde0e0f939e399603ab6d54eef4eaa123eb"
+      "sha256": "810030f08f38f47057fafb6bccebad8e8e41e199419eab63837affbc2cd7096c"
     },
     {
       "path": "assets/pricing.css",
@@ -248,7 +248,7 @@
     },
     {
       "path": "scripts/hero.test.mjs",
-      "sha256": "d1d50bfafac7aed194880fb809e022fed61d01671c3df2b1f51a9fdc0aa4320b"
+      "sha256": "fc2c586c2dac3dbcd47d170e942b36d3eeae7a554d3f9e9c84a1d42fe309b197"
     },
     {
       "path": "scripts/serve.mjs",
@@ -340,7 +340,7 @@
     },
     {
       "path": "site/index.html",
-      "sha256": "814da4adb1b5ac8db794737b534a760df8a6cd859a4c471a4638d8079b3e1f3f"
+      "sha256": "6f30b8ab8959a39cfa0ae512581a5b5ac7394c716f526ea6bb9f05f560e6fc2c"
     },
     {
       "path": "site/media/clinical-product/anamnesis-source.png",
@@ -396,15 +396,15 @@
     },
     {
       "path": "site/media/hero-film.mp4",
-      "sha256": "1b474a487b040527e4bb37b66bdc35d7608179f181e9b45379250eb8f8732a39"
+      "sha256": "fe4666a24593a2143ea0898bcadf8c742ce324d848cdcde680980d21d2e8bcac"
     },
     {
       "path": "site/media/hero-workspace.css",
-      "sha256": "7582e3982565f2e87f93989b26dd62397e24dee8004d4103a619f50a5d2d8d68"
+      "sha256": "dcbe94751ad655c52155d32118868fea97bdb2723f67b13caad967d124f30d7d"
     },
     {
       "path": "site/media/hero-workspace.js",
-      "sha256": "ac53b9339c5fb8bd598a2d4673a44fde0e0f939e399603ab6d54eef4eaa123eb"
+      "sha256": "810030f08f38f47057fafb6bccebad8e8e41e199419eab63837affbc2cd7096c"
     },
     {
       "path": "site/media/pricing.css",
@@ -560,7 +560,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "814da4adb1b5ac8db794737b534a760df8a6cd859a4c471a4638d8079b3e1f3f"
+      "sha256": "6f30b8ab8959a39cfa0ae512581a5b5ac7394c716f526ea6bb9f05f560e6fc2c"
     }
   ]
 }

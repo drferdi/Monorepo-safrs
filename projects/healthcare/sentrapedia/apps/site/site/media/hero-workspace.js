@@ -267,18 +267,28 @@
         else arrival.play();
       } else if (phase === 'film') {
         if (paused) el.video.pause();
-        else el.video.play().catch(() => showUi());
+        else el.video.play().catch(error => { if (!error || error.name !== 'AbortError') showUi(); });
       } else if (phase === 'ui') {
         if (paused) tl.pause();
         else tl.play();
       }
     };
+    /* The film's push-in keeps going through the dissolve: the video zooms a little further inside the
+       same device frame while the simulation settles into place underneath it. The dissolve starts
+       before the last frame so the picture never freezes first. */
+    const FILM_END_SCALE = 1.12;
     const showUi = () => {
       phase = 'ui';
-      if (hasFilm) { el.video.pause(); gsap.to(el.film, { autoAlpha: 0, duration: .8 }); }
+      if (hasFilm) {
+        gsap.to(el.video, { scale: FILM_END_SCALE, duration: 1.3, ease: 'power2.in' });
+        gsap.to(el.film, {
+          autoAlpha: 0, duration: 1.3, ease: 'power2.inOut',
+          onComplete: () => { el.video.pause(); gsap.set(el.video, { scale: 1 }); }
+        });
+      }
       tl.pause().seek(0, false);
-      gsap.fromTo(el.frame, { autoAlpha: 0, y: 12 }, {
-        autoAlpha: 1, y: 0, duration: .9, ease: 'power2.out',
+      gsap.fromTo(el.frame, { autoAlpha: 0, scale: .9 }, {
+        autoAlpha: 1, scale: 1, duration: 1.3, ease: 'power2.out',
         onComplete: () => { tl.restart(); sync(); }
       });
     };
@@ -286,12 +296,17 @@
       if (!filmReady()) return showUi();
       phase = 'film';
       el.video.currentTime = 0;
-      gsap.to(el.frame, { autoAlpha: 0, duration: .7 });
-      gsap.to(el.film, { autoAlpha: 1, duration: .7, onComplete: sync });
+      gsap.to(el.frame, { autoAlpha: 0, scale: .92, duration: 1, ease: 'power2.inOut' });
+      gsap.fromTo(el.video, { scale: FILM_END_SCALE }, { scale: 1, duration: 1.8, ease: 'power2.out' });
+      gsap.to(el.film, { autoAlpha: 1, duration: 1, ease: 'power2.out' });
+      sync();
     };
     tl.eventCallback('onComplete', showFilm);
     const onEnded = () => { if (phase === 'film') showUi(); };
     const onError = () => { if (phase === 'film') showUi(); };
+    const onTime = () => {
+      if (phase === 'film' && el.video.duration > 0 && el.video.duration - el.video.currentTime <= 1.2) showUi();
+    };
     const onToggle = () => {
       userPaused = !userPaused;
       toggle.setAttribute('aria-pressed', String(userPaused));
@@ -313,6 +328,7 @@
     if (hasFilm) {
       el.video.addEventListener('ended', onEnded);
       el.video.addEventListener('error', onError);
+      el.video.addEventListener('timeupdate', onTime);
       el.video.load();
     }
 
@@ -367,6 +383,7 @@
       if (hasFilm) {
         el.video.removeEventListener('ended', onEnded);
         el.video.removeEventListener('error', onError);
+        el.video.removeEventListener('timeupdate', onTime);
         el.video.pause();
       }
       toggle.hidden = true;
