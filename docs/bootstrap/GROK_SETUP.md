@@ -51,17 +51,27 @@ Before this adapter (observed 2026-10-15), Grok in the monorepo:
 - Headless Grok in this worktree (`grok -p`, `always-approve`): force push, `cat .env`, `read_file`
   and `write` on `devin-probe/.env`, a write to `%TEMP%`, merge, and `reset --hard` were all denied
   with `SAFRS guard:` reasons; `git status --short` ran; no probe file was created.
-- Not yet observed: Grok inside Devin Desktop over ACP. Run one merge probe there.
-- **Until this branch is merged, checkouts without `.grok/hooks/safrs-guard.mjs` stay unguarded.**
-  The user-level hook exits silently there: piping a force-push payload through it in
-  `D:\DEV\monorepo` (branch `codex/sentrapedia-website-docs`) returned no reply, so the push would run.
+- ACP, the route Devin Desktop uses: a minimal ACP client drove `grok agent stdio` in
+  `D:\DEV\monorepo` and approved every permission request. The hook loaded as
+  `global/safrs-guard`; the merge and the `%TEMP%` write were denied, `git status` ran. The payload
+  mode was `bypassPermissions` there too. Earlier Devin Desktop ACP sessions in
+  `~/.grok/sessions/` show user and global hooks running, so Devin starts Grok with the same hooks.
+- A checkout whose branch lacks `.grok/hooks/safrs-guard.mjs` stays unguarded: the user-level hook
+  exits silently there. Since 2026-10-15 the main checkout is on `main`, which has it.
 
-## Decisions for Gaffer
+## Trust and Jev (done 2026-10-15)
 
-- **Trust the monorepo in Grok** (`grok --trust` once, or `/hooks-trust`). Grok loads project
-  `AGENTS.md` only for trusted folders, so today Grok works in the monorepo without the SAFRS rules.
-  Trust also enables project hooks from `.claude/settings.json`: the Claude guard is a no-op for
-  Grok's tool names, and its Jev hook would log as `claude`.
-- **Jev for Grok subagents.** `jev_hook.py` does not know `spawn_subagent`, so the Jev hook in
-  `~/.grok/config.toml` never gates Grok subagents (same follow-up as Devin's `run_subagent`).
-- Register `.grok/**` in `.safrs/sensitive-paths.json` (separate `.safrs/**` change).
+- `D:\DEV\monorepo` is Grok-trusted (`grok --trust`; backup at
+  `~/.grok/trusted_folders.toml.bak-20261015`). `grok inspect` now lists `Agents.md`, `Claude.md`,
+  and the `.claude/rules/safrs-*.md` files as project instructions.
+- Project hooks still do not load: Grok reports "repository path 'D:/DEV/monorepo' is not owned by
+  current user", because the global `safe.directory` entry is spelled `D:/DEV/Monorepo` and Grok's
+  git library compares case-sensitively. The guard does not need them (it is user-level). If they are
+  ever wanted, add `git config --global --add safe.directory D:/DEV/monorepo`; `jev_hook.py` already
+  skips Grok payloads under the Claude-labelled hook, so Jev would still log Grok once.
+- `jev_hook.py` now knows `spawn_subagent`, so the Jev hook in `~/.grok/config.toml` gates Grok
+  subagents. Grok warns "`[hooks]` unrecognized config key" for that file but still loads the hook.
+
+## Open (separate changes)
+
+- Register `.grok/**` in `.safrs/sensitive-paths.json` (a `.safrs/**` change).
