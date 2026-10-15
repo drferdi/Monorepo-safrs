@@ -3,6 +3,24 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-10-15 - Temporary worktrees get a unique per-session suffix
+
+A task binds to `worktree_id` `worktrees/<directory name>` (from `git rev-parse --git-dir`), and
+`pnpm task state`/`close`/`transfer` act only from that worktree, so a recreated worktree with a
+reused name can mutate or close every task still bound there. Seen twice on 2026-10-15:
+`TASK-20261011-GAFFER-ADDRESS` was bound to `main-merge-tmp`, the name sessions reused for merge
+worktrees, and removing `claude-path-scoped-rules` left 11 tasks bound to it. Gaffer chose, in the
+2026-10-15 Claude Code session: a temporary worktree (merge, cleanup, any short-lived one) is named
+`<purpose>-<suffix>`, the suffix unique per session (the first 8 hex of the agent session ID, or 8
+random hex when there is none), e.g. `worktree-names-97e699c7`, and the session writes the full name
+into its HANDOFF entry. A task left bound there stays reachable by recreating that exact name on
+purpose; recreating another session's worktree name is only for closing or transferring its tasks,
+on Gaffer's go. `pnpm task recover` replays only the transfer journal and does not reach such tasks.
+Not changed: the AGENTS.md worktree line and the task tooling; no check enforces the suffix. Still
+bound to removed worktrees: `TASK-20261015-CLAUDE-CAPSULE-EXTRACT` (`claude-skills-docs`),
+`TASK-20261015-CURSOR-AGENTS-READONLY` (`cursor-agents-readonly`), `KEDIRI-GSAP-PRODUCTION-HARDENING`
+(`wt-kediri-gsap`), `TASK-20260824-SENTRABOT-SOURCE-RECOVERY` (`standalone-root`).
+
 ## 2026-10-15 - Routing block names the trigger paths of each task scope
 
 `88c99aba` demoted `MONOREPO_PURPOSE.md` and `03_ARCHITECTURE.md` to `task:architecture` SHOULD;

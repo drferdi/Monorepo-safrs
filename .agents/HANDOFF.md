@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, check_handoff heading)
+Last updated: 2026-10-15 (Claude Code, unique worktree names)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,16 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `docs/worktree-unique-names`, worktree `worktree-names-97e699c7`,
+  `TASK-20261015-WORKTREE-UNIQUE-NAMES`): DECISIONS records Gaffer's rule that temporary worktrees
+  are named `<purpose>-<session suffix>` and the full name goes into the HANDOFF entry (this entry
+  is the first). Review debt mapped read-only for Gaffer: per commit against its parent, only
+  `88c99aba` fails `check_sensitive_changes`; `2db20bad` changes the guard itself. The record cannot
+  list commits, only a range (`52750786..22d2fa2d`), so Gaffer picks: retroactive JSON now, or
+  DECISIONS prose now and JSON only on the filtered-export branch. Open: four REVIEW/EXECUTING tasks
+  bound to removed worktrees (listed in that DECISIONS entry); `cursor-jev-task-hook` (52 behind
+  `main`, R2 controls only, checker exit 0) needs a rebase and an independent review;
+  `sentrapedia-publish` HEAD `56af2ecb` equals the local `sentrapedia/main` ref (not fetched).
 - 2026-10-15 (Claude Code, `fix/check-handoff-heading`, `TASK-20261015-CHECK-HANDOFF-HEADING`):
   `check_handoff.py`'s failure message now points at the AGENTS.md "Memory And Reporting" section;
   the "Task Lifecycle & Documentation" heading it named was removed by the AGENTS compaction. Message
