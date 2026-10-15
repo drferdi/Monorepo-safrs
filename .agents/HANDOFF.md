@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, `chore/claude-skills-docs`)
+Last updated: 2026-10-15 (Claude Code, worktree cleanup merges into local `main`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,15 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `chore/cursor-agents-readonly`, `TASK-20261015-CURSOR-AGENTS-READONLY`):
+  Cursor solo subagents `02-triage-chief`, `03-product-brief`, `05-docs-auditor` now carry
+  `readonly: true`, the Cursor subagent field (cursor.com/docs/context/subagents), so their
+  "read-only" body text is enforced. `04-research-sota` and `06-release-communicator` still lack
+  it: `TASK-20261011-GAFFER-ADDRESS` holds those files. Evidence: `check_sensitive_changes`
+  (R2, implementation only), `check_task_ownership`, `check_handoff` exit 0. Open for the
+  `CURSOR_SETUP.md` owner: Cursor also loads `.claude/skills`, `.claude/agents`, `.codex/agents`,
+  so skill names repeat (`verify`, `safrs-session`, `gsap-*`); confirm in Customize → Skills
+  before trimming any copy.
 - 2026-10-15 (Claude Code, `chore/claude-skills-docs`, `TASK-20261015-CLAUDE-CAPSULE-EXTRACT`):
   new Claude skill `.claude/skills/capsule-extract` lists the Git-level checks that
   `pnpm project:verify` misses, because it copies working-tree files: root-only `.gitattributes`
