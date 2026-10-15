@@ -15,8 +15,9 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   `git branch fix/prepush-gate 37e70714`). Evidence: `git worktree list` no longer shows it and
   `git branch --list fix/prepush-gate` is empty. DECISIONS entry `1b5dc434` fast-forwarded into
   local `main` on Gaffer's go; `pnpm governance` PASS on that commit. This entry was committed on
-  Gaffer's order while `TASK-20261015-COMPACT-AGENTS-BRIEFING` (Kilo) still claims this file, so
-  `check_task_ownership` fails on this branch until that claim is released. Open risk: no hook or guard rule stops a plain
+  Gaffer's order while `TASK-20261015-COMPACT-AGENTS-BRIEFING` (Kilo) still claims this file
+  (`check_task_ownership` reads only uncommitted changes, so it passes once committed); expect a
+  conflict with Kilo's uncommitted HANDOFF edits. Open risk: no hook or guard rule stops a plain
   `git push` of local `main` (unpublished history with real numbers); safety rests on the written
   rules and Gaffer's approval. Nothing pushed or fetched.
 - 2026-10-15 (Claude Code, worktree cleanup on Gaffer's go): local `main` merged
