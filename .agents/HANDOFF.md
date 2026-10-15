@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, `chore/cursor-jev-task-hook`)
+Last updated: 2026-10-15 (Claude Code, `feat/devin-adapter`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,32 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `feat/devin-adapter`, `TASK-20261015-GROK-GUARD`, uncommitted): Grok
+  (also used inside Devin Desktop over ACP) had no SAFRS guard in the monorepo: only a Jev hook, the
+  folder is not Grok-trusted (so project hooks and project `AGENTS.md` are skipped), and
+  `always-approve` auto-approves hook asks. Added `.grok/hooks/safrs-guard.{mjs,json,test.mjs}` and
+  installed the identical hook at `~/.grok/hooks/safrs-guard.json` (user level, no trust needed).
+  Ask stays a prompt only in modes that prompt; otherwise deny. Evidence: tests 20/20; headless
+  Grok in this worktree denied force push, merge, `reset --hard`, `.env` read/write/cat, and a
+  `%TEMP%` write, and ran `git status`. The main checkout stays unguarded until this branch is
+  merged (verified: the hook is silent there). Unverified: Grok over ACP in Devin Desktop. Open for Gaffer: trust the monorepo in Grok, Jev for
+  `spawn_subagent`, `.grok/**` in sensitive paths. See `docs/bootstrap/GROK_SETUP.md`.
+- 2026-10-15 (Claude Code, `feat/devin-adapter`, `TASK-20261015-DEVIN-ADAPTER`, worktree
+  `../Monorepo.worktrees/feat-devin-adapter`, uncommitted): Devin CLI adapter per
+  `docs/bootstrap/DEVIN_SETUP.md`: `.devin/hooks.v1.json` + `.devin/hooks/safrs-guard.mjs` (Devin
+  tool names → shared `guard.mjs`, ask renders as block), `.devin/config.json`, mirrors of
+  `safrs-auditor`/`token-guard`, one always-on rule. Reason: Devin imports `.claude/` hooks, but their
+  matchers and `claude.mjs` do not know `exec`/`edit` (static reading), so Devin would run
+  unguarded on the import alone. Fixed after a Grok ACP test run: the old `$(git rev-parse ...)` hook
+  command exits 1 under `cmd.exe`, and `powershell -Command` turns exit 2 into 1, both fail-open. The
+  hook now blocks with JSON `decision: block` and exit 0, through a shell-agnostic `node -e` command.
+  Evidence: `node --test .devin/hooks/safrs-guard.test.mjs` 23/23 (including the configured command
+  through `cmd.exe` and `powershell -Command`), a 32-case shell matrix (cmd, pwsh, powershell 5, Git
+  Bash × root/subdir/outside), Biome exit 0. `devin doctor`: 4 profiles once each. Still unverified
+  in a session of Devin's own agent (the test session was Grok via ACP, which logs Jev as `grok`
+  and does not use `.devin/`): hook enforcement, the effect of `cursor: false` (`devin rules list`
+  still lists Cursor rules), subagent shell access. Not changed (separate changes): `.devin/**` in
+  `.safrs/sensitive-paths.json`, `.devin` hooks in `SELF_GUARD_PATTERNS`, Devin tool names in `jev_hook.py`.
 - 2026-10-15 (Claude Code, `chore/cursor-jev-task-hook`, `TASK-20261015-CURSOR-JEV-TASK-HOOK`):
   Cursor `preToolUse` (matcher `Task`, timeout 20 s, not failClosed) runs
   `.cursor/hooks/jev-before-task.mjs`. That script wraps `tools/typesafe-jev/mcp/jev_hook.py`
