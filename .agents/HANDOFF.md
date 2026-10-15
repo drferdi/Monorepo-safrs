@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-12 (Claude Code, `feat/claude-path-scoped-rules`)
+Last updated: 2026-10-15 (Claude Code, `chore/claude-skills-docs`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,19 @@ This file is overwritten with current state, not appended; keep it short (it is 
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `chore/claude-skills-docs`, `TASK-20261015-CLAUDE-CAPSULE-EXTRACT`):
+  new Claude skill `.claude/skills/capsule-extract` lists the Git-level checks that
+  `pnpm project:verify` misses, because it copies working-tree files: root-only `.gitattributes`
+  rules (LFS), root-ignored inputs, CRLF, and a subtree-split proof. Source: the Sentrapedia
+  2026-10-14 extraction section in that capsule's HANDOFF. `CLAUDE_SETUP.md` lists the skill and
+  drops the stale `.husky/pre-commit` mention. Evidence: `check_sensitive_changes`,
+  `check_task_ownership`, `check_docs`, `check_routing` exit 0. Gaffer ordered the release of
+  the root HANDOFF claim from `TASK-20261013-CAPABILITY-AWARENESS` (transfer
+  `TRANSFER-20261015-ROOT-HANDOFF`); its other scopes stay with Cursor. Open, not changed:
+  canonical `.agents/skills/prisma-migration` step 4 (`pnpm db:migrate -- --name …`) cannot
+  create a migration, because `run-local-prisma.mjs` runs `migrate deploy` and forwards no
+  arguments. Sibling branches `chore/cursor-agents-readonly` and `chore/cursor-jev-task-hook`
+  each carry their own HANDOFF entry, so expect small text conflicts when they merge.
 - Local `main` is `a54ee055` (fast-forwarded on Gaffer's go, local only) and contains
   `origin/main` `b2d3a022`. The main checkout is on `main`, so today's guards and hooks are active
   there. `docs/refresh-2026-10-12` (worktree `main-merge-tmp`) is ahead with the docs refresh;
