@@ -1,6 +1,7 @@
 ---
 name: 02-triage-chief
 description: Prioritize solo session work from HANDOFF and PROGRESS. Use at session start, when unsure what to do next, or when asking for today's top actions.
+readonly: true
 ---
 
 # Triage chief
