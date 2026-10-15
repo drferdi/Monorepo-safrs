@@ -9,6 +9,16 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, worktree cleanup on Gaffer's go): local `main` merged
+  `codex/sentrapedia-website-docs` (`67b1c045`), `chore/claude-skills-docs` (`313efb5a`) and
+  `chore/cursor-agents-readonly` (`a33cb861`); HANDOFF conflicts kept both entries. Removed
+  worktrees whose content is in `main`: `main-merge-tmp`, `task-scope-transfer`,
+  `oracle-vector-only`, `publish-fallow-config`, plus the two merged ones. Evidence:
+  `check_topology`, `check_project_independence`, `check_docs`, `check_routing` exit 0. Kept, not
+  finished: `cursor-jev-task-hook` (needs independent integrity review), `claude-path-scoped-rules`
+  (`fix/prepush-gate`, 4 uncommitted files, conflicts with the removed pre-push gates),
+  `docs-compact-agents-briefing` and `kilo-config-cleanup` (uncommitted edits), and
+  `sentrapedia-publish` (standalone publish pipeline). Nothing pushed.
 - 2026-10-15 (Claude Code, `chore/cursor-agents-readonly`, `TASK-20261015-CURSOR-AGENTS-READONLY`):
   Cursor solo subagents `02-triage-chief`, `03-product-brief`, `05-docs-auditor` now carry
   `readonly: true`, the Cursor subagent field (cursor.com/docs/context/subagents), so their
