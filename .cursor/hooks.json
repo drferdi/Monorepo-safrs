@@ -22,6 +22,13 @@
         "command": "node .cursor/hooks/guard-read-secrets.mjs",
         "failClosed": true
       }
+    ],
+    "preToolUse": [
+      {
+        "command": "node .cursor/hooks/jev-before-task.mjs",
+        "matcher": "Task",
+        "timeout": 20
+      }
     ]
   }
 }

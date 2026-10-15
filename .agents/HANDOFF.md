@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-15 (Claude Code, orphaned tasks closed)
+Last updated: 2026-10-15 (Claude Code, `chore/cursor-jev-task-hook`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,20 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `chore/cursor-jev-task-hook`, `TASK-20261015-CURSOR-JEV-TASK-HOOK`):
+  Cursor `preToolUse` (matcher `Task`, timeout 20 s, not failClosed) runs
+  `.cursor/hooks/jev-before-task.mjs`. That script wraps `tools/typesafe-jev/mcp/jev_hook.py`
+  (`--agent cursor`, unchanged). Cursor's preToolUse output has no `additional_context`
+  (cursor.com/docs/agent/hooks), so the hook denies once per conversation only on active-mode
+  `ask_human`/`stop_retry`, with Jev's decision in `agent_message`; everything else and any
+  failure allow. Web search is not gated (tool names undocumented). Verification-control-only
+  change set (`SAFRS_RISK=R2`) → needs independent integrity review. Evidence: hook boundary
+  tests (non-Task, malformed, real Jev twice, stubbed ask_human/stop_retry/shadow/allow) all as
+  expected; Biome, `check_sensitive_changes`, `check_task_ownership`, `check_handoff` exit 0.
+  Three test rows (`agent: cursor`) sit in the Jev logs. Not verified end to end: Cursor's
+  `Task` `tool_input` shape is undocumented. After merge, reload Cursor, spawn one subagent, and
+  read the newest `runs.jsonl` goal; a bare `Spawn subagent for: Task` means the field mapping
+  needs one line. `CURSOR_SETUP.md` (Cursor's task) still lists `preToolUse` as not installed.
 - 2026-10-15 (Claude Code, `docs/orphan-tasks-closeout-1f012894`, worktree
   `orphan-tasks-1f012894`, `TASK-20261015-ORPHAN-TASKS-CLOSEOUT`, Gaffer's go per task): the four
   tasks the 2026-10-15 unique-suffix DECISIONS entry listed are final. Each was moved from a
