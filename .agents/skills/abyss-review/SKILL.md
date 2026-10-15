@@ -34,12 +34,9 @@ Panggil manual via `/abyss-review` saat:
 Baca berurutan (MUST read order dari `AGENTS.md`):
 
 1. `AGENTS.md` (root router)
-2. `.agents/HANDOFF.md` (state saat ini, blocker terbukti)
-3. `.agents/knowledge/00_READ_FIRST.md`
-4. `.agents/knowledge/02_OBJECTIVES.md`
-5. `.agents/knowledge/03_ARCHITECTURE.md`
-6. `.agents/knowledge/04_CONTEXT.md`
-7. `.agents/knowledge/12_LESSONS.md`
+2. Setiap dokumen **Always (MUST)** di blok routing yang di-generate di `AGENTS.md`, berurutan
+   (sumber tunggal: `.safrs/document-registry.json`; jangan salin daftarnya ke sini)
+3. Dokumen `task:review` dan `task:architecture` dari blok yang sama
 
 Lalu baca sekali:
 - `.agents/DECISIONS.md` (keputusan terkunci — jangan langgar)
