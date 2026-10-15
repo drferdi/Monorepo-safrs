@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-13 (Cursor, `feat/prompt-template-metaprompt`)
+Last updated: 2026-10-15 (Claude Code, `chore/claude-skills-docs`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,19 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-15 (Claude Code, `chore/claude-skills-docs`, `TASK-20261015-CLAUDE-CAPSULE-EXTRACT`):
+  new Claude skill `.claude/skills/capsule-extract` lists the Git-level checks that
+  `pnpm project:verify` misses, because it copies working-tree files: root-only `.gitattributes`
+  rules (LFS), root-ignored inputs, CRLF, and a subtree-split proof. Source: the Sentrapedia
+  2026-10-14 extraction section in that capsule's HANDOFF. `CLAUDE_SETUP.md` lists the skill and
+  drops the stale `.husky/pre-commit` mention. Evidence: `check_sensitive_changes`,
+  `check_task_ownership`, `check_docs`, `check_routing` exit 0. Gaffer ordered the release of
+  the root HANDOFF claim from `TASK-20261013-CAPABILITY-AWARENESS` (transfer
+  `TRANSFER-20261015-ROOT-HANDOFF`); its other scopes stay with Cursor. Open, not changed:
+  canonical `.agents/skills/prisma-migration` step 4 (`pnpm db:migrate -- --name …`) cannot
+  create a migration, because `run-local-prisma.mjs` runs `migrate deploy` and forwards no
+  arguments. Sibling branches `chore/cursor-agents-readonly` and `chore/cursor-jev-task-hook`
+  each carry their own HANDOFF entry, so expect small text conflicts when they merge.
 - 2026-10-13 (Cursor): Fallow no longer reports `@ai-sdk/google` as an unlisted root dependency. The import lives in Assistverse, whose `package.json` already depends on it; `.fallowrc.json` `ignorePatterns` skips that standalone capsule so a root run does not attribute the import to the root manifest. Evidence: `npx fallow@3.33.1 dead-code --unlisted-deps` no longer lists `@ai-sdk/google`; the same command with `--root projects/healthcare/assistverse` reports 0 unlisted dependencies.
 - 2026-10-13 (Kilo): Kilo adapter setup implemented per `docs/bootstrap/KILO_SETUP.md` — four
   custom commands (`.kilo/command/{safrs-verify,capsule-verify,doctor,capsule-status}.md`), a

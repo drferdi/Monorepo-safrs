@@ -69,8 +69,8 @@ Cursor and Codex.
 
 Runs `biome check --write --no-errors-on-unmatched <file>` through the local binary at
 `node_modules/@biomejs/biome/bin/biome` for TypeScript, JavaScript, JSON, and CSS files.
-Never blocks; unfixable findings go to stderr. This moves format drift from
-`.husky/pre-commit` and CI to edit time.
+Never blocks; unfixable findings go to stderr. This moves format drift from CI to edit
+time (there is no `.husky/pre-commit`; `.husky/pre-push` is the publish and capsule gate only).
 
 ### session-context.mjs (SessionStart: startup, resume, clear, compact)
 
@@ -122,6 +122,7 @@ Both are read-only (`Read, Grep, Glob, Bash`) and report; the calling session ap
 | `new-capability` | user or model | Capability-pack activation and project capsules through `pnpm capability:add` / `pnpm project:new` |
 | `safrs-session` | user or model | Claude adapter of `.agents/skills/safrs-session`: session start, scope, and session-end HANDOFF protocol |
 | `prisma-migration` | `/prisma-migration` — user only | Claude adapter of `.agents/skills/prisma-migration`: safe migration through repository wrappers; the validation script stays in `.agents/skills/prisma-migration/scripts/` |
+| `capsule-extract` | user or model | Git-level checks the working-tree extraction verifier misses (root `.gitattributes`, root `.gitignore`, line endings) before a capsule is declared standalone or split |
 
 ## MCP servers
 
