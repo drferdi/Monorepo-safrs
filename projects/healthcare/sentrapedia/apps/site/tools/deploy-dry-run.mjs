@@ -6,6 +6,10 @@ if (!home.includes('<title>Sentrapedia</title>') || !home.includes('href="#featu
   throw new Error('Homepage identity or primary route missing');
 }
 if (!faq.includes('<title>') || !faq.includes('<details')) throw new Error('FAQ output missing');
+for (const page of ['privasi', 'ketentuan', 'penafian']) {
+  const legal = await readFile(new URL(`../site/${page}/index.html`, import.meta.url), 'utf8');
+  if (!legal.includes('<title>') || !legal.includes('class="legal-toc"')) throw new Error(`${page} output missing`);
+}
 for (const relative of ['site/media/design-audit.css', 'site/media/workflows/soap-web.mp4', 'site/assets/brand/favicon.png']) {
   await stat(new URL(`../${relative}`, import.meta.url));
 }

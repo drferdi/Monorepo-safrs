@@ -17,6 +17,13 @@ await fs.copyFile(path.join(root, 'source/faq/index.html'), path.join(site, 'faq
 for (const filename of ['faq.css', 'faq.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
+for (const page of ['privasi', 'ketentuan', 'penafian']) {
+  await fs.mkdir(path.join(site, page), { recursive: true });
+  await fs.copyFile(path.join(root, `source/${page}/index.html`), path.join(site, `${page}/index.html`));
+}
+for (const filename of ['legal.css', 'legal.js']) {
+  await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
+}
 for (const filename of ['design-audit.css', 'design-audit.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
