@@ -160,7 +160,7 @@ export function runDiagnostic(): void {
   SentraTerminal.logSuccess('Diagnostic selesai. Sistem siap digunakan untuk scraping website teknologi!');
 }
 
-async function main() {
+export async function main() {
   const program = new Command();
 
   program
