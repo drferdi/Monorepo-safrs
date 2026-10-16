@@ -124,6 +124,17 @@ footer .second-row a:hover,
     color: #c6d5d1;
 }
 
+/* Footer: the three legal pages sit between the copyright and the company line. */
+footer .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+}
+
+footer .footer-legal a {
+    text-decoration: none;
+}
+
 footer input:not([type=checkbox]) {
     border-bottom-color: var(--sp-border);
 }

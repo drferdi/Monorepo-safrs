@@ -261,3 +261,15 @@
   add a small GSAP float to the selected image. Both follow pause/visibility/reduced-motion
   controls; no new Higgsfield credit spending, new video render or publication is implied.
 - Older product images remain preserved; generation provenance belongs with the new assets.
+
+## 2026-10-16 — Legal pages are siblings of the FAQ page
+- The three mandatory pages (Kebijakan Privasi, Syarat dan Ketentuan, Penafian Klinis) are standalone routes
+  built like `/faq/`: one source file each, one shared stylesheet and script, the same shell, header, kicker,
+  display title and footer. Where the FAQ shows questions at display scale, these pages show plain-language
+  statements; the long text follows in numbered articles with a sticky table of contents.
+- Every claim on the privacy page describes what the site code does (no cookies, the contact fields, the
+  patient-identifier rejection, 15-minute IP memory, Resend and Vercel as the only processors); items the SPDS
+  marks UNKNOWN (retention, lawful basis, venue) are written as commitments for Gaffer to confirm, not as facts,
+  and no email address is published.
+- The work lives on its own branch and worktree because another agent was writing in `apps/site` at the same
+  time: one writer per scope.

@@ -56,7 +56,7 @@
     },
     {
       "path": "assets/design-audit.css",
-      "sha256": "70b1e78d0aeb7722ce0ae8ff177e978086fd1e8857e2f125a227558473994318"
+      "sha256": "3bb48d44d45a494fa0f735fc76eb386e01b56512b0c4c61f3fd92f0d928de930"
     },
     {
       "path": "assets/design-audit.js",
@@ -97,6 +97,14 @@
     {
       "path": "assets/hero-workspace.js",
       "sha256": "810030f08f38f47057fafb6bccebad8e8e41e199419eab63837affbc2cd7096c"
+    },
+    {
+      "path": "assets/legal.css",
+      "sha256": "d1afc56c464161e3430773ea680ec0cc654ddad9116d6fb1a300110e7a448d98"
+    },
+    {
+      "path": "assets/legal.js",
+      "sha256": "31093e33e5f004334a38c131b49898ba0ffc2521f86d112747854d63f1197f74"
     },
     {
       "path": "assets/pricing.css",
@@ -255,6 +263,10 @@
       "sha256": "fc2c586c2dac3dbcd47d170e942b36d3eeae7a554d3f9e9c84a1d42fe309b197"
     },
     {
+      "path": "scripts/legal.test.mjs",
+      "sha256": "b7eb5b239717eb085b69ca7abfbc48243d97074d59c1d7ba7fa1932f2d7ce725"
+    },
+    {
       "path": "scripts/serve.mjs",
       "sha256": "82c2c3df59fed8ed02f1698c53d97accc2cfd2c19135ecc937d41b4538e79793"
     },
@@ -264,7 +276,7 @@
     },
     {
       "path": "scripts/transform.mjs",
-      "sha256": "5c5bc75ed0515b6340a05ff316f7dd30b66e4bdfaeeea036d91b0666cbc97871"
+      "sha256": "7c202dd7facc6424f9698b67a3e1974003939de04d30adfd7277bb69101ed4a2"
     },
     {
       "path": "scripts/verify.mjs",
@@ -344,7 +356,11 @@
     },
     {
       "path": "site/index.html",
-      "sha256": "2438db12ed58d42b7b7662ff0fe74bda0fadc140d2ffb867a202f2a6929ce0ae"
+      "sha256": "abb11a4972993c3d2d34d147c0d4e45021532424db50327fa464d8086c8e2a05"
+    },
+    {
+      "path": "site/ketentuan/index.html",
+      "sha256": "cd2d0d8d9b768344babe9a60b50a96262eabdec43c263a6428ac17d9e125ad15"
     },
     {
       "path": "site/media/clinical-product/anamnesis-source.png",
@@ -372,7 +388,7 @@
     },
     {
       "path": "site/media/design-audit.css",
-      "sha256": "70b1e78d0aeb7722ce0ae8ff177e978086fd1e8857e2f125a227558473994318"
+      "sha256": "3bb48d44d45a494fa0f735fc76eb386e01b56512b0c4c61f3fd92f0d928de930"
     },
     {
       "path": "site/media/design-audit.js",
@@ -413,6 +429,14 @@
     {
       "path": "site/media/hero-workspace.js",
       "sha256": "810030f08f38f47057fafb6bccebad8e8e41e199419eab63837affbc2cd7096c"
+    },
+    {
+      "path": "site/media/legal.css",
+      "sha256": "d1afc56c464161e3430773ea680ec0cc654ddad9116d6fb1a300110e7a448d98"
+    },
+    {
+      "path": "site/media/legal.js",
+      "sha256": "31093e33e5f004334a38c131b49898ba0ffc2521f86d112747854d63f1197f74"
     },
     {
       "path": "site/media/pricing.css",
@@ -535,6 +559,14 @@
       "sha256": "75583e1e3f8ab1e85e74d1e404320dfbcc13142e8fcb8099c44a98ba258da0aa"
     },
     {
+      "path": "site/penafian/index.html",
+      "sha256": "11859f3be782c6fe15677f7861d7c87b337da5ca41be88ef227bb8e129fbe83f"
+    },
+    {
+      "path": "site/privasi/index.html",
+      "sha256": "ca54c0eee024f212635b0f41123f882965103c8d08502dc7d33ba54e0acc0393"
+    },
+    {
       "path": "site/vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
       "sha256": "3104b7623d267eedae62cbd065d0a9437dc8a4d822c209704bbbb88c80afcc9a"
     },
@@ -568,7 +600,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "2438db12ed58d42b7b7662ff0fe74bda0fadc140d2ffb867a202f2a6929ce0ae"
+      "sha256": "abb11a4972993c3d2d34d147c0d4e45021532424db50327fa464d8086c8e2a05"
     },
     {
       "path": "assets/system-anatomy.css",
@@ -769,6 +801,18 @@
     {
       "path": "site/media/capability-anatomy.js",
       "sha256": "828d8cce72f2b5149fea977a821cef6109bf708e43a25a53155ec73d9239fbc8"
+    },
+    {
+      "path": "source/ketentuan/index.html",
+      "sha256": "cd2d0d8d9b768344babe9a60b50a96262eabdec43c263a6428ac17d9e125ad15"
+    },
+    {
+      "path": "source/penafian/index.html",
+      "sha256": "11859f3be782c6fe15677f7861d7c87b337da5ca41be88ef227bb8e129fbe83f"
+    },
+    {
+      "path": "source/privasi/index.html",
+      "sha256": "ca54c0eee024f212635b0f41123f882965103c8d08502dc7d33ba54e0acc0393"
     }
   ]
 }
