@@ -27,6 +27,10 @@
   --workspace-error-text: #8b3a24;
   /* Swiss pass (Chief, 2026-10-09): one sharp corner, flat layers, strong rules; colours unchanged. */
   --radius: 2px;
+  /* Floating Vera launcher footprint: the widget is placed from it, and the layouts it can cover keep their controls clear of it. */
+  --launcher-inset: 22px;
+  --launcher-height: 40px;
+  --launcher-width: 128px;
   --rule-strong: #131313;
   --floating-line: color-mix(in srgb, #131313, transparent 75%);
   /* Type pair (Chief, 2026-10-09): Plus Jakarta Sans titles, Geist text. His colours came from a dark page; these follow this light one. */
@@ -259,7 +263,7 @@ h1 span { white-space: normal; }
 @keyframes greeting-rise { from { transform: translateY(8px) rotate(-30deg); } }
 .greeting-text { animation: greeting-fade 300ms ease-out both; }
 @keyframes greeting-fade { from { opacity: 0; } }
-.encounter-title { display: flex; align-items: center; gap: 8px; color: var(--color-text-secondary); font-size: 12px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.encounter-title { display: flex; align-items: center; min-height: 24px; gap: 8px; color: var(--color-text-secondary); font-size: 12px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .conversation { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
 .conversation-inner { width: min(780px, calc(100% - 48px)); margin: 18px auto 0; padding-bottom: 22px; }
 .user-message { display: flex; align-items: flex-start; margin: 20px 0 26px auto; width: fit-content; max-width: 90%; background: var(--color-background-surface); border: 1px solid var(--color-border-subtle); border-radius: var(--radius); padding: 12px 10px 12px 17px; gap: 10px; font-size: 15px; line-height: 23px; white-space: pre-wrap; }
@@ -326,7 +330,7 @@ h1 span { white-space: normal; }
 .diagnosis-provenance .draft-content { font-size: 11px; margin-top: 12px; }
 /* Source text and additional context fold away in a smaller face; the body fades in and out (160 ms). */
 .diagnosis-section:has(> .diagnosis-supporting) { position: relative; padding: 14px 0 12px; }
-.diagnosis-supporting > summary { display: flex; align-items: center; gap: 9px; cursor: pointer; list-style: none; color: var(--color-text-secondary); }
+.diagnosis-supporting > summary { display: flex; align-items: center; min-height: 24px; gap: 9px; cursor: pointer; list-style: none; color: var(--color-text-secondary); }
 .diagnosis-supporting > summary::-webkit-details-marker { display: none; }
 .diagnosis-supporting > summary::before { content: ""; width: 5px; height: 5px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 160ms ease-out; }
 .diagnosis-supporting[open] > summary::before { transform: rotate(45deg); }
@@ -386,7 +390,7 @@ h1 span { white-space: normal; }
 .chat-composer { width: min(780px, calc(100% - 48px)); flex-shrink: 0; margin: 8px auto 8px; }
 .chat-composer .action-rail-wrap { margin-top: 12px; }
 .composer-hint { font-size: 10px; text-align: left; color: var(--color-text-muted); margin: 11px 0 0; }
-.composer-hint button { padding: 0; color: var(--workspace-accent-ink); font-size: 10px; }
+.composer-hint button { padding: 0; min-height: 24px; color: var(--workspace-accent-ink); font-size: 10px; }
 
 
 .dialog { border: 1px solid var(--floating-line); border-radius: var(--radius); padding: 0; width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 48px); color: var(--color-text-primary); background: var(--workspace-white); box-shadow: var(--workspace-modal-shadow); overflow: auto; }
@@ -590,6 +594,8 @@ h1 span { white-space: normal; }
 .clinical-panel-content { height: 100%; display: flex; flex-direction: column; min-height: 0; }
 .clinical-panel-header { display: flex; justify-content: space-between; align-items: center; min-height: 47px; padding: 0 16px; }
 .clinical-panel-header > span { font-size: 12px; font-weight: 600; color: var(--color-text-primary); }
+/* In the dialog the title already names the cockpit; the label belongs to the side column. */
+.dialog .clinical-panel-header { display: none; }
 .patient-summary { display: flex; gap: 10px; align-items: center; padding: 17px 16px 21px; }
 .patient-symbol { display: grid; place-items: center; width: 38px; height: 38px; background: var(--workspace-white); border: 1px solid var(--color-border-subtle); border-radius: var(--radius); color: var(--workspace-accent-ink); flex-shrink: 0; }
 .patient-summary > div { min-width: 0; }
@@ -612,7 +618,7 @@ h1 span { white-space: normal; }
 .context-facts dd small { display: block; color: var(--workspace-accent-ink); font-size: 9px; margin: 4px 0 8px; }
 .missing-value { color: var(--color-text-muted); font-size: 11px; }
 .context-original { border-bottom: 1px solid var(--color-border-subtle); padding: 15px 0; font-size: 11px; }
-.context-original summary { cursor: pointer; color: var(--color-text-secondary); }
+.context-original summary { cursor: pointer; line-height: 24px; color: var(--color-text-secondary); }
 .context-original pre, .source-pane pre, .comparison pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 12px; line-height: 1.8; }
 .panel-wide-button { margin-top: 15px; width: 100%; justify-content: space-between; font-size: 11px; }
 .panel-footnote { display: flex; align-items: center; gap: 6px; padding: 14px 16px; font-size: 11px; color: var(--color-text-secondary); border-top: 1px solid var(--color-border-subtle); }
@@ -623,7 +629,7 @@ h1 span { white-space: normal; }
 .encounter-timeline > li.current::before { background: var(--workspace-focus); box-shadow: 0 0 0 3px var(--workspace-accent-soft); }
 .timeline-encounter { display: grid; gap: 7px; text-align: left; width: 100%; border-radius: var(--radius); padding: 4px 0; }
 .timeline-encounter:hover strong { color: var(--workspace-accent-ink); }
-.timeline-encounter small, .timeline-encounter span { font-size: 10px; color: var(--color-text-muted); }
+.timeline-encounter small, .timeline-encounter span { font-size: 10px; color: var(--color-text-secondary); }
 .timeline-encounter strong { font-size: 12px; font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
 .timeline-document { display: flex; align-items: flex-start; gap: 6px; color: var(--color-text-secondary); margin-top: 10px; padding: 9px; border-radius: var(--radius); background: var(--workspace-white); }
 .timeline-document svg { flex-shrink: 0; margin-top: 1px; }
@@ -677,7 +683,7 @@ h1 span { white-space: normal; }
 .source-technical > summary:hover { color: var(--workspace-accent-ink); }
 .status-reviewed, .status-final { color: var(--workspace-accent-ink); background: var(--workspace-accent-soft); }
 .command-search { display: flex; gap: 10px; align-items: center; padding: 12px; border: 1px solid var(--workspace-control-border); border-radius: var(--radius); }
-.command-search input { border: 0; outline: none; width: 100%; background: transparent; font-size: 14px; }
+.command-search input { border: 0; outline: none; width: 100%; min-height: 24px; background: transparent; font-size: 14px; }
 .command-search:focus-within { outline: 2px solid var(--workspace-focus); outline-offset: 2px; }
 .command-results { max-height: 340px; overflow-y: auto; margin: 16px -4px 0; padding: 4px; }
 .command-results [role="option"] { display: block; text-align: left; width: 100%; padding: 10px 12px; border-radius: var(--radius); font-size: 13px; cursor: pointer; overflow-wrap: anywhere; }
@@ -783,7 +789,6 @@ h1 span { white-space: normal; }
   .section-editor textarea, .command-search input { font-size: 16px; }
   .dialog .clinical-panel-content { max-height: 65dvh; }
   .dialog .panel-scroll { padding: 16px 0; }
-  .dialog .clinical-panel-header { display: none; }
 }
 
 .theoracle-list { display: grid; gap: 6px; max-height: 260px; overflow-y: auto; padding: 2px; }
@@ -823,6 +828,14 @@ h1 span { white-space: normal; }
 
 /* Design audit fixes (Gaffer, 2026-10-11). */
 @media (max-width: 1200px) { .chat-composer .intent-groups, .chat-composer .quick-actions { display: none; } }
+/* The launcher never covers Send, Stop or the footer links: where the column reaches under it, the hint line becomes the launcher's band. */
+@container canvas (max-width: 1080px) {
+  .app-shell:not(:has(> .clinical-panel)) .chat-composer { margin-bottom: var(--launcher-inset); }
+  .app-shell:not(:has(> .clinical-panel)) .composer-hint { min-height: var(--launcher-height); align-content: center; margin-top: 8px; padding-right: calc(var(--launcher-width) + var(--launcher-inset)); }
+  .app-shell:not(:has(> .clinical-panel)) .site-footer { padding-right: calc(var(--launcher-width) + var(--launcher-inset)); }
+}
+/* The inline cockpit keeps its "Tersimpan di browser · Data fiktif" marker above the launcher. */
+.clinical-panel .panel-footnote { margin-bottom: calc(var(--launcher-inset) + var(--launcher-height)); }
 /* H-03: on the home screen the Mode trigger appears only for a template outside the quick actions, or when asked for. */
 .composer-mode[data-quiet="true"] { padding: 0; }
 .composer-mode[data-quiet="true"] .mode-trigger { width: auto; height: 36px; padding: 8px 11px; border: 1px solid var(--color-border-subtle); background: var(--workspace-white); }
@@ -859,8 +872,8 @@ h1 span { white-space: normal; }
   --vera-raise-sm: 2px 2px 5px var(--vera-shadow-dark), -1px -1px 4px var(--vera-shadow-light);
   --vera-press: inset 1px 1px 3px var(--vera-shadow-dark), inset -1px -1px 3px var(--vera-shadow-light);
   position: fixed;
-  bottom: 22px;
-  right: 22px;
+  bottom: var(--launcher-inset);
+  right: var(--launcher-inset);
   z-index: 999999;
   font-family: var(--font-body);
   color: var(--vera-text);
@@ -927,7 +940,7 @@ h1 span { white-space: normal; }
 
 .vera-panel-footer { position: relative; padding: 6px 12px 12px; }
 .vera-composer { display: flex; flex-direction: column; gap: 8px; padding: 11px 10px 9px 14px; border-radius: 18px; background: var(--vera-raised); box-shadow: var(--vera-raise); }
-.vera-composer input { width: 100%; height: 22px; border: 0; outline: none; background: transparent; font: inherit; font-size: 13px; color: var(--vera-text); }
+.vera-composer input { width: 100%; height: 24px; border: 0; outline: none; background: transparent; font: inherit; font-size: 13px; color: var(--vera-text); }
 .vera-composer input::placeholder { color: var(--vera-dim); }
 .vera-composer-row { display: flex; align-items: center; gap: 10px; }
 .vera-round-btn, .vera-send-btn { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; transition: box-shadow 140ms ease, background 140ms ease, opacity 140ms ease; }
@@ -949,7 +962,7 @@ h1 span { white-space: normal; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  height: 40px;
+  height: var(--launcher-height);
   padding: 0 14px 0 9px;
   border: 1px solid var(--vera-line);
   border-radius: 11px;
@@ -972,7 +985,7 @@ h1 span { white-space: normal; }
 @keyframes vera-blink { 50% { opacity: 0; } }
 
 @media (max-width: 640px) {
-  .vera-widget-root { bottom: 16px; right: 16px; }
+  :root { --launcher-inset: 16px; }
   .vera-widget-panel { left: 8px; right: 8px; bottom: 64px; width: auto; height: min(480px, calc(100dvh - 80px)); }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -342,10 +342,10 @@ export function VeraWidget() {
             className="vera-panel-footer"
           >
             {suggesting && (
-              <ul className="vera-suggestions" role="listbox" aria-label="Saran pertanyaan">
+              <ul className="vera-suggestions" aria-label="Saran pertanyaan">
                 {suggestions.length ? suggestions.map((prompt) => (
                   <li key={prompt}>
-                    <button type="button" role="option" aria-selected="false" onClick={() => handleSend(prompt)}>{prompt}</button>
+                    <button type="button" onClick={() => handleSend(prompt)}>{prompt}</button>
                   </li>
                 )) : <li className="vera-suggestions-empty">Tidak ada saran yang cocok</li>}
               </ul>
