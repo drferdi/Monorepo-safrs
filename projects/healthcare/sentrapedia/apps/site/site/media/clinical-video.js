@@ -80,7 +80,6 @@
       } }).from(title.chars, { yPercent: 140, autoAlpha: 0, rotation: 3, duration: 1.2, stagger: 0.035, ease: 'power3.out' });
       const story = root.querySelector('.clinical-story');
       const stages = [...story.querySelectorAll('.clinical-stage')];
-      const chapters = [...story.querySelectorAll('.clinical-chapters li')];
       const rows = [...note.querySelectorAll('.clinical-note-row')];
       const strikes = note.querySelectorAll('.clinical-note-strike');
       const circle = note.querySelector('.clinical-note-circle');
@@ -92,11 +91,6 @@
       function select(index) {
         if (current === index) return;
         current = index;
-        chapters.forEach((chapter, i) => {
-          chapter.classList.toggle('is-current', i === index);
-          if (i === index) chapter.setAttribute('aria-current', 'step');
-          else chapter.removeAttribute('aria-current');
-        });
         story.dataset.stage = String(index + 1);
       }
       const timeline = gsap.timeline({
@@ -147,58 +141,10 @@
       };
       select(0);
       if (skipRequested) completeNote();
-      const capabilityViewport = root.querySelector('.clinical-capability-viewport');
-      const track = capabilityViewport.querySelector('.clinical-capability-index');
-      const capabilityItems = [...track.querySelectorAll('.clinical-capability')];
-      const counter = capabilityViewport.querySelector('[data-clinical-capability-count]');
-      gsap.fromTo(root.querySelector('.clinical-product-intro img'), {
-        clipPath: 'inset(0 0 100% 0)', scale: 1.02
-      }, {
-        clipPath: 'inset(0 0 0% 0)', scale: 1, ease: 'none',
-        scrollTrigger: { id: 'clinical-product-intro', trigger: root.querySelector('.clinical-index-intro'), start: 'top 88%', end: 'top 30%', scrub: 0.45 }
-      });
-      if (context.conditions.desktop) {
-        capabilityViewport.classList.add('is-horizontal');
-        const travel = () => Math.max(0, track.scrollWidth - capabilityViewport.clientWidth);
-        let activeCapability = -1;
-        const rail = gsap.timeline({ scrollTrigger: {
-          id: 'clinical-capabilities-right', trigger: capabilityViewport,
-          start: 'top 84px', end: () => '+=' + Math.round(travel() * 0.8),
-          pin: true, scrub: 0.45, anticipatePin: 1, invalidateOnRefresh: true
-        }, onUpdate() {
-            const center = capabilityViewport.getBoundingClientRect().left + capabilityViewport.clientWidth / 2;
-            let closest = Infinity;
-            let index = 0;
-            capabilityItems.forEach((item, i) => {
-              const rect = item.getBoundingClientRect();
-              const distance = Math.abs((rect.left + rect.right) / 2 - center);
-              if (distance < closest) { closest = distance; index = i; }
-            });
-            if (activeCapability !== index) {
-              activeCapability = index;
-              counter.textContent = String(index + 1).padStart(2, '0') + ' / 10';
-              capabilityViewport.dataset.capability = String(index + 1);
-            }
-          }
-        });
-        rail.fromTo(track, { x: 0 }, { x: () => -travel(), duration: 1, ease: 'none' }, 0);
-        rail.fromTo(track.querySelectorAll('.clinical-product-visual img'), { y: 12, scale: 1.035 }, { y: -12, scale: 1, duration: 1, ease: 'none' }, 0);
-      } else {
-        track.querySelectorAll('.clinical-product-visual img').forEach(image => {
-          gsap.fromTo(image, { clipPath: 'inset(0 0 12% 0)' }, {
-            clipPath: 'inset(0 0 0% 0)', ease: 'none',
-            scrollTrigger: { trigger: image.parentElement, start: 'top 90%', end: 'center 65%', scrub: 0.4 }
-          });
-        });
-      }
       return () => {
         completeNote = scrollToNote;
         story.classList.remove('is-pinned');
         delete story.dataset.stage;
-        chapters.forEach(chapter => { chapter.classList.remove('is-current'); chapter.removeAttribute('aria-current'); });
-        capabilityViewport.classList.remove('is-horizontal');
-        delete capabilityViewport.dataset.capability;
-        counter.textContent = '01 / 10';
         splits.forEach(item => item.revert());
       };
     }, root);

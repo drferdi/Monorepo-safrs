@@ -1,0 +1,31 @@
+#home-bottom .capability-anatomy { --anatomy-paper: #fff; --anatomy-top: #fafdfc; --anatomy-shade-0: #cad6d3; --anatomy-shade-1: #d9e2df; --anatomy-shade-2: #e5ece9; --anatomy-shade-3: #f0f5f3; --anatomy-hi: #3b5952; --anatomy-mid: #78918a; --anatomy-lo: #a0b4ad; --anatomy-faint: #d0dcd7; --anatomy-dot: #627f76; --anatomy-accent: #138d80; --anatomy-selected: #87dbd0; width: 100%; min-width: 0; margin: 0; background: #fff; }
+#home-bottom .feature-anatomy-heading, #home-bottom .feature-anatomy-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--capability-muted); font-size: 13px; line-height: 1.5; }
+#home-bottom .feature-anatomy-heading { padding: 10px 0; border-bottom: 1px solid var(--capability-rule); }
+#home-bottom .feature-anatomy-heading span:first-child { color: var(--anatomy-accent); font-size: 11px; letter-spacing: .08em; }
+#home-bottom .capability-anatomy-stage { position: relative; aspect-ratio: 8 / 5; max-height: 36svh; background: #fff; }
+#home-bottom .capability-anatomy-stage:focus-visible { outline: 2px solid var(--anatomy-accent); outline-offset: 3px; }
+#home-bottom .capability-anatomy-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+#home-bottom .capability-anatomy .iso-fill { fill: var(--anatomy-paper); }
+#home-bottom .capability-anatomy .iso-top { fill: var(--anatomy-top); }
+#home-bottom .capability-anatomy .iso-shade[data-shade="0"] { fill: var(--anatomy-shade-0); }
+#home-bottom .capability-anatomy .iso-shade[data-shade="1"] { fill: var(--anatomy-shade-1); }
+#home-bottom .capability-anatomy .iso-shade[data-shade="2"] { fill: var(--anatomy-shade-2); }
+#home-bottom .capability-anatomy .iso-shade[data-shade="3"] { fill: var(--anatomy-shade-3); }
+#home-bottom .capability-anatomy .iso-line { fill: none; stroke: var(--anatomy-lo); stroke-width: .65px; stroke-linecap: round; stroke-linejoin: round; }
+#home-bottom .capability-anatomy .iso-line[data-tone="hi"] { stroke: var(--anatomy-hi); }
+#home-bottom .capability-anatomy .iso-line[data-tone="mid"] { stroke: var(--anatomy-mid); }
+#home-bottom .capability-anatomy .iso-line[data-tone="faint"] { stroke: var(--anatomy-faint); }
+#home-bottom .capability-anatomy .iso-dots circle { fill: var(--anatomy-dot); }
+#home-bottom .capability-anatomy [data-feature-component="connector-port"] .iso-top, #home-bottom .capability-anatomy [data-feature-component="gateway-core"] .iso-top { fill: var(--anatomy-hi); }
+#home-bottom .capability-anatomy [data-active-part="true"] .iso-top { fill: var(--anatomy-selected); }
+#home-bottom .capability-anatomy .feature-data-flow { stroke: var(--anatomy-accent); stroke-width: 1.8px; stroke-dasharray: 9 42; }
+#home-bottom .feature-anatomy-footer { border-top: 1px solid var(--capability-rule); padding: 8px 0; font-variant-numeric: tabular-nums; }
+#home-bottom .feature-anatomy-footer > div { display: flex; gap: 6px; }
+#home-bottom .feature-anatomy-footer button { min-width: 38px; min-height: 38px; padding: 5px 10px; border: 1px solid var(--capability-rule); background: #fff; color: var(--capability-ink); font: inherit; cursor: pointer; }
+#home-bottom .feature-anatomy-footer button:focus-visible { outline: 2px solid var(--anatomy-accent); outline-offset: 2px; }
+#home-bottom .capability-anatomy figcaption { color: var(--capability-muted); font-size: 12px; line-height: 1.6; margin-top: 8px; }
+@media (max-width: 1000px) {
+  #home-bottom .capability-anatomy { order: -1; }
+  #home-bottom .capability-anatomy-stage { max-height: none; }
+  #home-bottom .feature-anatomy-heading, #home-bottom .feature-anatomy-footer { font-size: 12px; }
+}

@@ -48,11 +48,11 @@
     },
     {
       "path": "assets/clinical-video.css",
-      "sha256": "bf910b5745bdb9e871013bf94a6f82168c6ccf235e3303128347922beea43244"
+      "sha256": "ecba60c0a6c021c69429d2a9f0f10d1284fde86d55859f664aef8d8fbcce4473"
     },
     {
       "path": "assets/clinical-video.js",
-      "sha256": "eb18382acfbf462d485c7be335452cc841f5ae681d4b30f416c8b686360096f3"
+      "sha256": "21c0c2fcf974fba76ac0ff563020fde9ad0de64d346c7769a5ac994040e2bdef"
     },
     {
       "path": "assets/design-audit.css",
@@ -236,7 +236,7 @@
     },
     {
       "path": "scripts/clinical-video.test.mjs",
-      "sha256": "d28c03306e6cd46a620951fa8977feea6c7950d3e48689e117529a28bb4fd461"
+      "sha256": "8b9c85472201561914b1756e757c8cc0b877e68ccdb6003c8e7ad5d37f9136b8"
     },
     {
       "path": "scripts/contact.mjs",
@@ -264,7 +264,7 @@
     },
     {
       "path": "scripts/transform.mjs",
-      "sha256": "bfb3216fe03aa5f47472550b5900eaaaa9ce786a3064166a41fb4904b13c874e"
+      "sha256": "5c5bc75ed0515b6340a05ff316f7dd30b66e4bdfaeeea036d91b0666cbc97871"
     },
     {
       "path": "scripts/verify.mjs",
@@ -344,7 +344,7 @@
     },
     {
       "path": "site/index.html",
-      "sha256": "69fd0699225c66e728e96f90e9aecd9765fbc01f5f293088ab3868db11dba056"
+      "sha256": "2438db12ed58d42b7b7662ff0fe74bda0fadc140d2ffb867a202f2a6929ce0ae"
     },
     {
       "path": "site/media/clinical-product/anamnesis-source.png",
@@ -364,11 +364,11 @@
     },
     {
       "path": "site/media/clinical-video.css",
-      "sha256": "bf910b5745bdb9e871013bf94a6f82168c6ccf235e3303128347922beea43244"
+      "sha256": "ecba60c0a6c021c69429d2a9f0f10d1284fde86d55859f664aef8d8fbcce4473"
     },
     {
       "path": "site/media/clinical-video.js",
-      "sha256": "eb18382acfbf462d485c7be335452cc841f5ae681d4b30f416c8b686360096f3"
+      "sha256": "21c0c2fcf974fba76ac0ff563020fde9ad0de64d346c7769a5ac994040e2bdef"
     },
     {
       "path": "site/media/design-audit.css",
@@ -568,7 +568,207 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "69fd0699225c66e728e96f90e9aecd9765fbc01f5f293088ab3868db11dba056"
+      "sha256": "2438db12ed58d42b7b7662ff0fe74bda0fadc140d2ffb867a202f2a6929ce0ae"
+    },
+    {
+      "path": "assets/system-anatomy.css",
+      "sha256": "3308274ede2abae2fa5e9c32009d04064f543425ccc0b4834224d4821c603e83"
+    },
+    {
+      "path": "assets/system-anatomy.js",
+      "sha256": "58ad5dcee603aa4ac2dbddee130ae538487141581477bed48e28eccbbc113957"
+    },
+    {
+      "path": "assets/system-anatomy.mp4",
+      "sha256": "5e6832afdaaf3edbf93942e4455cb4ea23db8e0d441b992a0f0f0d49dd1ca8cb"
+    },
+    {
+      "path": "scripts/system-anatomy.mjs",
+      "sha256": "0358ece3fad759f7cf862aad6e281a496a6c5fc6d7cc60797c319ce2cccc23d7"
+    },
+    {
+      "path": "scripts/vendor/anatomy-kit.mjs",
+      "sha256": "edbac96b8c9adde99b3dd06ad477271a78b6baa82117ca484352084261e67819"
+    },
+    {
+      "path": "site/media/system-anatomy.css",
+      "sha256": "3308274ede2abae2fa5e9c32009d04064f543425ccc0b4834224d4821c603e83"
+    },
+    {
+      "path": "site/media/system-anatomy.js",
+      "sha256": "58ad5dcee603aa4ac2dbddee130ae538487141581477bed48e28eccbbc113957"
+    },
+    {
+      "path": "site/media/system-anatomy.mp4",
+      "sha256": "5e6832afdaaf3edbf93942e4455cb4ea23db8e0d441b992a0f0f0d49dd1ca8cb"
+    },
+    {
+      "path": "assets/system-anatomy-model.js",
+      "sha256": "bf8deaf94f852c22af0442ea0d2e6a7c9dc364237557aad6086cd03f1614ec2d"
+    },
+    {
+      "path": "scripts/system-anatomy.test.mjs",
+      "sha256": "98f1ae586edd90342ea2c289da1c7495e50a468b0915b265d75e4f3335d64a7c"
+    },
+    {
+      "path": "site/media/system-anatomy-model.js",
+      "sha256": "bf8deaf94f852c22af0442ea0d2e6a7c9dc364237557aad6086cd03f1614ec2d"
+    },
+    {
+      "path": "assets/capability-explorer.css",
+      "sha256": "e1b32fde9d8b7706ddc4eaeda24092a1a9612107fb91a10fe4bcaabecddd91d3"
+    },
+    {
+      "path": "assets/capability-explorer.js",
+      "sha256": "2b94a9b2aa7462ebd05f6150fabf15a701e1b81a103d5cf005ddfe487c0d1cfb"
+    },
+    {
+      "path": "assets/capability-flow.mp4",
+      "sha256": "f1e3e7b8f73638b5f3cb5ce389dd07decf91fc0b1b1c8daeaaa7acd26b4d7db3"
+    },
+    {
+      "path": "scripts/capability-explorer.test.mjs",
+      "sha256": "d70a5cf4a11b5858c36b222a15b90d8001092155a8a41969d13add76a58b01ca"
+    },
+    {
+      "path": "site/media/capability-explorer.css",
+      "sha256": "e1b32fde9d8b7706ddc4eaeda24092a1a9612107fb91a10fe4bcaabecddd91d3"
+    },
+    {
+      "path": "site/media/capability-explorer.js",
+      "sha256": "2b94a9b2aa7462ebd05f6150fabf15a701e1b81a103d5cf005ddfe487c0d1cfb"
+    },
+    {
+      "path": "site/media/capability-flow.mp4",
+      "sha256": "f1e3e7b8f73638b5f3cb5ce389dd07decf91fc0b1b1c8daeaaa7acd26b4d7db3"
+    },
+    {
+      "path": "site/public/child.png",
+      "sha256": "8c9ee81fdd74e783a02c5219f8368959588ce179238293beb4ddd54546a7c9d2"
+    },
+    {
+      "path": "site/public/joyful.png",
+      "sha256": "6b5b1c1033d1af67ad036f6a509e73bf5f1598dc30043b3e23e063176aae9362"
+    },
+    {
+      "path": "site/public/monitoring.png",
+      "sha256": "d6c1f0f93b63b2797d63ccc4cad05be5aceec6db4ef67d185b4f8e784e99426e"
+    },
+    {
+      "path": "assets/capability-flow-poster.jpg",
+      "sha256": "21f6af14998fce17327f223aa66fc99e5f67574772eaf8684edbf1b66a3270cf"
+    },
+    {
+      "path": "site/media/capability-flow-poster.jpg",
+      "sha256": "21f6af14998fce17327f223aa66fc99e5f67574772eaf8684edbf1b66a3270cf"
+    },
+    {
+      "path": "assets/capabilities/01-cockpit.webp",
+      "sha256": "e516bae691320791efcd1347ceaaaceb0c65b4be7234e675d93468fe8fa57eb7"
+    },
+    {
+      "path": "assets/capabilities/02-document-studio.webp",
+      "sha256": "a64cbe61ccc224b5720a1be40de946b1f973be19e4bd392da264ad61846e71a7"
+    },
+    {
+      "path": "assets/capabilities/03-cloud-agent.webp",
+      "sha256": "5d511b2caab9fea18f6419801e168d5cd0ee72e5a1a856860ea281b47f9352ea"
+    },
+    {
+      "path": "assets/capabilities/04-fast-assessment.webp",
+      "sha256": "e344f61661d1cf145d69c6a6b501f18523132a66d7e693f1126c54e03bb97ce6"
+    },
+    {
+      "path": "assets/capabilities/05-icd10.webp",
+      "sha256": "f283cb24bf752c57860d4dafa4fa8cd532ede8121e19a83cfdc472e4fd57f616"
+    },
+    {
+      "path": "assets/capabilities/06-clinical-modes.webp",
+      "sha256": "dcd9595ae424f4b6085f7355a10627da638f7beeb2114c6769e4debf729f6f0c"
+    },
+    {
+      "path": "assets/capabilities/07-ambient-scribing.webp",
+      "sha256": "e9a6d3d3bbe404aeb8274c592d003fe14022f46e42d9d85bd0a082ad4a5c8d72"
+    },
+    {
+      "path": "assets/capabilities/08-power-navigation.webp",
+      "sha256": "73a2531b7f2fe04218338ac98a960250c5e820833abfd0e1d47cfeb3e07c3d86"
+    },
+    {
+      "path": "assets/capabilities/09-privacy.webp",
+      "sha256": "1715980b1523704778539d483ddd9d961ee6137450c0be35ed85b87c2952746e"
+    },
+    {
+      "path": "assets/capabilities/10-library.webp",
+      "sha256": "9faf64acfb2acf4d64cb6b96de8c92f13872955dae5801f472c0e130139ffd84"
+    },
+    {
+      "path": "assets/capabilities/generation.json",
+      "sha256": "9056a9b23f96147be42c35d3f13d0292f481f650b8933bdbf3edbd870be73af0"
+    },
+    {
+      "path": "site/media/capabilities/01-cockpit.webp",
+      "sha256": "e516bae691320791efcd1347ceaaaceb0c65b4be7234e675d93468fe8fa57eb7"
+    },
+    {
+      "path": "site/media/capabilities/02-document-studio.webp",
+      "sha256": "a64cbe61ccc224b5720a1be40de946b1f973be19e4bd392da264ad61846e71a7"
+    },
+    {
+      "path": "site/media/capabilities/03-cloud-agent.webp",
+      "sha256": "5d511b2caab9fea18f6419801e168d5cd0ee72e5a1a856860ea281b47f9352ea"
+    },
+    {
+      "path": "site/media/capabilities/04-fast-assessment.webp",
+      "sha256": "e344f61661d1cf145d69c6a6b501f18523132a66d7e693f1126c54e03bb97ce6"
+    },
+    {
+      "path": "site/media/capabilities/05-icd10.webp",
+      "sha256": "f283cb24bf752c57860d4dafa4fa8cd532ede8121e19a83cfdc472e4fd57f616"
+    },
+    {
+      "path": "site/media/capabilities/06-clinical-modes.webp",
+      "sha256": "dcd9595ae424f4b6085f7355a10627da638f7beeb2114c6769e4debf729f6f0c"
+    },
+    {
+      "path": "site/media/capabilities/07-ambient-scribing.webp",
+      "sha256": "e9a6d3d3bbe404aeb8274c592d003fe14022f46e42d9d85bd0a082ad4a5c8d72"
+    },
+    {
+      "path": "site/media/capabilities/08-power-navigation.webp",
+      "sha256": "73a2531b7f2fe04218338ac98a960250c5e820833abfd0e1d47cfeb3e07c3d86"
+    },
+    {
+      "path": "site/media/capabilities/09-privacy.webp",
+      "sha256": "1715980b1523704778539d483ddd9d961ee6137450c0be35ed85b87c2952746e"
+    },
+    {
+      "path": "site/media/capabilities/10-library.webp",
+      "sha256": "9faf64acfb2acf4d64cb6b96de8c92f13872955dae5801f472c0e130139ffd84"
+    },
+    {
+      "path": "scripts/capability-anatomy.test.mjs",
+      "sha256": "435e0302b27cf4b12c32e876ba0719867f7a09dd20069930e7aa32038a3e6e19"
+    },
+    {
+      "path": "assets/capability-anatomy.css",
+      "sha256": "e0ead961a9c555892a6c89d1bcf1b234881c827ddc9bd495d0c9f33ad13af467"
+    },
+    {
+      "path": "assets/capability-anatomy.js",
+      "sha256": "828d8cce72f2b5149fea977a821cef6109bf708e43a25a53155ec73d9239fbc8"
+    },
+    {
+      "path": "scripts/capability-anatomy.mjs",
+      "sha256": "a28a9a897cf70f48ea28a7b5ce2c7306dceefc1e85c2b5e76c20fa6e9e623b9e"
+    },
+    {
+      "path": "site/media/capability-anatomy.css",
+      "sha256": "e0ead961a9c555892a6c89d1bcf1b234881c827ddc9bd495d0c9f33ad13af467"
+    },
+    {
+      "path": "site/media/capability-anatomy.js",
+      "sha256": "828d8cce72f2b5149fea977a821cef6109bf708e43a25a53155ec73d9239fbc8"
     }
   ]
 }

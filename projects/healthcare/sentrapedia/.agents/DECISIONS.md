@@ -199,3 +199,65 @@
 - "Audrey" as the assistant's name exists only in this render; registering it (SPDS, brand) is a separate
   decision for Gaffer. Credits: 4.5 (105 -> 100.5). The DrawSVG route line and the other motion options
   are dropped.
+
+## 2026-10-16 — Capabilities: a physical anatomy of the workspace
+- Gaffer requested an Anatomy figure in "Ruang kerja / Sepuluh kemampuan" and Higgsfield motion/video.
+  A precision workbench connects an encounter tray, assessment sorter, reference cabinet, and document
+  plotter with a separate manual review control. These objects illustrate the existing workflow;
+  the physician retains decision authority. The Audrey intro and ten capability items remain.
+- Use capsule-local generated SVG for the selectable diagram, with one teal emphasis at a time,
+  keyboard phase selection, an idle tour, pause/offscreen handling, and static reduced-motion output.
+  The vendored Anatomy kit snapshot is authoring code within the capsule, never an external lifecycle dependency.
+- The opt-in film is a distinct generated interpretation of this metaphor: Kling 3.0 Turbo, 5 seconds,
+  720p, job `b0f466ff-7b3f-4416-a1fe-c7061e55fc0f`, 7.5 credits (100.5 -> 93). No additional render,
+  commitment, publication, or change to open branding/SPDS decisions is implied.
+
+## 2026-10-16 — Modern digital anatomy is the capabilities opener
+- Gaffer replaces "Dari encounter hingga referensi" and its Audrey intro image with anatomy,
+  and rejects the analog cabinet/paper/plotter aesthetic as old-fashioned. Use a contemporary
+  computing-device metaphor: glass context/document panels, processor, solid-state reference
+  module and teal data traces. This supersedes the preceding physical workbench styling.
+- Motion must be visible immediately: the modern Higgsfield film plays on entering the viewport;
+  diagram mode remains selectable, with continuously moving data traces even on hover/focus.
+  Explicit pause, offscreen/tab-hidden pause, reduced-motion stillness and static fallback remain.
+- One replacement Kling 3.0 Turbo 720p/5 s render, job `91f17bbd-9c30-45cc-808e-a98e438daf5c`,
+  cost 7.5 credits (93 -> 85.5). The previous analog clip is backed up outside the capsule.
+  These are workflow illustrations, not claims about physical deployment or clinical validation.
+
+## 2026-10-16 - SVG-only layered anatomy replaces the small chapter footer
+- Gaffer selects only the modern SVG, superseding the film-default decision. Initial overview
+  separates base, PCB and four functional modules with no selected feature. Selection focuses its
+  module; reset/Escape restores all layers. Moving data traces, pause and reduced motion remain.
+- Feature text belongs inside the diagram frame: desktop titles up to 22px/body 16px, phone
+  18px/15px. Anatomy replaces the small Anamnesis/Pemeriksaan/etc chapter footer and loses its
+  large top padding. All six narrative stages and ten capability items remain unchanged.
+- Use a capsule-local shared pose model for generation, interaction and tests. Depth ordering
+  is sampled across 35 poses, not claimed as a swept-volume proof. Existing generated films
+  remain inactive assets; no new credits, publication or commit.
+
+## 2026-10-16 - Capabilities use a cinematic GSAP horizontal rail
+- Gaffer rejects the intermediate sidebar/accordion and explicitly chooses horizontal GSAP
+  for "Sepuluh kemampuan. Satu ruang kerja." Preserve anatomy, hero, narrative and all ten
+  capability texts. Pin the desktop section and translate its inner track; large images and
+  shaped divider frames remain the focus. Mobile/short viewport uses native horizontal snap;
+  reduced motion stacks readable content. No Element.animate replacement for GSAP here.
+- One shared 5s720p Higgsfield workflow metaphor was explicitly approved at7.5credits:
+  Kling3.0 Turbo job c3a70832-d3a2-4f2b-9c65-75a98e52a30d, balance85.5->78. Existing
+  Document Studio and 18Modes illustrations remain; other slots share one live video and
+  a real static poster. No further media generation or spending is authorized.
+- Do not wait on offscreen lazy-image decode before timeline initialization. Reserve frame
+  ratios, settle responsive layout before refreshing ScrollTrigger, cancel stale scheduled
+  refreshes and flush pending geometry before programmatic navigation. Native panel height
+  follows the selected content without animating height or clipping the six outputs.
+
+## 2026-10-16 - A coordinated image family for all ten capabilities
+- Gaffer approves one dedicated image per capability, uniform white/graphite/turquoise
+  palette and feature-specific text, then selects the Sentrapedia Library design as the
+  preferred reference. Preserve the existing horizontal GSAP rail, anatomy and motion.
+- Use built-in image generation with a shared master reference. Remove an invented S mark
+  rather than introducing an unapproved logo. Store transparent lightweight WebPs locally;
+  these are synthetic UI illustrations, not screenshots or validated clinical results.
+- Keep the single existing shared video behind the transparent foreground imagery and
+  add a small GSAP float to the selected image. Both follow pause/visibility/reduced-motion
+  controls; no new Higgsfield credit spending, new video render or publication is implied.
+- Older product images remain preserved; generation provenance belongs with the new assets.

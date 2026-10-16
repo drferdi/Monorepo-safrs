@@ -1,0 +1,86 @@
+{
+  "created": "2026-10-16",
+  "provider": "Built-in image_gen; model identifier not exposed",
+  "type": "Synthetic marketing UI illustrations, not screenshots or clinical validation",
+  "styleReference": "01-cockpit.webp",
+  "palette": [
+    "white",
+    "graphite",
+    "#40E0D0",
+    "#13786e"
+  ],
+  "encoding": "WebP quality 88, alpha quality 100, no content alteration or resizing",
+  "sharedPrompt": "Image1 is the approved STYLE AND COMPOSITION REFERENCE for a coherent Sentrapedia feature family. Generate ONE separate landscape 16:10 transparent-background illustration. Match its graphite thin frame silhouette, subtle three-quarter camera tilt, white UI surface, transparent perimeter, soft neutral shadow, #40E0D0 turquoise connections, #13786e dark teal accents, graphite type, lighting and scale exactly. Top-left plain word 'Sentrapedia', with NO logo or symbol beside it; top-right small 'Ilustrasi' badge. Keep palette WHITE GRAPHITE TEAL only, absolutely no warm beige, purple, blue, scenery, people, real patient data, invented clinical results or claims. Bottom status exactly 'Data sintetis · tinjau dokter'. Change the main screen contents to the requested feature, with crisp readable sans serif text. All text below is verbatim; do not add filler words or fake gibberish. Subject fills 84 percent of canvas with real transparent alpha surrounding it. Output single standalone image, not montage.",
+  "assets": [
+    {
+      "file": "01-cockpit.webp",
+      "generatedOriginal": "exec-b87d0050-b2e7-4d06-b396-90fb1f53b8d7.png",
+      "title": "Clinical Cockpit",
+      "labels": "Encounter · Riwayat · Antrean · Ruang kerja · Template · Dokumen · Referensi",
+      "featurePrompt": "Master: white/graphite/teal floating Clinical Cockpit UI; Encounter/Riwayat/Antrean, Ruang kerja/Template/Dokumen, Referensi; Data sintetis · tinjau dokter. Corrective edit removed the invented S symbol and preserved the rest of the image."
+    },
+    {
+      "file": "02-document-studio.webp",
+      "generatedOriginal": "exec-96f7a612-5c40-4274-9463-517d983e592a.png",
+      "title": "Document Studio",
+      "labels": "Dokumen · Sumber · Riwayat · Anamnesis · Pemeriksaan · Rencana · Tinjauan · Isi · Format · Draf",
+      "featurePrompt": "Feature 02. Main title 'Document Studio'. Main content: a large clean document canvas on the left with three sections labeled 'Anamnesis', 'Pemeriksaan', 'Rencana', each with understated gray content rules (not small text). A narrow right review column titled 'Tinjauan' with three empty checkboxes and labels 'Sumber', 'Isi', 'Format'. Upper toolbar tabs 'Dokumen', 'Sumber', 'Riwayat', active Dokumen in teal. Small pill 'Draf'. Show a thin teal connection between source tab and review rail. No checked or final approval badge; this is a draft illustration."
+    },
+    {
+      "file": "03-cloud-agent.webp",
+      "generatedOriginal": "exec-55b58610-d70d-4ac9-b51b-a3456bfdb279.png",
+      "title": "Cloud Agent",
+      "labels": "Workspace · Gateway · Streaming · SSE · Konteks · Respons",
+      "featurePrompt": "Feature03. Main title 'Cloud Agent'. Screen main content: three large clearly separated panels connected left-to-right by thin turquoise lines with small dots. Left label 'Workspace', center label 'Gateway', right label 'Streaming'. Workspace has a small document icon, Gateway a minimalist connector node with routing lines, Streaming has three short teal incoming bars and the label 'SSE'. A small lower strip labels 'Konteks' then 'Respons'. No cloud security certification, no latency or success guarantees; a workflow illustration."
+    },
+    {
+      "file": "04-fast-assessment.webp",
+      "generatedOriginal": "exec-cd82af61-191b-4cbc-91a0-c200feab6f78.png",
+      "title": "Fast Assessment",
+      "labels": "Gejala · DDx · Diagnosis · Penunjang · Terapi · Edukasi · Draf",
+      "featurePrompt": "Feature04. Main title 'Fast Assessment'. A clearly structured two-by-three grid of six large equal UI cards with thin line icons. Exact six labels: 'Gejala', 'DDx', 'Diagnosis', 'Penunjang', 'Terapi', 'Edukasi'. Subtle teal connector branches link the first card to the others. Small pill 'Draf' near the title. No clinical values, actual diagnoses, dosages, confidence percentages or green approval checks. This is a draft structure illustration for physician review."
+    },
+    {
+      "file": "05-icd10.webp",
+      "generatedOriginal": "exec-7ff3e7d2-3842-4724-bea7-7198ef95f2b3.png",
+      "title": "ICD-10",
+      "labels": "Draf diagnosis · Referensi kode · Telusuri kode · Tinjauan klinisi · Draf",
+      "featurePrompt": "Feature05. Main title 'ICD-10'. UI content: left large card titled 'Draf diagnosis', with simple gray placeholder content rules, not actual diagnosis names. Middle thin teal arrow to right card titled 'Referensi kode', showing one clean document/list icon and label 'Telusuri kode'. Below, a separate full-width review strip labeled 'Tinjauan klinisi' with an empty checkbox. Small pill 'Draf'. No actual disease codes, no ministry/government logos, no certification marks, no green final approval, no invented clinical facts."
+    },
+    {
+      "file": "06-clinical-modes.webp",
+      "generatedOriginal": "exec-bb7c7f31-2682-43bb-bf21-0219bd323371.png",
+      "title": "18 Mode Klinis",
+      "labels": "Analisis · Dokumentasi · Rencana · Komunikasi · Anamnesis · SOAP · Rujukan · Scribe Note · Edukasi · Ringkasan · Pilih template",
+      "featurePrompt": "Feature06. Main title '18 Mode Klinis'. UI content: organized clinical template picker with four group tabs 'Analisis', 'Dokumentasi', 'Rencana', 'Komunikasi', active Dokumentasi in restrained teal. Under tabs show six spacious template tiles in two rows labeled 'Anamnesis', 'SOAP', 'Rujukan', 'Scribe Note', 'Edukasi', 'Ringkasan'. Footer of picker has label 'Pilih template'. Delicate turquoise routing links connect the group tabs to the template grid. Keep text large and exact, no extra tiny gibberish, no patient records or actual medical findings."
+    },
+    {
+      "file": "07-ambient-scribing.webp",
+      "generatedOriginal": "exec-b0b3f3d3-47f7-48c5-b577-7e8cdaa74140.png",
+      "title": "Ambient Scribing",
+      "labels": "Percakapan · Scribe Note · Draf · Dikte browser",
+      "featurePrompt": "Feature07. Main title 'Ambient Scribing'. A large microphone outline icon and a smooth teal audio waveform occupy a compact left card titled 'Percakapan'. Thin teal connector to a right document card titled 'Scribe Note' with a 'Draf' pill and three simple gray text rules. A clear lower strip labeled 'Dikte browser'. No real conversation, no patient names, no always-on recording or consent claims. Distinct audio-to-draft workflow rendered with large clean labels."
+    },
+    {
+      "file": "08-power-navigation.webp",
+      "generatedOriginal": "exec-0dbca471-c6c8-4bfa-a8da-ded1ba791c62.png",
+      "title": "Power Navigation",
+      "labels": "Navigasi cepat · Cari perintah · Buka dokumen · Pilih template · Cari referensi · Ctrl + J",
+      "featurePrompt": "Feature08. Main title 'Power Navigation'. Screen shows a large centered clean command palette panel titled 'Navigasi cepat'. Search input text 'Cari perintah'. Under it three spacious command rows with simple line icons and exact labels 'Buka dokumen', 'Pilih template', 'Cari referensi'. At upper-right of palette a minimalist keyboard keycap 'Ctrl + J'. Fine turquoise routing line from search to the rows. No terminal window, code gibberish, or tiny filler labels. Keep typography as large and readable as reference."
+    },
+    {
+      "file": "09-privacy.webp",
+      "generatedOriginal": "exec-95237d08-3f55-42dd-a17e-c280da678610.png",
+      "title": "Privacy by Design",
+      "labels": "Data sintetis · Pemeriksaan PII · Batas biaya · Tinjauan",
+      "featurePrompt": "Feature09. Main title 'Privacy by Design'. UI content shows one large simple outlined shield and three neatly aligned rows: 'Data sintetis', 'Pemeriksaan PII', 'Batas biaya'. Use thin teal routing lines connecting a small input document to the shield, then to the three rows. Put a small 'Tinjauan' pill near the shield. The shield is an illustrative outline, NOT a certification seal. No padlock certification, no guaranteed secure or compliant claims, no real identifiers, no checkmarks suggesting regulatory approval."
+    },
+    {
+      "file": "10-library.webp",
+      "generatedOriginal": "exec-1a300962-8729-4715-91a3-61f8c92b4182.png",
+      "title": "Sentrapedia Library",
+      "labels": "Cari referensi · Pedoman · Obat · ICD-10 · Sumber primer",
+      "featurePrompt": "Feature10. Main title 'Sentrapedia Library'. A large clean library search area labeled 'Cari referensi', followed by three spacious content cards with minimal book/document line icons and exact labels 'Pedoman', 'Obat', 'ICD-10'. Lower simple strip titled 'Sumber primer'. A thin turquoise linking line connects all three reference cards. No actual medicine names, numerical dosages, fake citations, medical advice, regulator logos, or verified approval badges. Use large readable typography like reference."
+    }
+  ]
+}

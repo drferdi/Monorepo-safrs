@@ -79,7 +79,7 @@
 #home-bottom .is-pinned .clinical-stage { grid-area: 1 / 1; padding: 10px 0; }
 #home-bottom .is-pinned .clinical-note-figure { align-self: center; max-width: 450px; justify-self: end; }
 #home-bottom .is-pinned .clinical-chapters { margin-top: 12px; }
-#home-bottom .clinical-capabilities { padding-top: clamp(100px, 12vw, 180px); scroll-margin-top: 100px; }
+#home-bottom .clinical-capabilities { padding-top: 0; scroll-margin-top: 100px; }
 #home-bottom .clinical-index-intro { position: relative; margin-bottom: 80px; }
 #home-bottom .clinical-index-intro { display: grid; grid-template-columns: 1fr 1fr; column-gap: 7%; align-items: center; }
 #home-bottom .clinical-index-intro > .clinical-eyebrow { grid-column: 1 / -1; }
@@ -91,33 +91,8 @@
 #home-bottom .clinical-product-visual figcaption { margin-top: 12px; color: var(--clinical-muted); font-size: 9px; line-height: 1.6; letter-spacing: .04em; }
 #home-bottom .clinical-product-intro { grid-column: 2; grid-row: 2 / 4; }
 #home-bottom .clinical-product-intro img { aspect-ratio: 2048 / 1360; object-fit: cover; }
-#home-bottom .clinical-capability > .clinical-product-visual { grid-column: 2 / -1; width: min(100%, 680px); margin-top: 32px; }
-#home-bottom .clinical-capability-viewport { background: #fff; }
-#home-bottom .clinical-rail-header { display: none; }
-#home-bottom .clinical-capability-viewport.is-horizontal { overflow: hidden; height: calc(100svh - 84px); min-height: 610px; display: flex; flex-direction: column; container-type: inline-size; }
-#home-bottom .is-horizontal .clinical-rail-header { display: flex; justify-content: space-between; align-items: center; gap: 24px; border-block: 1px solid var(--clinical-rule); padding-block: 20px; }
-#home-bottom .clinical-rail-header [data-clinical-capability-count] { margin-inline: 24px; }
-#home-bottom .is-horizontal .clinical-capability-index { display: flex; flex-direction: row; gap: 80px; width: max-content; flex: 1; align-items: center; padding-inline: max(0px, calc((100cqw - clamp(320px, 31vw, 460px)) / 2)); }
-#home-bottom .is-horizontal .clinical-capability { flex: 0 0 auto; width: clamp(320px, 31vw, 460px); display: block; border: 0; padding: 32px 0; }
-#home-bottom .is-horizontal .clinical-index-number { display: block; margin-bottom: 24px; font-size: 64px; line-height: 1; letter-spacing: -.06em; color: var(--clinical-tosca); }
-#home-bottom .is-horizontal .clinical-capability h4 { font-size: clamp(30px, 3vw, 44px); max-width: 18ch; margin-bottom: 28px; }
-#home-bottom .is-horizontal .clinical-capability-copy { max-width: 38ch; }
-#home-bottom .is-horizontal .clinical-capability:has(.clinical-product-visual) { width: clamp(780px, 76vw, 1120px); display: grid; grid-template-columns: .85fr 1.15fr; gap: 0 40px; align-items: start; }
-#home-bottom .is-horizontal .clinical-capability > .clinical-product-visual { grid-column: 2; grid-row: 1 / 4; width: 100%; margin: 0; align-self: center; overflow: hidden; }
-#home-bottom .is-horizontal .clinical-capability > .clinical-product-visual img { height: min(48svh, 420px); object-fit: cover; }
-#home-bottom .is-horizontal .clinical-capability-copy .feature-output-label { margin-top: 16px; }
-#home-bottom .is-horizontal .feature-outputs { font-size: 11px; line-height: 1.55; }
 #home-bottom .clinical-index-intro h3 { margin: 32px 0 24px; color: var(--clinical-ink); font-size: clamp(44px, 6vw, 88px); font-weight: 500; line-height: 1.02; letter-spacing: -.065em; }
 #home-bottom .clinical-index-intro > p:last-child { margin: 0 0 0 50%; color: var(--clinical-muted); font-size: 17px; line-height: 1.6; letter-spacing: -.02em; }
-#home-bottom .clinical-capability-index { margin: 0; padding: 0; list-style: none; }
-#home-bottom .clinical-capability { display: grid; grid-template-columns: 8% 38% 1fr; gap: 3%; align-items: baseline; padding: 36px 0 42px; border-top: 1px solid var(--clinical-rule); }
-#home-bottom .clinical-index-number { color: var(--clinical-muted); font-size: 11px; letter-spacing: .05em; }
-#home-bottom .clinical-capability h4 { margin: 0; max-width: 23ch; font-size: clamp(20px, 2.1vw, 30px); color: var(--clinical-ink); line-height: 1.2; font-weight: 500; letter-spacing: -.04em; }
-#home-bottom .clinical-capability-copy > p { margin: 0; max-width: 58ch; color: var(--clinical-muted); font-size: 14px; line-height: 1.8; }
-#home-bottom .clinical-capability-copy .feature-output-label { margin-top: 24px; color: var(--clinical-ink); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
-#home-bottom .feature-outputs { margin: 12px 0 0; padding: 0 0 0 18px; color: var(--clinical-muted); font-size: 12px; line-height: 1.8; }
-#home-bottom .feature-outputs li { padding-left: 7px; }
-#home-bottom .feature-outputs li::marker { color: #13786e; font-size: 10px; }
 #home-bottom .clinical-principles { border-top: 1px solid var(--clinical-ink); padding: 32px 0; margin-top: 24px; scroll-margin-top: 100px; }
 #home-bottom .clinical-principles > p:last-child { max-width: 800px; margin: 24px 0 0 24%; font-size: clamp(20px, 2.6vw, 34px); line-height: 1.5; letter-spacing: -.035em; }
 #home-bottom .clinical-principles span { color: #13786e; margin: 0 8px; }
@@ -153,8 +128,6 @@
   #home-bottom .clinical-product-intro { grid-column: 1; grid-row: auto; margin-top: 32px; }
   #home-bottom .clinical-chapters { gap: 12px; }
   #home-bottom .clinical-chapters span { display: block; margin: 6px 0 0; }
-  #home-bottom .clinical-capability { grid-template-columns: 7% 1fr; gap: 4%; }
-  #home-bottom .clinical-capability-copy { grid-column: 2; margin-top: 14px; }
   #home-bottom .clinical-faq { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 600px) {
@@ -180,14 +153,11 @@
   #home-bottom .clinical-stage-copy > p { font-size: 14px; }
   #home-bottom .clinical-stage-tools { margin-left: 8%; font-size: 9px; }
   #home-bottom .clinical-chapters { display: none; }
-  #home-bottom .clinical-capabilities { padding-top: 72px; }
+  #home-bottom .clinical-capabilities { padding-top: 0; }
   #home-bottom .clinical-index-intro { margin-bottom: 44px; }
   #home-bottom .clinical-index-intro h3 { font-size: clamp(36px, 9vw, 54px); }
   #home-bottom .clinical-index-intro > p:last-child { margin-left: 8%; font-size: 14px; }
   #home-bottom .clinical-index-intro > p:last-of-type { margin-left: 8%; font-size: 14px; }
-  #home-bottom .clinical-capability { padding: 28px 0 32px; }
-  #home-bottom .clinical-capability h4 { font-size: 23px; }
-  #home-bottom .clinical-capability-copy > p { font-size: 14px; }
   #home-bottom .clinical-principles > p:last-child { margin-left: 8%; font-size: 22px; }
   #home-bottom .clinical-faq { margin-top: 72px; }
   #home-bottom .clinical-faq-intro h2 { margin: 24px 0 16px; font-size: clamp(42px, 10vw, 60px); }
