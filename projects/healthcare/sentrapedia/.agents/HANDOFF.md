@@ -1,5 +1,15 @@
 # Sentrapedia handoff
 
+## Gaffer's decisions on tech-debt rows 11, 12, 15, 17, 18 and the run command - 2026-10-17 Asia/Jakarta
+
+- Gaffer: "2. Setuju Baris 18 ... 3. Saya pilih A 4. Perbaiki 5. Setuju semua 6. samakan ke npm run start". Risk R1 (engine, gate, storage code) and R2 (manifest, provenance manifest, docs). Item 1 (push) is approved but waits for Gaffer to name the destination.
+- Row 15 (choice A): `mira/SOURCE.json` marks the 14 diverged files `owner: capsule` with no `packagedSha256`; `test_packaging.py` checks pinned files against upstream, owned files for no pin, and that providers, guard and settings stay pinned.
+- Rows 11 and 12: `engine.py` treats a 503 as a policy refusal only on OpenRouter, so a Gemini 503 is an outage with retries; `app.py` refuses to start when the profile model has no registered price. New `mira/service/tests/test_gemini_route.py` (3 tests). No paid MIRA call was made.
+- Row 18: `applyTherapyGate` is the one therapy gate in the gateway, client and presentation; the client test now expects a server report to be re-checked and an unsupported dose downgraded to `doseRemoved`.
+- Row 17: 20 revisions per document, compact source JSON (the source-display test now expects the compact form), and a save warning from 4 million characters. Row 4 follow-up: `capsule.json` `run` is `npm run start`.
+- Verified: tsc 0; lint 0; Vitest 296/296; site tests 0; site:verify and site:docs 0 errors; test:system 0; test:mira 189 passed, 1 skipped. `next-env.d.ts` is a generated change and not committed.
+- Next: Gaffer names the push destination (origin, or a subtree split to the Sentrapedia remote on a non-main branch).
+
 ## Tech-debt rows 6, 7, 9, 23 and 25 - 2026-10-17 Asia/Jakarta
 
 - Gaffer: "Ok lanjutkan". Risk R2 (agent governance docs: AGENTS.md, CONTEXT.md, DECISIONS.md, HANDOFF); R1 for lint and tsconfig. No app behaviour changed.
@@ -35,12 +45,3 @@
 - Row 4: `capsule.json` and `project.contract.json` declare `GEMINI_API_KEY` and the Gemini API instead of OpenRouter. The `run` difference (`dev` vs `start`) is left for Gaffer.
 - Verified: `npx tsc --noEmit` exit 0; eslint on the 5 touched TS files exit 0; Vitest 292/292; both manifests parse; `tools/safrs/check_topology.py` and `check_project_independence.py` exit 0. Not browser-verified: nothing rendered changed.
 - Next: Gaffer picks further rows; row 14 (silent workspace reset) is the highest risk and changes behaviour.
-
-## Technical debt audit written to docs/TECH-DEBT.md - 2026-10-17 Asia/Jakarta
-
-- Gaffer asked for a technical-debt audit with subagents and a prioritised list; nothing was fixed. Risk R0 (read-only scan, one new Markdown file). Committed as `9af7a45c` with rows 2, 4 and 8.
-- Four read-only subagent scans (Next.js app and tests; MIRA engine, launcher and provenance; site, scripts and repository hygiene; docs and governance) consolidated into 44 rows ranked by risk divided by effort (S=1, M=2, L=3); rows 1, 3, 4, 5, 6, 7, 8, 11, 14, 15, 16, 18, 21, 32, 36, 41 and 43 were re-read by hand. Flagged as safe to fix in isolation with an existing automated check: attach the gateway error code to the client error (row 2), correct `capsule.json` and `project.contract.json` (row 4), one exported constant for the empty-section sentence (row 8). Highest absolute risk: an invalid saved workspace is silently replaced by the demo data (row 14).
-- Headline findings: the Dockerfile `dependencies` stage cannot pass postinstall since 2026-10-14 (row 1); the monorepo CI runs nothing for the capsule and rejects its code by design (row 16); MIRA provenance pins 42 files with 14 diverged and no upstream sync (row 15); browser storage is unbounded (row 17); the therapy late gate is written three times (row 18).
-- Excluded: the fast-copies change in the parallel session, other sessions' uncommitted edits, `.env.local`. No lint, typecheck or test applies to the Markdown file; Vitest 291/291 was observed during the scan. Jev: allow_subagent. `/gaffer-routing-superpower` cannot be invoked by the agent; Gaffer runs it directly if wanted.
-- Follow-up (`/engineering:tech-debt`): the doc now also gives each row a debt category and Priority = (Impact + Risk) x (6 - Effort), plus a three-phase remediation plan alongside feature work. The risk-to-effort ranking stays the primary order.
-- Next: Gaffer picks rows to fix; none started.

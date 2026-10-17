@@ -12,15 +12,18 @@ ROOT = Path(__file__).resolve().parents[2]
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-def test_packaged_engine_and_schemas_match_the_recorded_source():
+def test_pinned_files_match_upstream_and_capsule_owned_files_carry_no_pin():
+    """Since 2026-10-17 the capsule owns every file that diverged from upstream (Gaffer's choice A): such an entry keeps
+    its origin and origin hash but has no packaged hash. Every other entry must still be byte-identical to upstream."""
     manifest = json.loads((ROOT / "SOURCE.json").read_text(encoding="utf-8"))
     for item in manifest["files"]:
-        assert sha256(ROOT / item["path"]) == item["packagedSha256"], item["path"]
-        if item["path"] not in ["service/__init__.py", "service/menu.py", "service/tests/test_components.py", "service/tests/test_data_policy.py", "routines.py", "config.py",
-                                "service/app.py", "service/prompts.py", "service/contract/mira-step-request.schema.json",
-                                "service/contract/SOURCE.md", "service/tests/test_step_api.py", "service/postchecks.py",
-                                "service/engine.py", "service/contract.py"]:
-            assert item["packagedSha256"] == item["sourceSha256"]
+        assert (ROOT / item["path"]).is_file(), item["path"]
+        if item.get("owner") == "capsule":
+            assert "packagedSha256" not in item, item["path"]
+        else:
+            assert sha256(ROOT / item["path"]) == item["packagedSha256"] == item["sourceSha256"], item["path"]
+    owned = {item["path"] for item in manifest["files"] if item.get("owner") == "capsule"}
+    assert {"common/providers.py", "common/guard.py", "service/settings.py"}.isdisjoint(owned)
     for name, digest in manifest["snapshotHashes"].items():
         assert sha256(ROOT / name) == digest
     assert hashlib.sha256(planning_menu_text().encode()).hexdigest() == manifest["planningMenuSha256"]

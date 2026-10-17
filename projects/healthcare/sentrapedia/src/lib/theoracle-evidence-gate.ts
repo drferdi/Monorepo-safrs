@@ -1,4 +1,4 @@
-import type { MiraTherapy } from "./mira/contract";
+import type { MiraResult, MiraTherapy } from "./mira/contract";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "./theoracle-grounding-types";
 import { referenceIncludes, theOracleDiseases } from "./theoracle";
 
@@ -294,4 +294,24 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
   const gated: MiraTherapy = { forDiagnosis, regimen: kept.map(shown), interactions: safety(therapy.interactions), contraindications: safety(therapy.contraindications) };
   const reason = kept.length ? "" : "Tidak ada obat yang indikasinya terverifikasi di TheOracle.";
   return { therapy: kept.length ? gated : undefined, report: { forDiagnosis, therapyRemoved: !kept.length, reason, drugs } };
+}
+
+/** The one late-gate rule (Gaffer, 2026-10-17), used by the gateway, the browser client and stored drafts. The result's
+ * therapy is gated for its likely diagnosis against the bundle. With an earlier report (`stored`), that report keeps its
+ * removals and safety items and only the doses the current gate no longer verifies are downgraded to doseRemoved. */
+export function applyTherapyGate(result: MiraResult, bundle: TheOracleGroundingBundle | undefined, stored?: EvidenceGateReport): { result: MiraResult; gate: EvidenceGateReport | undefined } {
+  if (!result.therapy) return { result, gate: stored };
+  const likely = result.differential.likely[0];
+  const late = gateTherapy(result.therapy, bundle, likely && { icd10: likely.icd10, label: likely.label });
+  if (!late.therapy) {
+    const withoutTherapy = { ...result };
+    delete withoutTherapy.therapy;
+    return { result: withoutTherapy, gate: late.report };
+  }
+  if (!stored) return { result: { ...result, therapy: late.therapy }, gate: late.report };
+  const unverified = new Set(late.report.drugs.filter(d => d.status !== "verified").map(d => d.drug));
+  return {
+    result: { ...result, therapy: { ...result.therapy, regimen: late.therapy.regimen } },
+    gate: { ...stored, drugs: stored.drugs.map(d => d.status === "verified" && unverified.has(d.drug) ? { ...d, status: "doseRemoved" as const } : d) },
+  };
 }

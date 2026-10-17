@@ -2,6 +2,15 @@
 
 ## Archived on 2026-10-17 - five-entry handoff retention
 
+## Technical debt audit written to docs/TECH-DEBT.md - 2026-10-17 Asia/Jakarta
+
+- Gaffer asked for a technical-debt audit with subagents and a prioritised list; nothing was fixed. Risk R0 (read-only scan, one new Markdown file). Committed as `9af7a45c` with rows 2, 4 and 8.
+- Four read-only subagent scans (Next.js app and tests; MIRA engine, launcher and provenance; site, scripts and repository hygiene; docs and governance) consolidated into 44 rows ranked by risk divided by effort (S=1, M=2, L=3); rows 1, 3, 4, 5, 6, 7, 8, 11, 14, 15, 16, 18, 21, 32, 36, 41 and 43 were re-read by hand. Flagged as safe to fix in isolation with an existing automated check: attach the gateway error code to the client error (row 2), correct `capsule.json` and `project.contract.json` (row 4), one exported constant for the empty-section sentence (row 8). Highest absolute risk: an invalid saved workspace is silently replaced by the demo data (row 14).
+- Headline findings: the Dockerfile `dependencies` stage cannot pass postinstall since 2026-10-14 (row 1); the monorepo CI runs nothing for the capsule and rejects its code by design (row 16); MIRA provenance pins 42 files with 14 diverged and no upstream sync (row 15); browser storage is unbounded (row 17); the therapy late gate is written three times (row 18).
+- Excluded: the fast-copies change in the parallel session, other sessions' uncommitted edits, `.env.local`. No lint, typecheck or test applies to the Markdown file; Vitest 291/291 was observed during the scan. Jev: allow_subagent. `/gaffer-routing-superpower` cannot be invoked by the agent; Gaffer runs it directly if wanted.
+- Follow-up (`/engineering:tech-debt`): the doc now also gives each row a debt category and Priority = (Impact + Risk) x (6 - Effort), plus a three-phase remediation plan alongside feature work. The risk-to-effort ranking stays the primary order.
+- Next: Gaffer picks rows to fix; none started.
+
 ## Fast copies become a knob; one copy measured at a third of the cost - 2026-10-17 Asia/Jakarta
 
 - Gaffer's go: add `MIRA_FAST_COPIES` (engine default 3), repin `service/engine.py`, then 3 paid runs of the fictional cough case at 1 copy against runs 6-8. Risk R2 (provenance repin). Uncommitted; nothing pushed.

@@ -384,3 +384,17 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 - Gaffer approved reading the number of raced copies from `MIRA_FAST_COPIES` (engine default 3) and repinning `service/engine.py` in `mira/SOURCE.json`, the same mechanism as `app.py`. `settings.py` stays byte-identical to upstream, so the knob lives in `engine.py` (`fast_copies()`), not in `Settings`.
 - The launcher passes `fastCopies` from `scripts/mira-profile.json`. Measured on 2026-10-17 (fictional cough case, 3 runs each): 1 copy costs one third of 3 copies (0.0050 against 0.0153 USD per case) with the diagnosis stage about 0.2 s slower and the same answer; it gives up the one-hiccup retry and the complete-regimen grace. Gaffer kept the profile at 1 copy on 2026-10-17; numbers in the HANDOFF entry of the same day.
+
+## 2026-10-17 - The capsule owns its diverged MIRA service files
+
+- Gaffer chose option A for tech-debt row 15: the 14 files in `mira/` that diverged from upstream are capsule-owned (`owner: capsule` in `mira/SOURCE.json`). They keep `origin` and `sourceSha256` for history, but have no `packagedSha256` and are edited without a repin.
+- Files without an owner stay byte-identical to upstream and pinned. `common/providers.py`, `common/guard.py` and `service/settings.py` may never become capsule-owned; `mira/service/tests/test_packaging.py` enforces both rules.
+
+## 2026-10-17 - One strict therapy-gate rule
+
+- Gaffer agreed to tech-debt row 18: the gateway, the browser client and the presentation all call `applyTherapyGate` in `src/lib/theoracle-evidence-gate.ts`.
+- The client re-checks therapy even when the server sent a gate report; a dose the evidence does not support is removed and its drug downgraded to `doseRemoved`.
+
+## 2026-10-17 - Browser storage limits
+
+- Gaffer agreed to tech-debt row 17: documents keep 20 revisions (was 50), the MIRA source is stored as compact JSON, and saving warns once the workspace reaches 4 million characters so a backup can be exported before the browser quota fills.

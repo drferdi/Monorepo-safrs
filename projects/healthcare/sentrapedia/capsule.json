@@ -6,7 +6,7 @@
     "install": ["npm", "ci", "--workspaces=false"],
     "build": ["npm", "run", "build"],
     "test": ["npm", "run", "test:all"],
-    "run": ["npm", "run", "dev"],
+    "run": ["npm", "run", "start"],
     "lint": ["npm", "run", "lint"],
     "typecheck": ["npm", "run", "typecheck"],
     "deployDryRun": ["npm", "run", "deploy:dry-run"]

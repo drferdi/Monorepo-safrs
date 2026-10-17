@@ -90,10 +90,10 @@ describe("therapy that arrives without a gate report", () => {
     expect(other.result.therapy).toBeUndefined();
     expect(other.evidenceGate?.therapyRemoved).toBe(true);
   });
-  it("is left as the server sent it when a gate report is present", async () => {
+  it("re-checks a server gate report with the one strict rule and downgrades a dose its evidence does not support", async () => {
     const evidenceGate = { forDiagnosis: therapy.forDiagnosis, therapyRemoved: false, reason: "", drugs: [{ drug: "Paracetamol", dose: "3x500mg", status: "verified", evidenceIds: ["P001-001"] }] };
     const analysis = await run(withTherapy({ therapyGrounding: tx, evidenceGate }));
-    expect(analysis.result.therapy?.regimen[0].dose).toBe("3x500mg");
-    expect(analysis.evidenceGate).toEqual(evidenceGate);
+    expect(analysis.result.therapy?.regimen[0]).toMatchObject({ drug: "Paracetamol", dose: "" });
+    expect(analysis.evidenceGate).toEqual({ ...evidenceGate, drugs: [{ ...evidenceGate.drugs[0], status: "doseRemoved" }] });
   });
 });

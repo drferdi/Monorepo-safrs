@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createPersonalDraft, defaultReviewItems, reviewComplete, queueItems, saveLocalWorkspace } from "../src/lib/workflow";
+import { createPersonalDraft, defaultReviewItems, reviewComplete, queueItems, revisionLimit, saveLocalWorkspace, storageWarningChars } from "../src/lib/workflow";
 import { initialWorkspace, restoreWorkspace, workspaceReducer, type Workspace, type Message } from "../src/lib/workspace";
 import { documentSections, emptySection } from "../src/lib/studio";
 
@@ -64,10 +64,11 @@ describe("versions and review guards", () => {
     next = workspaceReducer(next, { type: "revision.rename", ...ref, id: revision.id, name: "Sebelum edit" });
     expect(restoreWorkspace(JSON.stringify(next)).encounters[0].messages[0].revisions?.[0].name).toBe("Sebelum edit");
   });
-  it("caps history at 50 but retains the baseline", () => {
+  it("caps history at 20 but retains the baseline", () => {
     let next = state;
-    for (let i = 0; i < 55; i++) next = workspaceReducer(next, { type: "message.edit", ...ref, content: `Edit ${i}`, at: new Date(Date.parse(stamp) + i * 1000).toISOString() });
-    expect(message(next).revisions).toHaveLength(50);
+    expect(revisionLimit).toBe(20);
+    for (let i = 0; i < 25; i++) next = workspaceReducer(next, { type: "message.edit", ...ref, content: `Edit ${i}`, at: new Date(Date.parse(stamp) + i * 1000).toISOString() });
+    expect(message(next).revisions).toHaveLength(20);
     expect(message(next).originalContent).toBe("Original");
   });
   it("rejects empty review lists and resets status when the list changes", () => {
@@ -82,6 +83,12 @@ describe("queue and storage compatibility", () => {
     expect(saveLocalWorkspace(state, (raw) => { saved = raw; })).toBeNull();
     expect(JSON.parse(saved).version).toBe(1);
     expect(saveLocalWorkspace(state, () => { throw new Error("QuotaExceededError"); })).toContain("belum tersimpan");
+  });
+  it("warns before the browser quota is reached while still saving", () => {
+    const big = { ...state, settings: { ...state.settings, instructions: "x".repeat(storageWarningChars) } };
+    let saved = "";
+    expect(saveLocalWorkspace(big, (raw) => { saved = raw; })).toContain("hampir penuh");
+    expect(JSON.parse(saved).settings.instructions).toHaveLength(storageWarningChars);
   });
   it("retains a long snapshot produced from input and context after reload", () => {
     const long = "x".repeat(60000);

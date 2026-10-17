@@ -1,7 +1,7 @@
 import { containsIdentity, validCase, validResult, type MiraAnalysis } from "./contract";
 import type { CaseState } from "./types";
 import { validTheOracleGrounding } from "../theoracle-grounding-types";
-import { gateEvidence, gateTherapy, validGate } from "../theoracle-evidence-gate";
+import { applyTherapyGate, gateEvidence, validGate } from "../theoracle-evidence-gate";
 
 /** A failed analysis request; `code` is the gateway's error code when the server sent one. */
 export class MiraRequestError extends Error {
@@ -38,11 +38,7 @@ export async function requestMiraAnalysis(caseData: CaseState, options: { synthe
   if (therapyGrounding !== undefined && !validTheOracleGrounding(therapyGrounding)) throw new Error("Respons analisis tidak dapat diverifikasi.");
   const evidenceGate = "evidenceGate" in data ? data.evidenceGate : undefined;
   if (evidenceGate !== undefined && !validGate(evidenceGate)) throw new Error("Respons analisis tidak dapat diverifikasi.");
-  // Therapy without a gate report (an older or faulty server) is gated here as the gateway does, so no unchecked dose reaches a draft.
-  const likely = data.result.differential.likely[0];
-  const late = data.result.therapy && !evidenceGate ? gateTherapy(data.result.therapy, gateEvidence(therapyGrounding, data.grounding), likely && { icd10: likely.icd10, label: likely.label }) : undefined;
-  const result = late?.therapy ? { ...data.result, therapy: late.therapy } : { ...data.result };
-  if (late && !late.therapy) delete result.therapy;
-  const gate = late ? late.report : evidenceGate;
+  // Therapy is re-checked with the one strict rule, also when the server sent a report, so no unchecked dose reaches a draft.
+  const { result, gate } = applyTherapyGate(data.result, gateEvidence(therapyGrounding, data.grounding), evidenceGate);
   return { case: snapshot, result, traceId: data.traceId, createdAt: data.createdAt, grounding: data.grounding, ...(therapyGrounding ? { therapyGrounding } : {}), ...(gate ? { evidenceGate: gate } : {}) };
 }

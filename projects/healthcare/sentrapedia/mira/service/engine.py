@@ -143,8 +143,9 @@ class StepEngine:
             # A slow call is the step deadline, not an API failure: it must not pause the service.
             raise StepFailed("TIMEOUT", f"{role} call exceeded the step deadline") from None
         except Exception as exc:
-            if is_policy_failure(exc):
+            if is_policy_failure(exc) and self.settings.llm_provider == "openrouter":
                 # No provider meets the privacy policy. Not an outage: no pause, no retry without it.
+                # Only OpenRouter has a routing policy; elsewhere (the Gemini route) a 503 is an outage.
                 raise StepFailed("PROVIDER_POLICY", f"{role} call: no provider meets the privacy policy") from None
             # The class and HTTP status say whether it was a rate limit, an outage or credit; the message may echo input.
             log.warning("%s call failed: %s %s", role, type(exc).__name__, getattr(exc, "status_code", ""))

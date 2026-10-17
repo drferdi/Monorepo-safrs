@@ -118,6 +118,11 @@ describe("six-section diagnosis presentation", () => {
     expect(message.content.split("## Ringkasan Gejala")[0]).toContain("Belum ada kandidat diagnosis dari keluhan ini");
     expect(section(message.content, "Terapi Farmakologi")).toBe("Belum ada data terapi untuk diagnosis ini.");
   });
+  it("stores the analysis source as compact JSON", () => {
+    const message = miraMessage(analysis);
+    expect(message.sourceText).not.toContain("\n");
+    expect(JSON.parse(message.sourceText!).traceId).toBe(analysis.traceId);
+  });
   it("derives a message's view once per unchanged message, and again when the message changes", () => {
     const old = "# Analisis kasus\n\n## Ringkasan Kasus\n\nLama\n";
     const message = { ...miraMessage(analysis), content: old, originalContent: old };
@@ -250,7 +255,7 @@ describe("source shown to the clinician", () => {
     expect(shown).toContain("Keluhan sintetis");
     expect(shown).toContain("synthetic-trace");
     expect(shown).not.toMatch(/mira/i);
-    expect(message.sourceText).toContain("\"kind\": \"MIRA\"");
+    expect(message.sourceText).toContain("\"kind\":\"MIRA\"");
     expect(sourceForDisplay({ sourceText: "Input\nteks lokal" })).toBe("Input\nteks lokal");
     expect(sourceForDisplay({})).toBeUndefined();
   });

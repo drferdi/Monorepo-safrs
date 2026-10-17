@@ -24,7 +24,7 @@ from .auth import DevTokenVerifier, RateLimiter, bearer_token
 from .contract import CONTRACT_VERSION, REQUEST, THERAPY_REQUEST, errors
 from .engine import ApiErrorBreaker, StepEngine
 from .privacy import pii_kinds
-from .settings import Settings, check_startup, load_settings
+from .settings import Settings, StartupRefused, check_startup, load_settings
 
 log = logging.getLogger("mira_service")
 
@@ -43,6 +43,10 @@ TARGETED_THERAPY_CAPABILITY = "theoracle-targeted-therapy-v1"
 def create_app(settings: Settings | None = None, client=None) -> FastAPI:
     settings = settings or load_settings()
     check_startup(settings, require_api_key=client is None)
+    model = settings.assess_model.split("/")[-1]
+    if settings.llm_provider == "openai" and not any(model.startswith(prefix) for prefix in PRICES):
+        # This route reports no cost, so an unpriced model would be billed at o1's price and trip every step budget.
+        raise StartupRefused(f"No price is registered for {settings.assess_model}; add it to PRICES in service/app.py.")
     if client is None:
         from openai import AsyncOpenAI
 
