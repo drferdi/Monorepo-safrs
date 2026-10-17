@@ -41,7 +41,7 @@ test('clinical narrative preserves video, content and local assets', async () =>
     assert.equal([...section.matchAll(/class="clinical-capability"/g)].length, 10);
     assert.match(section, /class="clinical-capability-viewport"/);
     assert.match(section, /href="#clinical-principles">Lanjut ke fondasi/);
-    assert.equal([...section.matchAll(/class="capability-feature-image"/g)].length, 8, 'eight capabilities keep their coordinated product illustrations');
+    assert.equal([...section.matchAll(/class="capability-live-visual"/g)].length, 8, 'eight capabilities render live HTML/SVG panels');
     assert.equal([...section.matchAll(/data-feature-anatomy="/g)].length, 2, 'gateway and clinical modes use live SVG anatomy');
     const intro = section.slice(section.indexOf('id="clinical-capabilities"'), section.indexOf('class="clinical-capability-viewport"'));
     assert.match(intro, /<h3 id="clinical-capabilities-title">Anatomi ruang kerja\.<\/h3>/);

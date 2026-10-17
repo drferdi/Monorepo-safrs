@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { renderClinicalNote } from './clinical-note.mjs';
 import { renderSystemAnatomy } from './system-anatomy.mjs';
 import { renderCapabilityAnatomy } from './capability-anatomy.mjs';
+import { capabilityPanelSlugs, renderCapabilityPanel } from './capability-panels.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const site = path.join(root, 'site');
@@ -21,6 +22,19 @@ for (const kind of ['gateway', 'modes']) {
   if (!fragment.test(homepage)) throw new Error('Missing capability anatomy fragment: ' + kind);
   homepage = homepage.replace(fragment, () => '<!-- capability-anatomy:' + kind + ':start -->' + rendered.html + '<!-- capability-anatomy:' + kind + ':end -->');
 }
+const slugs = capabilityPanelSlugs();
+const liveFragments = /<!-- capability-live:([a-z0-9-]+):start -->[\s\S]*?<!-- capability-live:\1:end -->/g;
+const existingLive = [...homepage.matchAll(liveFragments)];
+if (existingLive.length === slugs.length) {
+  const found = existingLive.map(match => match[1]);
+  if (found.some((slug, index) => slug !== slugs[index])) throw new Error('Capability panel order changed');
+  homepage = homepage.replace(liveFragments, (_fragment, slug) => renderCapabilityPanel(slug));
+} else if (existingLive.length === 0) {
+  const legacyFigures = /<figure class="capability-motion-visual" data-capability-shared-visual>[\s\S]*?<\/figure>/g;
+  if ([...homepage.matchAll(legacyFigures)].length !== slugs.length) throw new Error('Expected eight legacy capability figures');
+  let index = 0;
+  homepage = homepage.replace(legacyFigures, () => renderCapabilityPanel(slugs[index++]));
+} else throw new Error('Incomplete capability panel fragments');
 if (homepage !== original) await fs.writeFile(path.join(root, 'source/index.html'), homepage);
 await fs.writeFile(path.join(site, 'index.html'), homepage);
 await fs.mkdir(path.join(site, 'faq'), { recursive: true });
@@ -32,6 +46,9 @@ for (const page of ['privasi', 'ketentuan', 'penafian']) {
   await fs.mkdir(path.join(site, page), { recursive: true });
   await fs.copyFile(path.join(root, `source/${page}/index.html`), path.join(site, `${page}/index.html`));
 }
+await fs.mkdir(path.join(site, 'ruang-kerja'), { recursive: true });
+await fs.copyFile(path.join(root, 'source/ruang-kerja/index.html'), path.join(site, 'ruang-kerja/index.html'));
+await fs.copyFile(path.join(root, 'assets/ruang-kerja.css'), path.join(site, 'media/ruang-kerja.css'));
 for (const filename of ['legal.css', 'legal.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
@@ -39,6 +56,9 @@ for (const filename of ['design-audit.css', 'design-audit.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
 for (const filename of ['pricing.css', 'pricing.js']) {
+  await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
+}
+for (const filename of ['human-anatomy.css', 'human-anatomy.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
 for (const filename of ['system-anatomy.css', 'system-anatomy.js', 'system-anatomy-model.js']) {
@@ -49,15 +69,15 @@ for (const filename of ['capability-explorer.css', 'capability-explorer.js', 'ca
 }
 await fs.mkdir(path.join(site, 'media/capabilities'), { recursive: true });
 for (const filename of await fs.readdir(path.join(root, 'assets/capabilities'))) {
-  if (/^\d{2}-[a-z0-9-]+\.webp$/.test(filename)) {
+  if (/^\d{2}-[a-z0-9-]+\.(?:webp|mp4)$/.test(filename)) {
     await fs.copyFile(path.join(root, 'assets/capabilities', filename), path.join(site, 'media/capabilities', filename));
   }
 }
-for (const filename of ['hero-workspace.css', 'hero-workspace.js', 'hero-film.mp4']) {
+for (const filename of ['hero-workspace.css', 'hero-workspace.js', 'hero-film.mp4', 'hero-bridge.mp4', 'promo-vid.mp4', 'product-film.css', 'product-film.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
 await fs.mkdir(path.join(site, 'media/clinical-product'), { recursive: true });
-for (const filename of ['workspace.png', 'document-review.png', 'anamnesis-source.png', 'audrey-chat.png']) {
+for (const filename of ['workspace.png', 'document-review.png', 'anamnesis-source.png', 'audrey-chat.png', 'human-anatomy-atlas.png', 'human-anatomy-atlas.mp4', 'human-anatomy-cutout.png']) {
   await fs.copyFile(path.join(root, 'assets/clinical-product', filename), path.join(site, 'media/clinical-product', filename));
 }
 await fs.mkdir(path.join(site, 'media/workflows'), { recursive: true });

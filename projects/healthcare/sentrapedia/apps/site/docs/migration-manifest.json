@@ -27,6 +27,38 @@
       "sha256": "46fa4bb751285699fc36ab67331d86a31b412947f9e21fb53eb206b9b6258879"
     },
     {
+      "path": "assets/capabilities/01-cockpit.mp4",
+      "sha256": "d82543735c1568265698b3715138141fe2ed63c52db190f148a2d10ecc9550fd"
+    },
+    {
+      "path": "assets/capabilities/02-document-studio.mp4",
+      "sha256": "0a35b01de75b44c41436794c13bb996ca2de6d971570482d144bd34d90c0e69b"
+    },
+    {
+      "path": "assets/capabilities/04-fast-assessment.mp4",
+      "sha256": "5afd38a0afd6a003e6b740b046768dc9daccc416ad5d5d83985a59189a419bdd"
+    },
+    {
+      "path": "assets/capabilities/05-icd10.mp4",
+      "sha256": "6a6bd66af45740503ce2ac528251f6d278f0dc4bf21bd70574dae7394735314a"
+    },
+    {
+      "path": "assets/capabilities/07-ambient-scribing.mp4",
+      "sha256": "99e2fb286b668597ea710b4f91b6bee556afd02abce00a4fe49250975bba6ad6"
+    },
+    {
+      "path": "assets/capabilities/08-power-navigation.mp4",
+      "sha256": "b9e2fc46776de56c25854e006d3e54676d6ecc11d977430b7fab53d10450e40f"
+    },
+    {
+      "path": "assets/capabilities/09-privacy.mp4",
+      "sha256": "625ae7740befff6111e6cf4f0b86120637e5d978934fcff7f2e8bceb5a2da270"
+    },
+    {
+      "path": "assets/capabilities/10-library.mp4",
+      "sha256": "1ab741039ab5910f19d432efcf3cb0c36c8d687586d4441e62f6e9bc582b49c5"
+    },
+    {
       "path": "assets/clinical-note.config.mjs",
       "sha256": "adecbc291644fed18ccc970eec4029ab75ac3f802eb2807f7ea988ced4dc157d"
     },
@@ -43,6 +75,18 @@
       "sha256": "8a1dede345f859f0e8efaba5751ee655088b99cd7bed95455f1a86f28e2ac4e8"
     },
     {
+      "path": "assets/clinical-product/human-anatomy-atlas.mp4",
+      "sha256": "f051f94af17e948d7a0e1febe78cee9c69bb437553c8710c0f8caeb21e82181f"
+    },
+    {
+      "path": "assets/clinical-product/human-anatomy-atlas.png",
+      "sha256": "53dd85e852666a7d7688a84c98658284612afbceebbfea0e78a0f6c439472cab"
+    },
+    {
+      "path": "assets/clinical-product/human-anatomy-cutout.png",
+      "sha256": "d5e76211cfd2d51a8f1b84992a517f2a3b6338ffd82d5927fb8cdc72dfba0337"
+    },
+    {
       "path": "assets/clinical-product/workspace.png",
       "sha256": "d6d8ac94f985cfe8624b9ee0d9ab769ec091cf0f3006da83713dcf06d6e4a93b"
     },
@@ -56,7 +100,7 @@
     },
     {
       "path": "assets/design-audit.css",
-      "sha256": "3bb48d44d45a494fa0f735fc76eb386e01b56512b0c4c61f3fd92f0d928de930"
+      "sha256": "9b9e97c7e861641b862530e4384c254f37f668e3ac1969f882ab60f446dced57"
     },
     {
       "path": "assets/design-audit.js",
@@ -87,16 +131,28 @@
       "sha256": "dd7dc87e023b3480f9707296342565ca2e361c8393cabb30f9557e06eb1bed4d"
     },
     {
+      "path": "assets/hero-bridge.mp4",
+      "sha256": "af2a2c7527d5c96537ff83bdd922408969fdcca09eeb300e11f9bfd1203bb8ee"
+    },
+    {
       "path": "assets/hero-film.mp4",
       "sha256": "fe4666a24593a2143ea0898bcadf8c742ce324d848cdcde680980d21d2e8bcac"
     },
     {
       "path": "assets/hero-workspace.css",
-      "sha256": "dcbe94751ad655c52155d32118868fea97bdb2723f67b13caad967d124f30d7d"
+      "sha256": "d3b89485d8d8a31b0e024c0d7127649287b0c06afb79c2fd4f554558ca7f89d9"
     },
     {
       "path": "assets/hero-workspace.js",
-      "sha256": "810030f08f38f47057fafb6bccebad8e8e41e199419eab63837affbc2cd7096c"
+      "sha256": "b5ccfa35bb78bd26c157528f0ed7cd705ffe015ceb8da711b4121c72ad9b6533"
+    },
+    {
+      "path": "assets/human-anatomy.css",
+      "sha256": "cd94738940fbf806aa45bed95d175e128305ae07a5f8c47f72177fe5b5ccc565"
+    },
+    {
+      "path": "assets/human-anatomy.js",
+      "sha256": "5ef2970333a15893204ff0dd916180a9d1549f7026624e2a7d610da9f0ed6e3d"
     },
     {
       "path": "assets/legal.css",
@@ -117,6 +173,22 @@
     {
       "path": "assets/ScrollTrigger.min.js",
       "sha256": "ba6ffe7b85ddcc7b891b91a430f88640dff41017874bceedf071ca156ccccefa"
+    },
+    {
+      "path": "assets/product-film.css",
+      "sha256": "e5397b132066b1fd9f7f787ee61a867ef9d0720238854ba88eda6c37075dda0d"
+    },
+    {
+      "path": "assets/product-film.js",
+      "sha256": "c9a14b916faaa8f7cf6a1eff2b667d1a62fc80af18a819bd6dfa4f1512ca273a"
+    },
+    {
+      "path": "assets/promo-vid.mp4",
+      "sha256": "337fe0356fac555f746c00e41f9c08dbc1b37b6568ad52eed3d34b063b60cf38"
+    },
+    {
+      "path": "assets/ruang-kerja.css",
+      "sha256": "f67495b438931ee7df2864db843a100d1e09abd44ebe29a70d28c34cbf751057"
     },
     {
       "path": "assets/sentrapedia-solusi.mp4",
@@ -235,6 +307,10 @@
       "sha256": "09a857b18b4cbcae41d773ca906955e23bb14b7148d8814ee07d608f724a072c"
     },
     {
+      "path": "scripts/capability-panels.mjs",
+      "sha256": "d473d33266f602b8aad43c9420603e8cce7ededc6603e0b39b4e3a9903b80c27"
+    },
+    {
       "path": "scripts/clinical-neuron.mjs",
       "sha256": "f2e65a33bef77f7fb5e94e50c64b623146d14afea2f5d97cc728c62be0e81d79"
     },
@@ -244,7 +320,7 @@
     },
     {
       "path": "scripts/clinical-video.test.mjs",
-      "sha256": "8b9c85472201561914b1756e757c8cc0b877e68ccdb6003c8e7ad5d37f9136b8"
+      "sha256": "041775d475892fea21061a113852728e50a7be2699c278ceae5e421ab1254648"
     },
     {
       "path": "scripts/contact.mjs",
@@ -260,11 +336,19 @@
     },
     {
       "path": "scripts/hero.test.mjs",
-      "sha256": "fc2c586c2dac3dbcd47d170e942b36d3eeae7a554d3f9e9c84a1d42fe309b197"
+      "sha256": "08212e9514b8826fe3b4c1d064bf03de231974460a0089a58b1a60579f3ed95e"
+    },
+    {
+      "path": "scripts/human-anatomy.test.mjs",
+      "sha256": "f3eb6eb1a18e79dde46cedead2ec30a6fff7ca4e96a80897da2beae579f6dcca"
     },
     {
       "path": "scripts/legal.test.mjs",
       "sha256": "b7eb5b239717eb085b69ca7abfbc48243d97074d59c1d7ba7fa1932f2d7ce725"
+    },
+    {
+      "path": "scripts/ruang-kerja.test.mjs",
+      "sha256": "3c53945695ac828de7dd63237fa7a04c15cb835daf3a7bc967b4024e1a580ff3"
     },
     {
       "path": "scripts/serve.mjs",
@@ -276,7 +360,7 @@
     },
     {
       "path": "scripts/transform.mjs",
-      "sha256": "7c202dd7facc6424f9698b67a3e1974003939de04d30adfd7277bb69101ed4a2"
+      "sha256": "b5c08891bff44643d4e026fd39a14c76616fcb91d0d6109c1bd6518bc631bf4d"
     },
     {
       "path": "scripts/verify.mjs",
@@ -352,15 +436,47 @@
     },
     {
       "path": "site/faq/index.html",
-      "sha256": "01148c759ade87f0e663497940813727b2e630f8673137b8488216bbe0c9ad68"
+      "sha256": "c34858316a252f573bbe03df73196417fa62f75a3c59775ace706620829b8148"
     },
     {
       "path": "site/index.html",
-      "sha256": "abb11a4972993c3d2d34d147c0d4e45021532424db50327fa464d8086c8e2a05"
+      "sha256": "7c9ebc225674d9b9adfc8d75f679c814ad57920e30dc26677aa94e3cd8aab7b8"
     },
     {
       "path": "site/ketentuan/index.html",
-      "sha256": "cd2d0d8d9b768344babe9a60b50a96262eabdec43c263a6428ac17d9e125ad15"
+      "sha256": "31e4c7775c85b17b769fbf75a3dcbea3c1dbfc57aaf3ad680861f9e380c55f69"
+    },
+    {
+      "path": "site/media/capabilities/01-cockpit.mp4",
+      "sha256": "d82543735c1568265698b3715138141fe2ed63c52db190f148a2d10ecc9550fd"
+    },
+    {
+      "path": "site/media/capabilities/02-document-studio.mp4",
+      "sha256": "0a35b01de75b44c41436794c13bb996ca2de6d971570482d144bd34d90c0e69b"
+    },
+    {
+      "path": "site/media/capabilities/04-fast-assessment.mp4",
+      "sha256": "5afd38a0afd6a003e6b740b046768dc9daccc416ad5d5d83985a59189a419bdd"
+    },
+    {
+      "path": "site/media/capabilities/05-icd10.mp4",
+      "sha256": "6a6bd66af45740503ce2ac528251f6d278f0dc4bf21bd70574dae7394735314a"
+    },
+    {
+      "path": "site/media/capabilities/07-ambient-scribing.mp4",
+      "sha256": "99e2fb286b668597ea710b4f91b6bee556afd02abce00a4fe49250975bba6ad6"
+    },
+    {
+      "path": "site/media/capabilities/08-power-navigation.mp4",
+      "sha256": "b9e2fc46776de56c25854e006d3e54676d6ecc11d977430b7fab53d10450e40f"
+    },
+    {
+      "path": "site/media/capabilities/09-privacy.mp4",
+      "sha256": "625ae7740befff6111e6cf4f0b86120637e5d978934fcff7f2e8bceb5a2da270"
+    },
+    {
+      "path": "site/media/capabilities/10-library.mp4",
+      "sha256": "1ab741039ab5910f19d432efcf3cb0c36c8d687586d4441e62f6e9bc582b49c5"
     },
     {
       "path": "site/media/clinical-product/anamnesis-source.png",
@@ -373,6 +489,18 @@
     {
       "path": "site/media/clinical-product/document-review.png",
       "sha256": "8a1dede345f859f0e8efaba5751ee655088b99cd7bed95455f1a86f28e2ac4e8"
+    },
+    {
+      "path": "site/media/clinical-product/human-anatomy-atlas.mp4",
+      "sha256": "f051f94af17e948d7a0e1febe78cee9c69bb437553c8710c0f8caeb21e82181f"
+    },
+    {
+      "path": "site/media/clinical-product/human-anatomy-atlas.png",
+      "sha256": "53dd85e852666a7d7688a84c98658284612afbceebbfea0e78a0f6c439472cab"
+    },
+    {
+      "path": "site/media/clinical-product/human-anatomy-cutout.png",
+      "sha256": "d5e76211cfd2d51a8f1b84992a517f2a3b6338ffd82d5927fb8cdc72dfba0337"
     },
     {
       "path": "site/media/clinical-product/workspace.png",
@@ -388,7 +516,7 @@
     },
     {
       "path": "site/media/design-audit.css",
-      "sha256": "3bb48d44d45a494fa0f735fc76eb386e01b56512b0c4c61f3fd92f0d928de930"
+      "sha256": "9b9e97c7e861641b862530e4384c254f37f668e3ac1969f882ab60f446dced57"
     },
     {
       "path": "site/media/design-audit.js",
@@ -419,16 +547,28 @@
       "sha256": "dd7dc87e023b3480f9707296342565ca2e361c8393cabb30f9557e06eb1bed4d"
     },
     {
+      "path": "site/media/hero-bridge.mp4",
+      "sha256": "af2a2c7527d5c96537ff83bdd922408969fdcca09eeb300e11f9bfd1203bb8ee"
+    },
+    {
       "path": "site/media/hero-film.mp4",
       "sha256": "fe4666a24593a2143ea0898bcadf8c742ce324d848cdcde680980d21d2e8bcac"
     },
     {
       "path": "site/media/hero-workspace.css",
-      "sha256": "dcbe94751ad655c52155d32118868fea97bdb2723f67b13caad967d124f30d7d"
+      "sha256": "d3b89485d8d8a31b0e024c0d7127649287b0c06afb79c2fd4f554558ca7f89d9"
     },
     {
       "path": "site/media/hero-workspace.js",
-      "sha256": "810030f08f38f47057fafb6bccebad8e8e41e199419eab63837affbc2cd7096c"
+      "sha256": "b5ccfa35bb78bd26c157528f0ed7cd705ffe015ceb8da711b4121c72ad9b6533"
+    },
+    {
+      "path": "site/media/human-anatomy.css",
+      "sha256": "cd94738940fbf806aa45bed95d175e128305ae07a5f8c47f72177fe5b5ccc565"
+    },
+    {
+      "path": "site/media/human-anatomy.js",
+      "sha256": "5ef2970333a15893204ff0dd916180a9d1549f7026624e2a7d610da9f0ed6e3d"
     },
     {
       "path": "site/media/legal.css",
@@ -449,6 +589,22 @@
     {
       "path": "site/media/ScrollTrigger.min.js",
       "sha256": "ba6ffe7b85ddcc7b891b91a430f88640dff41017874bceedf071ca156ccccefa"
+    },
+    {
+      "path": "site/media/product-film.css",
+      "sha256": "e5397b132066b1fd9f7f787ee61a867ef9d0720238854ba88eda6c37075dda0d"
+    },
+    {
+      "path": "site/media/product-film.js",
+      "sha256": "c9a14b916faaa8f7cf6a1eff2b667d1a62fc80af18a819bd6dfa4f1512ca273a"
+    },
+    {
+      "path": "site/media/promo-vid.mp4",
+      "sha256": "337fe0356fac555f746c00e41f9c08dbc1b37b6568ad52eed3d34b063b60cf38"
+    },
+    {
+      "path": "site/media/ruang-kerja.css",
+      "sha256": "f67495b438931ee7df2864db843a100d1e09abd44ebe29a70d28c34cbf751057"
     },
     {
       "path": "site/media/sentrapedia-solusi.mp4",
@@ -560,11 +716,19 @@
     },
     {
       "path": "site/penafian/index.html",
-      "sha256": "11859f3be782c6fe15677f7861d7c87b337da5ca41be88ef227bb8e129fbe83f"
+      "sha256": "55ca57d9eac288bee29e7ed0ef50b5df12352f5da7a50c067d787fbc0e77fcb9"
     },
     {
       "path": "site/privasi/index.html",
-      "sha256": "ca54c0eee024f212635b0f41123f882965103c8d08502dc7d33ba54e0acc0393"
+      "sha256": "83ca4461d7d1a86a08e233ea4d5d17c53cb779c6f7ffef5a24c8150a899d2a9d"
+    },
+    {
+      "path": "site/public/promo-vid.mp4",
+      "sha256": "337fe0356fac555f746c00e41f9c08dbc1b37b6568ad52eed3d34b063b60cf38"
+    },
+    {
+      "path": "site/ruang-kerja/index.html",
+      "sha256": "9c6f68c1295e2a366b5bfc9ca1c12ab09876a8518c94f30066a5ac22cc37170c"
     },
     {
       "path": "site/vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
@@ -596,11 +760,11 @@
     },
     {
       "path": "source/faq/index.html",
-      "sha256": "01148c759ade87f0e663497940813727b2e630f8673137b8488216bbe0c9ad68"
+      "sha256": "c34858316a252f573bbe03df73196417fa62f75a3c59775ace706620829b8148"
     },
     {
       "path": "source/index.html",
-      "sha256": "abb11a4972993c3d2d34d147c0d4e45021532424db50327fa464d8086c8e2a05"
+      "sha256": "7c9ebc225674d9b9adfc8d75f679c814ad57920e30dc26677aa94e3cd8aab7b8"
     },
     {
       "path": "assets/system-anatomy.css",
@@ -648,11 +812,11 @@
     },
     {
       "path": "assets/capability-explorer.css",
-      "sha256": "e1b32fde9d8b7706ddc4eaeda24092a1a9612107fb91a10fe4bcaabecddd91d3"
+      "sha256": "1ee47b64aa845f63370720f929a058553f1e40b7c3f09ee71da1c1a797f4be62"
     },
     {
       "path": "assets/capability-explorer.js",
-      "sha256": "2b94a9b2aa7462ebd05f6150fabf15a701e1b81a103d5cf005ddfe487c0d1cfb"
+      "sha256": "40556815777cd107acc9f83a11633b3a386c1b6e6ef33ec19689db59214f0143"
     },
     {
       "path": "assets/capability-flow.mp4",
@@ -660,15 +824,15 @@
     },
     {
       "path": "scripts/capability-explorer.test.mjs",
-      "sha256": "d70a5cf4a11b5858c36b222a15b90d8001092155a8a41969d13add76a58b01ca"
+      "sha256": "7264912f37b368fe95990305b7cd16553d82ed18353f747aadbf5c2d63f1c930"
     },
     {
       "path": "site/media/capability-explorer.css",
-      "sha256": "e1b32fde9d8b7706ddc4eaeda24092a1a9612107fb91a10fe4bcaabecddd91d3"
+      "sha256": "1ee47b64aa845f63370720f929a058553f1e40b7c3f09ee71da1c1a797f4be62"
     },
     {
       "path": "site/media/capability-explorer.js",
-      "sha256": "2b94a9b2aa7462ebd05f6150fabf15a701e1b81a103d5cf005ddfe487c0d1cfb"
+      "sha256": "40556815777cd107acc9f83a11633b3a386c1b6e6ef33ec19689db59214f0143"
     },
     {
       "path": "site/media/capability-flow.mp4",
@@ -696,11 +860,11 @@
     },
     {
       "path": "assets/capabilities/01-cockpit.webp",
-      "sha256": "e516bae691320791efcd1347ceaaaceb0c65b4be7234e675d93468fe8fa57eb7"
+      "sha256": "ed5659cfebabdac52c312b6694b5343ce8167e4325cdf69128180d112761f154"
     },
     {
       "path": "assets/capabilities/02-document-studio.webp",
-      "sha256": "a64cbe61ccc224b5720a1be40de946b1f973be19e4bd392da264ad61846e71a7"
+      "sha256": "3a65230f999bfc3d7cdd8d003e656ad021599ac344fc8016be4d3eed1afd4bb0"
     },
     {
       "path": "assets/capabilities/03-cloud-agent.webp",
@@ -708,11 +872,11 @@
     },
     {
       "path": "assets/capabilities/04-fast-assessment.webp",
-      "sha256": "e344f61661d1cf145d69c6a6b501f18523132a66d7e693f1126c54e03bb97ce6"
+      "sha256": "ef7bd4f501e41e214c0a2f7ea0f63ef85af0a3843dcf2cf02f1b29b286c5e128"
     },
     {
       "path": "assets/capabilities/05-icd10.webp",
-      "sha256": "f283cb24bf752c57860d4dafa4fa8cd532ede8121e19a83cfdc472e4fd57f616"
+      "sha256": "f8eb0446b633f64800b8e48dd659e75976a213ec79bdc252d3bdad1eb0668a37"
     },
     {
       "path": "assets/capabilities/06-clinical-modes.webp",
@@ -720,31 +884,31 @@
     },
     {
       "path": "assets/capabilities/07-ambient-scribing.webp",
-      "sha256": "e9a6d3d3bbe404aeb8274c592d003fe14022f46e42d9d85bd0a082ad4a5c8d72"
+      "sha256": "f0d845ede41229adde34b0c87493ce5edd4b9c7b2eec6d73785473dcebaeb76e"
     },
     {
       "path": "assets/capabilities/08-power-navigation.webp",
-      "sha256": "73a2531b7f2fe04218338ac98a960250c5e820833abfd0e1d47cfeb3e07c3d86"
+      "sha256": "d73ac837b62aa56f2dea9e952904085c2c4904723fb265d3fe16a7e485a95f75"
     },
     {
       "path": "assets/capabilities/09-privacy.webp",
-      "sha256": "1715980b1523704778539d483ddd9d961ee6137450c0be35ed85b87c2952746e"
+      "sha256": "fcd23de089a9772d167c9fbdd0a1e35cbb653b9fe4dec406c7778fb2ea0d6053"
     },
     {
       "path": "assets/capabilities/10-library.webp",
-      "sha256": "9faf64acfb2acf4d64cb6b96de8c92f13872955dae5801f472c0e130139ffd84"
+      "sha256": "ea55e06acf1b3a7c529d8fb9058161c65496e662cc6d79e2d5b42fd836e6bdc7"
     },
     {
       "path": "assets/capabilities/generation.json",
-      "sha256": "9056a9b23f96147be42c35d3f13d0292f481f650b8933bdbf3edbd870be73af0"
+      "sha256": "0c0c16b10a6deb2e4879846b769f7633660b134e588c30458dacfdd66f81fc00"
     },
     {
       "path": "site/media/capabilities/01-cockpit.webp",
-      "sha256": "e516bae691320791efcd1347ceaaaceb0c65b4be7234e675d93468fe8fa57eb7"
+      "sha256": "ed5659cfebabdac52c312b6694b5343ce8167e4325cdf69128180d112761f154"
     },
     {
       "path": "site/media/capabilities/02-document-studio.webp",
-      "sha256": "a64cbe61ccc224b5720a1be40de946b1f973be19e4bd392da264ad61846e71a7"
+      "sha256": "3a65230f999bfc3d7cdd8d003e656ad021599ac344fc8016be4d3eed1afd4bb0"
     },
     {
       "path": "site/media/capabilities/03-cloud-agent.webp",
@@ -752,11 +916,11 @@
     },
     {
       "path": "site/media/capabilities/04-fast-assessment.webp",
-      "sha256": "e344f61661d1cf145d69c6a6b501f18523132a66d7e693f1126c54e03bb97ce6"
+      "sha256": "ef7bd4f501e41e214c0a2f7ea0f63ef85af0a3843dcf2cf02f1b29b286c5e128"
     },
     {
       "path": "site/media/capabilities/05-icd10.webp",
-      "sha256": "f283cb24bf752c57860d4dafa4fa8cd532ede8121e19a83cfdc472e4fd57f616"
+      "sha256": "f8eb0446b633f64800b8e48dd659e75976a213ec79bdc252d3bdad1eb0668a37"
     },
     {
       "path": "site/media/capabilities/06-clinical-modes.webp",
@@ -764,23 +928,23 @@
     },
     {
       "path": "site/media/capabilities/07-ambient-scribing.webp",
-      "sha256": "e9a6d3d3bbe404aeb8274c592d003fe14022f46e42d9d85bd0a082ad4a5c8d72"
+      "sha256": "f0d845ede41229adde34b0c87493ce5edd4b9c7b2eec6d73785473dcebaeb76e"
     },
     {
       "path": "site/media/capabilities/08-power-navigation.webp",
-      "sha256": "73a2531b7f2fe04218338ac98a960250c5e820833abfd0e1d47cfeb3e07c3d86"
+      "sha256": "d73ac837b62aa56f2dea9e952904085c2c4904723fb265d3fe16a7e485a95f75"
     },
     {
       "path": "site/media/capabilities/09-privacy.webp",
-      "sha256": "1715980b1523704778539d483ddd9d961ee6137450c0be35ed85b87c2952746e"
+      "sha256": "fcd23de089a9772d167c9fbdd0a1e35cbb653b9fe4dec406c7778fb2ea0d6053"
     },
     {
       "path": "site/media/capabilities/10-library.webp",
-      "sha256": "9faf64acfb2acf4d64cb6b96de8c92f13872955dae5801f472c0e130139ffd84"
+      "sha256": "ea55e06acf1b3a7c529d8fb9058161c65496e662cc6d79e2d5b42fd836e6bdc7"
     },
     {
       "path": "scripts/capability-anatomy.test.mjs",
-      "sha256": "435e0302b27cf4b12c32e876ba0719867f7a09dd20069930e7aa32038a3e6e19"
+      "sha256": "d429d249e9cbc11090f864a6f17f0abef6de504b9b6002636a2f969673d2b243"
     },
     {
       "path": "assets/capability-anatomy.css",
@@ -804,15 +968,19 @@
     },
     {
       "path": "source/ketentuan/index.html",
-      "sha256": "cd2d0d8d9b768344babe9a60b50a96262eabdec43c263a6428ac17d9e125ad15"
+      "sha256": "31e4c7775c85b17b769fbf75a3dcbea3c1dbfc57aaf3ad680861f9e380c55f69"
     },
     {
       "path": "source/penafian/index.html",
-      "sha256": "11859f3be782c6fe15677f7861d7c87b337da5ca41be88ef227bb8e129fbe83f"
+      "sha256": "55ca57d9eac288bee29e7ed0ef50b5df12352f5da7a50c067d787fbc0e77fcb9"
     },
     {
       "path": "source/privasi/index.html",
-      "sha256": "ca54c0eee024f212635b0f41123f882965103c8d08502dc7d33ba54e0acc0393"
+      "sha256": "83ca4461d7d1a86a08e233ea4d5d17c53cb779c6f7ffef5a24c8150a899d2a9d"
+    },
+    {
+      "path": "source/ruang-kerja/index.html",
+      "sha256": "9c6f68c1295e2a366b5bfc9ca1c12ab09876a8518c94f30066a5ac22cc37170c"
     }
   ]
 }

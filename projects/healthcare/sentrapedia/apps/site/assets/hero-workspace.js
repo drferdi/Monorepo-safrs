@@ -1,5 +1,4 @@
-/* hero-workspace.js — drives the hero stage: a short product film (Higgsfield, Kling 3.0 Turbo image-to-video
-   from the studio render) that dissolves into a simulated Sentrapedia workspace with a visible pointer.
+/* hero-workspace.js - drives the hero stage: a simulated Sentrapedia workspace with a visible pointer.
    Requires gsap.min.js (loaded earlier on the page). The case is synthetic; every draft stays "Draf lokal"
    until the physician reviews it, and the status only moves after the checklist. */
 (() => {
@@ -14,8 +13,6 @@
   const pick = key => root.querySelector(`[data-hw="${key}"]`);
   const pickAll = key => [...root.querySelectorAll(`[data-hw="${key}"]`)];
   const el = {
-    film: root.querySelector('.hero-workspace-film'),
-    video: root.querySelector('.hero-workspace-film video'),
     frame: root.querySelector('.hero-workspace-frame'),
     screen: root.querySelector('.hw-screen'),
     main: root.querySelector('.hw-main'),
@@ -252,61 +249,30 @@
 
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     const tl = build();
-    const hasFilm = Boolean(el.film && el.video && el.video.canPlayType('video/mp4'));
-    let phase = 'idle';
+    const intro = root.closest('#intro');
     let arrival = null;
+    let entered = false;
     let userPaused = false;
     let inView = true;
-    const filmReady = () => hasFilm && el.video.readyState >= 3 && !el.video.error;
 
     const sync = () => {
       const paused = userPaused || !inView;
-      if (phase === 'idle') {
+      if (!entered) {
         if (!arrival) return;
         if (paused) arrival.pause();
         else arrival.play();
-      } else if (phase === 'film') {
-        if (paused) el.video.pause();
-        else el.video.play().catch(error => { if (!error || error.name !== 'AbortError') showUi(); });
-      } else if (phase === 'ui') {
+      } else {
         if (paused) tl.pause();
         else tl.play();
       }
     };
-    /* The film's push-in keeps going through the dissolve: the video zooms a little further inside the
-       same device frame while the simulation settles into place underneath it. The dissolve starts
-       before the last frame so the picture never freezes first. */
-    const FILM_END_SCALE = 1.12;
     const showUi = () => {
-      phase = 'ui';
-      if (hasFilm) {
-        gsap.to(el.video, { scale: FILM_END_SCALE, duration: 1.3, ease: 'power2.in' });
-        gsap.to(el.film, {
-          autoAlpha: 0, duration: 1.3, ease: 'power2.inOut',
-          onComplete: () => { el.video.pause(); gsap.set(el.video, { scale: 1 }); }
-        });
-      }
-      tl.pause().seek(0, false);
-      gsap.fromTo(el.frame, { autoAlpha: 0, scale: .9 }, {
-        autoAlpha: 1, scale: 1, duration: 1.3, ease: 'power2.out',
-        onComplete: () => { tl.restart(); sync(); }
-      });
-    };
-    const showFilm = () => {
-      if (!filmReady()) return showUi();
-      phase = 'film';
-      el.video.currentTime = 0;
-      gsap.to(el.frame, { autoAlpha: 0, scale: .92, duration: 1, ease: 'power2.inOut' });
-      gsap.fromTo(el.video, { scale: FILM_END_SCALE }, { scale: 1, duration: 1.8, ease: 'power2.out' });
-      gsap.to(el.film, { autoAlpha: 1, duration: 1, ease: 'power2.out' });
+      entered = true;
+      gsap.set(el.frame, { autoAlpha: 1 });
+      tl.restart();
       sync();
     };
-    tl.eventCallback('onComplete', showFilm);
-    const onEnded = () => { if (phase === 'film') showUi(); };
-    const onError = () => { if (phase === 'film') showUi(); };
-    const onTime = () => {
-      if (phase === 'film' && el.video.duration > 0 && el.video.duration - el.video.currentTime <= 1.2) showUi();
-    };
+    tl.eventCallback('onComplete', showUi);
     const onToggle = () => {
       userPaused = !userPaused;
       toggle.setAttribute('aria-pressed', String(userPaused));
@@ -324,19 +290,11 @@
       : null;
 
     tl.seek(0, false);
-    gsap.set(el.frame, { autoAlpha: 0 });
-    if (hasFilm) {
-      el.video.addEventListener('ended', onEnded);
-      el.video.addEventListener('error', onError);
-      el.video.addEventListener('timeupdate', onTime);
-      el.video.load();
-    }
+    gsap.set(el.frame, { autoAlpha: 1 });
 
     /* Arrival: the neuron lands alone in the centre, slides left as the wordmark joins it, then the lockup
-       slides left again and the stage enters from the right (film first when it is ready, otherwise the
-       simulation). Offsets are measured from the final CSS layout, so the row (desktop) and the column
+       slides left again and the tablet enters from the right. Offsets are measured from the final CSS layout, so the row and the column
        (narrow screens, where the shifts are zero) share one choreography. */
-    const intro = root.closest('#intro');
     const layout = root.parentElement;
     const stage = intro.querySelector('.hero-stage');
     const logo = stage.querySelector('.hero-stage-logo');
@@ -350,21 +308,13 @@
     gsap.set(logo, { x: logoShift, opacity: 0, scale: .72, rotation: -7 });
     gsap.set(wordmark, { opacity: 0, x: wide ? 28 : 0, y: wide ? 0 : 14 });
     gsap.set(root, { opacity: 0, x: wide ? 56 : 0, y: wide ? 0 : 28 });
-    const enter = () => {
-      const film = filmReady();
-      phase = film ? 'film' : 'ui';
-      gsap.set(el.film, { autoAlpha: film ? 1 : 0 });
-      gsap.set(el.frame, { autoAlpha: film ? 0 : 1 });
-      if (film) el.video.currentTime = 0;
-    };
     arrival = gsap.timeline({ defaults: { ease: 'power3.out' } })
       .to(logo, { opacity: 1, scale: 1, rotation: 0, duration: 1 }, .3)
       .to(logo, { x: 0, duration: .8, ease: 'power3.inOut' }, 1.5)
       .to(wordmark, { opacity: 1, x: 0, y: 0, duration: .7 }, 1.75)
       .to(stage, { x: 0, duration: .9, ease: 'power3.inOut' }, 2.8)
-      .call(enter, null, 2.9)
       .to(root, { opacity: 1, x: 0, y: 0, duration: .9 }, 2.95)
-      .call(() => { if (phase === 'ui') tl.restart(); sync(); }, null, 3.9);
+      .call(showUi, null, 3.9);
     observer?.observe(root);
     window.addEventListener('resize', onResize);
     toggle.hidden = false;
@@ -380,12 +330,6 @@
       window.removeEventListener('resize', onResize);
       clearTimeout(resizeTimer);
       toggle.removeEventListener('click', onToggle);
-      if (hasFilm) {
-        el.video.removeEventListener('ended', onEnded);
-        el.video.removeEventListener('error', onError);
-        el.video.removeEventListener('timeupdate', onTime);
-        el.video.pause();
-      }
       toggle.hidden = true;
       toggle.setAttribute('aria-pressed', 'false');
       toggle.setAttribute('aria-label', 'Jeda simulasi');

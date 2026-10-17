@@ -352,3 +352,23 @@ footer .sentrapedia-contact-form input[type=submit]:disabled {
     outline: 3px solid var(--sp-focus);
     outline-offset: 3px;
 }
+
+/* Keep the relocated promo unframed beneath the wordmark, including at its film anchor. */
+.home-page #logo-middle #product-film {
+    width: min(100%, 780px);
+    margin: clamp(1.25rem, 3vh, 2.5rem) auto 0;
+    padding: 0;
+    scroll-margin-top: 110px;
+    border: 0;
+    background: transparent;
+}
+
+#logo-middle #product-film::before { content: none; }
+
+#logo-middle .product-film-video {
+    background: transparent;
+}
+
+#logo-middle #product-film + .logo-middle-claim {
+    margin-top: clamp(1.25rem, 3vh, 2rem);
+}

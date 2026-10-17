@@ -1,0 +1,44 @@
+:root { --workspace-ink: #191c1c; --workspace-muted: #4a5956; --workspace-cyan: #13786e; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body.workspace-page { margin: 0; background: #fff; color: var(--workspace-ink); font-family: Arial, Helvetica, sans-serif; }
+.workspace-page a { color: inherit; }
+.workspace-page a:focus-visible, .workspace-page button:focus-visible, .workspace-page summary:focus-visible { outline: 2px solid var(--workspace-cyan); outline-offset: 5px; }
+.workspace-skip { position: absolute; top: -4rem; left: 1rem; z-index: 10; padding: .75rem 1rem; background: #fff; }
+.workspace-skip:focus { top: 1rem; }
+.workspace-header { display: flex; align-items: center; justify-content: space-between; gap: 2rem; min-height: 100px; border-bottom: 1px solid #d8e1df; }
+.workspace-header img { display: block; width: 172px; height: auto; }
+.workspace-header nav { display: flex; flex-wrap: wrap; gap: clamp(1rem, 3vw, 3rem); font-size: .9rem; }
+.workspace-header nav a { text-decoration: none; }
+.workspace-header nav a:hover, .workspace-next a:hover { color: var(--workspace-cyan); }
+#home-text { padding-top: clamp(3rem, 7vw, 7rem); padding-bottom: clamp(4rem, 8vw, 8rem); }
+.workspace-kicker { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid #cadbd7; padding-top: 1rem; margin-bottom: clamp(2rem, 5vw, 5rem); color: var(--workspace-cyan); font-size: .7rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
+.workspace-intro { align-items: start; }
+#home-text .human-anatomy-column { min-height: clamp(560px, 52vw, 760px); }
+#home-text .human-anatomy-column .section-subtitle { margin: 0; font-size: clamp(1.2rem, 2vw, 1.65rem); line-height: 1.25; }
+#home-text .human-anatomy { top: 5rem; }
+#home-text .human-anatomy-toggle { top: 4rem; left: 0; font: inherit; font-size: .76rem; }
+.workspace-content h1 { max-width: 16ch; margin: 0; font-size: clamp(2.8rem, 5.25vw, 5.8rem); font-weight: 600; letter-spacing: -.065em; line-height: 1.02; text-transform: uppercase; }
+.workspace-lede { max-width: 28ch; margin: clamp(2rem, 4vw, 4rem) 0 clamp(3rem, 5vw, 5rem); color: var(--workspace-muted); font-size: clamp(1.45rem, 2.75vw, 2.75rem); letter-spacing: -.035em; line-height: 1.14; }
+.workspace-content .about-box { padding-right: clamp(1rem, 2vw, 2rem); }
+.workspace-content .about-box h2 { border-bottom: 1px solid #aabcb8; padding-bottom: 1.25rem; margin-bottom: 1.5rem; font-size: clamp(1.05rem, 1.4vw, 1.4rem); font-weight: 600; line-height: 1.3; }
+.workspace-content .about-box p { color: #33403e; font-size: .95rem; line-height: 1.65; }
+.workspace-content details { margin-top: 1.5rem; }
+.workspace-content summary { width: max-content; cursor: pointer; font-size: .9rem; font-weight: 600; text-decoration: underline; text-underline-offset: .25em; }
+.workspace-content details p { padding-top: 1rem; }
+.workspace-next { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; border-top: 1px solid #191c1c; padding-top: 1.5rem; padding-bottom: clamp(5rem, 8vw, 8rem); }
+.workspace-next span { color: var(--workspace-muted); }
+.workspace-next a { font-size: clamp(1.5rem, 3vw, 2.75rem); letter-spacing: -.04em; text-decoration: none; }
+.workspace-next a span { color: inherit; }
+.workspace-footer { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid #d8e1df; padding-top: 1.5rem; padding-bottom: 2rem; color: var(--workspace-muted); font-size: .8rem; }
+@media (max-width: 767px) {
+  .workspace-header { align-items: flex-start; flex-direction: column; justify-content: center; gap: 1rem; padding-top: 1.25rem; padding-bottom: 1.25rem; }
+  .workspace-header nav { gap: 1.25rem; }
+  #home-text .human-anatomy-column { min-height: 280px; }
+  #home-text .human-anatomy { top: 0; left: 50%; width: 50%; height: 270px; }
+  #home-text .human-anatomy-toggle { top: 3rem; }
+  .workspace-content .about-box { margin-bottom: 2rem; }
+  .workspace-next { align-items: flex-start; flex-direction: column; }
+  .workspace-footer { flex-direction: column; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

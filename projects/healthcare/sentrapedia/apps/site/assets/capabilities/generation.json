@@ -9,7 +9,31 @@
     "#40E0D0",
     "#13786e"
   ],
-  "encoding": "WebP quality 88, alpha quality 100, no content alteration or resizing",
+  "encoding": "Eight active raster panels re-encoded from the generated PNG originals as WebP quality 97, alpha quality 100, no resizing; retained unused 03/06 WebPs remain quality 88",
+  "motion": {
+    "model": "Higgsfield Kling 3.0 standard image-to-video",
+    "settings": "5 seconds, 16:9, silent, matching start and end reference frames",
+    "creditsSpent": 60,
+    "balanceAfter": 18,
+    "note": "Original eight Kling renders retained as historical provenance; the active site clips were replaced by the no-credit sharp-image motion pass below because generative video softened or altered small UI labels.",
+    "qualityPass": {
+      "date": "2026-10-16",
+      "method": "Higgsfield media sandbox FFmpeg compositing of the approved full-resolution WebP illustrations with animated turquoise signal indicators",
+      "output": "Eight silent H.264 MP4 clips, 1586x992, 30 fps, 5 seconds each, white canvas, fast start",
+      "creditsSpent": 0,
+      "purpose": "Preserve exact UI text and 16:10 framing while adding independent motion to each scene; no cyan plate behind Sentrapedia Library"
+    },
+    "jobs": {
+      "01-cockpit.mp4": "b72b6e4a-ebeb-43d0-8e21-b2463ec191fc",
+      "02-document-studio.mp4": "bb3950f3-d57a-47b2-a901-2fa6645f773f",
+      "04-fast-assessment.mp4": "58275a62-8d5a-4080-bd5a-81e6d0af077e",
+      "05-icd10.mp4": "6dd55acf-b5b3-4451-813b-273301d381d3",
+      "07-ambient-scribing.mp4": "aff6fd7b-b94a-4572-ad7e-0986350a65e3",
+      "08-power-navigation.mp4": "9b3b8b64-210f-4e2a-af94-c2ad01c59d1d",
+      "09-privacy.mp4": "cfbe5c76-5c77-4f30-ac63-f546d1ea7ad1",
+      "10-library.mp4": "c00fd3c6-358a-4427-9224-6f6906f02119"
+    }
+  },
   "sharedPrompt": "Image1 is the approved STYLE AND COMPOSITION REFERENCE for a coherent Sentrapedia feature family. Generate ONE separate landscape 16:10 transparent-background illustration. Match its graphite thin frame silhouette, subtle three-quarter camera tilt, white UI surface, transparent perimeter, soft neutral shadow, #40E0D0 turquoise connections, #13786e dark teal accents, graphite type, lighting and scale exactly. Top-left plain word 'Sentrapedia', with NO logo or symbol beside it; top-right small 'Ilustrasi' badge. Keep palette WHITE GRAPHITE TEAL only, absolutely no warm beige, purple, blue, scenery, people, real patient data, invented clinical results or claims. Bottom status exactly 'Data sintetis · tinjau dokter'. Change the main screen contents to the requested feature, with crisp readable sans serif text. All text below is verbatim; do not add filler words or fake gibberish. Subject fills 84 percent of canvas with real transparent alpha surrounding it. Output single standalone image, not montage.",
   "assets": [
     {

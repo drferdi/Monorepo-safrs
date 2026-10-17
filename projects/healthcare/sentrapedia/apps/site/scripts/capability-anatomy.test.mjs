@@ -34,8 +34,8 @@ test('gateway and clinical modes are accessible SVG mechanisms instead of static
     assert.equal([...explorer.matchAll(/data-cartridge="\d+"/g)].length, 18, 'the documentation mechanism actually has eighteen cartridges');
     assert.equal([...explorer.matchAll(/data-feature-step="/g)].length, 4, 'both mechanisms expose previous and next controls');
     assert.doesNotMatch(explorer, /src="\/media\/capabilities\/(?:03-cloud-agent|06-clinical-modes)\.webp"/, 'requested SVG panels cannot silently retain the old raster illustrations');
-    assert.match(explorer, /data-capability-surface="cyan"/);
-    assert.match(explorer, /data-capability-surface="blue"/);
+    assert.doesNotMatch(explorer, /data-capability-surface="cyan"/, 'Fast Assessment copy returns to the shared white canvas');
+    assert.doesNotMatch(explorer, /data-capability-surface="blue"/, 'Library imagery stays on the same white canvas as the other features');
   } finally {
     await new Promise(resolve => server.close(resolve));
   }

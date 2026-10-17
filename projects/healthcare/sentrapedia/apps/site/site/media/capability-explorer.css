@@ -19,17 +19,62 @@
 #home-bottom .feature-outputs { margin: 10px 0 0; padding-left: 20px; font-size: 16px; line-height: 1.5; color: var(--capability-muted); }
 #home-bottom .feature-outputs li { padding: 4px 0 4px 6px; }
 #home-bottom .feature-outputs li::marker { color: var(--capability-action); font-size: 12px; }
-#home-bottom .capability-motion-visual, #home-bottom .capability-detail .clinical-product-visual { min-width: 0; width: 100%; margin: 0; }
-#home-bottom .capability-motion-frame, #home-bottom .capability-detail .clinical-product-frame { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 16 / 10; background: #fff; }
-#home-bottom [data-capability-surface="cyan"] .capability-detail-copy { background: #d8edff; padding: 24px; align-self: stretch; }
-#home-bottom [data-capability-surface="blue"] .capability-motion-frame { background: #d8edff; }
-#home-bottom .capability-motion-poster, #home-bottom .capability-motion-frame video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; filter: brightness(1.4) contrast(1.1); mix-blend-mode: multiply; }
-#home-bottom .capability-motion-poster { opacity: .35; }
-#home-bottom .capability-motion-frame video { opacity: 0; transition: opacity .35s ease; }
-#home-bottom .clinical-capability-viewport[data-media-ready] .capability-motion-frame video { opacity: .45; }
-#home-bottom .capability-feature-image { position: relative; z-index: 1; display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+#home-bottom .capability-explainer { max-width: 480px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--capability-rule); }
+#home-bottom .capability-explainer svg { display: block; width: 100%; height: 26px; overflow: visible; }
+#home-bottom .capability-explainer path { fill: none; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+#home-bottom .capability-explainer-base { stroke: #bad9d5; }
+#home-bottom .capability-explainer-route { stroke: #08bdb2; stroke-dasharray: 304; }
+#home-bottom .capability-explainer circle { fill: #08bdb2; }
+#home-bottom .capability-explainer .capability-explainer-pulse { fill: #1bd7c9; opacity: 0; filter: drop-shadow(0 0 5px #19d4c7); }
+#home-bottom .capability-explainer-labels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 6px; color: #176d68; font-size: 14px; line-height: 1.35; }
+#home-bottom .capability-explainer-labels span:nth-child(2) { text-align: center; }
+#home-bottom .capability-explainer-labels span:nth-child(3) { text-align: right; }
+#home-bottom .capability-live-visual, #home-bottom .capability-detail .clinical-product-visual { min-width: 0; width: 100%; margin: 0; }
+#home-bottom .capability-live-panel, #home-bottom .capability-detail .clinical-product-frame { position: relative; min-width: 0; aspect-ratio: 16 / 10; background: #fff; }
+#home-bottom .capability-live-panel { display: grid; grid-template-rows: auto auto 48px minmax(0, 1fr) auto; gap: 8px; padding: clamp(14px, 2cqw, 24px); color: #172222; }
+#home-bottom .capability-live-top, #home-bottom .capability-live-heading, #home-bottom .capability-live-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
+#home-bottom .capability-live-top { padding-bottom: 10px; border-bottom: 1px solid #d8e7e4; }
+#home-bottom .capability-live-brand { font-size: 15px; font-weight: 700; letter-spacing: -.035em; }
+#home-bottom .capability-live-badge, #home-bottom .capability-live-heading > span, #home-bottom .capability-live-bottom { color: #44736e; font-size: 10px; font-weight: 600; letter-spacing: .09em; }
+#home-bottom .capability-live-badge { padding: 5px 8px; background: #e5f8f5; white-space: nowrap; }
+#home-bottom .capability-live-heading h5 { margin: 0; color: #142020; font-size: clamp(24px, 2.5cqw, 34px); line-height: 1.05; font-weight: 600; letter-spacing: -.055em; }
+#home-bottom .capability-live-heading > span { white-space: nowrap; }
+#home-bottom .capability-live-route { width: 100%; height: 48px; overflow: visible; }
+#home-bottom .capability-live-route path { fill: none; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+#home-bottom .capability-live-route-base { stroke: #cee7e2; }
+#home-bottom .capability-live-route-signal { stroke: #00bbac; }
+#home-bottom .capability-live-route-node { fill: #00bbac; }
+#home-bottom .capability-live-route-pulse { fill: #18d9ca; filter: drop-shadow(0 0 5px #18d9ca); }
+#home-bottom .capability-live-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; min-height: 0; }
+#home-bottom .capability-live-card { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 12px; border: 1px solid #d8e7e4; border-top: 2px solid #19c7b9; background: #f9fcfb; }
+#home-bottom .capability-live-card-index { color: #0a8b80; font-size: 11px; font-variant-numeric: tabular-nums; }
+#home-bottom .capability-live-card-label { margin-top: auto; color: #4d756f; font-size: 11px; line-height: 1.25; }
+#home-bottom .capability-live-card strong { margin-top: 3px; color: #172222; font-size: clamp(14px, 1.35cqw, 18px); line-height: 1.18; font-weight: 600; letter-spacing: -.025em; }
+#home-bottom .capability-live-card-detail { margin-top: 6px; color: #58706c; font-size: 11px; line-height: 1.35; }
+#home-bottom .capability-live-detail-lines { display: grid; gap: 7px; width: min(100%, 220px); margin-top: 16px; }
+#home-bottom .capability-live-detail-lines i { display: block; height: 4px; background: #d8e9e6; }
+#home-bottom .capability-live-detail-lines i:nth-child(2) { width: 82%; }
+#home-bottom .capability-live-detail-lines i:nth-child(3) { width: 62%; }
+#home-bottom .capability-live-waveform { display: block; width: min(100%, 150px); height: 38px; margin-top: 10px; fill: none; stroke: #00bbac; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+#home-bottom .capability-live-shield { display: block; width: 34px; height: 38px; margin-top: 8px; fill: none; stroke: #00bbac; stroke-width: 1.5; }
+#home-bottom .capability-live-panel[data-live-layout="document"] .capability-live-cards { grid-template-columns: 1.4fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); }
+#home-bottom .capability-live-panel[data-live-layout="document"] .capability-live-card:first-child { grid-row: span 2; }
+#home-bottom .capability-live-panel[data-live-layout="resolution"] .capability-live-cards, #home-bottom .capability-live-panel[data-live-layout="scribe"] .capability-live-cards { grid-template-columns: 1.2fr 1fr; grid-template-rows: 1fr 60px; }
+#home-bottom .capability-live-panel[data-live-layout="resolution"] .capability-live-card:last-child, #home-bottom .capability-live-panel[data-live-layout="scribe"] .capability-live-card:last-child { grid-column: 1 / -1; }
+#home-bottom .capability-live-panel[data-live-layout="resolution"] .capability-live-card:last-child, #home-bottom .capability-live-panel[data-live-layout="scribe"] .capability-live-card:last-child, #home-bottom .capability-live-panel[data-live-layout="navigation"] .capability-live-card { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; column-gap: 10px; }
+#home-bottom .capability-live-panel[data-live-layout="resolution"] .capability-live-card:last-child .capability-live-card-label, #home-bottom .capability-live-panel[data-live-layout="scribe"] .capability-live-card:last-child .capability-live-card-label, #home-bottom .capability-live-panel[data-live-layout="navigation"] .capability-live-card-label { display: none; }
+#home-bottom .capability-live-panel[data-live-layout="resolution"] .capability-live-card:last-child strong, #home-bottom .capability-live-panel[data-live-layout="scribe"] .capability-live-card:last-child strong, #home-bottom .capability-live-panel[data-live-layout="navigation"] .capability-live-card strong { margin: 0; }
+#home-bottom .capability-live-panel[data-live-layout="resolution"] .capability-live-card:last-child .capability-live-card-detail, #home-bottom .capability-live-panel[data-live-layout="scribe"] .capability-live-card:last-child .capability-live-card-detail, #home-bottom .capability-live-panel[data-live-layout="navigation"] .capability-live-card-detail { margin: 0; text-align: right; }
+#home-bottom .capability-live-panel[data-live-layout="navigation"] .capability-live-cards { grid-template-columns: 1fr; grid-template-rows: repeat(3, minmax(0, 1fr)); }
+#home-bottom .capability-live-panel[data-live-layout="library"] .capability-live-cards { grid-template-rows: 54px minmax(0, 1fr); }
+#home-bottom .capability-live-panel[data-live-layout="library"] .capability-live-card:first-child { grid-column: 1 / -1; display: grid; grid-template-columns: 44px 1fr auto; align-items: center; column-gap: 10px; background: #f0f9f7; }
+#home-bottom .capability-live-panel[data-live-layout="library"] .capability-live-card:first-child .capability-live-card-label { display: none; }
+#home-bottom .capability-live-panel[data-live-layout="library"] .capability-live-card:first-child strong, #home-bottom .capability-live-panel[data-live-layout="library"] .capability-live-card:first-child .capability-live-card-detail { margin: 0; }
+#home-bottom .capability-live-panel[data-live-layout="six"] .capability-live-cards { grid-template-rows: repeat(2, minmax(0, 1fr)); }
+#home-bottom .capability-live-panel[data-live-layout="six"] .capability-live-card { padding: 8px 10px; }
+#home-bottom .capability-live-bottom { padding-top: 9px; border-top: 1px solid #d8e7e4; }
 #home-bottom .capability-detail .clinical-product-visual img { display: block; width: 100%; height: 100%; object-fit: contain; }
-#home-bottom .capability-motion-visual figcaption, #home-bottom .capability-detail .clinical-product-visual figcaption { margin-top: 12px; color: var(--capability-muted); font-size: 12px; line-height: 1.6; }
+#home-bottom .capability-live-visual figcaption, #home-bottom .capability-detail .clinical-product-visual figcaption { margin-top: 12px; color: var(--capability-muted); font-size: 12px; line-height: 1.6; }
 #home-bottom .capability-progress { height: 1px; background: var(--capability-rule); }
 #home-bottom .capability-progress span { display: block; width: 100%; height: 1px; background: var(--capability-action); transform: scaleX(.1); transform-origin: left; }
 #home-bottom .capability-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; padding: 18px 0 0; }
@@ -46,7 +91,7 @@
 #home-bottom [data-layout="pinned"] .clinical-capability { position: absolute; left: calc(var(--path-x) * (100cqw + 64px)); top: calc(var(--path-y) * (100% + 48px)); width: 100cqw; height: 100%; padding: 24px 32px 24px 0; border-right: 1px solid var(--capability-rule); }
 #home-bottom [data-layout="pinned"] .capability-detail { height: 100%; }
 #home-bottom [data-layout="pinned"] .capability-detail-copy { max-height: 100%; overflow-y: auto; scrollbar-width: thin; }
-#home-bottom [data-layout="pinned"] .capability-motion-frame, #home-bottom [data-layout="pinned"] .clinical-product-frame { max-height: 43svh; }
+#home-bottom [data-layout="pinned"] .capability-live-panel, #home-bottom [data-layout="pinned"] .clinical-product-frame { max-height: 43svh; }
 #home-bottom [data-layout="native"] .capability-rail-window { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: thin; }
 #home-bottom [data-layout="native"] .clinical-capability-index { display: flex; align-items: flex-start; gap: 28px; width: max-content; }
 #home-bottom [data-layout="native"] .clinical-capability { flex: 0 0 min(100cqw, 800px); width: min(100cqw, 800px); scroll-snap-align: start; }
@@ -56,7 +101,16 @@
   #home-bottom .capability-heading h3 { font-size: clamp(36px, 6.7vw, 56px); }
   #home-bottom .capability-heading > p { max-width: none; }
   #home-bottom .capability-detail { display: flex; flex-direction: column; align-items: stretch; gap: 28px; }
-  #home-bottom .capability-motion-visual, #home-bottom .capability-detail .clinical-product-visual { order: -1; }
+  #home-bottom .capability-live-visual, #home-bottom .capability-detail .clinical-product-visual { order: -1; }
+  #home-bottom .capability-live-panel { min-height: 340px; aspect-ratio: auto; grid-template-rows: auto auto 40px minmax(0, 1fr) auto; padding: 16px; }
+  #home-bottom .capability-live-heading h5 { font-size: clamp(23px, 4vw, 30px); }
+  #home-bottom .capability-live-route { height: 40px; }
+  #home-bottom .capability-live-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #home-bottom .capability-live-panel[data-live-layout="six"] .capability-live-cards { grid-template-rows: repeat(3, minmax(0, 1fr)); }
+  #home-bottom .capability-live-panel[data-live-layout="six"] { min-height: 420px; }
+  #home-bottom .capability-live-panel[data-live-layout="document"] .capability-live-cards, #home-bottom .capability-live-panel[data-live-layout="resolution"] .capability-live-cards, #home-bottom .capability-live-panel[data-live-layout="scribe"] .capability-live-cards { grid-template-columns: 1.2fr 1fr; }
+  #home-bottom .capability-live-panel[data-live-layout="library"] .capability-live-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #home-bottom .capability-live-heading > span { display: none; }
   #home-bottom .clinical-capability h4 { font-size: 30px; }
   #home-bottom .clinical-index-number { margin-bottom: 16px; }
   #home-bottom .capability-footer { gap: 16px; }
@@ -65,5 +119,4 @@
 }
 @media (prefers-reduced-motion: reduce) {
   #home-bottom .clinical-capability-viewport *, #home-bottom .clinical-capability-viewport *::before { transition: none; }
-  #home-bottom .clinical-capability-viewport[data-media-ready] .capability-motion-frame video { opacity: 0; }
 }

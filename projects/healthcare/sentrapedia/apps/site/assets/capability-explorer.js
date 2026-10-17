@@ -4,6 +4,21 @@ export function capabilityPath() {
   return [[0, 0], [1, 0], [2, 0], [2, 1], [2, 2], [2, 3], [3, 3], [4, 3], [5, 3], [5, 4]];
 }
 
+export function capabilityExplainSteps() {
+  return [
+    ['Encounter', 'Ruang kerja', 'Referensi'],
+    ['Dokumen', 'Sumber', 'Tinjauan'],
+    ['Konteks', 'Gateway', 'Streaming'],
+    ['Gejala', 'DDx', 'Edukasi'],
+    ['Draf', 'Kode', 'Tinjauan'],
+    ['Pilih mode', 'Susun draf', 'Tinjau'],
+    ['Dikte', 'Scribe Note', 'Tinjau'],
+    ['Cari', 'Pilih', 'Buka'],
+    ['Data sintetis', 'Periksa PII', 'Batas biaya'],
+    ['Pedoman', 'Obat', 'ICD-10']
+  ];
+}
+
 export function capabilitySelection(current, key, count) {
   if (key === 'Home') return 0;
   if (key === 'End') return count - 1;
@@ -33,28 +48,41 @@ function enhanceCapabilities(root) {
   const viewport = root.querySelector('.capability-rail-window');
   const track = root.querySelector('.clinical-capability-index');
   const items = [...root.querySelectorAll('.clinical-capability')];
-  const video = root.querySelector('[data-capability-video]');
   const status = root.querySelector('[data-capability-status]');
   const pause = root.querySelector('[data-capability-pause]');
   const previous = root.querySelector('[data-capability-previous]');
   const next = root.querySelector('[data-capability-next]');
   const progress = root.querySelector('.capability-progress span');
-  if (!viewport || !track || !items.length || !video || !status || !pause || !previous || !next || !progress) return;
+  if (!viewport || !track || !items.length || !status || !pause || !previous || !next || !progress) return;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   const { gsap, ScrollTrigger } = window;
   const anatomy = [...root.querySelectorAll('[data-feature-anatomy]')].map(createCapabilityAnatomy);
   const path = capabilityPath();
   items.forEach((item, index) => { item.style.setProperty('--path-x', path[index][0]); item.style.setProperty('--path-y', path[index][1]); });
+  capabilityExplainSteps().forEach((steps, index) => {
+    const explanation = document.createElement('div');
+    explanation.className = 'capability-explainer';
+    explanation.innerHTML = '<svg viewBox="0 0 320 26" preserveAspectRatio="none"><path class="capability-explainer-base" d="M8 13H312"/><path class="capability-explainer-route" d="M8 13H312"/><circle cx="8" cy="13" r="3"/><circle cx="160" cy="13" r="3"/><circle cx="312" cy="13" r="3"/><circle class="capability-explainer-pulse" cx="8" cy="13" r="5"/></svg><div class="capability-explainer-labels"></div>';
+    const labels = explanation.querySelector('.capability-explainer-labels');
+    steps.forEach(step => {
+      const label = document.createElement('span');
+      label.className = 'capability-explainer-label';
+      label.textContent = step;
+      labels.append(label);
+    });
+    items[index].querySelector('.capability-detail-copy').append(explanation);
+  });
   const settled = settledCapabilityRefresh(() => { if (root.isConnected && ScrollTrigger) ScrollTrigger.refresh(); }, requestAnimationFrame, cancelAnimationFrame);
   let selected = -1;
   let paused = false;
-  let mediaFailed = false;
   let visible = false;
   let timeline = null;
   let media = null;
   let scrollFrame = 0;
   let signal = null;
-  let illustrationMotion = null;
+  let sceneMotion = null;
+  let linePulse = null;
+  let livePulse = null;
   const travel = () => Math.max(viewport.clientWidth, viewport.clientHeight) * (items.length - 1);
   const offsets = () => items.map(item => item.offsetLeft - items[0].offsetLeft);
 
@@ -66,29 +94,63 @@ function enhanceCapabilities(root) {
     if (viewport.style.height !== previousHeight) settled.queue();
   }
 
+  function resetScene(item) {
+    sceneMotion?.kill();
+    linePulse?.kill();
+    livePulse?.kill();
+    sceneMotion = null;
+    linePulse = null;
+    livePulse = null;
+    if (!gsap || !item) return;
+    gsap.set(item.querySelectorAll('.clinical-index-number, h4, .clinical-capability-copy > p, .capability-explainer-label, .capability-explainer-route, .capability-explainer-pulse, .capability-live-card, .capability-live-route-signal, .capability-live-route-pulse'), { clearProps: 'transform,opacity,visibility,strokeDashoffset,strokeDasharray' });
+  }
+
+  function startScene() {
+    if (!gsap || sceneMotion || selected < 0 || reduced.matches) return;
+    const item = items[selected];
+    const route = item.querySelector('.capability-explainer-route');
+    const labels = item.querySelectorAll('.capability-explainer-label');
+    sceneMotion = gsap.timeline();
+    sceneMotion.fromTo(item.querySelectorAll('.clinical-index-number, h4'), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.1, ease: 'power2.out' }, 0);
+    sceneMotion.fromTo(item.querySelector('.clinical-capability-copy > p'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.65, ease: 'power2.out' }, 0.18);
+    sceneMotion.fromTo(route, { strokeDashoffset: 304 }, { strokeDashoffset: 0, duration: 1.15, ease: 'power2.inOut' }, 0.28);
+    sceneMotion.fromTo(labels, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.48, stagger: 0.14, ease: 'power2.out' }, 0.5);
+    const livePath = item.querySelector('[data-live-path]');
+    const cards = item.querySelectorAll('[data-live-card]');
+    if (livePath) {
+      const length = livePath.getTotalLength();
+      sceneMotion.fromTo(livePath, { strokeDasharray: length, strokeDashoffset: length }, { strokeDashoffset: 0, duration: 1.25, ease: 'power2.inOut' }, 0.26);
+      sceneMotion.fromTo(cards, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.62, stagger: 0.12, ease: 'power2.out' }, 0.45);
+      const pulse = item.querySelector('[data-live-pulse]');
+      const position = { progress: 0 };
+      livePulse = gsap.to(position, { progress: 1, duration: 3.2, repeat: -1, repeatDelay: 0.3, ease: 'none', onUpdate() {
+        const point = livePath.getPointAtLength(position.progress * length);
+        pulse.setAttribute('cx', String(point.x));
+        pulse.setAttribute('cy', String(point.y));
+      } });
+    }
+    linePulse = gsap.fromTo(item.querySelector('.capability-explainer-pulse'), { autoAlpha: 0, x: 0 }, { autoAlpha: 1, x: 304, duration: 2.8, repeat: -1, repeatDelay: 0.45, ease: 'none' });
+  }
+
   function syncMedia() {
-    const slot = items[selected]?.querySelector('.capability-motion-frame, .capability-anatomy-stage');
+    const slot = items[selected]?.querySelector('.capability-live-panel, .capability-anatomy-stage');
     const rect = slot?.getBoundingClientRect();
     const onScreen = rect && rect.bottom > 84 && rect.top < window.innerHeight && rect.right > 0 && rect.left < window.innerWidth;
     const motionAllowed = visible && onScreen && !document.hidden && !paused && !reduced.matches;
-    const running = motionAllowed && !mediaFailed && !!items[selected]?.querySelector('.capability-motion-frame');
     root.dataset.motion = motionAllowed ? 'running' : 'paused';
     for (const controller of anatomy) controller.sync(motionAllowed && items[selected].contains(controller.element), reduced.matches);
-    const illustration = items[selected]?.querySelector('.capability-feature-image');
     if (reduced.matches) {
-      illustrationMotion?.kill();
-      illustrationMotion = null;
-      if (gsap) gsap.set(root.querySelectorAll('.capability-feature-image'), { clearProps: 'transform' });
+      resetScene(items[selected]);
+    } else if (motionAllowed) {
+      startScene();
+      sceneMotion?.play();
+      linePulse?.play();
+      livePulse?.play();
     } else {
-      if (motionAllowed && gsap && illustration && !illustrationMotion) {
-        illustrationMotion = gsap.fromTo(illustration, { y: 4 }, { y: -4, duration: 2.4, repeat: -1, yoyo: true, ease: 'sine.inOut', paused: true });
-      }
-      illustrationMotion?.paused(!motionAllowed);
-    }
-    if (!running || !video.dataset.source) video.pause();
-    else {
-      if (!video.getAttribute('src')) video.src = video.dataset.source;
-      if (video.paused) video.play().catch(() => { video.dataset.playback = 'blocked'; });
+      if (paused) sceneMotion?.progress(1);
+      sceneMotion?.pause();
+      linePulse?.pause();
+      livePulse?.pause();
     }
     pause.textContent = paused ? 'Putar motion' : 'Jeda motion';
     pause.setAttribute('aria-pressed', String(paused));
@@ -96,17 +158,13 @@ function enhanceCapabilities(root) {
 
   function setActive(index) {
     if (selected === index) { fitNativeViewport(); syncMedia(); return; }
+    resetScene(items[selected]);
     selected = index;
-    illustrationMotion?.kill();
-    illustrationMotion = null;
     root.dataset.capability = String(index + 1);
     items.forEach((item, i) => {
       item.dataset.active = String(i === index);
       item.inert = root.dataset.layout === 'pinned' && i !== index;
     });
-    const slot = items[index].querySelector('.capability-motion-frame');
-    if (slot) slot.append(video);
-    else video.pause();
     const title = items[index].querySelector('h4').textContent;
     status.textContent = String(index + 1).padStart(2, '0') + ' / ' + String(items.length).padStart(2, '0') + ' — ' + title;
     if (!timeline) progress.style.transform = 'scaleX(' + ((index + 1) / items.length) + ')';
@@ -164,8 +222,6 @@ function enhanceCapabilities(root) {
   pause.addEventListener('click', () => { paused = !paused; signal?.paused(paused); syncMedia(); });
   previous.addEventListener('click', () => navigate((selected - 1 + items.length) % items.length));
   next.addEventListener('click', () => navigate((selected + 1) % items.length));
-  video.addEventListener('loadeddata', () => { if (!mediaFailed) root.dataset.mediaReady = 'true'; });
-  video.addEventListener('error', () => { mediaFailed = true; delete root.dataset.mediaReady; syncMedia(); });
   document.addEventListener('visibilitychange', syncMedia);
   window.addEventListener('scroll', syncMedia, { passive: true });
   reduced.addEventListener('change', syncMedia);
@@ -236,7 +292,7 @@ function enhanceCapabilities(root) {
   window.addEventListener('pagehide', event => {
     visible = false;
     syncMedia();
-    if (!event.persisted) { illustrationMotion?.kill(); anatomy.forEach(controller => controller.destroy()); media?.revert(); }
+    if (!event.persisted) { resetScene(items[selected]); anatomy.forEach(controller => controller.destroy()); media?.revert(); }
     settled.cancel();
   });
   window.addEventListener('pageshow', () => { visible = root.getBoundingClientRect().bottom > 0 && root.getBoundingClientRect().top < window.innerHeight; syncMedia(); });
