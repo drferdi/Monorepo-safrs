@@ -9,7 +9,8 @@
 - Row 32: README names the Gemini API in the three diagrams, the stack and integration cells, the privacy and external-service rows; the build protocol adds the postinstall model download and the startup metadata read, the run section explains `npm run dev` versus `npx next dev` and the gitignored `.claude/` preview config, and the verification section points at the CI. The 135-second claim and the missing grounding path were already gone. No test reads the README.
 - Also seen: Gaffer merged PR #6 (`feat/sentrapedia-hero-workspace`) into Sentrapedia `main` at 22:49 and the branch was deleted.
 - LFS fixed (Gaffer: "Ya, upload 84 objek LFS yang hilang ke remote sentrapedia dengan git lfs push. Jangan push commit atau branch."): `git lfs push --object-id sentrapedia` uploaded 84/84 objects (5.7 MB). A fresh clone of Sentrapedia `main` then pulled all 105 LFS files with none left as pointers; the remote still has the same three branches, so no ref was pushed. Jev: proceed_full.
-- Next: Gaffer pushes `719f2035` and this note (not pushed yet) so the CI runs once on GitHub.
+- Pushed (Gaffer: "push all"): subtree split `b133a4b3` (tree identical to the capsule at `f7ba8637`, builds on `d7c0fc08`) as a new branch `feat/sentrapedia-hero-workspace` on drferdi/Sentrapedia, carrying `a65c056a`, `719f2035`, the parallel session's `5e1c5d69` and `f7ba8637`; no force, `main` and origin untouched, no new LFS files. The parallel session's uncommitted ruang-kerja edits were not included. Jev: proceed_full.
+- Next: the CI runs only on pushes to `main` and on pull requests, so it first runs when Gaffer opens a pull request from this branch. This note is a later local commit.
 
 ## Gaffer's decisions on tech-debt rows 11, 12, 15, 17, 18 and the run command - 2026-10-17 Asia/Jakarta
 
