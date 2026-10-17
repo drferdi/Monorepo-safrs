@@ -9,7 +9,7 @@
     "build": "node scripts/build-system.mjs && npm --prefix apps/site run build",
     "start": "node scripts/run-system.mjs start",
     "system:check": "node scripts/run-system.mjs check",
-    "lint": "eslint src tests && npm --prefix apps/site run lint",
+    "lint": "eslint src tests scripts vitest.config.ts && npm --prefix apps/site run lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && npm --prefix apps/site test",
     "test:system": "node --test tests/system-runtime.node-test.mjs",

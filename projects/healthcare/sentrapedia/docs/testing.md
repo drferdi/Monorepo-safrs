@@ -4,7 +4,7 @@ All commands run from the capsule root and need the capsule-owned Node/Python ru
 
 ```powershell
 npm run typecheck   # tsc --noEmit
-npm run lint        # eslint src tests, then the site's syntax lint
+npm run lint        # eslint src, tests and scripts, then the site's syntax lint
 npm run test:all    # Vitest app tests, the site's node tests, supervisor checks and bundled MIRA mocked tests
 npm run build       # Next standalone output plus bundled engine/launcher
 npm run deploy:dry-run

@@ -480,7 +480,7 @@ The diagram states **required future controls**, not completed certifications or
 |---|---|---|
 | <small>Installed profile</small> | <small>`npm run system:check`</small> | <small>Local runtime/provider preflight</small> |
 | <small>Typecheck</small> | <small>`npm run typecheck`</small> | <small>`tsc --noEmit`</small> |
-| <small>Lint</small> | <small>`npm run lint`</small> | <small>`eslint src tests` plus the site's syntax lint</small> |
+| <small>Lint</small> | <small>`npm run lint`</small> | <small>`eslint src tests scripts` plus the site's syntax lint</small> |
 | <small>App tests</small> | <small>`npm test`</small> | <small>Vitest; excludes .runtime backups</small> |
 | <small>System tests</small> | <small>`npm run test:system`</small> | <small>Node lifecycle and policy checks</small> |
 | <small>MIRA tests</small> | <small>`npm run test:mira`</small> | <small>Mocked Python service tests</small> |

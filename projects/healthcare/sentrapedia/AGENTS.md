@@ -12,6 +12,12 @@
 - A future demo belongs under `apps/demo/` as configuration and synthetic data around shared application code, never as a forked capsule.
 - Root lifecycle commands must cover every shipped subsystem; run site-only commands from `apps/site/` when working exclusively on that surface.
 
+## Handoff retention
+
+- `.agents/HANDOFF.md` keeps the newest five entries, newest first. A session that adds a sixth moves the oldest entries verbatim to the top of `.agents/HANDOFF.archive.md` under `## Archived on <date> - <reason>`.
+- When an entry's work is committed, update that entry's status line with the commit hash instead of leaving "uncommitted".
+- Cite evidence that is tracked in git; a scratchpad, `verify-report/` or `.runtime/` path is not reopenable by the next maintainer.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
