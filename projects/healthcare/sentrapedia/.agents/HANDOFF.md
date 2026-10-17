@@ -1,5 +1,17 @@
 # Sentrapedia handoff
 
+## Tech-debt rows 13, 19-22, 37 done; 31, 33, 36 and two data folders wait for Gaffer - 2026-10-17 Asia/Jakarta
+
+- Gaffer: "kerjakan n row 13, 19 sampai 22, 31, 33, 36, dan 37." Risk R1 (launcher, dry run, workspace component, client schemas) and R2 (docs). Commits `414670dc`, `b98d09f8`, `7f6af9fb` and this note; none pushed. Jev: proceed_full.
+- Row 19: launcher timings in `scripts/run-system.mjs` and `scripts/mira-runtime.mjs` are named constants (same values); `run-mira-deepseek.ps1` is `scripts/run-mira.ps1`, `config/mira-deepseek.env.example` is `config/mira-gemini.env.example` with fast copies 1 as in the profile. Not changed: `settings.py` defaults and OpenRouter comments and `smoke_live.py`'s 12 s (pinned upstream files), and the `.runtime/mira-deepseek/audit` path (existing local ledgers live there).
+- Row 20: `oracle/data.ts`, `oracle/diseases-data.ts`, `oracle/diseases.json` removed with their tsconfig excludes; `oracle-ii/` is untracked local residue. Kept for Gaffer: `data/dose-inventory/` (2,248 verified dose statements whose build inputs are not in the repo) and `theoracle/provenance/` (38 MB of records).
+- Row 21: `docs:verify` checks `docs/spds/document_index.md` as the inventory instead of a fixed 96 (a scratch copy with one document removed and one unlisted failed as expected); pipeline evals write to `docs/verification/theoracle-eval-<today>/`; new TheOracle chunks carry the time they were added, in the corpus's existing format.
+- Row 22: the dead `DiagnosisEngineId`, `EngineResultMeta` and `DiagnosisEngine` types are removed; the client-side request and response schema descriptions name the Sentrapedia gateway and files, their `$id`s keep the contract identity (`src/lib/mira/SOURCE.md`), and the hash pins moved in the same commit. `mira/service/contract/` keeps the vendored text.
+- Row 13: `deploy:dry-run` fails without matching onnxruntime-node and sharp natives in the standalone build, reports `nativePlatforms`, and warns when they are not linux-x64 (on this Windows machine: win32-x64, warning, exit 0). The two packages stay undeclared (no new dependency).
+- Row 37: `src/lib/workspace-session.ts` (shortcuts, restore from storage, local draft messages) and `src/lib/fresh-answer.ts` (20-second rule) with 9 tests in `tests/workspace-session.test.ts` (watched failing first); the upgrade, legal and account dialogs moved to `src/components/workspace-dialogs.tsx`. `workspace.tsx` went from 29.0 KB to 23.6 KB. Browser check: Ctrl+J, Ctrl+/, plain J, upgrade, legal and account dialogs, and the clear confirmation resetting on reopen; preview stopped.
+- Verified: tsc 0; lint 0; test:all 0 (Vitest 305/305, site 41, system 8, MIRA); site:verify and site:docs 0 errors.
+- Waiting for Gaffer: row 31 (un-pin `settings.py`, `providers.py`, `guard.py`, reversing part of choice A), row 33 (site output layout; the parallel session is editing `apps/site`), row 36 (LFS for media: future files only, or a history rewrite with force push; CI pulls every LFS file per run), and whether to delete the two data folders above.
+
 ## Tech-debt rows 16 (capsule CI) and 32 (README provider and privacy) - 2026-10-17 Asia/Jakarta
 
 - Gaffer: "Kerjakan row 16 (workflow CI untuk capsule, jangan push) lalu row 32 (koreksi README soal provider dan privasi)." Risk R2 (CI workflow and public README; no app code). Not pushed.
@@ -42,10 +54,3 @@
 - Rows 3, 24, 42: `docs/mira-integration.md` (Gemini key, real preflight), `.env.example` (no hand-set MIRA_SERVICE_URL/TOKEN, PORT, SENTRAPEDIA_HOST), `config/mira-deepseek.env.example` (reference only), `docs/testing.md`, README (theoracle file names, 45/65 s gateway deadline, lint row).
 - Verified: tsc 0; root lint 0; Vitest 294/294; site tests 38/38; docs:verify 0; test:system 8/8.
 - Left: `next-env.d.ts` stays uncommitted (rewritten by `next dev`).
-
-## An unreadable saved workspace is kept and downloadable instead of lost - 2026-10-17 Asia/Jakarta
-
-- Gaffer: "Lanjutkan" on tech-debt row 14 (silent reset of an invalid saved workspace). Risk R1 (browser-local data handling; behaviour change approved). Committed as `3655c04f`.
-- Change: `loadWorkspace()` in `src/lib/workspace.ts` returns the workspace plus the saved text when it fails validation. `src/components/workspace.tsx` copies that text to `sentrapedia-workspace-v1-unreadable` (`unreadableKey`), shows an error notice, and the Workspace dialog offers "Unduh data tak terbaca" (`workspace-tidak-terbaca.json`) while a copy exists. "Hapus semua data lokal" also removes it. If the second copy does not fit in storage, the in-memory copy stays downloadable until reload. The main key is still reset to the demo workspace as before.
-- Verified: new test `tests/workspace.test.ts` (watched failing first); `npx tsc --noEmit` exit 0; eslint on the 3 touched files exit 0; Vitest 293/293. Browser on `sentrapedia` preview with fictional data: a version-2 blob and a broken blob each ended in the backup key; the notice appeared; the dialog showed the button and its download carried the exact saved text (anchor click intercepted, no file written); after reload the button stayed with no repeated notice; clear removed key and button. Console showed view-transition timeout/abort errors from `smooth()` while the pane runs hidden (scripted rapid clicks), not from this change. Preview stopped afterwards.
-- Still open from row 14: no migration for a future v2 format; an import of the downloaded file still fails validation by design.
