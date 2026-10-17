@@ -1,0 +1,49 @@
+# Capsule CI (tech-debt row 16). It runs in the standalone drferdi/Sentrapedia repository;
+# the monorepo CI does not touch projects/ by design. No step calls a paid model or needs a secret.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      # LFS holds the TheOracle vectors that the grounding tests read, and the site PNGs.
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      # Matches python3 in the Dockerfile's bookworm image; postinstall builds the MIRA venv with it.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # postinstall downloads the pinned 1.2 GB embedding model and skips files whose hash already matches.
+      - uses: actions/cache@v4
+        with:
+          path: theoracle/model
+          key: theoracle-model-${{ hashFiles('scripts/theoracle-model.mjs') }}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:all
+      - run: npm run site:verify
+      - run: npm run site:docs
+      - run: npm run build
+      - run: npm run deploy:dry-run

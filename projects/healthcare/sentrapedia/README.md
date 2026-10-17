@@ -134,7 +134,7 @@ flowchart TB
   GATE["NEXT.JS /api/mira + INPUT GATES"]
   SOURCE[("THEORACLE VECTOR INDEX / SOURCE EVIDENCE")]
   MIRA["BUNDLED MIRA / PYTHON"]
-  PROVIDER["OPENROUTER / GEMINI FLASH"]
+  PROVIDER["GEMINI API / GEMINI 3.1 FLASH-LITE"]
   DRAFT["VALIDATED DRAFT + SOURCE SNAPSHOT"]
   REVIEW["HUMAN CLINICAL REVIEW"]
   FAIL["REJECT / EXPOSE UNCERTAINTY"]
@@ -205,7 +205,7 @@ flowchart TB
 <table width="100%">
 <tr>
 <td width="33%" valign="top"><small><b><code>APPLICATION</code></b></small><br /><small>Next.js 16.4.0 · React 19.3.0 · TypeScript · Lucide · local Sentra CSS tokens.</small></td>
-<td width="33%" valign="top"><small><b><code>REASONING</code></b></small><br /><small>Python 3.11+ · FastAPI · Uvicorn · OpenRouter SDK · JSON schema · synthetic-only policy.</small></td>
+<td width="33%" valign="top"><small><b><code>REASONING</code></b></small><br /><small>Python 3.11+ · FastAPI · Uvicorn · OpenAI Python SDK on the Gemini API · JSON schema · synthetic-only policy.</small></td>
 <td width="33%" valign="top"><small><b><code>EVIDENCE</code></b></small><br /><small>Oracle JSON · TheOracle vector index · source hashes · browser localStorage · MIRA audit ledger.</small></td>
 </tr>
 </table>
@@ -225,7 +225,7 @@ flowchart TB
   API["SAME-ORIGIN GATEWAY"]
   SQL[("THEORACLE VECTOR INDEX")]
   BROWSER[("BROWSER localStorage")]
-  CLOUD["OPENROUTER PROVIDER"]
+  CLOUD["GEMINI API PROVIDER"]
   STOP["PAIRED SHUTDOWN"]
 
   OP --> INSTALL --> SUP --> PREFLIGHT --> ENGINE
@@ -321,7 +321,7 @@ flowchart TB
   API["LOCAL /api/mira"]
   SOURCE["THEORACLE LOCAL VECTOR SEARCH + HASH VERIFICATION"]
   ENGINE["MIRA CONTRACT + POLICY"]
-  MODEL["OPENROUTER / GEMINI FLASH"]
+  MODEL["GEMINI API / GEMINI 3.1 FLASH-LITE"]
   VERIFY["SCHEMA + MODEL + COST VALIDATION"]
   DRAFT["EDITABLE DRAFT + TRACE SNAPSHOT"]
   REVIEW["CLINICIAN REVIEW"]
@@ -372,7 +372,8 @@ A useful result is more than generated prose. Review the **case context** suppli
 ### Prerequisites
 
 - **Node.js 24+**, **Python 3.11+** with venv support, and npm (contract specifies version 11.19.0).
-- npm/PyPI installation access; OpenRouter public metadata endpoints must be reachable on startup.
+- npm, PyPI and Hugging Face access during install: `npm ci` runs a postinstall that builds the MIRA Python environment under `.runtime/mira/venv` and downloads the pinned TheOracle embedding model once (about 1.2 GB) into `theoracle/model/`.
+- The Gemini API must be reachable on startup: the engine reads the model's metadata with the key before it accepts a case.
 - Server-side `GEMINI_API_KEY` (paid tier) with Gemini API billing enabled for AI analysis.
 - A local machine; the default HTTP listener is `127.0.0.1:3101`. This repository is private and requires authorized GitHub access.
 
@@ -408,6 +409,8 @@ npm run build
 npm start
 ```
 
+Use `npm run dev`, not `npx next dev`: the script starts the MIRA engine beside Next.js and wires their private channel, and Next.js alone has no engine. The desktop preview configuration under `.claude/` is gitignored, so each machine sets up its own.
+
 Running a production-mode build locally **does not establish readiness to serve real patients**.
 
 ### Verify
@@ -432,7 +435,7 @@ The system check performs configuration/readiness preflight without paid inferen
 <td width="50%" valign="top"><small><b><code>BACKEND</code></b></small><br /><small>Next.js gateway and managed FastAPI service. No production user authentication.</small></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><small><b><code>AI / AUTOMATION</code></b></small><br /><small>Python MIRA, OpenRouter model calls, capability/profile checks, guarded budgets.</small></td>
+<td width="50%" valign="top"><small><b><code>AI / AUTOMATION</code></b></small><br /><small>Python MIRA, Gemini API model calls, capability/profile checks, guarded budgets.</small></td>
 <td width="50%" valign="top"><small><b><code>DATA</code></b></small><br /><small>Browser localStorage, Oracle JSON, read-only TheOracle vector index and local audit files.</small></td>
 </tr>
 <tr>
@@ -542,7 +545,7 @@ The project declares `rootDependencies: []`, carries its own npm/Python locks an
 <td width="50%" valign="top"><small><b><code>SENSITIVE DATA</code></b></small><br /><small>Fictional-only inputs, browser/server/service identity-pattern checks, browser-local unencrypted storage. Pattern detection cannot guarantee de-identification.</small></td>
 </tr>
 <tr>
-<td width="50%" valign="top"><small><b><code>SECRETS / PROVIDER</code></b></small><br /><small>Provider key is server-side. OpenRouter receives accepted synthetic cases; configured ZDR=false means zero retention must not be assumed.</small></td>
+<td width="50%" valign="top"><small><b><code>SECRETS / PROVIDER</code></b></small><br /><small>Provider key is server-side. Google's Gemini API receives accepted synthetic cases under the Gemini API terms for a paid-tier key; zero retention must not be assumed.</small></td>
 <td width="50%" valign="top"><small><b><code>PRIVILEGED ACTIONS</code></b></small><br /><small>No clinical-action automation. Any future real-world deployment needs clinical, privacy, security and authorized owner review.</small></td>
 </tr>
 </table>
@@ -555,7 +558,7 @@ The project declares `rootDependencies: []`, carries its own npm/Python locks an
 | <small>POST</small> | <small>`/api/mira`</small> | <small>Validate fictional case, retrieve TheOracle, forward and verify result</small> | <small>Same origin, body bound, identity and response checks</small> |
 | <small>GET</small> | <small>`/healthz` (private MIRA loopback)</small> | <small>Contract/version/capability probe</small> | <small>Not a public API</small> |
 | <small>POST</small> | <small>`/v1/diagnosis/step` (private MIRA)</small> | <small>Synthetic contract-v1 assessment</small> | <small>Ephemeral token, data policy and budget</small> |
-| <small>External</small> | <small>OpenRouter</small> | <small>Model metadata and paid AI inference</small> | <small>Provider availability, price, quota and retention caveats</small> |
+| <small>External</small> | <small>Google Gemini API</small> | <small>Model metadata and paid AI inference</small> | <small>Provider availability, price, quota and retention caveats</small> |
 
 Primary code: [route](src/app/api/mira/route.ts) · [gateway](src/lib/mira/gateway.ts) · [service](mira/service/app.py) · [contract provenance](mira/service/contract/SOURCE.md). The therapy and Oracle grounding contract extensions are local to Sentrapedia; their adoption by Med Assist is **not established**.
 
@@ -576,7 +579,7 @@ The account dialog supports JSON export and clearing browser-local records, but 
 
 ### Local development privacy: what the architecture really means
 
-"Local workspace" refers to the web process and browser-side fictional records; it does **not** mean every inference stays on the device. AI-assisted case inquiries call the managed MIRA service, which communicates with an **external OpenRouter model endpoint**. The project deliberately disallows real patient information during this development phase.
+"Local workspace" refers to the web process and browser-side fictional records; it does **not** mean every inference stays on the device. AI-assisted case inquiries call the managed MIRA service, which communicates with an **external model endpoint, Google's Gemini API**. The project deliberately disallows real patient information during this development phase.
 
 - **Browser:** synthetic patient/encounter and draft state is kept in localStorage. This is not an encrypted clinical database, shared patient chart or backup strategy.
 - **Application gateway:** same-origin and synthetic-only input rules reduce unintended use; pattern-based identity screening cannot guarantee anonymization.
@@ -617,7 +620,7 @@ No external sponsor is declared for this product. Sentrapedia is developed under
 <table width="100%">
 <tr>
 <td width="50%" valign="top"><small><b><code>NEXT.JS / REACT</code></b></small><br /><small>Next.js 16.4.0, React/React DOM 19.3.0, TypeScript, Lucide React, local Sentra CSS tokens.</small></td>
-<td width="50%" valign="top"><small><b><code>FASTAPI / OPENROUTER</code></b></small><br /><small>Python, FastAPI, Uvicorn, Pydantic, httpx, OpenRouter-compatible SDK.</small></td>
+<td width="50%" valign="top"><small><b><code>FASTAPI / GEMINI API</code></b></small><br /><small>Python, FastAPI, Uvicorn, Pydantic, httpx, OpenAI Python SDK pointed at the Gemini API's OpenAI-compatible endpoint.</small></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><small><b><code>ORACLE / THEORACLE</code></b></small><br /><small>Bundled disease JSON, `@huggingface/transformers` + ONNX Runtime for local embeddings, provenance and evidence records.</small></td>
@@ -648,7 +651,7 @@ No external sponsor is declared for this product. Sentrapedia is developed under
 </tr>
 <tr>
 <td width="50%" valign="top"><img src="https://img.shields.io/badge/09-OBSERVABILITY-64748B?style=flat-square" alt="Observability" /><br /><small><b><code>OBSERVABILITY</code></b></small><br /><small>Trace IDs, MIRA audit, source hashes, health/error states and dated verification reports.</small></td>
-<td width="50%" valign="top"><img src="https://img.shields.io/badge/10-INTEGRATIONS-EC4899?style=flat-square" alt="Integrations" /><br /><small><b><code>INTEGRATIONS</code></b></small><br /><small>OpenRouter HTTP API, private localhost FastAPI, browser speech where supported; no verified EHR link.</small></td>
+<td width="50%" valign="top"><img src="https://img.shields.io/badge/10-INTEGRATIONS-EC4899?style=flat-square" alt="Integrations" /><br /><small><b><code>INTEGRATIONS</code></b></small><br /><small>Gemini API (OpenAI-compatible endpoint), private localhost FastAPI, browser speech where supported; no verified EHR link.</small></td>
 </tr>
 </table>
 
@@ -668,7 +671,7 @@ Authorized contributors may use the repository's [GitHub Issues](https://github.
 
 ## 19 / VERIFICATION STATUS
 
-The following is **historical repository evidence from October 10, 2026**. The README-only revision does not imply fresh application tests, live paid model calls, container execution or deployment.
+The following is **historical repository evidence from October 10, 2026**. The README-only revision does not imply fresh application tests, live paid model calls, container execution or deployment. Current gates (lint, typecheck, all test suites, site checks, build and deploy dry run) run on every push to `main` and every pull request in [`.github/workflows/ci.yml`](.github/workflows/ci.yml); the latest local results are recorded in `.agents/HANDOFF.md`.
 
 | <small>Surface</small> | <small>Historical status</small> | <small>Evidence</small> | <small>Limit</small> |
 |---|---|---|---|

@@ -2,6 +2,15 @@
 
 ## Archived on 2026-10-17 - five-entry handoff retention
 
+## Tech-debt rows 2, 4 and 8 fixed without behaviour change - 2026-10-17 Asia/Jakarta
+
+- Gaffer: "Kerjakan" the three isolation-safe rows of `docs/TECH-DEBT.md`. Risk R1 for the code, R2 for the manifests (governance text). Committed as `9af7a45c`.
+- Row 2: `src/lib/mira/client.ts` throws `MiraRequestError` carrying the gateway's `code` (undefined when the server sent none); every message is unchanged. New test in `tests/mira-client.test.ts`, watched failing first. No UI reads the code yet.
+- Row 8: `missingField` and new `missingFieldEnglish` in `src/lib/clinical-templates.ts` are now the only copies; `drafts.ts` and `studio.ts` import them. `tests/studio.test.ts` pins the equality.
+- Row 4: `capsule.json` and `project.contract.json` declare `GEMINI_API_KEY` and the Gemini API instead of OpenRouter. The `run` difference (`dev` vs `start`) is left for Gaffer.
+- Verified: `npx tsc --noEmit` exit 0; eslint on the 5 touched TS files exit 0; Vitest 292/292; both manifests parse; `tools/safrs/check_topology.py` and `check_project_independence.py` exit 0. Not browser-verified: nothing rendered changed.
+- Next: Gaffer picks further rows; row 14 (silent workspace reset) is the highest risk and changes behaviour.
+
 ## Technical debt audit written to docs/TECH-DEBT.md - 2026-10-17 Asia/Jakarta
 
 - Gaffer asked for a technical-debt audit with subagents and a prioritised list; nothing was fixed. Risk R0 (read-only scan, one new Markdown file). Committed as `9af7a45c` with rows 2, 4 and 8.

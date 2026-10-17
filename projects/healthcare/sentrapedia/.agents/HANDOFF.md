@@ -1,5 +1,15 @@
 # Sentrapedia handoff
 
+## Tech-debt rows 16 (capsule CI) and 32 (README provider and privacy) - 2026-10-17 Asia/Jakarta
+
+- Gaffer: "Kerjakan row 16 (workflow CI untuk capsule, jangan push) lalu row 32 (koreksi README soal provider dan privasi)." Risk R2 (CI workflow and public README; no app code). Not pushed.
+- Row 16: `.github/workflows/ci.yml` for the standalone drferdi/Sentrapedia repository: checkout with LFS, Node 24, Python 3.11, a cache for `theoracle/model`, then `npm ci`, lint, typecheck, test:all, site:verify, site:docs, build and deploy:dry-run on push to `main`, pull requests and manual runs. No secret, no paid call (`tests/mira-paid.test.ts` is mocked).
+- Verified in a fresh clone of drferdi/Sentrapedia `main` (Windows, not the Linux runner): all eight steps exit 0; Vitest 296/296, site 38 passed, system 8 passed. Two clone-only artefacts were fixed on the way (LFS pointers from a partial pull; a junctioned model that Turbopack rejects). The workflow has not run on GitHub.
+- Blocker found: 84 LFS objects (80 PNGs under `docs/verification/`, 4 under `src/assets/`, 1 under `src/app/`) return 404 on the Sentrapedia LFS server, while all 84 exist in the local LFS store. The CI checkout with `lfs: true` fails until they are uploaded with `git lfs push` (needs Gaffer's approval).
+- Row 32: README names the Gemini API in the three diagrams, the stack and integration cells, the privacy and external-service rows; the build protocol adds the postinstall model download and the startup metadata read, the run section explains `npm run dev` versus `npx next dev` and the gitignored `.claude/` preview config, and the verification section points at the CI. The 135-second claim and the missing grounding path were already gone. No test reads the README.
+- Also seen: Gaffer merged PR #6 (`feat/sentrapedia-hero-workspace`) into Sentrapedia `main` at 22:49 and the branch was deleted.
+- Next: Gaffer approves uploading the 84 LFS objects, then pushes this commit so the CI runs once on GitHub.
+
 ## Gaffer's decisions on tech-debt rows 11, 12, 15, 17, 18 and the run command - 2026-10-17 Asia/Jakarta
 
 - Gaffer: "2. Setuju Baris 18 ... 3. Saya pilih A 4. Perbaiki 5. Setuju semua 6. samakan ke npm run start". Risk R1 (engine, gate, storage code) and R2 (manifest, provenance manifest, docs). Item 1 (push) is approved but waits for Gaffer to name the destination.
@@ -37,12 +47,3 @@
 - Change: `loadWorkspace()` in `src/lib/workspace.ts` returns the workspace plus the saved text when it fails validation. `src/components/workspace.tsx` copies that text to `sentrapedia-workspace-v1-unreadable` (`unreadableKey`), shows an error notice, and the Workspace dialog offers "Unduh data tak terbaca" (`workspace-tidak-terbaca.json`) while a copy exists. "Hapus semua data lokal" also removes it. If the second copy does not fit in storage, the in-memory copy stays downloadable until reload. The main key is still reset to the demo workspace as before.
 - Verified: new test `tests/workspace.test.ts` (watched failing first); `npx tsc --noEmit` exit 0; eslint on the 3 touched files exit 0; Vitest 293/293. Browser on `sentrapedia` preview with fictional data: a version-2 blob and a broken blob each ended in the backup key; the notice appeared; the dialog showed the button and its download carried the exact saved text (anchor click intercepted, no file written); after reload the button stayed with no repeated notice; clear removed key and button. Console showed view-transition timeout/abort errors from `smooth()` while the pane runs hidden (scripted rapid clicks), not from this change. Preview stopped afterwards.
 - Still open from row 14: no migration for a future v2 format; an import of the downloaded file still fails validation by design.
-
-## Tech-debt rows 2, 4 and 8 fixed without behaviour change - 2026-10-17 Asia/Jakarta
-
-- Gaffer: "Kerjakan" the three isolation-safe rows of `docs/TECH-DEBT.md`. Risk R1 for the code, R2 for the manifests (governance text). Committed as `9af7a45c`.
-- Row 2: `src/lib/mira/client.ts` throws `MiraRequestError` carrying the gateway's `code` (undefined when the server sent none); every message is unchanged. New test in `tests/mira-client.test.ts`, watched failing first. No UI reads the code yet.
-- Row 8: `missingField` and new `missingFieldEnglish` in `src/lib/clinical-templates.ts` are now the only copies; `drafts.ts` and `studio.ts` import them. `tests/studio.test.ts` pins the equality.
-- Row 4: `capsule.json` and `project.contract.json` declare `GEMINI_API_KEY` and the Gemini API instead of OpenRouter. The `run` difference (`dev` vs `start`) is left for Gaffer.
-- Verified: `npx tsc --noEmit` exit 0; eslint on the 5 touched TS files exit 0; Vitest 292/292; both manifests parse; `tools/safrs/check_topology.py` and `check_project_independence.py` exit 0. Not browser-verified: nothing rendered changed.
-- Next: Gaffer picks further rows; row 14 (silent workspace reset) is the highest risk and changes behaviour.
