@@ -9,8 +9,16 @@ export async function requestMiraAnalysis(caseData: CaseState, options: { synthe
   if (containsIdentity(JSON.stringify(caseData))) throw new Error("Hapus identitas dari keluhan dan konteks. Gunakan data fiktif tanpa nama, nomor identitas, kontak atau alamat.");
   options.signal?.throwIfAborted();
   const snapshot = structuredClone(caseData);
-  const response = await (options.fetchFn ?? fetch)("/api/mira", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ case: snapshot, synthetic: true }), signal: options.signal });
-  const data: unknown = await response.json();
+  let response: Response;
+  let data: unknown;
+  try {
+    response = await (options.fetchFn ?? fetch)("/api/mira", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ case: snapshot, synthetic: true }), signal: options.signal });
+    data = await response.json();
+  } catch (error) {
+    // A cancel stays a cancel; a lost connection or unreadable body gets the same wording as the server's 502.
+    if (options.signal?.aborted) throw error;
+    throw new Error("Layanan analisis tidak dapat dihubungi atau respons tidak dapat dibaca.");
+  }
   options.signal?.throwIfAborted();
   if (!response.ok) {
     const message = data && typeof data === "object" && "error" in data && data.error && typeof data.error === "object" && "message" in data.error && typeof data.error.message === "string" ? data.error.message : "Analisis belum tersedia. Keluhan tetap tersedia.";

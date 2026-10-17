@@ -45,6 +45,7 @@ describe("targeted therapy pipeline", () => {
     expect(body.evidenceGate.drugs.map((d: { status: string }) => d.status)).toEqual(["verified", "removed"]);
     expect(body.therapyGrounding.evidence[0].evidenceId).toBe("E1");
     expect(body.pipeline.path).toBe("targeted");
+    expect(body.result.meta.costUsd).toBe(0.02);
     expect(logs.map(l => l.stage)).toEqual(["retrieve_dx", "mira_dx", "retrieve_tx", "mira_tx", "gate"]);
     expect(JSON.stringify(logs)).not.toContain("Batuk");
   });

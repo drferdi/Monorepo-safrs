@@ -22,7 +22,9 @@ export function theOracleSourceLinks(message: Pick<Message, "sourceText">) {
     const source: unknown = JSON.parse(message.sourceText ?? "null");
     if (!source || typeof source !== "object" || !("grounding" in source) || !validTheOracleGrounding(source.grounding)) return [];
     const bundles = [source.grounding, ...("therapyGrounding" in source && validTheOracleGrounding(source.therapyGrounding) ? [source.therapyGrounding] : [])];
-    return bundles.flatMap(bundle => bundle.evidence.map(item => ({ id: item.evidenceId, label: item.source.title, text: item.text })));
+    // Diagnosis and therapy retrieval can return the same passage; it is listed once.
+    const links = bundles.flatMap(bundle => bundle.evidence.map(item => ({ id: item.evidenceId, label: item.source.title, text: item.text })));
+    return links.filter((link, index) => links.findIndex(other => other.id === link.id) === index);
   } catch { return []; }
 }
 

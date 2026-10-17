@@ -81,15 +81,19 @@ function seedWording(patient: Patient): Patient {
 }
 
 export function restoreWorkspace(raw: string | null): Workspace {
-  if (!raw) return initialWorkspace;
+  return raw ? parseWorkspace(raw) ?? initialWorkspace : initialWorkspace;
+}
+
+/** A validated workspace from saved or imported JSON, or null when the text is not a workspace backup. */
+export function parseWorkspace(raw: string): Workspace | null {
   try {
     const data: unknown = JSON.parse(raw);
-    if (!record(data) || data.version !== 1 || !Array.isArray(data.patients) || !Array.isArray(data.lists) || !Array.isArray(data.encounters)) return initialWorkspace;
-    if (!data.patients.every((p) => strings(p, ["id", "name", "age", "sex", "notes"]))) return initialWorkspace;
-    if (!data.lists.every((l) => record(l) && strings(l, ["id", "name"]) && Array.isArray(l.patientIds) && l.patientIds.every((id: unknown) => typeof id === "string"))) return initialWorkspace;
-    if (!data.encounters.every((e) => record(e) && strings(e, ["id", "title", "createdAt", "context"]) && (e.patientId === null || typeof e.patientId === "string") && Array.isArray(e.messages) && e.messages.every((m: unknown) => record(m) && strings(m, ["id", "content", "mode", "createdAt"]) && (m.role === "user" || m.role === "assistant") && modeIds.includes(m.mode as ModeId)))) return initialWorkspace;
-    if (!record(data.settings) || !strings(data.settings, ["specialty", "model", "language", "instructions"]) || !specialties.includes(String(data.settings.specialty)) || !["Standard", "Extended"].includes(String(data.settings.model)) || !["English", "Bahasa Indonesia"].includes(String(data.settings.language))) return initialWorkspace;
-    if (data.activeEncounterId !== null && (typeof data.activeEncounterId !== "string" || !data.encounters.some((e: Record<string, unknown>) => e.id === data.activeEncounterId))) return initialWorkspace;
+    if (!record(data) || data.version !== 1 || !Array.isArray(data.patients) || !Array.isArray(data.lists) || !Array.isArray(data.encounters)) return null;
+    if (!data.patients.every((p) => strings(p, ["id", "name", "age", "sex", "notes"]))) return null;
+    if (!data.lists.every((l) => record(l) && strings(l, ["id", "name"]) && Array.isArray(l.patientIds) && l.patientIds.every((id: unknown) => typeof id === "string"))) return null;
+    if (!data.encounters.every((e) => record(e) && strings(e, ["id", "title", "createdAt", "context"]) && (e.patientId === null || typeof e.patientId === "string") && Array.isArray(e.messages) && e.messages.every((m: unknown) => record(m) && strings(m, ["id", "content", "mode", "createdAt"]) && (m.role === "user" || m.role === "assistant") && modeIds.includes(m.mode as ModeId)))) return null;
+    if (!record(data.settings) || !strings(data.settings, ["specialty", "model", "language", "instructions"]) || !specialties.includes(String(data.settings.specialty)) || !["Standard", "Extended"].includes(String(data.settings.model)) || !["English", "Bahasa Indonesia"].includes(String(data.settings.language))) return null;
+    if (data.activeEncounterId !== null && (typeof data.activeEncounterId !== "string" || !data.encounters.some((e: Record<string, unknown>) => e.id === data.activeEncounterId))) return null;
     const workspace = data as unknown as Workspace;
     const settings = { ...workspace.settings };
     if (typeof settings.name !== "string") delete settings.name;
@@ -100,7 +104,7 @@ export function restoreWorkspace(raw: string | null): Workspace {
       if (!["draft", "reviewed", "final"].includes(clean.reviewStatus ?? "")) delete clean.reviewStatus;
       return cleanWorkflowMessage(clean);
     }) })) });
-  } catch { return initialWorkspace; }
+  } catch { return null; }
 }
 
 export function newId(): string { return crypto.randomUUID(); }

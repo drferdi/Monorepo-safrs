@@ -148,9 +148,11 @@ export function createMiraGateway(options: Options = {}) {
               const value = await postService("/v1/therapy/step", { contractVersion: "1", traceId, case: caseData, diagnosis: target, grounding: bundle });
               if (!value || typeof value !== "object" || !("status" in value) || value.status !== "ok") throw new ServiceFailure(value && typeof value === "object" && "error" in value && value.error && typeof value.error === "object" && "code" in value.error && typeof value.error.code === "string" ? value.error.code : "UNAVAILABLE");
               if (!("therapy" in value)) throw new ServiceFailure("CONTRACT");
-              const merged = { ...base, therapy: value.therapy };
               const cost = "meta" in value && value.meta && typeof value.meta === "object" && "costUsd" in value.meta ? value.meta.costUsd : null;
-              if (!validResult(merged) || typeof cost !== "number" || !Number.isFinite(cost) || cost < 0 || cost > maxCostUsd) throw new ServiceFailure("CONTRACT");
+              if (typeof cost !== "number" || !Number.isFinite(cost) || cost < 0 || cost > maxCostUsd) throw new ServiceFailure("CONTRACT");
+              // The draft's cost line covers the whole trace: diagnosis plus therapy step.
+              const merged = { ...base, therapy: value.therapy, meta: { ...base.meta, costUsd: typeof base.meta.costUsd === "number" ? Math.round((base.meta.costUsd + cost) * 1e6) / 1e6 : base.meta.costUsd } };
+              if (!validResult(merged)) throw new ServiceFailure("CONTRACT");
               return merged;
             }, Math.max(1, deadline - performance.now() - THERAPY_RESERVE_MS));
           } catch (error) {

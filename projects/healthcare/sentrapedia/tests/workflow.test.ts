@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createPersonalDraft, defaultReviewItems, reviewComplete, queueItems, saveLocalWorkspace } from "../src/lib/workflow";
 import { initialWorkspace, restoreWorkspace, workspaceReducer, type Workspace, type Message } from "../src/lib/workspace";
+import { documentSections, emptySection } from "../src/lib/studio";
 
 const doc: Message = { id: "doc", role: "assistant", mode: "clinic", content: "Original", originalContent: "Original", sourceText: "Immutable source", createdAt: "2026-10-09T01:00:00Z", reviewItems: defaultReviewItems };
 const state: Workspace = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [doc] }] };
@@ -16,6 +17,10 @@ describe("personal templates", () => {
     expect(output).toContain("## Plan\nTindak lanjut manual");
     expect(output).toContain("Teks tanpa label");
     expect(createPersonalDraft(template, "History: Contoh", "")).toContain("## Plan\nBelum tersedia");
+  });
+  it("marks an empty personal-template section with the placeholder the document collapses", () => {
+    const plan = documentSections(createPersonalDraft(template, "History: Contoh", "")).find((section) => section.title === "Plan")!;
+    expect(emptySection(plan.body)).toBe(true);
   });
   it("persists templates/favorites and cleans favorites when deleted", () => {
     let next = workspaceReducer(state, { type: "template.save", template });

@@ -34,6 +34,11 @@ describe("direct main-composer analysis", () => {
     await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => { calls++; return Response.json({ error: { code: "TIMEOUT", message: "Analisis melewati batas waktu layanan." } }, { status: 504 }); } })).rejects.toThrow("Analisis melewati batas waktu layanan.");
     expect(calls).toBe(1);
   });
+  it("turns a lost connection or unreadable body into the service wording instead of the browser's", async () => {
+    const offline: typeof fetch = async () => { throw new TypeError("Failed to fetch"); };
+    const html: typeof fetch = async () => new Response("<html>gateway</html>", { status: 502 });
+    for (const fetchFn of [offline, html]) await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn })).rejects.toThrow("Layanan analisis tidak dapat dihubungi atau respons tidak dapat dibaca.");
+  });
   it("rejects unavailable or malformed output and invalid trace dates", async () => {
     for (const data of [{ ...response, result: { ...response.result, status: "unavailable" } }, { ...response, createdAt: "invalid" }, { ...response, result: {} }, { ...response, grounding: { ...grounding, evidence: [] } }]) await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => Response.json(data) })).rejects.toThrow("Respons analisis tidak dapat diverifikasi.");
   });

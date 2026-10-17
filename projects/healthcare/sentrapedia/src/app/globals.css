@@ -136,6 +136,8 @@ h1 span { white-space: normal; }
 .composer-toolbar { margin-top: 7px; display: flex; align-items: center; justify-content: space-between; gap: 7px; }
 .composer-tools-left, .composer-tools-right { display: flex; align-items: center; gap: 8px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--color-border-subtle); min-height: 36px; padding: 8px 11px; border-radius: var(--radius); background: var(--workspace-white); font-size: 13px; color: var(--color-text-secondary); line-height: 18px; white-space: nowrap; }
+label.button { cursor: pointer; }
+label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus); outline-offset: 2px; }
 .button:hover { border-color: var(--workspace-ink-faint); background: var(--color-background-canvas); }
 .button.primary { border-color: var(--workspace-accent-ink); background: var(--color-action-primary); color: var(--workspace-on-accent); }
 .button.square { width: 36px; padding: 0; }

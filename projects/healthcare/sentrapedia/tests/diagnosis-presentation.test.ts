@@ -314,4 +314,8 @@ describe("therapy verification presentation", () => {
     expect(theOracleSourceLinks(message).map(link => link.id)).toEqual(["E1", "T1"]);
     expect(diagnosisContent(message)).toBe(message.content);
   });
+  it("lists a passage found by both diagnosis and therapy retrieval once", () => {
+    const therapyGrounding = { ...grounding, evidence: [grounding.evidence[0], { ...grounding.evidence[0], evidenceId: "T1", retrievalRank: 2, text: "Terapi pneumonia." }] };
+    expect(theOracleSourceLinks(miraMessage({ ...analysis, grounding, therapyGrounding })).map(link => link.id)).toEqual(["E1", "T1"]);
+  });
 });

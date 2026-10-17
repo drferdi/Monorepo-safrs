@@ -1,5 +1,6 @@
 import { modeIds, type ModeId } from "./drafts";
 import type { Encounter, Message, Workspace } from "./workspace";
+import { missingField } from "./clinical-templates";
 
 export interface PersonalTemplate { id: string; name: string; mode: ModeId; sections: string[]; instructions: string }
 export interface ReviewItem { id: string; label: string; required: boolean; checked: boolean; target: string }
@@ -68,7 +69,7 @@ export function createPersonalDraft(template: PersonalTemplate, prompt: string, 
       if (current && label?.[2]) supplied.get(current)!.push(label[2]);
     } else if (current) supplied.get(current)!.push(line);
   }
-  return [`# ${template.name}`, ...template.sections.map((title) => `## ${title}\n${supplied.get(title.toLowerCase())!.join("\n").trim() || "Belum tersedia - lengkapi dan verifikasi oleh klinisi."}`), `## Input asli\n${prompt}`, context && `## Konteks asli\n${context}`, template.instructions && `## Preferensi penulisan\n${template.instructions}`, "---\nKerangka lokal dari teks yang diberikan. Tinjau sebelum digunakan."].filter(Boolean).join("\n\n");
+  return [`# ${template.name}`, ...template.sections.map((title) => `## ${title}\n${supplied.get(title.toLowerCase())!.join("\n").trim() || `${missingField}.`}`), `## Input asli\n${prompt}`, context && `## Konteks asli\n${context}`, template.instructions && `## Preferensi penulisan\n${template.instructions}`, "---\nKerangka lokal dari teks yang diberikan. Tinjau sebelum digunakan."].filter(Boolean).join("\n\n");
 }
 export function changedMessage(message: Message, content: string, at: string, reason: Revision["reason"] = "edit"): Message {
   if (message.content === content) return message;

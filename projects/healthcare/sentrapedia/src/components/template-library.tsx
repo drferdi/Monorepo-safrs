@@ -30,7 +30,7 @@ export function TemplateLibrary({ state, dispatch, onChoose, onInsert, onClose }
 function BuiltinPreview({ mode, onInsert }: { mode: ModeId; onInsert: (mode: ModeId, text: string) => void }) {
   const template = clinicalTemplates.find((item) => item.mode === mode)!;
   const text = templateText(template);
-  return <div className="template-preview"><h3>{template.name}</h3><p className="panel-caption">{template.category}</p><pre>{text}</pre><p className="panel-caption">Kaidah verifikasi: {template.rule}</p><div className="workflow-actions"><button className="button primary" onClick={() => onInsert(mode, text)}>Sisipkan ke input</button></div></div>;
+  return <div className="template-preview"><h3>{template.name}</h3><p className="panel-caption">{template.category}</p><pre tabIndex={0} aria-label={`Isi templat ${template.name}`}>{text}</pre><p className="panel-caption">Kaidah verifikasi: {template.rule}</p><div className="workflow-actions"><button className="button primary" onClick={() => onInsert(mode, text)}>Sisipkan ke input</button></div></div>;
 }
 
 function TemplateEditor({ template, full, onSave }: { template?: PersonalTemplate; full: boolean; onSave: (template: PersonalTemplate) => void }) {

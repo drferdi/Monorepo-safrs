@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { initialWorkspace, newEncounter, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
+import { initialWorkspace, newEncounter, parseWorkspace, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
 import { createDraft, modes } from "../src/lib/drafts";
 import { greeting } from "../src/lib/ui-labels";
 
@@ -89,6 +89,11 @@ describe("storage validation", () => {
   });
   it("round-trips a complete workspace", () => {
     expect(restoreWorkspace(JSON.stringify(initialWorkspace))).toEqual(initialWorkspace);
+  });
+  it("accepts an exported backup for import and reports anything else as invalid", () => {
+    const backup = workspaceReducer(initialWorkspace, { type: "patient.add", patient: { id: "p-import", name: "Pasien Fiktif Impor", age: "40", sex: "Male", notes: "" } });
+    expect(parseWorkspace(JSON.stringify(backup, null, 2))).toEqual(restoreWorkspace(JSON.stringify(backup)));
+    for (const raw of ["{broken", "[]", JSON.stringify({ ...backup, version: 2 }), JSON.stringify({ ...backup, patients: [{ id: 1 }] })]) expect(parseWorkspace(raw)).toBeNull();
   });
   it("keeps a saved greeting name and drops one that is not text", () => {
     const named = { ...initialWorkspace, settings: { ...initialWorkspace.settings, name: "dr. Rani" } };
