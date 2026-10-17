@@ -274,6 +274,61 @@
 - The work lives on its own branch and worktree because another agent was writing in `apps/site` at the same
   time: one writer per scope.
 
+## 2026-10-16 - Individual capability films with GSAP explanations
+- Gaffer approves eight distinct five-second, silent Higgsfield clips, one for each raster capability,
+  with a hard total ceiling of 60 credits. All eight Kling 3.0 Standard jobs completed at 7.5 credits
+  each; the account balance moved from 78 to 18. No further paid rendering is implied.
+- The two anatomy SVG capabilities remain interactive GSAP diagrams. Each of the ten scenes gets its
+  own timed heading, copy, and three-step teal explanation line. One video element is reused across
+  raster scenes, loading only the active clip when motion is allowed; pause, visibility, and reduced-motion
+  controls keep still-image fallbacks available.
+- The eight foreground illustrations are re-encoded at WebP quality 97 from the original generated PNGs.
+  Fast Assessment's left copy surface is white again. All illustrations and films remain synthetic product
+  metaphors, not screenshots of a validated clinical system.
+
+## 2026-10-16 - Preserve exact capability artwork beneath scene-specific motion
+- Gaffer requested higher-quality capability video after reviewing the eight 720p generative films, and
+  specifically removed the cyan background behind Sentrapedia Library. The active clips are now five-second
+  1586x992 H.264 composites of the approved high-resolution illustrations and individually animated teal
+  signal paths. This keeps typography stable and 16:10 framing exact while retaining visible motion.
+- Original Kling jobs remain in the provenance record but are not the active site clips. The replacement
+  used Higgsfield's media sandbox for local-style FFmpeg processing, with zero new generation credits.
+  One lazy video node, GSAP text/line explanations, the two interactive SVG anatomy scenes, pause and
+  reduced-motion fallbacks remain. The Library frame is white; Fast Assessment's left copy stays white.
+
+## 2026-10-16 - Capability UI becomes live HTML/SVG
+- Gaffer explicitly selected HTML/SVG with animated lines and foreground elements after finding the generated interface text insufficiently sharp. This supersedes video/bitmap as the active presentation for eight capability scenes; the paid Higgsfield work is retained as historical source material, not deleted or regenerated.
+- Render each scene's labels and UI shapes as real DOM/SVG, preserve the existing two anatomy diagrams and the right/down/right/down GSAP rail, and animate vector paths, signal pulses and content entrances. Keep a static readable state without JavaScript and respect reduced motion.
+- This is a presentation illustration using synthetic data, not a functional clinical interface or a change to clinical logic. Final test and all-scene visual verification remain open after Jev stopped a retry of outdated-assertion tests.
+
+## 2026-10-17 - Clinical workspace headline separates promise from physician review
+- Gaffer approved "Ruang kerja klinis untuk dokter Indonesia." as the large `#home-text` headline, with the specific workflow description below rather than crowding the heading.
+- Describe diagnosis output as a proposal for physician review, alongside clinical questions, SOAP notes and referral letters grounded in clinician-entered findings. Do not turn this presentation copy into a claim of autonomous clinical decision-making.
+- This decision changes site copy only; the three explanatory columns and `child.png` placement require separate direction.
+
+## 2026-10-17 - Use a concise journey line under the clinical workspace headline
+- Gaffer replaces the detailed gray subheading with "Dari pertanyaan klinis sampai surat rujukan, dalam satu alur." The three-column explanations below retain the fuller context and physician-review boundaries.
+- The headline, column content, `child.png` placement and underlying clinical behavior are unchanged.
+
+## 2026-10-16 — Cockpit accessibility: launcher clearance and muted text
+- The floating Vera launcher keeps its place (bottom right). Its footprint is three tokens (`--launcher-inset`, `--launcher-height`, `--launcher-width`), and the layouts it can cover reserve that footprint instead of moving it: the chat composer's hint line becomes the launcher's band when the canvas is under 1080px (780px column plus 2 x 150px footprint) and no inline cockpit is open, the home footer keeps clear of it, and the inline cockpit's fictional-data footnote sits above it. Any new bottom-right control must clear the same tokens.
+- Muted text (`--color-text-muted`, 4.37:1 on `--color-background-surface`) stays off the surface colour; text there uses `--color-text-secondary`. `tests/design-tokens.test.ts` guards the token ratios and the known surface selectors.
+- Two axe findings are recorded exceptions rather than fixes: the slash picker's scroll region (a `<textarea>` cannot carry `role=combobox`; keyboard access works through `aria-activedescendant`) and the Vera hero's normal-motion contrast reading (a finished `fill-mode: both` animation; the real hit-test shows the dark panel).
+
+## 2026-10-16 - Dify is removed from Sentrapedia
+- Gaffer cancelled Dify. The Vera side chatbot, the `/dify` page and the `/api/dify/*` routes are deleted, not hidden behind a flag. MIRA with TheOracle grounding and the evidence gate remains the only clinical answer path.
+- The bottom-right launcher footprint tokens and clearance rules went with the widget. A future floating control must define its own footprint and clearance.
+
+## 2026-10-17 - One human anatomy study supports the clinical-workspace intro
+- Gaffer approved one anatomical body study in the left side of `#home-text` while keeping its headline, subheading and three explanatory columns intact. The figure is an editorial, synthetic educational metaphor and is labeled as not a diagnostic guide; it must not imply validated clinical evidence or alter diagnosis behavior.
+- The native HTML/SVG instrument frame and scan line stay crisp at browser resolution. A generated still remains the fallback; one five-second Higgsfield MiniMax H3 2K clip supplies restrained motion, job `9d10b50c-e1df-4c08-8d6d-a43ddd7c4e47`, quoted at 10 credits. Do not infer additional render cost from concurrent account-balance changes.
+- Motion pauses offscreen or by user control, and reduced-motion presents the still image. No further paid generation, publication or clinical feature expansion is implied.
+
+## 2026-10-17 - Anatomy becomes unframed transparent art in the left column
+- Gaffer rejected the dark instrument card around the human-body study. Use a transparent-background cutout as integrated visual art in the left column of `#home-text`, with no enclosing panel, border, caption rail, or baked-in video background. The headline, concise journey line, and three explanatory columns stay intact.
+- The built-in image edit was rejected by its output filter. Gaffer explicitly approved local extraction of the existing PNG, with no external upload or additional generation cost. Keep the original atlas PNG and Higgsfield MP4 as historical source assets, but do not play the opaque MP4 in this section.
+- Motion is a restrained CSS float and cyan pulse, paused offscreen or by the user and disabled under reduced-motion preference. The anatomy is conceptual illustration only, not clinical evidence or a diagnostic reference.
+
 ## 2026-10-17 - MIRA uses google/gemini-3.1-flash-lite for both stages
 - Gaffer asked for the fastest Gemini, then chose `google/gemini-3.1-flash-lite` as the default for planning and assessment (`scripts/mira-profile.json`, pinned in `tests/mira-paid.test.ts`). It supersedes `google/gemini-2.5-flash` from the 2026-10-09 model override; OpenRouter, synthetic-only data policy, no ZDR, throughput sorting and the Google fast-copy providers are unchanged.
 - Basis: one live run per model on the same fictional case. Model stages took 4.5 s against 5.6 s for 2.5-flash, at 0.0135 against 0.0169 USD, with the same verified therapy (ambroxol, paracetamol). `gemini-3.5-flash-lite` was slightly faster (4.3 s) but cost more (0.0202 USD) and proposed dextromethorphan for a productive cough. Evidence: `verify-report/full-check/2026-10-16/results/mira-live-3.json` to `-5.json`.
@@ -284,6 +339,35 @@
 - Route: the engine's existing `openai` provider with `OPENAI_BASE_URL` set to Google's OpenAI-compatible endpoint, set by the launcher. A new `gemini` provider value was rejected because it would diverge `common/providers.py`, `common/guard.py` and `service/settings.py`, which `test_packaging.py` requires to match upstream. The only engine change is the Gemini price in `service/app.py`, already an allowed divergence. Consequence: the engine reports `provider=openai`.
 - Privacy: prompts now go to Google under the Gemini API terms. A paid-tier key is required, because free-tier prompts may be used to improve Google products. The data policy stays `synthetic-only`.
 - Gaffer approved repinning the `service/app.py` `packagedSha256` in `mira/SOURCE.json`; done the same day. Open: the route is not yet verified live.
+
+## 2026-10-17 - Short promo prelude before the hero tablet
+- Gaffer approved trying `promo-vid.mp4` before the existing tablet arrival. The active prelude is a muted, full-viewport excerpt of about 3.8 seconds; the complete 8.8-second film stays optional through a link beneath the tablet.
+- The prelude is skippable, never plays on reduced-motion or direct section anchors, and falls back to the original hero if playback is unavailable. It hands off to the existing GSAP tablet film and synthetic workspace simulation without changing clinical content.
+- The authored asset lives in `apps/site/assets/` and is copied into `site/media/` by the site build. No new rendering credits, publication, commit, or clinical logic are part of this decision.
+
+## 2026-10-17 - Promo film becomes the second editorial section
+- Gaffer rejected the fullscreen prelude and approved a dedicated, elegant film section immediately after the hero. This supersedes the active presentation and optional hero link from the decision above; the existing GSAP tablet arrival again plays immediately.
+- Present the supplied film unframed in a spacious light section with restrained cyan accent and concise physician-authority copy. Play it muted only while in view, allow pause/play, and do not autoplay under reduced motion. Keep the original media unchanged and do not add a new render or clinical claim.
+
+## 2026-10-17 - Hero identity introduces a short promo teaser before the tablet
+- Gaffer approved the order neuron logo, arriving Sentrapedia wordmark, short promo excerpt, then the existing GSAP tablet simulation. Keep the complete supplied film in the separate second section. This refines, rather than removes, the editorial film decision above.
+- Use the existing `promo-vid.mp4` for the hero excerpt; preserve a static reduced-motion path and media-unavailable fallback. An optional Higgsfield transition remains unsubmitted pending specific confirmation of the 4.5-credit quote; no paid render is part of the current implementation.
+
+## 2026-10-17 - Approved paid signal bridge precedes the promo teaser
+- Gaffer approved exactly one Higgsfield Kling 3.0 Turbo render at 3 seconds, 720p, no audio, for 4.5 credits. Completed job `ace81f3e-3e74-4f0b-a61f-8be779e04902`; balance 370 to 365.5 credits. No second job or new preset was used.
+- Place the rendered abstract signal as a short unframed bridge after the identity lockup and before the existing promo excerpt. The complete supplied film remains in its second editorial section, and the tablet simulation follows the teaser. Missing media falls back toward the tablet; reduced motion remains static. Visual quality and transition timing await foreground browser review.
+
+## 2026-10-17 - Complete promo moves beneath the large wordmark
+- Gaffer rejected the paid signal bridge presentation and approved placing the complete existing `promo-vid.mp4` directly beneath the large Sentrapedia wordmark in `#logo-middle`, before the physician-authorship and RSIA Melinda lines. This supersedes the separate second film section and hero promo teaser, not the retained source media.
+- The hero returns to neuron logo, arriving wordmark, and the existing GSAP tablet simulation. The film has no surrounding frame or gray CSS background, remains muted and in-view only, and keeps pause/play and reduced-motion no-autoplay behavior. Preserve the `#product-film` anchor at its new location. No new render, clinical claim, commit, or publication follows from this decision.
+
+## 2026-10-17 - Film and typed explanation share two columns
+- Gaffer approved a bounded refinement inside `#logo-middle`: keep the complete promo unframed in the left column and place physician-led explanatory copy in the right column; on narrow screens the video precedes the copy. The authorship and origin lines stay below the pair.
+- The heading and explanation type once on entry using the existing GSAP runtime, pause while offscreen, and render fully without JavaScript or under reduced motion. A complete screen-reader copy remains available throughout the visual effect. The film's muted in-view playback and pause control remain independent of the typing effect. No new paid media or clinical claim is implied.
+
+## 2026-10-17 - Clinical introduction moves to its own page
+- Gaffer approved moving the complete clinical-workspace introduction, including the transparent anatomy illustration and three explanation columns, from the homepage to `/ruang-kerja/`. The homepage hero now leads directly into the large wordmark and product film. Feature links route to the dedicated page.
+- The existing promo stays unframed and uses a one-time GSAP video/caption/kicker entrance before the typing effect. Offscreen playback and motion pause; reduced motion keeps content static and readable. No new media or clinical claim is part of this decision.
 
 ## 2026-10-17 - Fast-assessment copies are a launcher knob; engine.py repinned
 
