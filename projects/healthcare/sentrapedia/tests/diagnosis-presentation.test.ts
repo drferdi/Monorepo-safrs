@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { emptyCase, type MiraResult } from "../src/lib/mira/contract";
-import { diagnosisContent, diagnosisSectionTitles, icd10SectionTitle, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay, theOracleCitations } from "../src/lib/mira/presentation";
+import { diagnosisContent, diagnosisSectionTitles, icd10SectionTitle, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/mira/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
 import { theOracleDiseases, relatedDiseases } from "../src/lib/theoracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
@@ -260,6 +260,16 @@ describe("therapy verification presentation", () => {
     const strengthInName = { ...gate, drugs: [{ drug: "Parasetamol 500 mg", dose: "3x500mg", status: "doseRemoved", evidenceIds: ["E1"] }, { drug: "Amoksisilin 500 mg", dose: "3x500mg", status: "verified", evidenceIds: ["E1"] }] };
     expect(theOracleCitations(grounding, grounding, strengthInName)).toContain("- Parasetamol: dosis tidak ditemukan");
     expect(theOracleCitations(grounding, grounding, strengthInName)).toContain("- Amoksisilin 500 mg: dosis terverifikasi");
+  });
+  it("reads the reference section back as one item per passage, diagnosis first, a shared passage once", () => {
+    const first = grounding.evidence[0];
+    const therapy = { ...grounding, evidence: [first, { ...first, evidenceId: "T9", source: { ...first.source, title: "fornas-2025.pdf" }, text: "Parasetamol 3 x 500 mg", retrievalRank: 2 }] };
+    const body = documentSections(theOracleCitations(grounding, therapy)).find(section => section.title === theOracleReferencesTitle)!.body;
+    expect(theOracleReferenceItems(body)).toEqual([
+      ...grounding.evidence.map(item => ({ id: item.evidenceId, title: item.source.title, similarity: String(item.similarity), text: item.text })),
+      { id: "T9", title: "fornas-2025.pdf", similarity: String(first.similarity), text: "Parasetamol 3 x 500 mg" },
+    ]);
+    expect(theOracleReferenceItems("Teks tanpa referensi")).toEqual([]);
   });
   it("renders a draft saved before the evidence gate exactly as before", () => {
     expect(theOracleCitations(grounding)).toBe(theOracleCitations(grounding, undefined, undefined));

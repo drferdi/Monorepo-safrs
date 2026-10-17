@@ -11,9 +11,10 @@ import { DiagnosisDocument } from "./diagnosis-document";
 
 const diagnosisLabels = new Set(["Keluhan utama", "Kondisi yang tercatat", "Alergi tercatat", "Obat yang sedang digunakan (input kasus)", "Anamnesis tercatat", "Tanda vital tercatat", "Pemeriksaan fisik tercatat", "Informasi yang belum tersedia", "Pertanyaan lanjutan dari layanan", "Alternatif", "Jangan terlewat", "Kemungkinan utama — belum ditinjau klinisi", "Pertimbangan layanan", "Bidang belum terisi", "Hasil pemeriksaan tercatat", "Usulan pemeriksaan dari layanan", "Kemampuan fasilitas tercatat", "Jejak analisis"]);
 
-// Analysis answers already revealed on this page; an answer types out once, only while it is fresh.
+// Answers already revealed on this page: a fresh answer enters once (an analysis by typing out), a reopened one appears at once.
 const revealed = new Set<string>();
 const freshAnswerMs = 20000;
+export const freshAnswer = (message: Message) => !revealed.has(message.id) && Date.now() - Date.parse(message.createdAt) < freshAnswerMs;
 
 export function DocumentContent({ content, onEdit, clinical = false }: { content: string; onEdit: (content: string) => void; clinical?: boolean }) {
   return <div className="draft-content">{content.split("\n").map((line, index) => {
@@ -38,14 +39,16 @@ export function DocumentStudio({ message, onEdit, onReview, encounterId, dispatc
   const content = diagnosisContent(message);
   const sections = documentSections(content);
   const diagnosis = hasMiraSource(message) && ["Ringkasan Kasus", referralSectionTitle, icd10SectionTitle, ...diagnosisSectionTitles].includes(sections[0]?.title);
-  const [typing] = useState(() => diagnosis && !revealed.has(message.id) && Date.now() - Date.parse(message.createdAt) < freshAnswerMs);
+  const [typing] = useState(() => diagnosis && freshAnswer(message));
+  // Any other fresh answer lets its blocks follow one another in (globals.css, data-reveal).
+  const [cascade] = useState(() => !typing && freshAnswer(message));
   useEffect(() => { revealed.add(message.id); }, [message.id]);
   const section = sections[selected];
   // Two-column documents carry their own section list and per-section Edit, so the Bagian bar above them goes (Chief, 2026-10-09).
   const twoColumn = diagnosis || sections.length > 1;
   const editSection = (index: number) => { setSelected(index); setBody(sections[index].body); setEditing(true); };
   const status = message.reviewStatus ?? "draft";
-  return <div className="document-studio">
+  return <div className="document-studio" data-reveal={cascade || undefined}>
     <div className="studio-toolbar"><div role="group" aria-label="Tampilan dokumen">{[{ id: "document", label: "Dokumen", Icon: FileText }, { id: "source", label: "Sumber", Icon: Columns2 }, { id: "compare", label: "Perubahan", Icon: GitCompareArrows }, { id: "history", label: "Riwayat", Icon: History }, { id: "review", label: "Peninjauan", Icon: ListChecks }].map(({ id, label, Icon }) => <button key={id} className={view === id ? "active" : ""} aria-pressed={view === id} disabled={editing} onClick={() => setView(id as typeof view)}><Icon size={13}/>{label}</button>)}</div><label className="review-control"><span>Status</span><select aria-label="Status dokumen" value={status} disabled={editing} onChange={(event) => onReview(event.target.value as ReviewStatus)}><option value="draft">Draf</option><option value="reviewed" disabled={!reviewComplete(message.reviewItems)}>Ditinjau</option><option value="final" disabled={status === "draft" || !reviewComplete(message.reviewItems)}>Final</option></select></label></div>
     <p className="studio-status-note">Status ditetapkan pengguna di perangkat ini; bukan validasi klinis. Edit isi mengembalikan status ke Draf.</p>
     {view === "history" && <HistoryPanel message={message} encounterId={encounterId} dispatch={dispatch}/>}

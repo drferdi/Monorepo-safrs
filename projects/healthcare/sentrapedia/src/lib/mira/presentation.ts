@@ -14,7 +14,15 @@ export function theOracleCitations(grounding: unknown, therapyGrounding?: unknow
   if (!validTheOracleGrounding(grounding)) return "";
   const therapy = validTheOracleGrounding(therapyGrounding) ? "\n\nReferensi terapi (dicari memakai diagnosis):\n\n" + passages(therapyGrounding) : "";
   const verification = validGate(gate) ? "\n\n## Verifikasi terapi\n\n" + [gate.reason, ...gate.drugs.map(d => `- ${d.status === "verified" ? d.drug : unstrength(d.drug)}: ${gateLine[d.status]}${d.status === "verified" && d.evidenceIds.length ? ` [${d.evidenceIds.join(", ")}]` : ""}`)].filter(Boolean).join("\n") : "";
-  return "\n\n---\n\n## Referensi TheOracle\n\nReferensi yang dipilih sebelum analisis:\n\n" + passages(grounding) + therapy + verification;
+  return `\n\n---\n\n## ${theOracleReferencesTitle}\n\nReferensi yang dipilih sebelum analisis:\n\n` + passages(grounding) + therapy + verification;
+}
+
+export const theOracleReferencesTitle = "Referensi TheOracle";
+export interface TheOracleReferenceItem { id: string; title: string; similarity: string; text: string }
+// The passages of a "Referensi TheOracle" section, diagnosis then therapy, each passage once; the document text stays as written.
+export function theOracleReferenceItems(body: string): TheOracleReferenceItem[] {
+  const items = [...body.matchAll(/^- (.+) \[([^\]\n]+)\] · kemiripan ([\d.]+)\r?\n {2}(.*)$/gm)].map(([, title, id, similarity, text]) => ({ id, title, similarity, text: text.trim() }));
+  return items.filter((item, index) => items.findIndex(other => other.id === item.id) === index);
 }
 
 export function theOracleSourceLinks(message: Pick<Message, "sourceText">) {

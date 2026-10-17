@@ -275,12 +275,12 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .message-header .brand img { width: 30px; height: 30px; }
 .message-header strong { font-size: 12px; font-weight: 600; }
 .draft-badge { font-size: 9px; padding: 3px 6px; background: var(--workspace-accent-soft); border: 1px solid var(--color-border-subtle); color: var(--workspace-accent-ink); border-radius: var(--radius); margin-left: 3px; }
-.draft-content { font-size: 15px; line-height: 23px; color: var(--body-color); padding-left: 29px; overflow-wrap: anywhere; }
-.draft-content h2 { font-family: var(--font-title); font-weight: 300; letter-spacing: 0; color: var(--title-color); font-size: 30px; line-height: 36px; margin: 0 0 12px; }
-.draft-content h3 { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; color: var(--title-color); font-size: 18px; line-height: 24px; margin: 24px 0 8px; }
+.draft-content { font-size: 15px; line-height: 24px; color: var(--body-color); padding-left: 29px; overflow-wrap: anywhere; }
+.draft-content h2 { font-family: var(--font-title); font-weight: 300; letter-spacing: 0; color: var(--title-color); font-size: 28px; line-height: 36px; margin: 0 0 16px; }
+.draft-content h3 { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; color: var(--title-color); font-size: 18px; line-height: 26px; margin: 24px 0 8px; }
 .draft-content p { white-space: pre-wrap; margin: 0 0 8px; color: var(--body-color); }
 .draft-content hr { border: 0; border-top: 1px solid var(--color-border-subtle); margin: 22px 0 12px; }
-.draft-content hr + p { font-size: 11px; color: var(--color-text-muted); }
+.draft-content hr + p { font-size: 12px; line-height: 18px; color: var(--color-text-muted); }
 .diagnosis-document { display: grid; grid-template-columns: 165px minmax(0, 1fr); gap: 26px; align-items: start; }
 /* The section list hangs in the canvas's right margin so the document text lines up with the composer and the user's messages
    (Chief: "sejajar vertikal dengan kolom text user", then "bawa ke sebelah kanan"). The reading column moves left just enough
@@ -310,49 +310,66 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .diagnosis-document .draft-content { padding-left: 0; }
 .diagnosis-field-label { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--color-text-secondary); margin: 20px 0 6px; }
 .diagnosis-field-label:first-child { margin-top: 0; }
-.diagnosis-reference-heading { font-size: 13px; font-weight: 600; color: var(--workspace-accent-ink); margin: 20px 0 6px; }
+.diagnosis-reference-heading { font-size: 15px; line-height: 24px; font-weight: 600; color: var(--workspace-accent-ink); margin: 20px 0 6px; }
 .diagnosis-list-item { position: relative; padding-left: 16px; }
 .diagnosis-list-item::before { content: ""; position: absolute; left: 4px; top: .7em; width: 5px; height: 5px; border-radius: 50%; background: var(--color-text-muted); }
 .draft-content .diagnosis-list-item { margin-bottom: 4px; }
 .draft-content .diagnosis-list-nested { margin-left: 16px; }
-.draft-content .diagnosis-list-detail { padding-left: 16px; margin: 6px 0 2px; font-size: 13px; color: var(--color-text-secondary); }
+.draft-content .diagnosis-list-detail { padding-left: 16px; margin: 6px 0 2px; font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
 /* Reading measure: answers wrap near 70 characters instead of the full column. */
 .diagnosis-document .draft-content > :is(p, h4, label) { max-width: 38em; }
 .diagnosis-document { font-variant-ligatures: no-contextual; }
 .diagnosis-section { border-top: 1px solid var(--color-border-subtle); padding: 22px 0 18px; scroll-margin-top: 24px; }
 .diagnosis-section-heading { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
-.diagnosis-section-heading h3 { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; color: var(--title-color); font-size: 18px; line-height: 24px; margin: 0; }
+.diagnosis-section-heading h3 { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; color: var(--title-color); font-size: 18px; line-height: 26px; margin: 0; }
 .diagnosis-section-heading .text-button { margin-left: auto; }
 /* A heading reached from BAGIAN gets a thin tosca line drawn left to right under its text, not a box (Chief). The previous one fades, then resets. */
 .diagnosis-section-heading h3, .diagnosis-supporting h3 { position: relative; outline: none; }
 .diagnosis-section-heading h3::after, .diagnosis-supporting h3::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 1px; background: var(--color-action-primary); transform: scaleX(0); transform-origin: left center; opacity: 0; pointer-events: none; transition: opacity 160ms ease-out, transform 0s linear 160ms; }
 .diagnosis-section[data-arrived="true"] :is(.diagnosis-section-heading, .diagnosis-supporting > summary) > h3::after { transform: scaleX(1); opacity: 1; transition: transform 560ms cubic-bezier(.4, 0, .2, 1) 120ms, opacity 160ms ease-out 120ms; }
-.diagnosis-provenance { margin-top: 22px; color: var(--color-text-muted); font-size: 11px; }
+.diagnosis-provenance { margin-top: 22px; color: var(--color-text-muted); font-size: 12px; line-height: 18px; }
 .diagnosis-provenance summary { cursor: pointer; padding: 8px 0; }
-.diagnosis-provenance .draft-content { font-size: 11px; margin-top: 12px; }
+.diagnosis-provenance .draft-content { font-size: 13px; line-height: 20px; margin-top: 12px; }
 /* Source text and additional context fold away in a smaller face; the body fades in and out (160 ms). */
 .diagnosis-section:has(> .diagnosis-supporting) { position: relative; padding: 14px 0 12px; }
 .diagnosis-supporting > summary { display: flex; align-items: center; min-height: 24px; gap: 9px; cursor: pointer; list-style: none; color: var(--color-text-secondary); }
 .diagnosis-supporting > summary::-webkit-details-marker { display: none; }
 .diagnosis-supporting > summary::before { content: ""; width: 5px; height: 5px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 160ms ease-out; }
 .diagnosis-supporting[open] > summary::before { transform: rotate(45deg); }
-.diagnosis-supporting h3 { font-size: 12px; font-weight: 500; margin: 0; }
+.diagnosis-supporting h3 { font-size: 13px; line-height: 20px; font-weight: 500; margin: 0; }
 .diagnosis-supporting > .text-button { position: absolute; top: 14px; right: 0; }
 .diagnosis-supporting .diagnosis-section-body { margin-top: 10px; }
-.diagnosis-supporting .draft-content { font-size: 12px; line-height: 1.65; color: var(--color-text-secondary); }
+/* TheOracle references (Gaffer, 2026-10-17): two one-line titles, the rest behind one disclosure; a title opens to its passage. */
+.oracle-references { display: grid; gap: 2px; }
+.oracle-reference > summary, .oracle-more > summary { display: flex; align-items: center; gap: 9px; min-height: 30px; cursor: pointer; list-style: none; font-size: 15px; color: var(--color-text-primary); }
+.oracle-more > summary { font-size: 13px; color: var(--color-text-secondary); }
+.oracle-reference > summary > small { flex: none; font-size: 12px; color: var(--color-text-secondary); }
+.oracle-reference > summary > span, .oracle-more > summary > span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.oracle-reference > summary::-webkit-details-marker, .oracle-more > summary::-webkit-details-marker { display: none; }
+.oracle-reference > summary::before, .oracle-more > summary::before { content: ""; flex: none; width: 5px; height: 5px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 160ms ease-out; }
+.oracle-reference[open] > summary::before, .oracle-more[open] > summary::before { transform: rotate(45deg); }
+.oracle-reference > summary:hover, .oracle-more > summary:hover { color: var(--workspace-accent-ink); }
+.oracle-more > .oracle-reference { padding-left: 14px; }
+.oracle-reference-text { margin: 2px 0 6px 14px; font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
+.oracle-reference-meta { margin: 0 0 10px 14px; font-size: 12px; line-height: 18px; color: var(--color-text-secondary); overflow-wrap: anywhere; }
+.oracle-reference::details-content, .oracle-more::details-content { opacity: 0; transition: opacity 160ms ease-out, content-visibility 160ms allow-discrete; }
+.oracle-reference[open]::details-content, .oracle-more[open]::details-content { opacity: 1; }
+@starting-style { .oracle-reference[open]::details-content, .oracle-more[open]::details-content { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .oracle-reference > summary::before, .oracle-more > summary::before, .oracle-reference::details-content, .oracle-more::details-content { transition: none; } }
+.diagnosis-supporting .draft-content { font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
 .diagnosis-supporting::details-content { opacity: 0; transition: opacity 160ms ease-out, content-visibility 160ms allow-discrete; }
 .diagnosis-supporting[open]::details-content { opacity: 1; }
 @starting-style { .diagnosis-supporting[open]::details-content { opacity: 0; } }
 /* A new section unfolds like a submenu (heading drops in, the branch line draws down), then types. */
-.diagnosis-document[aria-busy="true"] .diagnosis-section-heading { animation: section-heading-in 280ms cubic-bezier(.23, 1, .32, 1); }
+.diagnosis-document[aria-busy="true"] .diagnosis-section-heading { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) both; }
 .diagnosis-section-body { position: relative; padding-left: 16px; }
 .diagnosis-section-body::before { content: ""; position: absolute; left: 3px; top: 2px; bottom: 2px; border-left: 1px solid var(--color-border-subtle); transform-origin: top; transition: border-color 320ms ease-out; }
 .diagnosis-section[data-typing="true"] .diagnosis-section-body::before { border-left: 2px solid var(--color-action-primary); left: 2px; animation: branch-reveal 320ms cubic-bezier(.23, 1, .32, 1); }
 .diagnosis-section[data-unfolding="true"] .diagnosis-section-body { display: grid; grid-template-rows: 0fr; animation: section-unfold 320ms cubic-bezier(.23, 1, .32, 1) forwards; min-height: 24px; }
-.diagnosis-section[data-typing="true"] .draft-content > :last-child::after { content: ""; display: inline-block; width: 7px; height: 1.05em; margin-left: 3px; vertical-align: text-bottom; border-radius: 1px; background: var(--workspace-accent-ink); animation: typing-caret 900ms steps(1) infinite; }
-/* Each new line of a typing answer fades in, so the text arrives softly rather than popping. */
-.diagnosis-section[data-typing="true"] .draft-content > * { animation: line-in 360ms ease-out both; }
-@keyframes line-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+/* Every line of a typing answer arrives whole and settles into place: one calm fade and 6px rise, no blur, no caret
+   (Gaffer, 2026-10-17: "setiap kemunculan text harus halus"). Lines follow one another at the typing pace. */
+.diagnosis-document[aria-busy="true"] :is(.draft-content > *, .oracle-references) { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes text-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes section-heading-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes section-unfold { to { grid-template-rows: 1fr; } }
 @keyframes typing-caret { 50% { opacity: 0; } }
@@ -379,7 +396,7 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 }
 @media (prefers-reduced-motion: reduce) {
   .diagnosis-nav button, .diagnosis-nav-branch, .diagnosis-supporting > summary::before, .diagnosis-supporting::details-content, .diagnosis-section-heading h3::after, .diagnosis-supporting h3::after, .diagnosis-section[data-arrived="true"] :is(.diagnosis-section-heading, .diagnosis-supporting > summary) > h3::after { transition: none; }
-  .diagnosis-nav-branch, .diagnosis-document[aria-busy="true"] .diagnosis-section-heading, .diagnosis-section-body::before, .diagnosis-section[data-typing="true"] .draft-content > :last-child::after, .diagnosis-section[data-typing="true"] .draft-content > *, .thinking-steps li, .thinking-steps li > span:last-child { animation: none; }
+  .diagnosis-nav-branch, .diagnosis-document[aria-busy="true"] .diagnosis-section-heading, .diagnosis-section-body::before, .diagnosis-document[aria-busy="true"] :is(.draft-content > *, .oracle-references), .thinking-steps li, .thinking-steps li > span:last-child { animation: none; }
 }
 .draft-task { display: flex; gap: 7px; align-items: flex-start; margin: 7px 0; }
 .draft-task input { accent-color: var(--workspace-accent-ink); margin-top: 4px; }
@@ -821,6 +838,13 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 }
 
 /* Smooth UI changes, opacity only: what appears on a click fades in place; what leaves or reflows
+/* Every fresh answer arrives the same way (Gaffer, 2026-10-17: smooth and simple): the card rises softly into focus,
+   then a still document's blocks follow one by one. An analysis keeps its own typing reveal; a reopened answer appears at once. */
+.assistant-message[data-reveal] { animation: answer-in 520ms cubic-bezier(.16, 1, .3, 1) both; }
+.document-studio[data-reveal] :where(.diagnosis-sections > *, .document-studio > div > .draft-content > *) { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) 160ms both; }
+@supports (animation-delay: calc(sibling-index() * 1ms)) { .document-studio[data-reveal] :where(.diagnosis-sections > *, .document-studio > div > .draft-content > *) { animation-delay: calc(100ms + min(sibling-index(), 12) * 60ms); } }
+@keyframes answer-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .assistant-message[data-reveal], .document-studio[data-reveal] :where(.diagnosis-sections > *, .document-studio > div > .draft-content > *) { animation: none; } }
    (dialogs closing, sidebar, Focus Mode, panel, toast) cross-fades through components/smooth.ts. */
 @keyframes fade-in { from { opacity: 0; } }
 .quick-actions .action-chip, .dialog[open], .dialog[open]::backdrop, .toast, .home-content, .home-bottom, .conversation, .chat-composer, .user-message, .assistant-message, .header-left > :not(.expand-sidebar), .export-encounter, .panel-scroll, .document-studio > :not(.studio-toolbar, .studio-status-note), .draft-editor, .dialog-inner > :not(.dialog-header), .theoracle-detail, .template-preview, .workflow-form, .form-warning, .studio-columns, .mira-result, .queue-card, .composer-analysis, .slash-picker, .context-status > span, .storage-warning { animation: fade-in 160ms ease-out; }

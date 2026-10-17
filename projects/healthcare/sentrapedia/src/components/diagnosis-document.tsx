@@ -3,8 +3,12 @@
 import { Fragment, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Pencil } from "lucide-react";
 import { documentSections, documentTitle, emptySection, replaceSection, supportingSection } from "../lib/studio";
-import { diagnosisReferenceMarker } from "../lib/mira/presentation";
+import { diagnosisReferenceMarker, theOracleReferencesTitle } from "../lib/mira/presentation";
 import { revealAt } from "../lib/typing";
+import { TheOracleReferences } from "./theoracle-references";
+
+// While typing, text stops at the last whole line, so each line arrives complete and fades in (globals.css, text-in).
+const typedTo = (text: string, count: number) => count >= text.length ? text : text.slice(0, Math.max(0, text.lastIndexOf("\n", count)));
 
 // Two columns: the section list beside the document (in the right margin on wide canvases). MIRA analyses and local drafts (Chief: "Clinic note redesign menjadi 2 kolom") share it.
 export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderContent, typing = false, label = "Alur kasus", navLabel = "Bagian analisis kasus", showMeta = true, onEditSection }: { content: string; selected: number; onSelect: (index: number) => void; onEdit: (content: string) => void; renderContent: (content: string, onEdit: (content: string) => void) => ReactNode; typing?: boolean; label?: string; navLabel?: string; showMeta?: boolean; onEditSection?: (index: number) => void }) {
@@ -14,7 +18,8 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
   const prefix = content.slice(0, content.indexOf("## "));
   const marker = `\n\n${diagnosisReferenceMarker}\n\n`;
   const parts = useMemo(() => sections.map(section => { const split = section.body.indexOf(marker); return { section, split, body: split < 0 ? section.body : section.body.slice(0, split) }; }), [sections, marker]);
-  const lengths = useMemo(() => [prefix.length, ...parts.map(part => part.body.length)], [prefix.length, parts]);
+  // The references show as compact titles, not typed text, so they take no share of the typing time.
+  const lengths = useMemo(() => [prefix.length, ...parts.map(part => part.section.title === theOracleReferencesTitle ? Math.min(1, part.body.length) : part.body.length)], [prefix.length, parts]);
   const [elapsed, setElapsed] = useState(typing ? 0 : Infinity);
   const progress = revealAt(lengths, elapsed);
   const typingNow = !progress.done;
@@ -56,14 +61,15 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
       </div>
     </nav>
     <div className="diagnosis-sections">
-      {renderContent(showMeta ? prefix.slice(0, progress.visible[0]) : documentTitle(content), () => undefined)}
+      {renderContent(showMeta ? typedTo(prefix, progress.visible[0]) : documentTitle(content), () => undefined)}
       {parts.map(({ section, split, body }, index) => {
         if ((typingNow && index > typingSection) || empty.includes(index)) return null;
         const editable = !typingNow;
         const heading = <h3 id={`${id}-heading-${index}`} tabIndex={-1}>{section.title}</h3>;
         const edit = editable && onEditSection && <button type="button" className="text-button" aria-label={`Edit bagian ${section.title}`} onClick={() => onEditSection(index)}><Pencil size={12}/> Edit</button>;
+        const plain = renderContent(editable ? body : typedTo(body, progress.visible[index + 1]), value => { if (editable) onEdit(replaceSection(content, section, split < 0 ? value : value + section.body.slice(split))); });
         const sectionBody = <div className="diagnosis-section-body">
-          {renderContent(editable ? body : body.slice(0, progress.visible[index + 1]), value => { if (editable) onEdit(replaceSection(content, section, split < 0 ? value : value + section.body.slice(split))); })}
+          {section.title === theOracleReferencesTitle ? <TheOracleReferences body={body} fallback={plain}/> : plain}
           {split >= 0 && editable && <details className="diagnosis-provenance"><summary>Referensi dan jejak analisis</summary>{renderContent(section.body.slice(split + marker.length), () => undefined)}</details>}
         </div>;
         return <section key={section.title} id={`${id}-${index}`} className="diagnosis-section" data-diagnosis-section={index} data-active={current === index} data-arrived={arrived === index} data-typing={typingNow && index === typingSection} data-unfolding={typingNow && index === typingSection && progress.unfolding} aria-labelledby={`${id}-heading-${index}`}>
