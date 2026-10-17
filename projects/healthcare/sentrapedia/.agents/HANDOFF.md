@@ -8,7 +8,8 @@
 - Row 18: `applyTherapyGate` is the one therapy gate in the gateway, client and presentation; the client test now expects a server report to be re-checked and an unsupported dose downgraded to `doseRemoved`.
 - Row 17: 20 revisions per document, compact source JSON (the source-display test now expects the compact form), and a save warning from 4 million characters. Row 4 follow-up: `capsule.json` `run` is `npm run start`.
 - Verified: tsc 0; lint 0; Vitest 296/296; site tests 0; site:verify and site:docs 0 errors; test:system 0; test:mira 189 passed, 1 skipped. `next-env.d.ts` is a generated change and not committed.
-- Next: Gaffer names the push destination (origin, or a subtree split to the Sentrapedia remote on a non-main branch).
+- Pushed (Gaffer: "Push lewat subtree split ke remote sentrapedia, branch feat/sentrapedia-hero-workspace (bukan main)"): `git subtree split --prefix=projects/healthcare/sentrapedia` gave `d7c0fc08` (tree identical to the capsule at `a05168c8`), pushed as a new branch `feat/sentrapedia-hero-workspace` on drferdi/Sentrapedia; no force, `main` untouched, origin not pushed. Jev: proceed_full.
+- Next: Gaffer decides whether to open a pull request on drferdi/Sentrapedia; this handoff note itself is a later local commit, not in the pushed branch.
 
 ## Tech-debt rows 6, 7, 9, 23 and 25 - 2026-10-17 Asia/Jakarta
 
