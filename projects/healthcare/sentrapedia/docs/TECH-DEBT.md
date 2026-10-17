@@ -20,7 +20,7 @@ Prioritised list for a solo maintainer. Nothing in this list has been fixed; it 
 
 ## Top 3 safe to fix in isolation
 
-Status 2026-10-17: rows 2, 4 and 8 are fixed (see `.agents/HANDOFF.md`). For row 4 only the stale provider facts changed; the `run` difference between the two manifests (`npm run dev` versus `npm run start`) is left as is, because both commands are valid and choosing one is a governance decision.
+Status 2026-10-17: row 14 is mitigated (unreadable saved text is kept under `sentrapedia-workspace-v1-unreadable`, a notice is shown, and the Workspace dialog offers it as a download; a migration path for a v2 format is still open). Rows 2, 4 and 8 are fixed (see `.agents/HANDOFF.md`). For row 4 only the stale provider facts changed; the `run` difference between the two manifests (`npm run dev` versus `npm run start`) is left as is, because both commands are valid and choosing one is a governance decision.
 
 Documentation-only rows (3, 6, 7, 9 and others) are safe by nature, but their only check is a human read. These three are the highest-ranked rows where an existing automated check proves that behaviour is unchanged after the fix:
 

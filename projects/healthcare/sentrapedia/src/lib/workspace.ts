@@ -80,6 +80,15 @@ function seedWording(patient: Patient): Patient {
   return { ...patient, name: patient.name === "Patient" ? initialWorkspace.patients[0].name : patient.name, notes: patient.notes === "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." ? initialWorkspace.patients[0].notes : patient.notes };
 }
 
+/** Where saved text that no longer validates is kept, so a reset never destroys it. */
+export const unreadableKey = `${storageKey}-unreadable`;
+
+/** The workspace to start with, plus the saved text when it could not be read (null when nothing was lost). */
+export function loadWorkspace(raw: string | null): { workspace: Workspace; unreadable: string | null } {
+  const workspace = raw ? parseWorkspace(raw) : null;
+  return workspace ? { workspace, unreadable: null } : { workspace: initialWorkspace, unreadable: raw };
+}
+
 export function restoreWorkspace(raw: string | null): Workspace {
   return raw ? parseWorkspace(raw) ?? initialWorkspace : initialWorkspace;
 }

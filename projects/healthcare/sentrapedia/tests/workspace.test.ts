@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { initialWorkspace, newEncounter, parseWorkspace, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
+import { initialWorkspace, loadWorkspace, newEncounter, parseWorkspace, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
 import { createDraft, modes } from "../src/lib/drafts";
 import { greeting } from "../src/lib/ui-labels";
 
@@ -86,6 +86,13 @@ describe("storage validation", () => {
     expect(restoreWorkspace("{broken")).toEqual(initialWorkspace);
     expect(restoreWorkspace(JSON.stringify({ ...initialWorkspace, encounters: [{ id: "x", messages: null }] }))).toEqual(initialWorkspace);
     expect(restoreWorkspace(JSON.stringify({ ...initialWorkspace, settings: { model: "unknown" } }))).toEqual(initialWorkspace);
+  });
+  it("keeps saved text it cannot read so the caller can back it up instead of losing it", () => {
+    expect(loadWorkspace(null)).toEqual({ workspace: initialWorkspace, unreadable: null });
+    const saved = JSON.stringify({ ...initialWorkspace, settings: { ...initialWorkspace.settings, language: "English" } });
+    expect(loadWorkspace(saved)).toEqual({ workspace: restoreWorkspace(saved), unreadable: null });
+    const future = JSON.stringify({ ...initialWorkspace, version: 2 });
+    for (const raw of ["{broken", future]) expect(loadWorkspace(raw)).toEqual({ workspace: initialWorkspace, unreadable: raw });
   });
   it("round-trips a complete workspace", () => {
     expect(restoreWorkspace(JSON.stringify(initialWorkspace))).toEqual(initialWorkspace);

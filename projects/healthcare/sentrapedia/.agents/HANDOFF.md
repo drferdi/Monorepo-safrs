@@ -1,5 +1,12 @@
 # Sentrapedia handoff
 
+## An unreadable saved workspace is kept and downloadable instead of lost - 2026-10-17 Asia/Jakarta
+
+- Gaffer: "Lanjutkan" on tech-debt row 14 (silent reset of an invalid saved workspace). Risk R1 (browser-local data handling; behaviour change approved).
+- Change: `loadWorkspace()` in `src/lib/workspace.ts` returns the workspace plus the saved text when it fails validation. `src/components/workspace.tsx` copies that text to `sentrapedia-workspace-v1-unreadable` (`unreadableKey`), shows an error notice, and the Workspace dialog offers "Unduh data tak terbaca" (`workspace-tidak-terbaca.json`) while a copy exists. "Hapus semua data lokal" also removes it. If the second copy does not fit in storage, the in-memory copy stays downloadable until reload. The main key is still reset to the demo workspace as before.
+- Verified: new test `tests/workspace.test.ts` (watched failing first); `npx tsc --noEmit` exit 0; eslint on the 3 touched files exit 0; Vitest 293/293. Browser on `sentrapedia` preview with fictional data: a version-2 blob and a broken blob each ended in the backup key; the notice appeared; the dialog showed the button and its download carried the exact saved text (anchor click intercepted, no file written); after reload the button stayed with no repeated notice; clear removed key and button. Console showed view-transition timeout/abort errors from `smooth()` while the pane runs hidden (scripted rapid clicks), not from this change. Preview stopped afterwards.
+- Still open from row 14: no migration for a future v2 format; an import of the downloaded file still fails validation by design.
+
 ## Tech-debt rows 2, 4 and 8 fixed without behaviour change - 2026-10-17 Asia/Jakarta
 
 - Gaffer: "Kerjakan" the three isolation-safe rows of `docs/TECH-DEBT.md`. Risk R1 for the code, R2 for the manifests (governance text).
