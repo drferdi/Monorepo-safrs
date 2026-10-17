@@ -6,7 +6,8 @@ import { modes } from "../lib/drafts";
 import type { Message, ReviewStatus, WorkspaceAction } from "../lib/workspace";
 import { PixelLoader } from "./pixel-loader";
 import { Brand } from "./brand";
-import { DocumentStudio, freshAnswer } from "./document-studio";
+import { DocumentStudio } from "./document-studio";
+import { freshAnswer } from "../lib/fresh-answer";
 import { diagnosisContent, hasMiraSource } from "../lib/mira/presentation";
 
 export function downloadText(content: string, name: string) {

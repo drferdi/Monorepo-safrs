@@ -1,9 +1,11 @@
 "use client";
 
-import { ArrowDownToLine, ArrowRight, ArrowUpFromLine, Check, ChevronDown, CircleAlert, CircleHelp, Menu, Maximize2, Minimize2, PanelRight, Command, ShieldCheck, Sparkles, Trash2, X } from "lucide-react";
+import { ArrowDownToLine, Check, ChevronDown, CircleAlert, Menu, Maximize2, Minimize2, PanelRight, Command, Sparkles, X } from "lucide-react";
 import { useCallback, useEffect, useReducer, useRef, useState, useSyncExternalStore } from "react";
 import { createDraft, type ModeId } from "../lib/drafts";
-import { initialWorkspace, loadWorkspace, newEncounter, newId, parseWorkspace, storageKey, unreadableKey, workspaceReducer, type Encounter, type Message, type Patient, type Workspace } from "../lib/workspace";
+import { initialWorkspace, newEncounter, storageKey, unreadableKey, workspaceReducer, type Encounter, type Patient } from "../lib/workspace";
+import { localDraftMessages, restoreFromStorage, shortcutFor } from "../lib/workspace-session";
+import { AccountDialog, LegalDialog, UpgradeDialog } from "./workspace-dialogs";
 import { intentGroups } from "../lib/studio";
 import { insertTemplate } from "../lib/clinical-templates";
 import { Composer } from "./composer";
@@ -17,7 +19,7 @@ import { ClinicalPanel } from "./clinical-panel";
 import { CommandPalette } from "./command-palette";
 import { TemplateLibrary } from "./template-library";
 import { WorkQueue } from "./work-queue";
-import { createPersonalDraft, freshReview, saveLocalWorkspace } from "../lib/workflow";
+import { createPersonalDraft, saveLocalWorkspace } from "../lib/workflow";
 import { KnowledgeDialog } from "./knowledge-dialog";
 import { diagnosisContent, miraMessage } from "../lib/mira/presentation";
 import type { MiraAnalysis } from "../lib/mira/contract";
@@ -61,8 +63,6 @@ export function WorkspaceApp() {
   const [restoring, setRestoring] = useState(true);
   const [toast, setToast] = useState("");
   const [toastError, setToastError] = useState(false);
-  const [confirmClear, setConfirmClear] = useState(false);
-  const [pendingImport, setPendingImport] = useState<Workspace | null>(null);
   const hydrated = useRef(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const end = useRef<HTMLDivElement>(null);
@@ -88,7 +88,7 @@ export function WorkspaceApp() {
   function chooseTemplate(key: string) { cancelAnalysis(); if (key.startsWith("mode:")) changeMode(key.slice(5) as ModeId); else { const item = state.templates?.find((t) => `template:${t.id}` === key); if (!item) return; setMode(item.mode); setTemplateKey(key); } closeDialog(); }
 
   const notify = useCallback((text: string, tone?: "error") => { if (toastTimer.current) clearTimeout(toastTimer.current); setToast(text); setToastError(tone === "error"); toastTimer.current = setTimeout(() => smooth(() => setToast("")), 4500); }, []);
-  useEffect(() => { try { const loaded = loadWorkspace(localStorage.getItem(storageKey)); if (loaded.unreadable) { queueMicrotask(() => notify("Workspace tersimpan tidak dapat dibaca. Datanya disimpan sebagai cadangan dan dapat diunduh dari menu Workspace.", "error")); try { localStorage.setItem(unreadableKey, loaded.unreadable); } catch { /* no room for a second copy: the copy in memory stays downloadable until reload */ } } const kept = loaded.unreadable ?? localStorage.getItem(unreadableKey); queueMicrotask(() => setUnreadable(kept)); dispatch({ type: "restore", state: loaded.workspace }); } catch { queueMicrotask(() => notify("Penyimpanan browser tidak tersedia. Perubahan hanya bertahan selama sesi ini.", "error")); } finally { queueMicrotask(() => setRestoring(false)); } }, [notify]);
+  useEffect(() => { try { const restored = restoreFromStorage(localStorage); const notice = restored.notice; if (notice) queueMicrotask(() => notify(notice, "error")); queueMicrotask(() => setUnreadable(restored.unreadable)); dispatch({ type: "restore", state: restored.workspace }); } catch { queueMicrotask(() => notify("Penyimpanan browser tidak tersedia. Perubahan hanya bertahan selama sesi ini.", "error")); } finally { queueMicrotask(() => setRestoring(false)); } }, [notify]);
   useEffect(() => { if (!hydrated.current) { hydrated.current = true; return; } const error = saveLocalWorkspace(state, (raw) => localStorage.setItem(storageKey, raw)); queueMicrotask(() => setStorageError(error ?? "")); }, [state]);
   useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current); }, []);
   useEffect(() => () => analysisController.current?.abort(), []);
@@ -101,11 +101,11 @@ export function WorkspaceApp() {
     observer.observe(inner);
     return () => observer.disconnect();
   }, [hasMessages]);
-  useEffect(() => { const handler = (e: KeyboardEvent) => { if (dialog || (mobile && mobileNavOpen)) return; if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "j") { e.preventDefault(); setDialog("commands"); } if ((e.metaKey || e.ctrlKey) && e.key === "/") { e.preventDefault(); setDialog("search"); } if ((e.metaKey || e.ctrlKey) && e.key === "k") { e.preventDefault(); dispatch({ type: "encounter.select", id: null }); setPrompt(""); changeMode("question"); } }; window.addEventListener("keydown", handler); return () => window.removeEventListener("keydown", handler); }, [dialog, mobile, mobileNavOpen, changeMode]);
+  useEffect(() => { const handler = (e: KeyboardEvent) => { const shortcut = shortcutFor(e, Boolean(dialog) || (mobile && mobileNavOpen)); if (!shortcut) return; e.preventDefault(); if (shortcut === "new") { dispatch({ type: "encounter.select", id: null }); setPrompt(""); changeMode("question"); } else setDialog(shortcut); }; window.addEventListener("keydown", handler); return () => window.removeEventListener("keydown", handler); }, [dialog, mobile, mobileNavOpen, changeMode]);
 
   // One dialog replacing another cross-fades; a first dialog fades in through CSS.
   function openDialog(name: DialogName, id?: string) { if (analysisController.current) cancelAnalysis(); const open = () => { setDialog(name); setDialogId(id); }; if (dialog) smooth(open); else open(); }
-  function hideDialog() { setDialog(null); setDialogId(undefined); setConfirmClear(false); setPendingImport(null); }
+  function hideDialog() { setDialog(null); setDialogId(undefined); }
   function closeDialog() { if (dialog) smooth(hideDialog); else hideDialog(); }
   function selectEncounter(id: string) { dispatch({ type: "encounter.select", id }); setPrompt(""); changeMode("question"); if (mobile) setMobileNavOpen(false); closeDialog(); }
   function startNew(patientId?: string) {
@@ -141,7 +141,7 @@ export function WorkspaceApp() {
     try { content = personal ? createPersonalDraft(personal, text, current.context) : createDraft({ mode: selectedMode, prompt: text, context: current.context, ...state.settings, patient }); } catch (error) { notify(error instanceof Error ? error.message : "Draf tidak dapat diformat.", "error"); return; }
     setBusy(true);
     if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
-    const messages: Message[] = [{ id: newId(), role: "user", content: text.trim(), mode: selectedMode, createdAt: new Date().toISOString() }, { id: newId(), role: "assistant", content, originalContent: content, reviewStatus: "draft", reviewItems: freshReview(state.reviewDefaults), ...(personal ? { templateSnapshot: { ...personal, sections: [...personal.sections] } } : {}), sourceText: [`Input\n${text}`, personal && `Templat saat dibuat\n${JSON.stringify(personal, null, 2)}`, current.context && `Konteks Encounter\n${current.context}`, patient && `Pasien\n${patient.name}\n${patient.age}\n${patient.sex}\nCatatan Pasien\n${patient.notes}`, `Preferensi format\n${state.settings.specialty} · ${state.settings.model} · ${state.settings.language}\n${state.settings.instructions}`].filter(Boolean).join("\n\n"), mode: selectedMode, createdAt: new Date().toISOString() }];
+    const messages = localDraftMessages({ text, content, mode: selectedMode, context: current.context, patient, settings: state.settings, reviewDefaults: state.reviewDefaults, personal });
     dispatch({ type: "message.add", encounterId: current.id, messages });
     setPrompt(""); setBusy(false);
   }
@@ -183,8 +183,8 @@ export function WorkspaceApp() {
     {dialog === "context" && <ContextForm context={context} onSave={(text) => { if (encounter) dispatch({ type: "encounter.update", id: encounter.id, updates: { context: text } }); else if (text.trim()) dispatch({ type: "encounter.add", encounter: { ...newEncounter(), context: text } }); closeDialog(); notify(text ? "Konteks ditambahkan ke Encounter ini." : "Konteks Encounter dikosongkan."); }} onClose={closeDialog}/>}
     {dialog === "scribe" && <Scribe language={state.settings.language} onClose={closeDialog} onGenerate={(transcript) => { setMode("scribe"); generate(transcript, "scribe", false); closeDialog(); }}/ >}
     {dialog === "encounter" && editedEncounter && <EncounterForm key={editedEncounter.id} encounter={editedEncounter} patients={state.patients} onSave={(updates) => { dispatch({ type: "encounter.update", id: editedEncounter.id, updates }); closeDialog(); notify("Detail Encounter tersimpan."); }} onDelete={() => { dispatch({ type: "encounter.delete", id: editedEncounter.id }); closeDialog(); notify("Encounter lokal dihapus."); }} onClose={closeDialog}/>}
-    {dialog === "upgrade" && <Dialog title="Ruang untuk pemikiran Clinical" subtitle="Workspace lokal mencakup seluruh alur pembuatan draf." onClose={closeDialog}><div className="plan-card"><div><span className="plan-label">Workspace Anda</span><h3>Sentrapedia Lite <span>Lokal</span></h3><p>Pasien, Encounter, dan draf dokumen lokal tanpa batas.</p></div><ul>{["14 template Clinical dan administrasi", "Draf yang dapat diedit, checklist, dan ekspor Markdown", "Berkas konteks dan Scribing berbasis transkrip", "Preferensi Specialty dan format"].map((item) => <li key={item}><Check size={15}/>{item}</li>)}</ul></div><div className="notice"><CircleHelp size={17}/><span>Referensi penyakit tersedia secara lokal. Analisis kasus memerlukan koneksi layanan. Sinkronisasi, kutipan PNPK dan langganan belum tersedia. Tidak ada pembayaran di sini.</span></div><div className="dialog-footer"><button className="button primary" onClick={closeDialog}>Lanjutkan dengan workspace lokal <ArrowRight size={15}/></button></div></Dialog>}
-    {dialog === "account" && <Dialog title="Workspace Clinical Anda" subtitle="Sentrapedia · workspace Clinical" onClose={closeDialog}><div className="account-profile"><span className="avatar large">FI</span><div><strong>Workspace Sentrapedia</strong><p>Sesi lokal · Lite</p></div></div><div className="notice"><ShieldCheck size={18}/><span>Browser menyimpan workspace di perangkat ini tanpa enkripsi atau sinkronisasi antarperangkat. Gunakan data fiktif saja.</span></div><dl className="workspace-stats"><div><dt>Pasien</dt><dd>{state.patients.length}</dd></div><div><dt>Encounter</dt><dd>{state.encounters.length}</dd></div><div><dt>Daftar Pasien</dt><dd>{state.lists.length}</dd></div></dl><div className="integration-note"><strong>Koneksi backend</strong><p>Referensi penyakit tersedia; analisis kasus menggunakan layanan lokal yang dikonfigurasi. Kutipan pedoman, penyimpanan Pasien aman, authentication, transkripsi audio cloud, integrasi EHR, dan billing belum terhubung.</p></div>{pendingImport ? <div key="import" className="form-warning"><p>Ganti workspace di browser ini dengan backup ({pendingImport.patients.length} Pasien, {pendingImport.encounters.length} Encounter)? Data lokal saat ini akan ditimpa.</p><button className="button danger" onClick={() => { dispatch({ type: "restore", state: pendingImport }); setPrompt(""); closeDialog(); notify("Backup workspace dipulihkan."); }}>Ganti dengan backup</button></div> : confirmClear ? <div key="confirm" className="form-warning"><p>Hapus semua Pasien, Encounter, daftar, dan draf lokal? Ekspor draf yang ingin disimpan terlebih dahulu.</p><button className="button danger" onClick={() => { dispatch({ type: "clear" }); try { localStorage.removeItem(unreadableKey); } catch { /* storage unavailable: nothing to remove */ } setUnreadable(null); setPrompt(""); closeDialog(); notify("Workspace lokal dikosongkan."); }}>Hapus semua data lokal</button></div> : <div key="actions" className="dialog-footer"><button className="button danger-ghost push-left" onClick={() => setConfirmClear(true)}><Trash2 size={14}/> Hapus data lokal</button>{unreadable && <button className="button" onClick={() => downloadText(unreadable, "workspace-tidak-terbaca.json")}><ArrowDownToLine size={14}/> Unduh data tak terbaca</button>}<button className="button" onClick={() => downloadText(JSON.stringify(state, null, 2), "workspace-backup.json")}><ArrowDownToLine size={14}/> Ekspor backup</button><label className="button"><ArrowUpFromLine size={14}/> Impor backup<input type="file" accept="application/json,.json" className="visually-hidden" onChange={async (event) => { const file = event.target.files?.[0]; event.target.value = ""; if (!file) return; const restored = parseWorkspace(await file.text()); if (restored) setPendingImport(restored); else notify("Berkas bukan backup workspace Sentrapedia yang valid.", "error"); }}/></label></div>}</Dialog>}
-    {dialog === "legal" && <Dialog title={dialogId ?? "Informasi workspace"} subtitle="Workspace pengembangan lokal" onClose={closeDialog}><div className="legal-content"><ShieldCheck size={28}/><h3>Dibangun untuk menjelajahi alur kerja Anda.</h3><p>Sentrapedia adalah workspace mandiri untuk pengembangan. Layanan Clinical, langganan, dan perjanjian layanan produksi belum tersedia.</p><p>Data Pasien dan Encounter disimpan dalam local storage browser ini. Tidak ada analytics atau cookie iklan. Pengenalan suara dapat memakai layanan speech penyedia browser saat diaktifkan.</p><p>Gunakan informasi fiktif saja. Draf lokal mempertahankan teks yang diberikan; tinjauan Clinician dan integrasi AI/Evidence diperlukan untuk penggunaan Clinical.</p></div><div className="dialog-footer"><button className="button primary" onClick={closeDialog}>Mengerti</button></div></Dialog>}
+    {dialog === "upgrade" && <UpgradeDialog onClose={closeDialog}/>}
+    {dialog === "account" && <AccountDialog state={state} unreadable={unreadable} onRestore={(restored) => { dispatch({ type: "restore", state: restored }); setPrompt(""); closeDialog(); notify("Backup workspace dipulihkan."); }} onClear={() => { dispatch({ type: "clear" }); try { localStorage.removeItem(unreadableKey); } catch { /* storage unavailable: nothing to remove */ } setUnreadable(null); setPrompt(""); closeDialog(); notify("Workspace lokal dikosongkan."); }} onInvalidImport={() => notify("Berkas bukan backup workspace Sentrapedia yang valid.", "error")} onClose={closeDialog}/>}
+    {dialog === "legal" && <LegalDialog title={dialogId} onClose={closeDialog}/>}
   </div>;
 }
