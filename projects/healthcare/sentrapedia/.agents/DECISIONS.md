@@ -284,3 +284,8 @@
 - Route: the engine's existing `openai` provider with `OPENAI_BASE_URL` set to Google's OpenAI-compatible endpoint, set by the launcher. A new `gemini` provider value was rejected because it would diverge `common/providers.py`, `common/guard.py` and `service/settings.py`, which `test_packaging.py` requires to match upstream. The only engine change is the Gemini price in `service/app.py`, already an allowed divergence. Consequence: the engine reports `provider=openai`.
 - Privacy: prompts now go to Google under the Gemini API terms. A paid-tier key is required, because free-tier prompts may be used to improve Google products. The data policy stays `synthetic-only`.
 - Gaffer approved repinning the `service/app.py` `packagedSha256` in `mira/SOURCE.json`; done the same day. Open: the route is not yet verified live.
+
+## 2026-10-17 - Fast-assessment copies are a launcher knob; engine.py repinned
+
+- Gaffer approved reading the number of raced copies from `MIRA_FAST_COPIES` (engine default 3) and repinning `service/engine.py` in `mira/SOURCE.json`, the same mechanism as `app.py`. `settings.py` stays byte-identical to upstream, so the knob lives in `engine.py` (`fast_copies()`), not in `Settings`.
+- The launcher passes `fastCopies` from `scripts/mira-profile.json`. Measured on 2026-10-17 (fictional cough case, 3 runs each): 1 copy costs one third of 3 copies (0.0050 against 0.0153 USD per case) with the diagnosis stage about 0.2 s slower and the same answer; it gives up the one-hiccup retry and the complete-regimen grace. The profile value is Gaffer's call; numbers in the HANDOFF entry of the same day.

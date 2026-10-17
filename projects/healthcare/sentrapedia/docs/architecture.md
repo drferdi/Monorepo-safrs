@@ -166,7 +166,7 @@ All commands are **listed in package.json / capsule.json, not run** for this doc
 | `MIRA_SERVICE_TOKEN` | `app/api/mira/route.ts` | Bearer token for MIRA; server-side only | **Verified** |
 | `GEMINI_API_KEY` | Launcher scripts only, never the Next.js app | Passed to the MIRA process as `OPENAI_API_KEY` | **Verified** |
 | `PORT`, `HOSTNAME`, `NODE_ENV`, `NEXT_TELEMETRY_DISABLED` | Docker image | Container runtime | **Verified** `Dockerfile` |
-| `MIRA_*` (e.g. `MIRA_PLAN_MODEL`, `MIRA_STEP_DEADLINE_S`, `MIRA_DAILY_BUDGET_USD`, `MIRA_OPENROUTER_ZDR`, `MIRA_FAST_THERAPY`, `MIRA_DEV_TOKEN`) | The MIRA service, set by the launcher | Model, budget, speed and privacy settings | **Verified** `config/mira-deepseek.env.example` |
+| `MIRA_*` (e.g. `MIRA_PLAN_MODEL`, `MIRA_STEP_DEADLINE_S`, `MIRA_DAILY_BUDGET_USD`, `MIRA_OPENROUTER_ZDR`, `MIRA_FAST_THERAPY`, `MIRA_FAST_COPIES`, `MIRA_DEV_TOKEN`) | The MIRA service, set by the launcher | Model, budget, speed and privacy settings | **Verified** `config/mira-deepseek.env.example` |
 
 **Verified.** The two `process.env` reads happen once when the route module loads, so a restart is needed after changing them. `capsule.json` declares `requiredEnvironment: []`: the UI runs without any of them; only analysis fails (503 NOT_CONFIGURED).
 

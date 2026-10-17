@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
 import time
 from dataclasses import replace
 
@@ -36,10 +37,20 @@ from .settings import Settings
 
 log = logging.getLogger("mira_service")
 MAX_CALLS_PER_STEP = 2
-# fast assessment: each of its two parts is sent this many times and the first answer wins
+# fast assessment: default copies per raced part; MIRA_FAST_COPIES overrides it (fast_copies below)
 FAST_COPIES = 3
 # how long the other copies may still beat a valid but unaccepted one
 FALLBACK_GRACE_S = 1.0
+
+
+def fast_copies(environ: dict[str, str] | None = None) -> int:
+    """Copies per raced part: MIRA_FAST_COPIES, default FAST_COPIES. Read here, not in Settings, which
+    stays byte-identical to upstream."""
+    env = os.environ if environ is None else environ
+    copies = int(env.get("MIRA_FAST_COPIES", FAST_COPIES))
+    if copies < 1:
+        raise ValueError("MIRA_FAST_COPIES must be at least 1.")
+    return copies
 
 
 def _complete_therapy(content: dict) -> bool:
@@ -148,7 +159,7 @@ class StepEngine:
         return message.content
 
     async def _race(self, guard: ApiGuard, role: str, deadline: float, accept=lambda content: True, **kwargs) -> dict:
-        """The first of FAST_COPIES identical calls to return valid JSON that `accept` takes. When a
+        """The first of fast_copies() identical calls to return valid JSON that `accept` takes. When a
         copy is valid but not accepted, the others get FALLBACK_GRACE_S more to do better; otherwise
         that first valid copy is returned. Copies still running are cancelled and charged at the
         winner's cost, so the budget never undercounts."""
@@ -172,7 +183,7 @@ class StepEngine:
                     })
             return content
 
-        tasks = [asyncio.create_task(self._call(guard, role, model, deadline, count_failure=False, **copy(n))) for n in range(FAST_COPIES)]
+        tasks = [asyncio.create_task(self._call(guard, role, model, deadline, count_failure=False, **copy(n))) for n in range(fast_copies())]
         try:
             failure, fallback, grace_until = None, None, None
             pending = set(tasks)
@@ -242,7 +253,7 @@ class StepEngine:
     ) -> tuple[dict, ApiGuard, list[str]]:
         s = self.settings
         therapy = s.fast_therapy and not omit_therapy
-        max_calls = (3 if therapy else 2) * FAST_COPIES if s.fast_assessment else MAX_CALLS_PER_STEP
+        max_calls = (3 if therapy else 2) * fast_copies() if s.fast_assessment else MAX_CALLS_PER_STEP
         guard = ApiGuard(max_calls=max_calls, max_usd=s.max_usd_per_step, provider=s.llm_provider)
         if self.budget.exhausted():
             return self.unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
@@ -299,7 +310,7 @@ class StepEngine:
     async def run_therapy(self, case: dict, diagnosis: dict, grounding: dict) -> tuple[dict, ApiGuard, list[str]]:
         """Therapy for a diagnosis chosen by an earlier step, grounded on excerpts retrieved for it."""
         s = self.settings
-        guard = ApiGuard(max_calls=FAST_COPIES, max_usd=s.max_usd_per_step, provider=s.llm_provider)
+        guard = ApiGuard(max_calls=fast_copies(), max_usd=s.max_usd_per_step, provider=s.llm_provider)
         if self.budget.exhausted():
             return self.therapy_unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
         if self.breaker.is_open():

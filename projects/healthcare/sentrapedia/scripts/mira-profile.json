@@ -2,5 +2,6 @@
   "model": "gemini-3.1-flash-lite",
   "stepBudgetUsd": 0.1,
   "stepDeadlineS": 20,
-  "gatewayMarginS": 25
+  "gatewayMarginS": 25,
+  "fastCopies": 1
 }

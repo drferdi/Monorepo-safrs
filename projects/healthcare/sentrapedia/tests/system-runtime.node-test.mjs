@@ -5,11 +5,13 @@ import { resolve } from "node:path";
 import { engineEnvironment, engineReady, geminiBaseUrl, model, pythonPath } from "../scripts/mira-runtime.mjs";
 import profile from "../scripts/mira-profile.json" with { type: "json" };
 
-test("launcher takes model, step deadline and budget from the shared MIRA profile", () => {
+test("launcher takes model, step deadline, budget and fast copies from the shared MIRA profile", () => {
   const env = engineEnvironment(resolve("test-capsule"), { GEMINI_API_KEY: "fixture-only" }, "token");
   assert.equal(model, profile.model);
   assert.equal(env.MIRA_STEP_DEADLINE_S, String(profile.stepDeadlineS));
   assert.equal(env.MIRA_MAX_USD_PER_STEP, profile.stepBudgetUsd.toFixed(2));
+  assert.ok(Number.isInteger(profile.fastCopies) && profile.fastCopies >= 1, "fastCopies is a whole number of copies, at least 1");
+  assert.equal(env.MIRA_FAST_COPIES, String(profile.fastCopies));
 });
 
 test("engine uses capsule runtime and preserves approved profile despite inherited external config", () => {

@@ -68,7 +68,7 @@
       "source": "assist/service/engine.py",
       "path": "service/engine.py",
       "sourceSha256": "dd1b854c8c068b13f8f398cde27b94ed9239ab910f592f3fc8f9390795dbe829",
-      "packagedSha256": "e9b174d2ebcf1eaba81477764abc9a427216f68f7e3d9e12cd982a7f4c6c31d9"
+      "packagedSha256": "3a2a2ebebfab075bb6cdbb8cd3d333b4ce5ecfd45f008128f8c20425f9db5556"
     },
     {
       "source": "assist/service/HANDOFF_NOTES.md",

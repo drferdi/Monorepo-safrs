@@ -38,7 +38,7 @@ export function engineEnvironment(root, environment, token) {
     MIRA_DATA_POLICY: "synthetic-only", MIRA_PLAN_MODEL: model, MIRA_PLAN_MODEL_CHOICES: model,
     MIRA_ASSESS_MODEL: model, MIRA_OPENROUTER_PROVIDER_SORT: "", MIRA_OPENROUTER_ZDR: "",
     MIRA_PROVISIONAL_DIFFERENTIAL: "true", MIRA_FAST_ASSESSMENT: "true", MIRA_FAST_THERAPY: "true",
-    MIRA_FAST_COPY_PROVIDERS: "", MIRA_STEP_DEADLINE_S: String(profile.stepDeadlineS),
+    MIRA_FAST_COPIES: String(profile.fastCopies), MIRA_FAST_COPY_PROVIDERS: "", MIRA_STEP_DEADLINE_S: String(profile.stepDeadlineS),
     MIRA_MAX_USD_PER_STEP: profile.stepBudgetUsd.toFixed(2), MIRA_DAILY_BUDGET_USD: "5", MIRA_ALLOWED_ORIGINS: "",
     MIRA_AUDIT_DIR: resolve(root, ".runtime/mira-deepseek/audit"),
   };

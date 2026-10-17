@@ -258,7 +258,7 @@ flowchart TB
 
 `npm ci --workspaces=false` installs Node dependencies and the locked Python environment in `.runtime/mira/venv`. `scripts/run-system.mjs` then checks public model metadata, generates a private loopback token and port, starts MIRA, verifies its profile/grounding capability, and launches the web interface. Historical connection settings are overridden in memory; a sibling MIRA repository is not required. See [the current integration contract](docs/mira-integration.md).
 
-**Model selection:** `gemini-3.1-flash-lite` is configured for planning and assessment, called directly on the Gemini API with `GEMINI_API_KEY` (no OpenRouter), alongside provisional differentials and fast assessment/therapy. Configured guards include **US$0.10 per step**, **US$5 daily ledger**, **20-second engine deadline**, and **135-second gateway deadline**. These are limits and targets, **not guaranteed speed or charges**. The launcher sets `MIRA_OPENROUTER_ZDR=false`: zero-data-retention protection must not be assumed. [Source](scripts/mira-runtime.mjs).
+**Model selection:** `gemini-3.1-flash-lite` is configured for planning and assessment, called directly on the Gemini API with `GEMINI_API_KEY` (no OpenRouter), alongside provisional differentials and fast assessment/therapy (`fastCopies` in `scripts/mira-profile.json` sets how many copies of each raced part are sent; the engine default is 3). Configured guards include **US$0.10 per step**, **US$5 daily ledger**, **20-second engine deadline**, and **135-second gateway deadline**. These are limits and targets, **not guaranteed speed or charges**. The launcher sets `MIRA_OPENROUTER_ZDR=false`: zero-data-retention protection must not be assumed. [Source](scripts/mira-runtime.mjs).
 
 
 ### Clinical inquiry modes
