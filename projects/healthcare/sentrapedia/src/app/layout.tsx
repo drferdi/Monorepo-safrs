@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Plus_Jakarta_Sans } from "next/font/google";
-import { VeraWidget } from "../components/vera-widget";
 import "./globals.css";
 
 // Chief's type pair: Plus Jakarta Sans for titles, Geist for everything else.
@@ -14,7 +13,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="id" className={`${geist.variable} ${jakarta.variable}`}>
       <body>
         {children}
-        <VeraWidget />
       </body>
     </html>
   );

@@ -48,20 +48,6 @@ describe("muted text never sits on the surface colour", () => {
   });
 });
 
-describe("the floating Vera launcher keeps clear of the workspace controls", () => {
-  it("places the launcher from shared footprint tokens", () => {
-    for (const name of ["--launcher-inset", "--launcher-height", "--launcher-width"]) expect(root).toContain(`${name}:`);
-    expect(declarations(".vera-widget-root")).toMatch(/bottom:\s*var\(--launcher-inset\)/);
-    expect(declarations(".vera-widget-trigger")).toMatch(/height:\s*var\(--launcher-height\)/);
-  });
-  it("reserves that footprint under the chat composer, the home footer and the cockpit footnote", () => {
-    expect(css).toMatch(/\.chat-composer \{[^}]*var\(--launcher-inset\)/);
-    expect(css).toMatch(/\.composer-hint \{[^}]*min-height: var\(--launcher-height\)/);
-    expect(css).toMatch(/\.site-footer[^{]*\{[^}]*var\(--launcher-width\)/);
-    expect(css).toMatch(/\.clinical-panel \.panel-footnote[^{]*\{[^}]*var\(--launcher-height\)/);
-  });
-});
-
 describe("cockpit dialog", () => {
   it("hides the side-column label at every width, because the dialog title already names the cockpit", () => {
     const at = css.indexOf(".dialog .clinical-panel-header {");

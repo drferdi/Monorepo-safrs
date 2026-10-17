@@ -27,10 +27,6 @@
   --workspace-error-text: #8b3a24;
   /* Swiss pass (Chief, 2026-10-09): one sharp corner, flat layers, strong rules; colours unchanged. */
   --radius: 2px;
-  /* Floating Vera launcher footprint: the widget is placed from it, and the layouts it can cover keep their controls clear of it. */
-  --launcher-inset: 22px;
-  --launcher-height: 40px;
-  --launcher-width: 128px;
   --rule-strong: #131313;
   --floating-line: color-mix(in srgb, #131313, transparent 75%);
   /* Type pair (Chief, 2026-10-09): Plus Jakarta Sans titles, Geist text. His colours came from a dark page; these follow this light one. */
@@ -339,6 +335,10 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .diagnosis-supporting h3 { font-size: 13px; line-height: 20px; font-weight: 500; margin: 0; }
 .diagnosis-supporting > .text-button { position: absolute; top: 14px; right: 0; }
 .diagnosis-supporting .diagnosis-section-body { margin-top: 10px; }
+.diagnosis-supporting .draft-content { font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
+.diagnosis-supporting::details-content { opacity: 0; transition: opacity 160ms ease-out, content-visibility 160ms allow-discrete; }
+.diagnosis-supporting[open]::details-content { opacity: 1; }
+@starting-style { .diagnosis-supporting[open]::details-content { opacity: 0; } }
 /* TheOracle references (Gaffer, 2026-10-17): two one-line titles, the rest behind one disclosure; a title opens to its passage. */
 .oracle-references { display: grid; gap: 2px; }
 .oracle-reference > summary, .oracle-more > summary { display: flex; align-items: center; gap: 9px; min-height: 30px; cursor: pointer; list-style: none; font-size: 15px; color: var(--color-text-primary); }
@@ -356,10 +356,6 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .oracle-reference[open]::details-content, .oracle-more[open]::details-content { opacity: 1; }
 @starting-style { .oracle-reference[open]::details-content, .oracle-more[open]::details-content { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .oracle-reference > summary::before, .oracle-more > summary::before, .oracle-reference::details-content, .oracle-more::details-content { transition: none; } }
-.diagnosis-supporting .draft-content { font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
-.diagnosis-supporting::details-content { opacity: 0; transition: opacity 160ms ease-out, content-visibility 160ms allow-discrete; }
-.diagnosis-supporting[open]::details-content { opacity: 1; }
-@starting-style { .diagnosis-supporting[open]::details-content { opacity: 0; } }
 /* A new section unfolds like a submenu (heading drops in, the branch line draws down), then types. */
 .diagnosis-document[aria-busy="true"] .diagnosis-section-heading { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) both; }
 .diagnosis-section-body { position: relative; padding-left: 16px; }
@@ -838,6 +834,10 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 }
 
 /* Smooth UI changes, opacity only: what appears on a click fades in place; what leaves or reflows
+   (dialogs closing, sidebar, Focus Mode, panel, toast) cross-fades through components/smooth.ts. */
+@keyframes fade-in { from { opacity: 0; } }
+.quick-actions .action-chip, .dialog[open], .dialog[open]::backdrop, .toast, .home-content, .home-bottom, .conversation, .chat-composer, .user-message, .assistant-message, .header-left > :not(.expand-sidebar), .export-encounter, .panel-scroll, .document-studio > :not(.studio-toolbar, .studio-status-note), .draft-editor, .dialog-inner > :not(.dialog-header), .theoracle-detail, .template-preview, .workflow-form, .form-warning, .studio-columns, .mira-result, .queue-card, .composer-analysis, .slash-picker, .context-status > span, .storage-warning { animation: fade-in 160ms ease-out; }
+@starting-style { .submenu-section[data-open="true"] .submenu-item { opacity: 0; } }
 /* Every fresh answer arrives the same way (Gaffer, 2026-10-17: smooth and simple): the card rises softly into focus,
    then a still document's blocks follow one by one. An analysis keeps its own typing reveal; a reopened answer appears at once. */
 .assistant-message[data-reveal] { animation: answer-in 520ms cubic-bezier(.16, 1, .3, 1) both; }
@@ -845,23 +845,11 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 @supports (animation-delay: calc(sibling-index() * 1ms)) { .document-studio[data-reveal] :where(.diagnosis-sections > *, .document-studio > div > .draft-content > *) { animation-delay: calc(100ms + min(sibling-index(), 12) * 60ms); } }
 @keyframes answer-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .assistant-message[data-reveal], .document-studio[data-reveal] :where(.diagnosis-sections > *, .document-studio > div > .draft-content > *) { animation: none; } }
-   (dialogs closing, sidebar, Focus Mode, panel, toast) cross-fades through components/smooth.ts. */
-@keyframes fade-in { from { opacity: 0; } }
-.quick-actions .action-chip, .dialog[open], .dialog[open]::backdrop, .toast, .home-content, .home-bottom, .conversation, .chat-composer, .user-message, .assistant-message, .header-left > :not(.expand-sidebar), .export-encounter, .panel-scroll, .document-studio > :not(.studio-toolbar, .studio-status-note), .draft-editor, .dialog-inner > :not(.dialog-header), .theoracle-detail, .template-preview, .workflow-form, .form-warning, .studio-columns, .mira-result, .queue-card, .composer-analysis, .slash-picker, .context-status > span, .storage-warning { animation: fade-in 160ms ease-out; }
-@starting-style { .submenu-section[data-open="true"] .submenu-item { opacity: 0; } }
 ::view-transition { pointer-events: none; }
 ::view-transition-group(root), ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 160ms; animation-timing-function: ease-out; }
 
 /* Design audit fixes (Gaffer, 2026-10-11). */
 @media (max-width: 1200px) { .chat-composer .intent-groups, .chat-composer .quick-actions { display: none; } }
-/* The launcher never covers Send, Stop or the footer links: where the column reaches under it, the hint line becomes the launcher's band. */
-@container canvas (max-width: 1080px) {
-  .app-shell:not(:has(> .clinical-panel)) .chat-composer { margin-bottom: var(--launcher-inset); }
-  .app-shell:not(:has(> .clinical-panel)) .composer-hint { min-height: var(--launcher-height); align-content: center; margin-top: 8px; padding-right: calc(var(--launcher-width) + var(--launcher-inset)); }
-  .app-shell:not(:has(> .clinical-panel)) .site-footer { padding-right: calc(var(--launcher-width) + var(--launcher-inset)); }
-}
-/* The inline cockpit keeps its "Tersimpan di browser · Data fiktif" marker above the launcher. */
-.clinical-panel .panel-footnote { margin-bottom: calc(var(--launcher-inset) + var(--launcher-height)); }
 /* H-03: on the home screen the Mode trigger appears only for a template outside the quick actions, or when asked for. */
 .composer-mode[data-quiet="true"] { padding: 0; }
 .composer-mode[data-quiet="true"] .mode-trigger { width: auto; height: 36px; padding: 8px 11px; border: 1px solid var(--color-border-subtle); background: var(--workspace-white); }
@@ -882,139 +870,3 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .not-found h1 { margin: 0; }
 .not-found p { margin: 0; font-size: 15px; color: var(--color-text-secondary); }
 .not-found a { color: var(--workspace-accent-ink); font-size: 14px; min-height: 24px; display: inline-flex; align-items: center; }
-
-/* Vera chat widget (Dify). Compact dark neumorphic panel with the Sentrapedia tosca accent. */
-.vera-widget-root {
-  --vera-bg: #1e1e22;
-  --vera-raised: #232328;
-  --vera-line: #2c2c32;
-  --vera-text: #ececf1;
-  --vera-dim: #9a9aa4;
-  --vera-accent: #40e0d0;
-  --vera-accent-ink: #086b61;
-  --vera-shadow-dark: rgba(8, 8, 10, 0.5);
-  --vera-shadow-light: rgba(255, 255, 255, 0.03);
-  --vera-raise: 3px 3px 8px var(--vera-shadow-dark), -2px -2px 6px var(--vera-shadow-light);
-  --vera-raise-sm: 2px 2px 5px var(--vera-shadow-dark), -1px -1px 4px var(--vera-shadow-light);
-  --vera-press: inset 1px 1px 3px var(--vera-shadow-dark), inset -1px -1px 3px var(--vera-shadow-light);
-  position: fixed;
-  bottom: var(--launcher-inset);
-  right: var(--launcher-inset);
-  z-index: 999999;
-  font-family: var(--font-body);
-  color: var(--vera-text);
-}
-
-.vera-widget-panel {
-  position: fixed;
-  bottom: 74px;
-  right: 22px;
-  width: min(330px, calc(100vw - 24px));
-  height: min(440px, calc(100dvh - 96px));
-  display: flex;
-  flex-direction: column;
-  background: var(--vera-bg);
-  border: 1px solid var(--vera-line);
-  border-radius: 22px;
-  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  overflow: hidden;
-  animation: vera-panel-in 200ms cubic-bezier(.23, 1, .32, 1) both;
-  transform-origin: bottom right;
-}
-
-.vera-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 12px 6px; }
-.vera-header-actions { display: flex; gap: 6px; }
-.vera-plan { padding: 5px 12px; border-radius: 999px; background: var(--vera-raised); box-shadow: var(--vera-raise-sm); font-size: 11.5px; color: var(--vera-dim); white-space: nowrap; }
-.vera-plan b { font-weight: 500; color: var(--vera-text); }
-.vera-icon-button { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: var(--vera-raised); box-shadow: var(--vera-raise-sm); color: var(--vera-text); flex-shrink: 0; text-decoration: none; transition: box-shadow 140ms ease, color 140ms ease; }
-.vera-icon-button:hover { color: var(--vera-accent); }
-.vera-icon-button:active { box-shadow: var(--vera-press); }
-.vera-icon-button:focus-visible, .vera-send-btn:focus-visible, .vera-round-btn:focus-visible, .vera-widget-trigger:focus-visible, .vera-meta button:focus-visible, .vera-suggestions button:focus-visible { outline: 2px solid var(--vera-accent); outline-offset: 2px; }
-
-.vera-panel-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 12px 16px; scrollbar-width: thin; scrollbar-color: #3a3a42 transparent; }
-.vera-panel-body[data-fresh="true"] { justify-content: center; }
-.vera-hero { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; animation: vera-bubble-in 260ms ease-out both; }
-.vera-hero-logo { display: block; line-height: 0; }
-.vera-hero-logo img { width: 56px; height: auto; }
-.vera-hero h2 { margin: 0; font-family: "Iowan Old Style", Georgia, "Times New Roman", serif; font-size: 22px; font-weight: 400; letter-spacing: -0.01em; color: var(--vera-text); }
-.vera-hero p { margin: -6px 0 0; font-size: 13px; color: var(--vera-dim); }
-
-.vera-question { align-self: flex-end; max-width: 82%; margin: 0; padding: 9px 13px; border-radius: 16px 16px 4px 16px; background: var(--vera-raised); box-shadow: var(--vera-raise-sm); font-size: 13px; line-height: 1.4; color: #fff; white-space: pre-wrap; overflow-wrap: anywhere; animation: vera-bubble-in 200ms ease-out both; }
-.vera-answer { display: flex; flex-direction: column; gap: 6px; animation: vera-bubble-in 200ms ease-out both; }
-.vera-reply { font-size: 13px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
-.vera-caret { display: inline-block; width: 5px; height: 12px; margin-left: 3px; vertical-align: -2px; border-radius: 1px; background: var(--vera-accent); animation: vera-blink 900ms steps(1) infinite; }
-
-.vera-meta { display: flex; align-items: center; gap: 2px; color: var(--vera-dim); font-size: 12px; }
-.vera-meta button { display: inline-flex; align-items: center; gap: 5px; padding: 4px 5px; border-radius: 7px; color: var(--vera-dim); font-size: 12px; transition: color 140ms ease, box-shadow 140ms ease; }
-.vera-meta button:hover { color: var(--vera-text); }
-.vera-meta button:active { box-shadow: var(--vera-press); }
-.vera-meta button[data-active="true"] { color: var(--vera-accent); }
-.vera-sources-toggle { margin-left: auto; }
-.vera-count { display: inline-grid; place-items: center; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: #34343b; color: var(--vera-text); font-size: 10.5px; font-weight: 600; }
-.vera-sources-toggle svg[data-open="true"] { transform: rotate(180deg); }
-.vera-sources { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.vera-sources li { padding: 9px 11px; border-radius: 12px; background: var(--vera-raised); box-shadow: var(--vera-press); font-size: 12px; }
-.vera-sources strong { font-weight: 600; }
-.vera-sources em { margin-left: 6px; font-style: normal; color: var(--vera-accent); }
-.vera-sources p { margin: 4px 0 0; color: var(--vera-dim); line-height: 1.4; }
-
-.vera-typing { display: inline-flex; gap: 4px; padding: 6px 0; }
-.vera-typing i { width: 5px; height: 5px; border-radius: 50%; background: var(--vera-dim); animation: vera-dot 1.1s ease-in-out infinite; }
-.vera-typing i:nth-child(2) { animation-delay: .15s; }
-.vera-typing i:nth-child(3) { animation-delay: .3s; }
-.vera-error { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; color: #fca5a5; }
-
-.vera-panel-footer { position: relative; padding: 6px 12px 12px; }
-.vera-composer { display: flex; flex-direction: column; gap: 8px; padding: 11px 10px 9px 14px; border-radius: 18px; background: var(--vera-raised); box-shadow: var(--vera-raise); }
-.vera-composer input { width: 100%; height: 24px; border: 0; outline: none; background: transparent; font: inherit; font-size: 13px; color: var(--vera-text); }
-.vera-composer input::placeholder { color: var(--vera-dim); }
-.vera-composer-row { display: flex; align-items: center; gap: 10px; }
-.vera-round-btn, .vera-send-btn { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; transition: box-shadow 140ms ease, background 140ms ease, opacity 140ms ease; }
-.vera-round-btn { margin-left: -4px; background: var(--vera-bg); box-shadow: var(--vera-press); color: var(--vera-text); }
-.vera-round-btn:hover:not(:disabled) { color: var(--vera-accent); }
-.vera-hint { flex: 1; display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--vera-dim); }
-.vera-hint kbd { display: inline-grid; place-items: center; min-width: 16px; height: 18px; padding: 0 4px; border-radius: 5px; background: var(--vera-bg); box-shadow: var(--vera-press); font: inherit; font-size: 11px; color: var(--vera-text); }
-.vera-send-btn { background: linear-gradient(145deg, #4ff0df, #1fb3a4); box-shadow: var(--vera-raise-sm); color: #06312d; }
-.vera-send-btn:active:not(:disabled) { box-shadow: var(--vera-press); }
-.vera-send-btn:disabled { background: #34343b; color: var(--vera-dim); cursor: not-allowed; }
-
-.vera-suggestions { position: absolute; left: 12px; right: 12px; bottom: calc(100% + 4px); margin: 0; padding: 5px; list-style: none; background: var(--vera-raised); border-radius: 14px; box-shadow: var(--vera-raise); }
-.vera-suggestions button { width: 100%; text-align: left; padding: 7px 9px; border-radius: 9px; font-size: 12.5px; color: var(--vera-text); }
-.vera-suggestions button:hover { box-shadow: var(--vera-press); }
-.vera-suggestions-empty { padding: 7px 9px; font-size: 12.5px; color: var(--vera-dim); }
-
-/* Closed launcher in the same dark style. */
-.vera-widget-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: var(--launcher-height);
-  padding: 0 14px 0 9px;
-  border: 1px solid var(--vera-line);
-  border-radius: 11px;
-  background: var(--vera-bg);
-  color: var(--vera-text);
-  box-shadow: 0 12px 26px -10px rgba(0, 0, 0, 0.55);
-  transition: transform 180ms cubic-bezier(.23, 1, .32, 1), background 180ms ease;
-  animation: vera-launcher-in 360ms cubic-bezier(.23, 1, .32, 1) both;
-}
-.vera-widget-trigger:hover { transform: translateY(-1px); background: #232329; }
-.vera-widget-trigger:active { transform: scale(.97); }
-.vera-launcher-mark { display: grid; place-items: center; width: 26px; height: 22px; color: var(--vera-text); }
-.vera-launcher-mark img { width: 26px; height: auto; }
-.vera-launcher-text { font-size: 13px; font-weight: 600; }
-
-@keyframes vera-panel-in { from { opacity: 0; transform: translateY(8px) scale(.98); } }
-@keyframes vera-bubble-in { from { opacity: 0; transform: translateY(3px); } }
-@keyframes vera-launcher-in { from { opacity: 0; transform: translateY(8px); } }
-@keyframes vera-dot { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-3px); opacity: 1; } }
-@keyframes vera-blink { 50% { opacity: 0; } }
-
-@media (max-width: 640px) {
-  :root { --launcher-inset: 16px; }
-  .vera-widget-panel { left: 8px; right: 8px; bottom: 64px; width: auto; height: min(480px, calc(100dvh - 80px)); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .vera-widget-panel, .vera-answer, .vera-question, .vera-hero, .vera-widget-trigger { animation: none; transition: none; }
-  .vera-typing i, .vera-caret { animation: none; }
-}
