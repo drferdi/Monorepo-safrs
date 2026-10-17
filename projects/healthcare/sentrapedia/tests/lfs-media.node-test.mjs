@@ -24,6 +24,12 @@ test("every tracked mp4, webm and webp file in the capsule is stored in Git LFS"
   assert.deepEqual(plain, []);
 });
 
+test("CI restores LFS objects from the nearest cache and fails when a file is still a pointer after the pull", () => {
+  const workflow = readFileSync(new URL("../.github/workflows/ci.yml", import.meta.url), "utf8");
+  assert.match(workflow, /^ {10}restore-keys: lfs-$/m);
+  assert.match(workflow, /^ {6}- run: git lfs pull\n {6}- run: '! git lfs ls-files \| grep -q " - "'$/m);
+});
+
 test(".gitattributes routes the three media extensions through LFS", () => {
   const attributes = readFileSync(new URL("../.gitattributes", import.meta.url), "utf8");
   for (const ext of lfsMediaExtensions) assert.match(attributes, new RegExp(`^\\*\\.${ext} filter=lfs diff=lfs merge=lfs -text$`, "m"));

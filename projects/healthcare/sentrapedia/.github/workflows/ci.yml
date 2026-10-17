@@ -23,7 +23,8 @@ jobs:
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
       # LFS holds the TheOracle vectors that the grounding tests read, the site PNGs and the video and WebP media.
-      # Objects come from a cache keyed on the LFS file list, so a run downloads only what changed.
+      # Objects come from a cache keyed on the LFS file list; on a miss the nearest older cache is restored,
+      # so a run downloads only what changed. A file still a pointer after the pull fails the run.
       - uses: actions/checkout@v4
         with:
           lfs: false
@@ -32,7 +33,9 @@ jobs:
         with:
           path: .git/lfs
           key: lfs-${{ hashFiles('.lfs-assets-id') }}
+          restore-keys: lfs-
       - run: git lfs pull
+      - run: '! git lfs ls-files | grep -q " - "'
       - uses: actions/setup-node@v4
         with:
           node-version: 24
