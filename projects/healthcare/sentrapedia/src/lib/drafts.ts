@@ -1,5 +1,6 @@
 import type { Patient } from "./workspace";
 import { structureNote, type NoteField } from "./note-structure";
+import { missingField, missingFieldEnglish } from "./clinical-templates";
 
 export const modeIds = ["question", "ddx", "ap", "clinic", "hpi", "telephone", "chronic", "handoff", "tasks", "avs", "education", "referral", "authorization", "scribe", "workup", "refer", "monitoring", "icd10"] as const;
 export type ModeId = typeof modeIds[number];
@@ -31,7 +32,7 @@ export function createDraft(input: DraftInput): string {
   if (!prompt) throw new Error("Tambahkan pertanyaan atau konteks Clinical terlebih dahulu.");
   const mode = modes.find((m) => m.id === input.mode)!;
   const id = input.language === "Bahasa Indonesia";
-  const missing = id ? "Belum tersedia — lengkapi dan verifikasi oleh klinisi." : "Not provided — complete and verify with the clinician.";
+  const missing = `${id ? missingField : missingFieldEnglish}.`;
   const sections: Record<ModeId, string[]> = {
     question: id ? ["Pertanyaan Clinical", "Populasi / konteks", "Intervention dan Comparator", "Luaran yang ingin diketahui", "Sumber dan tanggal pedoman yang perlu diverifikasi"] : ["Clinical question", "Population / setting", "Intervention and comparison", "Outcomes of interest", "Guideline sources and publication dates to verify"],
     ddx: id ? ["Temuan yang disampaikan", "Differential Diagnosis untuk ditinjau Clinician", "Temuan pendukung / penyangkal", "Informasi dan pemeriksaan yang belum tersedia", "Prioritas penilaian oleh klinisi"] : ["Supplied findings", "Candidate diagnoses to be entered by clinician", "Supporting / opposing findings", "Missing history and examination", "Clinician review priorities"],

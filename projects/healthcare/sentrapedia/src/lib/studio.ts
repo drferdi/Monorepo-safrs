@@ -1,3 +1,4 @@
+import { missingField, missingFieldEnglish } from "./clinical-templates";
 import { modes, type ModeId } from "./drafts";
 import { structureNote, type NoteField } from "./note-structure";
 import type { Encounter } from "./workspace";
@@ -48,7 +49,7 @@ export function encounterTimeline(encounters: Encounter[], current: Encounter | 
 }
 /** A section still holding only the draft placeholder (createDraft writes it when the input has no matching label). */
 export function emptySection(body: string): boolean {
-  return ["Belum tersedia — lengkapi dan verifikasi oleh klinisi", "Not provided — complete and verify with the clinician"].includes(body.trim().replace(/\.$/, ""));
+  return [missingField, missingFieldEnglish].includes(body.trim().replace(/\.$/, ""));
 }
 
 export function workspaceDate(value: string): string {

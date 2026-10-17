@@ -3,6 +3,13 @@ import type { CaseState } from "./types";
 import { validTheOracleGrounding } from "../theoracle-grounding-types";
 import { gateEvidence, gateTherapy, validGate } from "../theoracle-evidence-gate";
 
+/** A failed analysis request; `code` is the gateway's error code when the server sent one. */
+export class MiraRequestError extends Error {
+  constructor(message: string, readonly code?: string) {
+    super(message);
+  }
+}
+
 export async function requestMiraAnalysis(caseData: CaseState, options: { synthetic: boolean; signal?: AbortSignal; fetchFn?: typeof fetch }): Promise<MiraAnalysis> {
   if (!options.synthetic) throw new Error("Konfirmasi bahwa keluhan dan konteks menggunakan data fiktif tanpa identitas pribadi.");
   if (!validCase(caseData)) throw new Error("Keluhan atau konteks tidak valid atau terlalu panjang.");
@@ -21,8 +28,9 @@ export async function requestMiraAnalysis(caseData: CaseState, options: { synthe
   }
   options.signal?.throwIfAborted();
   if (!response.ok) {
-    const message = data && typeof data === "object" && "error" in data && data.error && typeof data.error === "object" && "message" in data.error && typeof data.error.message === "string" ? data.error.message : "Analisis belum tersedia. Keluhan tetap tersedia.";
-    throw new Error(message);
+    const error = data && typeof data === "object" && "error" in data && data.error && typeof data.error === "object" ? data.error : {};
+    const message = "message" in error && typeof error.message === "string" ? error.message : "Analisis belum tersedia. Keluhan tetap tersedia.";
+    throw new MiraRequestError(message, "code" in error && typeof error.code === "string" ? error.code : undefined);
   }
   if (!data || typeof data !== "object" || !("result" in data) || !validResult(data.result) || data.result.status !== "ok" || !("traceId" in data) || typeof data.traceId !== "string" || !("createdAt" in data) || typeof data.createdAt !== "string" || !Number.isFinite(Date.parse(data.createdAt))) throw new Error("Respons analisis tidak dapat diverifikasi.");
   if (!("grounding" in data) || !validTheOracleGrounding(data.grounding)) throw new Error("Respons analisis tidak dapat diverifikasi.");

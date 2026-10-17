@@ -11,8 +11,8 @@
     "typecheck": ["npm", "run", "typecheck"],
     "deployDryRun": ["npm", "run", "deploy:dry-run"]
   },
-  "requiredEnvironment": ["OPENROUTER_API_KEY"],
-  "externalServices": ["OpenRouter provider API; synthetic cases only; Gemini 2.5 Flash for both stages"],
+  "requiredEnvironment": ["GEMINI_API_KEY"],
+  "externalServices": ["Gemini API (OpenAI-compatible endpoint); synthetic cases only; gemini-3.1-flash-lite for both stages"],
   "buildOutputs": [".next/standalone", ".next/static"],
   "generatedPaths": [".next", "node_modules", "next-env.d.ts"],
   "sensitiveSurfaces": ["Browser-local patient and encounter data; fictional data only", "Optional microphone speech recognition may contact browser speech provider"],

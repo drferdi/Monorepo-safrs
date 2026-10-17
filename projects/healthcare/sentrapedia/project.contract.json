@@ -38,7 +38,7 @@
     { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
     { "kind": "registry", "name": "Python package registry", "locator": "https://pypi.org", "required": true },
     { "kind": "registry", "name": "Hugging Face model hub; pinned TheOracle embedding model, install time only", "locator": "https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX", "required": true },
-    { "kind": "service", "name": "OpenRouter model provider; synthetic cases only", "locator": "OPENROUTER_API_KEY", "required": true },
+    { "kind": "service", "name": "Gemini API model provider; synthetic cases only", "locator": "GEMINI_API_KEY", "required": true },
     { "kind": "service", "name": "Optional public-site contact delivery through Resend", "locator": "RESEND_API_KEY, RESEND_FROM_EMAIL, and CONTACT_PUBLIC_ORIGIN", "required": false }
   ],
   "mutableStatePaths": ["node_modules", ".next", ".runtime", "tsconfig.tsbuildinfo", ".env.local", "theoracle/model", "apps/site/reference/verification.json"]

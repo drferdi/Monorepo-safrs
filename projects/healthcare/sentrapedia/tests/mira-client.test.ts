@@ -34,6 +34,12 @@ describe("direct main-composer analysis", () => {
     await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn: async () => { calls++; return Response.json({ error: { code: "TIMEOUT", message: "Analisis melewati batas waktu layanan." } }, { status: 504 }); } })).rejects.toThrow("Analisis melewati batas waktu layanan.");
     expect(calls).toBe(1);
   });
+  it("keeps the server's error code on the thrown error so the UI can tell causes apart", async () => {
+    const fetchFn = async () => Response.json({ error: { code: "NOT_CONFIGURED", message: "Layanan analisis belum dikonfigurasi." } }, { status: 503 });
+    await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn })).rejects.toMatchObject({ code: "NOT_CONFIGURED", message: "Layanan analisis belum dikonfigurasi." });
+    const bare = async () => Response.json({}, { status: 500 });
+    await expect(requestMiraAnalysis(caseData, { synthetic: true, fetchFn: bare })).rejects.toMatchObject({ code: undefined, message: "Analisis belum tersedia. Keluhan tetap tersedia." });
+  });
   it("turns a lost connection or unreadable body into the service wording instead of the browser's", async () => {
     const offline: typeof fetch = async () => { throw new TypeError("Failed to fetch"); };
     const html: typeof fetch = async () => new Response("<html>gateway</html>", { status: 502 });
