@@ -340,7 +340,7 @@
     },
     {
       "path": "scripts/human-anatomy.test.mjs",
-      "sha256": "f3eb6eb1a18e79dde46cedead2ec30a6fff7ca4e96a80897da2beae579f6dcca"
+      "sha256": "a31bb29c62bafbe5659fe0d019b20e4c8ced53a19e8a66170fcc5054445d7edb"
     },
     {
       "path": "scripts/legal.test.mjs",

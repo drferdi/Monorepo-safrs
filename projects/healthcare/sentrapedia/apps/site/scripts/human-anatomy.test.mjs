@@ -36,4 +36,3 @@ test('the anatomy does not rely on the opaque film or dark card', async () => {
   assert.doesNotMatch(css, /background:\s*#11191b/);
   assert.doesNotMatch(js, /\.play\(/);
 });
-
