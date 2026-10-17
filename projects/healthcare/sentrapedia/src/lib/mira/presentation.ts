@@ -150,7 +150,19 @@ export function miraDraft(result: MiraResult, traceId: string, createdAt: string
   return ["# Analisis kasus", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), (focus === "workup" ? [parts[3], ...parts.filter((_, i) => i !== 3)] : focus === "refer" ? [referral, ...parts] : focus === "icd10" ? [coding, ...parts] : parts).map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
 }
 
-export function diagnosisContent(message: Pick<Message, "content" | "originalContent" | "sourceText"> & Partial<Pick<Message, "mode">>): string {
+type ContentSource = Pick<Message, "content" | "originalContent" | "sourceText"> & Partial<Pick<Message, "mode">>;
+// Every render asks for each card's view; parsing the source and re-running the gate once per unchanged message is enough.
+const derived = new WeakMap<ContentSource, { content: string; originalContent?: string; sourceText?: string; mode?: string; view: string }>();
+
+export function diagnosisContent(message: ContentSource): string {
+  const hit = derived.get(message);
+  if (hit && hit.content === message.content && hit.originalContent === message.originalContent && hit.sourceText === message.sourceText && hit.mode === message.mode) return hit.view;
+  const view = deriveContent(message);
+  derived.set(message, { content: message.content, originalContent: message.originalContent, sourceText: message.sourceText, mode: message.mode, view });
+  return view;
+}
+
+function deriveContent(message: ContentSource): string {
   // Untouched analysis drafts always show in the current format; edited drafts stay as written.
   if (!hasMiraSource(message) || message.content !== message.originalContent || !message.content.startsWith("# Analisis kasus\n")) return message.content;
   try {

@@ -1,5 +1,16 @@
 # Sentrapedia handoff
 
+## Tech-debt rows 1, 3, 5, 10, 24, 27 and 42 - 2026-10-17 Asia/Jakarta
+
+- Gaffer: "Lanjutkan" on the tech-debt plan. Risk R1 (build, tooling, docs, a pure memo); no clinical logic changed.
+- Row 1: `Dockerfile` dependencies stage now copies the five files the site's `install:check` reads. Verified with a real `docker build --target dependencies` (exit 0, postinstall ran `install:check`: "Local website sources available"); the full image and container were not built; the 4.7 GB check image was removed.
+- Row 5: `apps/site/tools/write-migration-manifest.mjs` (`npm --prefix apps/site run manifest`) rewrites the manifest keeping the existing order; on the current tree it reproduces the committed file byte for byte, and a probe file was added and removed with the boundary test green.
+- Row 10: `diagnosisContent` caches its view per message object and re-derives when content, original, source or mode change; new test (watched failing first) proves no second `JSON.parse`.
+- Row 27: `vitest.config.ts` holds the exclusions, so bare `npx vitest run` and `npm test` see the same 15 files.
+- Rows 3, 24, 42: `docs/mira-integration.md` (Gemini key, real preflight), `.env.example` (no hand-set MIRA_SERVICE_URL/TOKEN, PORT, SENTRAPEDIA_HOST), `config/mira-deepseek.env.example` (reference only), `docs/testing.md`, README (theoracle file names, 45/65 s gateway deadline, lint row).
+- Verified: tsc 0; root lint 0; Vitest 294/294; site tests 38/38; docs:verify 0; test:system 8/8.
+- Left: `next-env.d.ts` stays uncommitted (rewritten by `next dev`).
+
 ## An unreadable saved workspace is kept and downloadable instead of lost - 2026-10-17 Asia/Jakarta
 
 - Gaffer: "Lanjutkan" on tech-debt row 14 (silent reset of an invalid saved workspace). Risk R1 (browser-local data handling; behaviour change approved).

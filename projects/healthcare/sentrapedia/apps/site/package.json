@@ -12,6 +12,7 @@
     "docs:verify": "node tools/verify-spds.mjs",
     "lint": "node tools/lint.mjs",
     "start": "node scripts/serve.mjs",
-    "deploy:dry-run": "node tools/deploy-dry-run.mjs"
+    "deploy:dry-run": "node tools/deploy-dry-run.mjs",
+    "manifest": "node tools/write-migration-manifest.mjs"
   }
 }

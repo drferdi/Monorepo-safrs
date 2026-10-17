@@ -4,6 +4,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3 python3
 COPY package.json package-lock.json .npmrc ./
 COPY scripts/install-mira.mjs scripts/mira-runtime.mjs scripts/mira-profile.json scripts/theoracle-model.mjs scripts/install-theoracle-model.mjs ./scripts/
 COPY mira/requirements.lock mira/requirements-test.lock ./mira/
+# postinstall ends with the site's install:check, which reads these five files.
+COPY apps/site/package.json ./apps/site/
+COPY apps/site/tools/install-check.mjs ./apps/site/tools/
+COPY apps/site/source/index.html ./apps/site/source/
+COPY apps/site/site/index.html ./apps/site/site/
+COPY apps/site/reference/design-integrity.json ./apps/site/reference/
 RUN npm ci --workspaces=false
 
 FROM dependencies AS builder

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { emptyCase, type MiraResult } from "../src/lib/mira/contract";
 import { diagnosisContent, diagnosisSectionTitles, icd10SectionTitle, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/mira/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
@@ -117,6 +117,17 @@ describe("six-section diagnosis presentation", () => {
     const message = miraMessage(input);
     expect(message.content.split("## Ringkasan Gejala")[0]).toContain("Belum ada kandidat diagnosis dari keluhan ini");
     expect(section(message.content, "Terapi Farmakologi")).toBe("Belum ada data terapi untuk diagnosis ini.");
+  });
+  it("derives a message's view once per unchanged message, and again when the message changes", () => {
+    const old = "# Analisis kasus\n\n## Ringkasan Kasus\n\nLama\n";
+    const message = { ...miraMessage(analysis), content: old, originalContent: old };
+    const first = diagnosisContent(message);
+    const parse = vi.spyOn(JSON, "parse");
+    expect(diagnosisContent(message)).toBe(first);
+    expect(parse).not.toHaveBeenCalled();
+    parse.mockRestore();
+    message.content = old + "Catatan klinisi";
+    expect(diagnosisContent(message)).toBe(old + "Catatan klinisi");
   });
   it("re-renders untouched older drafts in the new format without mutating saved text or source", () => {
     const old = "# Analisis kasus\n\n## Ringkasan Kasus\n\nLama\n\n---\n\n## Gejala\n\nLama\n";

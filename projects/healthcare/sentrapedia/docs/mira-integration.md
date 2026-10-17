@@ -13,12 +13,12 @@ flowchart LR
   Ready --> Web["Sentrapedia workspace"]
   Web --> Gateway["Server gateway + TheOracle evidence"]
   Gateway --> Engine
-  Engine --> Provider["OpenRouter / Gemini Flash"]
+  Engine --> Provider["Gemini API (gemini-3.1-flash-lite)"]
 ```
 
 Host prerequisites: Node24+, Python3.11+. Docker includes both. Install once with
-`npm ci --workspaces=false`; set `OPENROUTER_API_KEY` in the environment or capsule
-`.env.local`; run `npm run dev`. For an optimized local build use `npm run build`
+`npm ci --workspaces=false`; set `GEMINI_API_KEY` in the environment or capsule
+`.env.local`; run `npm run dev` (not `npx next dev`, which starts no engine). For an optimized local build use `npm run build`
 then `npm start`. Default workspace: http://127.0.0.1:3101. `PORT` and
 `SENTRAPEDIA_HOST` override the local web listener.
 
@@ -37,10 +37,10 @@ The internal engine is a Python process managed by the application lifecycle.
 No external `MiraRoot`, source checkout, shared service, manually supplied service
 token, or another project's environment is used. Old `.env.local` service URL/token
 values are overridden in memory. The provider is still an external model API.
-Startup reads public model/endpoint metadata to preserve the original price and
-structured-output gates (input <=USD0.50/M tokens, output <=USD2.50/M tokens).
-Metadata requests carry no key or case data. No paid inference occurs during
-install/startup/health checks. Unavailable metadata fails startup without a retry.
+Startup reads the model's metadata from the Gemini API with the key
+(`preflightProvider` in `scripts/mira-runtime.mjs`): a rejected key or an unknown
+model stops startup without a retry. The request carries no case data and sends no
+completion, so install, startup and health checks cost nothing.
 
 Source license and hashes are in `mira/LICENSE` and `mira/SOURCE.json`. The exact
 routine prompt and planning schema snapshots avoid importing research FHIR/ML

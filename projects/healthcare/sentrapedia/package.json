@@ -11,7 +11,7 @@
     "system:check": "node scripts/run-system.mjs check",
     "lint": "eslint src tests && npm --prefix apps/site run lint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --exclude .runtime/** --exclude apps/site/** && npm --prefix apps/site test",
+    "test": "vitest run && npm --prefix apps/site test",
     "test:system": "node --test tests/system-runtime.node-test.mjs",
     "test:mira": "node scripts/test-mira.mjs",
     "test:all": "npm test && npm run test:system && npm run test:mira",
