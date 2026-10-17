@@ -1,10 +1,14 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { icdNameMatch } from "./icd-name-match.mjs";
 
 const [base, label] = process.argv.slice(2);
 if (!base || !label) throw new Error("usage: node scripts/eval-theoracle-pipeline.mjs http://127.0.0.1:<port> <legacy|targeted>");
+// The eval set and gold labels stay in the 2026-10-11 folder; each run writes into a folder dated today (Asia/Jakarta),
+// so it never overwrites earlier evidence.
 const dir = path.resolve("docs/verification/theoracle-eval-2026-10-11");
+const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" });
+const outDir = path.resolve(`docs/verification/theoracle-eval-${today}`);
 const { queries } = JSON.parse(readFileSync(path.join(dir, "eval-set.json"), "utf8"));
 const { labels } = JSON.parse(readFileSync(path.join(dir, "gold-icd10.json"), "utf8"));
 const names = new Map(JSON.parse(readFileSync(path.resolve("mira/service/data/icd10.json"), "utf8")).icd10.map(e => [e.kode, e.nama_en]));
@@ -52,5 +56,6 @@ const summary = {
   retrievalSuccess: label === "targeted" && done.length ? done.filter(r => r.therapyRetrieved).length / done.length : null,
   costUsd: Math.round(sum("costUsd") * 10000) / 10000,
 };
-writeFileSync(path.join(dir, `pipeline-2026-10-11-${label}.json`), JSON.stringify({ summary, rows }, null, 2));
+mkdirSync(outDir, { recursive: true });
+writeFileSync(path.join(outDir, `pipeline-${today}-${label}.json`), JSON.stringify({ summary, rows }, null, 2));
 console.log(JSON.stringify(summary, null, 2));

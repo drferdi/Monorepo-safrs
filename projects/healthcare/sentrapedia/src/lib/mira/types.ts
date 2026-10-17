@@ -1,17 +1,12 @@
 /**
- * Diagnosis engine contract.
+ * MIRA diagnosis contract.
  *
- * Every diagnosis engine (the legacy Iskandar engine, and the MIRA candidate) takes the same
- * de-identified `CaseState` and returns the same `EngineResult`. Fields an engine cannot fill are
- * left empty and listed in `unfilled`; an engine never invents them.
+ * MIRA takes a de-identified `CaseState` and returns an `EngineResult` (see `MiraResult` in
+ * `contract.ts`). Fields it cannot fill are left empty and listed in `unfilled`; it never invents them.
  *
  * Safety rules (red flags, emergency gates, triage/referral) are deliberately not part of this
- * contract: they run outside any engine, whichever engine is active.
- *
- * @module lib/diagnosis-engine/types
+ * contract: they run outside the engine.
  */
-
-export type DiagnosisEngineId = 'legacy' | 'mira';
 
 /** Same scale as the side panel's confidence band (`ClinicalDifferential.tsx`). */
 export type ConfidenceTier = 'high' | 'moderate' | 'low' | 'unknown';
@@ -46,7 +41,6 @@ export interface CaseState {
     flag?: 'normal' | 'abnormal';
   }>;
   currentMedications: string[];
-  /** Known chronic conditions and allergies: the legacy engine uses both. */
   knownConditions: string[];
   allergies: string[];
   /** What the facility can do on site, e.g. "lab:darah-rutin", "ekg". Empty when unknown. */
@@ -93,15 +87,6 @@ export interface UnfilledField {
   reason: string;
 }
 
-export interface EngineResultMeta {
-  engineId: DiagnosisEngineId;
-  version: string;
-  model: string | null;
-  costUsd: number | null;
-  latencyMs: number | null;
-  traceId: string;
-}
-
 export interface EngineResult {
   /** `unavailable`: the engine failed, timed out or was blocked; the differential is empty. */
   status: 'ok' | 'unavailable';
@@ -116,11 +101,4 @@ export interface EngineResult {
   disposition: DispositionSuggestion | null;
   unfilled: UnfilledField[];
   error?: { code: string; message: string };
-  meta: EngineResultMeta;
-}
-
-export interface DiagnosisEngine {
-  readonly id: DiagnosisEngineId;
-  readonly version: string;
-  step(input: CaseState, opts?: { signal?: AbortSignal }): Promise<EngineResult>;
 }

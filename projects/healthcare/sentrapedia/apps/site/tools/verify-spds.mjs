@@ -34,7 +34,13 @@ async function markdownFiles(folder) {
 
 const errors = [];
 const files = await markdownFiles(docsRoot);
-if (files.length !== 96) errors.push(`Expected 96 SPDS documents, found ${files.length}`);
+// The document index is the inventory: every document is listed there and every listed document exists.
+const indexText = await fs.readFile(path.join(docsRoot, 'document_index.md'), 'utf8');
+const listed = new Set([...indexText.matchAll(/\]\(([^)#]+\.md)\)/g)].map(match => path.posix.normalize(match[1])));
+listed.add('document_index.md');
+const found = new Set(files.map(file => path.relative(docsRoot, file).replaceAll('\\', '/')));
+for (const name of found) if (!listed.has(name)) errors.push(`Not in document_index.md: ${name}`);
+for (const name of listed) if (!found.has(name)) errors.push(`Listed in document_index.md but missing: ${name}`);
 
 for (const file of files) {
   const relative = path.relative(docsRoot, file).replaceAll('\\', '/');

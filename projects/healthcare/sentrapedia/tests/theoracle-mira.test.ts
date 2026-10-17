@@ -24,8 +24,8 @@ describe("MIRA contract and presentation", () => {
   it("supports every keyword of the localized contract snapshots", () => {
     function inspect(schema: JsonSchema) { for (const [key, value] of Object.entries(schema)) { expect(SUPPORTED_KEYWORDS.has(key)).toBe(true); if (key === "properties" || key === "$defs") Object.values(value as Record<string, JsonSchema>).forEach(inspect); if (key === "items") inspect(value as JsonSchema); } }
     inspect(requestSchema); inspect(responseSchema);
-    expect(createHash("sha256").update(readFileSync("src/lib/mira/request.schema.json")).digest("hex")).toBe("84eba75c9810b794d1875dde77fc204dd5515b879056a8b47c60eef398e607dc");
-    expect(createHash("sha256").update(readFileSync("src/lib/mira/response.schema.json")).digest("hex")).toBe("b5048ad8fa750886dd7780435e1e09aabfb8299bbb1b49d0f1ca753154aef171");
+    expect(createHash("sha256").update(readFileSync("src/lib/mira/request.schema.json")).digest("hex")).toBe("8a635a8d9c0e476d7b0227b04d3f4d821c2f973ab94f10b573c0bfd037fc18c1");
+    expect(createHash("sha256").update(readFileSync("src/lib/mira/response.schema.json")).digest("hex")).toBe("6b0ecb098be295426423be0d0542bfe3c6bb07d9809344f00f38abe82f2dabd2");
   });
   it("preserves repeated and otherwise unlisted service evidence", () => {
     const draft = miraDraft({ ...result, evidence: [...result.evidence, { icd10: "J00", supporting: ["Pendukung tambahan"], opposing: [] }, { icd10: "R50", supporting: [], opposing: ["Alasan tambahan terpisah"] }] }, "trace", "time");

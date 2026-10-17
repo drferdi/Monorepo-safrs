@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://sentra/med-assist/diagnosis-engine/mira-step-response.schema.json",
   "title": "MIRA reasoning service: step response",
-  "description": "Returned by POST {VITE_MIRA_SERVICE_URL}/v1/diagnosis/step. Mirrors EngineResult in lib/diagnosis-engine/types.ts; the client adds engineId, traceId and measured latency. Anything the service cannot fill is left empty and listed in `unfilled`, never invented.",
+  "description": "Returned by POST /v1/diagnosis/step on the bundled MIRA service. Mirrors MiraResult in src/lib/mira/contract.ts; the gateway adds traceId and createdAt. Anything the service cannot fill is left empty and listed in `unfilled`, never invented.",
   "type": "object",
   "required": [
     "contractVersion",

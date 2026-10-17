@@ -7,6 +7,15 @@ import { fileURLToPath } from "node:url";
 import { engineEnvironment, engineReady, installedPython, model, preflightProvider, warmWorkspace } from "./mira-runtime.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
+// Launcher timings (milliseconds), named so they are read and changed in one place (tech-debt row 19).
+const killTimeoutMs = 6000; // taskkill of a child tree on Windows
+const killGraceMs = 1500; // time children get to exit before the launcher exits
+const restartResetMs = 60000; // an engine that ran this long restarts with the shortest backoff again
+const restartBaseMs = 1000; // restart delay is restartBaseMs * 2^n, n counting quick crashes
+const restartMaxMs = 30000; // longest restart delay
+const engineReadyMs = 30000; // first start: how long /healthz may take to answer
+const healthProbeMs = 1000; // timeout of one /healthz probe
+const healthPollMs = 100; // pause between /healthz probes
 const mode = process.argv[2];
 const children = new Set();
 let stopping = false;
@@ -16,7 +25,7 @@ function stop(code) {
   stopping = true;
   for (const child of children) {
     if (child.exitCode !== null || !child.pid) continue;
-    if (process.platform === "win32") spawnSync("taskkill", ["/PID", String(child.pid), "/T", "/F"], { windowsHide: true, stdio: "ignore", timeout: 6000 });
+    if (process.platform === "win32") spawnSync("taskkill", ["/PID", String(child.pid), "/T", "/F"], { windowsHide: true, stdio: "ignore", timeout: killTimeoutMs });
     else {
       try { process.kill(-child.pid, "SIGTERM"); } catch (error) { if (error.code !== "ESRCH") console.error("Child shutdown failed."); }
     }
@@ -27,7 +36,7 @@ function stop(code) {
       try { process.kill(-child.pid, "SIGKILL"); } catch (error) { if (error.code !== "ESRCH") console.error("Child cleanup failed."); }
     }
     process.exit(code);
-  }, 1500);
+  }, killGraceMs);
 }
 let engineRestarts = 0;
 // restart: the MIRA engine is started again on the same port and token when it stops, so the workspace keeps working;
@@ -43,8 +52,8 @@ function launch(program, args, environment, restart = false) {
     children.delete(child);
     if (stopping) return;
     if (restart) {
-      engineRestarts = Date.now() - started > 60000 ? 1 : engineRestarts + 1;
-      const delay = Math.min(30000, 1000 * 2 ** engineRestarts);
+      engineRestarts = Date.now() - started > restartResetMs ? 1 : engineRestarts + 1;
+      const delay = Math.min(restartMaxMs, restartBaseMs * 2 ** engineRestarts);
       console.error(`Sentrapedia: engine MIRA berhenti (kode ${code}); dimulai ulang dalam ${delay / 1000} detik.`);
       setTimeout(() => { if (!stopping) launch(program, args, environment, true); }, delay);
       return;
@@ -78,15 +87,15 @@ try {
     const port = await freePort();
     const url = `http://127.0.0.1:${port}`;
     launch(python, ["-I", "-m", "uvicorn", "--factory", "service.app:create_app", "--app-dir", resolve(root, "mira"), "--host", "127.0.0.1", "--port", String(port), "--no-access-log"], environment, true);
-    const deadline = Date.now() + 30000;
+    const deadline = Date.now() + engineReadyMs;
     let ready = false;
     while (!stopping && Date.now() < deadline) {
       try {
-        const response = await fetch(`${url}/healthz`, { signal: AbortSignal.timeout(1000) });
+        const response = await fetch(`${url}/healthz`, { signal: AbortSignal.timeout(healthProbeMs) });
         ready = response.ok && engineReady(await response.json());
       } catch { /* The child has not opened its socket yet. */ }
       if (ready) break;
-      await new Promise(done => setTimeout(done, 100));
+      await new Promise(done => setTimeout(done, healthPollMs));
     }
     if (!ready) throw new Error("Engine MIRA lokal belum siap atau capability/profile tidak cocok.");
     if (!stopping) {

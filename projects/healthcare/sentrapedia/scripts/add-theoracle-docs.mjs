@@ -9,7 +9,8 @@ const sourceDir = "theoracle/sources/tatalaksana/";
 const sha = text => createHash("sha256").update(text).digest("hex");
 const uuid = hex => `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
 const existing = new Set(readFileSync(`${indexDir}chunks.jsonl`, "utf8").trim().split("\n").map(line => JSON.parse(line).id));
-const published = "10/11/2026, 9:00:00 PM";
+// New chunks carry the time they were added (Asia/Jakarta, the format the corpus already uses); existing chunks are skipped above.
+const published = new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" });
 const added = [];
 for (const file of readdirSync(root + sourceDir).filter(name => name.endsWith(".md")).sort()) {
   const [head, ...sections] = readFileSync(root + sourceDir + file, "utf8").replace(/\r\n/g, "\n").trim().split(/\n(?=## )/);

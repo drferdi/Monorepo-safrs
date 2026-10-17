@@ -4,11 +4,14 @@ import { resolve } from "node:path";
 import profile from "./mira-profile.json" with { type: "json" };
 
 export const model = profile.model;
+// Request timeouts (milliseconds): the provider metadata read at startup, and one warm-up request to /api/mira.
+const preflightTimeoutMs = 10000;
+const warmRequestTimeoutMs = 30000;
 // The Gemini API's OpenAI-compatible endpoint. The engine reaches it through its openai provider (OPENAI_BASE_URL).
 export const geminiBaseUrl = "https://generativelanguage.googleapis.com/v1beta/openai/";
 export async function preflightProvider(fetchFn = fetch, apiKey = process.env.GEMINI_API_KEY) {
   // Reads the model's metadata with the key; no completion is sent, so nothing is billed. The response body is never echoed.
-  const response = await fetchFn(`${geminiBaseUrl}models/${model}`, { headers: { Authorization: `Bearer ${apiKey}` }, signal: AbortSignal.timeout(10000), redirect: "error" });
+  const response = await fetchFn(`${geminiBaseUrl}models/${model}`, { headers: { Authorization: `Bearer ${apiKey}` }, signal: AbortSignal.timeout(preflightTimeoutMs), redirect: "error" });
   if (response.status === 401 || response.status === 403) throw new Error("GEMINI_API_KEY ditolak oleh Gemini API. System tidak dimulai.");
   if (!response.ok) throw new Error(`Model ${model} belum tersedia di Gemini API (HTTP ${response.status}). System tidak dimulai.`);
 }
@@ -48,7 +51,7 @@ export async function warmWorkspace(webUrl, fetchFn = fetch, timeoutMs = 120000,
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     try {
-      await fetchFn(`${webUrl}/api/mira`, { signal: AbortSignal.timeout(30000) });
+      await fetchFn(`${webUrl}/api/mira`, { signal: AbortSignal.timeout(warmRequestTimeoutMs) });
       return true;
     } catch { /* Next has not opened its port or compiled the route yet. */ }
     await new Promise(done => setTimeout(done, pauseMs));

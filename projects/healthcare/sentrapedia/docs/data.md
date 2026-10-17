@@ -12,7 +12,7 @@ The storage is unencrypted and is only for fictional demonstration data. Never e
 ## Bundled reference data
 
 - `oracle/sentrapedia.json`: the disease knowledge base (`metadata`, `categories`, `diseases`), read by `src/lib/theoracle.ts`.
-- `oracle/diseases.json`, `oracle/diseases-data.ts`, `oracle/data.ts`: earlier forms of the same data.
+- Earlier forms of the same data (`oracle/diseases.json`, `oracle/diseases-data.ts`, `oracle/data.ts`) were removed on 2026-10-17 (tech-debt row 20); git history keeps them.
 
 The reference data ships with the build. The app does not change it at runtime.
 
