@@ -22,10 +22,17 @@ jobs:
     env:
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
-      # LFS holds the TheOracle vectors that the grounding tests read, and the site PNGs.
+      # LFS holds the TheOracle vectors that the grounding tests read, the site PNGs and the video and WebP media.
+      # Objects come from a cache keyed on the LFS file list, so a run downloads only what changed.
       - uses: actions/checkout@v4
         with:
-          lfs: true
+          lfs: false
+      - run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+      - uses: actions/cache@v4
+        with:
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-assets-id') }}
+      - run: git lfs pull
       - uses: actions/setup-node@v4
         with:
           node-version: 24

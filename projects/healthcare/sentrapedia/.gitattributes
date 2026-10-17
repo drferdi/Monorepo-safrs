@@ -2,3 +2,7 @@
 theoracle/index/vectors.f32 filter=lfs diff=lfs merge=lfs -text
 # PNGs are stored as LFS pointers; the standalone repo needs this rule, since the monorepo root .gitattributes is not exported.
 *.png filter=lfs diff=lfs merge=lfs -text
+# Video and WebP media go through LFS from 2026-10-17 (tech-debt row 36); older versions stay in plain history.
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.webm filter=lfs diff=lfs merge=lfs -text
+*.webp filter=lfs diff=lfs merge=lfs -text

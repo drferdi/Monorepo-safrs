@@ -12,7 +12,7 @@
     "lint": "eslint src tests scripts vitest.config.ts && npm --prefix apps/site run lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && npm --prefix apps/site test",
-    "test:system": "node --test tests/system-runtime.node-test.mjs",
+    "test:system": "node --test tests/system-runtime.node-test.mjs tests/lfs-media.node-test.mjs",
     "test:mira": "node scripts/test-mira.mjs",
     "test:all": "npm test && npm run test:system && npm run test:mira",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs && npm --prefix apps/site run deploy:dry-run",
