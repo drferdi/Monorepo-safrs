@@ -75,6 +75,21 @@ async function loadIndex(indexDir: string, modelDir: string, embedder: NonNullab
   }
 }
 
+// One load per index directory and process; a failed load is forgotten so the next call retries.
+function indexFor(options: RetrieveOptions): Promise<LoadedIndex> {
+  const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");
+  const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
+  if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
+  return loaded.get(indexDir)!;
+}
+
+// Loads the index and embedding model and runs one embedding before the first case needs them (measured on
+// 2026-10-17: about 3 s with the files in the OS cache, up to 12 s from a cold disk). A failure is not reported
+// here: indexFor forgets the load, so the next case retries it and shows the error to the clinician.
+export function warmTheOracleGrounding(options: RetrieveOptions = {}): Promise<void> {
+  return indexFor(options).then(index => index.embed(index.manifest.prefixes.query + "demam")).then(() => undefined, () => undefined);
+}
+
 // Match the local MIRA privacy guard; public-source matches are skipped, not rewritten.
 function sourceTriggersMiraPrivacy(item: Omit<TheOracleGroundingEvidence, "retrievalRank">): boolean {
   const value = JSON.stringify(item);
@@ -117,11 +132,8 @@ const evidenceItem = (chunk: Chunk, score: number): Omit<TheOracleGroundingEvide
 export async function retrieveTheOracleGrounding(caseData: CaseState, options: RetrieveOptions = {}): Promise<TheOracleGroundingBundle> {
   const query = queryText(caseData);
   if (!/[\p{L}\p{N}]/u.test(query)) throw new TheOracleGroundingError("THEORACLE_QUERY_EMPTY", "Keluhan belum memiliki istilah klinis yang dapat dicari di TheOracle.");
-  const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");
-  const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
   const limit = Math.max(1, Math.min(Math.trunc(options.limit ?? MAX_EVIDENCE), MAX_EVIDENCE));
-  if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
-  const index = await loaded.get(indexDir)!;
+  const index = await indexFor(options);
   const { manifest, chunks } = index;
   const dims = manifest.model.dims;
   const { ranked, scores } = await rankChunks(index, query);
@@ -183,10 +195,7 @@ function therapyQuery(caseData: CaseState, diagnosis: { icd10: string; label: st
 // Therapy is retrieved for the diagnosis the diagnosis step chose, so its treatment and dose passages reach the therapy step.
 export async function retrieveTheOracleTherapyGrounding(caseData: CaseState, diagnosis: { icd10: string; label: string }, options: RetrieveOptions = {}): Promise<TheOracleGroundingBundle> {
   const query = therapyQuery(caseData, diagnosis);
-  const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");
-  const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
-  if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
-  const index = await loaded.get(indexDir)!;
+  const index = await indexFor(options);
   const { manifest, chunks } = index;
   const { ranked, scores } = await rankChunks(index, query);
   const selected: Omit<TheOracleGroundingEvidence, "retrievalRank">[] = [];

@@ -45,7 +45,7 @@ Tanggal: 2026-10-11 · Commit yang diperiksa: `2d71a200` (branch `codex/oracle-i
  │ auth.py (token + rate limit) · privacy.py (PII) · audit.py (JSONL)       │
  └───────────────────────────────┬──────────────────────────────────────────┘
                                  │ HTTPS
-                        OpenRouter → google/gemini-2.5-flash
+                        Gemini API → gemini-3.1-flash-lite
 
  Supervisor: scripts/run-system.mjs  (menjalankan engine → menunggu /healthz → menjalankan Next.js;
              satu lifecycle; jika salah satu child berhenti, seluruh sistem ikut berhenti)

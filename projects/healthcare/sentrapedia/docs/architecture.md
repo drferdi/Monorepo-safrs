@@ -26,7 +26,7 @@ Short glossary:
 | Next.js | The web framework. It serves the pages and the small server-side API. |
 | API route | A server-side web address the page calls, here `/api/mira`. |
 | MIRA | A separate diagnosis service (Python) that calls an AI model and returns a structured differential diagnosis. |
-| OpenRouter | A paid gateway that MIRA uses to reach the AI model (`google/gemini-2.5-flash`). |
+| Gemini API | Google's paid API that MIRA calls directly for the AI model (`gemini-3.1-flash-lite`), through its OpenAI-compatible endpoint. |
 | Oracle | A local file of 144 disease records (definition, symptoms, diagnosis criteria, therapy, referral). |
 | localStorage | The browser's own storage on the user's computer. No server database is involved. |
 | Encounter | One visit or conversation, which holds messages (questions and drafts). |
@@ -52,7 +52,7 @@ Short glossary:
 | Browser-side libraries | State, drafting, workflow, typing animation, presentation | `lib/*.ts`, `lib/mira/*.ts` | **Verified** |
 | Disease database | `oracle/sentrapedia.json`, loaded at build time | `lib/oracle.ts` | **Verified** |
 | External MIRA service | Python service, separate repo, not part of this capsule | Launched by `scripts/run-mira-deepseek.ps1` from `D:/DEV/gafferverse/mira-system` | **Verified** (script) |
-| AI model | `google/gemini-2.5-flash` via OpenRouter, called by MIRA, never by this app | `lib/mira/model-profile.ts`, launcher | **Verified** |
+| AI model | `gemini-3.1-flash-lite` via the Gemini API directly, called by MIRA, never by this app | `lib/mira/model-profile.ts`, launcher | **Verified** |
 
 ### 2.2 Entry points
 
@@ -61,7 +61,7 @@ Short glossary:
 | `npm run dev` | Development server on `127.0.0.1:3101` | **Verified** `package.json` |
 | `npm start` | Production server on `127.0.0.1:3101` (after `npm run build`) | **Verified** `package.json` |
 | `Dockerfile` | Container image; standalone server on port 3000, `HOSTNAME=0.0.0.0` | **Verified** |
-| `scripts/run-mira-deepseek.ps1` | PowerShell launcher for the MIRA service on port 8791. Despite the name it configures Gemini Flash. It writes `MIRA_SERVICE_URL` and `MIRA_SERVICE_TOKEN` into this capsule's `.env.local` | **Verified** |
+| `scripts/run-mira-deepseek.ps1` | PowerShell launcher for the MIRA service on port 8791. Despite the name it runs `gemini-3.1-flash-lite`, read from `scripts/mira-profile.json`. It writes `MIRA_SERVICE_URL` and `MIRA_SERVICE_TOKEN` into this capsule's `.env.local` | **Verified** |
 | `scripts/run-mira-free.ps1` | Older launcher for a free model profile; historical | **Verified** file; "historical" is **From docs** |
 | `scripts/deploy-dry-run.mjs` | Checks build output exists and that no file traced into the build lives outside the capsule. Deploys nothing | **Verified** |
 
@@ -87,7 +87,7 @@ flowchart LR
   C --> CL[lib/mira/client.ts: validate, identity check, POST /api/mira]
   CL --> G[app/api/mira/route.ts -> lib/mira/gateway.ts: origin check, schema, identity check, health/profile check]
   G -->|Bearer token, X-MIRA-Case-Origin: synthetic| M[MIRA service 127.0.0.1:8791 /v1/diagnosis/step]
-  M --> OR[OpenRouter -> google/gemini-2.5-flash]
+  M --> OR[Gemini API -> gemini-3.1-flash-lite]
   OR --> M --> G
   G -->|validated result, cost <= 0.10 USD| CL --> P[lib/mira/presentation.ts miraDraft: six sections + Oracle narratives]
   O[(oracle/sentrapedia.json)] --> P
@@ -132,7 +132,7 @@ Step by step (all **Verified** unless marked):
 | --- | --- | --- |
 | Patients, lists, encounters, drafts, settings, templates | Browser localStorage, key `sentrapedia-workspace-v1`, unencrypted | **Verified** `lib/workspace.ts` |
 | Disease reference | `oracle/sentrapedia.json` (bundled into the app) | **Verified** `lib/oracle.ts` |
-| Server secrets | `.env.local` (git-ignored) — `MIRA_SERVICE_URL`, `MIRA_SERVICE_TOKEN`, `OPENROUTER_API_KEY` | **Verified** key names only |
+| Server secrets | `.env.local` (git-ignored) — `MIRA_SERVICE_URL`, `MIRA_SERVICE_TOKEN`, `GEMINI_API_KEY` | **Verified** key names only |
 | MIRA logs and cost audit | `.runtime/mira-deepseek/` (git-ignored) | **Verified** launcher |
 | Verification evidence | `docs/verification/*` (JSON, screenshots) | **Verified** file list |
 
@@ -164,7 +164,7 @@ All commands are **listed in package.json / capsule.json, not run** for this doc
 | --- | --- | --- | --- |
 | `MIRA_SERVICE_URL` | `app/api/mira/route.ts` | MIRA address; default `http://127.0.0.1:8787`; only loopback `http://` accepted | **Verified** |
 | `MIRA_SERVICE_TOKEN` | `app/api/mira/route.ts` | Bearer token for MIRA; server-side only | **Verified** |
-| `OPENROUTER_API_KEY` | Launcher scripts only, never the Next.js app | Passed to the MIRA process | **Verified** |
+| `GEMINI_API_KEY` | Launcher scripts only, never the Next.js app | Passed to the MIRA process as `OPENAI_API_KEY` | **Verified** |
 | `PORT`, `HOSTNAME`, `NODE_ENV`, `NEXT_TELEMETRY_DISABLED` | Docker image | Container runtime | **Verified** `Dockerfile` |
 | `MIRA_*` (e.g. `MIRA_PLAN_MODEL`, `MIRA_STEP_DEADLINE_S`, `MIRA_DAILY_BUDGET_USD`, `MIRA_OPENROUTER_ZDR`, `MIRA_FAST_THERAPY`, `MIRA_DEV_TOKEN`) | The MIRA service, set by the launcher | Model, budget, speed and privacy settings | **Verified** `config/mira-deepseek.env.example` |
 
@@ -216,7 +216,7 @@ Useful next: `lib/mira/model-profile.ts` (pinned model), `lib/oracle.ts`, `lib/w
 
 ### 7.2 Documentation drift
 
-- **Verified.** README says the adapter "requires the approved pinned DeepSeek Flash model"; the code pins `google/gemini-2.5-flash` (`lib/mira/model-profile.ts`).
+- **Verified.** README says the adapter "requires the approved pinned DeepSeek Flash model"; the code pins `gemini-3.1-flash-lite` (`scripts/mira-profile.json`, read by `lib/mira/model-profile.ts`).
 - **Verified.** README says US$1 daily budget, two-call limit and 120-second deadline. The launcher sets `MIRA_DAILY_BUDGET_USD=5` and `MIRA_STEP_DEADLINE_S=20`; HANDOFF mentions `max_calls` 9.
 - **Verified.** File names `run-mira-deepseek.ps1`, `mira-deepseek.env.example`, `.runtime/mira-deepseek` all configure Gemini (README explains this is kept for budget history).
 - **Verified.** `capsule.json` lifecycle `test` lists 8 files; `tests/diagnosis-presentation.test.ts` is missing, so a capsule-contract test run skips the six-section tests.

@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { createServer } from "node:net";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { engineEnvironment, engineReady, installedPython, preflightProvider } from "./mira-runtime.mjs";
+import { engineEnvironment, engineReady, installedPython, model, preflightProvider, warmWorkspace } from "./mira-runtime.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const mode = process.argv[2];
@@ -29,13 +29,29 @@ function stop(code) {
     process.exit(code);
   }, 1500);
 }
-function launch(program, args, environment) {
+let engineRestarts = 0;
+// restart: the MIRA engine is started again on the same port and token when it stops, so the workspace keeps working;
+// the wait doubles from 2 s to 30 s and resets after a minute of running. Any other child stopping ends the system.
+function launch(program, args, environment, restart = false) {
+  const started = Date.now();
   const command = process.platform === "win32" ? guardianPython : program;
   const argumentsList = process.platform === "win32" ? ["-I", resolve(root, "mira/managed_child.py"), String(process.pid), program, ...args] : args;
   const child = spawn(command, argumentsList, { cwd: root, env: environment, stdio: "inherit", windowsHide: true, detached: process.platform !== "win32" });
   children.add(child);
   child.once("error", () => { console.error("Sentrapedia: proses internal gagal dimulai."); stop(1); });
-  child.once("exit", code => { if (!stopping) { console.error("Sentrapedia: proses internal berhenti; menutup seluruh system."); stop(code || 1); } });
+  child.once("exit", code => {
+    children.delete(child);
+    if (stopping) return;
+    if (restart) {
+      engineRestarts = Date.now() - started > 60000 ? 1 : engineRestarts + 1;
+      const delay = Math.min(30000, 1000 * 2 ** engineRestarts);
+      console.error(`Sentrapedia: engine MIRA berhenti (kode ${code}); dimulai ulang dalam ${delay / 1000} detik.`);
+      setTimeout(() => { if (!stopping) launch(program, args, environment, true); }, delay);
+      return;
+    }
+    console.error("Sentrapedia: proses internal berhenti; menutup seluruh system.");
+    stop(code || 1);
+  });
   return child;
 }
 async function freePort() {
@@ -61,7 +77,7 @@ try {
   } else {
     const port = await freePort();
     const url = `http://127.0.0.1:${port}`;
-    launch(python, ["-I", "-m", "uvicorn", "--factory", "service.app:create_app", "--app-dir", resolve(root, "mira"), "--host", "127.0.0.1", "--port", String(port), "--no-access-log"], environment);
+    launch(python, ["-I", "-m", "uvicorn", "--factory", "service.app:create_app", "--app-dir", resolve(root, "mira"), "--host", "127.0.0.1", "--port", String(port), "--no-access-log"], environment, true);
     const deadline = Date.now() + 30000;
     let ready = false;
     while (!stopping && Date.now() < deadline) {
@@ -77,9 +93,12 @@ try {
       const webEnv = { ...process.env, MIRA_SERVICE_URL: url, MIRA_SERVICE_TOKEN: token };
       const webPort = process.env.PORT || "3101";
       const host = process.env.SENTRAPEDIA_HOST || "127.0.0.1";
-      console.log("Sentrapedia: engine MIRA siap; menjalankan workspace dalam satu lifecycle.");
+      console.log(`Sentrapedia: engine MIRA siap (Gemini API langsung, ${model}); menjalankan workspace dalam satu lifecycle.`);
       if (mode === "standalone") launch(process.execPath, [resolve(root, "server.js")], webEnv);
       else launch(process.execPath, [resolve(root, "node_modules/next/dist/bin/next"), mode, "--hostname", host, "--port", webPort], webEnv);
+      void warmWorkspace(`http://${host === "0.0.0.0" ? "127.0.0.1" : host}:${webPort}`).then(warmed => {
+        if (!stopping) console.log(warmed ? "Sentrapedia: TheOracle mulai dimuat di latar sebelum kasus pertama." : "Sentrapedia: workspace belum menjawab; TheOracle dimuat saat kasus pertama.");
+      });
     }
   }
 } catch (error) {

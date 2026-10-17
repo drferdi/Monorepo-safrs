@@ -273,3 +273,14 @@
   and no email address is published.
 - The work lives on its own branch and worktree because another agent was writing in `apps/site` at the same
   time: one writer per scope.
+
+## 2026-10-17 - MIRA uses google/gemini-3.1-flash-lite for both stages
+- Gaffer asked for the fastest Gemini, then chose `google/gemini-3.1-flash-lite` as the default for planning and assessment (`scripts/mira-profile.json`, pinned in `tests/mira-paid.test.ts`). It supersedes `google/gemini-2.5-flash` from the 2026-10-09 model override; OpenRouter, synthetic-only data policy, no ZDR, throughput sorting and the Google fast-copy providers are unchanged.
+- Basis: one live run per model on the same fictional case. Model stages took 4.5 s against 5.6 s for 2.5-flash, at 0.0135 against 0.0169 USD, with the same verified therapy (ambroxol, paracetamol). `gemini-3.5-flash-lite` was slightly faster (4.3 s) but cost more (0.0202 USD) and proposed dextromethorphan for a productive cough. Evidence: `verify-report/full-check/2026-10-16/results/mira-live-3.json` to `-5.json`.
+- Limits: a single run per model is not a benchmark, and the 5 s target is still missed because TheOracle retrieval takes 3.8 s warm and 12 s cold. Warming retrieval stays the larger latency fix.
+
+## 2026-10-17 - MIRA calls the Gemini API directly instead of OpenRouter
+- Gaffer rejected the OpenRouter route and chose a Gemini API key (`GEMINI_API_KEY`). The model stays Gemini 3.1 Flash-Lite, now under its bare Gemini API id `gemini-3.1-flash-lite`. This supersedes the OpenRouter, no-ZDR, throughput-sorting and Google fast-copy-provider parts of the 2026-10-09 override and of the entry above.
+- Route: the engine's existing `openai` provider with `OPENAI_BASE_URL` set to Google's OpenAI-compatible endpoint, set by the launcher. A new `gemini` provider value was rejected because it would diverge `common/providers.py`, `common/guard.py` and `service/settings.py`, which `test_packaging.py` requires to match upstream. The only engine change is the Gemini price in `service/app.py`, already an allowed divergence. Consequence: the engine reports `provider=openai`.
+- Privacy: prompts now go to Google under the Gemini API terms. A paid-tier key is required, because free-tier prompts may be used to improve Google products. The data policy stays `synthetic-only`.
+- Gaffer approved repinning the `service/app.py` `packagedSha256` in `mira/SOURCE.json`; done the same day. Open: the route is not yet verified live.

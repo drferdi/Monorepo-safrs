@@ -5,7 +5,7 @@ import { createMiraGateway } from "../src/lib/mira/gateway";
 import { emptyCase } from "../src/lib/mira/contract";
 import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 
-const version = (plan = selectedMiraModel, assess = selectedMiraModel) => `mira-service/test+contract=1+provider=openrouter+data=synthetic-only+plan=${plan}+assess=${assess}+experimental`;
+const version = (plan = selectedMiraModel, assess = selectedMiraModel) => `mira-service/test+contract=1+provider=openai+data=synthetic-only+plan=${plan}+assess=${assess}+experimental`;
 const input = () => new Request("http://127.0.0.1:3104/api/mira", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Kasus fiktif untuk uji" }, synthetic: true }) });
 const result = { contractVersion: "1", status: "ok", differential: { likely: [], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: ["Input kurang"], nextBestActions: [], disposition: null, unfilled: [], meta: { version: version(), model: `${selectedMiraModel}+${selectedMiraModel}`, costUsd: 0.006 } };
 const grounding: TheOracleGroundingBundle = { version: THEORACLE_GROUNDING_CAPABILITY, corpus: { name: "TheOracle", indexSha256: "a".repeat(64), embeddingModel: { id: "onnx-community/embeddinggemma-300m-ONNX", revision: "e".repeat(40), dtype: "fp32", dims: 768 }, retrievedAt: "2026-10-10T12:00:00.000Z", reviewProvenance: "Gaffer stated session-level review provenance." }, queryDigest: "b".repeat(64), evidence: [{ evidenceId: "P001-001", text: "Kutipan TheOracle", retrievalRank: 1, similarity: 0.71, source: { title: "PNPK uji.md", docSource: "Kemenkes knowledge base", origin: "oracle-ii-knowledge-base", textSha256: "c".repeat(64) } }] };
@@ -53,10 +53,10 @@ describe("approved Gemini Flash profile", () => {
       expect(JSON.stringify(body)).not.toContain("MIRA");
     }
   });
-  it("pins an explicit Flash release and both stages with synthetic-only OpenRouter", () => {
-    expect(selectedMiraModel).toBe("google/gemini-2.5-flash");
+  it("pins gemini-3.1-flash-lite on the direct Gemini API for both stages, synthetic-only", () => {
+    expect(selectedMiraModel).toBe("gemini-3.1-flash-lite");
     expect(miraServiceVersion(version(), selectedMiraModel)).toBe(true);
-    for (const value of [version("other/model"), version(selectedMiraModel, "other/model"), version().replace("synthetic-only", "openrouter-zdr"), version().replace("provider=openrouter", "provider=openai"), `${version()}+assess=${selectedMiraModel}`, "unknown"]) expect(miraServiceVersion(value, selectedMiraModel)).toBe(false);
+    for (const value of [version("other/model"), version(selectedMiraModel, "other/model"), version().replace("synthetic-only", "openrouter-zdr"), version().replace("provider=openai", "provider=openrouter"), version("google/gemini-3.1-flash-lite", "google/gemini-3.1-flash-lite"), `${version()}+assess=${selectedMiraModel}`, "unknown"]) expect(miraServiceVersion(value, selectedMiraModel)).toBe(false);
   });
   it("derives model, budget and gateway timeout from the shared profile", () => {
     expect(selectedMiraModel).toBe(miraProfile.model);

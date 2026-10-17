@@ -100,7 +100,7 @@ export function createMiraGateway(options: Options = {}) {
         let targetedReady = false;
         if (selectedModel || options.retrieveGrounding) {
           const health = await serviceHealth(controller.signal);
-          if (selectedModel && !health.modelReady) return failure("MODEL_REQUIRED", "Perencanaan dan asesmen harus memakai profil OpenRouter yang dipilih. Tidak ada analisis dijalankan.", 503);
+          if (selectedModel && !health.modelReady) return failure("MODEL_REQUIRED", "Perencanaan dan asesmen harus memakai profil Gemini yang dipilih. Tidak ada analisis dijalankan.", 503);
           if (options.retrieveGrounding && !health.groundingReady) return failure("GROUNDING_REQUIRED", "Layanan analisis belum mendukung referensi TheOracle. Muat ulang layanan setelah pembaruan.", 503);
           targetedReady = health.targetedReady;
         }

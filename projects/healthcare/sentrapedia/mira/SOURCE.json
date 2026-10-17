@@ -38,7 +38,7 @@
       "source": "assist/service/app.py",
       "path": "service/app.py",
       "sourceSha256": "991e42b7f922a2cbe269c72424827aa6f8c09415eeac3e29922b1b8a18d0f172",
-      "packagedSha256": "830b975c63d3efe804829a148b7e99eaf3742ea78c8288719883f954a96d6a37"
+      "packagedSha256": "0e83c665744b5dec904ccaf332392a2e5666e4adb530c4cc62a7adcb6b82f8bd"
     },
     {
       "source": "assist/service/audit.py",

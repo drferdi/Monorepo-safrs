@@ -10,6 +10,7 @@ import {
   TheOracleGroundingError,
   retrieveTheOracleGrounding,
   retrieveTheOracleTherapyGrounding,
+  warmTheOracleGrounding,
   type TheOracleManifest,
 } from "../src/lib/theoracle-grounding";
 
@@ -132,6 +133,28 @@ describe("TheOracle vector grounding", () => {
     const error: unknown = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: failing }).catch((caught: unknown) => caught);
     expect(error).toBeInstanceOf(TheOracleGroundingError);
     expect(error).toMatchObject({ code: "THEORACLE_UNAVAILABLE" });
+  });
+
+  it("warms the index and model once, so the first case and its therapy step reuse them", async () => {
+    let loads = 0;
+    const calls: string[] = [];
+    const embedder = async () => { loads++; return async (text: string) => { calls.push(text); return Float32Array.from([1, 0, 0]); }; };
+    const indexDir = fixtureIndex();
+    await warmTheOracleGrounding({ indexDir, embedder });
+    expect(loads).toBe(1);
+    expect(calls).toEqual(["task: search result | query: demam"]);
+    await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder });
+    await retrieveTheOracleTherapyGrounding(caseFor("batuk"), { icd10: "J18.9", label: "Pneumonia" }, { indexDir, embedder });
+    expect(loads).toBe(1);
+  });
+
+  it("keeps a failed warm-up quiet and lets the first case load again", async () => {
+    let attempts = 0;
+    const embedder = async () => { if (attempts++ === 0) throw new Error("model load failure"); return async () => Float32Array.from([1, 0, 0]); };
+    const indexDir = fixtureIndex();
+    await expect(warmTheOracleGrounding({ indexDir, embedder })).resolves.toBeUndefined();
+    expect((await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder })).evidence.length).toBeGreaterThan(0);
+    expect(attempts).toBe(2);
   });
 
   it("answers from the real TheOracle index with the pinned local model without modifying it", async () => {
