@@ -20,7 +20,9 @@ from .providers import (
 
 # USD per 1M tokens (input, output), standard tier, from the OpenAI model pages
 # checked on 2026-09-27. Cached-input discounts are ignored (conservative).
-PRICES = {"gpt-4o": (2.50, 10.00), "o1": (15.00, 60.00)}
+# Gemini (Sentrapedia, capsule-owned since 2026-10-18): the Gemini API reports no usage.cost, so the guard estimates it.
+# Google AI Studio standard tier, checked 2026-10-17; thinking tokens bill as output.
+PRICES = {"gpt-4o": (2.50, 10.00), "o1": (15.00, 60.00), "gemini-3.1-flash-lite": (0.25, 1.50)}
 
 
 class RunAborted(BaseException):

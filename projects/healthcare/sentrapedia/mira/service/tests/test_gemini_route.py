@@ -17,7 +17,7 @@ PROFILE = Path(__file__).resolve().parents[3] / "scripts" / "mira-profile.json"
 
 def test_the_launcher_model_has_a_registered_price():
     model = json.loads(PROFILE.read_text(encoding="utf-8"))["model"]
-    assert any(model.startswith(prefix) for prefix in PRICES), f"register a price for {model} in service/app.py"
+    assert any(model.startswith(prefix) for prefix in PRICES), f"register a price for {model} in common/guard.py"
 
 
 def test_an_unpriced_model_on_the_estimated_route_refuses_to_start(settings):

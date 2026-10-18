@@ -14,7 +14,7 @@
       "source": "assist/common/guard.py",
       "path": "common/guard.py",
       "sourceSha256": "8c4828f2ed3ca710c4ce11ca802f3ccab5b8779f9e16328ebde5933904d6f083",
-      "packagedSha256": "8c4828f2ed3ca710c4ce11ca802f3ccab5b8779f9e16328ebde5933904d6f083"
+      "owner": "capsule"
     },
     {
       "source": "assist/common/providers.py",
@@ -110,7 +110,7 @@
       "source": "assist/service/settings.py",
       "path": "service/settings.py",
       "sourceSha256": "d14ed5fe12a1a3bacc2fd8b5c7ecac61050019ad0928d9534fbc016a9a461a04",
-      "packagedSha256": "d14ed5fe12a1a3bacc2fd8b5c7ecac61050019ad0928d9534fbc016a9a461a04"
+      "owner": "capsule"
     },
     {
       "source": "assist/service/sim_benchmark.py",
@@ -262,5 +262,5 @@
   "snapshotHashes": {
     "planning-tools.json": "402a38508184da7acbd2b47752fa549197e87d0b05d5a7f30cdd4590b332202c"
   },
-  "ownership": "Since 2026-10-17 the capsule owns every file marked owner: capsule (Gaffer, choice A); such files keep their origin and origin hash but are edited without a repin. Files without owner stay byte-identical to upstream."
+  "ownership": "Since 2026-10-17 the capsule owns every file marked owner: capsule (Gaffer, choice A); such files keep their origin and origin hash but are edited without a repin. Files without owner stay byte-identical to upstream. Since 2026-10-18 the capsule also owns service/settings.py and common/guard.py (Gaffer: Sentrapedia uses several models by task, tech-debt row 31); common/providers.py stays pinned."
 }

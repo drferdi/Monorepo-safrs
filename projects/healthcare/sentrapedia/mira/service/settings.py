@@ -79,13 +79,13 @@ def load_settings(environ: dict[str, str] | None = None) -> Settings:
         # Required in production; development defaults to synthetic cases only.
         data_policy=env.get("MIRA_DATA_POLICY", DEVELOPMENT_DEFAULT if service_env == "development" else None),
         dev_token=env.get("MIRA_DEV_TOKEN", ""),
-        # defaults: MIRA's models; through OpenRouter as openai/o1 and openai/gpt-4o
+        # defaults: MIRA's validated models (o1 and gpt-4o); Sentrapedia's launcher sets the profile model
         plan_model=plan_model,
         plan_model_choices=tuple(dict.fromkeys([plan_model, *choices])),
         assess_model=model_id(provider, env.get("MIRA_ASSESS_MODEL", MEDICAL_ASSISTANT_MODEL)),
         assess_temperature=MEDICAL_ASSISTANT_TEMPERATURE,
-        step_deadline_s=float(env.get("MIRA_STEP_DEADLINE_S", "12")),
-        max_usd_per_step=float(env.get("MIRA_MAX_USD_PER_STEP", "0.50")),
+        step_deadline_s=float(env.get("MIRA_STEP_DEADLINE_S", "20")),  # scripts/mira-profile.json
+        max_usd_per_step=float(env.get("MIRA_MAX_USD_PER_STEP", "0.50")),  # the launcher sets stepBudgetUsd from scripts/mira-profile.json
         daily_budget_usd=float(env.get("MIRA_DAILY_BUDGET_USD", "5")),
         max_consecutive_api_errors=int(env.get("MIRA_MAX_CONSECUTIVE_API_ERRORS", "3")),
         api_error_cooldown_s=float(env.get("MIRA_API_ERROR_COOLDOWN_S", "60")),

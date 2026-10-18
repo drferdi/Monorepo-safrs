@@ -281,7 +281,8 @@ def test_pii_patterns_without_clinical_false_positives(text, kinds):
 
 def test_empty_settings_fall_back_to_defaults():
     settings = load_settings({"MIRA_PLAN_MODEL": "", "MIRA_STEP_DEADLINE_S": "", "MIRA_DEV_TOKEN": "t"})
-    assert settings.plan_model == "o1" and settings.step_deadline_s == 12 and settings.dev_token == "t"
+    # The step deadline default matches scripts/mira-profile.json (row 31); the models stay MIRA's validated ones.
+    assert settings.plan_model == "o1" and settings.step_deadline_s == 20 and settings.dev_token == "t"
     assert settings.plan_model_choices == ("o1",)
 
 
