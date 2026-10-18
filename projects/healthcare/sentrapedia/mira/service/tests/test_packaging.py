@@ -2,6 +2,7 @@
 import hashlib
 import importlib.metadata
 import json
+import re
 from pathlib import Path
 
 from routines import ROUTINE_PROMPT
@@ -33,7 +34,16 @@ def test_pinned_files_match_upstream_and_capsule_owned_files_carry_no_pin():
     assert hashlib.sha256(ROUTINE_PROMPT.encode()).hexdigest() == manifest["routinePromptSha256"]
 
 def test_installed_runtime_matches_the_pinned_dependency_closure():
-    for line in (ROOT / "requirements.lock").read_text().splitlines():
-        if "==" in line:
-            name, version = line.split("==")
-            assert importlib.metadata.version(name) == version
+    pins = re.findall(r"^([A-Za-z0-9_.-]+)==([^\s\\]+)", (ROOT / "requirements.lock").read_text(), re.MULTILINE)
+    assert len(pins) >= 20
+    for name, version in pins:
+        assert importlib.metadata.version(name) == version
+
+def test_both_locks_pin_every_package_with_a_hash():
+    """pip installs a lock with hashes in hash-checking mode, so a changed or substituted wheel is refused (row 41)."""
+    for lock in ("requirements.lock", "requirements-test.lock"):
+        lines = (ROOT / lock).read_text().splitlines()
+        pins = [i for i, line in enumerate(lines) if re.match(r"[A-Za-z0-9_.-]+==", line)]
+        assert pins, lock
+        for i in pins:
+            assert lines[i].endswith("\\") and lines[i + 1].strip().startswith("--hash=sha256:"), (lock, lines[i])
