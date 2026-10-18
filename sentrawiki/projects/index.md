@@ -8,8 +8,8 @@ A capsule is standalone only when **structural** checks and **empirical extracti
 
 ## Inventory
 
-18 capsules across five domains (2026-10-18). 17 carry `project.contract.json`; `internal/control-center`
-is the one entry in `.safrs/known-nonconformance.json`. "Excluded" means `pnpm-workspace.yaml` names the
+18 capsules across five domains (2026-10-18), all with `project.contract.json`;
+`.safrs/known-nonconformance.json` is empty. "Excluded" means `pnpm-workspace.yaml` names the
 capsule (or its domain) with `!`; "not included" means the `projects/*/*/apps/*` glob matches nothing there.
 
 | ID | What it is | Contract | Root workspace |
@@ -31,7 +31,7 @@ capsule (or its domain) with `!`; "not included" means the `projects/*/*/apps/*`
 | healthcare/sentraverse-neural | Scroll-driven neural journey site | `project.contract.json` | excluded |
 | healthcare/sidelab-src | Research-prototype clinical decision support (not production-ready) | `project.contract.json` | excluded |
 | **internal** | | | |
-| [internal/control-center](control-center.md) | Local repo-health dashboard | none (known non-conformance) | excluded |
+| [internal/control-center](control-center.md) | Local repo-health dashboard | `project.contract.json` | excluded |
 | [internal/golden-path](golden-path.md) | Typed DB→API→Web demo; standalone capsule (local snapshot packages) | `project.contract.json` | excluded |
 | internal/unicom | UNICOM legacy multi-agent communication room (Next.js) | `project.contract.json` | not included |
 | **product** | | | |
