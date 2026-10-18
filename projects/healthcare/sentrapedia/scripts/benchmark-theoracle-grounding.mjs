@@ -15,10 +15,10 @@ const evalSet = path.resolve(process.argv[2] ?? "docs/verification/theoracle-eva
 const hash = () => createHash("sha256").update(readFileSync(path.join(indexDir, "vectors.f32"))).update(readFileSync(path.join(indexDir, "chunks.jsonl"))).digest("hex");
 const pct = (values, p) => { const sorted = [...values].sort((a, b) => a - b); return Math.round(sorted[Math.min(sorted.length - 1, Math.floor(p * sorted.length))] * 10) / 10; };
 try {
-  for (const name of ["theoracle-grounding-types", "theoracle-grounding"]) {
+  for (const name of ["guards", "theoracle-grounding-types", "theoracle-grounding"]) {
     const source = readFileSync(path.resolve(`src/lib/${name}.ts`), "utf8");
     const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
-    writeFileSync(path.join(scratch, `${name}.mjs`), compiled.replaceAll('"./theoracle-grounding-types"', '"./theoracle-grounding-types.mjs"'));
+    writeFileSync(path.join(scratch, `${name}.mjs`), compiled.replace(/from "\.\/([\w-]+)"/g, 'from "./$1.mjs"'));
   }
   const { retrieveTheOracleGrounding, retrieveTheOracleTherapyGrounding } = await import(pathToFileURL(path.join(scratch, "theoracle-grounding.mjs")).href);
   const caseFor = complaint => ({ demographics: { ageYears: null, sex: "unknown" }, chiefComplaint: complaint, anamnesis: {}, physicalExam: [], results: [], currentMedications: [], knownConditions: [] });

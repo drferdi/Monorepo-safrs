@@ -162,10 +162,9 @@ test("standalone build stops with the next build exit code and copies nothing", 
 }));
 
 // build-theoracle-index.mjs: a copy runs next to a stub model profile and a stub @huggingface/transformers whose
-// embedding of a text is [length, STUB_ROUND (default 1), 0, ...]. One row is 64 KiB: the script reads vectors.f32
-// through readFileSync(...).buffer, which on Node 24 is a shared pool for small files (measured: 20,000 bytes pooled,
-// 65,535 not), so --append and resume are only correct from that size up. The real index is 60 MB.
-const dims = 16384;
+// embedding of a text is [length, STUB_ROUND (default 1), 0, ...]. Rows are 12 bytes, so vectors.f32 is small enough
+// that Node 24 reads it into its shared buffer pool (measured: 20,000 bytes pooled, 65,535 not).
+const dims = 3;
 const stubModel = { id: "stub/model", revision: "r1", dtype: "fp32", dims, files: { "config.json": { size: 11, sha256: sha("stub-config") } } };
 function indexFixture(root, texts) {
   copyScripts(root, ["build-theoracle-index.mjs"]);
@@ -216,6 +215,17 @@ test("index build --append keeps the existing rows and embeds only the new chunk
   assert.equal(code, 0, stderr);
   assert.deepEqual(readVectors(root), [...unit("d: one".length, 1), ...unit("d: two".length, 1), ...unit("d: three".length, 2)]);
   assert.equal(JSON.parse(readFileSync(join(root, "theoracle/index/manifest.json"), "utf8")).chunks.count, 3);
+}));
+
+test("an interrupted index build resumes from its partial vectors and embeds only the rows still missing", withCapsule("index-resume", async root => {
+  indexFixture(root, ["one", "two three"]);
+  // "one" is the shorter text, so it is embedded first; the partial file already holds a marker row for it.
+  writeFileSync(join(root, "theoracle/index/vectors.partial.f32"), Buffer.from(new Float32Array([0, 0, 1, 0, 0, 0]).buffer));
+  writeFileSync(join(root, "theoracle/index/vectors.partial.json"), JSON.stringify({ done: 1, total: 2 }));
+  const { code, stderr } = await run(join(root, "scripts/build-theoracle-index.mjs"));
+  assert.equal(code, 0, stderr);
+  assert.deepEqual(readVectors(root), [0, 0, 1, ...unit("d: two three".length, 1)]);
+  assert.ok(!existsSync(join(root, "theoracle/index/vectors.partial.f32")) && !existsSync(join(root, "theoracle/index/vectors.partial.json")));
 }));
 
 test("index build refuses a model file that does not match its pinned hash and writes nothing", withCapsule("index-model", async root => {
@@ -346,13 +356,14 @@ test("npm wrapper runs npm in the capsule and passes its exit code on", async ()
   assert.notEqual(missing.code, 0);
 });
 
-// benchmark-theoracle-grounding.mjs transpiles only theoracle-grounding.ts and its types file into a scratch folder,
-// but both import ./guards since 9c6e921c, so the compiled retriever fails with ERR_MODULE_NOT_FOUND. Reported, not fixed.
-test("benchmark compiles every local module the retriever imports", { todo: "benchmark-theoracle-grounding.mjs does not compile src/lib/guards.ts" }, () => {
-  const compiled = readFileSync(resolve("scripts/benchmark-theoracle-grounding.mjs"), "utf8").match(/for \(const name of \[([^\]]+)\]\)/)[1];
-  for (const file of ["theoracle-grounding.ts", "theoracle-grounding-types.ts"]) {
-    for (const [, local] of readFileSync(resolve("src/lib", file), "utf8").matchAll(/^import (?!type )[^;]*from "\.\/([^"]+)"/gm)) {
-      assert.ok(compiled.includes(`"${local}"`), `${file} imports ./${local}, which the benchmark does not compile`);
+// benchmark-theoracle-grounding.mjs transpiles the retriever into a scratch folder; a local module it leaves out
+// stops the run with ERR_MODULE_NOT_FOUND before any retrieval (as ./guards did from 9c6e921c until it was added).
+test("benchmark compiles every local module the retriever imports", () => {
+  const compiled = [...readFileSync(resolve("scripts/benchmark-theoracle-grounding.mjs"), "utf8").match(/for \(const name of \[([^\]]+)\]\)/)[1].matchAll(/"([^"]+)"/g)].map(match => match[1]);
+  assert.ok(compiled.includes("theoracle-grounding"));
+  for (const name of compiled) {
+    for (const [, local] of readFileSync(resolve("src/lib", `${name}.ts`), "utf8").matchAll(/^import (?!type )[^;]*from "\.\/([^"]+)"/gm)) {
+      assert.ok(compiled.includes(local), `${name}.ts imports ./${local}, which the benchmark does not compile`);
     }
   }
 });
