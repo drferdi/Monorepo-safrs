@@ -150,12 +150,16 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
                 return JSONResponse(response)
             step_engine = engine.with_plan_model(plan_model)
 
+        guards = []  # the engine hands over the step's guard before any call
         try:
-            response, guard, notes = await run(step_engine, payload)
+            response, guard, notes = await run(step_engine, payload, guards.append)
             calls = guard.calls
         except Exception as exc:  # any internal failure is an 'unavailable' answer, never a 500
             log.warning("step failed internally: %s", type(exc).__name__)
-            response, calls, notes = step_engine.unavailable("INTERNAL_ERROR", type(exc).__name__), [], []
+            # The calls made before the crash were paid: the answer and the ledger carry them (row 40).
+            guard = guards[0] if guards else None
+            response = step_engine.unavailable("INTERNAL_ERROR", type(exc).__name__, guard)
+            calls, notes = (guard.calls if guard else []), []
         audit.write(
             {
                 "traceId": trace_id,
@@ -178,10 +182,10 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
 
     @app.post("/v1/diagnosis/step")
     async def step(request: Request) -> JSONResponse:
-        return await handle(request, REQUEST, lambda e, p: e.run(p["case"], p.get("grounding"), p.get("omitTherapy", False)))
+        return await handle(request, REQUEST, lambda e, p, track: e.run(p["case"], p.get("grounding"), p.get("omitTherapy", False), track))
 
     @app.post("/v1/therapy/step")
     async def therapy_step(request: Request) -> JSONResponse:
-        return await handle(request, THERAPY_REQUEST, lambda e, p: e.run_therapy(p["case"], p["diagnosis"], p["grounding"]))
+        return await handle(request, THERAPY_REQUEST, lambda e, p, track: e.run_therapy(p["case"], p["diagnosis"], p["grounding"], track))
 
     return app

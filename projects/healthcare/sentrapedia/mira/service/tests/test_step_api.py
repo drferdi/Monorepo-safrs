@@ -12,6 +12,7 @@ import pytest
 
 from service import postchecks
 from service.app import AUDIT_RETENTION_DAYS, digest
+from service.audit import AuditLog
 from service.contract import RESPONSE, UNFILLABLE_FIELDS, errors
 from service.engine import FAST_COPIES
 from service.postchecks import NOT_AVAILABLE_NOTE
@@ -769,3 +770,30 @@ def test_an_unexpected_therapy_failure_after_a_paid_call_still_counts_toward_the
     assert client.post(THERAPY, content=request, headers=AUTH).json()["error"]["code"] == "INTERNAL_ERROR"
     assert client.post(THERAPY, content=request, headers=AUTH).json()["error"]["code"] == "BUDGET_EXHAUSTED"
     assert len(fake.calls) == FAST_COPIES
+
+
+def test_a_crashed_step_writes_its_spend_to_the_ledger_so_a_restart_keeps_it(make_client, example_request, settings, monkeypatch):
+    # Row 40 (a): the ledger line of a crashed step carries its cost and calls; DailyBudget seeds from that ledger.
+    def crash(*args, **kwargs):
+        raise RuntimeError("unexpected")
+
+    monkeypatch.setattr(postchecks, "apply", crash)
+    client, _ = make_client(model_outputs())
+    body = post(client, example_request).json()
+    assert body["error"]["code"] == "INTERNAL_ERROR" and body["meta"]["costUsd"] > 0
+    [record] = audit_lines(settings)
+    assert record["costUsd"] == body["meta"]["costUsd"]
+    assert [call["role"] for call in record["calls"]] == ["plan", "assessment"]
+    assert AuditLog(settings.audit_dir).spent_today() == pytest.approx(body["meta"]["costUsd"])
+
+
+def test_a_crashed_therapy_step_writes_its_spend_to_the_ledger(make_client, example_request, settings, monkeypatch):
+    def crash(*args, **kwargs):
+        raise RuntimeError("unexpected")
+
+    monkeypatch.setattr(postchecks, "resolve_code", crash)
+    client, _ = make_client([completion(therapy_part(), "gpt-4o")] * FAST_COPIES, fast_assessment=True, fast_therapy=True)
+    body = client.post(THERAPY, content=json.dumps(therapy_request(example_request)), headers=AUTH).json()
+    assert body["error"]["code"] == "INTERNAL_ERROR" and body["meta"]["costUsd"] > 0
+    [record] = audit_lines(settings)
+    assert record["costUsd"] == body["meta"]["costUsd"] and record["calls"]

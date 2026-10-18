@@ -261,12 +261,15 @@ class StepEngine:
                 part.cancel()
 
     async def run(
-        self, case: dict, grounding: dict | None = None, omit_therapy: bool = False
+        self, case: dict, grounding: dict | None = None, omit_therapy: bool = False, on_guard=None
     ) -> tuple[dict, ApiGuard, list[str]]:
+        """on_guard receives the step's guard before any call, so a caller can still log the spend of a step that crashes."""
         s = self.settings
         therapy = s.fast_therapy and not omit_therapy
         max_calls = (3 if therapy else 2) * fast_copies() if s.fast_assessment else MAX_CALLS_PER_STEP
         guard = ApiGuard(max_calls=max_calls, max_usd=s.max_usd_per_step, provider=s.llm_provider)
+        if on_guard:
+            on_guard(guard)
         if self.budget.exhausted():
             return self.unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
         if self.breaker.is_open():
@@ -325,10 +328,12 @@ class StepEngine:
         return {"contractVersion": CONTRACT_VERSION, "status": "unavailable", "error": {"code": code, "message": message},
                 "meta": {"version": self.version, "model": self.model, "costUsd": cost}}
 
-    async def run_therapy(self, case: dict, diagnosis: dict, grounding: dict) -> tuple[dict, ApiGuard, list[str]]:
-        """Therapy for a diagnosis chosen by an earlier step, grounded on excerpts retrieved for it."""
+    async def run_therapy(self, case: dict, diagnosis: dict, grounding: dict, on_guard=None) -> tuple[dict, ApiGuard, list[str]]:
+        """Therapy for a diagnosis chosen by an earlier step, grounded on excerpts retrieved for it. on_guard: as in run."""
         s = self.settings
         guard = ApiGuard(max_calls=fast_copies(), max_usd=s.max_usd_per_step, provider=s.llm_provider)
+        if on_guard:
+            on_guard(guard)
         if self.budget.exhausted():
             return self.therapy_unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
         if self.breaker.is_open():
