@@ -2,6 +2,7 @@ import profile from "../../../scripts/mira-profile.json";
 
 export const selectedMiraModel = profile.model;
 export const miraStepBudgetUsd = profile.stepBudgetUsd;
+export const miraDailyBudgetUsd = profile.dailyBudgetUsd;
 // The engine stops a step at its own deadline; the margin covers the health check and TheOracle grounding.
 export const miraGatewayTimeoutMs = (profile.stepDeadlineS + profile.gatewayMarginS) * 1000;
 // The targeted pipeline runs two MIRA steps (diagnosis, then therapy), each with its own deadline.

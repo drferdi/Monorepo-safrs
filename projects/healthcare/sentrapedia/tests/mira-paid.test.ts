@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { selectedMiraModel, miraServiceVersion, miraStepBudgetUsd, miraGatewayTimeoutMs } from "../src/lib/mira/model-profile";
+import { selectedMiraModel, miraServiceVersion, miraStepBudgetUsd, miraDailyBudgetUsd, miraGatewayTimeoutMs } from "../src/lib/mira/model-profile";
 import miraProfile from "../scripts/mira-profile.json";
 import { createMiraGateway } from "../src/lib/mira/gateway";
 import { emptyCase } from "../src/lib/mira/contract";
@@ -61,6 +61,8 @@ describe("approved Gemini Flash profile", () => {
   it("derives model, budget and gateway timeout from the shared profile", () => {
     expect(selectedMiraModel).toBe(miraProfile.model);
     expect(miraStepBudgetUsd).toBe(miraProfile.stepBudgetUsd);
+    expect(miraDailyBudgetUsd).toBeGreaterThan(0);
+    expect(miraDailyBudgetUsd).toBe(miraProfile.dailyBudgetUsd);
     expect(miraGatewayTimeoutMs).toBe((miraProfile.stepDeadlineS + miraProfile.gatewayMarginS) * 1000);
   });
   it("reports the selected paid profile and its configured response cost limit", async () => {
