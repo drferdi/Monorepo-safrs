@@ -15,8 +15,9 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   standalone capsule (own workspace, lockfile, token snapshot, tsconfig, `next build`) and
   `pnpm-workspace.yaml` excludes it; the root `pnpm-lock.yaml` loses only its importer and orphans.
   Details and evidence in the capsule HANDOFF; extraction `project:verify` PASS with the step B
-  contract applied locally. Step B (`feat/control-center-contract`): contract plus removal of the
-  known-nonconformance entry. `check_project_independence.py` rejects a contract while the entry
+  contract applied locally. Step B (`feat/control-center-contract`, `TASK-20261018-CONTROL-CENTER-NONCONFORMANCE`):
+  contract plus removal of the known-nonconformance entry; with it the independence checker reports
+  18 active capsules and no known non-conformance. `check_project_independence.py` rejects a contract while the entry
   exists, so B is necessarily implementation plus a verification control and needs Gaffer's
   `.safrs/reviews/verification-integrity.json`; an agent cannot record it. The root
   `.claude/launch.json` (gitignored) entry `control-center` still points at a removed worktree.
