@@ -268,7 +268,14 @@ class StepEngine:
             return self.unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
         if self.breaker.is_open():
             return self.unavailable("API_ERRORS", "Model calls paused after repeated API errors."), guard, []
+        try:
+            return await self._run(guard, case, grounding, therapy)
+        finally:
+            # Charged however the step ends, an unexpected exception included (row 40).
+            self.budget.add(guard.cost_usd)
 
+    async def _run(self, guard: ApiGuard, case: dict, grounding: dict | None, therapy: bool) -> tuple[dict, ApiGuard, list[str]]:
+        s = self.settings
         deadline = time.monotonic() + s.step_deadline_s
         try:
             async with asyncio.timeout(s.step_deadline_s):
@@ -291,13 +298,13 @@ class StepEngine:
                     assessment = json.loads(raw)
             fields, notes = postchecks.apply(assessment, case)
         except TimeoutError:
-            return self._spent(self.unavailable("TIMEOUT", f"Step deadline of {s.step_deadline_s:g} s reached.", guard), guard)
+            return self.unavailable("TIMEOUT", f"Step deadline of {s.step_deadline_s:g} s reached.", guard), guard, []
         except RunAborted as exc:
-            return self._spent(self.unavailable("STEP_BUDGET_EXCEEDED", str(exc), guard), guard)
+            return self.unavailable("STEP_BUDGET_EXCEEDED", str(exc), guard), guard, []
         except StepFailed as exc:
-            return self._spent(self.unavailable(exc.code, exc.message, guard), guard)
+            return self.unavailable(exc.code, exc.message, guard), guard, []
         except (json.JSONDecodeError, KeyError, TypeError) as exc:
-            return self._spent(self.unavailable("MODEL_OUTPUT_INVALID", type(exc).__name__, guard), guard)
+            return self.unavailable("MODEL_OUTPUT_INVALID", type(exc).__name__, guard), guard, []
 
         response = {
             "contractVersion": CONTRACT_VERSION,
@@ -307,8 +314,7 @@ class StepEngine:
         }
         problems = errors(RESPONSE, response)
         if problems:
-            return self._spent(self.unavailable("CONTRACT_MISMATCH", "; ".join(problems[:5]), guard), guard)
-        self.budget.add(guard.cost_usd)
+            return self.unavailable("CONTRACT_MISMATCH", "; ".join(problems[:5]), guard), guard, []
         return response, guard, notes
 
     def therapy_unavailable(self, code: str, message: str, guard: ApiGuard | None = None) -> dict:
@@ -324,6 +330,14 @@ class StepEngine:
             return self.therapy_unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
         if self.breaker.is_open():
             return self.therapy_unavailable("API_ERRORS", "Model calls paused after repeated API errors."), guard, []
+        try:
+            return await self._run_therapy(guard, case, diagnosis, grounding)
+        finally:
+            # Charged however the step ends, an unexpected exception included (row 40).
+            self.budget.add(guard.cost_usd)
+
+    async def _run_therapy(self, guard: ApiGuard, case: dict, diagnosis: dict, grounding: dict) -> tuple[dict, ApiGuard, list[str]]:
+        s = self.settings
         deadline = time.monotonic() + s.step_deadline_s
         notes: list[str] = []
         try:
@@ -340,29 +354,16 @@ class StepEngine:
                 notes.append(f"therapy: {note}")
             therapy = {**therapy, "forDiagnosis": {**target, "icd10": code or target["icd10"]}}
         except TimeoutError:
-            response = self.therapy_unavailable("TIMEOUT", f"Step deadline of {s.step_deadline_s:g} s reached.", guard)
-            self.budget.add(guard.cost_usd)
-            return response, guard, []
+            return self.therapy_unavailable("TIMEOUT", f"Step deadline of {s.step_deadline_s:g} s reached.", guard), guard, []
         except RunAborted as exc:
-            response = self.therapy_unavailable("STEP_BUDGET_EXCEEDED", str(exc), guard)
-            self.budget.add(guard.cost_usd)
-            return response, guard, []
+            return self.therapy_unavailable("STEP_BUDGET_EXCEEDED", str(exc), guard), guard, []
         except StepFailed as exc:
-            response = self.therapy_unavailable(exc.code, exc.message, guard)
-            self.budget.add(guard.cost_usd)
-            return response, guard, []
+            return self.therapy_unavailable(exc.code, exc.message, guard), guard, []
         except (KeyError, TypeError) as exc:
-            response = self.therapy_unavailable("MODEL_OUTPUT_INVALID", type(exc).__name__, guard)
-            self.budget.add(guard.cost_usd)
-            return response, guard, []
+            return self.therapy_unavailable("MODEL_OUTPUT_INVALID", type(exc).__name__, guard), guard, []
         response = {"contractVersion": CONTRACT_VERSION, "status": "ok", "therapy": therapy,
                     "meta": {"version": self.version, "model": self.model, "costUsd": round(guard.cost_usd, 6)}}
         problems = errors(THERAPY_RESPONSE, response)
         if problems:
             response = self.therapy_unavailable("CONTRACT_MISMATCH", "; ".join(problems[:5]), guard)
-        self.budget.add(guard.cost_usd)
         return response, guard, notes
-
-    def _spent(self, response: dict, guard: ApiGuard) -> tuple[dict, ApiGuard, list[str]]:
-        self.budget.add(guard.cost_usd)
-        return response, guard, []

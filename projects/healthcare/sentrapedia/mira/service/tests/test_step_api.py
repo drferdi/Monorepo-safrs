@@ -730,3 +730,28 @@ def test_therapy_step_failure_is_unavailable(make_client, example_request):
 def test_healthz_advertises_targeted_therapy(make_client):
     client, _ = make_client([])
     assert "theoracle-targeted-therapy-v1" in client.get("/healthz").json()["capabilities"]
+
+
+def test_an_unexpected_failure_after_paid_calls_still_counts_toward_the_daily_budget(make_client, example_request, monkeypatch):
+    # Row 40: the spend of a step that crashes outside the handled classes must reach the daily budget.
+    def crash(*args, **kwargs):
+        raise RuntimeError("unexpected")
+
+    monkeypatch.setattr(postchecks, "apply", crash)
+    client, fake = make_client(model_outputs() + model_outputs(), daily_budget_usd=0.01)
+    assert post(client, example_request).json()["error"]["code"] == "INTERNAL_ERROR"
+    assert post(client, example_request).json()["error"]["code"] == "BUDGET_EXHAUSTED"
+    assert len(fake.calls) == 2
+
+
+def test_an_unexpected_therapy_failure_after_a_paid_call_still_counts_toward_the_daily_budget(make_client, example_request, monkeypatch):
+    def crash(*args, **kwargs):
+        raise RuntimeError("unexpected")
+
+    monkeypatch.setattr(postchecks, "resolve_code", crash)
+    client, fake = make_client([completion(therapy_part(), "gpt-4o")] * (2 * FAST_COPIES), daily_budget_usd=1e-9,
+                               fast_assessment=True, fast_therapy=True)
+    request = json.dumps(therapy_request(example_request))
+    assert client.post(THERAPY, content=request, headers=AUTH).json()["error"]["code"] == "INTERNAL_ERROR"
+    assert client.post(THERAPY, content=request, headers=AUTH).json()["error"]["code"] == "BUDGET_EXHAUSTED"
+    assert len(fake.calls) == FAST_COPIES
