@@ -1,5 +1,8 @@
 # Dose inventory
 
+Archive (Gaffer, 2026-10-18): no runtime, build or test code reads this folder; the dose gate uses the passages
+TheOracle retrieves. It is kept as a source record.
+
 Data for the dose gate, built 2026-10-11 and moved here from the git-ignored `.runtime/dose-inventory/`
 of the main checkout (bytes unchanged). Not clinician reviewed. Source typos are copied verbatim.
 
