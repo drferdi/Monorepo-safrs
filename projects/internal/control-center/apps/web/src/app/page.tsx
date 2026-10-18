@@ -7,6 +7,7 @@ import { readHealth } from "../lib/repo/health.ts";
 import { readDocumentRegistry } from "../lib/repo/knowledge.ts";
 import { readLibrary } from "../lib/repo/library.ts";
 import { readRegistry } from "../lib/repo/registry.ts";
+import { repoRoot } from "../lib/repo/root.ts";
 import { readWorkspace } from "../lib/repo/workspace.ts";
 import { ControlCenter } from "./control-center.tsx";
 
@@ -21,6 +22,26 @@ import { ControlCenter } from "./control-center.tsx";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
+  // Without a repository there is nothing to observe, so say that instead of
+  // failing the render (an extracted copy of the capsule starts here).
+  try {
+    await repoRoot();
+  } catch {
+    return (
+      <main className="shell">
+        <section className="notice">
+          <h1>Repository tidak ditemukan</h1>
+          <p className="muted">
+            Jalankan Control Center dari dalam repository, atau atur{" "}
+            <code>SENTRA_REPO_ROOT</code> ke root checkout yang ingin dibaca.
+            Tidak ada status yang ditampilkan karena tidak ada yang dapat
+            diamati.
+          </p>
+        </section>
+      </main>
+    );
+  }
+
   const [
     snapshot,
     workspace,

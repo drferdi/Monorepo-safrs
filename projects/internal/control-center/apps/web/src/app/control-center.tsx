@@ -2369,10 +2369,10 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
                     <td>
                       {gate.reason}
                       {gate.errors.length > 0
-                        ? gate.errors.map((error, errorIndex) => (
+                        ? [...new Set(gate.errors)].map((error) => (
                             <p
                               className="t-compact muted"
-                              key={`${gate.check_id}-error-${errorIndex}`}
+                              key={`${gate.check_id}-error-${error}`}
                             >
                               {error}
                             </p>

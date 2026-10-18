@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-18 (Claude Code, `docs/sentrawiki-refresh`)
+Last updated: 2026-10-18 (Claude Code, `feat/control-center-sovereignty`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,19 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-18 (Claude Code, `feat/control-center-sovereignty` on top of `docs/sentrawiki-refresh`, same
+  worktree `sentrawiki-refresh-7f29`, `TASK-20261018-CONTROL-CENTER-SOVEREIGNTY`; safe-gaps Module 3,
+  Gaffer's order after being told ADR 0007 leaves the placement open). Step A: control-center is a
+  standalone capsule (own workspace, lockfile, token snapshot, tsconfig, `next build`) and
+  `pnpm-workspace.yaml` excludes it; the root `pnpm-lock.yaml` loses only its importer and orphans.
+  Details and evidence in the capsule HANDOFF; extraction `project:verify` PASS with the step B
+  contract applied locally. Step B (`feat/control-center-contract`): contract plus removal of the
+  known-nonconformance entry. `check_project_independence.py` rejects a contract while the entry
+  exists, so B is necessarily implementation plus a verification control and needs Gaffer's
+  `.safrs/reviews/verification-integrity.json`; an agent cannot record it. The root
+  `.claude/launch.json` (gitignored) entry `control-center` still points at a removed worktree.
+  Claims `.agents/HANDOFF.md`, `sentrawiki/projects/index.md`, `sentrawiki/reference/dependencies.md`
+  moved from the Module 2 task (`TRANSFER-20261018-M3-SHARED-DOCS`, `-M3-DEPENDENCIES-PAGE`).
 - 2026-10-18 (Claude Code, `docs/sentrawiki-refresh`, worktree
   `../Monorepo.worktrees/sentrawiki-refresh-7f29` from `main` `e3d37073`,
   `TASK-20261018-SENTRAWIKI-REFRESH`; safe-gaps Module 2). `sentrawiki/projects/index.md` lists all 18

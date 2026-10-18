@@ -1,0 +1,18 @@
+{
+  "name": "control-center",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24.18.0 <25"
+  },
+  "scripts": {
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "build": "pnpm --filter @sentra/control-center build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.7"
+  }
+}

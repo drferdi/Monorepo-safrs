@@ -1,0 +1,29 @@
+{
+  "name": "@sentra/token",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Capsule-local snapshot of the Sentraverse design tokens: src/ and assets/ copied verbatim from the monorepo's packages/token at 895a19fa on 2026-10-18. Refresh by copying again; never edit here.",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./tokens.css": "./src/tokens.css",
+    "./tokens.json": "./src/tokens.json",
+    "./tailwind.css": "./src/tailwind.css",
+    "./fonts": "./src/fonts.ts",
+    "./fonts-archivo": "./src/fonts-archivo.ts",
+    "./archivo.css": "./src/archivo.css"
+  },
+  "files": [
+    "src",
+    "assets"
+  ],
+  "peerDependencies": {
+    "next": ">=15"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
+  }
+}

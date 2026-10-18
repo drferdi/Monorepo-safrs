@@ -1,14 +1,13 @@
 # Dependencies reference
 
-> **Scope.** Root `pnpm-workspace.yaml` catalog. Every capsule except `internal/control-center` resolves its own lockfile.
+> **Scope.** Root `pnpm-workspace.yaml` catalog. Every capsule resolves its own lockfile.
 
 ## Workspace members
 
 `pnpm-workspace.yaml` includes `packages/*`, `tools/*` (minus `tools/retriever` and `tools/prompt`), and the glob
 `projects/*/*/apps/*`. Every capsule that glob would match is excluded by name (`academic-smartboard`,
-`kediri-history`, `sentrabot`, `golden-path`) or by domain (`!projects/healthcare/**`);
-`portfolio-drnovia` and `unicom` have no `apps/`. The only capsule still inside the root workspace is
-`projects/internal/control-center/apps/web`, recorded in `.safrs/known-nonconformance.json`.
+`kediri-history`, `sentrabot`, `golden-path`, `control-center`) or by domain (`!projects/healthcare/**`);
+`portfolio-drnovia` and `unicom` have no `apps/`. No capsule is inside the root workspace.
 
 ## The version catalog
 

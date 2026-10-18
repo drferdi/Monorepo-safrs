@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node ../../../../../scripts/next-production-build.mjs",
+    "build": "next build",
     "dev": "next dev -H 127.0.0.1 -p 3100",
     "lint": "biome check src",
     "start": "next start",
@@ -13,19 +13,18 @@
   },
   "dependencies": {
     "@sentra/token": "workspace:*",
-    "next": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
+    "next": "16.3.8",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "react-is": "^19.3.0",
     "recharts": "3.10.1"
   },
   "devDependencies": {
-    "@safrs/config": "workspace:*",
-    "@tailwindcss/postcss": "catalog:",
-    "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "tailwindcss": "catalog:",
-    "typescript": "catalog:"
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "24.10.13",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "tailwindcss": "4.3.3",
+    "typescript": "7.0.2"
   }
 }

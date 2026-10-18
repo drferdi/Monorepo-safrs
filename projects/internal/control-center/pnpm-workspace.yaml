@@ -1,0 +1,16 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  sharp: true
+
+# Minutes (pnpm unit): 1440 = 1 day. A quoted duration string crashes pnpm
+# with "Invalid time value" during install and implicit deps checks.
+minimumReleaseAge: 1440
+
+# @sentra/token has an optional next peer; pin it to the app's patched next
+# (GHSA-p293-qw3h-jr36, GHSA-2xp9-vwfh-vxw4 < 16.3.3).
+overrides:
+  next: 16.3.8
+  sharp: ">=0.35.5"
