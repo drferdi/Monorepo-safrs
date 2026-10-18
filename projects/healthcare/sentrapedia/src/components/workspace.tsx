@@ -7,6 +7,7 @@ import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type 
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
 import { intentGroups } from "../lib/studio";
 import { insertTemplate } from "../lib/clinical-templates";
+import { compactQuery, mobileQuery } from "../lib/layout";
 import { Composer } from "./composer";
 import { Dialog } from "./dialog";
 import { downloadText } from "./message-card";
@@ -31,11 +32,11 @@ export function WorkspaceApp() {
   const [state, dispatch] = useReducer(workspaceReducer, initialWorkspace);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const mobile = useMediaQuery("(max-width: 760px)");
+  const mobile = useMediaQuery(mobileQuery);
   const [focusMode, setFocusMode] = useState(false);
   // The Clinical Cockpit starts closed; the header button opens it (Chief, 2026-10-09).
   const [panelOpen, setPanelOpen] = useState(false);
-  const compact = useMediaQuery("(max-width: 1200px)");
+  const compact = useMediaQuery(compactQuery);
   const navigationOpen = !focusMode && (mobile ? mobileNavOpen : sidebarOpen);
   const toggleNavigation = useCallback(() => { if (mobile) setMobileNavOpen((v) => !v); else smooth(() => setSidebarOpen((v) => !v)); }, [mobile]);
   const [dialog, setDialog] = useState<DialogName>(null);

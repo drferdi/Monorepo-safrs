@@ -11,6 +11,10 @@ class ServiceFailure extends Error { constructor(readonly code: string) { super(
 const RETRIEVAL_TIMEOUT_MS = 15000;
 // The therapy step ends this long before the overall timer, so a slow therapy loses only the therapy, not the diagnosis.
 const THERAPY_RESERVE_MS = 1000;
+// Overall request limit when the caller passes none; /api/mira always passes the profile-derived limit (model-profile.ts).
+const DEFAULT_TIMEOUT_MS = 20000;
+// One health probe of the engine; health never triggers inference.
+const HEALTH_TIMEOUT_MS = 2500;
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const failure = (code: string, message: string, status: number) => reply({ error: { code, message } }, status);
 async function boundedBody(response: Response | Request, limit: number): Promise<string> {
@@ -43,7 +47,7 @@ export function createMiraGateway(options: Options = {}) {
   return {
     async health(): Promise<Response> {
       let status = { reachable: false, modelReady: false, groundingReady: false, targetedReady: false };
-      if (base) try { status = await serviceHealth(AbortSignal.timeout(2500)); } catch { /* Health never triggers inference. */ }
+      if (base) try { status = await serviceHealth(AbortSignal.timeout(HEALTH_TIMEOUT_MS)); } catch { /* Health never triggers inference. */ }
       return reply({ reachable: status.reachable, modelReady: status.modelReady, groundingReady: status.groundingReady, configured: !!base && !!token, model: selectedModel ?? null, maxCostUsd: selectedModel ? maxCostUsd : null });
     },
     async step(request: Request): Promise<Response> {
@@ -69,8 +73,8 @@ export function createMiraGateway(options: Options = {}) {
       active = true;
       const controller = new AbortController(); let timedOut = false;
       const cancel = () => controller.abort(); request.signal.addEventListener("abort", cancel, { once: true });
-      const deadline = performance.now() + (options.timeoutMs ?? 20000);
-      const timer = setTimeout(() => { timedOut = true; controller.abort(); }, options.timeoutMs ?? 20000);
+      const deadline = performance.now() + (options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
+      const timer = setTimeout(() => { timedOut = true; controller.abort(); }, options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
       const traceId = crypto.randomUUID(); const createdAt = new Date().toISOString();
       const stages: StageLog[] = [];
       const log = options.log ?? (entry => console.info(JSON.stringify({ event: "mira.stage", ...entry })));
