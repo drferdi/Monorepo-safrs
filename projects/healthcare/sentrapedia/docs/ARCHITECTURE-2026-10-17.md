@@ -274,8 +274,7 @@ Runner-up: `src/lib/mira/presentation.ts`, which turns AI output into the clinic
 
 Trust code over these. Each was checked against the code by an investigator.
 
-- **`docs/architecture.md` (2026-10-09).** Wrong on folder paths (code moved to `src/`), the external MIRA launcher, which modes use AI (now 5, not 2), timeouts (now 65 s, not 135 s), and several file names that no longer exist.
-- **`docs/architecture-overview-2026-10-11.md`.** Describes the retired Oracle II database search, OpenRouter preflight and keys, and says the system stops if either part stops (the engine now restarts).
+- **`docs/architecture.md`.** Updated (2026-10-18) to reflect current runtime, direct Gemini API integration, and bundled MIRA; incorporates the former `docs/architecture-overview-2026-10-11.md` (TD-38).
 - **`docs/mira-integration.md`.** Still tells you to set `OPENROUTER_API_KEY`. The code uses `GEMINI_API_KEY` and deletes the OpenRouter key.
 - **`README.md`.** Several sections still describe OpenRouter.
 - **`docs/TECH-DEBT.md:3`.** Says nothing has been fixed, but rows 2, 4 and 8 were fixed in `9af7a45c`.
@@ -291,3 +290,4 @@ Trust code over these. Each was checked against the code by an investigator.
 - Secret files were not opened. One investigator listed setting names from `.env.local` without seeing values.
 - Marketing-site visuals were not viewed.
 - TECH-DEBT rows 5, 17, 30, 33 and 36 were not re-checked.
+

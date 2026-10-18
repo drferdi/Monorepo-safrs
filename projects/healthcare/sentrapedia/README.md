@@ -687,10 +687,11 @@ The following is **historical repository evidence from October 10, 2026**. The R
 | <small>Docker image build/run</small> | <small>NOT VERIFIED</small> | <small>[Integrated runtime report](docs/verification/2026-10-10-integrated-mira.md)</small> | <small>Docker daemon unavailable in reported test</small> |
 | <small>Clinical validity / production</small> | <small>NOT ESTABLISHED</small> | <small>[Current integration contract](docs/mira-integration.md)</small> | <small>Requires separate safety/security approval</small> |
 
-**Engineering references:** [MIRA integration](docs/mira-integration.md) · [Architecture](docs/architecture.md) (contains older superseded runtime descriptions) · [Data](docs/data.md) · [Testing](docs/testing.md) · [Oracle II QA](theoracle/provenance/oracle-ii/README.md).
+**Engineering references:** [MIRA integration](docs/mira-integration.md) · [Architecture](docs/architecture.md) · [Data](docs/data.md) · [Testing](docs/testing.md) · [Oracle II QA](theoracle/provenance/oracle-ii/README.md).
 
 <p align="center">
 <b>Architected and built by dr. Ferdi Iskandar (the Gaffer) · Sentra Artificial Intelligence.</b><br />
 <small>One clinical workspace. Traceable sources. Reviewable reasoning. Human authority.</small><br />
 <sub><code>// the surface is documentation. the depth is running.</code></sub>
 </p>
+
