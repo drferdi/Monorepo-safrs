@@ -4,16 +4,14 @@ import { existsSync } from "node:fs";
 import { createServer } from "node:net";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { engineEnvironment, engineReady, installedPython, model, preflightProvider, warmWorkspace } from "./mira-runtime.mjs";
+import { engineEnvironment, engineReady, installedPython, model, nextRestart, preflightProvider, warmWorkspace } from "./mira-runtime.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 // Launcher timings (milliseconds), named so they are read and changed in one place (tech-debt row 19).
 const killTimeoutMs = 6000; // taskkill of a child tree on Windows
 const killGraceMs = 1500; // time children get to exit before the launcher exits
-const restartResetMs = 60000; // an engine that ran this long restarts with the shortest backoff again
-const restartBaseMs = 1000; // restart delay is restartBaseMs * 2^n, n counting quick crashes
-const restartMaxMs = 30000; // longest restart delay
-const engineReadyMs = 30000; // first start: how long /healthz may take to answer
+// Restart backoff and the crash limit: nextRestart in mira-runtime.mjs.
+const engineReadyMs = 30000; // every start: how long /healthz may take to answer
 const healthProbeMs = 1000; // timeout of one /healthz probe
 const healthPollMs = 100; // pause between /healthz probes
 const mode = process.argv[2];
@@ -39,8 +37,21 @@ function stop(code) {
   }, killGraceMs);
 }
 let engineRestarts = 0;
+let engineUrl;
+async function waitReady(url) {
+  const deadline = Date.now() + engineReadyMs;
+  while (!stopping && Date.now() < deadline) {
+    try {
+      const response = await fetch(`${url}/healthz`, { signal: AbortSignal.timeout(healthProbeMs) });
+      if (response.ok && engineReady(await response.json())) return true;
+    } catch { /* The child has not opened its socket yet. */ }
+    await new Promise(done => setTimeout(done, healthPollMs));
+  }
+  return false;
+}
 // restart: the MIRA engine is started again on the same port and token when it stops, so the workspace keeps working;
-// the wait doubles from 2 s to 30 s and resets after a minute of running. Any other child stopping ends the system.
+// the wait doubles from 2 s to 30 s and resets after a minute of running; five crashes in a row end the system.
+// Any other child stopping ends the system.
 function launch(program, args, environment, restart = false) {
   const started = Date.now();
   const command = process.platform === "win32" ? guardianPython : program;
@@ -52,10 +63,19 @@ function launch(program, args, environment, restart = false) {
     children.delete(child);
     if (stopping) return;
     if (restart) {
-      engineRestarts = Date.now() - started > restartResetMs ? 1 : engineRestarts + 1;
-      const delay = Math.min(restartMaxMs, restartBaseMs * 2 ** engineRestarts);
-      console.error(`Sentrapedia: engine MIRA berhenti (kode ${code}); dimulai ulang dalam ${delay / 1000} detik.`);
-      setTimeout(() => { if (!stopping) launch(program, args, environment, true); }, delay);
+      const next = nextRestart(engineRestarts, Date.now() - started);
+      engineRestarts = next.crashes;
+      if (next.delayMs === null) {
+        console.error(`Sentrapedia: engine MIRA berhenti ${next.crashes} kali berturut-turut (kode terakhir ${code}); system ditutup. Periksa venv MIRA dan GEMINI_API_KEY.`);
+        stop(1);
+        return;
+      }
+      console.error(`Sentrapedia: engine MIRA berhenti (kode ${code}); dimulai ulang dalam ${next.delayMs / 1000} detik.`);
+      setTimeout(() => {
+        if (stopping) return;
+        launch(program, args, environment, true);
+        void waitReady(engineUrl).then(ready => { if (!ready && !stopping) console.error("Sentrapedia: engine MIRA belum siap setelah dimulai ulang; analisis belum tersedia."); });
+      }, next.delayMs);
       return;
     }
     console.error("Sentrapedia: proses internal berhenti; menutup seluruh system.");
@@ -86,18 +106,9 @@ try {
   } else {
     const port = await freePort();
     const url = `http://127.0.0.1:${port}`;
+    engineUrl = url;
     launch(python, ["-I", "-m", "uvicorn", "--factory", "service.app:create_app", "--app-dir", resolve(root, "mira"), "--host", "127.0.0.1", "--port", String(port), "--no-access-log"], environment, true);
-    const deadline = Date.now() + engineReadyMs;
-    let ready = false;
-    while (!stopping && Date.now() < deadline) {
-      try {
-        const response = await fetch(`${url}/healthz`, { signal: AbortSignal.timeout(healthProbeMs) });
-        ready = response.ok && engineReady(await response.json());
-      } catch { /* The child has not opened its socket yet. */ }
-      if (ready) break;
-      await new Promise(done => setTimeout(done, healthPollMs));
-    }
-    if (!ready) throw new Error("Engine MIRA lokal belum siap atau capability/profile tidak cocok.");
+    if (!await waitReady(url)) throw new Error("Engine MIRA lokal belum siap atau capability/profile tidak cocok.");
     if (!stopping) {
       const webEnv = { ...process.env, MIRA_SERVICE_URL: url, MIRA_SERVICE_TOKEN: token };
       const webPort = process.env.PORT || "3101";

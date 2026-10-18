@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { spawn } from "node:child_process";
 import { resolve } from "node:path";
-import { engineEnvironment, engineReady, geminiBaseUrl, model, pythonPath } from "../scripts/mira-runtime.mjs";
+import { engineEnvironment, engineReady, geminiBaseUrl, model, nextRestart, pythonPath } from "../scripts/mira-runtime.mjs";
 import profile from "../scripts/mira-profile.json" with { type: "json" };
 
 test("postinstall opt-outs skip MIRA and TheOracle setup with one warning each", async () => {
@@ -37,6 +37,20 @@ test("postinstall opt-outs skip MIRA and TheOracle setup with one warning each",
     }
     assert.deepEqual(messages, [warning]);
   }
+});
+
+test("the engine restarts with a doubling wait and the launcher gives up after five quick crashes in a row", () => {
+  let crashes = 0;
+  const delays = [];
+  for (let i = 0; i < 4; i++) {
+    const next = nextRestart(crashes, 500);
+    crashes = next.crashes;
+    delays.push(next.delayMs);
+  }
+  assert.deepEqual(delays, [2000, 4000, 8000, 16000]);
+  assert.deepEqual(nextRestart(crashes, 500), { crashes: 5, delayMs: null });
+  // A run longer than a minute resets the count, so a rare crash never ends the system.
+  assert.deepEqual(nextRestart(4, 61000), { crashes: 1, delayMs: 2000 });
 });
 
 test("launcher takes model, step deadline, budget and fast copies from the shared MIRA profile", () => {

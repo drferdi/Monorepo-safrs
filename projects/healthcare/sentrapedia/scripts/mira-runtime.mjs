@@ -58,6 +58,12 @@ export async function warmWorkspace(webUrl, fetchFn = fetch, timeoutMs = 120000,
   }
   return false;
 }
+// Engine restart policy (tech-debt row 28): the wait doubles per crash, a run longer than resetMs resets the count,
+// and maxCrashes crashes in a row end the system (delayMs null) instead of an endless crash loop.
+export function nextRestart(crashes, ranMs, { resetMs = 60000, baseMs = 1000, maxMs = 30000, maxCrashes = 5 } = {}) {
+  const count = ranMs > resetMs ? 1 : crashes + 1;
+  return { crashes: count, delayMs: count >= maxCrashes ? null : Math.min(maxMs, baseMs * 2 ** count) };
+}
 export function engineReady(health) {
   return health?.status === "ok" && health.contractVersion === "1" &&
     health.capabilities?.includes("theoracle-grounding-v2") &&
