@@ -30,6 +30,7 @@ $checks = @(
     'tools/safrs/check_topology.py',
     'tools/safrs/check_project_independence.py',
     'tools/safrs/check_tool_independence.py',
+    'tools/safrs/check_capsule_remotes.py',
     'tools/safrs/check_actions_pinning.py',
     'tools/safrs/check_automation_policy.py',
     'tools/safrs/check_task_contract.py',
@@ -47,6 +48,7 @@ $checks = @(
     'tests/governance/test_handoff_scope.py',
     'tests/architecture/test_project_independence.py',
     'tests/architecture/test_tool_independence.py',
+    'tests/architecture/test_capsule_remotes.py',
     'tests/architecture/test_verifier_parity.py'
 )
 
