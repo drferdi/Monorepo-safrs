@@ -427,6 +427,14 @@ npm run benchmark:oracle
 
 The system check performs configuration/readiness preflight without paid inference. `benchmark:oracle` measures **local retrieval**, not model latency or medical accuracy. `deploy:dry-run` requires build outputs and checks traced dependencies; it does not deploy.
 
+### Deployment
+
+The Docker image is local only and carries no user authentication. Run it bound strictly to the loopback interface:
+
+```powershell
+docker run -p 127.0.0.1:3000:3000 -e GEMINI_API_KEY="your-api-key" sentrapedia
+```
+
 ### Build architecture
 
 <table width="100%">
@@ -440,7 +448,7 @@ The system check performs configuration/readiness preflight without paid inferen
 </tr>
 <tr>
 <td width="50%" valign="top"><small><b><code>SECURITY</code></b></small><br /><small>Local-origin checks, ephemeral MIRA token, schema/identity guards; development-only posture.</small></td>
-<td width="50%" valign="top"><small><b><code>DEPLOYMENT</code></b></small><br /><small>Standalone Next.js output; Dockerfile bundles Node/Python and listens on port 3000 as non-root. Container execution not yet evidenced.</small></td>
+<td width="50%" valign="top"><small><b><code>DEPLOYMENT</code></b></small><br /><small>Standalone Next.js output; Dockerfile bundles Node/Python and listens on port 3000 as non-root. Local only; run bound to <code>127.0.0.1:3000:3000</code>.</small></td>
 </tr>
 </table>
 
