@@ -4,7 +4,7 @@ Needs the provider's key (OPENAI_API_KEY or OPENROUTER_API_KEY, from the environ
 and the project owner's approval. With the openrouter provider (MIRA_LLM_PROVIDER or --provider), the OpenRouter preflight (public
 model and zero-data-retention lists, no completion) runs first and stops the test on any problem.
 One step makes at most two calls; --max-usd caps the step and the day. The step deadline is raised (default 120 s) so both
-calls are measured; the output says whether the step would have met the live 12 s deadline.
+calls are measured; the output says whether the step would have met the live 20 s deadline.
 
     python -m service.smoke_live --max-usd 1                          (from assist/)
     python -m service.smoke_live --max-usd 1 --provider openrouter
@@ -18,7 +18,7 @@ import os
 import sys
 from dataclasses import replace
 
-LIVE_DEADLINE_S = 12.0
+LIVE_DEADLINE_S = 20.0  # stepDeadlineS in scripts/mira-profile.json
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:

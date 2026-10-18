@@ -10,7 +10,6 @@ extend-exclude = [
   "service/auth.py",
   "service/privacy.py",
   "service/sim_benchmark.py",
-  "service/smoke_live.py",
   "service/tests/__init__.py",
   "service/tests/conftest.py",
   "service/tests/test_cors.py",

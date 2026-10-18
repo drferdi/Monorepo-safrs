@@ -335,3 +335,10 @@ def test_recorded_finding_states_reach_the_model_as_written_and_are_explained():
     assert "Auskultasi paru: Ronki basah halus — DITEMUKAN; Auskultasi paru: Wheezing — TIDAK DITEMUKAN" in text
     assert '"TIDAK DITEMUKAN" means it was examined and is\n  absent' in ASSESSMENT_INSTRUCTIONS
     assert "never treat it as absent" in ASSESSMENT_INSTRUCTIONS
+
+
+def test_smoke_live_measures_against_the_profile_step_deadline():
+    from service.smoke_live import LIVE_DEADLINE_S
+
+    profile = json.loads((Path(__file__).resolve().parents[3] / "scripts" / "mira-profile.json").read_text(encoding="utf-8"))
+    assert LIVE_DEADLINE_S == profile["stepDeadlineS"]
