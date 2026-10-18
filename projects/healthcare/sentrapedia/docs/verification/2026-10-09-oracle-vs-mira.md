@@ -6,7 +6,7 @@ Tanggal: 2026-10-09. Lingkup: pemeriksaan kode/dokumentasi lokal dan GET health 
 
 MIRA sudah memiliki integrasi diagnosis yang dapat diadaptasi untuk Sentrapedia. Oracle adalah dataset referensi lokal 144 entri. Keduanya memenuhi fungsi berbeda: reasoning kasus melalui layanan MIRA, lookup/detail penyakit dari Oracle. Baik skema Oracle maupun kontrak MIRA yang tersedia belum menyediakan kutipan PNPK per dokumen/halaman.
 
-Layanan yang dipakai Med Assist adalah assist/service step mode di D:/DEV/gafferverse/mira-system, bukan runner simulasi penuh upstream. engine.py membatasi dua panggilan model per step (planning, structured assessment), memakai post-check deterministik, budget/error breaker dan contract validation. README menjelaskan step mode tidak membutuhkan FHIR/Qdrant. Estimasi 35–50 panggilan pada asesmen upstream lama tidak digunakan untuk menilai jalur layanan ini.
+Layanan yang dipakai Med Assist adalah assist/service step mode di <mira-system>, bukan runner simulasi penuh upstream. engine.py membatasi dua panggilan model per step (planning, structured assessment), memakai post-check deterministik, budget/error breaker dan contract validation. README menjelaskan step mode tidak membutuhkan FHIR/Qdrant. Estimasi 35–50 panggilan pada asesmen upstream lama tidak digunakan untuk menilai jalur layanan ini.
 
 ## Bukti kesiapan saat diperiksa
 

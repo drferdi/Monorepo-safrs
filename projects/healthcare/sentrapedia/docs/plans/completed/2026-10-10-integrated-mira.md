@@ -38,7 +38,7 @@ No paid inference, publishing, clinical changes, or shared-service restart.
 - [x] Independent review; record evidence and capsule handoff.
 
 Acceptance: extracted Sentrapedia installs and runs its engine without access to
-`D:/DEV/gafferverse/mira-system` or the monorepo root. Health confirms the grounded
+`<external-mira-repo>` or the monorepo root. Health confirms the grounded
 Gemini Flash profile. Missing key/runtime fails clearly; no silent UI-only startup.
 
 Verification completed: 154 app + 7 managed runtime + 157 MIRA tests pass;

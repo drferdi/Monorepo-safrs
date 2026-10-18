@@ -10,7 +10,7 @@ The draft badge now distinguishes structured MIRA snapshots from local documents
 
 ## Fresh gates
 
-Execution root: C:/Users/drfer/AppData/Local/Temp/sentrapedia-identity-20261008-220319, the existing independent extraction with dependencies already installed. Main-checkout dependencies remain incomplete; no installation performed and no main-checkout gate claim.
+Execution root: <extraction-root>, the existing independent extraction with dependencies already installed. Main-checkout dependencies remain incomplete; no installation performed and no main-checkout gate claim.
 
 | Command | Observed result |
 | --- | --- |

@@ -34,8 +34,8 @@ embedded locally on CPU with the model recorded in `theoracle/index/manifest.jso
 `npm ci` also downloads that pinned model once (about 1.2 GB) into `theoracle/model/`.
 
 The internal engine is a Python process managed by the application lifecycle.
-No external `MiraRoot`, source checkout, shared service, manually supplied service
-token, or another project's environment is used. Old `.env.local` service URL/token
+No external `-MiraRoot` switch, source checkout, shared service, manually supplied service
+token, or another project's environment is used (`scripts/run-mira.ps1` forwards directly to `scripts/run-system.mjs`). Old `.env.local` service URL/token
 values are overridden in memory. The provider is still an external model API.
 Startup reads the model's metadata from the Gemini API with the key
 (`preflightProvider` in `scripts/mira-runtime.mjs`): a rejected key or an unknown
@@ -52,7 +52,7 @@ not offered as a runtime feature.
 Build output can run with `node scripts/run-system.mjs standalone` after installing
 its Python lock using `node scripts/install-mira.mjs --production`. Docker performs
 this installation and uses the same supervisor. Runtime secrets are injected at
-launch, never built into the image. Preserve `.runtime/mira-deepseek/audit` when
+launch, never built into the image. The audit ledger records metadata and `requestSha256`/`responseSha256` hashes (never the raw case text) and prunes files older than 14 days at engine start; preserve `.runtime/mira-deepseek/audit` when
 moving an existing local installation so today's budget ledger is retained.
 
 The application retains its existing synthetic-only development boundary. Local

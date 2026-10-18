@@ -29,7 +29,7 @@ No install was run, as requested: extraction used copied existing capsule depend
 
 ## Extraction evidence
 
-Extracted capsule: `C:/Users/drfer/AppData/Local/Temp/sentrapedia-oracle-proof-20261010-195126`.
+Extracted capsule: `<extracted-capsule>`.
 It contains neither root dependencies/configuration nor `.env.local`, `.runtime` or main `.next`.
 The 17 owned source/test/contract/config files compared byte-for-byte with the main capsule.
 The first main-checkout build reported `UNKNOWN: unknown error, open ... next-env.d.ts` while

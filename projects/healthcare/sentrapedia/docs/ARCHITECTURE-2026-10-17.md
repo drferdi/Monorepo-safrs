@@ -222,7 +222,7 @@ Runner-up: `src/lib/mira/presentation.ts`, which turns AI output into the clinic
 ### Privacy and security
 
 - **Your Gemini key reaches the web server process.** The launcher passes a full copy of its environment to Next.js. *(Author-checked: `scripts/run-system.mjs:93` spreads `process.env`. That the key sits in that environment is inferred from `.env.local` being loaded at `:69`.)*
-- **The engine's audit log stores the full case and full answer** on disk under `.runtime/mira-deepseek/audit`, although a code comment says case text never appears in logs. *(Author-checked: `mira/service/app.py:151-152`; comment at `mira/service/engine.py:5`.)*
+- **The engine's audit log stores metadata and hashes only, never case text.** Following commit `ed8a09a1`, the ledger records metadata plus `requestSha256` and `responseSha256` under `.runtime/mira-deepseek/audit/`, never the raw case text or answer, and day files older than 14 days are deleted when the engine starts. *(Verified: `mira/service/app.py:150-155`, commit `ed8a09a1`.)*
 - **Two different consent models.** The main composer always declares the case synthetic without asking. The library's "Analisis kasus" form requires a checkbox. *(Author-checked: `src/components/workspace.tsx:122`; `src/components/mira-case-form.tsx:30,55`.)*
 - **Synthetic-only is a policy, not a guarantee.** Identity patterns catch common formats only. *(Verified: `src/lib/mira/contract.ts:17-19`.)*
 - **Browser storage is unencrypted and unbounded.** *(Verified / From docs, TECH-DEBT row 17.)*
@@ -274,8 +274,7 @@ Runner-up: `src/lib/mira/presentation.ts`, which turns AI output into the clinic
 
 Trust code over these. Each was checked against the code by an investigator.
 
-- **`docs/architecture.md` (2026-10-09).** Wrong on folder paths (code moved to `src/`), the external MIRA launcher, which modes use AI (now 5, not 2), timeouts (now 65 s, not 135 s), and several file names that no longer exist.
-- **`docs/architecture-overview-2026-10-11.md`.** Describes the retired Oracle II database search, OpenRouter preflight and keys, and says the system stops if either part stops (the engine now restarts).
+- **`docs/architecture.md`.** Updated (2026-10-18) to reflect current runtime, direct Gemini API integration, and bundled MIRA; incorporates the former `docs/architecture-overview-2026-10-11.md` (TD-38).
 - **`docs/mira-integration.md`.** Still tells you to set `OPENROUTER_API_KEY`. The code uses `GEMINI_API_KEY` and deletes the OpenRouter key.
 - **`README.md`.** Several sections still describe OpenRouter.
 - **`docs/TECH-DEBT.md:3`.** Says nothing has been fixed, but rows 2, 4 and 8 were fixed in `9af7a45c`.
@@ -291,3 +290,4 @@ Trust code over these. Each was checked against the code by an investigator.
 - Secret files were not opened. One investigator listed setting names from `.env.local` without seeing values.
 - Marketing-site visuals were not viewed.
 - TECH-DEBT rows 5, 17, 30, 33 and 36 were not re-checked.
+

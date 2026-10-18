@@ -11,12 +11,12 @@ Gaffer authorized “Okay integrate both oracle and MIRA”; implementation and 
 
 ## Observed gates
 
-Independent preinstalled extraction: C:\Users\drfer\AppData\Local\Temp\sentrapedia-identity-20261008-220319. No installs in this session. Main checkout dependencies remain incomplete; gates ran in this extraction, not claimed as main-checkout executions.
+Independent preinstalled extraction: <extraction-root>. No installs in this session. Main checkout dependencies remain incomplete; gates ran in this extraction, not claimed as main-checkout executions.
 
 | Command from extraction | Observed result |
 | --- | --- |
 | npx --no-install tsc --noEmit | Exit 0 |
-| npx --no-install eslint app/api/mira/route.ts components/workspace.tsx components/sidebar.tsx components/command-palette.tsx components/knowledge-dialog.tsx components/mira-case-form.tsx lib/oracle.ts lib/mira/contract.ts lib/mira/types.ts lib/mira/validate-json.ts lib/mira/gateway.ts lib/mira/presentation.ts tests/oracle-mira.test.ts --fix | Exit 0 |
+| npx --no-install eslint app/api/mira/route.ts components/workspace.tsx components/sidebar.tsx components/command-palette.tsx components/knowledge-dialog.tsx components/mira-case-form.tsx src/lib/theoracle.ts lib/mira/contract.ts lib/mira/types.ts lib/mira/validate-json.ts lib/mira/gateway.ts lib/mira/presentation.ts tests/oracle-mira.test.ts --fix | Exit 0 |
 | npm test -- tests/oracle-mira.test.ts tests/workflow.test.ts tests/workspace.test.ts tests/studio.test.ts | Exit 0; 64 tests / 4 files |
 | npm run build | Exit 0; /, /_not-found, dynamic /api/mira |
 | npm run deploy:dry-run | Exit 0 PASS; 6 traces, zero external source dependencies |

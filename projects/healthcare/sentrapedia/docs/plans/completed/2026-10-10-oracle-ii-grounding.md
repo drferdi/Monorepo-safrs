@@ -32,7 +32,7 @@
 ### Task 1: Read-only Oracle II retriever
 
 **Files:**
-- Create: `src/lib/oracle-grounding.ts`
+- Create: `src/lib/theoracle-grounding.ts (formerly oracle-grounding.ts)`
 - Create: `tests/oracle-grounding.test.ts`
 - Modify: `next.config.ts`
 
@@ -49,12 +49,12 @@
 ### Task 2: Backward-compatible MIRA grounding capability
 
 **Files:**
-- Modify: `D:/DEV/gafferverse/mira-system/assist/service/contract/mira-step-request.schema.json`
-- Modify: `D:/DEV/gafferverse/mira-system/assist/service/contract.py`
-- Modify: `D:/DEV/gafferverse/mira-system/assist/service/prompts.py`
-- Modify: `D:/DEV/gafferverse/mira-system/assist/service/engine.py`
-- Modify: `D:/DEV/gafferverse/mira-system/assist/service/app.py`
-- Modify: `D:/DEV/gafferverse/mira-system/assist/service/tests/test_step_api.py`
+- Modify: `<mira-repo>/assist/service/contract/mira-step-request.schema.json`
+- Modify: `<mira-repo>/assist/service/contract.py`
+- Modify: `<mira-repo>/assist/service/prompts.py`
+- Modify: `<mira-repo>/assist/service/engine.py`
+- Modify: `<mira-repo>/assist/service/app.py`
+- Modify: `<mira-repo>/assist/service/tests/test_step_api.py`
 
 **Interfaces:**
 - Consumes: `OracleGroundingBundle` JSON shape produced by Task 1.
@@ -80,7 +80,7 @@
 - Modify: `tests/diagnosis-presentation.test.ts`
 - Modify: `src/components/mira-case-form.tsx` (same validated client path; no design styling)
 - Modify: `src/app/api/mira/route.ts`
-- Create: `src/lib/oracle-grounding-types.ts`
+- Create: `src/lib/theoracle-grounding-types.ts (formerly oracle-grounding-types.ts)`
 
 **Interfaces:**
 - Consumes: Task 1 retriever and Task 2 capability/envelope contract.
@@ -95,10 +95,10 @@
 ### Task 4: Verification and capsule handoff
 
 **Files:**
-- Create: `scripts/benchmark-oracle-grounding.mjs`
+- Create: `scripts/benchmark-theoracle-grounding.mjs (formerly enchmark-oracle-grounding.mjs)`
 - Modify: `package.json`
 - Modify: `.agents/HANDOFF.md`
-- Modify: `D:/DEV/gafferverse/mira-system/assist/README.md` or local handoff only if required by that repository.
+- Modify: `<mira-repo>/assist/README.md` or local handoff only if required by that repository.
 
 **Interfaces:**
 - Consumes: completed Tasks 1-3.

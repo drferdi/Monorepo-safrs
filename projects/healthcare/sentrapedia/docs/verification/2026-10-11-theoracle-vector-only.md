@@ -1,6 +1,6 @@
 # TheOracle vector-only — verification, 2026-10-11
 
-Branch `feat/oracle-vector-only` (worktree `D:\DEV\monorepo.worktrees\oracle-vector-only`),
+Branch `feat/oracle-vector-only` (worktree `../Monorepo.worktrees/oracle-vector-only`),
 commits `c3581e5e` (store, runtime, contract, tests) and `8b030bfd` (SQLite removal, Oracle II
 move). Not pushed, not merged.
 

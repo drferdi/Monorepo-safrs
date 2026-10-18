@@ -2,7 +2,7 @@
 
 **Status:** Approved for local implementation on 2026-10-10  
 **Risk:** R3 - Gaffer-approved clinical-facing prompt grounding; R2 for the backward-compatible data contracts  
-**Scope:** Sentrapedia capsule and the local MIRA service under `D:/DEV/gafferverse/mira-system/assist`
+**Scope:** Sentrapedia capsule and the local MIRA service under `<mira-repo>/assist`
 
 ## Outcome
 
