@@ -1,8 +1,8 @@
 {
   "version": 1,
   "verdict": "approved",
-  "reviewer_id": "human:chief",
-  "reviewed_at": "2026-09-26T12:30:56Z",
-  "base_sha": "52750786a14046151cfdaa8d7be5554539013f97",
-  "change_set_sha256": "6618988dbbba10887d4f1240aaa8d62f8676aa9f76258c1ec0b8aa0467b58bd7"
+  "reviewer_id": "human:gaffer",
+  "reviewed_at": "2026-10-18T08:53:58Z",
+  "base_sha": "afdd7ea9b85585201969f6871209daa0ddf11feb",
+  "change_set_sha256": "b94a29856e3ec8de839c909c712c2b0d259aa7c1831eaf1dd4d70ee04133b0fc"
 }
