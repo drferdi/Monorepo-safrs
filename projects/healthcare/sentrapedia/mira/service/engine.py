@@ -154,8 +154,9 @@ class StepEngine:
             raise StepFailed("MODEL_ERROR", f"{role} call failed: {type(exc).__name__}") from None
         self.breaker.success()
         guard.record_success(model, role, response, started)
-        message = response.choices[0].message
-        if not message.content:
+        # An empty choices list is billed like any answer, so it fails as a step (which charges it), not as a crash.
+        message = response.choices[0].message if response.choices else None
+        if not message or not message.content:
             raise StepFailed("MODEL_OUTPUT_INVALID", f"{role} call returned no content")
         return message.content
 

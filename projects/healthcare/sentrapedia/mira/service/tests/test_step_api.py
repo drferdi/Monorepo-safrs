@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
 from service import postchecks
+from service.app import AUDIT_RETENTION_DAYS, digest
 from service.engine import FAST_COPIES
 from service.contract import RESPONSE, UNFILLABLE_FIELDS, errors
 from service.postchecks import NOT_AVAILABLE_NOTE
@@ -83,7 +85,33 @@ def test_happy_path_returns_a_contract_valid_assessment(make_client, example_req
     [record] = audit_lines(settings)
     assert record["traceId"] == example_request["traceId"]
     assert [c["role"] for c in record["calls"]] == ["plan", "assessment"]
-    assert record["request"] == example_request
+    # Metadata and hashes only: the case text never reaches the ledger.
+    assert record["requestSha256"] == digest(example_request) and record["responseSha256"] == digest(body)
+    assert "request" not in record and "response" not in record
+    assert example_request["case"]["chiefComplaint"] not in json.dumps(record)
+
+
+def test_an_answer_without_choices_is_invalid_output_and_still_charged(make_client, example_request, settings):
+    empty = completion("plan", "o1")
+    empty.choices = []
+    client, _ = make_client([empty])
+    body = post(client, example_request).json()
+    assert body["error"]["code"] == "MODEL_OUTPUT_INVALID"
+    assert body["meta"]["costUsd"] > 0
+    [record] = audit_lines(settings)
+    assert record["costUsd"] == body["meta"]["costUsd"]
+
+
+def test_audit_files_older_than_the_retention_are_pruned_at_startup(make_client, settings):
+    settings.audit_dir.mkdir(parents=True)
+    today = datetime.now(UTC).date()
+    old = settings.audit_dir / f"audit-{today - timedelta(days=AUDIT_RETENTION_DAYS + 1)}.jsonl"
+    kept = settings.audit_dir / f"audit-{today - timedelta(days=AUDIT_RETENTION_DAYS)}.jsonl"
+    other = settings.audit_dir / "notes.txt"
+    for path in (old, kept, other):
+        path.write_text("{}\n", encoding="utf-8")
+    make_client([])
+    assert not old.exists() and kept.exists() and other.exists()
 
 
 def test_a_non_default_model_is_marked_experimental(make_client, example_request):
@@ -339,8 +367,7 @@ def test_grounded_full_assessment_keeps_case_unchanged_and_supplies_every_call(m
         assert "separate from patient facts" in prompt
         assert "verbatim from an excerpt" in prompt
     [record] = audit_lines(settings)
-    assert record["request"]["case"] == original_case
-    assert record["request"]["grounding"] == request["grounding"]
+    assert record["requestSha256"] == digest(request)
 
 
 def test_invalid_grounding_is_refused_before_model_calls(make_client, example_request):

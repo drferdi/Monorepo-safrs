@@ -5,10 +5,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
 import time
+from datetime import UTC, datetime
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,6 +36,25 @@ log = logging.getLogger("mira_service")
 PLAN_MODEL_HEADER = "X-MIRA-Plan-Model"
 GROUNDING_CAPABILITY = "theoracle-grounding-v2"
 TARGETED_THERAPY_CAPABILITY = "theoracle-targeted-therapy-v1"
+# Gaffer, 2026-10-18: the ledger keeps metadata and hashes, never the case text, for 14 days.
+AUDIT_RETENTION_DAYS = 14
+
+
+def digest(value) -> str:
+    """SHA-256 of canonical JSON, so a ledger line can be matched to a request without storing it."""
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
+
+
+def prune_audit(directory: Path) -> None:
+    """Deletes day files older than AUDIT_RETENTION_DAYS; other files stay."""
+    today = datetime.now(UTC).date()
+    for path in directory.glob("audit-*.jsonl"):
+        try:
+            day = datetime.strptime(path.stem.removeprefix("audit-"), "%Y-%m-%d").date()
+        except ValueError:
+            continue
+        if (today - day).days > AUDIT_RETENTION_DAYS:
+            path.unlink()
 
 
 def create_app(settings: Settings | None = None, client=None) -> FastAPI:
@@ -57,6 +79,7 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
 
     verifier = DevTokenVerifier(settings.dev_token)
     limiter = RateLimiter(settings.rate_limit_per_minute)
+    prune_audit(settings.audit_dir)
     audit = AuditLog(settings.audit_dir)
     engine = StepEngine(
         settings,
@@ -147,8 +170,8 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
                 "costSource": sorted({call["cost_source"] for call in calls}) or None,
                 "calls": calls,
                 "postcheckNotes": notes,
-                "request": payload,
-                "response": response,
+                "requestSha256": digest(payload),
+                "responseSha256": digest(response),
             }
         )
         return JSONResponse(response)
