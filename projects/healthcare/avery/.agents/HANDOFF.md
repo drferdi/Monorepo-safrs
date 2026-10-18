@@ -1,8 +1,12 @@
 # HANDOFF — Avery (WhatsApp Home Agent)
 
-Last updated: 2026-09-25
+Last updated: 2026-10-18
 
 Baca ini di setiap sesi Avery. **Ditimpa**, bukan ditambah. Keputusan durable: `DECISIONS.md`.
+
+## Contract remote (2026-10-18, task `TASK-20261018-HEALTHCARE-CONTRACT-REMOTES`)
+
+`project.contract.json` declares `repository` `https://github.com/drferdi/Averyintelligence.git` (the `avery` root remote; `.agents/BOUNDARIES.md` names it Avery's own remote). Read by the root `check_capsule_remotes.py`; no lifecycle change.
 
 ## Standalone contract (branch `feat/avery-standalone`, task `TASK-20260925-AVERY-STANDALONE`, REVIEW)
 

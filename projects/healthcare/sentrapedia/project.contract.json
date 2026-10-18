@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "healthcare/sentrapedia",
+  "repository": "git@github.com:drferdi/Sentrapedia.git",
   "owner": "Gaffer",
   "risk": "R2",
   "runtime": {

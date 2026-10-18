@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "healthcare/sentraverse-neural",
+  "repository": "git@github.com:drferdi/Sentraverse-N.git",
   "owner": "Chief (dr. Ferdi Iskandar)",
   "risk": "R2",
   "runtime": {

@@ -1,12 +1,17 @@
 # HANDOFF
 
-Last updated: 2026-10-06 (background error flood on chrome://extensions silenced. Earlier,
+Last updated: 2026-10-18 (contract `repository` field. Earlier, 2026-10-06: background error flood on chrome://extensions silenced; before that,
 2026-10-05: MedBoard default sign-in, presence heartbeat, "Asisten Medis" name.)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
+
+- 2026-10-18 (Claude Code, `TASK-20261018-HEALTHCARE-CONTRACT-REMOTES`): `project.contract.json`
+  declares `repository` `git@github.com:drferdi/AsistenMedis.git` (the `asistenmedis` root remote and
+  the README link; Gaffer chose it over the `medassist` remote). Read by the root
+  `check_capsule_remotes.py`; no lifecycle change.
 
 - 2026-10-06 audit remediation (Cursor audit, verified; plan
   `docs/plans/2026-10-06-audit-remediation-plan.md`). Commits: `8d0ecec7` + `5d1784c8` panel RME

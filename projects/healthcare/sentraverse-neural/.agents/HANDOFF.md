@@ -1,5 +1,9 @@
 # HANDOFF
 
+## 2026-10-18 - Contract remote (Claude)
+
+- `TASK-20261018-HEALTHCARE-CONTRACT-REMOTES`: `project.contract.json` declares `repository` `git@github.com:drferdi/Sentraverse-N.git` (the `sentraverse-n` root remote; the README GitHub link). Read by the root `check_capsule_remotes.py`; no lifecycle change.
+
 ## 2026-10-11 - Site public, durable Vera limit (Claude)
 
 - Gaffer approved making the site public: Vercel `sentraverseii` `ssoProtection` changed from `all_except_custom_domains` to `prod_deployment_urls_and_all_previews`. `https://sentraverseii.vercel.app/` returns 200; deployment URLs still require Vercel login (302).
