@@ -50,10 +50,38 @@ jobs:
           path: theoracle/model
           key: theoracle-model-${{ hashFiles('scripts/theoracle-model.mjs') }}
       - run: npm ci
+      # Runtime dependencies only; .npmrc keeps audit=false so local installs stay quiet.
+      - run: npm audit --omit=dev --audit-level=high
       - run: npm run lint
+      # The ruff version is pinned because its default rules change between releases (mira/ruff.toml).
+      - run: pipx run ruff==0.17.1 check mira
       - run: npm run typecheck
       - run: npm run test:all
       - run: npm run site:verify
       - run: npm run site:docs
       - run: npm run build
       - run: npm run deploy:dry-run
+  # Builds the image only: the launcher's provider preflight needs a real GEMINI_API_KEY, which CI never holds.
+  docker:
+    needs: check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+      - run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+      - uses: actions/cache@v4
+        with:
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-assets-id') }}
+          restore-keys: lfs-
+      - run: git lfs pull
+      - run: '! git lfs ls-files | grep -q " - "'
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

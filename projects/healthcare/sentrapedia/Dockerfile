@@ -23,6 +23,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3 python3
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
+# Single-user and local only: the workspace has no login, so anyone who reaches the port can spend the Gemini key
+# (capped by the 5 USD daily budget). The server listens on all interfaces inside the container; publish it on
+# loopback only, never on a public port:
+#   docker run -p 127.0.0.1:3000:3000 --env GEMINI_API_KEY <image>
 ENV HOSTNAME=0.0.0.0
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 RUN node scripts/install-mira.mjs --production && chown -R node:node /app/.runtime
