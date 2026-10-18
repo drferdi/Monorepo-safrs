@@ -25,27 +25,27 @@ jobs:
       # LFS holds the TheOracle vectors that the grounding tests read, the site PNGs and the video and WebP media.
       # Objects come from a cache keyed on the LFS file list; on a miss the nearest older cache is restored,
       # so a run downloads only what changed. A file still a pointer after the pull fails the run.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           lfs: false
       - run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: .git/lfs
           key: lfs-${{ hashFiles('.lfs-assets-id') }}
           restore-keys: lfs-
       - run: git lfs pull
       - run: '! git lfs ls-files | grep -q " - "'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
       # Matches python3 in the Dockerfile's bookworm image; postinstall builds the MIRA venv with it.
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       # postinstall downloads the pinned 1.2 GB embedding model and skips files whose hash already matches.
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: theoracle/model
           key: theoracle-model-${{ hashFiles('scripts/theoracle-model.mjs') }}
@@ -67,19 +67,19 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           lfs: false
       - run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: .git/lfs
           key: lfs-${{ hashFiles('.lfs-assets-id') }}
           restore-keys: lfs-
       - run: git lfs pull
       - run: '! git lfs ls-files | grep -q " - "'
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/build-push-action@v6
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/build-push-action@v7
         with:
           context: .
           push: false
