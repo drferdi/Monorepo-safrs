@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-16 (Claude Code, `chore/register-devin-grok-controls`)
+Last updated: 2026-10-18 (Claude Code, `feat/capsule-remote-checker`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,23 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-18 (Claude Code, `feat/capsule-remote-checker`, worktree
+  `../Monorepo.worktrees/feat-capsule-remote-checker` from `main` `1f056afc`,
+  `TASK-20261018-CAPSULE-REMOTE-CHECKER` plus `-HANDOFF`; Module 1 of the gitignored plan
+  `docs/plans/active/2026-10-18-safe-gaps-implementation-plan.md`). The plan says R1; the paths
+  are R2 verification controls. Gaffer chose the data source: an optional `repository` field in
+  `project.contract.json` (schema and `tools/project-standalone/src/contract.mjs`, which rejected
+  unknown keys), not a `.safrs/` registry, because the remote then travels with the capsule and
+  stays out of public `origin`. New `tools/safrs/check_capsule_remotes.py`: missing field is a
+  WARNING, a malformed URL (HTTPS or scp-style SSH, no credentials) or `drferdi/Monorepo-safrs`
+  fails; a test pins the schema pattern to the checker's. No contract declares `repository` yet
+  (17 WARNINGs; filling them touches capsule files, a separate change). Evidence: new unittest 5/5,
+  `project-standalone.test.mjs` 26/26, `test_project_independence` OK, ruff 0, Biome 0 on
+  `contract.mjs` (the test file's other format findings exist in `main`). Open: the checker is not
+  yet in `scripts/safrs-verify.{sh,ps1}`; both are claimed by `TASK-20261011-TOOLS-COVERAGE`
+  (REVIEW, bound to worktree `main`, its change landed as `6933007e`, last update 2026-10-11), and
+  `task transfer` refuses across worktrees by design. `safrs-verify.mjs` only delegates to those
+  two, so it needs no line. CI `safrs-governance.yml` does not list this or the tool checker.
 - 2026-10-15 (Claude Code, `feat/devin-adapter` merged to local `main` as `033494e6` on Gaffer's go,
   then `chore/agent-guard-closeout`; the main checkout was switched to `main` on Gaffer's order; branch
   `codex/sentrapedia-website-docs` is unchanged at `d3b35b26`). Grok, which Gaffer uses inside Devin

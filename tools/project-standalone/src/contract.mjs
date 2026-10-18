@@ -14,6 +14,7 @@ const topLevelKeys = new Set([
   "externalDependencies",
   "mutableStatePaths",
 ]);
+const optionalTopLevelKeys = new Set([...topLevelKeys, "repository"]);
 const commandNames = [
   "install",
   "lint",
@@ -355,8 +356,19 @@ function validateSmoke(value, errors) {
 export function validateContract(contract) {
   const errors = [];
   if (!isObject(contract)) return ["$ must be an object."];
-  rejectUnknownKeys(contract, topLevelKeys, "$", errors);
+  rejectUnknownKeys(contract, optionalTopLevelKeys, "$", errors);
   requireKeys(contract, topLevelKeys, "$", errors);
+  if (
+    hasOwn(contract, "repository") &&
+    (typeof contract.repository !== "string" ||
+      !/^(?:https:\/\/[A-Za-z0-9.-]+\/|git@[A-Za-z0-9.-]+:)[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/u.test(
+        contract.repository,
+      ))
+  ) {
+    errors.push(
+      "$.repository must be an HTTPS or SSH Git URL without credentials.",
+    );
+  }
   if (contract.schemaVersion !== 1)
     errors.push("$.schemaVersion must equal 1.");
   if (

@@ -181,6 +181,22 @@ test("tool capsule discovery rejects symbolic directories and contracts", async 
   }
 });
 
+test("contract repository is optional and must be a credential-free Git URL", () => {
+  assert.deepEqual(
+    validateContract(
+      contract({ repository: "git@github.com:drferdi/Sentrapedia.git" }),
+    ),
+    [],
+  );
+  for (const repository of ["", "https://token@github.com/drferdi/x.git", 42]) {
+    assert.ok(
+      validateContract(contract({ repository })).some((error) =>
+        error.includes("$.repository"),
+      ),
+    );
+  }
+});
+
 test("contract validation reports precise fields and rejects unsafe argv", async () => {
   assert.deepEqual(validateContract(contract()), []);
 
