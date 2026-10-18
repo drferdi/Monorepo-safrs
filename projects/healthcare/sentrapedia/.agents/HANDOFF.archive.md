@@ -2,6 +2,15 @@
 
 ## Archived on 2026-10-19 - handoff rotation
 
+## dr. Novia's clinical reasoning contribution - 2026-10-18 Asia/Jakarta
+
+- Gaffer corrected dr. Novia Dwi Anggraini's history-page role: she is a physician who helped design Sentra's clinical reasoning algorithm, not a generic hands-on builder. Risk R1 (public editorial copy only; no clinical logic changed). Uncommitted; no push or deploy.
+- Files: `apps/site/source/sejarah-sentra/index.html`, generated `site/sejarah-sentra/index.html`, `scripts/sejarah-sentra.test.mjs`, and `docs/migration-manifest.json`. The role is now `Dokter / Clinical Reasoning Co-Designer`; the paragraph attributes collaborative algorithm and reasoning-flow design without implying clinical validation or transferring physician authority. Removed the brittle test assertion for the superseded role text.
+- Verified: `node --run build`, `manifest`, `lint`, `test` (42/42), `verify` (0 errors), `docs:verify` (96 documents, 0 errors), and `deploy:dry-run` all exit 0 from `apps/site/`. The first docs gate emitted a shell-profile CliXml warning despite exit 0; a deterministic no-profile rerun was clean. No browser visual claim because Work settings disable local browser access.
+- Next: Gaffer reviews the wording on `/sejarah-sentra/` in the local preview. Preserve unrelated capsule changes and the existing uncommitted Ruang Kerja work.
+
+## Archived on 2026-10-19 - handoff rotation
+
 ## History head menu and two contributor profiles - 2026-10-17 Asia/Jakarta
 
 - Gaffer approved adding `Sejarah Sentra` to the homepage desktop and mobile head menus, plus an editorial people section on the existing `/sejarah-sentra/` page. Gaffer confirmed the spelling Joseph Arianto. Risk R1 (public-site presentation and named contributor copy); uncommitted, no push or deploy.

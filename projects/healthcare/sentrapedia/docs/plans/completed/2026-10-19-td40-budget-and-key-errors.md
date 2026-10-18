@@ -1,6 +1,6 @@
 # Proposal: the rest of tech-debt row 40 (budget ledger, reservation, rejected key)
 
-Status: proposal, waiting for Gaffer. Nothing here is implemented. Written 2026-10-19.
+Status: done 2026-10-19. Gaffer chose (a) as proposed, B1 with `service/audit.py` made capsule-owned, and (c) as proposed with the message "Kunci API ditolak, periksa GEMINI_API_KEY." Commits `0d6081c8` (a), `92498fa8` (b), `d183f434` (c). The live call with a wrong key was not answered and not made, so the 400 case is unchecked.
 
 Ownership (checked in `mira/SOURCE.json` on 2026-10-19): `service/engine.py`, `service/app.py`, `service/settings.py` and `common/guard.py` are capsule-owned; `service/audit.py` (which holds `DailyBudget`) and `common/providers.py` are pinned. `providers.py` is not touched by any option below. No option adds a bare or broad `except`.
 

@@ -1,6 +1,6 @@
 # Plan: a migration path for the workspace storage format (tech-debt row 14)
 
-Status: plan only, waiting for Gaffer's "go". It concerns clinicians' local data, so nothing here is implemented. Written 2026-10-19.
+Status: deferred by Gaffer on 2026-10-19 ("tunda"); nothing is implemented. It concerns clinicians' local data, so it needs Gaffer's "go" before any work. Written 2026-10-19.
 
 ## Today
 
