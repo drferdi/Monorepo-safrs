@@ -7,12 +7,12 @@ from __future__ import annotations
 
 import json
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 
 def _today() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    return datetime.now(UTC).strftime("%Y-%m-%d")
 
 
 class AuditLog:
@@ -25,7 +25,7 @@ class AuditLog:
 
     def write(self, record: dict) -> None:
         self.directory.mkdir(parents=True, exist_ok=True)
-        line = json.dumps({"loggedAt": datetime.now(timezone.utc).isoformat(), **record}, ensure_ascii=False)
+        line = json.dumps({"loggedAt": datetime.now(UTC).isoformat(), **record}, ensure_ascii=False)
         with self._lock, self.path_for(_today()).open("a", encoding="utf-8") as handle:
             handle.write(line + "\n")
 
@@ -38,12 +38,14 @@ class AuditLog:
 
 
 class DailyBudget:
-    """US$ spent today; starts from today's audit file so a restart does not reset it."""
+    """US$ spent today; starts from today's audit file so a restart does not reset it. A running step holds its cap
+    (reserve) until it settles, so steps started together cannot pass the limit between them (tech-debt row 40)."""
 
     def __init__(self, limit_usd: float, audit: AuditLog):
         self.limit_usd = limit_usd
         self._day = _today()
         self._spent = audit.spent_today()
+        self._held = 0.0  # caps of running steps; not reset at midnight, since those steps are still running
         self._lock = threading.Lock()
 
     def _roll(self) -> None:
@@ -59,3 +61,19 @@ class DailyBudget:
         with self._lock:
             self._roll()
             self._spent += usd
+
+    def reserve(self, usd: float) -> bool:
+        """Holds usd for a step; refused when today's spend plus the holds of running steps would pass the limit."""
+        with self._lock:
+            self._roll()
+            if self._spent + self._held + usd > self.limit_usd:
+                return False
+            self._held += usd
+            return True
+
+    def settle(self, held_usd: float, spent_usd: float) -> None:
+        """Releases a step's hold and charges what the step actually spent."""
+        with self._lock:
+            self._roll()
+            self._held = max(self._held - held_usd, 0.0)
+            self._spent += spent_usd

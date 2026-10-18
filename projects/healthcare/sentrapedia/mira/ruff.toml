@@ -6,7 +6,6 @@ extend-exclude = [
   "common/__init__.py",
   "common/data_policy.py",
   "common/providers.py",
-  "service/audit.py",
   "service/auth.py",
   "service/privacy.py",
   "service/sim_benchmark.py",

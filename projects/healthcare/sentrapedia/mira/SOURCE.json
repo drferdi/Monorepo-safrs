@@ -44,7 +44,7 @@
       "source": "assist/service/audit.py",
       "path": "service/audit.py",
       "sourceSha256": "420d091968e35f3e0d4dd01201cd83b24d493f9facff683afe1931080455f14f",
-      "packagedSha256": "420d091968e35f3e0d4dd01201cd83b24d493f9facff683afe1931080455f14f"
+      "owner": "capsule"
     },
     {
       "source": "assist/service/auth.py",
@@ -262,5 +262,5 @@
   "snapshotHashes": {
     "planning-tools.json": "402a38508184da7acbd2b47752fa549197e87d0b05d5a7f30cdd4590b332202c"
   },
-  "ownership": "Since 2026-10-17 the capsule owns every file marked owner: capsule (Gaffer, choice A); such files keep their origin and origin hash but are edited without a repin. Files without owner stay byte-identical to upstream. Since 2026-10-18 the capsule also owns service/settings.py and common/guard.py (Gaffer: Sentrapedia uses several models by task, tech-debt row 31); common/providers.py stays pinned. Since 2026-10-19 the capsule also owns service/smoke_live.py (Gaffer: its live deadline follows the profile, tech-debt row 19)."
+  "ownership": "Since 2026-10-17 the capsule owns every file marked owner: capsule (Gaffer, choice A); such files keep their origin and origin hash but are edited without a repin. Files without owner stay byte-identical to upstream. Since 2026-10-18 the capsule also owns service/settings.py and common/guard.py (Gaffer: Sentrapedia uses several models by task, tech-debt row 31); common/providers.py stays pinned. Since 2026-10-19 the capsule also owns service/smoke_live.py (Gaffer: its live deadline follows the profile, tech-debt row 19) and service/audit.py (Gaffer: the daily budget reserves each step's cap, tech-debt row 40)."
 }

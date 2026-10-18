@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
 import httpx
@@ -12,12 +14,12 @@ import pytest
 
 from service import postchecks
 from service.app import AUDIT_RETENTION_DAYS, digest
-from service.audit import AuditLog
+from service.audit import AuditLog, DailyBudget
 from service.contract import RESPONSE, UNFILLABLE_FIELDS, errors
-from service.engine import FAST_COPIES
+from service.engine import FAST_COPIES, ApiErrorBreaker, StepEngine
 from service.postchecks import NOT_AVAILABLE_NOTE
 
-from .conftest import AUTH, assessment, completion, model_outputs, with_case
+from .conftest import AUTH, FakeClient, assessment, completion, model_outputs, with_case
 
 STEP = "/v1/diagnosis/step"
 
@@ -246,7 +248,8 @@ def test_daily_budget_exhausted_makes_no_call(make_client, example_request):
 
 
 def test_daily_budget_counts_spend_across_requests(make_client, example_request):
-    client, fake = make_client(model_outputs() + model_outputs(), daily_budget_usd=0.01)
+    # A step needs room for its whole cap (0.50 USD by default); the second one finds less than that left.
+    client, fake = make_client(model_outputs() + model_outputs(), daily_budget_usd=0.51)
     assert post(client, example_request).json()["status"] == "ok"
     assert post(client, example_request).json()["error"]["code"] == "BUDGET_EXHAUSTED"
     assert len(fake.calls) == 2
@@ -753,7 +756,7 @@ def test_an_unexpected_failure_after_paid_calls_still_counts_toward_the_daily_bu
         raise RuntimeError("unexpected")
 
     monkeypatch.setattr(postchecks, "apply", crash)
-    client, fake = make_client(model_outputs() + model_outputs(), daily_budget_usd=0.01)
+    client, fake = make_client(model_outputs() + model_outputs(), daily_budget_usd=0.51)
     assert post(client, example_request).json()["error"]["code"] == "INTERNAL_ERROR"
     assert post(client, example_request).json()["error"]["code"] == "BUDGET_EXHAUSTED"
     assert len(fake.calls) == 2
@@ -764,7 +767,7 @@ def test_an_unexpected_therapy_failure_after_a_paid_call_still_counts_toward_the
         raise RuntimeError("unexpected")
 
     monkeypatch.setattr(postchecks, "resolve_code", crash)
-    client, fake = make_client([completion(therapy_part(), "gpt-4o")] * (2 * FAST_COPIES), daily_budget_usd=1e-9,
+    client, fake = make_client([completion(therapy_part(), "gpt-4o")] * (2 * FAST_COPIES), daily_budget_usd=0.51,
                                fast_assessment=True, fast_therapy=True)
     request = json.dumps(therapy_request(example_request))
     assert client.post(THERAPY, content=request, headers=AUTH).json()["error"]["code"] == "INTERNAL_ERROR"
@@ -797,3 +800,29 @@ def test_a_crashed_therapy_step_writes_its_spend_to_the_ledger(make_client, exam
     assert body["error"]["code"] == "INTERNAL_ERROR" and body["meta"]["costUsd"] > 0
     [record] = audit_lines(settings)
     assert record["costUsd"] == body["meta"]["costUsd"] and record["calls"]
+
+
+def test_the_daily_budget_holds_a_step_cap_until_the_step_settles(tmp_path):
+    budget = DailyBudget(0.6, AuditLog(tmp_path))
+    assert budget.reserve(0.5)
+    assert not budget.reserve(0.5)  # 0.5 held + 0.5 > 0.6
+    budget.settle(0.5, 0.1)
+    assert budget.reserve(0.4) and not budget.reserve(0.11)  # 0.1 spent + 0.4 held
+    budget.settle(0.4, 0.0)
+    assert not budget.exhausted()
+
+
+def test_concurrent_steps_reserve_the_step_cap_so_they_cannot_all_pass(settings, example_request):
+    # Row 40 (b): each step holds max_usd_per_step at start, so a second step started meanwhile is refused.
+    step_settings = replace(settings, max_usd_per_step=0.5, daily_budget_usd=0.6)
+    fake = FakeClient(model_outputs())
+    budget = DailyBudget(step_settings.daily_budget_usd, AuditLog(step_settings.audit_dir))
+    engine = StepEngine(step_settings, fake, budget, ApiErrorBreaker(3, 60.0))
+
+    async def both():
+        return await asyncio.gather(engine.run(example_request["case"]), engine.run(example_request["case"]))
+
+    (first, _, _), (second, _, _) = asyncio.run(both())
+    assert first["status"] == "ok"
+    assert second["error"]["code"] == "BUDGET_EXHAUSTED"
+    assert len(fake.calls) == 2

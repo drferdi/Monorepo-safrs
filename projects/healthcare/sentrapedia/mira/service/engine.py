@@ -270,15 +270,15 @@ class StepEngine:
         guard = ApiGuard(max_calls=max_calls, max_usd=s.max_usd_per_step, provider=s.llm_provider)
         if on_guard:
             on_guard(guard)
-        if self.budget.exhausted():
+        if not self.budget.reserve(s.max_usd_per_step):
             return self.unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
-        if self.breaker.is_open():
-            return self.unavailable("API_ERRORS", "Model calls paused after repeated API errors."), guard, []
         try:
+            if self.breaker.is_open():
+                return self.unavailable("API_ERRORS", "Model calls paused after repeated API errors."), guard, []
             return await self._run(guard, case, grounding, therapy)
         finally:
-            # Charged however the step ends, an unexpected exception included (row 40).
-            self.budget.add(guard.cost_usd)
+            # The hold is released and the spend charged however the step ends, an unexpected exception included (row 40).
+            self.budget.settle(s.max_usd_per_step, guard.cost_usd)
 
     async def _run(self, guard: ApiGuard, case: dict, grounding: dict | None, therapy: bool) -> tuple[dict, ApiGuard, list[str]]:
         s = self.settings
@@ -334,15 +334,15 @@ class StepEngine:
         guard = ApiGuard(max_calls=fast_copies(), max_usd=s.max_usd_per_step, provider=s.llm_provider)
         if on_guard:
             on_guard(guard)
-        if self.budget.exhausted():
+        if not self.budget.reserve(s.max_usd_per_step):
             return self.therapy_unavailable("BUDGET_EXHAUSTED", "Daily model budget reached."), guard, []
-        if self.breaker.is_open():
-            return self.therapy_unavailable("API_ERRORS", "Model calls paused after repeated API errors."), guard, []
         try:
+            if self.breaker.is_open():
+                return self.therapy_unavailable("API_ERRORS", "Model calls paused after repeated API errors."), guard, []
             return await self._run_therapy(guard, case, diagnosis, grounding)
         finally:
-            # Charged however the step ends, an unexpected exception included (row 40).
-            self.budget.add(guard.cost_usd)
+            # The hold is released and the spend charged however the step ends, an unexpected exception included (row 40).
+            self.budget.settle(s.max_usd_per_step, guard.cost_usd)
 
     async def _run_therapy(self, guard: ApiGuard, case: dict, diagnosis: dict, grounding: dict) -> tuple[dict, ApiGuard, list[str]]:
         s = self.settings
