@@ -2,7 +2,9 @@
 
 **Path:** `projects/internal/control-center/`
 **App:** `apps/web` (Next.js, intended local-only)
-**Posture:** root-coupled (`@sentra/token`, `@safrs/config`, root Next build script). Local operator surface, never deployed.
+**Posture:** own pnpm workspace and lockfile, capsule-local `@sentra/token` snapshot (`packages/token`), self-contained `tsconfig.json`, plain `next build`; excluded from the root workspace (2026-10-18). Local operator surface, never deployed.
+
+The repository it reports on is data, not a dependency: it finds the checkout by walking up from its working directory or through `SENTRA_REPO_ROOT`. Started anywhere else, `/` renders "Repository tidak ditemukan" instead of failing.
 
 Canonical: `projects/internal/control-center/docs/architecture.md`.
 

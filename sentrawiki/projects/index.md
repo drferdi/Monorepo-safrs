@@ -31,7 +31,7 @@ capsule (or its domain) with `!`; "not included" means the `projects/*/*/apps/*`
 | healthcare/sentraverse-neural | Scroll-driven neural journey site | `project.contract.json` | excluded |
 | healthcare/sidelab-src | Research-prototype clinical decision support (not production-ready) | `project.contract.json` | excluded |
 | **internal** | | | |
-| [internal/control-center](control-center.md) | Local repo-health dashboard | none (known non-conformance) | **included (legacy)** |
+| [internal/control-center](control-center.md) | Local repo-health dashboard | none (known non-conformance) | excluded |
 | [internal/golden-path](golden-path.md) | Typed DB→API→Web demo; standalone capsule (local snapshot packages) | `project.contract.json` | excluded |
 | internal/unicom | UNICOM legacy multi-agent communication room (Next.js) | `project.contract.json` | not included |
 | **product** | | | |

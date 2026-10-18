@@ -17,6 +17,9 @@ packages:
   - '!projects/internal/golden-path/**'
   # Setiap capsule healthcare berdiri sendiri; jangan pernah diserap workspace root.
   - '!projects/healthcare/**'
+  # control-center berdiri sendiri dengan workspace pnpm, lockfile, dan snapshot
+  # @sentra/token sendiri (safe-gaps Module 3, 2026-10-18).
+  - '!projects/internal/control-center/**'
   - packages/*
   - tools/*
   # retriever punya workspace dan lockfile sendiri (rencananya repo sendiri).

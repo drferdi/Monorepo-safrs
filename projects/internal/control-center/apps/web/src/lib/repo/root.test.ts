@@ -1,11 +1,23 @@
 import assert from "node:assert/strict";
+import { mkdtempSync, realpathSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { test } from "node:test";
 
 import { repoPath, repoPathExists, repoRoot } from "./root.ts";
 
-test("repoRoot menemukan root repository dari cwd", async () => {
-  const root = await repoRoot();
-  assert.ok(root.length > 0);
+// A disposable repository with both root markers, so these tests run the same
+// inside the monorepo and in an extracted copy of the capsule.
+const fixture = realpathSync(
+  mkdtempSync(join(tmpdir(), "control-center-root-")),
+);
+writeFileSync(join(fixture, "pnpm-workspace.yaml"), "packages: []\n");
+writeFileSync(join(fixture, "SAFRS_SPEC.md"), "# fixture\n");
+writeFileSync(join(fixture, "package.json"), "{}\n");
+process.env.SENTRA_REPO_ROOT = fixture;
+
+test("repoRoot memakai SENTRA_REPO_ROOT yang menunjuk repository", async () => {
+  assert.equal(await repoRoot(), fixture);
 });
 
 test("repoPath menolak path absolut", async () => {

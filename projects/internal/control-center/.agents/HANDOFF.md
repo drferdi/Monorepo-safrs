@@ -1,5 +1,12 @@
 # HANDOFF — Control Center
 
+## 2026-10-18 - Standalone capsule, step A (Claude Code)
+
+- Branch `feat/control-center-sovereignty`, task `TASK-20261018-CONTROL-CENTER-SOVEREIGNTY` (safe-gaps Module 3, Gaffer's order). The capsule now has its own `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `scripts/pnpm.mjs`, `scripts/deploy-dry-run.mjs`, and a `packages/token` snapshot of the root tokens (`src/` and `assets/` verbatim at `895a19fa`). `apps/web` pins the versions the root catalog gave it, drops `@safrs/config` (its `tsconfig.json` carries the options itself; `next build` normalised it once), and builds with plain `next build`. The root workspace excludes the capsule.
+- Two root couplings found by extraction and fixed: `root.test.ts` needed the monorepo (it now builds a two-marker fixture and points `SENTRA_REPO_ROOT` at it), and `/` returned 500 outside a repository (`page.tsx` now renders "Repository tidak ditemukan" when `repoRoot()` fails). Biome also flagged an index key in the gate errors list (present since 2026-08-25); identical messages are now shown once, keyed by text.
+- Evidence: `lint` 43 files 0, `typecheck` 0, `test` 41/41, `build` 0 inside the capsule; with the step B contract applied locally, `node tools/project-standalone/src/cli.mjs verify internal/control-center` RESULT PASS (every stage, smoke `/` -> 200 in an extraction outside the monorepo); inside the repo the full board rendered at `next start` (35 features read), no console errors.
+- Step B (separate branch): `project.contract.json` plus removing the `.safrs/known-nonconformance.json` entry. The independence checker rejects a contract while the entry exists, so B mixes implementation and a verification control and needs Gaffer's recorded integrity review.
+
 ## 2026-10-12 - Capsule Biome config (Claude Code)
 
 - Gaffer approved taking over this handoff from `TASK-20261011-TOOLS-LOCAL` (now SUPERSEDED; its work was committed). Owners: `TASK-20261012-CONTROL-CENTER-HANDOFF`, `-BIOME`, `-A11Y`.
