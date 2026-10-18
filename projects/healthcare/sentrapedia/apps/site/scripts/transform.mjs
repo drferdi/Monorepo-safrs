@@ -49,6 +49,9 @@ for (const page of ['privasi', 'ketentuan', 'penafian']) {
 await fs.mkdir(path.join(site, 'ruang-kerja'), { recursive: true });
 await fs.copyFile(path.join(root, 'source/ruang-kerja/index.html'), path.join(site, 'ruang-kerja/index.html'));
 await fs.copyFile(path.join(root, 'assets/ruang-kerja.css'), path.join(site, 'media/ruang-kerja.css'));
+await fs.mkdir(path.join(site, 'sejarah-sentra'), { recursive: true });
+await fs.copyFile(path.join(root, 'source/sejarah-sentra/index.html'), path.join(site, 'sejarah-sentra/index.html'));
+await fs.copyFile(path.join(root, 'assets/sejarah-sentra.css'), path.join(site, 'media/sejarah-sentra.css'));
 for (const filename of ['legal.css', 'legal.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }

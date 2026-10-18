@@ -28,3 +28,11 @@ test('the standalone clinical workspace page is served by the built site', async
     server.close();
   }
 });
+
+test('workspace uses the editorial legal-page rhythm without framing the anatomy', async () => {
+  const css = await readFile(new URL('../assets/ruang-kerja.css', import.meta.url), 'utf8');
+  assert.match(css, /\.workspace-intro\.row\s*\{[^}]*display:\s*grid/);
+  assert.match(css, /\.workspace-content \.about-box\s*\{[^}]*border-bottom:/);
+  assert.match(css, /#home-text \.human-anatomy-column\s*\{[^}]*position:\s*sticky/);
+  assert.doesNotMatch(css, /\.human-anatomy\s*\{[^}]*background:/);
+});

@@ -1,5 +1,19 @@
 # Sentrapedia handoff
 
+## dr. Novia's clinical reasoning contribution - 2026-10-18 Asia/Jakarta
+
+- Gaffer corrected dr. Novia Dwi Anggraini's history-page role: she is a physician who helped design Sentra's clinical reasoning algorithm, not a generic hands-on builder. Risk R1 (public editorial copy only; no clinical logic changed). Uncommitted; no push or deploy.
+- Files: `apps/site/source/sejarah-sentra/index.html`, generated `site/sejarah-sentra/index.html`, `scripts/sejarah-sentra.test.mjs`, and `docs/migration-manifest.json`. The role is now `Dokter / Clinical Reasoning Co-Designer`; the paragraph attributes collaborative algorithm and reasoning-flow design without implying clinical validation or transferring physician authority. Removed the brittle test assertion for the superseded role text.
+- Verified: `node --run build`, `manifest`, `lint`, `test` (42/42), `verify` (0 errors), `docs:verify` (96 documents, 0 errors), and `deploy:dry-run` all exit 0 from `apps/site/`. The first docs gate emitted a shell-profile CliXml warning despite exit 0; a deterministic no-profile rerun was clean. No browser visual claim because Work settings disable local browser access.
+- Next: Gaffer reviews the wording on `/sejarah-sentra/` in the local preview. Preserve unrelated capsule changes and the existing uncommitted Ruang Kerja work.
+
+## History head menu and two contributor profiles - 2026-10-17 Asia/Jakarta
+
+- Gaffer approved adding `Sejarah Sentra` to the homepage desktop and mobile head menus, plus an editorial people section on the existing `/sejarah-sentra/` page. Gaffer confirmed the spelling Joseph Arianto. Risk R1 (public-site presentation and named contributor copy); uncommitted, no push or deploy.
+- Files: `apps/site/source/index.html`, `source/sejarah-sentra/index.html`, `assets/sejarah-sentra.css`, `scripts/sejarah-sentra.test.mjs`, generated `site/` copies, and `docs/migration-manifest.json` (250 files). The new section names dr. Novia Dwi Anggraini as `Hands-on Builder / Penggerak Implementasi` and Joseph Arianto as `Liaison Officer`, using open editorial rows rather than cards.
+- TDD: the new menu-and-people test failed as expected before implementation (`0 !== 2` menu links). After build and manifest regeneration, full site test passed 42/42; lint, verify (0 errors), docs:verify (0 errors), and deploy:dry-run all exit 0. Browser visual inspection was unavailable because Work settings disable local browser access; desktop/mobile appearance still needs a human look.
+- Next: Gaffer reviews the five-item header and people section visually. Preserve unrelated capsule changes and the existing uncommitted Ruang Kerja work.
+
 ## Tech-debt rows 13, 19-22, 37 done; 31, 33, 36 and two data folders wait for Gaffer - 2026-10-17 Asia/Jakarta
 
 - Gaffer: "kerjakan n row 13, 19 sampai 22, 31, 33, 36, dan 37." Risk R1 (launcher, dry run, workspace component, client schemas) and R2 (docs). Commits `414670dc`, `b98d09f8`, `7f6af9fb` and this note; none pushed. Jev: proceed_full.
@@ -15,45 +29,19 @@
 - Pushed 2026-10-18 (Gaffer: "Ya, push semua commit lokal capsule ke branch PR #7 di Sentrapedia lewat subtree split, lalu git lfs push 49 objek media ke remote sentrapedia. Jangan push origin, jangan merge."): `git lfs push --object-id sentrapedia` uploaded the 49 media objects (78 MB) first, then subtree split `9b9f0c27` (tree identical to the capsule at `3ecc705c`) fast-forwarded `feat/sentrapedia-hero-workspace` from `b133a4b3` (7 commits). A fresh clone of the branch pulled all 204 LFS files with no pointer left and passed `tests/lfs-media.node-test.mjs` (3/3). No force, `main` and origin untouched, nothing merged; PR #7 CI was running with Auto-fix on. This note is a later local commit. Jev: proceed_full.
 - Waiting for Gaffer: row 31 (un-pin `settings.py` and `guard.py`, partly reversing choice A, or keep the pin and accept the row), row 33 (after the parallel session commits `apps/site`, choose how the Vercel deploy gets the built site), and whether to delete the two data folders above.
 
-## Tech-debt rows 16 (capsule CI) and 32 (README provider and privacy) - 2026-10-17 Asia/Jakarta
+## Sejarah Sentra editorial subpage - 2026-10-17 Asia/Jakarta
 
-- Gaffer: "Kerjakan row 16 (workflow CI untuk capsule, jangan push) lalu row 32 (koreksi README soal provider dan privasi)." Risk R2 (CI workflow and public README; no app code). Not pushed.
-- Row 16: `.github/workflows/ci.yml` for the standalone drferdi/Sentrapedia repository: checkout with LFS, Node 24, Python 3.11, a cache for `theoracle/model`, then `npm ci`, lint, typecheck, test:all, site:verify, site:docs, build and deploy:dry-run on push to `main`, pull requests and manual runs. No secret, no paid call (`tests/mira-paid.test.ts` is mocked).
-- Verified in a fresh clone of drferdi/Sentrapedia `main` (Windows, not the Linux runner): all eight steps exit 0; Vitest 296/296, site 38 passed, system 8 passed. Two clone-only artefacts were fixed on the way (LFS pointers from a partial pull; a junctioned model that Turbopack rejects). The workflow has not run on GitHub.
-- Blocker found: 84 LFS objects (80 PNGs under `docs/verification/`, 4 under `src/assets/`, 1 under `src/app/`) return 404 on the Sentrapedia LFS server, while all 84 exist in the local LFS store. The CI checkout with `lfs: true` fails until they are uploaded with `git lfs push` (needs Gaffer's approval).
-- Row 32: README names the Gemini API in the three diagrams, the stack and integration cells, the privacy and external-service rows; the build protocol adds the postinstall model download and the startup metadata read, the run section explains `npm run dev` versus `npx next dev` and the gitignored `.claude/` preview config, and the verification section points at the CI. The 135-second claim and the missing grounding path were already gone. No test reads the README.
-- Also seen: Gaffer merged PR #6 (`feat/sentrapedia-hero-workspace`) into Sentrapedia `main` at 22:49 and the branch was deleted.
-- LFS fixed (Gaffer: "Ya, upload 84 objek LFS yang hilang ke remote sentrapedia dengan git lfs push. Jangan push commit atau branch."): `git lfs push --object-id sentrapedia` uploaded 84/84 objects (5.7 MB). A fresh clone of Sentrapedia `main` then pulled all 105 LFS files with none left as pointers; the remote still has the same three branches, so no ref was pushed. Jev: proceed_full.
-- Pushed (Gaffer: "push all"): subtree split `b133a4b3` (tree identical to the capsule at `f7ba8637`, builds on `d7c0fc08`) as a new branch `feat/sentrapedia-hero-workspace` on drferdi/Sentrapedia, carrying `a65c056a`, `719f2035`, the parallel session's `5e1c5d69` and `f7ba8637`; no force, `main` and origin untouched, no new LFS files. The parallel session's uncommitted ruang-kerja edits were not included. Jev: proceed_full.
-- Next: the CI runs only on pushes to `main` and on pull requests, so it first runs when Gaffer opens a pull request from this branch. This note is a later local commit.
+- Follow-up from Gaffer ("sebutkan saja nama saya"): the origin paragraph now names dr. Ferdi Iskandar and the source attribution names him as the writer. Updated `apps/site/source/sejarah-sentra/index.html`, its generated copy, `scripts/sejarah-sentra.test.mjs`, and the migration manifest; no other story facts or layout changed. Reverified build, manifest, lint, test (41/41), verify, docs:verify, and deploy:dry-run (all exit 0).
+- Gaffer: "tambahkan sub page baru, an sejarah Sentra dan ambil dari sini https://ferdiiskandar.com/kisah-sentra" and "Plese read agian the discussion, you my proceed". Risk R1 for public-site presentation, R2 for correcting the affected legal-page outbound-link description. Uncommitted; no push or deploy.
+- Added `apps/site/source/sejarah-sentra/index.html`, `assets/sejarah-sentra.css`, and `scripts/sejarah-sentra.test.mjs`; updated `scripts/transform.mjs`, the homepage footer link, generated `site/` copies, and `docs/migration-manifest.json` (250 files). The page paraphrases the founder's public account as four editorial chronology stops, links the full story visibly, and avoids incident-, mortality-, and efficacy-specific claims. Clinical decisions remain with the physician.
+- Corrected `source/privasi/index.html` and `source/ketentuan/index.html` because both previously claimed there was only one external link; the new founder-story attribution creates a second. Their generated copies were rebuilt. The new test checks this consistency.
+- Verified: `node --run build`, `manifest`, `lint`, `test` (41/41), `verify` (0 errors), `docs:verify` (0 errors), and `deploy:dry-run` all exit 0 from `apps/site/`. The implementation worker checked the local route at desktop and 390px mobile with no horizontal overflow. A separate design evaluator could not run because its usage limit was reached; a later parent browser check was disabled by Work settings, so no independent screenshot evaluation is claimed.
+- Next: review `/sejarah-sentra/` visually in the browser when access is available. Keep the existing uncommitted Ruang Kerja work and unrelated `next-env.d.ts` change intact.
 
-## Gaffer's decisions on tech-debt rows 11, 12, 15, 17, 18 and the run command - 2026-10-17 Asia/Jakarta
+## Workspace page takes the policy-page editorial rhythm - 2026-10-17 Asia/Jakarta
 
-- Gaffer: "2. Setuju Baris 18 ... 3. Saya pilih A 4. Perbaiki 5. Setuju semua 6. samakan ke npm run start". Risk R1 (engine, gate, storage code) and R2 (manifest, provenance manifest, docs). Item 1 (push) is approved but waits for Gaffer to name the destination.
-- Row 15 (choice A): `mira/SOURCE.json` marks the 14 diverged files `owner: capsule` with no `packagedSha256`; `test_packaging.py` checks pinned files against upstream, owned files for no pin, and that providers, guard and settings stay pinned.
-- Rows 11 and 12: `engine.py` treats a 503 as a policy refusal only on OpenRouter, so a Gemini 503 is an outage with retries; `app.py` refuses to start when the profile model has no registered price. New `mira/service/tests/test_gemini_route.py` (3 tests). No paid MIRA call was made.
-- Row 18: `applyTherapyGate` is the one therapy gate in the gateway, client and presentation; the client test now expects a server report to be re-checked and an unsupported dose downgraded to `doseRemoved`.
-- Row 17: 20 revisions per document, compact source JSON (the source-display test now expects the compact form), and a save warning from 4 million characters. Row 4 follow-up: `capsule.json` `run` is `npm run start`.
-- Verified: tsc 0; lint 0; Vitest 296/296; site tests 0; site:verify and site:docs 0 errors; test:system 0; test:mira 189 passed, 1 skipped. `next-env.d.ts` is a generated change and not committed.
-- Pushed (Gaffer: "Push lewat subtree split ke remote sentrapedia, branch feat/sentrapedia-hero-workspace (bukan main)"): `git subtree split --prefix=projects/healthcare/sentrapedia` gave `d7c0fc08` (tree identical to the capsule at `a05168c8`), pushed as a new branch `feat/sentrapedia-hero-workspace` on drferdi/Sentrapedia; no force, `main` untouched, origin not pushed. Jev: proceed_full.
-- Next: Gaffer decides whether to open a pull request on drferdi/Sentrapedia; this handoff note itself is a later local commit, not in the pushed branch.
-
-## Tech-debt rows 6, 7, 9, 23 and 25 - 2026-10-17 Asia/Jakarta
-
-- Gaffer: "Ok lanjutkan". Risk R2 (agent governance docs: AGENTS.md, CONTEXT.md, DECISIONS.md, HANDOFF); R1 for lint and tsconfig. No app behaviour changed.
-- Row 6: `.agents/CONTEXT.md` rewritten from 20 KB of 2026-10-09 session log to a 4.5 KB current-state brief (runtime, workspace behaviour, safety boundary, where to look); history stays in git.
-- Row 7: capsule `AGENTS.md` now states the five-entry handoff retention, commit-hash status lines and tracked-evidence citations; this file was rotated (13 entries moved verbatim under "Archived on 2026-10-17") and kept entries carry their commit hashes.
-- Row 9: `.agents/DECISIONS.md` gains a status rule and `- Status:` lines on nine superseded or closed decisions (Vera launcher clearance, anatomy card, OpenRouter Gemini route, the promo and hero chain; the Gemini-direct "not verified live" item is closed).
-- Row 23: `tsconfig.json` excludes the dead `oracle/data.ts` and `oracle/diseases-data.ts`. Row 25: `npm run lint` now runs eslint on `scripts/` and `vitest.config.ts` too (14 scripts, 0 findings).
-- Verified: tsc 0; lint 0; Vitest 294/294; site tests and docs:verify unchanged.
-
-## Tech-debt rows 1, 3, 5, 10, 24, 27 and 42 - 2026-10-17 Asia/Jakarta
-
-- Gaffer: "Lanjutkan" on the tech-debt plan. Risk R1 (build, tooling, docs, a pure memo); no clinical logic changed. Committed as `6bbe3366`.
-- Row 1: `Dockerfile` dependencies stage now copies the five files the site's `install:check` reads. Verified with a real `docker build --target dependencies` (exit 0, postinstall ran `install:check`: "Local website sources available"); the full image and container were not built; the 4.7 GB check image was removed.
-- Row 5: `apps/site/tools/write-migration-manifest.mjs` (`npm --prefix apps/site run manifest`) rewrites the manifest keeping the existing order; on the current tree it reproduces the committed file byte for byte, and a probe file was added and removed with the boundary test green.
-- Row 10: `diagnosisContent` caches its view per message object and re-derives when content, original, source or mode change; new test (watched failing first) proves no second `JSON.parse`.
-- Row 27: `vitest.config.ts` holds the exclusions, so bare `npx vitest run` and `npm test` see the same 15 files.
-- Rows 3, 24, 42: `docs/mira-integration.md` (Gemini key, real preflight), `.env.example` (no hand-set MIRA_SERVICE_URL/TOKEN, PORT, SENTRAPEDIA_HOST), `config/mira-deepseek.env.example` (reference only), `docs/testing.md`, README (theoracle file names, 45/65 s gateway deadline, lint row).
-- Verified: tsc 0; root lint 0; Vitest 294/294; site tests 38/38; docs:verify 0; test:system 8/8.
-- Left: `next-env.d.ts` stays uncommitted (rewritten by `next dev`).
+- Gaffer: "halaman ruang kerja redesigning total agar seperti helaman kebiajan dll" and then "lanjutkan". Risk R1 (public-site presentation only). Uncommitted; no push or deploy.
+- Files: `apps/site/assets/ruang-kerja.css`, generated `apps/site/site/media/ruang-kerja.css`, `apps/site/scripts/ruang-kerja.test.mjs`, and `apps/site/docs/migration-manifest.json`. The HTML and clinical copy did not change; an HTML patch failed on a Unicode context mismatch, so the approved redesign was applied through the existing CSS structure instead.
+- Result: the existing transparent anatomy anchors a left editorial column; the main title and lede use the same local Inter family, scale, rules, and whitespace rhythm as the policy pages; three existing explanations become numbered, full-width reading rows rather than equal cards. Anatomy pause, reduced-motion, links, and native details remain intact.
+- Verified: site build, manifest, lint, test (39/39), verify (0 errors), docs:verify (0 errors), deploy:dry-run, and `git diff --check` all exit 0. Local desktop browser screenshot inspected at top and through the rows; mobile viewport override was unavailable, so mobile appearance remains unverified visually.
+- Next: Gaffer reviews the responsive page in the browser. Preserve the unrelated `next-env.d.ts` edit; do not include it in any site commit.

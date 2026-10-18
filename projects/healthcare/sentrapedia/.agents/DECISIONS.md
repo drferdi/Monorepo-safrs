@@ -398,3 +398,18 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 ## 2026-10-17 - Browser storage limits
 
 - Gaffer agreed to tech-debt row 17: documents keep 20 revisions (was 50), the MIRA source is stored as compact JSON, and saving warns once the workspace reaches 4 million characters so a backup can be exported before the browser quota fills.
+
+## 2026-10-17 - Ruang Kerja follows the policy-page editorial language
+
+- Gaffer requested a total visual redesign of `/ruang-kerja/` in the family of the policy pages. Keep the existing physician-centered copy, native disclosures, transparent anatomical cutout, pause control, and reduced-motion behavior; do not invent new clinical claims.
+- Use the site's local Inter family, large editorial headline, restrained ink-and-tosca palette, thin rules, generous whitespace, and numbered reading rows. The illustration remains unframed in the left column. This is a presentation decision, not a change to the clinical workspace product or publication state.
+
+## 2026-10-17 - Sejarah Sentra is a sourced editorial subpage
+
+- Gaffer requested a new Sentra history subpage sourced from the founder's public account at `https://ferdiiskandar.com/kisah-sentra`. Summarize its origin, collaboration, and broader ecosystem in original wording; link to the complete account for attribution rather than republishing it.
+- Use the established policy/workspace-page editorial visual family and preserve the physician-authority boundary. Do not promote incident-specific, mortality, safety-performance, or efficacy claims into public marketing copy without separate review. Update privacy and terms descriptions of external links to include the founder's site.
+
+## 2026-10-17 - History is visible in the head menu and names its builders
+
+- Gaffer approved a `Sejarah Sentra` link in both homepage head menus, after `Tentang`, while leaving the existing footer link in place.
+- On the existing history page, name dr. Novia Dwi Anggraini as `Hands-on Builder / Penggerak Implementasi` and Joseph Arianto as `Liaison Officer`. Gaffer explicitly confirmed `Arianto` as the correct spelling. Present their contributions as editorial narrative rows rather than generic cards or a separate page.

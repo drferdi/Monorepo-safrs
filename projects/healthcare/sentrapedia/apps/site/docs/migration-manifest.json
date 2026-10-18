@@ -188,7 +188,7 @@
     },
     {
       "path": "assets/ruang-kerja.css",
-      "sha256": "f67495b438931ee7df2864db843a100d1e09abd44ebe29a70d28c34cbf751057"
+      "sha256": "896571f04152d4449ca20294fba4c19318c14d32ff0a5d61c95eb8c4155927e6"
     },
     {
       "path": "assets/sentrapedia-solusi.mp4",
@@ -348,7 +348,7 @@
     },
     {
       "path": "scripts/ruang-kerja.test.mjs",
-      "sha256": "3c53945695ac828de7dd63237fa7a04c15cb835daf3a7bc967b4024e1a580ff3"
+      "sha256": "e97ed63905322638d865354c8c8f1d6132641069b85693e6a5346f7555e76a5e"
     },
     {
       "path": "scripts/serve.mjs",
@@ -360,7 +360,7 @@
     },
     {
       "path": "scripts/transform.mjs",
-      "sha256": "b5c08891bff44643d4e026fd39a14c76616fcb91d0d6109c1bd6518bc631bf4d"
+      "sha256": "12b4f33f642f1a56a4201f07c4c78c63d4d054519ec983422e9effc52a1396f6"
     },
     {
       "path": "scripts/verify.mjs",
@@ -440,11 +440,11 @@
     },
     {
       "path": "site/index.html",
-      "sha256": "7c9ebc225674d9b9adfc8d75f679c814ad57920e30dc26677aa94e3cd8aab7b8"
+      "sha256": "a7fe72dfa3211bd36ab6bc721bf55dda002b5cb7d1252c3170853a57afb1bd98"
     },
     {
       "path": "site/ketentuan/index.html",
-      "sha256": "31e4c7775c85b17b769fbf75a3dcbea3c1dbfc57aaf3ad680861f9e380c55f69"
+      "sha256": "c321351893515a91f12c4a74b659572dbd2b8411ffeca32b7e040d6051a1978a"
     },
     {
       "path": "site/media/capabilities/01-cockpit.mp4",
@@ -604,7 +604,7 @@
     },
     {
       "path": "site/media/ruang-kerja.css",
-      "sha256": "f67495b438931ee7df2864db843a100d1e09abd44ebe29a70d28c34cbf751057"
+      "sha256": "896571f04152d4449ca20294fba4c19318c14d32ff0a5d61c95eb8c4155927e6"
     },
     {
       "path": "site/media/sentrapedia-solusi.mp4",
@@ -720,7 +720,7 @@
     },
     {
       "path": "site/privasi/index.html",
-      "sha256": "83ca4461d7d1a86a08e233ea4d5d17c53cb779c6f7ffef5a24c8150a899d2a9d"
+      "sha256": "b8c9b0bd868274a35dbb6e961d55c00723ee7b93cefba895a68d9721accd2376"
     },
     {
       "path": "site/public/promo-vid.mp4",
@@ -764,7 +764,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "7c9ebc225674d9b9adfc8d75f679c814ad57920e30dc26677aa94e3cd8aab7b8"
+      "sha256": "a7fe72dfa3211bd36ab6bc721bf55dda002b5cb7d1252c3170853a57afb1bd98"
     },
     {
       "path": "assets/system-anatomy.css",
@@ -968,7 +968,7 @@
     },
     {
       "path": "source/ketentuan/index.html",
-      "sha256": "31e4c7775c85b17b769fbf75a3dcbea3c1dbfc57aaf3ad680861f9e380c55f69"
+      "sha256": "c321351893515a91f12c4a74b659572dbd2b8411ffeca32b7e040d6051a1978a"
     },
     {
       "path": "source/penafian/index.html",
@@ -976,11 +976,31 @@
     },
     {
       "path": "source/privasi/index.html",
-      "sha256": "83ca4461d7d1a86a08e233ea4d5d17c53cb779c6f7ffef5a24c8150a899d2a9d"
+      "sha256": "b8c9b0bd868274a35dbb6e961d55c00723ee7b93cefba895a68d9721accd2376"
     },
     {
       "path": "source/ruang-kerja/index.html",
       "sha256": "9c6f68c1295e2a366b5bfc9ca1c12ab09876a8518c94f30066a5ac22cc37170c"
+    },
+    {
+      "path": "assets/sejarah-sentra.css",
+      "sha256": "a923094baf3763ac8eda9f4963186bc9ed6c0c03e37e6962582c316274fdce8c"
+    },
+    {
+      "path": "scripts/sejarah-sentra.test.mjs",
+      "sha256": "7f3ef1c5ade563e668f19eb9c6222d6a5bc33ed169a89b232db24b4a536e1b38"
+    },
+    {
+      "path": "site/media/sejarah-sentra.css",
+      "sha256": "a923094baf3763ac8eda9f4963186bc9ed6c0c03e37e6962582c316274fdce8c"
+    },
+    {
+      "path": "site/sejarah-sentra/index.html",
+      "sha256": "acc4d67a60c73c7254403620fa76c4a7cce3ed7e118aec07bc1a393f583db1b5"
+    },
+    {
+      "path": "source/sejarah-sentra/index.html",
+      "sha256": "acc4d67a60c73c7254403620fa76c4a7cce3ed7e118aec07bc1a393f583db1b5"
     }
   ]
 }
