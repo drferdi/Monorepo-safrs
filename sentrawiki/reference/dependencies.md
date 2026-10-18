@@ -1,12 +1,22 @@
 # Dependencies reference
 
-> **Scope.** Root `pnpm-workspace.yaml` catalog. SentraBot, Kediri, and Smartboard resolve their own lockfiles.
+> **Scope.** Root `pnpm-workspace.yaml` catalog. Every capsule except `internal/control-center` resolves its own lockfile.
+
+## Workspace members
+
+`pnpm-workspace.yaml` includes `packages/*`, `tools/*` (minus `tools/retriever` and `tools/prompt`), and the glob
+`projects/*/*/apps/*`. Every capsule that glob would match is excluded by name (`academic-smartboard`,
+`kediri-history`, `sentrabot`, `golden-path`) or by domain (`!projects/healthcare/**`);
+`portfolio-drnovia` and `unicom` have no `apps/`. The only capsule still inside the root workspace is
+`projects/internal/control-center/apps/web`, recorded in `.safrs/known-nonconformance.json`.
 
 ## The version catalog
 
 Root workspace members reference `catalog:` so those packages share one version of each dependency. That catalog is **not** the version source for excluded capsules.
 
 ## Key dependencies and versions
+
+Checked against `pnpm-workspace.yaml` on 2026-10-18.
 
 | Dependency | Catalog version |
 | --- | --- |
@@ -20,20 +30,15 @@ Root workspace members reference `catalog:` so those packages share one version 
 | `pg` | 8.16.3 |
 | `typescript` | 7.0.2 |
 | `turbo` | 2.10.9 |
-| `vitest` | 4.1.10 |
-| `@vitest/coverage-v8` | 4.1.10 |
-| `@playwright/test` / `playwright` | 1.62.1 |
+| `vitest` | 4.1.11 |
+| `@playwright/test` | 1.62.1 |
 | `@biomejs/biome` | 2.5.7 |
 | `react` / `react-dom` | 19.2.8 |
 | `tailwindcss` | 4.3.3 |
 | `@tailwindcss/postcss` | 4.3.3 |
 | `@t3-oss/env-core` | 0.13.8 |
 | `@t3-oss/env-nextjs` | 0.13.8 |
-| `stripe` | 22.5.0 |
 | `resend` | 6.19.0 |
-| `react-email` | 6.9.2 |
-| `@react-email/components` | 1.0.12 |
-| `@react-email/ui` | 6.9.2 |
 | `@faker-js/faker` | 10.5.0 |
 | `fast-check` | 4.9.0 |
 | `husky` | 9.1.7 |
@@ -46,7 +51,6 @@ Root workspace members reference `catalog:` so those packages share one version 
 | `@opentelemetry/sdk-node` | 0.221.0 |
 | `@opentelemetry/exporter-trace-otlp-http` | 0.221.0 |
 | `@opentelemetry/instrumentation-http` | 0.221.0 |
-| `@opentelemetry/resources` | 2.10.0 |
 | `@opentelemetry/semantic-conventions` | 1.30.0 |
 
 ## Dependency relationships between packages

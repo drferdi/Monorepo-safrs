@@ -8,16 +8,39 @@ A capsule is standalone only when **structural** checks and **empirical extracti
 
 ## Inventory
 
-| ID | Domain | What it is | Contract | Root workspace |
-| --- | --- | --- | --- | --- |
-| [product/sentrabot](sentrabot.md) | product | Public multi-surface agent product | capsule-owned workspace | excluded |
-| [product/kediri-history](kediri-history.md) | product | Cinematic heritage site + Payload CMS | `project.contract.json` | excluded |
-| [academic/academic-smartboard](academic-smartboard.md) | academic | El-Kayyisa bimbel + Kayyisa agent | `project.contract.json` | excluded |
-| [corporate/portfolio-drnovia](portfolio-drnovia.md) | corporate | Static portfolio (Framer markup + Lenis) | `project.contract.json` | not included |
-| [healthcare/avery](avery.md) | healthcare | Hermes agent configuration | SPDS + AGENTS | not a Node workspace |
-| [internal/golden-path](golden-path.md) | internal | Typed DB→API→Web demo | none at capsule root | excluded (standalone) |
-| [internal/control-center](control-center.md) | internal | Local repo-health dashboard | none at capsule root | **included (legacy)** |
-| [template](template.md) | n/a | Scaffold | placeholder contract | template |
+18 capsules across five domains (2026-10-18). 17 carry `project.contract.json`; `internal/control-center`
+is the one entry in `.safrs/known-nonconformance.json`. "Excluded" means `pnpm-workspace.yaml` names the
+capsule (or its domain) with `!`; "not included" means the `projects/*/*/apps/*` glob matches nothing there.
+
+| ID | What it is | Contract | Root workspace |
+| --- | --- | --- | --- |
+| **academic** | | | |
+| [academic/academic-smartboard](academic-smartboard.md) | El-Kayyisa bimbel + Kayyisa agent | `project.contract.json` | excluded |
+| **corporate** | | | |
+| [corporate/portfolio-drnovia](portfolio-drnovia.md) | Static portfolio (Framer markup + Lenis) | `project.contract.json` | not included |
+| **healthcare** | | | |
+| healthcare/assistverse | Public Sentra Assist website (prototype) | `project.contract.json` | excluded (`!projects/healthcare/**`) |
+| [healthcare/avery](avery.md) | Avery, Sentra's Hermes agent, as versioned configuration | `project.contract.json` | excluded |
+| healthcare/healthsphere | Puskesmas public website plus primary-care master assets | `project.contract.json` | excluded |
+| healthcare/mantra | Hospital management platform (Frappe) for RSIA Melinda | `project.contract.json` | excluded |
+| healthcare/med-assist | Chrome side-panel extension for FKTP clinicians in ePuskesmas | `project.contract.json` | excluded |
+| healthcare/medboard | Clinical intelligence dashboard for primary healthcare | `project.contract.json` | excluded |
+| healthcare/referralink | MEDLINK public sandbox: differential diagnosis, ICD-10, referral | `project.contract.json` | excluded |
+| healthcare/sentrapedia | Clinical workspace (Next.js) plus public site in `apps/site/` | `project.contract.json` | excluded |
+| healthcare/sentraverse | Public Sentra marketing website and platform hub | `project.contract.json` | excluded |
+| healthcare/sentraverse-neural | Scroll-driven neural journey site | `project.contract.json` | excluded |
+| healthcare/sidelab-src | Research-prototype clinical decision support (not production-ready) | `project.contract.json` | excluded |
+| **internal** | | | |
+| [internal/control-center](control-center.md) | Local repo-health dashboard | none (known non-conformance) | **included (legacy)** |
+| [internal/golden-path](golden-path.md) | Typed DB→API→Web demo; standalone capsule (local snapshot packages) | `project.contract.json` | excluded |
+| internal/unicom | UNICOM legacy multi-agent communication room (Next.js) | `project.contract.json` | not included |
+| **product** | | | |
+| [product/kediri-history](kediri-history.md) | Cinematic heritage site + Payload CMS | `project.contract.json` | excluded |
+| [product/sentrabot](sentrabot.md) | Public multi-surface agent product | `project.contract.json` | excluded |
+
+The scaffold lives at `projects/_template/` ([template](template.md)); it is not a capsule.
+
+Capsules without a wiki page are documented in their own `README.md` and `.agents/CONTEXT.md`.
 
 ## Required lifecycle
 
