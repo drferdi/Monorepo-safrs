@@ -1,6 +1,6 @@
 # HANDOFF — Sentra Bot overrides consolidation
 
-Last updated: 2026-10-11 (Claude Code, local `main`, task `TASK-20261011-GAFFER-ADDRESS`)
+Last updated: 2026-10-18 (Claude Code, branch `feat/capsule-contract-remotes`, task `TASK-20261018-CAPSULE-CONTRACT-REMOTES`)
 `D:\DEV\Monorepo.worktrees\fix\sentrabot-overrides`, task `TASK-20260926-SENTRABOT-OVERRIDES`, state REVIEW)
 
 The WhatsApp Business Bridge public beta handoff (worktree `codex-whatsapp-bridge`) is unchanged in git
@@ -8,6 +8,7 @@ history; its open items still apply.
 
 ## Done in this branch
 
+- 2026-10-18 (Claude Code, task `TASK-20261018-CAPSULE-CONTRACT-REMOTES`, R1): `project.contract.json` declares `repository` `https://github.com/drferdi/sentrabot.git` (the `sentrabot` remote's URL). The root checker `check_capsule_remotes.py` reads it; no lifecycle change.
 - 2026-10-11 (Claude Code, task `TASK-20261011-GAFFER-ADDRESS`, R1): docs in this capsule now address the owner as "Gaffer" instead of "Chief" (wording only; no code, config or behaviour change).
 - The `react`, `react-dom`, `better-auth` overrides moved from `pnpm-workspace.yaml` (ignored by pnpm 9.15.0)
   to `package.json` `pnpm.overrides`, next to the security overrides. All overrides now live in one place.

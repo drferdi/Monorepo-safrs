@@ -1,11 +1,15 @@
 # HANDOFF
 
-Last updated: 2026-09-26 (Claude Code, branch `fix/kediri-gsap-hardening`, claim `KEDIRI-GSAP-PRODUCTION-HARDENING`)
+Last updated: 2026-10-18 (Claude Code, branch `feat/capsule-contract-remotes`, claim `TASK-20261018-CAPSULE-CONTRACT-REMOTES`)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Durable decisions go
 to `DECISIONS.md`.
 
 ## Current state
+
+- Contract remote (2026-10-18): `project.contract.json` declares `repository`
+  `https://github.com/drferdi/Kediri-Kings-Century.git`, the `kediri` remote's URL and the README's
+  GitHub link. The root checker `check_capsule_remotes.py` reads it; no lifecycle change.
 
 - GSAP production hardening (2026-09-26): commit `800f0dff` (merged on the `kediri` remote as PR #2
   on 2026-09-12, never brought into the Monorepo) is cherry-picked: production motion canary

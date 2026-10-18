@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "product/sentrabot",
+  "repository": "https://github.com/drferdi/sentrabot.git",
   "owner": "Chief",
   "risk": "R2",
   "runtime": { "name": "node", "version": "24.18.0" },
