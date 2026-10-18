@@ -4,8 +4,8 @@ import importlib.metadata
 import json
 from pathlib import Path
 
-from service.menu import planning_menu_text
 from routines import ROUTINE_PROMPT
+from service.menu import planning_menu_text
 
 ROOT = Path(__file__).resolve().parents[2]
 

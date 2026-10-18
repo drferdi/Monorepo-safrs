@@ -1,6 +1,7 @@
 """Capsule-local test entrypoint; every provider client is mocked."""
-from pathlib import Path
 import sys
+from pathlib import Path
+
 import pytest
 
 root = Path(__file__).resolve().parent

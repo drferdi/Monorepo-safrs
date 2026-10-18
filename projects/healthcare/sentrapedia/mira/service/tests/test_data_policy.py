@@ -68,7 +68,7 @@ def test_synthetic_only_refuses_an_unmarked_request_before_any_model_call(make_c
 
 
 def test_a_marked_synthetic_request_is_served_and_the_policy_is_recorded(make_client, example_request, settings):
-    client, fake = make_client(model_outputs())
+    client, _ = make_client(model_outputs())
     body = client.post(STEP, json=example_request, headers=AUTH).json()
 
     assert body["status"] == "ok"
@@ -126,7 +126,7 @@ def test_the_runner_stops_before_any_model_call(tmp_path, extra_args, mark, mess
     )
     result = subprocess.run(
         [sys.executable, "-I", "-c", script, str(ASSIST_DIR), str(path), extra_args[-1] if extra_args else "synthetic-only"],
-        capture_output=True, text=True, env=env, timeout=120,
+        capture_output=True, text=True, env=env, timeout=120, check=False,
     )
     assert result.returncode != 0
     assert message in result.stderr

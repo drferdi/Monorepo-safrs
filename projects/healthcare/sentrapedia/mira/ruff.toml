@@ -1,0 +1,23 @@
+# Python lint for the bundled MIRA engine (tech-debt row 43). Run from the capsule root: uvx ruff@0.17.1 check mira
+# The ruff version is pinned because its default rule set changes between releases.
+target-version = "py311"
+# Files pinned in SOURCE.json stay byte-identical to upstream, so they are not linted here.
+extend-exclude = [
+  "common/__init__.py",
+  "common/data_policy.py",
+  "common/providers.py",
+  "service/audit.py",
+  "service/auth.py",
+  "service/privacy.py",
+  "service/sim_benchmark.py",
+  "service/smoke_live.py",
+  "service/tests/__init__.py",
+  "service/tests/conftest.py",
+  "service/tests/test_cors.py",
+  "service/tests/test_providers.py",
+]
+
+[lint.per-file-ignores]
+# By design every failure becomes a contract-valid "unavailable" answer, never a 500 (engine.py docstring).
+"service/app.py" = ["BLE001"]
+"service/engine.py" = ["BLE001"]

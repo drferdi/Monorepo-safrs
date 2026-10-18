@@ -14,14 +14,21 @@ import os
 import time
 from dataclasses import replace
 
+from openai import APITimeoutError
+
 from common.guard import ApiGuard, RunAborted
 from common.providers import is_policy_failure, openrouter_extra_body
 from config import MEDICAL_ASSISTANT_MODEL, REASONING_MODEL
-from openai import APITimeoutError
 
 from . import SERVICE_VERSION, postchecks
 from .audit import DailyBudget
-from .contract import CONTRACT_VERSION, RESPONSE, THERAPY_RESPONSE, errors, unavailable_response
+from .contract import (
+    CONTRACT_VERSION,
+    RESPONSE,
+    THERAPY_RESPONSE,
+    errors,
+    unavailable_response,
+)
 from .menu import planning_menu_text
 from .prompts import (
     ASSESSMENT_RESPONSE_FORMAT,

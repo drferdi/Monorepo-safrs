@@ -34,9 +34,9 @@ def normalize_code(raw: str, codes: frozenset[str]) -> str | None:
 
 
 # Words that carry no meaning when a diagnosis label is compared with an official ICD-10 name.
-_FILLER = frozenset("a an and as by due in not of or the to with without".split())
+_FILLER = frozenset(["a", "an", "and", "as", "by", "due", "in", "not", "of", "or", "the", "to", "with", "without"])
 _GENERIC = _FILLER | frozenset(
-    "acute chronic disease diseases disorder disorders other specified unspecified nos site type classified elsewhere".split()
+    ["acute", "chronic", "disease", "diseases", "disorder", "disorders", "other", "specified", "unspecified", "nos", "site", "type", "classified", "elsewhere"]
 )
 
 

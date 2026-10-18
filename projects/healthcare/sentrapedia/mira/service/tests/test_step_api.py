@@ -10,8 +10,8 @@ import pytest
 
 from service import postchecks
 from service.app import AUDIT_RETENTION_DAYS, digest
-from service.engine import FAST_COPIES
 from service.contract import RESPONSE, UNFILLABLE_FIELDS, errors
+from service.engine import FAST_COPIES
 from service.postchecks import NOT_AVAILABLE_NOTE
 
 from .conftest import AUTH, assessment, completion, model_outputs, with_case
@@ -607,7 +607,7 @@ def test_fast_therapy_keeps_an_empty_regimen_when_every_copy_agrees(make_client,
 def test_fast_therapy_waits_only_a_short_grace_for_a_better_copy(make_client, example_request, monkeypatch):
     import time
 
-    import service.engine as engine
+    from service import engine
 
     monkeypatch.setattr(engine, "FALLBACK_GRACE_S", 0.05)
     empty = json.dumps({"therapy": {"forDiagnosis": {"icd10": "K35.8", "label": "Acute appendicitis"}, "regimen": [], "interactions": [], "contraindications": []}})
@@ -658,7 +658,11 @@ def test_grounding_reaches_fast_diagnosis_workup_and_therapy_prompts(make_client
 
 
 def test_grounding_constraints_have_system_priority_and_preserve_legacy_prompts(example_request):
-    from service.prompts import assessment_messages, fast_assessment_messages, planning_messages
+    from service.prompts import (
+        assessment_messages,
+        fast_assessment_messages,
+        planning_messages,
+    )
 
     grounding = theoracle_grounding()
     case = example_request["case"]

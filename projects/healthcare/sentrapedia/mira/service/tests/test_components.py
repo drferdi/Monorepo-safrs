@@ -14,10 +14,29 @@ from pathlib import Path
 import pytest
 
 from service import ASSIST_DIR, SRC_DIR
-from service.contract import CONTRACT_DIR, REQUEST, RESPONSE, UNFILLABLE_FIELDS, errors, unavailable_response
+from service.contract import (
+    CONTRACT_DIR,
+    REQUEST,
+    RESPONSE,
+    UNFILLABLE_FIELDS,
+    errors,
+    unavailable_response,
+)
 from service.menu import EXCLUDED_TOOLS, PLANNING_TOOLS
-from service.postchecks import SERVICE_DIR, apply, icd_codes, incompatible_rule, normalize_code, resolve_code
-from service.prompts import ASSESSMENT_INSTRUCTIONS, ASSESSMENT_SCHEMA, THERAPY_SCHEMA, case_text
+from service.postchecks import (
+    SERVICE_DIR,
+    apply,
+    icd_codes,
+    incompatible_rule,
+    normalize_code,
+    resolve_code,
+)
+from service.prompts import (
+    ASSESSMENT_INSTRUCTIONS,
+    ASSESSMENT_SCHEMA,
+    THERAPY_SCHEMA,
+    case_text,
+)
 from service.settings import StartupRefused, check_startup, load_settings
 from service.sim_benchmark import parse_args, simulation_response
 

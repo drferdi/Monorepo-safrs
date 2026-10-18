@@ -1,6 +1,5 @@
 """The Gemini API reports no usage.cost, so the guard's own price table must carry it (common/guard.py)."""
 from common.guard import PRICES, ApiGuard
-
 from service import app
 
 

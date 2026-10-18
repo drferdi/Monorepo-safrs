@@ -76,8 +76,10 @@ def grounding_text(grounding: dict | None) -> str:
         source = item["source"]
         lines.extend(
             [
-                f"[{item['evidenceId']}] {source['title']} | similarity {item['similarity']} | "
-                f"chunk SHA-256 {source['textSha256']}",
+                (
+                    f"[{item['evidenceId']}] {source['title']} | similarity {item['similarity']} | "
+                    f"chunk SHA-256 {source['textSha256']}"
+                ),
                 item["text"],
             ]
         )

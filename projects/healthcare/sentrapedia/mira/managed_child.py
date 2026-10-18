@@ -1,8 +1,9 @@
 """Windows child guardian: closing its Job Object reaps the entire child tree."""
 import ctypes
-from ctypes import wintypes
 import subprocess
 import sys
+from ctypes import wintypes
+
 
 class IO_COUNTERS(ctypes.Structure):
     _fields_ = [(name, ctypes.c_ulonglong) for name in (

@@ -8,7 +8,11 @@ from pathlib import Path
 
 from common.data_policy import DEVELOPMENT_DEFAULT, policy_problem
 from common.providers import API_KEY_ENV, PROVIDERS, model_id
-from config import MEDICAL_ASSISTANT_MODEL, MEDICAL_ASSISTANT_TEMPERATURE, REASONING_MODEL
+from config import (
+    MEDICAL_ASSISTANT_MODEL,
+    MEDICAL_ASSISTANT_TEMPERATURE,
+    REASONING_MODEL,
+)
 
 SERVICE_DIR = Path(__file__).resolve().parent
 
