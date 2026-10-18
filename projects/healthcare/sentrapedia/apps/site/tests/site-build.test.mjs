@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, stat } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,6 +23,9 @@ test('a clean build produces the whole site from source and static files alone',
     }
     await readFile(path.join(out, 'assets/brand/favicon.png'));
     await readFile(path.join(out, 'public/child.png'));
+    // No page loads these: the capability stills and films, the animated WebP and WebM workflow masters.
+    await assert.rejects(stat(path.join(out, 'media/capabilities')), { code: 'ENOENT' });
+    assert.deepEqual((await readdir(path.join(out, 'media/workflows'))).filter(name => !/-(?:poster\.webp|web\.mp4)$/.test(name)), []);
   } finally {
     await rm(out, { recursive: true, force: true });
   }

@@ -42,25 +42,12 @@ for (const filename of ['hero-workspace.css', 'hero-workspace.js', 'hero-film.mp
   if (sha(await fs.readFile(path.join(root, 'assets', filename))) !== sha(await fs.readFile(path.join(site, 'media', filename)))) errors.push(`Hero workspace source differs: ${filename}`);
 }
 const workflows = JSON.parse(await fs.readFile(path.join(root, 'assets/workflows.json'), 'utf8'));
-const motionAssets = [];
 if (sha(await fs.readFile(path.join(root, 'assets/workflow-playback.js'))) !== sha(await fs.readFile(path.join(site, 'media/workflow-playback.js')))) errors.push('Playback controller source differs from served file');
 for (const workflow of workflows) {
-  const bytes = await fs.readFile(path.join(site, `media/workflows/${workflow.id}.webp`));
-  if (bytes.toString('ascii', 0, 4) !== 'RIFF' || bytes.toString('ascii', 8, 12) !== 'WEBP' || bytes.readUInt32LE(4) !== bytes.length - 8) errors.push(`Invalid motion container: ${workflow.id}`);
-  let frameCount = 0, durationMs = 0, width = 0, height = 0;
-  for (let offset = 12; offset < bytes.length;) {
-    const name = bytes.toString('ascii', offset, offset + 4), size = bytes.readUInt32LE(offset + 4);
-    if (offset + 8 + size > bytes.length) { errors.push(`Truncated motion: ${workflow.id}`); break; }
-    if (name === 'VP8X') { width = bytes.readUIntLE(offset + 12, 3) + 1; height = bytes.readUIntLE(offset + 15, 3) + 1; }
-    if (name === 'ANMF') { frameCount++; durationMs += bytes.readUIntLE(offset + 20, 3); }
-    offset += 8 + size + size % 2;
-  }
-  if (width !== workflow.width || height !== workflow.height || frameCount !== 90 || durationMs !== 9000) errors.push(`Motion dimensions or timing failed: ${workflow.id}`);
-  for (const suffix of ['.webp', '-poster.webp', '.webm', '-web.mp4']) {
+  for (const suffix of ['-poster.webp', '-web.mp4']) {
     const filename = workflow.id + suffix;
     if (sha(await fs.readFile(path.join(root, 'assets/workflows', filename))) !== sha(await fs.readFile(path.join(site, 'media/workflows', filename)))) errors.push(`Generated media differs: ${filename}`);
   }
-  motionAssets.push({ id: workflow.id, width, height, frameCount, durationMs });
 }
 const server = createServer(site);
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -72,7 +59,7 @@ try {
     await response.arrayBuffer();
   }
   if ((await fetch(base + '/api/unavailable', { method: 'POST' })).status !== 501) errors.push('Real submissions must remain unavailable');
-  for (const workflow of workflows) for (const [suffix, mime] of [['.webp', 'image/webp'], ['-poster.webp', 'image/webp'], ['.webm', 'video/webm'], ['-web.mp4', 'video/mp4']]) {
+  for (const workflow of workflows) for (const [suffix, mime] of [['-poster.webp', 'image/webp'], ['-web.mp4', 'video/mp4']]) {
     const response = await fetch(base + `/media/workflows/${workflow.id}${suffix}`);
     if (response.status !== 200 || response.headers.get('content-type') !== mime) errors.push(`Workflow HTTP or MIME failed: ${workflow.id}${suffix}`);
     await response.arrayBuffer();
@@ -86,7 +73,7 @@ try {
     if (response.status !== 206 || response.headers.get('content-type') !== 'video/mp4' || (await response.arrayBuffer()).byteLength !== 32) errors.push('Hero film range failed');
   }
 } finally { await new Promise(resolve => server.close(resolve)); }
-const result = { presentationFilesUnchanged: manifest.files.length, localTargets, motionAssets, errors };
+const result = { presentationFilesUnchanged: manifest.files.length, localTargets, errors };
 await fs.mkdir(path.join(root, 'reference'), { recursive: true });
 await fs.writeFile(path.join(root, 'reference/verification.json'), JSON.stringify(result, null, 2) + '\n');
 console.log(JSON.stringify(result));

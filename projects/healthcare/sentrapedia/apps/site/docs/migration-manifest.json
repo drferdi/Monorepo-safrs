@@ -7,10 +7,6 @@
       "sha256": "09370788ff1791a3e540266c1c652eacab596b58378a82f90127c0d741c88c51"
     },
     {
-      "path": "assets/branding/sentra-neuron-white.png",
-      "sha256": "c09c536152da54ae8f38c21c40257cc5abb03ecadacc4d3855f52705864e120e"
-    },
-    {
       "path": "assets/branding/sentrapedia-wordmark-big.svg",
       "sha256": "2578b295b9ca28f8087ee81cbb27a594cbae2cb32ed145416d8709b905770e20"
     },
@@ -25,38 +21,6 @@
     {
       "path": "assets/branding/sentrapedia-wordmark-header.svg",
       "sha256": "46fa4bb751285699fc36ab67331d86a31b412947f9e21fb53eb206b9b6258879"
-    },
-    {
-      "path": "assets/capabilities/01-cockpit.mp4",
-      "sha256": "d82543735c1568265698b3715138141fe2ed63c52db190f148a2d10ecc9550fd"
-    },
-    {
-      "path": "assets/capabilities/02-document-studio.mp4",
-      "sha256": "0a35b01de75b44c41436794c13bb996ca2de6d971570482d144bd34d90c0e69b"
-    },
-    {
-      "path": "assets/capabilities/04-fast-assessment.mp4",
-      "sha256": "5afd38a0afd6a003e6b740b046768dc9daccc416ad5d5d83985a59189a419bdd"
-    },
-    {
-      "path": "assets/capabilities/05-icd10.mp4",
-      "sha256": "6a6bd66af45740503ce2ac528251f6d278f0dc4bf21bd70574dae7394735314a"
-    },
-    {
-      "path": "assets/capabilities/07-ambient-scribing.mp4",
-      "sha256": "99e2fb286b668597ea710b4f91b6bee556afd02abce00a4fe49250975bba6ad6"
-    },
-    {
-      "path": "assets/capabilities/08-power-navigation.mp4",
-      "sha256": "b9e2fc46776de56c25854e006d3e54676d6ecc11d977430b7fab53d10450e40f"
-    },
-    {
-      "path": "assets/capabilities/09-privacy.mp4",
-      "sha256": "625ae7740befff6111e6cf4f0b86120637e5d978934fcff7f2e8bceb5a2da270"
-    },
-    {
-      "path": "assets/capabilities/10-library.mp4",
-      "sha256": "1ab741039ab5910f19d432efcf3cb0c36c8d687586d4441e62f6e9bc582b49c5"
     },
     {
       "path": "assets/clinical-note.config.mjs",
@@ -215,28 +179,12 @@
       "sha256": "54cdd135dbf61e19674d46e4af7193ea3a10873b194379627eb8105879e29914"
     },
     {
-      "path": "assets/workflows/anamnesis.webm",
-      "sha256": "aa9f3e876dd0c25da2c2e85ddcf772bd5a3d66010e22b043b78d3041a6e0debd"
-    },
-    {
-      "path": "assets/workflows/anamnesis.webp",
-      "sha256": "5173c54ec6af95daf49aeb8becc2b41e2858b77598d3f1d081bf0732ef41e038"
-    },
-    {
       "path": "assets/workflows/education-poster.webp",
       "sha256": "3cbff3038f47739b5db0d06ea222999c837cfdb34984d5fcf2f1f1096360c862"
     },
     {
       "path": "assets/workflows/education-web.mp4",
       "sha256": "7b2a6b53418451de6738ab1bb8929ce9cbad0e7ca2f62377c0af575a50241ff4"
-    },
-    {
-      "path": "assets/workflows/education.webm",
-      "sha256": "0615eaf236921a87bd5bf95d2eef4caa558258b38eed177f1a6ab6ecdc5e1674"
-    },
-    {
-      "path": "assets/workflows/education.webp",
-      "sha256": "e2f38c41a9f9ddd49fe4c678a21d7041e8037dba13b2dea1bb350d6af5a5bb44"
     },
     {
       "path": "assets/workflows/mira-poster.webp",
@@ -247,28 +195,12 @@
       "sha256": "91dc82fc47e052adecd9d4524ee6fa31d2f82170978bc54e2ded6aa0ba0eba8b"
     },
     {
-      "path": "assets/workflows/mira.webm",
-      "sha256": "7ca4dff2b1961316046f0303abe38376b6e3cc6bb6302bc21281d5e55e64de2b"
-    },
-    {
-      "path": "assets/workflows/mira.webp",
-      "sha256": "467a2a1fbb3d1290ba72fc13be1099048ee0c37587890b0ab11068f48f2fbf35"
-    },
-    {
       "path": "assets/workflows/referral-poster.webp",
       "sha256": "523e838db0184bbe66d81b07c8202b9bc55dc0eac3023a6198a5235e8d951595"
     },
     {
       "path": "assets/workflows/referral-web.mp4",
       "sha256": "e7e713c1c0917c4cac7c1bd44d63a5027f5ada3bd6eadbce5049b0dd8047ea8e"
-    },
-    {
-      "path": "assets/workflows/referral.webm",
-      "sha256": "1b34c86cb9968c4d4e3d4f7c90d171d6a7a6adbaf81995d4ab304e60b818162b"
-    },
-    {
-      "path": "assets/workflows/referral.webp",
-      "sha256": "4a7487b6f28e603d633994c400bc5b3198d30496ab6c7976a77eb06ffe9cb9f0"
     },
     {
       "path": "assets/workflows/sbar-poster.webp",
@@ -279,28 +211,12 @@
       "sha256": "be1cd995b4e9492457387f0abdac09845a35d01a303fcd00e83c71f226a9c2b0"
     },
     {
-      "path": "assets/workflows/sbar.webm",
-      "sha256": "06b84beb4ada697b60cfa919f78feffcc7a1c44c229beaa0c6c9feb097159808"
-    },
-    {
-      "path": "assets/workflows/sbar.webp",
-      "sha256": "750ad0c7a850721c997da3902e755f8a08b3f9d6281a78dcaafed3805d9881a9"
-    },
-    {
       "path": "assets/workflows/soap-poster.webp",
       "sha256": "9e14ef35593a82ea63f04eb7d488b7d3f1cefadfe74e5883d8f18bcfd0e38c1c"
     },
     {
       "path": "assets/workflows/soap-web.mp4",
       "sha256": "84a9700acc9ebad7af49b250ee07ca69ea93a2af225ea878ac7b904d66ecb120"
-    },
-    {
-      "path": "assets/workflows/soap.webm",
-      "sha256": "9aa546d6cb24ece57211ac45f8017381a7a4ca0381da8a5e6088c25684a90917"
-    },
-    {
-      "path": "assets/workflows/soap.webp",
-      "sha256": "75583e1e3f8ab1e85e74d1e404320dfbcc13142e8fcb8099c44a98ba258da0aa"
     },
     {
       "path": "reference/design-integrity.json",
@@ -360,11 +276,11 @@
     },
     {
       "path": "scripts/transform.mjs",
-      "sha256": "0bebd8751fe707c7e99419f74af9898259409c0b48b27774df09ecb51c36c62d"
+      "sha256": "19cfd097b09b0a85de9465ad9de57c8129ec72525693d691a1c7995a47e751a7"
     },
     {
       "path": "scripts/verify.mjs",
-      "sha256": "077e09baa96d8b20d01265e7c2cc21c52d6bc8ada532199d8d52eae5adec443d"
+      "sha256": "0e8c74668415aa68a2a3b485bb37ecf50003c53e6455eb6a221b2ee1a9e2453e"
     },
     {
       "path": "scripts/workflow-playback.test.mjs",
@@ -385,10 +301,6 @@
     {
       "path": "assets/system-anatomy.js",
       "sha256": "58ad5dcee603aa4ac2dbddee130ae538487141581477bed48e28eccbbc113957"
-    },
-    {
-      "path": "assets/system-anatomy.mp4",
-      "sha256": "5e6832afdaaf3edbf93942e4455cb4ea23db8e0d441b992a0f0f0d49dd1ca8cb"
     },
     {
       "path": "scripts/system-anatomy.mjs",
@@ -425,50 +337,6 @@
     {
       "path": "assets/capability-flow-poster.jpg",
       "sha256": "21f6af14998fce17327f223aa66fc99e5f67574772eaf8684edbf1b66a3270cf"
-    },
-    {
-      "path": "assets/capabilities/01-cockpit.webp",
-      "sha256": "ed5659cfebabdac52c312b6694b5343ce8167e4325cdf69128180d112761f154"
-    },
-    {
-      "path": "assets/capabilities/02-document-studio.webp",
-      "sha256": "3a65230f999bfc3d7cdd8d003e656ad021599ac344fc8016be4d3eed1afd4bb0"
-    },
-    {
-      "path": "assets/capabilities/03-cloud-agent.webp",
-      "sha256": "5d511b2caab9fea18f6419801e168d5cd0ee72e5a1a856860ea281b47f9352ea"
-    },
-    {
-      "path": "assets/capabilities/04-fast-assessment.webp",
-      "sha256": "ef7bd4f501e41e214c0a2f7ea0f63ef85af0a3843dcf2cf02f1b29b286c5e128"
-    },
-    {
-      "path": "assets/capabilities/05-icd10.webp",
-      "sha256": "f8eb0446b633f64800b8e48dd659e75976a213ec79bdc252d3bdad1eb0668a37"
-    },
-    {
-      "path": "assets/capabilities/06-clinical-modes.webp",
-      "sha256": "dcd9595ae424f4b6085f7355a10627da638f7beeb2114c6769e4debf729f6f0c"
-    },
-    {
-      "path": "assets/capabilities/07-ambient-scribing.webp",
-      "sha256": "f0d845ede41229adde34b0c87493ce5edd4b9c7b2eec6d73785473dcebaeb76e"
-    },
-    {
-      "path": "assets/capabilities/08-power-navigation.webp",
-      "sha256": "d73ac837b62aa56f2dea9e952904085c2c4904723fb265d3fe16a7e485a95f75"
-    },
-    {
-      "path": "assets/capabilities/09-privacy.webp",
-      "sha256": "fcd23de089a9772d167c9fbdd0a1e35cbb653b9fe4dec406c7778fb2ea0d6053"
-    },
-    {
-      "path": "assets/capabilities/10-library.webp",
-      "sha256": "ea55e06acf1b3a7c529d8fb9058161c65496e662cc6d79e2d5b42fd836e6bdc7"
-    },
-    {
-      "path": "assets/capabilities/generation.json",
-      "sha256": "0c0c16b10a6deb2e4879846b769f7633660b134e588c30458dacfdd66f81fc00"
     },
     {
       "path": "scripts/capability-anatomy.test.mjs",

@@ -71,12 +71,6 @@ for (const filename of ['system-anatomy.css', 'system-anatomy.js', 'system-anato
 for (const filename of ['capability-explorer.css', 'capability-explorer.js', 'capability-anatomy.css', 'capability-anatomy.js', 'capability-flow.mp4', 'capability-flow-poster.jpg']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
-await fs.mkdir(path.join(site, 'media/capabilities'), { recursive: true });
-for (const filename of await fs.readdir(path.join(root, 'assets/capabilities'))) {
-  if (/^\d{2}-[a-z0-9-]+\.(?:webp|mp4)$/.test(filename)) {
-    await fs.copyFile(path.join(root, 'assets/capabilities', filename), path.join(site, 'media/capabilities', filename));
-  }
-}
 for (const filename of ['hero-workspace.css', 'hero-workspace.js', 'hero-film.mp4', 'hero-bridge.mp4', 'promo-vid.mp4', 'product-film.css', 'product-film.js']) {
   await fs.copyFile(path.join(root, 'assets', filename), path.join(site, 'media', filename));
 }
@@ -86,7 +80,7 @@ for (const filename of ['workspace.png', 'document-review.png', 'anamnesis-sourc
 }
 await fs.mkdir(path.join(site, 'media/workflows'), { recursive: true });
 for (const filename of await fs.readdir(path.join(root, 'assets/workflows'))) {
-  if (/^[a-z]+(?:-poster\.webp|-web\.mp4|\.webp|\.webm)$/.test(filename)) {
+  if (/^[a-z]+(?:-poster\.webp|-web\.mp4)$/.test(filename)) {
     await fs.copyFile(path.join(root, 'assets/workflows', filename), path.join(site, 'media/workflows', filename));
   }
 }
