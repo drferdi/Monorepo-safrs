@@ -21,11 +21,15 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   fails; a test pins the schema pattern to the checker's. No contract declares `repository` yet
   (17 WARNINGs; filling them touches capsule files, a separate change). Evidence: new unittest 5/5,
   `project-standalone.test.mjs` 26/26, `test_project_independence` OK, ruff 0, Biome 0 on
-  `contract.mjs` (the test file's other format findings exist in `main`). Open: the checker is not
-  yet in `scripts/safrs-verify.{sh,ps1}`; both are claimed by `TASK-20261011-TOOLS-COVERAGE`
-  (REVIEW, bound to worktree `main`, its change landed as `6933007e`, last update 2026-10-11), and
-  `task transfer` refuses across worktrees by design. `safrs-verify.mjs` only delegates to those
-  two, so it needs no line. CI `safrs-governance.yml` does not list this or the tool checker.
+  `contract.mjs` (the test file's other format findings exist in `main`). On Gaffer's order,
+  `TASK-20261011-TOOLS-COVERAGE` (REVIEW, bound to worktree `main`, its change landed as `6933007e`,
+  last update 2026-10-11) went REVIEW -> MERGED -> CLOSED from the main checkout (registry only;
+  "no active lease for RELEASE" warning). `task transfer` refuses across worktrees by design, and a
+  plain close from REVIEW would have recorded ABORTED. `TASK-20261018-CAPSULE-REMOTE-CHECKER-VERIFY`
+  then registered the checker and its test in `scripts/safrs-verify.{sh,ps1}`, each after its
+  tool-independence pair. `safrs-verify.mjs` only delegates to those two, so it needs no line. Open:
+  CI `safrs-governance.yml` lists neither this nor the tool checker; `TOOLS-REGISTRY` and
+  `TOOLS-BOUNDARY` are stale by the same evidence but were left alone.
 - 2026-10-15 (Claude Code, `feat/devin-adapter` merged to local `main` as `033494e6` on Gaffer's go,
   then `chore/agent-guard-closeout`; the main checkout was switched to `main` on Gaffer's order; branch
   `codex/sentrapedia-website-docs` is unchanged at `d3b35b26`). Grok, which Gaffer uses inside Devin
