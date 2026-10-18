@@ -9,6 +9,17 @@ Sentrapedia has no database server. Its data comes from four places.
 
 The storage is unencrypted and is only for fictional demonstration data. Never enter real patient data. The account dialog can export a backup or clear all local records.
 
+### Format changes
+
+A saved workspace that fails validation is kept under `sentrapedia-workspace-v1-unreadable` and offered as a download, never discarded. A change to the stored format must not rely on that:
+
+- A new format gets a new key (`sentrapedia-workspace-v2`) and reads the v1 blob through `parseWorkspace`, then migrates it in memory. The v1 blob stays untouched, so rolling back to an older build still finds its data.
+- A renamed mode maps the old id to the new one before validation instead of rejecting the message.
+- Every file in `tests/fixtures/workspace/` must keep parsing (`tests/workspace-fixtures.test.ts`); add a fixture for each shape a release writes.
+- Ship the reader before the writer: one release reads the new format while still writing the old one.
+
+The full plan is `docs/plans/active/2026-10-19-workspace-v2-migration.md`.
+
 ## Bundled reference data
 
 - `oracle/sentrapedia.json`: the disease knowledge base (`metadata`, `categories`, `diseases`), read by `src/lib/theoracle.ts`.

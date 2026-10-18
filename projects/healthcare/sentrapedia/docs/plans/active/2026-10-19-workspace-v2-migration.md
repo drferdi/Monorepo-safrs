@@ -1,6 +1,6 @@
 # Plan: a migration path for the workspace storage format (tech-debt row 14)
 
-Status: deferred by Gaffer on 2026-10-19 ("tunda"); nothing is implemented. It concerns clinicians' local data, so it needs Gaffer's "go" before any work. Written 2026-10-19.
+Status: groundwork done 2026-10-19 (Gaffer: "SELESAIKAN SEMUA BEST OPTION"; this session chose what to build). Frozen v1 fixtures and their round-trip tests (`tests/fixtures/workspace/`, `tests/workspace-fixtures.test.ts`) and the rules in `docs/data.md` ("Format changes") are in place. The migration code itself (steps 1 to 3 below) is written together with the first real format change; no v2 format exists yet, so building it now would be code with nothing to migrate.
 
 ## Today
 
