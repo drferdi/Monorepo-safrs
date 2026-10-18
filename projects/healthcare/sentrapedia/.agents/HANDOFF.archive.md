@@ -2,6 +2,18 @@
 
 ## Archived on 2026-10-19 - handoff rotation
 
+## Tech-debt rows 31 and 33 done: MIRA settings and guard owned, site output untracked - 2026-10-18 Asia/Jakarta
+
+- Gaffer: "31: ... Kami menggunakan minimal tiga model, yaitu Claude, OpenAI, dan Gemini. 33: Parallel sudah selesai, website statik juga sudah selesai. Sekarang waktunya untuk benar-benar membersihkan yang tidak terpakai, lalu melakukan commit yang diperlukan." Jev: proceed_full for both.
+- Row 31, `c9f7d16c` (R1): `service/settings.py` and `common/guard.py` are capsule-owned, the Gemini price is in the guard's table, deadline default 20 s; `providers.py` stays pinned. `test:mira` 190 passed, 1 skipped.
+- Row 33, `51549955` (R2): `apps/site/site/` (122 files) is untracked build output; 19 hand-carried files moved to `apps/site/static/`; `transform.mjs` takes an output folder, starts empty and no longer writes into `source/index.html`; `test`, `verify` and `start` build first (`node --run` skips pre-hooks); manifest closure covers `static/` (now 114 files); install-check and the Dockerfile read `static/`. `tests/site-build.test.mjs` failed first (theme CSS had no source), then passed.
+- Row 33, `1b83f371` (R2): removed 33 unreferenced media files (workflow WebM and animated WebP masters, capability stills and films with `generation.json`, `system-anatomy.mp4`, `sentra-neuron-white.png`); `51549955` had already dropped `public/joyful.png`, `public/monitoring.png`, `public/promo-vid.mp4` and `media/system-anatomy.mp4`. `verify.mjs` lost its animated-WebP check with them. `public/child.png` kept (placement decision pending).
+- Pushed 2026-10-18 (Gaffer: "Tapi ya commit dan push saja"; Jev: proceed_full): subtree split `f5616ed3` (tree identical to the capsule at `69101c18`) fast-forwarded Sentrapedia `feat/sentrapedia-hero-workspace` from `711ae40e` (5 commits, no new LFS objects). No force, `main` and origin untouched. CI runs only on `main` and pull requests, so this push started none. `docker build` got past the dependencies layer (postinstall and the site install-check on `static/`) and then stalled in `next build` when Docker Desktop began returning 500s; it was stopped, not finished. This note is a later local commit.
+- Verified after `rm -rf apps/site/site`, in CI order from the capsule root: lint, typecheck, test:all, site:verify, site:docs, build, deploy:dry-run, all exit 0. Not run: `docker build` (no Docker here); the Dockerfile now copies `apps/site/static/` for postinstall.
+- Open: Vercel is not Git-linked and has no build command, so the next CLI deploy must run `npm run build` first and upload `apps/site/site/`. Still waiting for Gaffer: whether to delete `data/dose-inventory/` and `theoracle/provenance/`. README provider wording stays factual (Gemini today) until the other models are wired. 
+
+## Archived on 2026-10-19 - handoff rotation
+
 ## dr. Novia's clinical reasoning contribution - 2026-10-18 Asia/Jakarta
 
 - Gaffer corrected dr. Novia Dwi Anggraini's history-page role: she is a physician who helped design Sentra's clinical reasoning algorithm, not a generic hands-on builder. Risk R1 (public editorial copy only; no clinical logic changed). Uncommitted; no push or deploy.

@@ -177,7 +177,7 @@ Use the npm scripts in the capsule's `package.json`; they wrap everything, inclu
 | `npm run test:all` | All of the above test sets. |
 | `npm run deploy:dry-run` | Checks the build output is self-contained and reports which platform its native binaries are for. Does not deploy. |
 
-`mira/service/smoke_live.py` and `sim_benchmark.py` call the real AI and cost money; treat them as needing owner approval.
+`mira/service/smoke_live.py` and `sim_benchmark.py` call the real AI and cost money; treat them as needing owner approval. `sim_benchmark.py` is a pinned upstream file that runs only from the upstream `assist/` folder: its encounter imports `run_one_case.py` and `mira_adapter`, which the capsule does not ship. In the capsule only its pure functions run, in `test_components.py`.
 
 ## 8. The five files to understand first
 
