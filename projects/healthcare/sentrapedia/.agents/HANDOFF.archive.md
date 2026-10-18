@@ -1,5 +1,16 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-18 - audit follow-up entry and five-entry retention
+
+## Sejarah Sentra editorial subpage - 2026-10-17 Asia/Jakarta
+
+- Follow-up from Gaffer ("sebutkan saja nama saya"): the origin paragraph now names dr. Ferdi Iskandar and the source attribution names him as the writer. Updated `apps/site/source/sejarah-sentra/index.html`, its generated copy, `scripts/sejarah-sentra.test.mjs`, and the migration manifest; no other story facts or layout changed. Reverified build, manifest, lint, test (41/41), verify, docs:verify, and deploy:dry-run (all exit 0).
+- Gaffer: "tambahkan sub page baru, an sejarah Sentra dan ambil dari sini https://ferdiiskandar.com/kisah-sentra" and "Plese read agian the discussion, you my proceed". Risk R1 for public-site presentation, R2 for correcting the affected legal-page outbound-link description. Uncommitted; no push or deploy.
+- Added `apps/site/source/sejarah-sentra/index.html`, `assets/sejarah-sentra.css`, and `scripts/sejarah-sentra.test.mjs`; updated `scripts/transform.mjs`, the homepage footer link, generated `site/` copies, and `docs/migration-manifest.json` (250 files). The page paraphrases the founder's public account as four editorial chronology stops, links the full story visibly, and avoids incident-, mortality-, and efficacy-specific claims. Clinical decisions remain with the physician.
+- Corrected `source/privasi/index.html` and `source/ketentuan/index.html` because both previously claimed there was only one external link; the new founder-story attribution creates a second. Their generated copies were rebuilt. The new test checks this consistency.
+- Verified: `node --run build`, `manifest`, `lint`, `test` (41/41), `verify` (0 errors), `docs:verify` (0 errors), and `deploy:dry-run` all exit 0 from `apps/site/`. The implementation worker checked the local route at desktop and 390px mobile with no horizontal overflow. A separate design evaluator could not run because its usage limit was reached; a later parent browser check was disabled by Work settings, so no independent screenshot evaluation is claimed.
+- Next: review `/sejarah-sentra/` visually in the browser when access is available. Keep the existing uncommitted Ruang Kerja work and unrelated `next-env.d.ts` change intact.
+
 ## Archived on 2026-10-18 - rows 31 and 33 entry and five-entry retention
 
 ## Workspace page takes the policy-page editorial rhythm - 2026-10-17 Asia/Jakarta
