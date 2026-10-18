@@ -1,5 +1,14 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-19 - handoff rotation
+
+## History head menu and two contributor profiles - 2026-10-17 Asia/Jakarta
+
+- Gaffer approved adding `Sejarah Sentra` to the homepage desktop and mobile head menus, plus an editorial people section on the existing `/sejarah-sentra/` page. Gaffer confirmed the spelling Joseph Arianto. Risk R1 (public-site presentation and named contributor copy); uncommitted, no push or deploy.
+- Files: `apps/site/source/index.html`, `source/sejarah-sentra/index.html`, `assets/sejarah-sentra.css`, `scripts/sejarah-sentra.test.mjs`, generated `site/` copies, and `docs/migration-manifest.json` (250 files). The new section names dr. Novia Dwi Anggraini as `Hands-on Builder / Penggerak Implementasi` and Joseph Arianto as `Liaison Officer`, using open editorial rows rather than cards.
+- TDD: the new menu-and-people test failed as expected before implementation (`0 !== 2` menu links). After build and manifest regeneration, full site test passed 42/42; lint, verify (0 errors), docs:verify (0 errors), and deploy:dry-run all exit 0. Browser visual inspection was unavailable because Work settings disable local browser access; desktop/mobile appearance still needs a human look.
+- Next: Gaffer reviews the five-item header and people section visually. Preserve unrelated capsule changes and the existing uncommitted Ruang Kerja work.
+
 ## Archived on 2026-10-18 - tech-debt follow-up entry and five-entry retention
 
 ## Tech-debt rows 13, 19-22, 37 done; 31, 33, 36 and two data folders wait for Gaffer - 2026-10-17 Asia/Jakarta
