@@ -52,7 +52,7 @@ not offered as a runtime feature.
 Build output can run with `node scripts/run-system.mjs standalone` after installing
 its Python lock using `node scripts/install-mira.mjs --production`. Docker performs
 this installation and uses the same supervisor. Runtime secrets are injected at
-launch, never built into the image. Preserve `.runtime/mira-deepseek/audit` when
+launch, never built into the image. The audit ledger records metadata and `requestSha256`/`responseSha256` hashes (never the raw case text) and prunes files older than 14 days at engine start; preserve `.runtime/mira-deepseek/audit` when
 moving an existing local installation so today's budget ledger is retained.
 
 The application retains its existing synthetic-only development boundary. Local

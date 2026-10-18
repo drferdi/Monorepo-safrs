@@ -222,7 +222,7 @@ Runner-up: `src/lib/mira/presentation.ts`, which turns AI output into the clinic
 ### Privacy and security
 
 - **Your Gemini key reaches the web server process.** The launcher passes a full copy of its environment to Next.js. *(Author-checked: `scripts/run-system.mjs:93` spreads `process.env`. That the key sits in that environment is inferred from `.env.local` being loaded at `:69`.)*
-- **The engine's audit log stores the full case and full answer** on disk under `.runtime/mira-deepseek/audit`, although a code comment says case text never appears in logs. *(Author-checked: `mira/service/app.py:151-152`; comment at `mira/service/engine.py:5`.)*
+- **The engine's audit log stores metadata and hashes only, never case text.** Following commit `ed8a09a1`, the ledger records metadata plus `requestSha256` and `responseSha256` under `.runtime/mira-deepseek/audit/`, never the raw case text or answer, and day files older than 14 days are deleted when the engine starts. *(Verified: `mira/service/app.py:150-155`, commit `ed8a09a1`.)*
 - **Two different consent models.** The main composer always declares the case synthetic without asking. The library's "Analisis kasus" form requires a checkbox. *(Author-checked: `src/components/workspace.tsx:122`; `src/components/mira-case-form.tsx:30,55`.)*
 - **Synthetic-only is a policy, not a guarantee.** Identity patterns catch common formats only. *(Verified: `src/lib/mira/contract.ts:17-19`.)*
 - **Browser storage is unencrypted and unbounded.** *(Verified / From docs, TECH-DEBT row 17.)*

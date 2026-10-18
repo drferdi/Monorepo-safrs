@@ -582,7 +582,7 @@ Primary code: [route](src/app/api/mira/route.ts) · [gateway](src/lib/mira/gatew
 
 **Oracle is not TheOracle.** The UI disease catalog reads `oracle/sentrapedia.json`. TheOracle is the single knowledge source for MIRA grounding: 20,423 chunks with local EmbeddingGemma-300m vectors in `theoracle/index/`. The former Oracle II SQLite was removed; its sources and QA moved to `theoracle/provenance/oracle-ii/`. [Its source parser QA](theoracle/provenance/oracle-ii/README.md) documents **72 newly reprocessed PDFs, 8,332 source-page text records and 904 machine-selected literal excerpts**. Machine-selected text may be semantically misclassified: unreviewed candidate fields remain quarantined, not promoted as clinician-approved facts.
 
-The account dialog supports JSON export and clearing browser-local records, but no authenticated multiuser database or guaranteed sync/retention exists. Audit history under `.runtime/mira-deepseek/audit` should be preserved when relocating an existing installation to retain daily-budget context.
+The account dialog supports JSON export and clearing browser-local records, but no authenticated multiuser database or guaranteed sync/retention exists. The MIRA audit ledger under `.runtime/mira-deepseek/audit` records metadata and SHA-256 hashes (`requestSha256` / `responseSha256`, never raw case text) and deletes day files older than 14 days at engine start; preserve it when relocating an existing installation to retain daily-budget context.
 
 
 ### Local development privacy: what the architecture really means
