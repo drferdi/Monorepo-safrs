@@ -1,6 +1,6 @@
 # Database (`@safrs/database`)
 
-> **Scope.** Root workspace package for the **legacy golden-path** demo (Postgres `safrs_local` on `127.0.0.1:54329`). It is **not** the database for SentraBot, Kediri, Avery, or Smartboard. Those capsules own their own schemas. New capsules must not import this package (ADR 0006).
+> **Scope.** Root workspace package behind the root `Demo` store (Postgres `safrs_local` on `127.0.0.1:54329`). The `internal/golden-path` capsule no longer uses it: it carries its own snapshot in `projects/internal/golden-path/packages/database`. It is **not** the database for any capsule; capsules own their own schemas. New capsules must not import this package (ADR 0006).
 
 ## Purpose
 
@@ -25,13 +25,14 @@ Migrations and schema changes here are R2. Production data and destructive produ
 
 `packages/database/prisma/schema.prisma` uses the `prisma-client` generator (`engineType = "client"`, ESM output into `src/generated/prisma`) and a PostgreSQL datasource.
 
-Models present in the schema today:
+Models present in the schema today (five, checked 2026-10-18):
 
 | Model | Role |
 | --- | --- |
-| `Demo` | Golden-path demo record (`demos`) |
-| `User`, `Session`, `Account`, `Verification` | Better Auth tables (golden-path AGENTS lists auth as a non-goal; schema leftover) |
-| `SentraBotDeploymentSettings`, `SentraBotBot`, `SentraBotThread`, `SentraBotThreadMessage`, `SentraBotMemoryDocument`, `SentraBotRoutine` | Product tables left in the **root** schema. Live SentraBot persistence is `projects/product/sentrabot/packages/db`. Treat these root models as a sovereignty defect, not as SentraBot's database. |
+| `Demo` | Demo record (`demos`) |
+| `User`, `Session`, `Account`, `Verification` | Better Auth tables (`user`, `session`, `account`, `verification`); auth is a non-goal of the demo, so these are schema leftovers |
+
+The `SentraBot*` product models are gone from the root schema; SentraBot persistence lives in its capsule (`projects/product/sentrabot/packages/db`).
 
 ## The reset guard
 

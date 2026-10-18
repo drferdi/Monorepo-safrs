@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-18 (Claude Code, `feat/capsule-remote-checker`)
+Last updated: 2026-10-18 (Claude Code, `docs/sentrawiki-refresh`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,18 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-18 (Claude Code, `docs/sentrawiki-refresh`, worktree
+  `../Monorepo.worktrees/sentrawiki-refresh-7f29` from `main` `e3d37073`,
+  `TASK-20261018-SENTRAWIKI-REFRESH`; safe-gaps Module 2). `sentrawiki/projects/index.md` lists all 18
+  capsules by domain (17 with contracts, `internal/control-center` the one known non-conformance);
+  `packages/database.md` names the five root models (`Demo`, `User`, `Session`, `Account`,
+  `Verification`; the `SentraBot*` rows were stale); `reference/dependencies.md` gains a workspace
+  members section and matches the catalog again (`vitest` 4.1.11; seven rows no longer in the
+  catalog removed); `.wiki-meta.json` points at `e3d37073`. Other wiki pages were not re-audited.
+  Also recorded here: Module 1's follow-up `feat/capsule-contract-remotes` (merged as `e3d37073`)
+  closed the stale `TASK-20260927-HEALTHCARE-MIGRATION` (REVIEW -> MERGED -> CLOSED from the main
+  checkout on Gaffer's order; its change is `bce602c9`), so `projects/healthcare/` has no blanket
+  claim any more. Seven contracts now declare `repository`; ten capsules have no known remote.
 - 2026-10-18 (Claude Code, `feat/capsule-remote-checker`, worktree
   `../Monorepo.worktrees/feat-capsule-remote-checker` from `main` `1f056afc`,
   `TASK-20261018-CAPSULE-REMOTE-CHECKER` plus `-HANDOFF`; Module 1 of the gitignored plan
