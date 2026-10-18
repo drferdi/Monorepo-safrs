@@ -387,6 +387,7 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 ## 2026-10-17 - The capsule owns its diverged MIRA service files
 
+- Status: the rule that `common/guard.py` and `service/settings.py` stay pinned is superseded by "2026-10-18 - The capsule owns the MIRA settings and guard"; `common/providers.py` stays pinned.
 - Gaffer chose option A for tech-debt row 15: the 14 files in `mira/` that diverged from upstream are capsule-owned (`owner: capsule` in `mira/SOURCE.json`). They keep `origin` and `sourceSha256` for history, but have no `packagedSha256` and are edited without a repin.
 - Files without an owner stay byte-identical to upstream and pinned. `common/providers.py`, `common/guard.py` and `service/settings.py` may never become capsule-owned; `mira/service/tests/test_packaging.py` enforces both rules.
 
@@ -413,3 +414,14 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 - Gaffer approved a `Sejarah Sentra` link in both homepage head menus, after `Tentang`, while leaving the existing footer link in place.
 - On the existing history page, name dr. Novia Dwi Anggraini as `Hands-on Builder / Penggerak Implementasi` and Joseph Arianto as `Liaison Officer`. Gaffer explicitly confirmed `Arianto` as the correct spelling. Present their contributions as editorial narrative rows rather than generic cards or a separate page.
+
+## 2026-10-18 - The capsule owns the MIRA settings and guard
+
+- Gaffer (tech-debt row 31): Sentrapedia publicly describes agentic model use by task, with at least three models (Claude, OpenAI, Gemini). `service/settings.py` and `common/guard.py` become `owner: capsule` in `mira/SOURCE.json` and keep their origin hashes; `common/providers.py` stays pinned. `mira/service/tests/test_packaging.py` enforces both.
+- Model prices belong in the guard's own `PRICES` table, not in `app.py`. Today's runtime calls Gemini only (`scripts/mira-profile.json`).
+
+## 2026-10-18 - The site's build output is not committed
+
+- Gaffer (tech-debt row 33): "benar-benar membersihkan yang tidak terpakai". `apps/site/site/` is gitignored and rebuilt by `scripts/transform.mjs`; files with no source (theme, vendor copies, `public/child.png`) live in `apps/site/static/`, which the build copies first. The build never writes into `source/`.
+- `test`, `verify` and `start` build first. The Vercel project is not Git-linked and has no build command, so a CLI deploy uploads `apps/site/site/` only after `npm run build`.
+- Media no page loads are removed rather than kept beside the build; history and the LFS remote keep them.

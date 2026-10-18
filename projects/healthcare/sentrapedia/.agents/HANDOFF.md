@@ -1,5 +1,14 @@
 # Sentrapedia handoff
 
+## Tech-debt rows 31 and 33 done: MIRA settings and guard owned, site output untracked - 2026-10-18 Asia/Jakarta
+
+- Gaffer: "31: ... Kami menggunakan minimal tiga model, yaitu Claude, OpenAI, dan Gemini. 33: Parallel sudah selesai, website statik juga sudah selesai. Sekarang waktunya untuk benar-benar membersihkan yang tidak terpakai, lalu melakukan commit yang diperlukan." Jev: proceed_full for both.
+- Row 31, `c9f7d16c` (R1): `service/settings.py` and `common/guard.py` are capsule-owned, the Gemini price is in the guard's table, deadline default 20 s; `providers.py` stays pinned. `test:mira` 190 passed, 1 skipped.
+- Row 33, `51549955` (R2): `apps/site/site/` (122 files) is untracked build output; 19 hand-carried files moved to `apps/site/static/`; `transform.mjs` takes an output folder, starts empty and no longer writes into `source/index.html`; `test`, `verify` and `start` build first (`node --run` skips pre-hooks); manifest closure covers `static/` (now 114 files); install-check and the Dockerfile read `static/`. `tests/site-build.test.mjs` failed first (theme CSS had no source), then passed.
+- Row 33, `1b83f371` (R2): removed 33 unreferenced media files (workflow WebM and animated WebP masters, capability stills and films with `generation.json`, `system-anatomy.mp4`, `sentra-neuron-white.png`); `51549955` had already dropped `public/joyful.png`, `public/monitoring.png`, `public/promo-vid.mp4` and `media/system-anatomy.mp4`. `verify.mjs` lost its animated-WebP check with them. `public/child.png` kept (placement decision pending).
+- Verified after `rm -rf apps/site/site`, in CI order from the capsule root: lint, typecheck, test:all, site:verify, site:docs, build, deploy:dry-run, all exit 0. Not run: `docker build` (no Docker here); the Dockerfile now copies `apps/site/static/` for postinstall.
+- Open: Vercel is not Git-linked and has no build command, so the next CLI deploy must run `npm run build` first and upload `apps/site/site/`. Still waiting for Gaffer: whether to delete `data/dose-inventory/` and `theoracle/provenance/`. README provider wording stays factual (Gemini today) until the other models are wired. Nothing pushed; local commits after `c9f7d16c` are unpushed.
+
 ## dr. Novia's clinical reasoning contribution - 2026-10-18 Asia/Jakarta
 
 - Gaffer corrected dr. Novia Dwi Anggraini's history-page role: she is a physician who helped design Sentra's clinical reasoning algorithm, not a generic hands-on builder. Risk R1 (public editorial copy only; no clinical logic changed). Uncommitted; no push or deploy.
@@ -37,11 +46,3 @@
 - Corrected `source/privasi/index.html` and `source/ketentuan/index.html` because both previously claimed there was only one external link; the new founder-story attribution creates a second. Their generated copies were rebuilt. The new test checks this consistency.
 - Verified: `node --run build`, `manifest`, `lint`, `test` (41/41), `verify` (0 errors), `docs:verify` (0 errors), and `deploy:dry-run` all exit 0 from `apps/site/`. The implementation worker checked the local route at desktop and 390px mobile with no horizontal overflow. A separate design evaluator could not run because its usage limit was reached; a later parent browser check was disabled by Work settings, so no independent screenshot evaluation is claimed.
 - Next: review `/sejarah-sentra/` visually in the browser when access is available. Keep the existing uncommitted Ruang Kerja work and unrelated `next-env.d.ts` change intact.
-
-## Workspace page takes the policy-page editorial rhythm - 2026-10-17 Asia/Jakarta
-
-- Gaffer: "halaman ruang kerja redesigning total agar seperti helaman kebiajan dll" and then "lanjutkan". Risk R1 (public-site presentation only). Uncommitted; no push or deploy.
-- Files: `apps/site/assets/ruang-kerja.css`, generated `apps/site/site/media/ruang-kerja.css`, `apps/site/scripts/ruang-kerja.test.mjs`, and `apps/site/docs/migration-manifest.json`. The HTML and clinical copy did not change; an HTML patch failed on a Unicode context mismatch, so the approved redesign was applied through the existing CSS structure instead.
-- Result: the existing transparent anatomy anchors a left editorial column; the main title and lede use the same local Inter family, scale, rules, and whitespace rhythm as the policy pages; three existing explanations become numbered, full-width reading rows rather than equal cards. Anatomy pause, reduced-motion, links, and native details remain intact.
-- Verified: site build, manifest, lint, test (39/39), verify (0 errors), docs:verify (0 errors), deploy:dry-run, and `git diff --check` all exit 0. Local desktop browser screenshot inspected at top and through the rows; mobile viewport override was unavailable, so mobile appearance remains unverified visually.
-- Next: Gaffer reviews the responsive page in the browser. Preserve the unrelated `next-env.d.ts` edit; do not include it in any site commit.

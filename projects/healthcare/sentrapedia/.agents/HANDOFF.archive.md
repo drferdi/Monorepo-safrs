@@ -1,5 +1,15 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-18 - rows 31 and 33 entry and five-entry retention
+
+## Workspace page takes the policy-page editorial rhythm - 2026-10-17 Asia/Jakarta
+
+- Gaffer: "halaman ruang kerja redesigning total agar seperti helaman kebiajan dll" and then "lanjutkan". Risk R1 (public-site presentation only). Uncommitted; no push or deploy.
+- Files: `apps/site/assets/ruang-kerja.css`, generated `apps/site/site/media/ruang-kerja.css`, `apps/site/scripts/ruang-kerja.test.mjs`, and `apps/site/docs/migration-manifest.json`. The HTML and clinical copy did not change; an HTML patch failed on a Unicode context mismatch, so the approved redesign was applied through the existing CSS structure instead.
+- Result: the existing transparent anatomy anchors a left editorial column; the main title and lede use the same local Inter family, scale, rules, and whitespace rhythm as the policy pages; three existing explanations become numbered, full-width reading rows rather than equal cards. Anatomy pause, reduced-motion, links, and native details remain intact.
+- Verified: site build, manifest, lint, test (39/39), verify (0 errors), docs:verify (0 errors), deploy:dry-run, and `git diff --check` all exit 0. Local desktop browser screenshot inspected at top and through the rows; mobile viewport override was unavailable, so mobile appearance remains unverified visually.
+- Next: Gaffer reviews the responsive page in the browser. Preserve the unrelated `next-env.d.ts` edit; do not include it in any site commit.
+
 ## Archived on 2026-10-18 - clinical reasoning contributor correction and five-entry retention
 
 ## Tech-debt rows 16 (capsule CI) and 32 (README provider and privacy) - 2026-10-17 Asia/Jakarta
