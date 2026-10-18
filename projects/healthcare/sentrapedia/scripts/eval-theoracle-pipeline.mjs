@@ -2,11 +2,11 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { icdNameMatch } from "./icd-name-match.mjs";
 
-const [base, label] = process.argv.slice(2);
-if (!base || !label) throw new Error("usage: node scripts/eval-theoracle-pipeline.mjs http://127.0.0.1:<port> <legacy|targeted>");
-// The eval set and gold labels stay in the 2026-10-11 folder; each run writes into a folder dated today (Asia/Jakarta),
-// so it never overwrites earlier evidence.
-const dir = path.resolve("docs/verification/theoracle-eval-2026-10-11");
+const [base, label, evalDir = "docs/verification/theoracle-eval-2026-10-11"] = process.argv.slice(2);
+if (!base || !label) throw new Error("usage: node scripts/eval-theoracle-pipeline.mjs http://127.0.0.1:<port> <legacy|targeted> [eval-set folder]");
+// The eval set and gold labels are read from evalDir (default: the 2026-10-11 set); each run writes into a folder dated
+// today (Asia/Jakarta), so it never overwrites earlier evidence.
+const dir = path.resolve(evalDir);
 const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" });
 const outDir = path.resolve(`docs/verification/theoracle-eval-${today}`);
 const { queries } = JSON.parse(readFileSync(path.join(dir, "eval-set.json"), "utf8"));

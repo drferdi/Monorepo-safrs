@@ -10,7 +10,8 @@ import ts from "typescript";
 const cache = path.resolve("node_modules/.cache"); mkdirSync(cache, { recursive: true });
 const scratch = mkdtempSync(path.join(cache, "theoracle-grounding-benchmark-"));
 const indexDir = path.resolve("theoracle/index");
-const evalSet = path.resolve("docs/verification/theoracle-eval-2026-10-11/eval-set.json");
+// Usage: node scripts/benchmark-theoracle-grounding.mjs [eval-set folder] (default: the 2026-10-11 set).
+const evalSet = path.resolve(process.argv[2] ?? "docs/verification/theoracle-eval-2026-10-11", "eval-set.json");
 const hash = () => createHash("sha256").update(readFileSync(path.join(indexDir, "vectors.f32"))).update(readFileSync(path.join(indexDir, "chunks.jsonl"))).digest("hex");
 const pct = (values, p) => { const sorted = [...values].sort((a, b) => a - b); return Math.round(sorted[Math.min(sorted.length - 1, Math.floor(p * sorted.length))] * 10) / 10; };
 try {
