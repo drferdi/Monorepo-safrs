@@ -5,6 +5,40 @@ import { resolve } from "node:path";
 import { engineEnvironment, engineReady, geminiBaseUrl, model, pythonPath } from "../scripts/mira-runtime.mjs";
 import profile from "../scripts/mira-profile.json" with { type: "json" };
 
+test("postinstall opt-outs skip MIRA and TheOracle setup with one warning each", async () => {
+  const cases = [
+    {
+      script: "scripts/install-mira.mjs",
+      flag: "SENTRAPEDIA_SKIP_MIRA",
+      warning: "Sentrapedia: instalasi MIRA dilewati karena SENTRAPEDIA_SKIP_MIRA=1.",
+    },
+    {
+      script: "scripts/install-theoracle-model.mjs",
+      flag: "SENTRAPEDIA_SKIP_MODEL",
+      warning: "Sentrapedia: unduhan model TheOracle dilewati karena SENTRAPEDIA_SKIP_MODEL=1.",
+    },
+  ];
+  for (const { script, flag, warning } of cases) {
+    const previousFlag = process.env[flag];
+    const previousExitCode = process.exitCode;
+    const messages = [];
+    const original = { error: console.error, log: console.log, warn: console.warn };
+    process.env[flag] = "1";
+    console.error = () => {};
+    console.log = () => {};
+    console.warn = message => messages.push(message);
+    try {
+      await import(`../${script}?skip-test=${flag}`);
+    } finally {
+      if (previousFlag === undefined) delete process.env[flag];
+      else process.env[flag] = previousFlag;
+      process.exitCode = previousExitCode;
+      Object.assign(console, original);
+    }
+    assert.deepEqual(messages, [warning]);
+  }
+});
+
 test("launcher takes model, step deadline, budget and fast copies from the shared MIRA profile", () => {
   const env = engineEnvironment(resolve("test-capsule"), { GEMINI_API_KEY: "fixture-only" }, "token");
   assert.equal(model, profile.model);
