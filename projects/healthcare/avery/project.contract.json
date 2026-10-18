@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "healthcare/avery",
+  "repository": "https://github.com/drferdi/Averyintelligence.git",
   "owner": "Chief (dr. Ferdi Iskandar)",
   "risk": "R2",
   "runtime": { "name": "python", "version": "3.12" },

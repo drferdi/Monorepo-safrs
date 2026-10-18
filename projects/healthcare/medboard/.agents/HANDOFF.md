@@ -1,11 +1,15 @@
 # HANDOFF
 
-Last updated: 2026-10-07 late night (crew rank, hours, awards and three access levels)
+Last updated: 2026-10-18 (contract `repository` field; before that 2026-10-07 late night: crew rank, hours, awards and three access levels)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`. This file is untracked (git-ignored).
 
 ## Current state
+
+- 2026-10-18 (Claude Code, `TASK-20261018-HEALTHCARE-CONTRACT-REMOTES`): `project.contract.json`
+  declares `repository` `git@github.com:drferdi/Medboard.git` (the `medboard` root remote; the
+  README clone URL). Read by the root `check_capsule_remotes.py`; no lifecycle change.
 
 Branch `feat/sidepanel-ui-batch` (monorepo). This session, on top of `6153e3e5`: `4a6050b2` (rank
 ladder, awards), `cc313320` (CEO / Administrator / User; only the CEO manages levels and deletes),

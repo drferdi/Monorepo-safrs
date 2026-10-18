@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "healthcare/med-assist",
+  "repository": "git@github.com:drferdi/AsistenMedis.git",
   "owner": "Chief (dr. Ferdi Iskandar)",
   "risk": "R2",
   "runtime": {

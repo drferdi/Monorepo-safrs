@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "product/kediri-history",
+  "repository": "https://github.com/drferdi/Kediri-Kings-Century.git",
   "owner": "Chief (dr. Ferdi Iskandar)",
   "risk": "R2",
   "runtime": {

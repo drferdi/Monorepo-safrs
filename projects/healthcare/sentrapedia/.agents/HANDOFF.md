@@ -1,5 +1,9 @@
 # Sentrapedia handoff
 
+## Contract remote - 2026-10-18 Asia/Jakarta
+
+- Claude Code, `TASK-20261018-HEALTHCARE-CONTRACT-REMOTES`: `project.contract.json` declares `repository` `git@github.com:drferdi/Sentrapedia.git` (the `sentrapedia` root remote; the README repository link). Read by the root `check_capsule_remotes.py`; no lifecycle change.
+
 ## Public site on Vercel, WIP notice - 2026-10-15 Asia/Jakarta
 
 - GitHub and monorepo are in sync. `drferdi/Sentrapedia` main went `9b8e4746` -> `2b371155` (pushed by the agent on Gaffer's "Samakan GitHub", fast-forward, no force; publish worktree `D:\DEV\monorepo.worktrees\sentrapedia-publish`, split branch `sentrapedia-site-split`). Gates on the pushed tree: typecheck, lint, `test:all` (288 + site 15 + system 8 + MIRA 180/1 skipped), build, deploy dry-run; sanitation clean. GitHub reports 1 high Dependabot alert (not read).

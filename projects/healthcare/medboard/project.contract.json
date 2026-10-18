@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "healthcare/medboard",
+  "repository": "git@github.com:drferdi/Medboard.git",
   "owner": "Chief (dr. Ferdi Iskandar)",
   "risk": "R2",
   "runtime": {
