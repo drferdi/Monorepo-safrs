@@ -1,6 +1,7 @@
 import { modeIds, type ModeId } from "./drafts";
 import type { Encounter, Message, Workspace } from "./workspace";
 import { missingField } from "./clinical-templates";
+import { record, text } from "./guards";
 
 export interface PersonalTemplate { id: string; name: string; mode: ModeId; sections: string[]; instructions: string }
 export interface ReviewItem { id: string; label: string; required: boolean; checked: boolean; target: string }
@@ -30,8 +31,6 @@ export function saveLocalWorkspace(state: Workspace, write: (raw: string) => voi
   catch { return "Perubahan belum tersimpan ke browser. Ekspor backup dari profil workspace untuk menyimpan salinan."; }
 }
 
-function record(value: unknown): value is Record<string, unknown> { return !!value && typeof value === "object" && !Array.isArray(value); }
-function text(value: unknown, max: number): value is string { return typeof value === "string" && value.length <= max; }
 function date(value: unknown): value is string { return typeof value === "string" && Number.isFinite(Date.parse(value)); }
 export function validTemplate(value: unknown): value is PersonalTemplate {
   return record(value) && text(value.id, 100) && !!value.id && text(value.name, 80) && !!value.name.trim() && modeIds.includes(value.mode as ModeId) && text(value.instructions, 2000) && Array.isArray(value.sections) && value.sections.length > 0 && value.sections.length <= 20 && value.sections.every((item) => text(item, 80) && !!item.trim() && !/[\r\n]/.test(item)) && new Set(value.sections.map((item: string) => item.toLowerCase())).size === value.sections.length;

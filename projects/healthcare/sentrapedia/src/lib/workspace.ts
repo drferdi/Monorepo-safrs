@@ -1,4 +1,5 @@
 import { modeIds, type ModeId } from "./drafts";
+import { record } from "./guards";
 
 import { changedMessage, cleanWorkflowEncounter, cleanWorkflowMessage, cleanWorkflowState, reviewComplete, workflowReducer, type PersonalTemplate, type ReviewItem, type Revision, type WorkflowAction, type WorkStatus, type WorkTask } from "./workflow";
 
@@ -71,7 +72,6 @@ export function workspaceReducer(state: Workspace, action: WorkspaceAction): Wor
   }
 }
 
-function record(value: unknown): value is Record<string, unknown> { return typeof value === "object" && value !== null && !Array.isArray(value); }
 function strings(value: unknown, keys: string[]): boolean { return record(value) && keys.every((key) => typeof value[key] === "string"); }
 
 // Builds before 2026-10-09 seeded the demo patient as "Patient"; only that untouched seed text now reads "Pasien".

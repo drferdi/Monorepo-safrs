@@ -1,17 +1,17 @@
 import type { MiraResult, MiraTherapy } from "./mira/contract";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "./theoracle-grounding-types";
 import { referenceIncludes, theOracleDiseases } from "./theoracle";
+import { objectLike } from "./guards";
 
 export type GateStatus = "verified" | "doseRemoved" | "removed";
 // `dose` (and `drug`) are the raw model strings, kept for audit only; never display them.
 export interface GateDrug { drug: string; dose: string; status: GateStatus; evidenceIds: string[] }
 export interface EvidenceGateReport { forDiagnosis: { icd10: string; label: string }; therapyRemoved: boolean; reason: string; drugs: GateDrug[] }
 
-const isRecord = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object";
 const GATE_STATUSES: readonly unknown[] = ["verified", "doseRemoved", "removed"];
 export function validGate(value: unknown): value is EvidenceGateReport {
-  return isRecord(value) && isRecord(value.forDiagnosis) && typeof value.forDiagnosis.icd10 === "string" && typeof value.forDiagnosis.label === "string" && typeof value.therapyRemoved === "boolean" && typeof value.reason === "string" && Array.isArray(value.drugs)
-    && value.drugs.every(d => isRecord(d) && typeof d.drug === "string" && typeof d.dose === "string" && GATE_STATUSES.includes(d.status) && Array.isArray(d.evidenceIds) && d.evidenceIds.every(id => typeof id === "string"));
+  return objectLike(value) && objectLike(value.forDiagnosis) && typeof value.forDiagnosis.icd10 === "string" && typeof value.forDiagnosis.label === "string" && typeof value.therapyRemoved === "boolean" && typeof value.reason === "string" && Array.isArray(value.drugs)
+    && value.drugs.every(d => objectLike(d) && typeof d.drug === "string" && typeof d.dose === "string" && GATE_STATUSES.includes(d.status) && Array.isArray(d.evidenceIds) && d.evidenceIds.every(id => typeof id === "string"));
 }
 
 const UNVERIFIED = " (belum terverifikasi)";

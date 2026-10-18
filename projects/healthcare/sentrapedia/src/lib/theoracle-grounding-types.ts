@@ -1,3 +1,5 @@
+import { filledText, record } from "./guards";
+
 export const THEORACLE_GROUNDING_CAPABILITY = "theoracle-grounding-v2" as const;
 
 // Evidence text is the stored chunk without its metadata header, whitespace collapsed;
@@ -44,17 +46,15 @@ export class TheOracleGroundingError extends Error {
   }
 }
 
-const record = (value: unknown): value is Record<string, unknown> => !!value && typeof value === "object" && !Array.isArray(value);
 const hash = (value: unknown): boolean => typeof value === "string" && /^[a-f0-9]{64}$/.test(value);
-const text = (value: unknown, max = 500): value is string => typeof value === "string" && !!value.trim() && value.length <= max;
 
 export function validTheOracleGrounding(value: unknown): value is TheOracleGroundingBundle {
-  if (!record(value) || value.version !== THEORACLE_GROUNDING_CAPABILITY || !record(value.corpus) || value.corpus.name !== "TheOracle" || !hash(value.corpus.indexSha256) || !text(value.corpus.retrievedAt, 64) || !Number.isFinite(Date.parse(value.corpus.retrievedAt)) || !text(value.corpus.reviewProvenance) || !hash(value.queryDigest) || !Array.isArray(value.evidence) || value.evidence.length < 1 || value.evidence.length > 6) return false;
+  if (!record(value) || value.version !== THEORACLE_GROUNDING_CAPABILITY || !record(value.corpus) || value.corpus.name !== "TheOracle" || !hash(value.corpus.indexSha256) || !filledText(value.corpus.retrievedAt, 64) || !Number.isFinite(Date.parse(value.corpus.retrievedAt)) || !filledText(value.corpus.reviewProvenance, 500) || !hash(value.queryDigest) || !Array.isArray(value.evidence) || value.evidence.length < 1 || value.evidence.length > 6) return false;
   const model = value.corpus.embeddingModel;
-  if (!record(model) || !text(model.id, 200) || !/^[a-f0-9]{40}$/.test(String(model.revision)) || !text(model.dtype, 16) || typeof model.dims !== "number" || !Number.isSafeInteger(model.dims) || model.dims < 1) return false;
+  if (!record(model) || !filledText(model.id, 200) || !/^[a-f0-9]{40}$/.test(String(model.revision)) || !filledText(model.dtype, 16) || typeof model.dims !== "number" || !Number.isSafeInteger(model.dims) || model.dims < 1) return false;
   return value.evidence.every((item: unknown, index: number) => {
-    if (!record(item) || !text(item.evidenceId, 100) || !text(item.text, 2400) || item.retrievalRank !== index + 1 || typeof item.similarity !== "number" || !Number.isFinite(item.similarity) || item.similarity < -1 || item.similarity > 1 || !record(item.source)) return false;
+    if (!record(item) || !filledText(item.evidenceId, 100) || !filledText(item.text, 2400) || item.retrievalRank !== index + 1 || typeof item.similarity !== "number" || !Number.isFinite(item.similarity) || item.similarity < -1 || item.similarity > 1 || !record(item.source)) return false;
     const source = item.source;
-    return text(source.title) && text(source.docSource) && text(source.origin, 100) && hash(source.textSha256);
+    return filledText(source.title, 500) && filledText(source.docSource, 500) && filledText(source.origin, 100) && hash(source.textSha256);
   });
 }
