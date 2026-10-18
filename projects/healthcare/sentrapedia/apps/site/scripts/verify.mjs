@@ -13,7 +13,6 @@ for (const entry of manifest.files) {
   if (sha(await fs.readFile(path.join(site, entry.path))) !== entry.sha256) errors.push(`Presentation changed: ${entry.path}`);
 }
 const current = await fs.readFile(path.join(site, 'index.html'), 'utf8');
-if (current !== await fs.readFile(path.join(root, 'source/index.html'), 'utf8')) errors.push('Homepage differs from source template');
 if (!current.includes('<title>Sentrapedia</title>') || !current.includes('kewenangan dokter yang menangani')) errors.push('Product identity or physician ownership copy missing');
 const ids = new Set([...current.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]));
 const outboundLinks = new Set(['https://melinda.co.id/']); // Gaffer-approved outbound links; every other target stays self-hosted

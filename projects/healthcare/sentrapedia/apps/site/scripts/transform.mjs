@@ -7,8 +7,10 @@ import { renderCapabilityAnatomy } from './capability-anatomy.mjs';
 import { capabilityPanelSlugs, renderCapabilityPanel } from './capability-panels.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const site = path.join(root, 'site');
-await fs.mkdir(site, { recursive: true });
+const site = path.resolve(process.argv[2] ?? path.join(root, 'site'));
+await fs.rm(site, { recursive: true, force: true });
+await fs.cp(path.join(root, 'static'), site, { recursive: true });
+for (const directory of ['media', 'assets/brand']) await fs.mkdir(path.join(site, directory), { recursive: true });
 const original = await fs.readFile(path.join(root, 'source/index.html'), 'utf8');
 const note = /<!-- clinical-note:start -->[\s\S]*?<!-- clinical-note:end -->/g;
 if ([...original.matchAll(note)].length !== 1) throw new Error('Expected exactly one clinical note fragment');
@@ -35,7 +37,6 @@ if (existingLive.length === slugs.length) {
   let index = 0;
   homepage = homepage.replace(legacyFigures, () => renderCapabilityPanel(slugs[index++]));
 } else throw new Error('Incomplete capability panel fragments');
-if (homepage !== original) await fs.writeFile(path.join(root, 'source/index.html'), homepage);
 await fs.writeFile(path.join(site, 'index.html'), homepage);
 await fs.mkdir(path.join(site, 'faq'), { recursive: true });
 await fs.copyFile(path.join(root, 'source/faq/index.html'), path.join(site, 'faq/index.html'));

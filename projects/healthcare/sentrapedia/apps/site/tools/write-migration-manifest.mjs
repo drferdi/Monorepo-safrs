@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const manifestPath = path.join(root, 'docs/migration-manifest.json');
-const directories = ['source', 'assets', 'site', 'reference', 'scripts'];
+const directories = ['source', 'assets', 'static', 'reference', 'scripts'];
 const excluded = new Set(['reference/verification.json']);
 
 async function filesUnder(directory) {
