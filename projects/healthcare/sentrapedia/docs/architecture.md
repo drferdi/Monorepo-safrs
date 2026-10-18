@@ -183,7 +183,7 @@ Use the npm scripts in the capsule's `package.json`; they wrap everything, inclu
 
 1. **`src/lib/mira/gateway.ts`.** The trust boundary: every server-side safety check, timeout, cost check and error message, and the diagnosis-then-therapy-then-dose-gate pipeline.
 2. **`scripts/run-system.mjs` with `scripts/mira-runtime.mjs`.** How the system starts, which provider and key are used, the budget, ports and restarts.
-3. **`src/components/workspace.tsx`.** The one page component: app state, saving, and whether a request goes to AI or a template. Dense; covered by the UI smoke test only.
+3. **`src/components/workspace.tsx`.** The one page component: app state and whether a request goes to AI or a template. Saving, restore, media queries and the toast live in `workspace-hooks.ts`; the header, home, conversation and chat composer in `workspace-views.tsx`; the record dialogs in `workspace-forms.tsx`. Covered by the UI smoke tests.
 4. **`mira/service/engine.py`.** Deadlines, cost caps, the error circuit breaker, and how every failure becomes a safe "unavailable" answer.
 5. **`src/lib/theoracle-grounding.ts`.** Decides which evidence the AI sees.
 
