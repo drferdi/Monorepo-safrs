@@ -1,8 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { spawn } from "node:child_process";
-import { resolve } from "node:path";
-import { engineEnvironment, engineReady, geminiBaseUrl, model, nextRestart, pythonPath } from "../scripts/mira-runtime.mjs";
+import { createHash } from "node:crypto";
+import { once } from "node:events";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
+import { engineEnvironment, engineReady, geminiBaseUrl, installedPython, lockDigest, model, nextRestart, pythonPath } from "../scripts/mira-runtime.mjs";
+import { fileSha256, profile as oracleModel } from "../scripts/theoracle-model.mjs";
 import profile from "../scripts/mira-profile.json" with { type: "json" };
 
 test("postinstall opt-outs skip MIRA and TheOracle setup with one warning each", async () => {
@@ -143,4 +148,57 @@ test("launcher calls the workspace health check once Next answers, so TheOracle 
   assert.equal(warmed, true);
   assert.deepEqual(calls, Array(3).fill("http://127.0.0.1:3101/api/mira"));
   assert.equal(await warmWorkspace("http://127.0.0.1:3101", async () => { throw new Error("ECONNREFUSED"); }, 20, 1), false);
+});
+
+test("launcher refuses an unknown mode before it reads keys or starts anything", async () => {
+  const child = spawn(process.execPath, [resolve("scripts/run-system.mjs"), "bogus"], { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+  let stderr = "";
+  child.stderr.on("data", data => { stderr += data.toString(); });
+  const [code] = await once(child, "exit");
+  assert.equal(code, 1);
+  assert.equal(stderr.trim(), "Gunakan dev, start, standalone, atau check.");
+});
+
+test("the installed MIRA runtime is used only while its stamp matches the current lock", () => {
+  const root = mkdtempSync(join(tmpdir(), "sentrapedia-runtime-"));
+  try {
+    mkdirSync(join(root, "mira"));
+    writeFileSync(join(root, "mira/requirements.lock"), "fastapi==1.0\n");
+    assert.throws(() => installedPython(root), /Runtime MIRA lokal belum terpasang/);
+    mkdirSync(dirname(pythonPath(root)), { recursive: true });
+    writeFileSync(pythonPath(root), "");
+    writeFileSync(join(root, ".runtime/mira/installed.json"), JSON.stringify({ lockSha256: lockDigest(root) }));
+    assert.equal(installedPython(root), pythonPath(root));
+    writeFileSync(join(root, "mira/requirements.lock"), "fastapi==2.0\n");
+    assert.throws(() => installedPython(root), /lock berubah/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("the venv interpreter path follows the platform", () => {
+  assert.equal(pythonPath("/capsule", "win32"), resolve("/capsule", ".runtime/mira/venv/Scripts/python.exe"));
+  assert.equal(pythonPath("/capsule", "linux"), resolve("/capsule", ".runtime/mira/venv/bin/python"));
+});
+
+test("the restart wait never exceeds the cap when more crashes are allowed", () => {
+  assert.deepEqual(nextRestart(5, 0, { maxCrashes: 10 }), { crashes: 6, delayMs: 30000 });
+});
+
+test("the model download fetches exactly the model the TheOracle manifest pins", () => {
+  const manifest = JSON.parse(readFileSync(resolve("theoracle/index/manifest.json"), "utf8"));
+  assert.deepEqual({ id: oracleModel.id, revision: oracleModel.revision, dtype: oracleModel.dtype, dims: oracleModel.dims, files: oracleModel.files }, manifest.model);
+  assert.deepEqual(oracleModel.prefixes, manifest.prefixes);
+  assert.equal(oracleModel.maxTokens, manifest.maxTokens);
+  assert.equal(oracleModel.pooling, manifest.pooling);
+});
+
+test("the download check hashes a file the same way the manifest does", async () => {
+  const root = mkdtempSync(join(tmpdir(), "sentrapedia-hash-"));
+  try {
+    writeFileSync(join(root, "file.bin"), "theoracle");
+    assert.equal(await fileSha256(join(root, "file.bin")), createHash("sha256").update("theoracle").digest("hex"));
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });
