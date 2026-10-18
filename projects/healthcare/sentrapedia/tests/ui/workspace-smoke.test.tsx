@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { WorkspaceApp } from "../../src/components/workspace";
 import { initialWorkspace, storageKey, unreadableKey, type Encounter } from "../../src/lib/workspace";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
@@ -131,6 +131,12 @@ describe("workspace UI smoke tests", () => {
     };
 
     Element.prototype.scrollIntoView = vi.fn();
+    HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+      this.setAttribute("open", "");
+    });
+    HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+      this.removeAttribute("open");
+    });
 
     global.fetch = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
@@ -152,6 +158,7 @@ describe("workspace UI smoke tests", () => {
   });
 
   afterEach(() => {
+    cleanup();
     vi.useRealTimers();
     vi.restoreAllMocks();
   });
@@ -244,5 +251,117 @@ describe("workspace UI smoke tests", () => {
 
     // Assert that raw text is kept under unreadableKey backup
     expect(localStorage.getItem(unreadableKey)).toBe(corruptData);
+  });
+  it("toggles focus mode button aria-pressed and label between Aktifkan and Keluar", async () => {
+    render(<WorkspaceApp />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const activateBtn = screen.getByRole("button", { name: "Aktifkan Focus Mode" });
+    expect(activateBtn.getAttribute("aria-pressed")).toBe("false");
+
+    fireEvent.click(activateBtn);
+
+    const exitBtn = screen.getByRole("button", { name: "Keluar Focus Mode" });
+    expect(exitBtn.getAttribute("aria-pressed")).toBe("true");
+
+    fireEvent.click(exitBtn);
+
+    const restoredBtn = screen.getByRole("button", { name: "Aktifkan Focus Mode" });
+    expect(restoredBtn.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("opens the command palette dialog from header button and removes it on close", async () => {
+    render(<WorkspaceApp />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    const openCommandsBtn = screen.getByRole("button", { name: "Buka pusat perintah" });
+    fireEvent.click(openCommandsBtn);
+
+    expect(screen.getByRole("dialog")).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Pusat perintah" })).toBeDefined();
+
+    const closeBtn = screen.getByRole("button", { name: "Tutup dialog" });
+    fireEvent.click(closeBtn);
+
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("opens command palette on Ctrl+J and ignores Ctrl+J while dialog is open", async () => {
+    render(<WorkspaceApp />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(screen.queryByRole("dialog")).toBeNull();
+
+    // Ctrl+J opens the command palette
+    fireEvent.keyDown(window, { key: "j", ctrlKey: true });
+
+    expect(screen.getByRole("dialog")).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Pusat perintah" })).toBeDefined();
+
+    // While dialog is open, pressing Ctrl+J again does nothing new
+    fireEvent.keyDown(window, { key: "j", ctrlKey: true });
+
+    expect(screen.getAllByRole("dialog").length).toBe(1);
+    expect(screen.getByRole("heading", { name: "Pusat perintah" })).toBeDefined();
+  });
+
+  it("completes a dialog round trip for Settings and keeps the composer intact", async () => {
+    render(<WorkspaceApp />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    // Composer textarea is present initially
+    expect(screen.getByLabelText("Pertanyaan atau catatan klinis")).toBeDefined();
+
+    // Open settings dialog through the UI
+    const settingsBtn = screen.getByRole("button", { name: "Pengaturan Agent" });
+    fireEvent.click(settingsBtn);
+
+    expect(screen.getByRole("dialog")).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Sesuaikan workspace" })).toBeDefined();
+
+    // Close the dialog
+    const closeBtn = screen.getByRole("button", { name: "Tutup dialog" });
+    fireEvent.click(closeBtn);
+
+    // Assert dialog is gone and composer is still there
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.getByLabelText("Pertanyaan atau catatan klinis")).toBeDefined();
+  });
+
+  it("shows a status toast when an action calls notify", async () => {
+    render(<WorkspaceApp />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    // Open create patient dialog through the UI
+    const createPatientBtn = screen.getByRole("button", { name: "Buat Pasien" });
+    fireEvent.click(createPatientBtn);
+
+    const dialog = screen.getByRole("dialog");
+    expect(screen.getByRole("heading", { name: "Buat Pasien" })).toBeDefined();
+
+    // Fill in patient name
+    const nameInput = screen.getByLabelText(/Nama Pasien/i);
+    fireEvent.change(nameInput, { target: { value: "Pasien Uji Coba" } });
+
+    // Submit patient form
+    const submitBtn = within(dialog).getByRole("button", { name: "Buat Pasien" });
+    fireEvent.click(submitBtn);
+
+    // Assert that role="status" toast appears with notify text
+    expect(screen.queryByRole("dialog")).toBeNull();
+    const statusElements = screen.getAllByRole("status");
+    const toast = statusElements.find((el) => el.textContent?.includes("Pasien dibuat. Encounter pertama siap digunakan."));
+    expect(toast).toBeDefined();
+    expect(toast?.getAttribute("role")).toBe("status");
   });
 });
