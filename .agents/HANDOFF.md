@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-10-18 (Claude Code, `feat/control-center-sovereignty`)
+Last updated: 2026-10-18 (Claude Code, `chore/safe-gaps-closeout`)
 History: `git show 4e4e10ec:.agents/HANDOFF.md` (full log through 2026-10-12) and `git log -- .agents/HANDOFF.md`.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
@@ -9,6 +9,16 @@ Overwrite this file only for control-plane work. Keep another live session's ope
 
 ## Current state
 
+- 2026-10-18 (Claude Code, `chore/safe-gaps-closeout`, worktree `safe-gaps-closeout-7f29` from `main`
+  `e5485fcb`, `TASK-20261018-SAFE-GAPS-CLOSEOUT`): the safe-gaps plan (Modules 1-3) is fully in local
+  `main` (`ea19118a`, `e3d37073`, `220105cb`, `afdd7ea9`, `e5485fcb`; nothing pushed). This closeout
+  runs `check_capsule_remotes.py` and its test in CI `safrs-governance.yml` (after the capsule
+  independence steps) and records the control-center placement in DECISIONS. Still open, each
+  needing Gaffer: root `pnpm lint` has 21 errors, all in files this work never touched
+  (`.agents/skills/superpowers/**`, `.claude/hooks/format-edited-file.mjs`,
+  `.cursor/hooks/guard-shell.mjs`); root `pnpm test` was not run (needs `DATABASE_URL` and Docker);
+  `safrs-no-capsules.yml` still exempts control-center from the no-capsule publication rule; CI does
+  not run `check_tool_independence.py` either; ten capsules declare no `repository`.
 - 2026-10-18 (Claude Code, `feat/control-center-sovereignty` on top of `docs/sentrawiki-refresh`, same
   worktree `sentrawiki-refresh-7f29`, `TASK-20261018-CONTROL-CENTER-SOVEREIGNTY`; safe-gaps Module 3,
   Gaffer's order after being told ADR 0007 leaves the placement open). Step A: control-center is a

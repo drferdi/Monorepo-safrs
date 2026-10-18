@@ -47,6 +47,12 @@ jobs:
       - name: Test capsule independence invariants
         run: python tests/architecture/test_project_independence.py
 
+      - name: Enforce capsule Git remotes
+        run: python tools/safrs/check_capsule_remotes.py
+
+      - name: Test capsule remote invariants
+        run: python tests/architecture/test_capsule_remotes.py
+
       - name: Enforce immutable GitHub Action pins
         run: python tools/safrs/check_actions_pinning.py
 

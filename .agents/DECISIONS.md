@@ -3,6 +3,22 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-10-18 - control-center stays in `projects/` as a standalone capsule
+
+ADR 0007 left the placement of `internal/control-center` open ("reads the repository by design and
+may belong to the root control plane rather than `projects/`"). Told that the question was open,
+Gaffer ordered the 2026-10-18 safe-gaps plan carried out end to end, and that plan makes it a
+standalone capsule. It stays at `projects/internal/control-center`: own pnpm workspace, lockfile and
+`@sentra/token` snapshot, excluded from the root workspace, with `project.contract.json` (merged as
+`e5485fcb`, `.safrs/known-nonconformance.json` now empty). The repository it reports on is data,
+not a lifecycle dependency: it finds the checkout by walking up or through `SENTRA_REPO_ROOT`, and
+renders "Repository tidak ditemukan" outside one, so extraction passes (`pnpm project:verify
+internal/control-center` PASS). The step that pairs the contract with the entry removal had
+Gaffer's own integrity record (`human:gaffer`, base `afdd7ea9`) after a read-only `safrs-auditor`
+ACCEPT. Not changed: ADR 0007 text, and `.github/workflows/safrs-no-capsules.yml`, which still lets
+control-center publish with the monorepo; whether a sovereign capsule should keep that exception is
+a separate decision.
+
 ## 2026-10-15 - Temporary worktrees get a unique per-session suffix
 
 A task binds to `worktree_id` `worktrees/<directory name>` (from `git rev-parse --git-dir`), and
