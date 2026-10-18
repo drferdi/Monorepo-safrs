@@ -42,7 +42,7 @@ describe("approved Gemini Flash profile", () => {
     expect(calls).toBe(1);
   });
   it("distinguishes upstream timeout, budget and policy errors without exposing raw messages", async () => {
-    for (const [code, status] of [["TIMEOUT", 504], ["BUDGET_EXHAUSTED", 429], ["STEP_BUDGET_EXCEEDED", 429], ["PROVIDER_POLICY", 503], ["MODEL_ERROR", 502], ["MODEL_OUTPUT_INVALID", 502], ["CONTRACT_MISMATCH", 502], ["API_ERRORS", 503], ["UNKNOWN", 503]] as const) {
+    for (const [code, status] of [["TIMEOUT", 504], ["BUDGET_EXHAUSTED", 429], ["STEP_BUDGET_EXCEEDED", 429], ["PROVIDER_POLICY", 503], ["MODEL_ERROR", 502], ["MODEL_OUTPUT_INVALID", 502], ["CONTRACT_MISMATCH", 502], ["API_ERRORS", 503], ["PROVIDER_AUTH", 503], ["UNKNOWN", 503]] as const) {
       const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, status: "unavailable", error: { code, message: "private raw provider message" } }) });
       const response = await gateway.step(input());
       const body = await response.json();
@@ -52,6 +52,10 @@ describe("approved Gemini Flash profile", () => {
       expect(JSON.stringify(body)).not.toContain("private raw provider message");
       expect(JSON.stringify(body)).not.toContain("MIRA");
     }
+  });
+  it("tells the clinician to check the key when the provider rejects it", async () => {
+    const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, status: "unavailable", error: { code: "PROVIDER_AUTH", message: "private raw provider message" } }) });
+    expect((await (await gateway.step(input())).json()).error).toMatchObject({ code: "PROVIDER_AUTH", message: "Kunci API ditolak, periksa GEMINI_API_KEY." });
   });
   it("pins gemini-3.1-flash-lite on the direct Gemini API for both stages, synthetic-only", () => {
     expect(selectedMiraModel).toBe("gemini-3.1-flash-lite");

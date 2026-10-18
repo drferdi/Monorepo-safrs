@@ -124,6 +124,7 @@ export function createMiraGateway(options: Options = {}) {
             PROVIDER_POLICY: { status: 503, message: "Layanan analisis belum tersedia dengan kebijakan privasi yang ditetapkan." },
             API_ERRORS: { status: 503, message: "Layanan analisis dijeda sementara setelah beberapa kegagalan. Coba kembali beberapa saat lagi." },
             MODEL_ERROR: { status: 502, message: "Penyedia analisis sedang mengalami gangguan. Pertanyaan tetap tersedia." },
+            PROVIDER_AUTH: { status: 503, message: "Kunci API ditolak, periksa GEMINI_API_KEY." },
             MODEL_OUTPUT_INVALID: { status: 502, message: "Hasil analisis tidak dapat diverifikasi. Tidak ada hasil yang disimpan." },
             CONTRACT_MISMATCH: { status: 502, message: "Format hasil analisis tidak sesuai. Tidak ada hasil yang disimpan." },
           };

@@ -14,7 +14,7 @@ import os
 import time
 from dataclasses import replace
 
-from openai import APITimeoutError
+from openai import APITimeoutError, AuthenticationError, PermissionDeniedError
 
 from common.guard import ApiGuard, RunAborted
 from common.providers import is_policy_failure, openrouter_extra_body
@@ -149,6 +149,9 @@ class StepEngine:
         except APITimeoutError:
             # A slow call is the step deadline, not an API failure: it must not pause the service.
             raise StepFailed("TIMEOUT", f"{role} call exceeded the step deadline") from None
+        except (AuthenticationError, PermissionDeniedError):
+            # A rejected or revoked key is configuration, not an outage: no pause; the clinician is told to check the key.
+            raise StepFailed("PROVIDER_AUTH", f"{role} call: API key rejected") from None
         except Exception as exc:
             if is_policy_failure(exc) and self.settings.llm_provider == "openrouter":
                 # No provider meets the privacy policy. Not an outage: no pause, no retry without it.

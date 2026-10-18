@@ -6,6 +6,8 @@ import json
 import logging
 from datetime import UTC, datetime, timedelta
 
+import httpx
+import openai
 import pytest
 
 from service import postchecks
@@ -264,6 +266,18 @@ def test_model_error_is_unavailable_and_repeated_errors_pause_calls(make_client,
     codes = [post(client, example_request).json()["error"]["code"] for _ in range(4)]
     assert codes == ["MODEL_ERROR", "MODEL_ERROR", "MODEL_ERROR", "API_ERRORS"]
     assert len(fake.calls) == 3
+
+
+def test_a_rejected_key_is_its_own_error_and_never_pauses_calls(make_client, example_request):
+    request = httpx.Request("POST", "https://provider.invalid/v1/chat/completions")
+    rejected = [
+        openai.AuthenticationError("invalid key", response=httpx.Response(401, request=request), body=None),
+        openai.PermissionDeniedError("revoked key", response=httpx.Response(403, request=request), body=None),
+    ]
+    client, fake = make_client(rejected * 2, max_consecutive_api_errors=3)
+    codes = [post(client, example_request).json()["error"]["code"] for _ in range(4)]
+    assert codes == ["PROVIDER_AUTH"] * 4
+    assert len(fake.calls) == 4
 
 
 def test_unparseable_model_output_is_unavailable(make_client, example_request):
