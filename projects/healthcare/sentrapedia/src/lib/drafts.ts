@@ -4,6 +4,8 @@ import { missingField, missingFieldEnglish } from "./clinical-templates";
 
 export const modeIds = ["question", "ddx", "ap", "clinic", "hpi", "telephone", "chronic", "handoff", "tasks", "avs", "education", "referral", "authorization", "scribe", "workup", "refer", "monitoring", "icd10"] as const;
 export type ModeId = typeof modeIds[number];
+export const draftModels = ["Standard", "Extended"] as const;
+export const draftLanguages = ["English", "Bahasa Indonesia"] as const;
 export const modes: { id: ModeId; label: string; title: string; description: string; placeholder: string }[] = [
   { id: "hpi", label: "Anamnesis (HPI)", title: "History of present illness", description: "Susun riwayat Presenting Concern.", placeholder: "Jelaskan Onset, Duration, Course, dan Associated Symptoms..." },
   { id: "clinic", label: "Catatan Klinis (SOAP)", title: "Catatan Klinis", description: "Susun Catatan Klinis dari detail klinis yang diberikan.", placeholder: "Tambahkan History, Examination, Assessment, dan Plan..." },
@@ -25,7 +27,7 @@ export const modes: { id: ModeId; label: string; title: string; description: str
   { id: "authorization", label: "Persetujuan Penjaminan (Prior Authorization)", title: "Prior authorization", description: "Susun permintaan penjaminan dengan detail pendukung.", placeholder: "Masukkan layanan, Clinical Indication, dan Previous Treatments..." },
 ];
 
-export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: "Standard" | "Extended"; language: "English" | "Bahasa Indonesia"; patient?: Patient; instructions: string }
+export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; patient?: Patient; instructions: string }
 
 export function createDraft(input: DraftInput): string {
   const prompt = input.prompt.trim();

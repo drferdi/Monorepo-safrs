@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { record } from "./guards";
 import type { CaseState } from "./mira/types";
 import {
   THEORACLE_GROUNDING_CAPABILITY,
@@ -41,6 +42,16 @@ const fileSha256 = (file: string) => new Promise<string>((done, fail) => {
   createReadStream(file).on("error", fail).on("data", chunk => hash.update(chunk)).on("end", () => done(hash.digest("hex")));
 });
 const unavailable = (message: string) => new TheOracleGroundingError("THEORACLE_UNAVAILABLE", message);
+const isText = (value: unknown): value is string => typeof value === "string";
+const isNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
+// Every manifest field that loading, embedding and the bundle read; extra fields are allowed.
+function validManifest(value: unknown): value is TheOracleManifest {
+  return record(value) && record(value.model) && record(value.model.files) && record(value.prefixes) && record(value.chunks) && record(value.vectors)
+    && isText(value.model.id) && isText(value.model.revision) && isText(value.model.dtype) && isNumber(value.model.dims)
+    && Object.values(value.model.files).every(file => record(file) && isNumber(file.size) && isText(file.sha256))
+    && isText(value.prefixes.query) && isText(value.prefixes.document) && isNumber(value.maxTokens)
+    && isNumber(value.chunks.count) && isText(value.chunks.sha256) && isText(value.vectors.sha256) && isText(value.indexSha256);
+}
 
 // The query is embedded on this machine with the exact model recorded in the manifest; case text never leaves the process.
 async function localEmbedder(manifest: TheOracleManifest, modelDir: string): Promise<Embed> {
@@ -62,7 +73,8 @@ async function localEmbedder(manifest: TheOracleManifest, modelDir: string): Pro
 
 async function loadIndex(indexDir: string, modelDir: string, embedder: NonNullable<RetrieveOptions["embedder"]>): Promise<LoadedIndex> {
   try {
-    const manifest = JSON.parse(await readFile(path.join(indexDir, "manifest.json"), "utf8")) as TheOracleManifest;
+    const manifest: unknown = JSON.parse(await readFile(path.join(indexDir, "manifest.json"), "utf8"));
+    if (!validManifest(manifest)) throw unavailable("TheOracle tidak dapat dibuka atau dibaca. Analisis tidak dijalankan.");
     const [chunkBytes, vectorBytes] = await Promise.all([readFile(path.join(indexDir, "chunks.jsonl")), readFile(path.join(indexDir, "vectors.f32"))]);
     if (sha256(chunkBytes) !== manifest.chunks.sha256 || sha256(vectorBytes) !== manifest.vectors.sha256) throw unavailable("Integritas index TheOracle tidak dapat diverifikasi. Analisis tidak dijalankan.");
     const chunks = chunkBytes.toString("utf8").trim().split("\n").map(line => JSON.parse(line) as Chunk);

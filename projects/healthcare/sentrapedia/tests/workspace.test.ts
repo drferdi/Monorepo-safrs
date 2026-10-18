@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { initialWorkspace, loadWorkspace, newEncounter, parseWorkspace, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
-import { createDraft, modes } from "../src/lib/drafts";
+import { createDraft, draftLanguages, draftModels, modes } from "../src/lib/drafts";
 import { greeting } from "../src/lib/ui-labels";
 
 describe("workspace relationships", () => {
@@ -101,6 +101,12 @@ describe("storage validation", () => {
     const backup = workspaceReducer(initialWorkspace, { type: "patient.add", patient: { id: "p-import", name: "Pasien Fiktif Impor", age: "40", sex: "Male", notes: "" } });
     expect(parseWorkspace(JSON.stringify(backup, null, 2))).toEqual(restoreWorkspace(JSON.stringify(backup)));
     for (const raw of ["{broken", "[]", JSON.stringify({ ...backup, version: 2 }), JSON.stringify({ ...backup, patients: [{ id: 1 }] })]) expect(parseWorkspace(raw)).toBeNull();
+  });
+  it("accepts only the shared draft model and language values in saved settings", () => {
+    expect(draftModels).toEqual(["Standard", "Extended"]);
+    expect(draftLanguages).toEqual(["English", "Bahasa Indonesia"]);
+    for (const model of draftModels) for (const language of draftLanguages) expect(parseWorkspace(JSON.stringify({ ...initialWorkspace, settings: { ...initialWorkspace.settings, model, language } }))).not.toBeNull();
+    for (const settings of [{ model: "Detailed" }, { language: "Indonesian" }, { model: 1 }]) expect(parseWorkspace(JSON.stringify({ ...initialWorkspace, settings: { ...initialWorkspace.settings, ...settings } }))).toBeNull();
   });
   it("keeps a saved greeting name and drops one that is not text", () => {
     const named = { ...initialWorkspace, settings: { ...initialWorkspace.settings, name: "dr. Rani" } };

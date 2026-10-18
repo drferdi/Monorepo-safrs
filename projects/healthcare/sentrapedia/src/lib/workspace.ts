@@ -1,4 +1,4 @@
-import { modeIds, type ModeId } from "./drafts";
+import { draftLanguages, draftModels, modeIds, type ModeId } from "./drafts";
 import { record } from "./guards";
 
 import { changedMessage, cleanWorkflowEncounter, cleanWorkflowMessage, cleanWorkflowState, reviewComplete, workflowReducer, type PersonalTemplate, type ReviewItem, type Revision, type WorkflowAction, type WorkStatus, type WorkTask } from "./workflow";
@@ -8,7 +8,7 @@ export interface PatientList { id: string; name: string; patientIds: string[] }
 export type ReviewStatus = "draft" | "reviewed" | "final";
 export interface Message { id: string; role: "user" | "assistant"; content: string; mode: ModeId; createdAt: string; reviewStatus?: ReviewStatus; originalContent?: string; sourceText?: string; reviewItems?: ReviewItem[]; revisions?: Revision[]; revisionSequence?: number; templateSnapshot?: PersonalTemplate }
 export interface Encounter { id: string; patientId: string | null; title: string; createdAt: string; messages: Message[]; context: string; workStatus?: WorkStatus; pinned?: boolean; tasks?: WorkTask[]; updatedAt?: string }
-export interface Settings { specialty: string; model: "Standard" | "Extended"; language: "English" | "Bahasa Indonesia"; instructions: string; name?: string }
+export interface Settings { specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; instructions: string; name?: string }
 export interface Workspace { version: 1; patients: Patient[]; lists: PatientList[]; encounters: Encounter[]; activeEncounterId: string | null; settings: Settings; templates?: PersonalTemplate[]; favorites?: string[]; reviewDefaults?: ReviewItem[] }
 
 export const specialties = ["Primary Care", "Internal Medicine", "Emergency Medicine", "Pediatrics", "Obstetrics & Gynecology", "Family Medicine", "Cardiology", "Psychiatry"];
@@ -73,6 +73,7 @@ export function workspaceReducer(state: Workspace, action: WorkspaceAction): Wor
 }
 
 function strings(value: unknown, keys: string[]): boolean { return record(value) && keys.every((key) => typeof value[key] === "string"); }
+function oneOf(values: readonly string[], value: unknown): boolean { return values.some((known) => known === value); }
 
 // Builds before 2026-10-09 seeded the demo patient as "Patient"; only that untouched seed text now reads "Pasien".
 function seedWording(patient: Patient): Patient {
@@ -101,7 +102,7 @@ export function parseWorkspace(raw: string): Workspace | null {
     if (!data.patients.every((p) => strings(p, ["id", "name", "age", "sex", "notes"]))) return null;
     if (!data.lists.every((l) => record(l) && strings(l, ["id", "name"]) && Array.isArray(l.patientIds) && l.patientIds.every((id: unknown) => typeof id === "string"))) return null;
     if (!data.encounters.every((e) => record(e) && strings(e, ["id", "title", "createdAt", "context"]) && (e.patientId === null || typeof e.patientId === "string") && Array.isArray(e.messages) && e.messages.every((m: unknown) => record(m) && strings(m, ["id", "content", "mode", "createdAt"]) && (m.role === "user" || m.role === "assistant") && modeIds.includes(m.mode as ModeId)))) return null;
-    if (!record(data.settings) || !strings(data.settings, ["specialty", "model", "language", "instructions"]) || !specialties.includes(String(data.settings.specialty)) || !["Standard", "Extended"].includes(String(data.settings.model)) || !["English", "Bahasa Indonesia"].includes(String(data.settings.language))) return null;
+    if (!record(data.settings) || !strings(data.settings, ["specialty", "model", "language", "instructions"]) || !specialties.includes(String(data.settings.specialty)) || !oneOf(draftModels, data.settings.model) || !oneOf(draftLanguages, data.settings.language)) return null;
     if (data.activeEncounterId !== null && (typeof data.activeEncounterId !== "string" || !data.encounters.some((e: Record<string, unknown>) => e.id === data.activeEncounterId))) return null;
     const workspace = data as unknown as Workspace;
     const settings = { ...workspace.settings };

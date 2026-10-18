@@ -128,6 +128,16 @@ describe("TheOracle vector grounding", () => {
     await expect(retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(true), embedder: fakeEmbedder([]) })).rejects.toMatchObject({ code: "THEORACLE_UNAVAILABLE" });
   });
 
+  it("refuses a manifest without the fields retrieval reads, before embedding", async () => {
+    const calls: string[] = [];
+    const indexDir = fixtureIndex();
+    const manifest = JSON.parse(readFileSync(path.join(indexDir, "manifest.json"), "utf8"));
+    delete manifest.prefixes.query;
+    writeFileSync(path.join(indexDir, "manifest.json"), JSON.stringify(manifest));
+    await expect(retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: fakeEmbedder(calls) })).rejects.toMatchObject({ code: "THEORACLE_UNAVAILABLE" });
+    expect(calls).toEqual([]);
+  });
+
   it("reports a local embedding failure as unavailable", async () => {
     const failing = async () => async (): Promise<Float32Array> => { throw new Error("onnx failure"); };
     const error: unknown = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: failing }).catch((caught: unknown) => caught);
