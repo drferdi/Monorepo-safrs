@@ -11,7 +11,7 @@
 **Spec:** `docs/specs/2026-10-11-theoracle-clinical-evidence-pipeline.md` (commit `6be425a5`, approved by Gaffer, paid run approved with a cap of $18.30).
 
 All paths below are relative to `projects/healthcare/sentrapedia/` in the worktree
-`D:\DEV\monorepo.worktrees\oracle-vector-only` (branch `feat/sentrapedia-dify-theoracle`).
+`../Monorepo.worktrees/oracle-vector-only` (branch `feat/sentrapedia-dify-theoracle`).
 
 ## Global Constraints
 

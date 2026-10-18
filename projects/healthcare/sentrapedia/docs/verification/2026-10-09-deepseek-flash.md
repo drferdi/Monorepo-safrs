@@ -8,7 +8,7 @@ lib/mira/model-profile.ts defines release, response budget and immutable-version
 
 config/mira-deepseek.env.example and scripts/run-mira-deepseek.ps1 start separate installed MIRA8791, disable external dotenv, use own private environment, fixed original privacy policy,60s deadline, US$0.10 step and US$1 daily service budgets. Two-call limit inherited. Gateway75s deadline. Preflight/public price thresholds, runtime and actual startup observed. Own URL/token written only after health; secrets never printed or copied into artifacts/Git. Shared8787 preserved. Old owned Apodex8788 stopped after new-profile success. Budget accounting occurs after provider calls; rejecting output/cost or cancellation does not guarantee zero provider charge.
 
-TDD RED: new paid-profile test first failed for missing model-profile module, intentionally; then implementation. Fresh independent extraction gates at C:/Users/drfer/AppData/Local/Temp/sentrapedia-identity-20261008-220319:
+TDD RED: new paid-profile test first failed for missing model-profile module, intentionally; then implementation. Fresh independent extraction gates at <extraction-root>:
 - npx --no-install tsc --noEmit: exit0.
 - npx --no-install eslint app/api/mira/route.ts components/mira-case-form.tsx lib/mira/model-profile.ts lib/mira/gateway.ts tests/mira-paid.test.ts --fix: exit0.
 - npm test -- tests/mira-paid.test.ts tests/mira-free.test.ts tests/oracle-mira.test.ts tests/workflow.test.ts tests/workspace.test.ts tests/studio.test.ts: exit0,74/74,6files.

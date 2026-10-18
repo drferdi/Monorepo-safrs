@@ -1,7 +1,7 @@
 {
   "date": "2026-10-10",
   "scope": "Integrated MIRA installation and managed lifecycle",
-  "extractedRoot": "C:\\Users\\drfer\\AppData\\Local\\Temp\\sentrapedia-integrated-mira-1791640528616",
+  "extractedRoot": "<extraction-root>",
   "buildId": "hFR4P0kvcVmMAlxlhcH_k",
   "gates": {
     "freshInstall": "PASS/0",
@@ -342,7 +342,7 @@
     ]
   },
   "integratedStartSmoke": {
-    "extractedRoot": "C:\\Users\\drfer\\AppData\\Local\\Temp\\sentrapedia-integrated-mira-1791640528616",
+    "extractedRoot": "<extraction-root>",
     "runtimeMode": "start",
     "supervisorPid": 8316,
     "health": {
@@ -363,7 +363,7 @@
     "forcedShutdownClosedEngine": true
   },
   "standaloneSmoke": {
-    "extractedRoot": "C:\\Users\\drfer\\AppData\\Local\\Temp\\sentrapedia-integrated-mira-1791640528616",
+    "extractedRoot": "<extraction-root>",
     "runtimeMode": "standalone",
     "supervisorPid": 21760,
     "health": {

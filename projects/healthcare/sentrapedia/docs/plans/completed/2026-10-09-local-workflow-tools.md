@@ -17,7 +17,7 @@ Review focus: Invalid metadata must not erase legacy records; edit/restore reset
 - [x] 4. Create work-queue dialog with three manual groups, pin, query/patient filter, tasks; wire sidebar and Command Center; opening card selects Encounter and last document. Tests cover pin/filter/deletion/persistence.
 - [x] 5. Add scoped responsive CSS. Typecheck, lint modified TS files, targeted tests, build, deploy dry run from preinstalled extraction. Compare source hashes. Browser desktop/mobile flows, reload, keyboard/Escape; preserve original QA data; save screenshots. Solo review and update CONTEXT/HANDOFF with limits.
 
-Verification root: C:/Users/drfer/AppData/Local/Temp/sentrapedia-identity-20261008-220319 (preinstalled identical independent capsule). Commands: npx --no-install tsc --noEmit; npx --no-install eslint <changed TS files> --fix; npm test -- tests/workflow.test.ts tests/workspace.test.ts tests/studio.test.ts; npm run build; npm run deploy:dry-run.
+Verification root: <extraction-root> (preinstalled identical independent capsule). Commands: npx --no-install tsc --noEmit; npx --no-install eslint <changed TS files> --fix; npm test -- tests/workflow.test.ts tests/workspace.test.ts tests/studio.test.ts; npm run build; npm run deploy:dry-run.
 
 
 Status: CLOSED after solo implementation and observed final gates on 2026-10-09. Evidence: docs/verification/2026-10-09-local-workflow-tools.md. Final build: 6I7GNHw6WblHE_NKJOZ4x; 45/45 tests; 37 matching source/config files. Gaffer instruction forbids additional workers, so review is solo. No installation or external mutation. Main checkout dependency limitation and browser quota-banner coverage limit remain documented.

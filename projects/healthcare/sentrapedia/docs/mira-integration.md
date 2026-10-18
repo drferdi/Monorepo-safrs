@@ -34,8 +34,8 @@ embedded locally on CPU with the model recorded in `theoracle/index/manifest.jso
 `npm ci` also downloads that pinned model once (about 1.2 GB) into `theoracle/model/`.
 
 The internal engine is a Python process managed by the application lifecycle.
-No external `MiraRoot`, source checkout, shared service, manually supplied service
-token, or another project's environment is used. Old `.env.local` service URL/token
+No external `-MiraRoot` switch, source checkout, shared service, manually supplied service
+token, or another project's environment is used (`scripts/run-mira.ps1` forwards directly to `scripts/run-system.mjs`). Old `.env.local` service URL/token
 values are overridden in memory. The provider is still an external model API.
 Startup reads the model's metadata from the Gemini API with the key
 (`preflightProvider` in `scripts/mira-runtime.mjs`): a rejected key or an unknown

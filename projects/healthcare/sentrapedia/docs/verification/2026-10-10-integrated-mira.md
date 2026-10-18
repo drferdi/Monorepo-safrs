@@ -21,7 +21,7 @@ approved corrected verification after Jev stop_retry, without paid inference.
 | Standalone production Python install / pip check | PASS, exit0 |
 | Dedicated SAFRS R2 package/lifecycle review | PASS; no remaining actionable P1/P2 |
 
-Extraction root: `C:/Users/drfer/AppData/Local/Temp/sentrapedia-integrated-mira-1791640528616`.
+Extraction root: `<extraction-root>`.
 62 owned runtime/package/test files match the main capsule byte-for-byte. This proof
 uses a fresh Node/Python install, not the previous external MIRA virtual environment.
 No secret file was copied into extraction; the smoke harness injects the provider
