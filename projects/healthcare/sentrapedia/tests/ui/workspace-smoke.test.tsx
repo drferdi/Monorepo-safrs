@@ -304,11 +304,14 @@ describe("workspace UI smoke tests", () => {
     expect(screen.getByRole("dialog")).toBeDefined();
     expect(screen.getByRole("heading", { name: "Pusat perintah" })).toBeDefined();
 
-    // While dialog is open, pressing Ctrl+J again does nothing new
+    // While another dialog is open, Ctrl+J does not switch to the command palette
+    fireEvent.click(screen.getByRole("button", { name: "Tutup dialog" }));
+    fireEvent.click(screen.getByRole("button", { name: "Pengaturan Agent" }));
     fireEvent.keyDown(window, { key: "j", ctrlKey: true });
 
     expect(screen.getAllByRole("dialog").length).toBe(1);
-    expect(screen.getByRole("heading", { name: "Pusat perintah" })).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Sesuaikan workspace" })).toBeDefined();
+    expect(screen.queryByRole("heading", { name: "Pusat perintah" })).toBeNull();
   });
 
   it("completes a dialog round trip for Settings and keeps the composer intact", async () => {
