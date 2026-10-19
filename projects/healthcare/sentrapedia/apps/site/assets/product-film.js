@@ -1,9 +1,12 @@
-/* Muted in-view playback for the promo beneath the Sentrapedia wordmark. */
+/* In-view playback for the promo beneath the Sentrapedia wordmark: it starts muted, which browsers require for
+   autoplay, and the sound button turns the audio on only after a visitor's click (Gaffer, 2026-10-19). */
 const productFilm = document.querySelector('#product-film');
 
 if (productFilm) {
   const video = productFilm.querySelector('.product-film-video');
   const toggle = productFilm.querySelector('.product-film-toggle');
+  const sound = productFilm.querySelector('.product-film-sound');
+  video.muted = true;
   const caption = productFilm.querySelector('figcaption');
   const kicker = productFilm.querySelector('.product-film-kicker');
   const typeLines = [...productFilm.querySelectorAll('[data-film-type]')].map(node => ({
@@ -131,10 +134,28 @@ if (productFilm) {
     sync();
   });
 
+  const updateSound = () => {
+    sound.textContent = video.muted ? 'Suara' : 'Bisukan';
+    sound.setAttribute('aria-label', video.muted ? 'Nyalakan suara film' : 'Bisukan film');
+    sound.setAttribute('aria-pressed', String(!video.muted));
+  };
+
+  sound.addEventListener('click', () => {
+    video.muted = !video.muted;
+    updateSound();
+    // Turning sound on means the visitor wants to hear the film, so a paused film resumes.
+    if (!video.muted && video.paused) {
+      optedIn = true;
+      manuallyPaused = false;
+      sync();
+    }
+  });
+
   video.addEventListener('play', updateControl);
   video.addEventListener('pause', updateControl);
   video.addEventListener('error', () => {
     video.pause();
+    sound.disabled = true;
     toggle.disabled = true;
     toggle.textContent = 'Film tidak tersedia';
     toggle.setAttribute('aria-label', 'Film tidak tersedia');

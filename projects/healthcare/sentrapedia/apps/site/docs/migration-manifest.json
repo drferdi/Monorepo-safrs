@@ -140,11 +140,11 @@
     },
     {
       "path": "assets/product-film.css",
-      "sha256": "e5397b132066b1fd9f7f787ee61a867ef9d0720238854ba88eda6c37075dda0d"
+      "sha256": "2639327df9a205e7b4cffb616bf952dd6cd24adfa996d7cb181a4f0e4e31b844"
     },
     {
       "path": "assets/product-film.js",
-      "sha256": "c9a14b916faaa8f7cf6a1eff2b667d1a62fc80af18a819bd6dfa4f1512ca273a"
+      "sha256": "858fc0e844b5d42b5af0ea621ec5a63bef2a4d6cb19cb03be3485f51af3c9815"
     },
     {
       "path": "assets/promo-vid.mp4",
@@ -292,7 +292,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "a7fe72dfa3211bd36ab6bc721bf55dda002b5cb7d1252c3170853a57afb1bd98"
+      "sha256": "b8795d1f2edd82f795dd5e208a06e6f4b9565a1dae88427b6a98bd2f0e57ee5c"
     },
     {
       "path": "assets/system-anatomy.css",
