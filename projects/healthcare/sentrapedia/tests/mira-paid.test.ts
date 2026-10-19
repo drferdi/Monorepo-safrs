@@ -57,6 +57,17 @@ describe("approved Gemini Flash profile", () => {
     const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, status: "unavailable", error: { code: "PROVIDER_AUTH", message: "private raw provider message" } }) });
     expect((await (await gateway.step(input())).json()).error).toMatchObject({ code: "PROVIDER_AUTH", message: "Kunci API ditolak, periksa GEMINI_API_KEY." });
   });
+  it("names the engine's refusals instead of suggesting a retry that would be refused again", async () => {
+    for (const [code, status, wording] of [["PII_DETECTED", 400, "Hapus"], ["DATA_POLICY", 503, "data fiktif"], ["MODEL_NOT_ALLOWED", 503, "tidak diizinkan"], ["INTERNAL_ERROR", 502, "gangguan internal"]] as const) {
+      const gateway = createMiraGateway({ log: () => undefined, model: selectedMiraModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, status: "unavailable", error: { code, message: "private raw engine message" } }) });
+      const response = await gateway.step(input());
+      const body = await response.json();
+      expect(response.status).toBe(status);
+      expect(body.error.code).toBe(code);
+      expect(body.error.message).toContain(wording);
+      expect(JSON.stringify(body)).not.toContain("private raw engine message");
+    }
+  });
   it("pins gemini-3.1-flash-lite on the direct Gemini API for both stages, synthetic-only", () => {
     expect(selectedMiraModel).toBe("gemini-3.1-flash-lite");
     expect(miraServiceVersion(version(), selectedMiraModel)).toBe(true);

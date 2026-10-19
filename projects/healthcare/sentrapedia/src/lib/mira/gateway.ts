@@ -131,6 +131,11 @@ export function createMiraGateway(options: Options = {}) {
             PROVIDER_AUTH: { status: 503, message: "Kunci API ditolak, periksa GEMINI_API_KEY." },
             MODEL_OUTPUT_INVALID: { status: 502, message: "Hasil analisis tidak dapat diverifikasi. Tidak ada hasil yang disimpan." },
             CONTRACT_MISMATCH: { status: 502, message: "Format hasil analisis tidak sesuai. Tidak ada hasil yang disimpan." },
+            // Refusals the engine repeats for the same input: the message says what to change, not to retry.
+            PII_DETECTED: { status: 400, message: "Layanan analisis menemukan pola identitas. Hapus nama dengan sapaan (Ibu, Bapak, Tn., Ny.), nomor identitas, kontak dan alamat; tanpa perubahan, kasus ini akan ditolak lagi." },
+            DATA_POLICY: { status: 503, message: "Layanan analisis hanya menerima kasus bertanda data fiktif. Periksa konfigurasi workspace; tidak ada analisis dijalankan." },
+            MODEL_NOT_ALLOWED: { status: 503, message: "Model perencanaan yang diminta tidak diizinkan oleh layanan analisis. Tidak ada analisis dijalankan." },
+            INTERNAL_ERROR: { status: 502, message: "Terjadi gangguan internal pada layanan analisis. Tidak ada hasil yang disimpan; coba kembali beberapa saat lagi." },
           };
           const code = result.error?.code;
           if (code && Object.hasOwn(reasons, code)) return failure(code, reasons[code].message, reasons[code].status);
