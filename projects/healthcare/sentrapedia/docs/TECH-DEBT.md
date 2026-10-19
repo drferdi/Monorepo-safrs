@@ -2,6 +2,26 @@
 
 Prioritised list for a solo maintainer. Nothing in this list has been fixed; it is a ranking, not a change set.
 
+## Closed 2026-10-19
+
+Gaffer closed this list on 2026-10-19 after a triage of what was still open ("Setuju semua label"). Every row is now done, closed by decision, or carried below as an accepted risk. New findings are not added here: a fix that is picked up gets a plan under `docs/plans/`, and a new audit gets its own dated document.
+
+Fixed in the triage: row 45, phone part: the client also refuses the engine's `PHONE_62` and `PHONE_GENERAL` numbers, so the engine refuses no number the client passed; the parity fixture has six more rows (`9d543194`). Row 50, engine part: a raced copy that answers JSON but no object is `MODEL_OUTPUT_INVALID`, not an `INTERNAL_ERROR` from `_complete_therapy` (`24826b36`).
+
+Accepted risks (known, recorded, not planned):
+
+| Row | What stays | Why it is accepted |
+|---|---|---|
+| 47 | 15 of 20,465 passages are skipped because a sentence ends in "ibu." before a capital letter, which the shared title rule reads as a titled name. | 0.07% of the corpus after a net gain of 703 passages; avoiding it would loosen the client's PII rule. |
+| 45 | `apps/site/scripts/contact.mjs:43` keeps its own PII pattern outside the parity fixture. | It guards the site's contact form, not the MIRA path, so it need not match the engine (triage label: drop). |
+| 2 | The UI does not yet act on the error code (the composer offers one retry for every failure). | The code reaches the browser and the PII message says what to change; acting on the code is a feature, not debt. |
+| 14 | No migration code for a workspace v2 format. | No v2 format exists; the fixtures and rules in `docs/data.md` are the groundwork. |
+| 36 | Media committed before `ca0fdc37` stays as plain blobs in history. | Removing them needs a history rewrite and a force push, which the repository rules forbid. |
+| 43 | Two unused images (`src/assets/icons.png`, `src/assets/sentra-official-logo.png`), the pinned upstream notes in `mira/service/` and the one skipped MIRA test. | Dead bytes without risk. |
+| 50 | `apps/site/scripts/contact.mjs:96` decodes each body chunk on its own; `apps/site/scripts/serve.mjs:71` has no stream error handler. | The first was never reproduced and touches only the contact form; the second affects only the local site server. |
+| 40 | Whether Gemini answers an invalid key with 400 (then counted as `MODEL_ERROR`) is unchecked. | Checking needs a paid live call; the cost is a less precise error message. |
+| 46 | Whether Gemini bills a request the engine cuts off is unknown. | Not observable without the billing dashboard; the engine already charges each cut-off call the dearest recorded call. |
+
 ## Basis
 
 - Branch `feat/sentrapedia-hero-workspace`, HEAD `f5aa7427`, audited 2026-10-17. Line numbers refer to that commit; another session was editing `mira/service/engine.py`, `mira/SOURCE.json`, `scripts/mira-runtime.mjs`, `scripts/mira-profile.json`, `README.md`, `config/mira-deepseek.env.example` and the architecture docs while this audit ran, so rows about those files name identifiers rather than lines.
