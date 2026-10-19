@@ -368,7 +368,7 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - Place the rendered abstract signal as a short unframed bridge after the identity lockup and before the existing promo excerpt. The complete supplied film remains in its second editorial section, and the tablet simulation follows the teaser. Missing media falls back toward the tablet; reduced motion remains static. Visual quality and transition timing await foreground browser review.
 
 ## 2026-10-17 - Complete promo moves beneath the large wordmark
-- Status: live, refined by "2026-10-17 - Film and typed explanation share two columns".
+- Status: live, refined by "2026-10-17 - Film and typed explanation share two columns"; its muted-only rule is refined by "2026-10-19 - The promo film gets a sound button".
 - Gaffer rejected the paid signal bridge presentation and approved placing the complete existing `promo-vid.mp4` directly beneath the large Sentrapedia wordmark in `#logo-middle`, before the physician-authorship and RSIA Melinda lines. This supersedes the separate second film section and hero promo teaser, not the retained source media.
 - The hero returns to neuron logo, arriving wordmark, and the existing GSAP tablet simulation. The film has no surrounding frame or gray CSS background, remains muted and in-view only, and keeps pause/play and reduced-motion no-autoplay behavior. Preserve the `#product-film` anchor at its new location. No new render, clinical claim, commit, or publication follows from this decision.
 
@@ -425,3 +425,8 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - Gaffer (tech-debt row 33): "benar-benar membersihkan yang tidak terpakai". `apps/site/site/` is gitignored and rebuilt by `scripts/transform.mjs`; files with no source (theme, vendor copies, `public/child.png`) live in `apps/site/static/`, which the build copies first. The build never writes into `source/`.
 - `test`, `verify` and `start` build first. The Vercel project is not Git-linked and has no build command, so a CLI deploy uploads `apps/site/site/` only after `npm run build`.
 - Media no page loads are removed rather than kept beside the build; history and the LFS remote keep them.
+
+## 2026-10-19 - The promo film gets a sound button
+
+- Gaffer: "itu video section 2 kok gak ada suaranya", then chose a separate sound button: "Tambahkan tombol Suara/Bisukan terpisah di video section 2 (opsi 1)". `promo-vid.mp4` has an audio track; until now the film was muted with no way to hear it.
+- The film still autoplays muted while in view, because browsers block autoplay with sound, and keeps pause/play and the reduced-motion rule. A separate "Suara"/"Bisukan" button beside "Putar" turns the sound on only after a visitor's click; turning sound on also resumes a paused film. The film's media file is unchanged.
