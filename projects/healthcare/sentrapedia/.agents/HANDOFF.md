@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## Licence, public code with private data, closed-beta access committed and pushed - 2026-10-19 Asia/Jakarta
+
+- Gaffer pasted the plan and confirmed: "Ya, jalankan rencana yang saya tempel: lima cek, satu commit R2, lalu subtree split dan push ke branch baru feat/sentrapedia-licence-private-data-2026-10-19 dengan tiga cek dulu." The work itself was already in the tree, uncommitted, from an earlier session; its notes are in `.agents/AGENT-CONTEXT.md` (items "Public code, private data" and "Closed beta settings").
+- Checks from the capsule root before the commit, first run each: typecheck 0, lint 0, `test:all` 0 (Vitest 342/342, site 49/49, `test:system` 41/41, MIRA pytest 235 passed 1 skipped), `build` 0, `deploy:dry-run` 0. The build left no tracked file changed.
+- `9d1209f3` (R2): exactly the 26 listed files (LICENSE, `scripts/private-data.mjs`, `scripts/export-split.mjs`, the sample catalogue, the gateway's `SENTRAPEDIA_PUBLIC_ORIGIN` and `MIRA_MAX_CONCURRENT`, build and dry-run without the TheOracle index, docs and tests). `.husky/` and the monorepo-level untracked folders were left out.
+- Pushed (Jev: proceed_full): split `067a7e0e` of `9d1209f3` to the new branch `feat/sentrapedia-licence-private-data-2026-10-19`. Checked first: it descends from the last split `414afa5d` (in `main` `8c8b19b1` via PR #22; three commits on top), its tree equals the capsule tree (`1b55bef1`), no LFS-filtered file changed (27 files), and it merges with `main` without conflict. No force; `main` and origin untouched; no PR yet; not deployed. This note is a local commit after the split. The next split must descend from `067a7e0e`.
+- Open: `LICENSE` is still a draft; GitHub reports one high Dependabot alert on Sentrapedia `main` (not read); `.husky/` is untracked and not reviewed.
+
 ## Tech-debt list closed after triage - 2026-10-19 Asia/Jakarta
 
 - Gaffer asked how long the tech debt would stay open, accepted a read-only triage of every open item (table in chat), then: "Setuju semua label. Kerjakan dua butir Perbaiki, lalu tutup dokumen TECH-DEBT dengan butir Terima sebagai risiko yang diterima." Branch `chore/sentrapedia-tech-debt-close-2026-10-19` from `907d6835`, not pushed. Jev: not called (routine edits, no push).
