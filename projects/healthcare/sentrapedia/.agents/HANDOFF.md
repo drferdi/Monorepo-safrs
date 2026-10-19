@@ -20,6 +20,7 @@
   - `df72b646` (R1, row 49): `initialCase` and `saveOnSuccess` removed from `KnowledgeDialog` and `MiraCaseForm` with the branches only they reached; `restoreWorkspace` and `relatedDiseases` removed, their tests use `loadWorkspace(raw).workspace` and a local filter.
   - Verified after `df72b646`, first run each: lint 0, typecheck 0, Vitest 323/323, site `npm test` 49/49 (after the manifest refresh; it failed first on the changed `contact.mjs` hash), contact tests included. Browser (`npm run dev` preview): Pustaka Klinis, Analisis kasus shows the new budget sentence; no console errors. `next dev` rewrote `next-env.d.ts`; restored.
   - Still open: rows 45, 46, 47, the rest of row 50, and row 2's code-specific behaviour.
+- Gaffer merged PR #17 (`main` `8485698c`, contains split `30b18f1e`) and the branch `fix/sentrapedia-mira-pii-2026-10-19` was deleted, so the asked fast-forward had no target. Pushed instead (Gaffer: "go push split fab4f987 ke branch baru chore/sentrapedia-audit-phase1-2026-10-19 di Sentrapedia"; Jev: proceed_full): split `fab4f987` of `1f477714` to the new branch `chore/sentrapedia-audit-phase1-2026-10-19`. Checked first: it descends from `30b18f1e` (six commits on top), its tree equals the capsule tree at `1f477714` (`633742a0`), no LFS-filtered file changed (14 files), and it merges with `main` without conflict. No force; `main` and origin untouched; no PR yet. This note is a local commit after the split.
 
 ## Tech-debt rows 14, 26, 39, 41 and 44 finished; choices made by this session - 2026-10-19 Asia/Jakarta
 
