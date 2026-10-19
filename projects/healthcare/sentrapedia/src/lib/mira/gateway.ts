@@ -91,10 +91,10 @@ export function createMiraGateway(options: Options = {}) {
           throw error;
         } finally { clearTimeout(timer); }
       };
-      const postService = async (path: string, body: unknown): Promise<unknown> => {
+      const postService = async (path: string, body: unknown, signal = controller.signal): Promise<unknown> => {
         const serviceBody = JSON.stringify(body);
         if (new TextEncoder().encode(serviceBody).length > 65536) throw new ServiceFailure("INPUT");
-        const response = await fetchFn(`${base}${path}`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, "X-MIRA-Case-Origin": "synthetic" }, body: serviceBody, signal: controller.signal, cache: "no-store", redirect: "error" });
+        const response = await fetchFn(`${base}${path}`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, "X-MIRA-Case-Origin": "synthetic" }, body: serviceBody, signal, cache: "no-store", redirect: "error" });
         if (!response.ok) throw new ServiceFailure("SERVICE");
         const raw = await boundedBody(response, 1048576);
         if (token.length > 8 && raw.includes(token)) throw new ServiceFailure("RESPONSE");
@@ -149,13 +149,15 @@ export function createMiraGateway(options: Options = {}) {
         const absent = (reason: string): EvidenceGateReport => ({ forDiagnosis: target ?? { icd10: "", label: "" }, therapyRemoved: true, reason, drugs: [] });
         let evidenceGate: EvidenceGateReport | undefined = targeted && !target ? absent("Diagnosis kerja belum ada; terapi tidak disusun.") : undefined;
         if (targeted && target) {
+          // A therapy stage that runs out of time is cancelled, not left running: the lock below is released at return.
+          const stage = new AbortController();
           try {
             therapyGrounding = await timed("retrieve_tx", () => options.retrieveTherapyGrounding!(caseData, target), retrievalLimitMs);
             if (!validTheOracleGrounding(therapyGrounding)) throw new TheOracleGroundingError("THEORACLE_UNAVAILABLE", "Referensi terapi tidak dapat diverifikasi.");
             const bundle = therapyGrounding;
             const base = final;
             final = await timed("mira_tx", async () => {
-              const value = await postService("/v1/therapy/step", { contractVersion: "1", traceId, case: caseData, diagnosis: target, grounding: bundle });
+              const value = await postService("/v1/therapy/step", { contractVersion: "1", traceId, case: caseData, diagnosis: target, grounding: bundle }, AbortSignal.any([controller.signal, stage.signal]));
               if (!value || typeof value !== "object" || !("status" in value) || value.status !== "ok") throw new ServiceFailure(value && typeof value === "object" && "error" in value && value.error && typeof value.error === "object" && "code" in value.error && typeof value.error.code === "string" ? value.error.code : "UNAVAILABLE");
               if (!("therapy" in value)) throw new ServiceFailure("CONTRACT");
               const cost = "meta" in value && value.meta && typeof value.meta === "object" && "costUsd" in value.meta ? value.meta.costUsd : null;
@@ -170,7 +172,7 @@ export function createMiraGateway(options: Options = {}) {
             if (controller.signal.aborted) throw error;
             therapyGrounding = undefined;
             evidenceGate = absent("Referensi atau langkah terapi TheOracle tidak tersedia; terapi dan dosis tidak ditampilkan.");
-          }
+          } finally { stage.abort(); }
         }
         if (final.therapy) {
           const gated = await timed("gate", async () => applyTherapyGate(final, gateEvidence(therapyGrounding, grounding)));

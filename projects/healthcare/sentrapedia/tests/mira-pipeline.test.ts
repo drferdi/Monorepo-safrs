@@ -140,6 +140,20 @@ describe("targeted therapy pipeline", () => {
     expect(body.evidenceGate).toEqual(absent());
     expect(logs.find(l => l.stage === "mira_tx")).toMatchObject({ ok: false, code: "TIMEOUT" });
   });
+  it("cancels the therapy call it stops waiting for, so no paid call outlives the request", async () => {
+    const { fetchFn: serve } = service();
+    let therapySignal: AbortSignal | undefined;
+    const fetchFn: typeof fetch = async (url, init) => {
+      if (new URL(String(url)).pathname !== "/v1/therapy/step") return serve(url, init);
+      therapySignal = init?.signal ?? undefined;
+      return new Promise<Response>((_, fail) => init?.signal?.addEventListener("abort", () => fail(new DOMException("aborted", "AbortError"))));
+    };
+    const { gateway, logs } = gatewayWith(fetchFn, { timeoutMs: 1100 });
+    const response = await gateway.step(input());
+    expect(response.status).toBe(200);
+    expect(logs.find(l => l.stage === "mira_tx")).toMatchObject({ ok: false, code: "TIMEOUT" });
+    expect(therapySignal?.aborted).toBe(true);
+  });
   it("applies no retrieval time limit on the legacy path", async () => {
     const { fetchFn } = service();
     const { gateway, logs } = gatewayWith(fetchFn, { targetedTherapy: false, retrievalTimeoutMs: 5, retrieveGrounding: async () => { await new Promise(resolve => setTimeout(resolve, 60)); return bundle("Batuk dan demam."); } });
