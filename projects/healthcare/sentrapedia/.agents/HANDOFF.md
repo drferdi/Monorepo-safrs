@@ -25,6 +25,7 @@
   - `8738f425` (R1, row 46): `gateway.ts` gives the therapy stage its own `AbortController` (combined with the overall one through `AbortSignal.any`) and aborts it in `finally`; `postService` takes the signal. Red first in `tests/mira-pipeline.test.ts` (the therapy signal stayed unaborted).
   - Probe (scratchpad script, not tracked): a FastAPI handler under uvicorn 0.54.0 / Starlette 1.7.0 ran to completion after its client gave up at 0.5 s. So the engine still finishes and charges an abandoned therapy call within its 20 s deadline and 0.10 USD cap; stopping it needs an engine change in `app.py` (R2), not started.
   - Verified after `8738f425`, first run each: lint 0, typecheck 0, Vitest 324/324. MIRA pytest not run (no Python change).
+  - Pushed (Gaffer: "go push: subtree split ke branch baru fix/sentrapedia-gateway-abort-2026-10-19 di Sentrapedia, dengan tiga cek dulu"; Jev: proceed_full): split `67a9e95b` of `7e004b11` to the new branch `fix/sentrapedia-gateway-abort-2026-10-19`. Checked first: it descends from the last split `fab4f987` (in `main` `84aa2ea4` via PR #18; three commits on top), its tree equals the capsule tree at `7e004b11` (`db50e566`), no LFS-filtered file changed (four files), and it merges with `main` without conflict. No force; `main` and origin untouched; no PR yet. This note is a local commit after the split.
 
 ## Tech-debt rows 14, 26, 39, 41 and 44 finished; choices made by this session - 2026-10-19 Asia/Jakarta
 
