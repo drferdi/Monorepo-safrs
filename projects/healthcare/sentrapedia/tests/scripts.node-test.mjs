@@ -170,6 +170,18 @@ test("standalone build stops with the next build exit code and copies nothing", 
   assert.ok(!existsSync(join(root, ".next/standalone/mira")));
 }));
 
+// Public code without the index, installed with SENTRAPEDIA_SKIP_MODEL=1: the build still finishes and names both gaps.
+test("standalone build without the TheOracle index and model warns once for each and copies neither", withCapsule("build-bare", async root => {
+  buildFixture(root);
+  rmSync(join(root, "theoracle"), { recursive: true, force: true });
+  const { code, stdout, stderr } = await run(join(root, "scripts/build-system.mjs"));
+  assert.equal(code, 0, stderr);
+  assert.match(stderr, /database TheOracle tidak terpasang/);
+  assert.match(stderr, /model embedding TheOracle tidak terpasang/);
+  assert.match(stdout, /engine MIRA, dan unified launcher/);
+  assert.ok(!existsSync(join(root, ".next/standalone/theoracle")));
+}));
+
 // build-theoracle-index.mjs: a copy runs next to a stub model profile and a stub @huggingface/transformers whose
 // embedding of a text is [length, STUB_ROUND (default 1), 0, ...]. Rows are 12 bytes, so vectors.f32 is small enough
 // that Node 24 reads it into its shared buffer pool (measured: 20,000 bytes pooled, 65,535 not).
