@@ -9,6 +9,7 @@ import { initialWorkspace, newEncounter, workspaceReducer, loadWorkspace } from 
 import requestSchema from "../src/lib/mira/request.schema.json";
 import responseSchema from "../src/lib/mira/response.schema.json";
 import { SUPPORTED_KEYWORDS, type JsonSchema } from "../src/lib/mira/validate-json";
+import { withCatalog } from "./private-data";
 
 const withCode = (code: string) => theOracleDiseases.filter(d => d.kode.trim().toUpperCase() === code);
 
@@ -18,9 +19,9 @@ const therapy = { forDiagnosis: { icd10: "J00", label: "Nama keluaran uji" }, re
 const request = (body: unknown = { case: caseData, synthetic: true }, origin = "http://localhost:3104") => new Request("http://localhost:3104/api/mira", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
 describe("TheOracle local catalog", () => {
-  it("ties provenance to the exact original source bytes", () => { expect(createHash("sha256").update(readFileSync("oracle/sentrapedia.json")).digest("hex")).toBe(theOracleSource.hash); });
-  it("uses all actual categories and preserves repeated codes", () => { expect(theOracleDiseases).toHaveLength(144); expect(theOracleCategories).toHaveLength(15); expect(theOracleCategories).toContain("Pernapasan Bawah"); expect(withCode("A09")).toHaveLength(2); expect(withCode("C92.0")).toEqual([]); });
-  it("searches name, code and category with no clinical ranking", () => { expect(searchDiseases("pneumonia", "all").length).toBeGreaterThan(0); expect(searchDiseases("J00", "all")[0].id).toBe(1); expect(searchDiseases("", "Saluran Cerna").every(d => d.kategori === "Saluran Cerna")).toBe(true); expect(searchDiseases("zzzz", "all")).toEqual([]); expect(theOracleSource.hash).toHaveLength(64); });
+  it.skipIf(!withCatalog)("ties provenance to the exact original source bytes", () => { expect(createHash("sha256").update(readFileSync("oracle/sentrapedia.json")).digest("hex")).toBe(theOracleSource.hash); });
+  it.skipIf(!withCatalog)("uses all actual categories and preserves repeated codes", () => { expect(theOracleDiseases).toHaveLength(144); expect(theOracleCategories).toHaveLength(15); expect(theOracleCategories).toContain("Pernapasan Bawah"); expect(withCode("A09")).toHaveLength(2); expect(withCode("C92.0")).toEqual([]); });
+  it.skipIf(!withCatalog)("searches name, code and category with no clinical ranking", () => { expect(searchDiseases("pneumonia", "all").length).toBeGreaterThan(0); expect(searchDiseases("J00", "all")[0].id).toBe(1); expect(searchDiseases("", "Saluran Cerna").every(d => d.kategori === "Saluran Cerna")).toBe(true); expect(searchDiseases("zzzz", "all")).toEqual([]); expect(theOracleSource.hash).toHaveLength(64); });
 });
 describe("MIRA contract and presentation", () => {
   it("supports every keyword of the localized contract snapshots", () => {

@@ -41,3 +41,13 @@ TheOracle is the single source of truth for Sentra knowledge used to ground MIRA
 ## MIRA service
 
 `src/app/api/mira/route.ts` forwards case reviews to the bundled `mira/service` started by `scripts/run-system.mjs`. The supervisor supplies its private loopback URL and token to the server; the browser never sees the token. The request/response schemas remain in `src/lib/mira/` and `mira/service/contract/`. TheOracle retrieval validates index and model hashes before forwarding evidence. Only confirmed synthetic cases may be sent. `.env.example` names the server-side provider key; no external MIRA folder is needed. See `docs/mira-integration.md`.
+
+## Public code, private data
+
+Gaffer's decision of 2026-10-19: the code may be published under the royalty licence in `LICENSE`; the database stays private.
+
+- `scripts/private-data.mjs` lists what is private: `theoracle/index/`, `theoracle/sources/`, `theoracle/provenance/`, `oracle/sentrapedia.json`, `oracle-ii/`, `data/dose-inventory/`, `docs/verification/` and `.agents/`.
+- `npm run export:split -- <empty folder outside the capsule>` copies the tracked files into `<folder>/public` (code, with `oracle/sentrapedia.sample.json` as the catalogue) and `<folder>/data` (the private files at the same paths). It stops if a file is still a Git LFS pointer. Daily work in the monorepo is unchanged.
+- Without the data, the app builds and runs: the library shows the fictional sample, analyses answer "Database TheOracle belum terpasang di server ini", and tests that need the real catalogue or index are skipped (`tests/private-data.ts`).
+- To build with the data (for example on the beta server): check out the code, copy the contents of the private data repository over it, then `npm run build` or `docker build`.
+

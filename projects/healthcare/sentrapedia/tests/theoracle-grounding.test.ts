@@ -14,6 +14,7 @@ import {
   type TheOracleManifest,
 } from "../src/lib/theoracle-grounding";
 import parity from "./fixtures/pii-parity.json";
+import { withIndex } from "./private-data";
 
 const scratch: string[] = [];
 const sha256 = (data: string | Uint8Array) => createHash("sha256").update(data).digest("hex");
@@ -175,7 +176,7 @@ describe("TheOracle vector grounding", () => {
     expect(attempts).toBe(2);
   });
 
-  it("answers from the real TheOracle index with the pinned local model without modifying it", async () => {
+  it.skipIf(!withIndex)("answers from the real TheOracle index with the pinned local model without modifying it", async () => {
     const indexDir = path.join(process.cwd(), "theoracle", "index");
     const before = sha256(readFileSync(path.join(indexDir, "vectors.f32")));
     const manifest = JSON.parse(readFileSync(path.join(indexDir, "manifest.json"), "utf8")) as TheOracleManifest;

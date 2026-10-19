@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { gateEvidence, gateTherapy, unstrength } from "../src/lib/theoracle-evidence-gate";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import type { MiraTherapy } from "../src/lib/mira/contract";
+import { withCatalog } from "./private-data";
 
 // A plain string is a passage from a pneumonia document; { title, text } sets the document title.
 const bundle = (...items: (string | { title: string; text: string })[]): TheOracleGroundingBundle => ({
@@ -209,7 +210,7 @@ describe("clinical evidence gate", () => {
     const { report } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), bundle("Pneumonia: berikan 500 mg amoksisilin 3 kali sehari."), pneumonia);
     expect(report.drugs[0].status).toBe("doseRemoved");
   });
-  it("reads ODHA as HIV and the catalog's K64 for haemorrhoids coded I84", () => {
+  it.skipIf(!withCatalog)("reads ODHA as HIV and the catalog's K64 for haemorrhoids coded I84", () => {
     const hiv = { icd10: "Z21", label: "Asymptomatic human immunodeficiency virus [HIV] infection status" };
     const art = bundle({ title: "panduan-praktik-klinis.pdf", text: "Terapi ODHA: Efavirenz (EFV) 600 mg sekali sehari." });
     expect(gateTherapy(therapy([drug("Efavirenz", "1x600mg")], { forDiagnosis: hiv }), art, hiv).report.drugs[0].status).toBe("verified");
@@ -397,7 +398,7 @@ describe("clinical evidence gate: the dose passage names the diagnosis", () => {
     const { report } = gateTherapy(forVersicolor([drug("Flukonazol", "1x50mg")]), bundle(azoleList, { title: "dermatovenereologi-perdoski-2021.pdf", text: "Pitiriasis versikolor: ketokonazol krim, flukonazol oral." }), versicolor);
     expect(report.drugs[0]).toMatchObject({ status: "doseRemoved" });
   });
-  it("verifies a dose from a passage that names the diagnosis in its text, title or a TheOracle catalog name", () => {
+  it.skipIf(!withCatalog)("verifies a dose from a passage that names the diagnosis in its text, title or a TheOracle catalog name", () => {
     const named = (item: { title: string; text: string }) => gateTherapy(forVersicolor([drug("Flukonazol", "1x50mg")]), bundle(item), versicolor).report.drugs[0].status;
     expect(named({ title: "perdoski.pdf", text: "Pitiriasis versikolor: flukonazol 50 mg/hari." })).toBe("verified");
     expect(named({ title: "pityriasis-versikolor.md", text: "Flukonazol 50 mg/hari selama 14 hari." })).toBe("verified");
@@ -409,12 +410,12 @@ describe("clinical evidence gate: the dose passage names the diagnosis", () => {
     const oma = { icd10: "H66.9", label: "Otitis media akut, unspecified" };
     expect(gateTherapy(therapy([drug("Amoxicillin", "2x250mg")], { forDiagnosis: oma }), bundle({ title: "tonsilitis-2018.pdf", text: "Infeksi akut: amoksisilin 250 mg." }), oma).report.drugs[0].status).toBe("doseRemoved");
   });
-  it("does not count a word shared by many catalog diseases or a function word", () => {
+  it.skipIf(!withCatalog)("does not count a word shared by many catalog diseases or a function word", () => {
     const typhoid = { icd10: "A01.0", label: "Demam tifoid" };
     expect(gateTherapy(therapy([drug("Paracetamol", "3x500mg")], { forDiagnosis: typhoid }), bundle({ title: "kejang-demam.md", text: "Kejang demam pada anak: parasetamol 500 mg." }), typhoid).report.drugs[0].status).toBe("doseRemoved");
     expect(gateTherapy(therapy([drug("Paracetamol", "3x500mg")], { forDiagnosis: typhoid }), bundle({ title: "demam-tifoid.md", text: "Parasetamol 500 mg bila demam." }), typhoid).report.drugs[0].status).toBe("verified");
   });
-  it("ignores Roman numerals, all-capital labels and English ICD qualifiers", () => {
+  it.skipIf(!withCatalog)("ignores Roman numerals, all-capital labels and English ICD qualifiers", () => {
     const status = (dx: { icd10: string; label: string }, name: string, dose: string, item: { title: string; text: string }) => gateTherapy(therapy([drug(name, dose)], { forDiagnosis: dx }), bundle(item), dx).report.drugs[0].status;
     expect(status({ icd10: "I10", label: "Hipertensi stage II" }, "Amlodipine", "1x10mg", { title: "gagal-jantung.md", text: "NYHA kelas II: amlodipin 10 mg." })).toBe("doseRemoved");
     expect(status({ icd10: "A01.0", label: "DEMAM TIFOID" }, "Paracetamol", "3x500mg", { title: "kejang-demam.md", text: "Kejang demam: parasetamol 500 mg." })).toBe("doseRemoved");

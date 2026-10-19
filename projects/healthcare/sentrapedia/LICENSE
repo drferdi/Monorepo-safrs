@@ -1,0 +1,93 @@
+Sentrapedia Source-Available License 1.0
+Version of 19 October 2026
+
+Copyright (c) 2026 SENTRA ARTIFICIAL INTELLIGENCE. All rights reserved.
+
+1. Definitions
+
+"Licensor" means SENTRA ARTIFICIAL INTELLIGENCE, a Perseroan Perorangan (an
+Indonesian individual limited liability company) established by Decree of the
+Minister of Law of the Republic of Indonesia No.
+AHU-A119231.AH.01.30.Tahun 2026 of 4 September 2026, domiciled in Kota Kediri,
+Jawa Timur, Indonesia.
+"Software" means the source code, documentation and other files in this
+repository, except the third-party components listed in section 7.
+"Commercial License" means a separate written agreement with the Licensor,
+which may require the payment of royalties or fees.
+"You" means the person or organisation exercising rights under this licence.
+
+2. What you may do without charge
+
+Subject to these terms, the Licensor grants you a worldwide, non-exclusive,
+non-transferable and revocable licence to:
+(a) read and study the Software;
+(b) run the Software on your own computer for personal evaluation, research
+    or education, with fictional (synthetic) data only; and
+(c) change the Software for those purposes and propose changes to the
+    Licensor.
+Forking this repository on GitHub, as GitHub's Terms of Service allow for
+public repositories, is permitted and grants no further rights.
+
+3. What requires a Commercial License
+
+You need a Commercial License from the Licensor before you, or any
+organisation you act for:
+(a) use the Software, or any work based on it, in the care of real patients,
+    including diagnosis, treatment, documentation and referral, in any
+    setting, including hospitals, clinics, community health centres
+    (Puskesmas) and government institutions, whether or not for profit;
+(b) offer the Software, or any work based on it, to others as a hosted or
+    online service;
+(c) sell, license, sublicense, rent or otherwise distribute the Software or
+    any work based on it, in source or compiled form; or
+(d) use the Software in any other way that produces revenue or a commercial
+    advantage.
+
+4. The database is not included
+
+The TheOracle knowledge index, the clinical catalogue, the dose data and
+their sources are not part of the Software and are not licensed under these
+terms. This repository contains only fictional sample data in their place.
+Access to the database is available only under a Commercial License.
+
+5. Conditions
+
+You must keep this licence and every copyright notice in all copies. You may
+not remove or circumvent access controls, licence notices or attribution.
+Any work based on the Software is subject to these same terms.
+
+6. Termination
+
+If you breach these terms, your licence ends automatically. The Licensor may
+reinstate it in writing.
+
+7. Third-party components
+
+The files in the mira/ folder include software by third parties under the
+MIT License (see mira/LICENSE and mira/SOURCE.json); those files remain under
+their own licence. Packages installed by npm or pip are under their own
+licences.
+
+8. Not a medical device; no warranty
+
+The Software is not a registered medical device and has not been clinically
+validated. Any output is a draft for review by a licensed clinician, who
+remains responsible for every clinical decision.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NON-INFRINGEMENT. TO THE EXTENT PERMITTED BY LAW, THE
+LICENSOR IS NOT LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM
+THE SOFTWARE OR ITS USE.
+
+9. Governing law
+
+These terms are governed by the laws of the Republic of Indonesia. Disputes
+are submitted to the Pengadilan Negeri Kediri.
+
+10. Contact
+
+SENTRA ARTIFICIAL INTELLIGENCE
+Jl. Balowerti II No. 59, RT 005, RW 002, Balowerti, Kota Kediri,
+Jawa Timur 64129, Indonesia
+Commercial licensing and notices: info@sentrapedia.com

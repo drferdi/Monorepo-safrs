@@ -4,7 +4,7 @@ import { miraServiceVersion } from "./model-profile";
 import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
 import type { CaseState } from "./types";
 
-type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => Promise<TheOracleGroundingBundle>; retrieveTherapyGrounding?: (caseData: CaseState, diagnosis: { icd10: string; label: string }) => Promise<TheOracleGroundingBundle>; targetedTherapy?: boolean; retrievalTimeoutMs?: number; log?: (entry: StageLog) => void };
+type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => Promise<TheOracleGroundingBundle>; retrieveTherapyGrounding?: (caseData: CaseState, diagnosis: { icd10: string; label: string }) => Promise<TheOracleGroundingBundle>; targetedTherapy?: boolean; retrievalTimeoutMs?: number; publicOrigin?: string; maxConcurrent?: number; log?: (entry: StageLog) => void };
 export interface StageLog { traceId: string; stage: string; ms: number; ok: boolean; code?: string }
 class ServiceFailure extends Error { constructor(readonly code: string) { super(code); } }
 // Targeted retrieval limit: a cold start loads the index and hashes the model files (measured 2.5-3 s).
@@ -33,7 +33,11 @@ export function createMiraGateway(options: Options = {}) {
   const profileMatches = (version: unknown) => !!selectedModel && miraServiceVersion(version, selectedModel);
   let base = "";
   try { const url = new URL(options.baseUrl ?? "http://127.0.0.1:8787"); if (url.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(url.hostname) && !url.username && !url.password && !url.search && !url.hash && url.pathname === "/") base = url.origin; } catch { /* Invalid configuration stays unavailable. */ }
-  let active = false;
+  // Closed beta (Gaffer, 2026-10-19): one public https origin behind Cloudflare Tunnel and Access, and a few analyses at
+  // once for 10-20 invited clinicians. Unset or invalid, the gateway stays local-only and runs one analysis at a time.
+  let publicOrigin = ""; try { const url = new URL(options.publicOrigin ?? ""); if (url.protocol === "https:" && !url.username && !url.password && url.pathname === "/" && !url.search && !url.hash) publicOrigin = url.origin; } catch { /* Invalid configuration stays local-only. */ }
+  const maxConcurrent = Number.isInteger(options.maxConcurrent) && (options.maxConcurrent ?? 0) >= 1 && (options.maxConcurrent ?? 0) <= 8 ? options.maxConcurrent as number : 1;
+  let running = 0;
   async function serviceHealth(signal: AbortSignal) {
     const response = await fetchFn(`${base}/healthz`, { cache: "no-store", signal, redirect: "error" });
     const body: unknown = JSON.parse(await boundedBody(response, 4096));
@@ -51,26 +55,33 @@ export function createMiraGateway(options: Options = {}) {
       return reply({ reachable: status.reachable, modelReady: status.modelReady, groundingReady: status.groundingReady, configured: !!base && !!token, model: selectedModel ?? null, maxCostUsd: selectedModel ? maxCostUsd : null });
     },
     async step(request: Request): Promise<Response> {
-      const caller = new URL(request.url);
-      let expectedOrigin = caller.origin;
-      try {
-        const host = request.headers.get("host");
-        if (host) {
-          const publicUrl = new URL(`${caller.protocol}//${host}`);
-          if (!["localhost", "127.0.0.1", "[::1]"].includes(publicUrl.hostname) || publicUrl.port !== caller.port || publicUrl.username || publicUrl.password || publicUrl.pathname !== "/" || publicUrl.search || publicUrl.hash) throw new Error("host");
-          expectedOrigin = publicUrl.origin;
-        }
-      } catch { return failure("ORIGIN", "Alamat workspace lokal tidak valid.", 403); }
-      if (!["localhost", "127.0.0.1", "[::1]"].includes(caller.hostname) || request.headers.get("origin") !== expectedOrigin) return failure("ORIGIN", "Permintaan harus berasal dari workspace lokal ini.", 403);
+      const origin = request.headers.get("origin");
+      if (publicOrigin && origin === publicOrigin) {
+        // The browser's Origin is the guard here; Host is the public name, or loopback when the tunnel rewrites it.
+        let hostOk = false; try { const host = new URL(`https://${request.headers.get("host") ?? ""}`); hostOk = host.host === new URL(publicOrigin).host || ["localhost", "127.0.0.1", "[::1]"].includes(host.hostname); } catch { /* A missing or invalid Host is refused. */ }
+        if (!hostOk) return failure("ORIGIN", "Permintaan harus berasal dari workspace ini.", 403);
+      } else {
+        const caller = new URL(request.url);
+        let expectedOrigin = caller.origin;
+        try {
+          const host = request.headers.get("host");
+          if (host) {
+            const publicUrl = new URL(`${caller.protocol}//${host}`);
+            if (!["localhost", "127.0.0.1", "[::1]"].includes(publicUrl.hostname) || publicUrl.port !== caller.port || publicUrl.username || publicUrl.password || publicUrl.pathname !== "/" || publicUrl.search || publicUrl.hash) throw new Error("host");
+            expectedOrigin = publicUrl.origin;
+          }
+        } catch { return failure("ORIGIN", "Alamat workspace lokal tidak valid.", 403); }
+        if (!["localhost", "127.0.0.1", "[::1]"].includes(caller.hostname) || request.headers.get("origin") !== expectedOrigin) return failure("ORIGIN", "Permintaan harus berasal dari workspace lokal ini.", 403);
+      }
       let payload: unknown;
       try { payload = JSON.parse(await boundedBody(request, 32768)); } catch { return failure("INPUT", "Input tidak valid atau terlalu panjang.", 400); }
       if (!payload || typeof payload !== "object" || !("case" in payload) || !("synthetic" in payload) || payload.synthetic !== true || Object.keys(payload).some(k => !["case", "synthetic"].includes(k)) || !validCase(payload.case)) return failure("INPUT", "Lengkapi kasus terstruktur dan konfirmasi data fiktif.", 400);
       const caseData = payload.case;
       if (containsIdentity(JSON.stringify(caseData))) return failure("IDENTITY", "Input mengandung pola identitas. Hapus nama, nomor identitas, kontak dan alamat.", 400);
       if (!base || !token) return failure("NOT_CONFIGURED", "Token koneksi layanan analisis belum dikonfigurasi pada server workspace.", 503);
-      if (active) return failure("BUSY", "Analisis lain masih berjalan. Coba kembali setelah selesai.", 429);
+      if (running >= maxConcurrent) return failure("BUSY", "Analisis lain masih berjalan. Coba kembali setelah selesai.", 429);
       if (request.signal.aborted) return failure("ABORTED", "Analisis dibatalkan.", 499);
-      active = true;
+      running++;
       const controller = new AbortController(); let timedOut = false;
       const cancel = () => controller.abort(); request.signal.addEventListener("abort", cancel, { once: true });
       const deadline = performance.now() + (options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
@@ -184,7 +195,7 @@ export function createMiraGateway(options: Options = {}) {
         if (!timedOut && !controller.signal.aborted && error instanceof TheOracleGroundingError) return failure(error.code, error.message, error.code === "THEORACLE_UNAVAILABLE" ? 503 : 422);
         return failure(timedOut ? "TIMEOUT" : controller.signal.aborted ? "ABORTED" : "NETWORK", timedOut ? "Analisis melewati batas waktu. Tidak ada hasil yang disimpan." : controller.signal.aborted ? "Analisis dibatalkan." : "Layanan analisis tidak dapat dihubungi atau respons tidak dapat dibaca.", timedOut ? 504 : controller.signal.aborted ? 499 : 502);
       }
-      finally { clearTimeout(timer); request.signal.removeEventListener("abort", cancel); active = false; }
+      finally { clearTimeout(timer); request.signal.removeEventListener("abort", cancel); running--; }
     },
   };
 }

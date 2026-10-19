@@ -8,6 +8,7 @@ import { theOracleSourceLinks } from "../src/lib/mira/presentation";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import { initialWorkspace, workspaceReducer, loadWorkspace } from "../src/lib/workspace";
 import { gateTherapy } from "../src/lib/theoracle-evidence-gate";
+import { withCatalog } from "./private-data";
 
 const withCode = (code: string) => theOracleDiseases.filter(d => d.kode.trim().toUpperCase() === code);
 
@@ -72,7 +73,7 @@ describe("six-section diagnosis presentation", () => {
     const none = { ...analysis, result: { ...analysis.result, nextBestActions: [] } };
     expect(section(miraMessage(none).content, "Penunjang")).toMatch(/^Tidak perlu saat ini/);
   });
-  it("shows the complete database narratives for the likely diagnosis in their own sections", () => {
+  it.skipIf(!withCatalog)("shows the complete database narratives for the likely diagnosis in their own sections", () => {
     const content = miraMessage(analysis).content;
     const disease = withCode("J00")[0];
     for (const text of [disease.definisi, ...disease.gejala, disease.diagnosis]) expect(section(content, "Diagnosis")).toContain(text);
@@ -80,7 +81,7 @@ describe("six-section diagnosis presentation", () => {
     expect(section(content, "Edukasi")).toContain(disease.rujukan);
     for (const title of ["Terapi Farmakologi", "Edukasi"]) expect(section(content, title)).not.toContain("Obat tercatat");
   });
-  it("shows database narratives for the highest group that has one, not for every candidate", () => {
+  it.skipIf(!withCatalog)("shows database narratives for the highest group that has one, not for every candidate", () => {
     const input = withDifferential({ likely: [{ icd10: "R10.3", label: "Nyeri perut bawah", confidenceTier: "low" }], alternatives: [{ icd10: "K35.8", label: "Appendicitis", confidenceTier: "low" }], cannotMiss: [{ icd10: "A06.0", label: "Amoebic dysentery", confidenceTier: "low" }] });
     expect(withCode("R10.3")).toHaveLength(0);
     const content = miraMessage(input).content;
@@ -104,7 +105,7 @@ describe("six-section diagnosis presentation", () => {
     const therapy = section(miraMessage(unmatched).content, "Terapi Farmakologi");
     expect(therapy).toBe("Belum ada data terapi untuk diagnosis ini.");
   });
-  it("resolves explicit ranges, category coverage and comma-separated codes as labeled references", () => {
+  it.skipIf(!withCatalog)("resolves explicit ranges, category coverage and comma-separated codes as labeled references", () => {
     for (const [code, sourceCode] of [["J02.9", "J02-J03"], ["J00.1", "J00"], ["R42", "H81-H83, R42"], ["G47.0", "G47.0, F51.0"]]) {
       const input = withDifferential({ likely: [{ icd10: code, label: "Kandidat sintetis", confidenceTier: "low" }], alternatives: [], cannotMiss: [] });
       const content = miraMessage(input).content;
@@ -146,7 +147,7 @@ describe("six-section diagnosis presentation", () => {
     expect(diagnosisContent({ ...message, sourceText: "invalid" })).toBe(old);
     expect(diagnosisContent({ ...message, sourceText: undefined })).toBe(old);
   });
-  it("writes the pharmacological therapy as drug and compact dose per line, then DDI and contraindications", () => {
+  it.skipIf(!withCatalog)("writes the pharmacological therapy as drug and compact dose per line, then DDI and contraindications", () => {
     const therapy = { forDiagnosis: { icd10: "J00", label: "Diagnosis sintetis" }, regimen: [{ drug: "Ceftriaxone", dose: "1x500mg", route: "IM", duration: "dosis tunggal", note: "1g bila >=150kg" }, { drug: "Azithromycin", dose: "1x1g", route: "PO", duration: "dosis tunggal", note: "" }], interactions: ["Azithromycin dengan warfarin: risiko perdarahan", "Ceftriaxone dengan kalsium IV: presipitasi"], contraindications: ["Ceftriaxone: alergi sefalosporin"] };
     const content = miraMessage({ ...analysis, result: { ...analysis.result, therapy } }).content;
     expect(section(content, "Terapi Farmakologi")).toBe("Untuk Diagnosis sintetis (J00)\n\n- Ceftriaxone 1x500mg IM dosis tunggal (1g bila >=150kg)\n- Azithromycin 1x1g PO dosis tunggal\n\nDDI\n- Azithromycin dengan warfarin: risiko perdarahan\n- Ceftriaxone dengan kalsium IV: presipitasi\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");

@@ -47,6 +47,15 @@ function deployFixture(root, { platforms = ["linux-x64"], dependency = "1.0.0" }
 }
 const deploy = root => run(resolve("scripts/deploy-dry-run.mjs"), [], { cwd: root });
 
+test("deploy dry-run accepts a public build without the private TheOracle index and says so", withCapsule("deploy", async root => {
+  deployFixture(root);
+  for (const file of ["manifest.json", "vectors.f32", "chunks.jsonl"]) rmSync(join(root, ".next/standalone/theoracle/index", file), { force: true });
+  const { code, stdout, stderr } = await deploy(root);
+  assert.equal(code, 0, stderr);
+  assert.match(stderr, /TheOracle database not installed/);
+  assert.equal(JSON.parse(stdout).status, "PASS");
+}));
+
 test("deploy dry-run passes a complete linux-x64 build and validates its traces", withCapsule("deploy", async root => {
   deployFixture(root);
   write(root, ".next/server/app/page.js");
@@ -237,7 +246,7 @@ test("index build refuses a model file that does not match its pinned hash and w
   assert.ok(!existsSync(join(root, "theoracle/index/vectors.f32")) && !existsSync(join(root, "theoracle/index/manifest.json")));
 }));
 
-test("the committed TheOracle index matches its manifest the way the index build computes it", () => {
+test("the committed TheOracle index matches its manifest the way the index build computes it", { skip: !existsSync("theoracle/index/manifest.json") && "public code without the private TheOracle index" }, () => {
   const manifest = JSON.parse(readFileSync(resolve("theoracle/index/manifest.json"), "utf8"));
   const chunks = readFileSync(resolve("theoracle/index/chunks.jsonl"));
   const vectors = readFileSync(resolve("theoracle/index/vectors.f32"));

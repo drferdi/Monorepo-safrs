@@ -3,6 +3,8 @@ import data from "../../oracle/sentrapedia.json";
 export interface Disease { id: number; nama: string; kategori: string; kode: string; definisi: string; gejala: string[]; diagnosis: string; terapi: string; rujukan: string }
 export const theOracleDiseases: readonly Disease[] = data.diseases;
 export const theOracleCategories = [...new Set(theOracleDiseases.map(d => d.kategori))].sort((a, b) => a.localeCompare(b, "id"));
+// The public repository carries a fictional sample catalogue instead of the private one (2026-10-19).
+export const theOracleSample = "sample" in data.metadata && data.metadata.sample === true;
 export const theOracleSource = { file: "oracle/sentrapedia.json", hash: "73e40882cdd313f46f406c99c3474aab9ebde44418d3e1681b0f5aaec9f9cd9a", version: data.metadata.version, declaredCategories: data.metadata.total_categories };
 export function searchDiseases(query: string, category: string): Disease[] {
   const terms = query.trim().toLocaleLowerCase("id").split(/\s+/).filter(Boolean);

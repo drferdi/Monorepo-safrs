@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { once } from "node:events";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { engineEnvironment, engineReady, geminiBaseUrl, installedPython, lockDigest, model, nextRestart, pythonPath } from "../scripts/mira-runtime.mjs";
@@ -185,7 +185,7 @@ test("the restart wait never exceeds the cap when more crashes are allowed", () 
   assert.deepEqual(nextRestart(5, 0, { maxCrashes: 10 }), { crashes: 6, delayMs: 30000 });
 });
 
-test("the model download fetches exactly the model the TheOracle manifest pins", () => {
+test("the model download fetches exactly the model the TheOracle manifest pins", { skip: !existsSync("theoracle/index/manifest.json") && "public code without the private TheOracle index" }, () => {
   const manifest = JSON.parse(readFileSync(resolve("theoracle/index/manifest.json"), "utf8"));
   assert.deepEqual({ id: oracleModel.id, revision: oracleModel.revision, dtype: oracleModel.dtype, dims: oracleModel.dims, files: oracleModel.files }, manifest.model);
   assert.deepEqual(oracleModel.prefixes, manifest.prefixes);

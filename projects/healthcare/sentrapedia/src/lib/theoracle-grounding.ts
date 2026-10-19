@@ -73,7 +73,9 @@ async function localEmbedder(manifest: TheOracleManifest, modelDir: string): Pro
 
 async function loadIndex(indexDir: string, modelDir: string, embedder: NonNullable<RetrieveOptions["embedder"]>): Promise<LoadedIndex> {
   try {
-    const manifest: unknown = JSON.parse(await readFile(path.join(indexDir, "manifest.json"), "utf8"));
+    // The public code repository ships without the private database (2026-10-19): say so instead of a read error.
+    const manifestText = await readFile(path.join(indexDir, "manifest.json"), "utf8").catch((error: NodeJS.ErrnoException) => { throw error?.code === "ENOENT" ? unavailable("Database TheOracle belum terpasang di server ini. Analisis tidak dijalankan.") : error; });
+    const manifest: unknown = JSON.parse(manifestText);
     if (!validManifest(manifest)) throw unavailable("TheOracle tidak dapat dibuka atau dibaca. Analisis tidak dijalankan.");
     const [chunkBytes, vectorBytes] = await Promise.all([readFile(path.join(indexDir, "chunks.jsonl")), readFile(path.join(indexDir, "vectors.f32"))]);
     if (sha256(chunkBytes) !== manifest.chunks.sha256 || sha256(vectorBytes) !== manifest.vectors.sha256) throw unavailable("Integritas index TheOracle tidak dapat diverifikasi. Analisis tidak dijalankan.");

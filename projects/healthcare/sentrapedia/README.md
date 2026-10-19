@@ -671,7 +671,9 @@ This repository was **private at the documentation audit date**. Authorized cont
 
 ### License
 
-**No repository-wide `LICENSE` file was present in the inspected root.** Therefore no general open-source license is asserted for Sentrapedia. The file `mira/LICENSE` grants MIT terms to its bundled upstream MIRA component only, with its own author/copyright attribution. Source attribution is available in [MIRA SOURCE](mira/SOURCE.json) and [contract provenance](mira/service/contract/SOURCE.md).
+Sentrapedia is **source-available, not open source**: see [LICENSE](LICENSE) (Sentrapedia Source-Available License 1.0, draft of 2026-10-19). Reading, studying and running the code locally for evaluation, research or education with fictional data is free. Use with real patients by any organisation, hosting it as a service, distribution and other commercial use require a paid commercial licence from SENTRA ARTIFICIAL INTELLIGENCE (info@sentrapedia.com).
+
+The clinical database (TheOracle index, clinical catalogue, dose data and their sources) is **not included** in the public repository and not covered by the licence; a fictional sample catalogue takes its place, and analyses answer "Database TheOracle belum terpasang". The file `mira/LICENSE` grants MIT terms to its bundled upstream MIRA component only, with its own author/copyright attribution. Source attribution is available in [MIRA SOURCE](mira/SOURCE.json) and [contract provenance](mira/service/contract/SOURCE.md).
 
 ### Support and security
 
