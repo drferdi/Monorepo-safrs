@@ -13,7 +13,10 @@
   - `/swapfile2` 4 G created, enabled, added to `/etc/fstab` (swap now 2 G + 4 G).
   - `setup-server.sh` (identical to `main`) run as root with `NEEDRESTART_SUSPEND=1`, exit 0: 9 packages newly installed, 0 upgraded (docker.io 29.1.3, git-lfs 3.4.1); `/etc/sentrapedia/beta.env` (root, 600, `GEMINI_API_KEY` empty); deploy key `/root/.ssh/sentrapedia_deploy` (`sentrapedia-beta-server`).
   - After: medboard, caddy, postgres active with unchanged start times, both URLs 200, UFW rules unchanged. New listener `127.0.0.1:38827` (docker/containerd, loopback).
-  - Waiting on Gaffer: add the deploy key read-only on GitHub, fill `GEMINI_API_KEY`. Then: clone to `/opt/sentrapedia`, `SENTRAPEDIA_HOST_PORT=3201 bash update.sh`, check medboard, then Gaffer's Cloudflare Tunnel and Access.
+  - Gaffer filled `GEMINI_API_KEY` (53 characters, not starting with `AIza`; Gaffer says it is checked) and, on the second try, added the deploy key (`SHA256:JBc8/INFgwDXPfNqrI05P0PtI3iUd9nFKLDtVFUOdXE`, read-only); GitHub then answered "Hi drferdi/Sentrapedia!".
+  - Cloned `main` `d7d0a51` to `/opt/sentrapedia` (113 LFS files, index present). `SENTRAPEDIA_HOST_PORT=3201 bash update.sh` ran detached (`/tmp/sentrapedia-beta-run.sh`, logs `/var/log/sentrapedia-beta-update.log` and `-watch.log`), 21:27 to 21:45 WIB, exit 0. Image `sentrapedia:beta` 3.11 GB; container `sentrapedia-beta` on `127.0.0.1:3201` only, 1.58 of 2.44 GiB.
+  - Checked after: `GET /api/mira` reachable, modelReady, groundingReady, configured (`gemini-3.1-flash-lite`, 0.10 USD cap); home 200. Medboard: 74 samples every 15 s during the build, all active and 200; lowest available RAM 1401 MB, swap at most 507 MB; no OOM in the kernel log; after: service active, 0 restarts, same start time, local and public 200; Caddy and PostgreSQL active; UFW rules unchanged. No analysis was run (no paid call).
+  - Open: Gaffer's Cloudflare Tunnel (`beta.sentrapedia.com` → `http://localhost:3201`) and Access (invited emails, one-time PIN); DNS of `sentrapedia.com`. The Gemini key is unproven until the first analysis. Every later `update.sh` run needs `SENTRAPEDIA_HOST_PORT=3201` (without it the run fails to bind 3000, which medboard holds). A build takes about 18 minutes.
 
 ## Licence, public code with private data, closed-beta access committed and pushed - 2026-10-19 Asia/Jakarta
 
