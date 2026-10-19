@@ -1,5 +1,14 @@
 # Sentrapedia handoff
 
+## Public code repository published - 2026-10-19 Asia/Jakarta
+
+- Gaffer wants the code public like a source-available, open-core product: code downloadable, the database and full use sold ("ok atur aja yan gpenting ada yang public"). `drferdi/Sentrapedia` holds every private file and its history, so it stays private; the public repo is new, with fresh history, built from `npm run export:split`.
+- A side session (branch `claude/amazing-boyd-c315c1`, Gaffer: "rapikan dulu") fixed the public-tree leaks in `e2ac375e`, `ff5b1745`, `fcae69d9`, `dfd9743d`; Gaffer approved merging it ("3. Ya"), fast-forwarded here. Gaffer confirmed the test NIK is fictional ("1. Ya").
+- `e22129a7` (R2): `mira/service/DESIGN.md` (upstream's private design notes: local paths, the crew portal's login cookie) is a private path; its `SOURCE.json` entry carries `privateNote`, and `test_packaging.py` skips such an entry only when the file is absent; `apps/site/docs/migration-report.md` no longer names a local temp path. Checks first, exit 0 each: typecheck, lint, `test:all` (Vitest 342/342, site 49/49, system 42/42, MIRA 235 passed 1 skipped), `site:verify`, `site:docs`, ruff.
+- Export to `D:\DEV\sentrapedia-split-2026-10-19` (`public/` 452 files, `data/` 479; outside the monorepo, not tracked). Scan of `public/`: no private path, sample catalogue (2 diseases), no server IP, Cloudflare or Vercel IDs, tokens, keys, private emails or local paths; only `mira/service/data/SOURCE.md` names medboard as the ICD-10 source. MIRA tests in the public tree: 235 passed 1 skipped.
+- Pushed (Gaffer: "kalau sudah bersih push"; Jev: proceed_full): fresh repo, one commit `487ae25` by `drferdi <drferdi@users.noreply.github.com>`, 453 files with 31 LFS objects (34 MB), to `main` of `drferdi/Sentrapedia-p` (created public by Gaffer, empty before). Anonymous check: repo page and `LICENSE` 200, `theoracle/index/manifest.json` 404.
+- Open: `LICENSE` was published as written (Gaffer did not answer whether it was reviewed); the site's contact form sends to `info@sentrapedia.com` unless Vercel sets `CONTACT_RECIPIENT` (deploy not yet run); the commits above are local, not in `drferdi/Sentrapedia`; later public updates need a new export and a commit on top of `487ae25` in that folder, never a push from the monorepo.
+
 ## Public code tree cleaned up before a public repository - 2026-10-19 Asia/Jakarta
 
 - Task (parent session, for Gaffer): prepare, not publish, a public code repository from `npm run export:split`. Gaffer's answer to the leak report, relayed verbatim: "rapikan dulu" (fix L1-L4 and B3, L5/L7 if trivial). Not approved: NIK test value, LICENSE wording, `git init` of a public repo, GitHub repo, push.
