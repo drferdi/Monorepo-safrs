@@ -43,6 +43,7 @@ class ApiGuard:
         self.max_usd = max_usd
         self.max_consecutive_errors = max_consecutive_errors
         self.calls: list[dict] = []
+        self.in_flight = 0  # calls sent and not yet answered or failed; a call cut off by a cancel stays counted
         self.errors = 0
         self.consecutive_errors = 0
 

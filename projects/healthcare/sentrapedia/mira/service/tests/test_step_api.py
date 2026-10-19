@@ -840,7 +840,7 @@ def test_a_crashed_therapy_step_writes_its_spend_to_the_ledger(make_client, exam
 
 def test_a_step_the_caller_hangs_up_on_is_cancelled_and_charged_its_cap(make_client, example_request, settings, monkeypatch):
     # Row 46: the gateway gives up on a step (stage timeout, the clinician cancels); the engine stops its calls too.
-    # The call in flight reports no cost and may still be billed, so the step is charged its whole cap.
+    # The call in flight reports no cost and may still be billed; with no recorded cost to go by, the cap stands in.
     client, fake = make_client([3.0])
     monkeypatch.setattr(Request, "is_disconnected", lambda request: asyncio.sleep(0, bool(fake.calls)))
     body = post(client, example_request).json()
@@ -850,6 +850,31 @@ def test_a_step_the_caller_hangs_up_on_is_cancelled_and_charged_its_cap(make_cli
     assert record["costUsd"] == pytest.approx(settings.max_usd_per_step)
     assert AuditLog(settings.audit_dir).spent_today() == pytest.approx(settings.max_usd_per_step)
     assert len(fake.calls) == 1
+
+
+def test_a_call_cut_off_by_a_hang_up_is_charged_the_dearest_recorded_call(make_client, example_request, settings, monkeypatch):
+    # Gaffer, 2026-10-19: estimate the cut-off call from what the step recorded; the cap only when nothing is recorded.
+    client, fake = make_client([completion("plan", "o1"), 3.0])
+    monkeypatch.setattr(Request, "is_disconnected", lambda request: asyncio.sleep(0, bool(fake.calls)))
+    assert post(client, example_request).json()["error"]["code"] == "CLIENT_DISCONNECTED"
+    [record] = audit_lines(settings)
+    plan, cut_off = record["calls"]
+    assert plan["role"] == "plan" and plan["cost_usd"] > 0
+    assert (cut_off["cost_source"], cut_off["cost_usd"]) == ("estimated-cancelled", plan["cost_usd"])
+    assert record["costUsd"] == pytest.approx(2 * plan["cost_usd"])
+    assert AuditLog(settings.audit_dir).spent_today() == pytest.approx(2 * plan["cost_usd"])
+
+
+def test_a_hang_up_charges_every_raced_copy_in_flight_once(make_client, example_request, settings, monkeypatch):
+    # The diagnosis race is won and its losers charged by the race; the hang-up then cuts off every workup copy.
+    client, fake = make_client(fast_outputs([completion(diagnosis_part(), "gpt-4o")], [], pad=3.0), fast_assessment=True)
+    monkeypatch.setattr(Request, "is_disconnected", lambda request: asyncio.sleep(0, bool(fake.calls)))
+    assert post(client, example_request).json()["error"]["code"] == "CLIENT_DISCONNECTED"
+    [record] = audit_lines(settings)
+    winner = record["calls"][0]["cost_usd"]
+    assert [c["role"] for c in record["calls"]] == ["diagnosis"] * FAST_COPIES + ["cancelled"] * FAST_COPIES
+    assert all(c["cost_usd"] == winner for c in record["calls"])
+    assert record["costUsd"] == pytest.approx(2 * FAST_COPIES * winner)
 
 
 def test_the_daily_budget_holds_a_step_cap_until_the_step_settles(tmp_path):

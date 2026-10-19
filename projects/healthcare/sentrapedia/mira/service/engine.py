@@ -144,8 +144,14 @@ class StepEngine:
             )
         remaining = max(deadline - time.monotonic(), 0.001)
         started = time.time()
+        guard.in_flight += 1
         try:
-            response = await self.client.chat.completions.create(model=model, timeout=remaining, **kwargs)
+            try:
+                response = await self.client.chat.completions.create(model=model, timeout=remaining, **kwargs)
+            except Exception:  # a CancelledError is not an Exception: a cut-off call stays in flight (row 46)
+                guard.in_flight -= 1
+                raise
+            guard.in_flight -= 1
         except APITimeoutError:
             # A slow call is the step deadline, not an API failure: it must not pause the service.
             raise StepFailed("TIMEOUT", f"{role} call exceeded the step deadline") from None
@@ -187,6 +193,7 @@ class StepEngine:
             for task in tasks:
                 if not task.done():
                     task.cancel()
+                    guard.in_flight -= 1  # charged here, so a later hang-up does not charge it again
                     guard.calls.append({
                         "n": len(guard.calls) + 1, "role": role, "model_requested": model, "model_served": None,
                         "prompt_tokens": 0, "completion_tokens": 0, "reasoning_tokens": 0, "cost_usd": cost,
@@ -262,16 +269,18 @@ class StepEngine:
 
     def _charge_if_cancelled(self, guard: ApiGuard) -> None:
         """A step cancelled because its caller hung up (row 46) stops with calls in flight that report no cost and
-        may still be billed: it is charged its whole cap, so the budget never undercounts."""
-        if not asyncio.current_task().cancelling():
+        may still be billed. Gaffer, 2026-10-19: each is charged the dearest call the step recorded; before any call
+        has a cost, the step's cap stands in."""
+        if not asyncio.current_task().cancelling() or not guard.in_flight:
             return
         s = self.settings
-        guard.calls.append({
-            "n": len(guard.calls) + 1, "role": "cancelled", "model_requested": None, "model_served": None,
-            "prompt_tokens": 0, "completion_tokens": 0, "reasoning_tokens": 0,
-            "cost_usd": round(max(s.max_usd_per_step - guard.cost_usd, 0.0), 6),
-            "cost_source": "estimated-cancelled", "provider": s.llm_provider, "provider_served": None, "latency_s": None,
-        })
+        recorded = [c["cost_usd"] for c in guard.calls]
+        for cost in [max(recorded)] * guard.in_flight if recorded else [s.max_usd_per_step]:
+            guard.calls.append({
+                "n": len(guard.calls) + 1, "role": "cancelled", "model_requested": None, "model_served": None,
+                "prompt_tokens": 0, "completion_tokens": 0, "reasoning_tokens": 0, "cost_usd": cost,
+                "cost_source": "estimated-cancelled", "provider": s.llm_provider, "provider_served": None, "latency_s": None,
+            })
 
     async def run(
         self, case: dict, grounding: dict | None = None, omit_therapy: bool = False, on_guard=None
