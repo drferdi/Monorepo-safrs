@@ -45,6 +45,16 @@ def digest(value) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
 
 
+def scanned_text(payload: dict) -> str:
+    """The request parts that carry case or passage text. Ids, hashes and the traceId are random hex: about 1 in 735
+    random UUIDs matched a phone pattern, which refused synthetic cases at random."""
+    evidence = [
+        {"text": item["text"], **{key: item["source"][key] for key in ("title", "docSource", "origin")}}
+        for item in (payload.get("grounding") or {}).get("evidence", [])
+    ]
+    return json.dumps({"case": payload["case"], "diagnosis": payload.get("diagnosis"), "evidence": evidence}, ensure_ascii=False)
+
+
 def prune_audit(directory: Path) -> None:
     """Deletes day files older than AUDIT_RETENTION_DAYS; other files stay."""
     today = datetime.now(UTC).date()
@@ -132,7 +142,7 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
             audit.write({"traceId": trace_id, "principal": principal, "dataPolicy": settings.data_policy,
                          "status": "unavailable", "errorCode": "DATA_POLICY", "costUsd": 0.0})
             return JSONResponse(response)
-        kinds = pii_kinds(json.dumps(payload, ensure_ascii=False))
+        kinds = pii_kinds(scanned_text(payload))
         if kinds:
             response = engine.unavailable("PII_DETECTED", "Blocked before any model call: " + ", ".join(kinds))
             audit.write({"traceId": trace_id, "principal": principal, "dataPolicy": settings.data_policy,

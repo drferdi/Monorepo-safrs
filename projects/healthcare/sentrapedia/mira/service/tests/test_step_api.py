@@ -220,6 +220,25 @@ def test_other_identifiers_are_blocked(make_client, example_request, text):
     assert fake.calls == []
 
 
+def test_random_trace_ids_and_hashes_are_not_read_as_identifiers(make_client, example_request):
+    # The gateway's trace id is a random UUID; this one ends in "62930803889", which the phone pattern matched.
+    grounding = theoracle_grounding()
+    grounding["queryDigest"] = "a" * 53 + "62123456789"
+    client, fake = make_client(model_outputs())
+    body = post(client, {**example_request, "traceId": "3ee4da5a-7989-49d0-83a4-e62930803889", "grounding": grounding}).json()
+    assert body["status"] == "ok"
+    assert fake.calls
+
+
+def test_identifiers_in_evidence_text_are_still_blocked(make_client, example_request):
+    grounding = theoracle_grounding()
+    grounding["evidence"][0]["text"] = "hubungi 081234567890"
+    client, fake = make_client(model_outputs())
+    body = post(client, {**example_request, "grounding": grounding}).json()
+    assert body["error"]["code"] == "PII_DETECTED"
+    assert fake.calls == []
+
+
 def test_step_deadline_returns_timeout(make_client, example_request):
     client, _ = make_client([5.0], step_deadline_s=0.2)
     body = post(client, example_request).json()
