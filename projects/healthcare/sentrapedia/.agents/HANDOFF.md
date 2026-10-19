@@ -7,7 +7,8 @@
 - `24826b36` (R2, row 50 engine part): `_race` in `mira/service/engine.py` treats a copy that answers JSON but no object as `MODEL_OUTPUT_INVALID`, so another copy can still win; before, `_complete_therapy` raised `AttributeError` and the step answered `INTERNAL_ERROR`. Red first in `test_step_api.py`.
 - `99dabdf3` (R1): `docs/TECH-DEBT.md` gains a "Closed 2026-10-19" section: every row is done, closed by decision, or one of nine accepted risks; new findings go to `docs/plans/` or a new dated audit, not to this list.
 - Verified, first run each: typecheck 0, eslint on `contract.ts` 0, Vitest 327/327, MIRA pytest 235 passed 1 skipped, `uvx ruff@0.17.1 check mira` 0. Browser (preview config `sentrapedia`): the case form with "+62 812 3456 7890" shows "Hapus pola identitas dari input..." and sent no POST to `/api/mira` (the page's fetch blocked such a POST during the check, so no paid call was possible). `next dev` rewrote `next-env.d.ts`; restored.
-- Open: nothing planned; the accepted risks are listed in `docs/TECH-DEBT.md`. The phase 3 split is pushed with no PR yet; this branch is local only.
+- Open: nothing planned; the accepted risks are listed in `docs/TECH-DEBT.md`.
+- Pushed (Gaffer: "go push: subtree split ke branch baru chore/sentrapedia-tech-debt-close-2026-10-19 di Sentrapedia, dengan tiga cek dulu"; Jev: proceed_full): split `d6f54f8d` of `044279e0` to the new branch `chore/sentrapedia-tech-debt-close-2026-10-19`. Checked first: it descends from the last split `e07c8865` (in `main` `5ecd4293` via PR #20; five commits on top), its tree equals the capsule tree at `044279e0` (`a002b610`), no LFS-filtered file changed (seven files), and it merges with `main` without conflict. No force; `main` and origin untouched; no PR yet. This note is a local commit after the split.
 
 ## Read-only audit, then MIRA false PII refusals fixed - 2026-10-19 Asia/Jakarta
 
