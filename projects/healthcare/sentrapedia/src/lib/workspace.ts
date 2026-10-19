@@ -90,10 +90,6 @@ export function loadWorkspace(raw: string | null): { workspace: Workspace; unrea
   return workspace ? { workspace, unreadable: null } : { workspace: initialWorkspace, unreadable: raw };
 }
 
-export function restoreWorkspace(raw: string | null): Workspace {
-  return raw ? parseWorkspace(raw) ?? initialWorkspace : initialWorkspace;
-}
-
 /** A validated workspace from saved or imported JSON, or null when the text is not a workspace backup. */
 export function parseWorkspace(raw: string): Workspace | null {
   try {

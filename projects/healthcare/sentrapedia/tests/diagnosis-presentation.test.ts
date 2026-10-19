@@ -2,12 +2,14 @@ import { describe, expect, it, vi } from "vitest";
 import { emptyCase, type MiraResult } from "../src/lib/mira/contract";
 import { diagnosisContent, diagnosisSectionTitles, icd10SectionTitle, miraDraft, miraMessage, referralSectionTitle, sourceForDisplay, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/mira/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
-import { theOracleDiseases, relatedDiseases } from "../src/lib/theoracle";
+import { theOracleDiseases } from "../src/lib/theoracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
 import { theOracleSourceLinks } from "../src/lib/mira/presentation";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
-import { restoreWorkspace, initialWorkspace, workspaceReducer } from "../src/lib/workspace";
+import { initialWorkspace, workspaceReducer, loadWorkspace } from "../src/lib/workspace";
 import { gateTherapy } from "../src/lib/theoracle-evidence-gate";
+
+const withCode = (code: string) => theOracleDiseases.filter(d => d.kode.trim().toUpperCase() === code);
 
 const analysis = {
   case: { ...emptyCase(), chiefComplaint: "Keluhan sintetis", anamnesis: { freeText: "Gejala sintetis" }, currentMedications: ["Obat tercatat"], results: [{ name: "Tes sintetis", value: 3, unit: "unit" }] },
@@ -28,7 +30,7 @@ describe("TheOracle citation persistence", () => {
     expect(message.content).toContain("- PNPK Malaria.md [chunk-1] · kemiripan 0.68");
     const state = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [message] }] };
     const edited = workspaceReducer(state, { type: "message.edit", encounterId: state.encounters[0].id, messageId: message.id, content: message.content + "\nCatatan dokter" });
-    const restored = restoreWorkspace(JSON.stringify(edited));
+    const restored = loadWorkspace(JSON.stringify(edited)).workspace;
     const saved = restored!.encounters[0].messages[0];
     expect(saved.sourceText).toBe(message.sourceText);
     expect(diagnosisContent(saved)).toContain("Catatan dokter");
@@ -72,7 +74,7 @@ describe("six-section diagnosis presentation", () => {
   });
   it("shows the complete database narratives for the likely diagnosis in their own sections", () => {
     const content = miraMessage(analysis).content;
-    const disease = relatedDiseases("J00")[0];
+    const disease = withCode("J00")[0];
     for (const text of [disease.definisi, ...disease.gejala, disease.diagnosis]) expect(section(content, "Diagnosis")).toContain(text);
     expect(section(content, "Terapi Farmakologi")).toContain(disease.terapi);
     expect(section(content, "Edukasi")).toContain(disease.rujukan);
@@ -80,7 +82,7 @@ describe("six-section diagnosis presentation", () => {
   });
   it("shows database narratives for the highest group that has one, not for every candidate", () => {
     const input = withDifferential({ likely: [{ icd10: "R10.3", label: "Nyeri perut bawah", confidenceTier: "low" }], alternatives: [{ icd10: "K35.8", label: "Appendicitis", confidenceTier: "low" }], cannotMiss: [{ icd10: "A06.0", label: "Amoebic dysentery", confidenceTier: "low" }] });
-    expect(relatedDiseases("R10.3")).toHaveLength(0);
+    expect(withCode("R10.3")).toHaveLength(0);
     const content = miraMessage(input).content;
     const appendicitis = theOracleDiseases.find(d => d.kode === "K35")!, dysentery = theOracleDiseases.find(d => d.kode === "A03-A09")!;
     expect(section(content, "Diagnosis")).toContain(appendicitis.definisi);
@@ -97,7 +99,7 @@ describe("six-section diagnosis presentation", () => {
   it("keeps every database record of other candidates in the collapsed references", () => {
     const repeated = withDifferential({ likely: [], alternatives: [{ icd10: "A09", label: "Alternatif sintetis", confidenceTier: "low" }], cannotMiss: [] });
     const content = miraMessage(repeated).content;
-    for (const disease of relatedDiseases("A09")) { expect(content).toContain(`record ${disease.id}`); expect(content).toContain(disease.terapi); }
+    for (const disease of withCode("A09")) { expect(content).toContain(`record ${disease.id}`); expect(content).toContain(disease.terapi); }
     const unmatched = withDifferential({ likely: [{ icd10: "C92.0", label: "Kandidat sintetis", confidenceTier: "low" }], alternatives: [], cannotMiss: [] });
     const therapy = section(miraMessage(unmatched).content, "Terapi Farmakologi");
     expect(therapy).toBe("Belum ada data terapi untuk diagnosis ini.");
@@ -148,7 +150,7 @@ describe("six-section diagnosis presentation", () => {
     const therapy = { forDiagnosis: { icd10: "J00", label: "Diagnosis sintetis" }, regimen: [{ drug: "Ceftriaxone", dose: "1x500mg", route: "IM", duration: "dosis tunggal", note: "1g bila >=150kg" }, { drug: "Azithromycin", dose: "1x1g", route: "PO", duration: "dosis tunggal", note: "" }], interactions: ["Azithromycin dengan warfarin: risiko perdarahan", "Ceftriaxone dengan kalsium IV: presipitasi"], contraindications: ["Ceftriaxone: alergi sefalosporin"] };
     const content = miraMessage({ ...analysis, result: { ...analysis.result, therapy } }).content;
     expect(section(content, "Terapi Farmakologi")).toBe("Untuk Diagnosis sintetis (J00)\n\n- Ceftriaxone 1x500mg IM dosis tunggal (1g bila >=150kg)\n- Azithromycin 1x1g PO dosis tunggal\n\nDDI\n- Azithromycin dengan warfarin: risiko perdarahan\n- Ceftriaxone dengan kalsium IV: presipitasi\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
-    const disease = relatedDiseases("J00")[0];
+    const disease = withCode("J00")[0];
     expect(content.indexOf(disease.terapi)).toBeGreaterThan(content.indexOf("Referensi penyakit terkait"));
     const single = miraMessage({ ...analysis, result: { ...analysis.result, therapy: { ...therapy, regimen: [therapy.regimen[1]], interactions: [] } } }).content;
     expect(section(single, "Terapi Farmakologi")).toBe("Untuk Diagnosis sintetis (J00)\n\nAzithromycin 1x1g PO dosis tunggal\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");

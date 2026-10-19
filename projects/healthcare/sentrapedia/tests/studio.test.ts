@@ -3,7 +3,7 @@ import { intentGroups, emptySection, documentSections, documentTitle, supporting
 import { defaultReviewItems } from "../src/lib/workflow";
 import { createDraft, modeIds, modes } from "../src/lib/drafts";
 import { clinicalTemplates, insertTemplate, modeCategories, templateText } from "../src/lib/clinical-templates";
-import { initialWorkspace, restoreWorkspace, workspaceReducer, type Message, type Workspace } from "../src/lib/workspace";
+import { initialWorkspace, workspaceReducer, type Message, type Workspace, loadWorkspace } from "../src/lib/workspace";
 
 const message: Message = { id: "doc", role: "assistant", content: "# Note\n\n## History\nOriginal\n\n## Plan\nKeep\n---\nFooter", mode: "clinic", createdAt: "2026-10-09T01:00:00Z" };
 const state: Workspace = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [message] }] };
@@ -22,9 +22,9 @@ describe("document provenance and review", () => {
     expect(changed.originalContent).toBe(message.content);
   });
   it("preserves legacy documents and discards malformed optional metadata only", () => {
-    expect(restoreWorkspace(JSON.stringify(state))).toEqual(state);
+    expect(loadWorkspace(JSON.stringify(state)).workspace).toEqual(state);
     const malformed = { ...state, encounters: [{ ...state.encounters[0], messages: [{ ...message, sourceText: 42, reviewStatus: "approved", originalContent: null }] }] };
-    expect(restoreWorkspace(JSON.stringify(malformed)).encounters[0].messages[0]).toEqual(message);
+    expect(loadWorkspace(JSON.stringify(malformed)).workspace.encounters[0].messages[0]).toEqual(message);
   });
 });
 
@@ -96,7 +96,7 @@ describe("Indonesian patient wording", () => {
 describe("saved seed patient", () => {
   it("renames the untouched demo patient from an older build to Pasien and leaves every other patient as it is", () => {
     const old = { ...initialWorkspace, patients: [{ ...initialWorkspace.patients[0], name: "Patient", notes: "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." }, { id: "own", name: "Patient", age: "", sex: "Female", notes: "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." }, { ...initialWorkspace.patients[0], id: "demo-edited", name: "Bu Ani" }] };
-    const [demo, own, edited] = restoreWorkspace(JSON.stringify(old)).patients;
+    const [demo, own, edited] = loadWorkspace(JSON.stringify(old)).workspace.patients;
     expect(demo).toEqual(initialWorkspace.patients[0]);
     expect(own).toEqual(old.patients[1]);
     expect(edited.name).toBe("Bu Ani");

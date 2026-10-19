@@ -8,7 +8,6 @@ export function searchDiseases(query: string, category: string): Disease[] {
   const terms = query.trim().toLocaleLowerCase("id").split(/\s+/).filter(Boolean);
   return theOracleDiseases.filter(d => (category === "all" || d.kategori === category) && terms.every(term => `${d.nama} ${d.kode} ${d.kategori}`.toLocaleLowerCase("id").includes(term)));
 }
-export function relatedDiseases(code: string): Disease[] { return theOracleDiseases.filter(d => d.kode.trim().toUpperCase() === code.trim().toUpperCase()); }
 
 // True when a catalog code field ("B36.0", "B20-B24", "L01, L08") covers an ICD-10 code.
 export function referenceIncludes(sourceCode: string, code: string): boolean {

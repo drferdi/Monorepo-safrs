@@ -1,14 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { theOracleCategories, theOracleDiseases, theOracleSource, searchDiseases, relatedDiseases } from "../src/lib/theoracle";
+import { theOracleCategories, theOracleDiseases, theOracleSource, searchDiseases } from "../src/lib/theoracle";
 import { createMiraGateway } from "../src/lib/mira/gateway";
 import { containsIdentity, validCase, validResult, type MiraResult } from "../src/lib/mira/contract";
 import { miraDraft, miraMessage } from "../src/lib/mira/presentation";
-import { initialWorkspace, newEncounter, restoreWorkspace, workspaceReducer } from "../src/lib/workspace";
+import { initialWorkspace, newEncounter, workspaceReducer, loadWorkspace } from "../src/lib/workspace";
 import requestSchema from "../src/lib/mira/request.schema.json";
 import responseSchema from "../src/lib/mira/response.schema.json";
 import { SUPPORTED_KEYWORDS, type JsonSchema } from "../src/lib/mira/validate-json";
+
+const withCode = (code: string) => theOracleDiseases.filter(d => d.kode.trim().toUpperCase() === code);
 
 const caseData = { demographics: { ageYears: 30, sex: "unknown" }, chiefComplaint: "Keluhan fiktif untuk uji integrasi", anamnesis: { freeText: "Contoh sintetis" }, vitals: {}, physicalExam: [], results: [], currentMedications: [], knownConditions: [], allergies: [], facilityCapabilities: [] };
 const result: MiraResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "J00", label: "Nama keluaran uji", confidenceTier: "low" }], alternatives: [], cannotMiss: [{ icd10: "C92.0", label: "Kondisi di luar TheOracle", confidenceTier: "unknown" }] }, evidence: [{ icd10: "J00", supporting: ["Alasan dari layanan"], opposing: ["Data belum lengkap"] }], missingInformation: ["Pemfis belum tersedia"], nextBestActions: [{ kind: "exam", item: "Lengkapi pemfis", reason: "Data kurang" }], disposition: null, unfilled: [{ field: "disposition", reason: "Belum cukup data" }], meta: { version: "test-only", model: "mock", costUsd: 0 } };
@@ -17,7 +19,7 @@ const request = (body: unknown = { case: caseData, synthetic: true }, origin = "
 
 describe("TheOracle local catalog", () => {
   it("ties provenance to the exact original source bytes", () => { expect(createHash("sha256").update(readFileSync("oracle/sentrapedia.json")).digest("hex")).toBe(theOracleSource.hash); });
-  it("uses all actual categories and preserves repeated codes", () => { expect(theOracleDiseases).toHaveLength(144); expect(theOracleCategories).toHaveLength(15); expect(theOracleCategories).toContain("Pernapasan Bawah"); expect(relatedDiseases("A09")).toHaveLength(2); expect(relatedDiseases("C92.0")).toEqual([]); });
+  it("uses all actual categories and preserves repeated codes", () => { expect(theOracleDiseases).toHaveLength(144); expect(theOracleCategories).toHaveLength(15); expect(theOracleCategories).toContain("Pernapasan Bawah"); expect(withCode("A09")).toHaveLength(2); expect(withCode("C92.0")).toEqual([]); });
   it("searches name, code and category with no clinical ranking", () => { expect(searchDiseases("pneumonia", "all").length).toBeGreaterThan(0); expect(searchDiseases("J00", "all")[0].id).toBe(1); expect(searchDiseases("", "Saluran Cerna").every(d => d.kategori === "Saluran Cerna")).toBe(true); expect(searchDiseases("zzzz", "all")).toEqual([]); expect(theOracleSource.hash).toHaveLength(64); });
 });
 describe("MIRA contract and presentation", () => {
@@ -41,7 +43,7 @@ describe("MIRA contract and presentation", () => {
     const encounter = newEncounter();
     let state = workspaceReducer(initialWorkspace, { type: "encounter.add", encounter });
     state = workspaceReducer(state, { type: "message.add", encounterId: encounter.id, messages: [message] });
-    const restored = restoreWorkspace(JSON.stringify(state)).encounters.find(e => e.id === encounter.id)!.messages[0];
+    const restored = loadWorkspace(JSON.stringify(state)).workspace.encounters.find(e => e.id === encounter.id)!.messages[0];
     expect(restored.reviewStatus).toBe("draft"); expect(restored.reviewItems?.every(i => !i.checked)).toBe(true);
     expect(JSON.parse(restored.sourceText!).case).toEqual(caseData); expect(JSON.parse(restored.sourceText!).result).toEqual(result);
     expect(restored.content).toContain("C92.0"); expect(restored.originalContent).toBe(restored.content);

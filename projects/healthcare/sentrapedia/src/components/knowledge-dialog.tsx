@@ -4,9 +4,8 @@ import { useRef, useState } from "react";
 import { theOracleCategories, theOracleDiseases, theOracleSource, searchDiseases } from "../lib/theoracle";
 import { Dialog } from "./dialog";
 import { MiraCaseForm, type MiraAnalysis } from "./mira-case-form";
-import type { CaseState } from "../lib/mira/types";
 
-export function KnowledgeDialog({ initialTab, initialCase, saveOnSuccess, onClose, onSave }: { initialTab?: string; initialCase?: CaseState; saveOnSuccess?: boolean; onClose: () => void; onSave: (analysis: MiraAnalysis) => void }) {
+export function KnowledgeDialog({ initialTab, onClose, onSave }: { initialTab?: string; onClose: () => void; onSave: (analysis: MiraAnalysis) => void }) {
   const [tab, setTab] = useState(initialTab === "mira" ? "mira" : "theoracle");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
@@ -14,10 +13,10 @@ export function KnowledgeDialog({ initialTab, initialCase, saveOnSuccess, onClos
   const detail = useRef<HTMLElement>(null);
   const items = searchDiseases(query, category);
   const disease = theOracleDiseases.find(d => d.id === selected);
-  if (initialCase || initialTab === "mira") return <Dialog title="Analisis kasus" subtitle="Tinjau keluhan lalu mulai analisis. Data tambahan bersifat opsional." onClose={onClose}><MiraCaseForm initialCase={initialCase} saveOnSuccess={saveOnSuccess} onSave={onSave}/></Dialog>;
+  if (initialTab === "mira") return <Dialog title="Analisis kasus" subtitle="Tinjau keluhan lalu mulai analisis. Data tambahan bersifat opsional." onClose={onClose}><MiraCaseForm onSave={onSave}/></Dialog>;
   return <Dialog title="Pustaka Klinis" subtitle="Katalog penyakit lokal dan analisis kasus untuk ditinjau klinisi." wide onClose={onClose}>
     <div className="workflow-tabs" role="group" aria-label="Sumber pengetahuan"><button aria-pressed={tab === "theoracle"} onClick={() => setTab("theoracle")}>Penyakit · {theOracleDiseases.length} entri</button><button aria-pressed={tab === "mira"} onClick={() => setTab("mira")}>Analisis kasus</button></div>
-    {tab === "mira" ? <MiraCaseForm initialCase={initialCase} saveOnSuccess={saveOnSuccess} onSave={onSave}/> : <div className="theoracle-catalog">
+    {tab === "mira" ? <MiraCaseForm onSave={onSave}/> : <div className="theoracle-catalog">
       <p className="panel-caption">Isi referensi belum diverifikasi klinis. Kutipan halaman PNPK belum tersedia. {theOracleCategories.length} kategori pada entri; metadata sumber mendefinisikan {theOracleSource.declaredCategories} kategori.</p>
       <div className="queue-filters"><label>Cari penyakit<input aria-label="Cari penyakit" value={query} placeholder="Nama, kode, atau kategori…" onChange={e => { setQuery(e.target.value); setSelected(null); }}/></label><label>Kategori<select aria-label="Kategori TheOracle" value={category} onChange={e => { setCategory(e.target.value); setSelected(null); }}><option value="all">Semua kategori</option>{theOracleCategories.map(c => <option key={c}>{c}</option>)}</select></label></div>
       <p role="status">{items.length} entri ditemukan</p>
