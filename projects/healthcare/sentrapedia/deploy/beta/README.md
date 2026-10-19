@@ -11,9 +11,13 @@ One Ubuntu 24.04 server (2 vCPU, 4 GB RAM, Jakarta) runs the Docker image on loo
    GIT_SSH_COMMAND="ssh -i /root/.ssh/sentrapedia_deploy" git clone git@github.com:drferdi/Sentrapedia.git /opt/sentrapedia
    git -C /opt/sentrapedia config core.sshCommand "ssh -i /root/.ssh/sentrapedia_deploy"
    ```
-4. Put the Gemini key in `/etc/sentrapedia/beta.env`, then run `bash /opt/sentrapedia/deploy/beta/update.sh`. The first build downloads the 1.2 GB model and takes several minutes.
-5. Cloudflare → Zero Trust → Networks → Tunnels → create a `cloudflared` tunnel, run the install command it shows on the server, and add the public hostname `beta.sentrapedia.com` → `http://localhost:<port>` (3201 unless `SENTRAPEDIA_HOST_PORT` is set).
-6. Cloudflare → Zero Trust → Access → Applications → add a self-hosted application for `beta.sentrapedia.com` with an Allow policy that includes the invited emails. Login method: one-time PIN.
+4. Image registry (since 2026-10-20, once). CI builds the image on every push to `main` and publishes it to private GHCR as `ghcr.io/drferdi/sentrapedia-beta`, so the server only pulls it.
+   - Before the first merge with this setup: GitHub → Settings → Billing → set a spending limit for Packages. The free tier holds 500 MB of private storage and the first image is about 1.8 GB, so without a limit above $0 the first publish fails. Estimate, not measured: about US$1-3 a month (storage of five images that share most layers, plus about 0.1-0.3 GB transfer per code update; a `package-lock.json` change moves the 1.2 GB model again).
+   - GitHub → Settings → Developer settings → Personal access tokens (classic) → a token with `read:packages` only (fine-grained tokens do not cover packages). On the server, as root, paste it when asked: `docker login ghcr.io -u drferdi --password-stdin`. Docker keeps it in `/root/.docker/config.json`, readable by root only.
+   - After the first publish, check that the package on GitHub shows **Private**.
+5. Put the Gemini key in `/etc/sentrapedia/beta.env`, then run `bash /opt/sentrapedia/deploy/beta/update.sh`. The first pull fetches the 1.2 GB model layer; later updates fetch only the changed layers.
+6. Cloudflare → Zero Trust → Networks → Tunnels → create a `cloudflared` tunnel, run the install command it shows on the server, and add the public hostname `beta.sentrapedia.com` → `http://localhost:<port>` (3201 unless `SENTRAPEDIA_HOST_PORT` is set).
+7. Cloudflare → Zero Trust → Access → Applications → add a self-hosted application for `beta.sentrapedia.com` with an Allow policy that includes the invited emails. Login method: one-time PIN.
 
 ## Settings (`/etc/sentrapedia/beta.env`)
 
@@ -27,6 +31,7 @@ On a shared server, `update.sh` also reads `SENTRAPEDIA_HOST_PORT` (default `320
 
 ## Update and roll back
 
-- Update: `bash /opt/sentrapedia/deploy/beta/update.sh` (pulls `main`, rebuilds, restarts, waits until ready).
-- Roll back: `git -C /opt/sentrapedia checkout <previous commit>`, then run the same build and run commands from `update.sh` without `git pull`.
+- Update: after CI on `main` is green, `bash /opt/sentrapedia/deploy/beta/update.sh` (pulls `main`, pulls the image `sha-<commit>` built by CI, restarts, waits until ready). If CI is still running or failed, it stops with a message and the running container stays.
+- Build on the server instead (CI down, or no `docker login`): `SENTRAPEDIA_BUILD=local bash /opt/sentrapedia/deploy/beta/update.sh`. It takes 12-18 minutes and squeezes medboard's memory, so use it only when needed.
+- Roll back: `SENTRAPEDIA_IMAGE_TAG=sha-<previous commit> bash /opt/sentrapedia/deploy/beta/update.sh` (no `git pull`). CI keeps the five newest images; earlier tags pulled on this server also stay until removed.
 - Logs: `docker logs -f sentrapedia-beta`.

@@ -16,6 +16,11 @@ FROM dependencies AS builder
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
+# Layers for a small update (2026-10-20): the large, rarely changed parts leave the standalone tree and get their own
+# runtime layers, so a code change ships only the last layer. The model comes from the dependencies stage instead.
+# The public code tree has no index (and may have no model), so an absent folder becomes an empty one.
+RUN mkdir -p /stage/theoracle && cd .next/standalone && rm -rf theoracle/model \
+ && for dir in theoracle/index node_modules; do if [ -d "$dir" ]; then mv "$dir" "/stage/$dir"; else mkdir -p "/stage/$dir"; fi; done
 
 FROM node:24-bookworm-slim AS runtime
 WORKDIR /app
@@ -28,8 +33,15 @@ ENV PORT=3000
 # loopback only, never on a public port:
 #   docker run -p 127.0.0.1:3000:3000 --env GEMINI_API_KEY <image>
 ENV HOSTNAME=0.0.0.0
-COPY --from=builder --chown=node:node /app/.next/standalone ./
+# Stable first: model (changes with package-lock), index (with the database), node_modules and the MIRA venv
+# (with the locks), then the app.
+COPY --from=dependencies --chown=node:node /app/theoracle/model ./theoracle/model
+COPY --from=builder --chown=node:node /stage/theoracle/index ./theoracle/index
+COPY --from=builder --chown=node:node /stage/node_modules ./node_modules
+COPY scripts/install-mira.mjs scripts/mira-runtime.mjs scripts/mira-profile.json ./scripts/
+COPY mira/requirements.lock ./mira/
 RUN node scripts/install-mira.mjs --production && chown -R node:node /app/.runtime
+COPY --from=builder --chown=node:node /app/.next/standalone ./
 USER node
 EXPOSE 3000
 CMD ["node", "scripts/run-system.mjs", "standalone"]

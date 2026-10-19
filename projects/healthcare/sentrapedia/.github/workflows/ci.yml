@@ -13,7 +13,8 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # A push to main is never cancelled, so every merged commit gets its image (the beta server pulls it by SHA).
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   check:
@@ -61,11 +62,19 @@ jobs:
       - run: npm run site:docs
       - run: npm run build
       - run: npm run deploy:dry-run
-  # Builds the image only: the launcher's provider preflight needs a real GEMINI_API_KEY, which CI never holds.
+  # Builds the image; the launcher's provider preflight needs a real GEMINI_API_KEY, which CI never holds, so it is not
+  # run. A push to main of this private repository also publishes the image to private GHCR for the beta server
+  # (deploy/beta/update.sh pulls it by SHA). The public code mirror never publishes.
   docker:
     needs: check
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ghcr.io/${{ github.repository_owner }}/sentrapedia-beta
+      PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.repository.private }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -79,9 +88,27 @@ jobs:
       - run: git lfs pull
       - run: '! git lfs ls-files | grep -q " - "'
       - uses: docker/setup-buildx-action@v4
+      - if: env.PUBLISH == 'true'
+        run: echo "$GITHUB_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - uses: docker/build-push-action@v7
         with:
           context: .
-          push: false
+          push: ${{ env.PUBLISH == 'true' }}
+          tags: |
+            ${{ env.IMAGE }}:sha-${{ github.sha }}
+            ${{ env.IMAGE }}:main
+          labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          # One manifest per push, so the retention step below counts images, not attestations.
+          provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      # Retention: keep the five newest images (rollback range), so private storage stays small.
+      - if: env.PUBLISH == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          versions="/users/${{ github.repository_owner }}/packages/container/sentrapedia-beta/versions"
+          gh api --paginate "$versions" --jq '.[] | "\(.created_at) \(.id)"' | sort -r | tail -n +6 | cut -d' ' -f2 \
+            | xargs -r -I{} gh api -X DELETE "$versions/{}"
