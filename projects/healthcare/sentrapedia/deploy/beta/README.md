@@ -12,7 +12,7 @@ One Ubuntu 24.04 server (2 vCPU, 4 GB RAM, Jakarta) runs the Docker image on loo
    git -C /opt/sentrapedia config core.sshCommand "ssh -i /root/.ssh/sentrapedia_deploy"
    ```
 4. Put the Gemini key in `/etc/sentrapedia/beta.env`, then run `bash /opt/sentrapedia/deploy/beta/update.sh`. The first build downloads the 1.2 GB model and takes several minutes.
-5. Cloudflare → Zero Trust → Networks → Tunnels → create a `cloudflared` tunnel, run the install command it shows on the server, and add the public hostname `beta.sentrapedia.com` → `http://localhost:<port>` (3000 unless `SENTRAPEDIA_HOST_PORT` is set).
+5. Cloudflare → Zero Trust → Networks → Tunnels → create a `cloudflared` tunnel, run the install command it shows on the server, and add the public hostname `beta.sentrapedia.com` → `http://localhost:<port>` (3201 unless `SENTRAPEDIA_HOST_PORT` is set).
 6. Cloudflare → Zero Trust → Access → Applications → add a self-hosted application for `beta.sentrapedia.com` with an Allow policy that includes the invited emails. Login method: one-time PIN.
 
 ## Settings (`/etc/sentrapedia/beta.env`)
@@ -23,7 +23,7 @@ One Ubuntu 24.04 server (2 vCPU, 4 GB RAM, Jakarta) runs the Docker image on loo
 | `SENTRAPEDIA_PUBLIC_ORIGIN` | `https://beta.sentrapedia.com`, the only origin the gateway accepts besides loopback. |
 | `MIRA_MAX_CONCURRENT` | `3`, analyses that may run at once (1-8). The 5 USD daily budget still applies. |
 
-On a shared server, `update.sh` also reads `SENTRAPEDIA_HOST_PORT` (default `3000`; choose a port no other app uses) and `SENTRAPEDIA_MEMORY` (default `2500m`) from its own environment, for example `SENTRAPEDIA_HOST_PORT=3201 bash update.sh`.
+On a shared server, `update.sh` also reads `SENTRAPEDIA_HOST_PORT` (default `3201`, beside medboard on `3000`; change it only together with the tunnel's service URL) and `SENTRAPEDIA_MEMORY` (default `2500m`) from its own environment, for example `SENTRAPEDIA_HOST_PORT=3202 bash update.sh`.
 
 ## Update and roll back
 

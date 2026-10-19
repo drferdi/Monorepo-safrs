@@ -3,9 +3,9 @@
 #   sudo bash /opt/sentrapedia/deploy/beta/update.sh
 set -euo pipefail
 cd "$(dirname "$0")/../.."
-# Shared server (2026-10-19: beta runs beside medboard): pick a free loopback port and cap memory, so Sentrapedia
-# stops before it can starve the other app.
-HOST_PORT="${SENTRAPEDIA_HOST_PORT:-3000}"
+# Shared server (2026-10-19: beta runs beside medboard, which holds 3000): loopback port 3201, where the Cloudflare
+# Tunnel points, and a memory cap, so Sentrapedia stops before it can starve the other app.
+HOST_PORT="${SENTRAPEDIA_HOST_PORT:-3201}"
 MEMORY="${SENTRAPEDIA_MEMORY:-2500m}"
 
 grep -q '^GEMINI_API_KEY=.\+' /etc/sentrapedia/beta.env || { echo "Set GEMINI_API_KEY in /etc/sentrapedia/beta.env first." >&2; exit 1; }
