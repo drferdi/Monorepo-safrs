@@ -1,5 +1,12 @@
 # Sentrapedia handoff
 
+## Smoother answer reveal and reading size pushed - 2026-10-19/20 Asia/Jakarta
+
+- Gaffer: "Commit perubahan lokal ini (R1): src/lib/typing.ts, src/components/diagnosis-document.tsx, src/app/globals.css, tests/typing-lines.test.ts ... Go push: subtree split ke branch baru, tiga cek dulu. Setelah PR saya merge, jalankan di server: sudo SENTRAPEDIA_HOST_PORT=3201 bash /opt/sentrapedia/deploy/beta/update.sh". The four files came from an earlier session; reviewed: `linesUpTo` reveals whole lines at an even rhythm, lines fade in place (`ink-in`, none under reduced motion), analysis body 15-16 px with 1.65 line height.
+- Checks first, exit 0 each: typecheck, lint, `test:all` (Vitest 346/346, site 49/49, system 42/42, MIRA 235 passed 1 skipped). `4d1b111c` (R1): exactly the four files.
+- Pushed (Jev: proceed_full; `drferdi/Sentrapedia` confirmed private, anonymous 404): split `5c2d8126` to the new branch `feat/sentrapedia-answer-reveal-2026-10-19` (name chosen by this session). It descends from `a987788a` (in `main` `d7d0a511`; 11 commits on top, so it also carries the beta, public-tree clean-up and handoff commits), its tree equals the capsule tree (`e4ce7819`), no LFS-filtered file changed (21 files), merges cleanly with `main`. No force, no PR. The next split must descend from `5c2d8126`.
+- Waiting: Gaffer opens and merges the PR; then `update.sh` on the server (about 18 minutes, watched for medboard). The branch also brings `CONTACT_RECIPIENT` (site contact form defaults to `info@sentrapedia.com`) to `main`.
+
 ## Public code repository published - 2026-10-19 Asia/Jakarta
 
 - Gaffer wants the code public like a source-available, open-core product: code downloadable, the database and full use sold ("ok atur aja yan gpenting ada yang public"). `drferdi/Sentrapedia` holds every private file and its history, so it stays private; the public repo is new, with fresh history, built from `npm run export:split`.
