@@ -220,6 +220,9 @@ class StepEngine:
                     except json.JSONDecodeError:
                         failure = StepFailed("MODEL_OUTPUT_INVALID", f"{role} call returned invalid JSON")
                         continue
+                    if not isinstance(content, dict):  # a JSON array or scalar crashed `accept` (row 50)
+                        failure = StepFailed("MODEL_OUTPUT_INVALID", f"{role} call returned JSON that is not an object")
+                        continue
                     if accept(content):
                         return settle(content)
                     if fallback is None:

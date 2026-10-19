@@ -838,6 +838,16 @@ def test_a_crashed_therapy_step_writes_its_spend_to_the_ledger(make_client, exam
     assert record["costUsd"] == body["meta"]["costUsd"] and record["calls"]
 
 
+def test_a_therapy_copy_that_answers_json_but_no_object_is_invalid_output_not_a_crash(make_client, example_request):
+    # Row 50: a JSON array made _complete_therapy raise AttributeError, which surfaced as INTERNAL_ERROR.
+    request = json.dumps(therapy_request(example_request))
+    client, _ = make_client([completion("[]", "gpt-4o")] * FAST_COPIES, fast_assessment=True, fast_therapy=True)
+    assert client.post(THERAPY, content=request, headers=AUTH).json()["error"]["code"] == "MODEL_OUTPUT_INVALID"
+    outputs = [completion("[]", "gpt-4o"), completion(therapy_part(), "gpt-4o")] + [5.0] * (FAST_COPIES - 2)
+    client, _ = make_client(outputs, fast_assessment=True, fast_therapy=True)
+    assert client.post(THERAPY, content=request, headers=AUTH).json()["status"] == "ok"
+
+
 def test_a_step_the_caller_hangs_up_on_is_cancelled_and_charged_its_cap(make_client, example_request, settings, monkeypatch):
     # Row 46: the gateway gives up on a step (stage timeout, the clinician cancels); the engine stops its calls too.
     # The call in flight reports no cost and may still be billed; with no recorded cost to go by, the cap stands in.
