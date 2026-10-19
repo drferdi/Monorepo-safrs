@@ -375,12 +375,12 @@ A useful result is more than generated prose. Review the **case context** suppli
 - npm, PyPI and Hugging Face access during install: `npm ci` runs a postinstall that builds the MIRA Python environment under `.runtime/mira/venv` and downloads the pinned TheOracle embedding model once (about 1.2 GB) into `theoracle/model/`.
 - The Gemini API must be reachable on startup: the engine reads the model's metadata with the key before it accepts a case.
 - Server-side `GEMINI_API_KEY` (paid tier) with Gemini API billing enabled for AI analysis.
-- A local machine; the default HTTP listener is `127.0.0.1:3101`. This repository is private and requires authorized GitHub access.
+- A local machine; the default HTTP listener is `127.0.0.1:3101`.
 
 ### Install
 
 ```powershell
-git clone https://github.com/drferdi/Sentrapedia.git
+git clone <this repository's URL> Sentrapedia
 cd Sentrapedia
 npm ci --workspaces=false
 ```
@@ -618,7 +618,7 @@ No external sponsor is declared for this product. Sentrapedia is developed under
 ## 15 / OPEN CHANNEL
 
 <p align="center">
-<a href="https://github.com/drferdi/Sentrapedia"><img src="https://img.shields.io/badge/GitHub-REPOSITORY-64748B?style=for-the-badge&logo=github&logoColor=white" alt="Repository" /></a>
+<a href="https://sentrapedia.com/"><img src="https://img.shields.io/badge/WEBSITE-SENTRAPEDIA-64748B?style=for-the-badge" alt="Website" /></a>
 <a href="https://www.linkedin.com/in/dr-ferdi-iskandar-1b620a3b5"><img src="https://img.shields.io/badge/LinkedIn-CONNECT-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
 <a href="https://medium.com/@drferdiiskandar"><img src="https://img.shields.io/badge/Medium-ARTICLES-111111?style=for-the-badge&logo=medium&logoColor=white" alt="Medium" /></a>
 </p>
@@ -667,7 +667,7 @@ No external sponsor is declared for this product. Sentrapedia is developed under
 
 ### Contribution
 
-This repository was **private at the documentation audit date**. Authorized contributors should use scoped branches and PRs, preserve clinical/synthetic-only safety requirements, include tests and source provenance when behavior changes, and obtain R2/owner review for boundary-affecting work.
+Contributors should use scoped branches and PRs, preserve clinical/synthetic-only safety requirements, include tests and source provenance when behavior changes, and obtain R2/owner review for boundary-affecting work.
 
 ### License
 
@@ -677,7 +677,7 @@ The clinical database (TheOracle index, clinical catalogue, dose data and their 
 
 ### Support and security
 
-Authorized contributors may use the repository's [GitHub Issues](https://github.com/drferdi/Sentrapedia/issues) where enabled or established [Sentra](https://sentrahai.com/) channels. Avoid posting real patient information, credentials or exploit details in issue threads. A dedicated security reporting address is **not documented** in the inspected repository.
+Use this repository's GitHub Issues where enabled, or established [Sentra](https://sentrahai.com/) channels. Avoid posting real patient information, credentials or exploit details in issue threads. A dedicated security reporting address is **not documented** in the inspected repository.
 
 ## 19 / VERIFICATION STATUS
 
