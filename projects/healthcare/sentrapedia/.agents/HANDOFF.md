@@ -8,6 +8,12 @@
 - `f73ed02a` (R2): `deploy/beta/` (README, `setup-server.sh`, `update.sh`) as written by the earlier session, unchanged.
 - Pushed (Jev: proceed_full): split `a987788a` of `f73ed02a` to the new branch `feat/sentrapedia-beta-deploy-2026-10-19` (name chosen by this session). Checked first: it descends from `067a7e0e` (in `main` `624b054e`; four commits on top), its tree equals the capsule tree (`c660da2e`), no LFS-filtered file changed (four files), and it merges with `main` without conflict. No force; no PR (Gaffer opens and merges it). This note is a local commit after the split. The next split must descend from `a987788a`.
 - Open before stage 2: `setup-server.sh` skips its 4 G swap because `/swapfile` (2 G) already exists, so the image build (over 4 GB peak per the README) would share 3.8 G RAM + 2 G swap with medboard; installing docker adds iptables rules (UFW and Caddy untouched, container bound to loopback); `update.sh` needs `SENTRAPEDIA_HOST_PORT=3201` on every run. Gaffer: GitHub deploy key, Cloudflare Tunnel and Access, `GEMINI_API_KEY`, DNS of `sentrapedia.com`. The capsule `.gitignore` change (`.husky/_/`) is uncommitted and not from this session.
+- Gaffer merged PR #24 (`main` `d7d0a511`). Stage 2 (Gaffer: "go: jalankan Tahap 2 dengan /swapfile2 4 G, SENTRAPEDIA_HOST_PORT=3201, jangan ubah firewall, Caddy, atau apa pun milik medboard. Berhenti saat perlu deploy key dan GEMINI_API_KEY."; Jev: proceed_full), on the server:
+  - Baseline: medboard, caddy, postgres active; `127.0.0.1:3000` and `https://medboard.sentrahai.com/` 200; medboard 0 restarts since 2026-10-06 17:09:59 WIB.
+  - `/swapfile2` 4 G created, enabled, added to `/etc/fstab` (swap now 2 G + 4 G).
+  - `setup-server.sh` (identical to `main`) run as root with `NEEDRESTART_SUSPEND=1`, exit 0: 9 packages newly installed, 0 upgraded (docker.io 29.1.3, git-lfs 3.4.1); `/etc/sentrapedia/beta.env` (root, 600, `GEMINI_API_KEY` empty); deploy key `/root/.ssh/sentrapedia_deploy` (`sentrapedia-beta-server`).
+  - After: medboard, caddy, postgres active with unchanged start times, both URLs 200, UFW rules unchanged. New listener `127.0.0.1:38827` (docker/containerd, loopback).
+  - Waiting on Gaffer: add the deploy key read-only on GitHub, fill `GEMINI_API_KEY`. Then: clone to `/opt/sentrapedia`, `SENTRAPEDIA_HOST_PORT=3201 bash update.sh`, check medboard, then Gaffer's Cloudflare Tunnel and Access.
 
 ## Licence, public code with private data, closed-beta access committed and pushed - 2026-10-19 Asia/Jakarta
 
