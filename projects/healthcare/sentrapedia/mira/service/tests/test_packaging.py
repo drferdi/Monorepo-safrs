@@ -18,6 +18,9 @@ def test_pinned_files_match_upstream_and_capsule_owned_files_carry_no_pin():
     its origin and origin hash but has no packaged hash. Every other entry must still be byte-identical to upstream."""
     manifest = json.loads((ROOT / "SOURCE.json").read_text(encoding="utf-8"))
     for item in manifest["files"]:
+        # The public code tree leaves out private notes (scripts/private-data.mjs); where present, they stay pinned.
+        if item.get("privateNote") and not (ROOT / item["path"]).exists():
+            continue
         assert (ROOT / item["path"]).is_file(), item["path"]
         if item.get("owner") == "capsule":
             assert "packagedSha256" not in item, item["path"]

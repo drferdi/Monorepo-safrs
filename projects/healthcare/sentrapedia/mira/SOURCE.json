@@ -61,6 +61,7 @@
     {
       "source": "assist/service/DESIGN.md",
       "path": "service/DESIGN.md",
+      "privateNote": true,
       "sourceSha256": "d4104074baa8dd5412a7bfe61e822e55a106340ec7a595bb2329252f1f9dbff6",
       "packagedSha256": "d4104074baa8dd5412a7bfe61e822e55a106340ec7a595bb2329252f1f9dbff6"
     },
