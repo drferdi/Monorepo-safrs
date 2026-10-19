@@ -14,5 +14,16 @@
     { "text": "BPJS 0001234567890", "client": true, "engine": true },
     { "text": "email keluarga test@example.com", "client": true, "engine": true },
     { "text": "nama: Test Person", "client": true, "engine": false }
+  ],
+  "evidenceNote": "Passage text that the gateway keeps (src/lib/theoracle-grounding.ts) must also pass the engine, or the whole case is refused. DOIs are removed before the check on both sides (Gaffer, 2026-10-19): AHA DOIs end in 16 digits, which read as a NIK.",
+  "evidence": [
+    { "text": "Rekomendasi kelas I (doi:10.1161/CIR.0000000000001234).", "kept": true },
+    { "text": "Circulation. 2023;148:e9-e119. https://doi.org/10.1161/CIR.0000000000001168", "kept": true },
+    { "text": "Disusun oleh dr. Hartono, Sp.JP.", "kept": true },
+    { "text": "Ibu Hamil dengan pneumonia diberi amoksisilin.", "kept": true },
+    { "text": "Hubungi 081234567890 untuk konsultasi.", "kept": false },
+    { "text": "doi:10.1161/CIR.0000000000001234; hubungi 081234567890.", "kept": false },
+    { "text": "Konsultasi Ny. Ani di poli.", "kept": false },
+    { "text": "Surat ke redaksi jurnal@example.com", "kept": false }
   ]
 }

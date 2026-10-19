@@ -9,6 +9,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -38,6 +39,9 @@ GROUNDING_CAPABILITY = "theoracle-grounding-v2"
 TARGETED_THERAPY_CAPABILITY = "theoracle-targeted-therapy-v1"
 # Gaffer, 2026-10-18: the ledger keeps metadata and hashes, never the case text, for 14 days.
 AUDIT_RETENTION_DAYS = 14
+# A DOI is a citation, not an identifier: AHA DOIs end in 16 digits, which read as a NIK (Gaffer, 2026-10-19). The
+# gateway's passage filter (src/lib/theoracle-grounding.ts) removes the same pattern, so it never sends what this refuses.
+DOI = re.compile(r"\b(?:doi:\s*)?10\.\d{4,9}/\s?[^\s\"<>]+|\bdoi:\s*[^\s\"<>]+", re.IGNORECASE)
 
 
 def digest(value) -> str:
@@ -49,7 +53,7 @@ def scanned_text(payload: dict) -> str:
     """The request parts that carry case or passage text. Ids, hashes and the traceId are random hex: about 1 in 735
     random UUIDs matched a phone pattern, which refused synthetic cases at random."""
     evidence = [
-        {"text": item["text"], **{key: item["source"][key] for key in ("title", "docSource", "origin")}}
+        {"text": DOI.sub(" ", item["text"]), **{key: item["source"][key] for key in ("title", "docSource", "origin")}}
         for item in (payload.get("grounding") or {}).get("evidence", [])
     ]
     return json.dumps({"case": payload["case"], "diagnosis": payload.get("diagnosis"), "evidence": evidence}, ensure_ascii=False)

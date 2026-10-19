@@ -7,6 +7,7 @@ import json
 import logging
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import httpx
 import openai
@@ -228,6 +229,21 @@ def test_random_trace_ids_and_hashes_are_not_read_as_identifiers(make_client, ex
     body = post(client, {**example_request, "traceId": "3ee4da5a-7989-49d0-83a4-e62930803889", "grounding": grounding}).json()
     assert body["status"] == "ok"
     assert fake.calls
+
+
+PII_PARITY = json.loads((Path(__file__).resolve().parents[3] / "tests" / "fixtures" / "pii-parity.json").read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("row", PII_PARITY["evidence"], ids=lambda row: row["text"])
+def test_engine_accepts_exactly_the_evidence_the_gateway_keeps(make_client, example_request, row):
+    """tests/theoracle-grounding.test.ts runs the same rows through the gateway's passage filter."""
+    grounding = theoracle_grounding()
+    grounding["evidence"][0]["text"] = row["text"]
+    client, _ = make_client(model_outputs())
+    body = post(client, {**example_request, "grounding": grounding}).json()
+    assert (body["status"] == "ok") == row["kept"]
+    if not row["kept"]:
+        assert body["error"]["code"] == "PII_DETECTED"
 
 
 def test_identifiers_in_evidence_text_are_still_blocked(make_client, example_request):

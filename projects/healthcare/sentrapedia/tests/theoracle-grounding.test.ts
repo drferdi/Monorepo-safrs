@@ -13,6 +13,7 @@ import {
   warmTheOracleGrounding,
   type TheOracleManifest,
 } from "../src/lib/theoracle-grounding";
+import parity from "./fixtures/pii-parity.json";
 
 const scratch: string[] = [];
 const sha256 = (data: string | Uint8Array) => createHash("sha256").update(data).digest("hex");
@@ -76,6 +77,13 @@ describe("TheOracle vector grounding", () => {
     const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: fakeEmbedder([]) });
     expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1", "D1"]);
     expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("keeps exactly the parity passages the engine accepts: DOIs are not identifiers", async () => {
+    // mira/service/tests/test_step_api.py posts the same rows to the engine.
+    const rows = parity.evidence.map((row, index) => chunk(`E${index}`, `Doc${index}.md`, row.text, [1, index / 100, 0]));
+    const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(false, rows), embedder: fakeEmbedder([]) });
+    expect(bundle.evidence.map(item => item.text)).toEqual(parity.evidence.filter(row => row.kept).map(row => row.text));
   });
 
   it("adds the best treatment passage that states a dose, from any guideline, in place of the lowest-ranked match", async () => {

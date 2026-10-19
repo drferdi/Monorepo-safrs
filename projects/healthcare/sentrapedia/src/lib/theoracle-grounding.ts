@@ -102,11 +102,16 @@ export function warmTheOracleGrounding(options: RetrieveOptions = {}): Promise<v
   return indexFor(options).then(index => index.embed(index.manifest.prefixes.query + "demam")).then(() => undefined, () => undefined);
 }
 
-// Match the local MIRA privacy guard; public-source matches are skipped, not rewritten.
+// A DOI is a citation, not an identifier: AHA DOIs end in 16 digits, which read as a NIK (Gaffer, 2026-10-19).
+// mira/service/app.py removes the same pattern before its check.
+const DOI = /\b(?:doi:\s*)?10\.\d{4,9}\/\s?[^\s"<>]+|\bdoi:\s*[^\s"<>]+/gi;
+
+// Match the local MIRA privacy guard (mira/service/privacy.py over the fields app.py scanned_text sends it);
+// public-source matches are skipped, not rewritten. tests/fixtures/pii-parity.json holds both sides.
 function sourceTriggersMiraPrivacy(item: Omit<TheOracleGroundingEvidence, "retrievalRank">): boolean {
-  const value = JSON.stringify(item);
+  const value = JSON.stringify({ text: item.text.replace(DOI, " "), title: item.source.title, docSource: item.source.docSource, origin: item.source.origin });
   if ([/\b\d{16}\b/, /\b\d{13}\b/, /\b08\d{8,11}\b/, /\+?62\d{9,12}\b/, /\b(?:\+62|62|0)[\s.-]?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{3,4}\b/, /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/].some(pattern => pattern.test(value))) return true;
-  return [...value.matchAll(/\b(?:tn\.|ny\.|nn\.|an\.|sdr\.|sdri\.|bpk\.|bapak|ibu|dr\.)\s*([a-z]+)/gi)].some(match => /^[A-Z][a-z]+/.test(match[1]));
+  return [...value.matchAll(/\b(?:tn|ny|sdr|sdri|bpk|ibu)\.\s*([a-z]+)/gi)].some(match => /^[A-Z][a-z]/.test(match[1]));
 }
 
 function queryText(caseData: CaseState): string {
