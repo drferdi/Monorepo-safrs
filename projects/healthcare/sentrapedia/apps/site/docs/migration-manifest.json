@@ -240,7 +240,7 @@
     },
     {
       "path": "scripts/contact.mjs",
-      "sha256": "a7e32601a7c267e83bd557a284c13c5f2ff23f2e7dcb02159d708e41b6ca94b2"
+      "sha256": "d752ecce8553966d84203dbaef735aa6a1455435df6e1036cdd8830d77dc36f4"
     },
     {
       "path": "scripts/contact.test.mjs",

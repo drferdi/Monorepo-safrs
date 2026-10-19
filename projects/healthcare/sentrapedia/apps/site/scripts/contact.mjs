@@ -78,7 +78,9 @@ export function createContactHandler({
       json(res, 415, { status: 'invalid', message: 'Format formulir tidak didukung.' });
       return;
     }
-    // Behind a proxy (Vercel) the socket is the proxy; the first forwarded address is the visitor.
+    // Behind a proxy (Vercel) the socket is the proxy; the first forwarded address is the visitor. Vercel overwrites
+    // x-forwarded-for, so a visitor cannot set it (vercel.com/docs/headers/request-headers, checked 2026-10-19); the
+    // local server listens on loopback only and takes the header as sent.
     const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
     const recent = (attempts.get(ip) || []).filter(time => now() - time < WINDOW_MS);
     if (recent.length >= MAX_ATTEMPTS) {
