@@ -1,5 +1,14 @@
 # Sentrapedia handoff
 
+## Shared beta server inspected, beta deploy scripts pushed - 2026-10-19 Asia/Jakarta
+
+- Gaffer: the medboard server (Biznet, 103.89.2.92, user `gaffer`) is to host Sentrapedia BETA beside medboard; stage 1 read-only, stage 2 only after "go". Jev: run_deterministic.
+- Stage 1 over SSH (`~/.ssh/id_ed25519`, nothing changed): Ubuntu 24.04.5, 2 vCPU, 3.8 GiB RAM (2.9 available), 2 G `/swapfile`, 48 G free on `/`. Listening: medboard `127.0.0.1:3000`, Caddy admin `127.0.0.1:2019`, PostgreSQL 16 on loopback `5432`, Caddy `:80`/`:443`, SSH `:22`. UFW active (OpenSSH, 80, 443). Caddyfile only `medboard.sentrahai.com` → `127.0.0.1:3000`. No docker, git-lfs or cloudflared; `sudo -n` works. Proposed `SENTRAPEDIA_HOST_PORT=3201`; the default 3000 collides with medboard.
+- Gaffer: "Commit deploy/beta (satu commit), jalankan cek, subtree split dan push ke branch baru di Sentrapedia dengan tiga cek dulu." Checks first, each exit 0: typecheck, lint, `test:all` (Vitest 342/342, site 49/49, `test:system` 41/41, MIRA pytest 235 passed 1 skipped), `build`, `deploy:dry-run`; `bash -n` on both scripts ok (shellcheck not installed).
+- `f73ed02a` (R2): `deploy/beta/` (README, `setup-server.sh`, `update.sh`) as written by the earlier session, unchanged.
+- Pushed (Jev: proceed_full): split `a987788a` of `f73ed02a` to the new branch `feat/sentrapedia-beta-deploy-2026-10-19` (name chosen by this session). Checked first: it descends from `067a7e0e` (in `main` `624b054e`; four commits on top), its tree equals the capsule tree (`c660da2e`), no LFS-filtered file changed (four files), and it merges with `main` without conflict. No force; no PR (Gaffer opens and merges it). This note is a local commit after the split. The next split must descend from `a987788a`.
+- Open before stage 2: `setup-server.sh` skips its 4 G swap because `/swapfile` (2 G) already exists, so the image build (over 4 GB peak per the README) would share 3.8 G RAM + 2 G swap with medboard; installing docker adds iptables rules (UFW and Caddy untouched, container bound to loopback); `update.sh` needs `SENTRAPEDIA_HOST_PORT=3201` on every run. Gaffer: GitHub deploy key, Cloudflare Tunnel and Access, `GEMINI_API_KEY`, DNS of `sentrapedia.com`. The capsule `.gitignore` change (`.husky/_/`) is uncommitted and not from this session.
+
 ## Licence, public code with private data, closed-beta access committed and pushed - 2026-10-19 Asia/Jakarta
 
 - Gaffer pasted the plan and confirmed: "Ya, jalankan rencana yang saya tempel: lima cek, satu commit R2, lalu subtree split dan push ke branch baru feat/sentrapedia-licence-private-data-2026-10-19 dengan tiga cek dulu." The work itself was already in the tree, uncommitted, from an earlier session; its notes are in `.agents/AGENT-CONTEXT.md` (items "Public code, private data" and "Closed beta settings").
