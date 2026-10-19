@@ -5,6 +5,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 import logging
@@ -39,6 +40,7 @@ GROUNDING_CAPABILITY = "theoracle-grounding-v2"
 TARGETED_THERAPY_CAPABILITY = "theoracle-targeted-therapy-v1"
 # Gaffer, 2026-10-18: the ledger keeps metadata and hashes, never the case text, for 14 days.
 AUDIT_RETENTION_DAYS = 14
+DISCONNECT_POLL_S = 0.5
 # A DOI is a citation, not an identifier: AHA DOIs end in 16 digits, which read as a NIK (Gaffer, 2026-10-19). The
 # gateway's passage filter (src/lib/theoracle-grounding.ts) removes the same pattern, so it never sends what this refuses.
 DOI = re.compile(r"\b(?:doi:\s*)?10\.\d{4,9}/\s?[^\s\"<>]+|\bdoi:\s*[^\s\"<>]+", re.IGNORECASE)
@@ -57,6 +59,12 @@ def scanned_text(payload: dict) -> str:
         for item in (payload.get("grounding") or {}).get("evidence", [])
     ]
     return json.dumps({"case": payload["case"], "diagnosis": payload.get("diagnosis"), "evidence": evidence}, ensure_ascii=False)
+
+
+async def hung_up(request: Request) -> None:
+    """Returns once the caller has closed the connection; Starlette reports a disconnect only when asked."""
+    while not await request.is_disconnected():
+        await asyncio.sleep(DISCONNECT_POLL_S)
 
 
 def prune_audit(directory: Path) -> None:
@@ -165,15 +173,28 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
             step_engine = engine.with_plan_model(plan_model)
 
         guards = []  # the engine hands over the step's guard before any call
-        try:
-            response, guard, notes = await run(step_engine, payload, guards.append)
-            calls = guard.calls
-        except Exception as exc:  # any internal failure is an 'unavailable' answer, never a 500
-            log.warning("step failed internally: %s", type(exc).__name__)
-            # The calls made before the crash were paid: the answer and the ledger carry them (row 40).
-            guard = guards[0] if guards else None
-            response = step_engine.unavailable("INTERNAL_ERROR", type(exc).__name__, guard)
-            calls, notes = (guard.calls if guard else []), []
+        work = asyncio.create_task(run(step_engine, payload, guards.append))
+        watch = asyncio.create_task(hung_up(request))
+        await asyncio.wait({work, watch}, return_when=asyncio.FIRST_COMPLETED)
+        watch.cancel()
+        if not work.done():
+            # The caller hung up (the gateway gave up on this step): stop its calls instead of paying for an
+            # answer nobody reads. Uvicorn lets the handler run on otherwise (row 46). The engine charges the cap.
+            work.cancel()
+            await asyncio.gather(work, return_exceptions=True)
+            guard = guards[0]
+            response = step_engine.unavailable("CLIENT_DISCONNECTED", "The caller hung up; the step was cancelled.", guard)
+            calls, notes = guard.calls, []
+        else:
+            try:
+                response, guard, notes = work.result()
+                calls = guard.calls
+            except Exception as exc:  # any internal failure is an 'unavailable' answer, never a 500
+                log.warning("step failed internally: %s", type(exc).__name__)
+                # The calls made before the crash were paid: the answer and the ledger carry them (row 40).
+                guard = guards[0] if guards else None
+                response = step_engine.unavailable("INTERNAL_ERROR", type(exc).__name__, guard)
+                calls, notes = (guard.calls if guard else []), []
         audit.write(
             {
                 "traceId": trace_id,

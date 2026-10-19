@@ -12,6 +12,7 @@ from pathlib import Path
 import httpx
 import openai
 import pytest
+from starlette.requests import Request
 
 from service import postchecks
 from service.app import AUDIT_RETENTION_DAYS, digest
@@ -835,6 +836,20 @@ def test_a_crashed_therapy_step_writes_its_spend_to_the_ledger(make_client, exam
     assert body["error"]["code"] == "INTERNAL_ERROR" and body["meta"]["costUsd"] > 0
     [record] = audit_lines(settings)
     assert record["costUsd"] == body["meta"]["costUsd"] and record["calls"]
+
+
+def test_a_step_the_caller_hangs_up_on_is_cancelled_and_charged_its_cap(make_client, example_request, settings, monkeypatch):
+    # Row 46: the gateway gives up on a step (stage timeout, the clinician cancels); the engine stops its calls too.
+    # The call in flight reports no cost and may still be billed, so the step is charged its whole cap.
+    client, fake = make_client([3.0])
+    monkeypatch.setattr(Request, "is_disconnected", lambda request: asyncio.sleep(0, bool(fake.calls)))
+    body = post(client, example_request).json()
+    assert body["error"]["code"] == "CLIENT_DISCONNECTED"
+    [record] = audit_lines(settings)
+    assert record["errorCode"] == "CLIENT_DISCONNECTED" and record["costSource"] == ["estimated-cancelled"]
+    assert record["costUsd"] == pytest.approx(settings.max_usd_per_step)
+    assert AuditLog(settings.audit_dir).spent_today() == pytest.approx(settings.max_usd_per_step)
+    assert len(fake.calls) == 1
 
 
 def test_the_daily_budget_holds_a_step_cap_until_the_step_settles(tmp_path):

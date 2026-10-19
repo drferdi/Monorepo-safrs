@@ -260,6 +260,19 @@ class StepEngine:
             for part in parts:
                 part.cancel()
 
+    def _charge_if_cancelled(self, guard: ApiGuard) -> None:
+        """A step cancelled because its caller hung up (row 46) stops with calls in flight that report no cost and
+        may still be billed: it is charged its whole cap, so the budget never undercounts."""
+        if not asyncio.current_task().cancelling():
+            return
+        s = self.settings
+        guard.calls.append({
+            "n": len(guard.calls) + 1, "role": "cancelled", "model_requested": None, "model_served": None,
+            "prompt_tokens": 0, "completion_tokens": 0, "reasoning_tokens": 0,
+            "cost_usd": round(max(s.max_usd_per_step - guard.cost_usd, 0.0), 6),
+            "cost_source": "estimated-cancelled", "provider": s.llm_provider, "provider_served": None, "latency_s": None,
+        })
+
     async def run(
         self, case: dict, grounding: dict | None = None, omit_therapy: bool = False, on_guard=None
     ) -> tuple[dict, ApiGuard, list[str]]:
@@ -278,6 +291,7 @@ class StepEngine:
             return await self._run(guard, case, grounding, therapy)
         finally:
             # The hold is released and the spend charged however the step ends, an unexpected exception included (row 40).
+            self._charge_if_cancelled(guard)
             self.budget.settle(s.max_usd_per_step, guard.cost_usd)
 
     async def _run(self, guard: ApiGuard, case: dict, grounding: dict | None, therapy: bool) -> tuple[dict, ApiGuard, list[str]]:
@@ -342,6 +356,7 @@ class StepEngine:
             return await self._run_therapy(guard, case, diagnosis, grounding)
         finally:
             # The hold is released and the spend charged however the step ends, an unexpected exception included (row 40).
+            self._charge_if_cancelled(guard)
             self.budget.settle(s.max_usd_per_step, guard.cost_usd)
 
     async def _run_therapy(self, guard: ApiGuard, case: dict, diagnosis: dict, grounding: dict) -> tuple[dict, ApiGuard, list[str]]:
