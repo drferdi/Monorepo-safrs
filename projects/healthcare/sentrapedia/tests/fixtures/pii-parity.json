@@ -1,0 +1,18 @@
+{
+  "note": "Case text checked by the browser and gateway (src/lib/mira/contract.ts containsIdentity) and by the engine (mira/service/privacy.py pii_kinds). Both test suites read this file. Rule (Gaffer, 2026-10-19): the engine is the looser side, so no row may be blocked by the engine and passed by the client.",
+  "cases": [
+    { "text": "Pasien diantar Ibu Kandungnya karena demam", "client": false, "engine": false },
+    { "text": "Keluhan dirasakan sejak Bapak Pasien pulang kerja", "client": false, "engine": false },
+    { "text": "Ibu pasien mengatakan demam sejak 2 hari", "client": false, "engine": false },
+    { "text": "Ibu Sari mengeluh nyeri", "client": false, "engine": false },
+    { "text": "dirujuk oleh dr. Hartono", "client": false, "engine": false },
+    { "text": "Pasien Sdr. Budi Santoso", "client": true, "engine": true },
+    { "text": "Ny. Ani datang kontrol", "client": true, "engine": true },
+    { "text": "Ibu. Sari mengeluh nyeri", "client": true, "engine": true },
+    { "text": "hubungi keluarga di 081234567890", "client": true, "engine": true },
+    { "text": "NIK 3571021204990001", "client": true, "engine": true },
+    { "text": "BPJS 0001234567890", "client": true, "engine": true },
+    { "text": "email keluarga test@example.com", "client": true, "engine": true },
+    { "text": "nama: Test Person", "client": true, "engine": false }
+  ]
+}

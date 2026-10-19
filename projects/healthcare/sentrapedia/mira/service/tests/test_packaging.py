@@ -25,8 +25,8 @@ def test_pinned_files_match_upstream_and_capsule_owned_files_carry_no_pin():
             assert sha256(ROOT / item["path"]) == item["packagedSha256"] == item["sourceSha256"], item["path"]
     owned = {item["path"] for item in manifest["files"] if item.get("owner") == "capsule"}
     # Since 2026-10-18 (row 31) the capsule also owns the guard and the settings; providers.py stays pinned.
-    # Since 2026-10-19 also smoke_live.py (row 19) and audit.py (row 40).
-    assert {"common/guard.py", "service/settings.py", "service/smoke_live.py", "service/audit.py"} <= owned
+    # Since 2026-10-19 also smoke_live.py (row 19), audit.py (row 40) and privacy.py (row 45).
+    assert {"common/guard.py", "service/settings.py", "service/smoke_live.py", "service/audit.py", "service/privacy.py"} <= owned
     assert "common/providers.py" not in owned
     for name, digest in manifest["snapshotHashes"].items():
         assert sha256(ROOT / name) == digest

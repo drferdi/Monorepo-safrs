@@ -286,8 +286,10 @@ def test_simulation_cli_requires_an_explicit_cost_cap():
         ("bising usus normal, abdomen supel", []),
         ("Ibu pasien mengatakan demam sejak 2 hari", []),
         ("TD 120/80, nadi 88", []),
-        ("Ibu Sari mengeluh nyeri", ["TITLED_NAME"]),
-        ("dirujuk oleh dr. Hartono", ["TITLED_NAME"]),
+        # Gaffer, 2026-10-19: a title counts only with its dot, as in the client (Tn., Ny., Sdr., Sdri., Bpk., Ibu.).
+        ("Ibu Sari mengeluh nyeri", []),
+        ("dirujuk oleh dr. Hartono", []),
+        ("Ny. Ani datang kontrol", ["TITLED_NAME"]),
         ("email pasien: a.b@contoh.id", ["EMAIL"]),
         ("hp +6281234567890", ["BPJS", "PHONE_62", "PHONE_GENERAL"]),
     ],
@@ -296,6 +298,17 @@ def test_pii_patterns_without_clinical_false_positives(text, kinds):
     from service.privacy import pii_kinds
 
     assert pii_kinds(text) == kinds
+
+
+PII_PARITY = json.loads((Path(__file__).resolve().parents[3] / "tests" / "fixtures" / "pii-parity.json").read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("row", PII_PARITY["cases"], ids=lambda row: row["text"])
+def test_engine_blocks_exactly_the_parity_rows_marked_for_it(row):
+    """The client's side of this fixture is tests/pii-parity.test.ts; the engine never refuses what the client passed."""
+    from service.privacy import pii_kinds
+
+    assert bool(pii_kinds(row["text"])) == row["engine"]
 
 
 def test_empty_settings_fall_back_to_defaults():
