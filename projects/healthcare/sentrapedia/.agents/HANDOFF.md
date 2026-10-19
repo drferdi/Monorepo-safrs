@@ -1,5 +1,18 @@
 # Sentrapedia handoff
 
+## Beta image built in CI, the server only pulls - 2026-10-20 Asia/Jakarta
+
+- Gaffer: "Opsi A: GHCR privat. Saya yang atur spending limit Packages di GitHub Billing. Pecah lapisan Docker supaya update kecil, tambahkan push ke GHCR di CI, dan ubah update.sh supaya pull dulu dengan fallback build lokal."
+- `297b3799` (R2), local only:
+  - `Dockerfile`: runtime layers stable-first: model (from the dependencies stage), index, node_modules (moved out of standalone in the builder), MIRA venv (from the locks), then the app.
+  - `ci.yml`: the `docker` job publishes `ghcr.io/drferdi/sentrapedia-beta:sha-<commit>` and `:main` only on a push to `main` of a private repository (`github.event.repository.private`), so PRs and the public mirror `Sentrapedia-p` only build. `provenance: false`; retention keeps the five newest versions through `gh api` (no new action); a push to `main` is never cancelled.
+  - `update.sh`: default pulls `sha-$(git rev-parse HEAD)` and stops with a message if it is missing; `SENTRAPEDIA_BUILD=local` builds as before; `SENTRAPEDIA_IMAGE_TAG` rolls back without `git pull`; `docker image prune -f` after a healthy start.
+  - `deploy/beta/README.md`: one-time steps and the cost estimate.
+- Checks: `node --test tests/lfs-media.node-test.mjs tests/export-split.node-test.mjs` 6/6, `deploy:dry-run` exit 0, `bash -n update.sh` ok, `ci.yml` parses as YAML, the builder's staging loop simulated for a full and a public tree (hidden `node_modules` files kept, empty index when absent). Not run: the Docker build itself (no Docker daemon on this machine) and the workflow on GitHub.
+- Before merging this to `main` (Gaffer): set the Packages spending limit (free 500 MB, the first image is about 1.8 GB, so a $0 limit fails the first publish); a classic PAT with `read:packages` only; on the server `sudo docker login ghcr.io -u drferdi --password-stdin`. After the first publish, check that the package is Private.
+- Risks: layers stay byte-identical only while the BuildKit gha cache holds them; an evicted cache or a `package-lock.json` change re-publishes and re-pulls the 1.2 GB model. Retention deletion needs the repository to have admin access to the package (default when GITHUB_TOKEN creates it); if the step fails, images just accumulate. Not pushed; the next split must descend from `5c2d8126`.
+- Not touched: Gaffer's "tetep text jawaban keluar kasar, lompat, tersendat dll" about the answer reveal is open; other sessions' uncommitted edits in `src/lib/typing.ts` and friends were left alone.
+
 ## Smoother answer reveal and reading size pushed - 2026-10-19/20 Asia/Jakarta
 
 - Gaffer: "Commit perubahan lokal ini (R1): src/lib/typing.ts, src/components/diagnosis-document.tsx, src/app/globals.css, tests/typing-lines.test.ts ... Go push: subtree split ke branch baru, tiga cek dulu. Setelah PR saya merge, jalankan di server: sudo SENTRAPEDIA_HOST_PORT=3201 bash /opt/sentrapedia/deploy/beta/update.sh". The four files came from an earlier session; reviewed: `linesUpTo` reveals whole lines at an even rhythm, lines fade in place (`ink-in`, none under reduced motion), analysis body 15-16 px with 1.65 line height.
