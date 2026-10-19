@@ -357,15 +357,26 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 @starting-style { .oracle-reference[open]::details-content, .oracle-more[open]::details-content { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .oracle-reference > summary::before, .oracle-more > summary::before, .oracle-reference::details-content, .oracle-more::details-content { transition: none; } }
 /* A new section unfolds like a submenu (heading drops in, the branch line draws down), then types. */
-.diagnosis-document[aria-busy="true"] .diagnosis-section-heading { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) both; }
+.diagnosis-document[aria-busy="true"] .diagnosis-section-heading { animation: ink-in 420ms cubic-bezier(.33, 1, .68, 1) both; }
 .diagnosis-section-body { position: relative; padding-left: 16px; }
 .diagnosis-section-body::before { content: ""; position: absolute; left: 3px; top: 2px; bottom: 2px; border-left: 1px solid var(--color-border-subtle); transform-origin: top; transition: border-color 320ms ease-out; }
 .diagnosis-section[data-typing="true"] .diagnosis-section-body::before { border-left: 2px solid var(--color-action-primary); left: 2px; animation: branch-reveal 320ms cubic-bezier(.23, 1, .32, 1); }
 .diagnosis-section[data-unfolding="true"] .diagnosis-section-body { display: grid; grid-template-rows: 0fr; animation: section-unfold 320ms cubic-bezier(.23, 1, .32, 1) forwards; min-height: 24px; }
 /* Every line of a typing answer arrives whole and settles into place: one calm fade and 6px rise, no blur, no caret
    (Gaffer, 2026-10-17: "setiap kemunculan text harus halus"). Lines follow one another at the typing pace. */
-.diagnosis-document[aria-busy="true"] :is(.draft-content > *, .oracle-references) { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) both; }
+.diagnosis-document[aria-busy="true"] :is(.draft-content > *, .oracle-references) { animation: ink-in 420ms cubic-bezier(.33, 1, .68, 1) both; }
 @keyframes text-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+/* Answer reveal (Gaffer, 2026-10-19: "lebih halus"): lines fade in place like ink; rising lines arriving every few
+   tens of milliseconds read as a jitter. */
+@keyframes ink-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .diagnosis-document[aria-busy="true"] :is(.diagnosis-section-heading, .draft-content > *, .oracle-references) { animation: none; } }
+/* Reading size of analyses and documents (2026-10-19): body 15 px on phones to 16 px on wide screens with a 1.65 line
+   height, labels and secondary text one step up, aligned dose figures, no single word left on a last line. */
+.diagnosis-document .draft-content { font-size: clamp(15px, 14px + .2vw, 16px); line-height: 1.65; font-variant-numeric: tabular-nums; }
+.diagnosis-document .draft-content :is(p, .diagnosis-list-item) { text-wrap: pretty; }
+.diagnosis-document .diagnosis-field-label { font-size: 13px; line-height: 18px; }
+.diagnosis-document .diagnosis-reference-heading { font-size: inherit; line-height: inherit; }
+.diagnosis-document .draft-content .diagnosis-list-detail, .diagnosis-document .diagnosis-supporting .draft-content { font-size: 14px; line-height: 22px; }
 @keyframes section-heading-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes section-unfold { to { grid-template-rows: 1fr; } }
 @keyframes typing-caret { 50% { opacity: 0; } }

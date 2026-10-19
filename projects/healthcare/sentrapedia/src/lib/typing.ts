@@ -28,6 +28,15 @@ export function revealAt(lengths: number[], elapsed: number): { visible: number[
   return { visible, active: active < 0 ? lengths.length - 1 : active, unfolding, done: active < 0 };
 }
 
+/** The whole lines of `text` to show once `count` of its characters are typed. Lines arrive at an even rhythm by
+ * count (Gaffer, 2026-10-19: "lebih halus"), so a long line does not hold back the short ones after it and short
+ * lines do not arrive in bursts; a partial line is never shown. */
+export function linesUpTo(text: string, count: number): string {
+  if (count >= text.length) return text;
+  const lines = text.split("\n");
+  return lines.slice(0, Math.floor(lines.length * Math.max(0, count) / text.length)).join("\n");
+}
+
 /** What the answer card shows while the analysis runs, one step after another. */
 export const thinkingSteps = ["Permintaan klinis diterima", "Intensi klinis teridentifikasi", "TheOracle aktif", "Konteks klinis pasien dihimpun", "Dokumen medis ditelaah", "Literatur dan pedoman klinis ditelusuri", "Temuan klinis dikorelasikan", "Bukti ilmiah sedang disintesis"];
 export const thinkingStepMs = 340;

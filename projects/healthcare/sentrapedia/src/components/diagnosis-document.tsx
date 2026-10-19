@@ -4,11 +4,10 @@ import { Fragment, useEffect, useId, useMemo, useRef, useState, type CSSProperti
 import { Pencil } from "lucide-react";
 import { documentSections, documentTitle, emptySection, replaceSection, supportingSection } from "../lib/studio";
 import { diagnosisReferenceMarker, theOracleReferencesTitle } from "../lib/mira/presentation";
-import { revealAt } from "../lib/typing";
+import { linesUpTo, revealAt } from "../lib/typing";
 import { TheOracleReferences } from "./theoracle-references";
 
-// While typing, text stops at the last whole line, so each line arrives complete and fades in (globals.css, text-in).
-const typedTo = (text: string, count: number) => count >= text.length ? text : text.slice(0, Math.max(0, text.lastIndexOf("\n", count)));
+// While typing, whole lines arrive at an even rhythm (linesUpTo) and each fades in without moving (globals.css, ink-in).
 
 // Two columns: the section list beside the document (in the right margin on wide canvases). MIRA analyses and local drafts (Chief: "Clinic note redesign menjadi 2 kolom") share it.
 export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderContent, typing = false, label = "Alur kasus", navLabel = "Bagian analisis kasus", showMeta = true, onEditSection }: { content: string; selected: number; onSelect: (index: number) => void; onEdit: (content: string) => void; renderContent: (content: string, onEdit: (content: string) => void) => ReactNode; typing?: boolean; label?: string; navLabel?: string; showMeta?: boolean; onEditSection?: (index: number) => void }) {
@@ -61,13 +60,13 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
       </div>
     </nav>
     <div className="diagnosis-sections">
-      {renderContent(showMeta ? typedTo(prefix, progress.visible[0]) : documentTitle(content), () => undefined)}
+      {renderContent(showMeta ? linesUpTo(prefix, progress.visible[0]) : documentTitle(content), () => undefined)}
       {parts.map(({ section, split, body }, index) => {
         if ((typingNow && index > typingSection) || empty.includes(index)) return null;
         const editable = !typingNow;
         const heading = <h3 id={`${id}-heading-${index}`} tabIndex={-1}>{section.title}</h3>;
         const edit = editable && onEditSection && <button type="button" className="text-button" aria-label={`Edit bagian ${section.title}`} onClick={() => onEditSection(index)}><Pencil size={12}/> Edit</button>;
-        const plain = renderContent(editable ? body : typedTo(body, progress.visible[index + 1]), value => { if (editable) onEdit(replaceSection(content, section, split < 0 ? value : value + section.body.slice(split))); });
+        const plain = renderContent(editable ? body : linesUpTo(body, progress.visible[index + 1]), value => { if (editable) onEdit(replaceSection(content, section, split < 0 ? value : value + section.body.slice(split))); });
         const sectionBody = <div className="diagnosis-section-body">
           {section.title === theOracleReferencesTitle ? <TheOracleReferences body={body} fallback={plain}/> : plain}
           {split >= 0 && editable && <details className="diagnosis-provenance"><summary>Referensi dan jejak analisis</summary>{renderContent(section.body.slice(split + marker.length), () => undefined)}</details>}
