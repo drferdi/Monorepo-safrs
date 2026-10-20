@@ -57,8 +57,8 @@ const missingNames: Record<string, string> = { "Keluhan Utama": "Keluhan utama",
 
 // An Indonesian note in Gaffer's format (2026-10-21): the patient and status on top, the filled parts numbered, then
 // "Kelengkapan Dokumentasi" with what is still empty, any extra notes, and the closing status.
-function numberedNote(heading: string, status: string, patient: string, filled: [string, string][], notes = ""): string {
-  const empty = filled.filter(([, text]) => !text.trim()).map(([title]) => missingNames[title] ?? title);
+function numberedNote(heading: string, status: string, patient: string, filled: [string, string][], notes = "", names = missingNames): string {
+  const empty = filled.filter(([, text]) => !text.trim()).map(([title]) => names[title] ?? title);
   const completeness = [
     empty.length ? `**Belum diisi:**\n${empty.map((name) => `- ${name}`).join("\n")}` : "",
     notes,
@@ -91,6 +91,77 @@ function hpiParts(text: string) {
   }
   return parts;
 }
+
+// The other Indonesian notes from the Dokumentasi, Rencana and Komunikasi tabs (Gaffer, 2026-10-21: "Evaluasi dan
+// perbaiki juga untuk section lain"), in the same numbered format. Each part: title, its name in the "Belum diisi" list
+// ("" = shown only when filled), the labelled fields it takes, and the words that send a free-text clause to it.
+// `check` is the order the words are tried; a clause no word claims goes to `main`, written as a sentence.
+type Part = [title: string, missing: string, fields: NoteField[], words?: RegExp];
+interface NoteSpec { heading: string; status: string; parts: Part[]; main: string; check: string[]; vitals?: string }
+const doseWords = /\b\d+(?:[.,]\d+)?\s*(?:mg|mcg|g|ml|unit|IU|tab(?:let)?|kapsul|puff)\b|\b\d\s*x\s*\d\b|\bobat\b/i;
+const labWords = /\b(?:GDS|GDP|GD2PP|GDPP|HbA1c|kolesterol|LDL|HDL|trigliserida|asam urat|kreatinin|ureum|eGFR|Hb|leukosit|trombosit|BB|IMT)\s*[:=]?\s*\d/i;
+const examWords = /\b(?:EKG|rontgen|USG|wheezing|ronki|ronkhi|GCS|kesadaran|nyeri tekan|akral|CRT|retraksi|sianosis|edema|pupil|bising usus|murmur|pemeriksaan)\b|\([+-]/i;
+const followupWords = /\b(?:kontrol|kembali|datang lagi|evaluasi|follow[- ]?up)\b/i;
+const noteSpecs: Partial<Record<ModeId, NoteSpec>> = {
+  chronic: { heading: "CATATAN PENYAKIT KRONIS", status: "Draf kontrol penyakit kronis • Menunggu validasi dokter", main: "Riwayat Interval", vitals: "Tanda Vital dan Hasil Pemantauan", check: ["Target Terapi", "Tanda Vital dan Hasil Pemantauan", "Tinjauan Obat", "Kondisi Kronis", "Pemantauan dan Tindak Lanjut"], parts: [
+    ["Kondisi Kronis", "Kondisi kronis", ["assessment"], /\b(?:hipertensi|HT|DM|diabetes|asma|PPOK|COPD|CKD|gagal ginjal|dislipidemia|gout|TB|TBC|HIV|epilepsi|stroke|jantung koroner|gagal jantung|CHF|hipotiroid|hipertiroid|skizofrenia|depresi)\b/i],
+    ["Riwayat Interval", "Riwayat interval", ["history", "concern"]],
+    ["Tanda Vital dan Hasil Pemantauan", "Tanda vital dan hasil pemantauan", ["examination", "investigations"], labWords],
+    ["Tinjauan Obat", "Tinjauan obat", ["medications"], doseWords],
+    ["Target Terapi", "Target terapi", ["goals"], /\btarget\b/i],
+    ["Pemantauan dan Tindak Lanjut", "Pemantauan dan tindak lanjut", ["plan", "followup"], /\b(?:kontrol|cek|periksa|evaluasi|rujuk|edukasi|lanjutkan)\b/i],
+  ] },
+  handoff: { heading: "SERAH TERIMA KLINIS (SBAR)", status: "Draf serah terima • Menunggu validasi dokter", main: "Situasi (S)", vitals: "Penilaian (A)", check: ["Hasil Tertunda / Penanggung Jawab", "Rekomendasi (R)", "Penilaian (A)", "Latar Belakang (B)"], parts: [
+    ["Situasi (S)", "Situasi", ["concern"]],
+    ["Latar Belakang (B)", "Latar belakang", ["background", "history", "previous"], /\b(?:riwayat|sudah|telah|diberi|mendapat|post|pasca|dirawat|MRS)\b/i],
+    ["Penilaian (A)", "Penilaian", ["assessment", "examination", "investigations"], new RegExp(`${examWords.source}|${labWords.source}`, "i")],
+    ["Rekomendasi (R)", "Rekomendasi", ["plan", "request"], /\b(?:mohon|minta|observasi|pantau|rencana|lanjutkan|konsul|rujuk|cek)\b/i],
+    ["Hasil Tertunda / Penanggung Jawab", "Hasil tertunda dan penanggung jawab", ["pending"], /\b(?:menunggu|tertunda|pending|belum keluar|penanggung jawab|PJ)\b/i],
+  ] },
+  ap: { heading: "ASESMEN DAN RENCANA", status: "Draf asesmen dan rencana • Menunggu validasi dokter", main: "Assessment", check: ["Tindak Lanjut", "Pemeriksaan Penunjang", "Tata Laksana"], parts: [
+    ["Assessment", "Assessment", ["assessment"]],
+    ["Daftar Masalah", "", ["concern"]],
+    ["Pemeriksaan Penunjang", "Pemeriksaan penunjang", ["investigations"], /\b(?:cek|periksa|lab|darah lengkap|rontgen|foto|EKG|USG|urinalisis)\b/i],
+    // "Assessment" and "Tata Laksana" keep the SOAP note's titles, which the P-Care copy looks for.
+    ["Tata Laksana", "Tata laksana", ["plan"], new RegExp(`${doseWords.source}|\\b(?:terapi|rencana|edukasi|diet)\\b`, "i")],
+    ["Tindak Lanjut", "Tindak lanjut", ["followup"], new RegExp(`${followupWords.source}|\\brujuk\\b`, "i")],
+  ] },
+  referral: { heading: "SURAT RUJUKAN", status: "Draf surat rujukan • Menunggu validasi dokter", main: "Alasan Rujukan", vitals: "Pemeriksaan", check: ["Tujuan Rujukan", "Permintaan", "Tata Laksana Sebelumnya", "Pemeriksaan", "Riwayat Klinis"], parts: [
+    ["Tujuan Rujukan", "Tujuan rujukan", ["recipient"], /\b(?:RSUD|RS|rumah sakit|poli\s+\w+|spesialis|Sp\.\s*\w+)\b/i],
+    ["Alasan Rujukan", "Alasan rujukan", ["concern"]],
+    ["Riwayat Klinis", "Riwayat klinis", ["history", "background"], /\briwayat\b/i],
+    ["Pemeriksaan", "Pemeriksaan", ["examination", "investigations"], new RegExp(`${examWords.source}|${labWords.source}`, "i")],
+    ["Tata Laksana Sebelumnya", "Tata laksana sebelumnya", ["previous", "plan"], new RegExp(`${doseWords.source}|\\b(?:sudah|telah|diberi|mendapat)\\b`, "i")],
+    ["Permintaan", "Permintaan", ["request"], /\b(?:mohon|minta)\b/i],
+  ] },
+  monitoring: { heading: "PEMANTAUAN KLINIS", status: "Draf rencana pemantauan • Menunggu validasi dokter", main: "Masalah yang Dipantau", vitals: "Parameter dan Target", check: ["Kriteria Eskalasi", "Frekuensi dan Cara Pemantauan", "Penanggung Jawab dan Tindak Lanjut", "Parameter dan Target"], parts: [
+    ["Masalah yang Dipantau", "Masalah yang dipantau", ["concern", "assessment"]],
+    ["Parameter dan Target", "Parameter dan target", ["investigations", "goals", "examination"], /\b(?:target|parameter|TD|tekanan darah|saturasi|SpO2|GDS|suhu|nadi|diuresis|BB)\b/i],
+    ["Frekuensi dan Cara Pemantauan", "Frekuensi dan cara pemantauan", ["plan"], /\b(?:tiap|setiap|per\s+\d+|\d+\s*x\s*sehari|harian)\b/i],
+    ["Kriteria Eskalasi", "Kriteria eskalasi", [], /\b(?:bila|jika|apabila|segera|eskalasi|lapor)\b/i],
+    ["Penanggung Jawab dan Tindak Lanjut", "Penanggung jawab dan tindak lanjut", ["followup", "pending"], new RegExp(`${followupWords.source}|\\b(?:perawat|dokter jaga|penanggung jawab|PJ)\\b`, "i")],
+  ] },
+  education: { heading: "EDUKASI PASIEN", status: "Draf edukasi pasien • Menunggu validasi dokter", main: "Topik Edukasi", check: ["Kapan Kembali / Tindak Lanjut", "Perawatan Mandiri", "Penjelasan yang Diberikan"], parts: [
+    ["Topik Edukasi", "Topik edukasi", ["concern"]],
+    ["Penjelasan yang Diberikan", "Penjelasan yang diberikan", ["assessment"], /\b(?:adalah|disebabkan|karena|penyakit)\b/i],
+    ["Perawatan Mandiri", "Perawatan mandiri", ["plan"], /\b(?:minum|makan|istirahat|hindari|kompres|jaga|cuci|diet|olahraga|kurangi|perbanyak)\b/i],
+    ["Kapan Kembali / Tindak Lanjut", "Kapan kembali dan tindak lanjut", ["followup"], new RegExp(`${followupWords.source}|\\b(?:segera|bila|jika|tanda bahaya)\\b`, "i")],
+  ] },
+  avs: { heading: "RINGKASAN KUNJUNGAN", status: "Draf ringkasan untuk pasien • Menunggu validasi dokter", main: "Kunjungan Hari Ini", check: ["Jadwal Kontrol", "Obat dan Pemeriksaan", "Langkah yang Disepakati", "Yang Dibahas"], parts: [
+    ["Kunjungan Hari Ini", "Kunjungan hari ini", ["concern", "history"]],
+    ["Yang Dibahas", "Yang dibahas", ["assessment"], /\b(?:dibahas|dijelaskan|kemungkinan|diagnosis)\b/i],
+    ["Langkah yang Disepakati", "Langkah yang disepakati", ["plan"], /\b(?:minum|istirahat|hindari|kompres|diet|disepakati|edukasi)\b/i],
+    ["Obat dan Pemeriksaan", "Obat dan pemeriksaan", ["medications", "investigations"], new RegExp(`${doseWords.source}|\\b(?:cek|periksa|lab)\\b`, "i")],
+    ["Jadwal Kontrol", "Jadwal kontrol", ["followup"], followupWords],
+  ] },
+  telephone: { heading: "CATATAN KONSULTASI TELEPON", status: "Draf konsultasi telepon • Menunggu validasi dokter", main: "Keluhan yang Dibahas", check: ["Penelepon dan Hubungan", "Tindak Lanjut", "Saran yang Diberikan"], parts: [
+    ["Penelepon dan Hubungan", "Penelepon dan hubungan", ["caller"], /\b(?:menelepon|penelepon|ibu pasien|ayah pasien|suami|istri|keluarga|kader|bidan)\b/i],
+    ["Ringkasan Telepon", "", ["history"]],
+    ["Keluhan yang Dibahas", "Keluhan yang dibahas", ["concern"]],
+    ["Saran yang Diberikan", "Saran yang diberikan", ["plan"], /\b(?:disarankan|saran|minum|kompres|beri|berikan|lanjutkan|istirahat)\b/i],
+    ["Tindak Lanjut", "Tindak lanjut", ["followup"], new RegExp(`${followupWords.source}|\\b(?:ke puskesmas|segera|bila|jika)\\b`, "i")],
+  ] },
+};
 
 export function createDraft(input: DraftInput): string {
   const prompt = input.prompt.trim();
@@ -169,6 +240,26 @@ export function createDraft(input: DraftInput): string {
       ["Negatif Pertinen", field(["negatives"]) || list(parts.negatives)],
     ];
     return `${numberedNote("ANAMNESIS (HPI)", "Draf anamnesis • Menunggu validasi dokter", patientText, filled)}\n\n## Teks sumber (verbatim)\n${prompt}${tail}`;
+  }
+  // The task list keeps its checkboxes under the same header.
+  if (input.mode === "tasks" && id) return `${numberedNote("DAFTAR TUGAS KLINIS", "Draf daftar tugas • Menunggu validasi dokter", patientText, [["Daftar Tugas", prompt.split(/\n+/).filter(Boolean).map((line) => `- [ ] ${line.replace(/^[-*]\s*(\[[ x]\]\s*)?/, "")}`).join("\n")]])}${tail}`;
+  const spec = id ? noteSpecs[input.mode] : undefined;
+  if (spec) {
+    // Typed vital signs leave the clauses and come back as one line in the spec's vitals part; labelled input keeps its own.
+    const vitals = note.recognized ? "" : [input.caseFields?.bp && `TD ${input.caseFields.bp} mmHg`, input.caseFields?.heartRate && `N ${input.caseFields.heartRate} x/menit`, input.caseFields?.respiratoryRate && `RR ${input.caseFields.respiratoryRate} x/menit`, input.caseFields?.temperature && `S ${input.caseFields.temperature} °C`, input.caseFields?.spo2 && `SpO₂ ${input.caseFields.spo2}%`].filter(Boolean).join(", ");
+    const sorted: Record<string, string[]> = {};
+    const cap = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+    if (!note.recognized) for (const clause of complaintOnly(prompt, { demographics: !!(age || sexText), vitals: !!vitals }).split(/\s*(?:[;\n]|,(?!\d)|\bdisertai\b)\s*/i).map((part) => part.trim().replace(/\.$/, "")).filter(Boolean)) {
+      const title = spec.check.find((name) => spec.parts.find(([part]) => part === name)?.[3]?.test(clause)) ?? spec.main;
+      (sorted[title] ??= []).push(cap(clause));
+    }
+    const filled = spec.parts.map(([title, , keys]): [string, string] => {
+      const clauses = sorted[title] ?? [];
+      const written = title === spec.main ? (clauses.length ? `${clauses.join(", ")}.` : "") : clauses.map((clause) => `- ${clause}`).join("\n");
+      return [title, [field(keys), written, title === spec.vitals && vitals ? `Tanda vital: ${vitals}` : ""].filter(Boolean).join("\n")];
+    }).filter(([title, text]) => text || spec.parts.find(([part]) => part === title)?.[1]);
+    const names = Object.fromEntries(spec.parts.map(([title, name]) => [title, name]));
+    return `${numberedNote(spec.heading, spec.status, patientText, filled, "", names)}\n\n## Teks sumber (verbatim)\n${prompt}${tail}`;
   }
   // The Indonesian SOAP note: its exam tables, and which findings came from the normal template.
   if (input.mode === "clinic" && id) {

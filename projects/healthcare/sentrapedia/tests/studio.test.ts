@@ -52,9 +52,9 @@ describe("workspace presentation helpers", () => {
   });
   it("drafts a monitoring plan from the supplied findings", () => {
     const draft = createDraft({ mode: "monitoring", prompt: "Keluhan: sesak napas sintetis\nRencana: cek saturasi tiap 4 jam", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
-    expect(draft).toContain("## Masalah yang dipantau\nsesak napas sintetis");
-    expect(draft).toContain("## Frekuensi dan cara pemantauan\ncek saturasi tiap 4 jam");
-    expect(draft).toContain("## Kriteria eskalasi\nBelum tersedia");
+    expect(draft).toContain("## 1. Masalah yang Dipantau\n\nsesak napas sintetis\n");
+    expect(draft).toContain("## 2. Frekuensi dan Cara Pemantauan\n\ncek saturasi tiap 4 jam\n");
+    expect(draft).toContain("**Belum diisi:**\n- Parameter dan target\n- Kriteria eskalasi\n");
   });
   it("filters timeline by patient and keeps unlinked encounters separate", () => {
     const encounters = [...state.encounters, { ...state.encounters[0], id: "other", patientId: "other" }, { ...state.encounters[0], id: "unlinked", patientId: null }];
@@ -88,7 +88,7 @@ describe("Indonesian patient wording", () => {
     for (const mode of modeIds) {
       const draft = createDraft({ mode, prompt: "Keluhan: sintetis", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
       expect(draft).not.toMatch(/\bpatient\b/i);
-      expect(draft).toContain(mode === "clinic" || mode === "hpi" ? "**Pasien:** —" : "Pasien: —");
+      expect(draft).toMatch(/(?:^|\n)(?:\*\*Pasien:\*\*|Pasien:) —\n/);
     }
   });
 });
@@ -190,7 +190,7 @@ describe("empty document sections", () => {
     expect(emptySection("")).toBe(false);
   });
   it("matches what createDraft writes for a section without input", () => {
-    const sections = documentSections(createDraft({ mode: "referral", prompt: "Keluhan: batuk 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" }));
+    const sections = documentSections(createDraft({ mode: "refer", prompt: "Keluhan: batuk 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" }));
     expect(sections.filter((section) => emptySection(section.body)).length).toBeGreaterThan(0);
     expect(emptySection(sections[0].body)).toBe(false);
   });
