@@ -72,6 +72,8 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
     });
   };
   const summaryFirst = parts[0]?.section.title === doctorSummaryTitle;
+  const navStart = summaryFirst ? 1 : 0;
+  const [hover, setHover] = useState<number | null>(null);
   const renderPart = ({ section, split, body }: typeof parts[number], index: number) => {
     if ((typingNow && index > typingSection) || empty.includes(index)) return null;
     const editable = !typingNow, complete = editable || progress.visible[index + 1] >= lengths[index + 1];
@@ -94,11 +96,14 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
     </section>;
   };
   return <div className="diagnosis-document" ref={root} aria-busy={typingNow}>
-    <nav className="diagnosis-nav" aria-label={navLabel} style={{ "--active-section": current } as CSSProperties}>
+    {/* The case flow lists the report's parts only; the doctor's summary is a section of its own above it (Gaffer,
+        2026-10-21). Rails as RareUI's HookSidebar: the accent one hooks into the current part, a muted one into the hovered. */}
+    <nav className="diagnosis-nav" aria-label={navLabel} data-active={current >= navStart || undefined} data-hover={hover !== null && hover !== current - navStart || undefined} style={{ "--active-section": current - navStart, "--hover-section": hover ?? 0 } as CSSProperties} onMouseLeave={() => setHover(null)}>
       <span className="diagnosis-nav-label">{label}</span>
       <div className="diagnosis-nav-items">
+        <span className="diagnosis-nav-hover" aria-hidden="true"/>
         <span className="diagnosis-nav-branch" aria-hidden="true"/>
-        {sections.map((section, index) => <button type="button" key={section.title} style={{ "--item-order": index } as CSSProperties} aria-current={current === index ? "location" : undefined} aria-controls={`${id}-${index}`} data-pending={typingNow && index > typingSection} onClick={() => navigate(index)}>{section.title}</button>)}
+        {sections.map((section, index) => index < navStart ? null : <button type="button" key={section.title} style={{ "--item-order": index - navStart } as CSSProperties} aria-current={current === index ? "location" : undefined} aria-controls={`${id}-${index}`} data-pending={typingNow && index > typingSection} onMouseEnter={() => setHover(index - navStart)} onFocus={() => setHover(index - navStart)} onBlur={() => setHover(null)} onClick={() => navigate(index)}>{section.title}</button>)}
       </div>
     </nav>
     <div className="diagnosis-sections">

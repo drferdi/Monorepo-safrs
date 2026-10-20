@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## Case-flow list without the doctor's summary, HookSidebar look (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer: "kan sudah saya bilang pindahakan!", pointing at the "Alur kasus" list, then "gunakan https://www.rareui.com/components/hooksidebar". My reading (stated to Gaffer): the summary stays its own section above the report but leaves the case-flow list.
+- `diagnosis-document.tsx`: the list starts at part 1 when the summary leads; `--active-section` counts from part 1, and no rail shows while the summary is current. A second muted rail hooks into the hovered or focused item (`--hover-section`, `data-hover`).
+- `globals.css`: label uppercase; rows have no fill (muted, secondary on hover, primary ink when current); the old grey tree lines are gone; both rails 1 px dashed with the rounded hook. Existing tokens only; reduced motion and the ≤ 900 px grid unchanged.
+- `tests/ui/workspace-smoke.test.tsx` expects the nine parts in the list.
+- Verified: typecheck 0, lint 0, Vitest 35 files 448 tests; browser 3101: nine items, rail hooks into "4. Pemeriksaan fisik" after a click, 400 px no page scroll.
+
 ## Report parts 2 to 7 reworded, part 4 in Gaffer's format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "Skrining kegawatan Jadikan 2 kolom", "Anamnesis terarah -> ganti jadi Anamnesis", "Belum tercatat; dapat mengubah asesmen -> ini maksudnya apa?", part 4 "Format baru" (A. Hasil Pemeriksaan / B. Pemeriksaan Lanjutan / C. Kesimpulan), "Status belum terkonfirmasi … kebanyakan jargon", "Tulis aja \"Kode ICD-10: B50.9 (kandidat): reason\"", "Status: belum difinalisasi … HAPUS", therapy straight under "Usulan terapi dari AADI:".

@@ -5,7 +5,7 @@ import { WorkspaceApp } from "../../src/components/workspace";
 import { initialWorkspace, storageKey, unreadableKey, type Encounter } from "../../src/lib/workspace";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
-import { diagnosisSectionTitles, doctorSummaryTitle } from "../../src/lib/aadi/presentation";
+import { diagnosisSectionTitles } from "../../src/lib/aadi/presentation";
 
 vi.mock("next/image", () => ({
   default: ({ src, alt, unoptimized, ...rest }: { src: unknown; alt?: string; unoptimized?: boolean; [key: string]: unknown }) => {
@@ -226,7 +226,8 @@ describe("workspace UI smoke tests", () => {
 
     // The answer is the nine-part report: its parts in the section list, real tables, and links that open outside
     const parts = within(screen.getByRole("navigation", { name: "Bagian analisis kasus" })).getAllByRole("button").map(button => button.textContent);
-    expect(parts).toEqual([doctorSummaryTitle, ...diagnosisSectionTitles]);
+    // The case flow lists the report's parts only; the doctor's summary is a section of its own above them (Gaffer, 2026-10-21).
+    expect(parts).toEqual(diagnosisSectionTitles);
     // The guideline passages and the dose check are sub-parts of part 9's fold, the passages as compact titles
     const fold = [...document.querySelectorAll<HTMLDetailsElement>("details.diagnosis-provenance")].at(-1)!;
     expect(within(fold).getByRole("heading", { name: "Kutipan pedoman" })).toBeTruthy();
