@@ -7,6 +7,7 @@ import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type 
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
 import { downloadName, intentGroups } from "../lib/studio";
 import { insertTemplate } from "../lib/clinical-templates";
+import { reviewedText } from "../lib/normal-exam";
 import { compactQuery, mobileQuery } from "../lib/layout";
 import { Composer } from "./composer";
 import { Dialog } from "./dialog";
@@ -141,7 +142,7 @@ export function WorkspaceApp() {
     let content: string;
     const personal = useTemplate && selectedTemplate?.mode === selectedMode ? selectedTemplate : undefined;
     if (!local && composerUsesAadi(selectedMode, !!personal)) { void analyzeMain(text, selectedMode, current); return; }
-    try { content = personal ? createPersonalDraft(personal, text, current.context) : createDraft({ mode: selectedMode, prompt: text, context: current.context, ...state.settings, patient }); } catch (error) { notify(error instanceof Error ? error.message : "Draf tidak dapat diformat.", "error"); return; }
+    try { content = personal ? createPersonalDraft(personal, text, current.context) : createDraft({ mode: selectedMode, prompt: text, context: current.context, ...state.settings, patient, caseFields: readCaseFields(text) }); } catch (error) { notify(error instanceof Error ? error.message : "Draf tidak dapat diformat.", "error"); return; }
     setBusy(true);
     if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
     const messages = localDraftMessages({ text, content, mode: selectedMode, context: current.context, patient, settings: state.settings, reviewDefaults: state.reviewDefaults, personal, fallback });
@@ -174,7 +175,7 @@ export function WorkspaceApp() {
         onCommands={() => openDialog("commands")}
         onFocus={() => smooth(() => { setMobileNavOpen(false); setFocusMode((value) => !value); })}
         onPanel={() => { if (compact || focusMode) openDialog("clinical"); else smooth(() => setPanelOpen((value) => !value)); }}
-        onExport={() => downloadText(encounter?.messages.map((m) => diagnosisContent(m)).join("\n\n---\n\n") ?? "", downloadName(encounter?.title ?? "encounter"))}
+        onExport={() => downloadText(encounter?.messages.map((m) => reviewedText(diagnosisContent(m), m.reviewStatus)).join("\n\n---\n\n") ?? "", downloadName(encounter?.title ?? "encounter"))}
         onUpgrade={() => openDialog("upgrade")}/>
       <div className="workspace-body">
         {!hasMessages ? <HomeView name={state.settings.name ?? ""} intent={intent} composer={composerProps}/> : <>

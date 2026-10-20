@@ -109,7 +109,7 @@ kbd { font-family: inherit; font-size: 11px; color: var(--color-text-secondary);
 .account > svg { color: var(--workspace-accent-ink); }
 .avatar { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: var(--radius); color: var(--workspace-on-accent); background: var(--color-action-primary); font-size: 10px; flex-shrink: 0; }
 .lite-badge { color: var(--workspace-accent-ink); border: 1px solid color-mix(in srgb, var(--workspace-focus), transparent 70%); background: var(--workspace-accent-soft); border-radius: var(--radius); padding: 2px 4px; font-size: 10px; }
-.main-canvas { container: canvas / inline-size; position: relative; background: var(--color-background-canvas); border: 0; border-left: 1px solid var(--color-border-subtle); border-right: 1px solid var(--color-border-subtle); border-radius: 0; flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+.main-canvas { container: canvas / inline-size; position: relative; background: var(--color-background-canvas); border: 0; border-left: 1px solid var(--color-border-subtle); border-right: 1px solid var(--color-border-subtle); border-radius: 0; flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: clip; }
 .canvas-header { display: flex; justify-content: space-between; align-items: center; min-height: 56px; padding: 10px 16px; gap: 12px; flex-shrink: 0; }
 .header-left, .header-right { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .expand-sidebar { display: none; }
@@ -910,3 +910,11 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .soap-row strong { color: var(--color-text-primary); }
 .soap-row[data-empty] span { color: var(--color-text-secondary); font-style: italic; }
 @media (max-width: 760px) { .soap-row { grid-template-columns: 1fr; gap: 2px; } }
+/* Normal exam template (2026-10-21): the template the SOAP draft will use and the value flags. */
+.case-guide-item[data-optional] { border-style: dashed; }
+.exam-template { flex-basis: 100%; display: flex; align-items: center; gap: 6px; margin: 2px 0 0; color: var(--color-text-secondary); }
+.exam-template[data-ready] { color: var(--workspace-accent-ink); font-weight: 500; }
+.exam-flags { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.exam-flags li { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: var(--radius); background: var(--workspace-error-bg); color: var(--workspace-error-text); overflow-wrap: anywhere; }
+.soap-entry { display: block; color: var(--color-text-primary); font-size: 12px; }
+.soap-note { display: block; margin-top: 2px; color: var(--color-text-secondary); font-style: italic; }

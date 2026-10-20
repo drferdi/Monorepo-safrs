@@ -10,6 +10,7 @@ import { DocumentStudio } from "./document-studio";
 import { freshAnswer } from "../lib/fresh-answer";
 import { diagnosisContent, hasAadiSource, aadiFocus, nextSteps, pcareCopies, summaryCopies } from "../lib/aadi/presentation";
 import { downloadName } from "../lib/studio";
+import { reviewedText } from "../lib/normal-exam";
 
 export function downloadText(content: string, name: string) {
   const url = URL.createObjectURL(new Blob([content], { type: "text/markdown;charset=utf-8" }));
@@ -30,13 +31,15 @@ export function MessageCard({ message, onEdit, onToast, onReuse, onStep, onRevie
   const [fresh] = useState(() => message.role === "assistant" && freshAnswer(message));
   const aadi = hasAadiSource(message);
   const content = diagnosisContent(message);
+  // What every copy and download carries: the stored text, with the auto-normal marker hidden once reviewed (D10).
+  const output = reviewedText(content, message.reviewStatus);
   // Every AADI answer is a case analysis (Gaffer, 2026-10-20, "Tetap lima mode"); the mode it came from shows as its focus.
   const modeName = modes.find((m) => m.id === message.mode)?.label;
   const focus = aadi && message.mode ? aadiFocus(message.mode) : undefined;
   const complaint = aadi ? caseComplaint(message.sourceText) : "";
   // The summary copies whole; each P-Care field the draft holds copies on its own (design D1, D2; Puskesmas flow, feature 4).
-  const copies = aadi ? summaryCopies(content) : null;
-  const pcare = pcareCopies(message, content);
+  const copies = aadi ? summaryCopies(output) : null;
+  const pcare = pcareCopies(message, output);
   // Next steps only prefill the composer in an existing mode (Puskesmas flow, feature 6).
   const steps = onStep ? nextSteps(message) : [];
   async function copyText(value: string, done: string) {
@@ -47,7 +50,7 @@ export function MessageCard({ message, onEdit, onToast, onReuse, onStep, onRevie
     {editing ? <textarea className="draft-editor" aria-label="Edit draf Clinical" rows={20} value={text} onChange={(e) => setText(e.target.value)} maxLength={50000}/> : <DocumentStudio encounterId={encounterId} dispatch={dispatch} message={message} onEdit={onEdit} onReview={onReview}/>}
     {message.mode === "question" && !editing && !aadi && <div className="evidence-handoff"><strong>Siap untuk peninjauan Evidence</strong><span>Hubungkan AI Clinical dan sumber terverifikasi untuk menjawab ringkasan ini. Draf dapat diedit dan diekspor.</span></div>}
     {pcare.length > 0 && !editing && <div className="quick-copy" role="group" aria-label="Salin ke P-Care"><span>Salin ke P-Care:</span>{pcare.map((item) => <button type="button" key={item.field + item.label} className="action-chip" title={item.value} aria-label={item.name ? `Salin ${item.value} — ${item.name} ke ${item.field} P-Care (kandidat, belum terkonfirmasi)` : `Salin ${item.label} ke ${item.field} P-Care`} onClick={() => copyText(item.value, item.done)}>{item.label}</button>)}</div>}
-    <footer className="message-actions">{editing ? <><button className="button primary" onClick={() => { onEdit(text); setEditing(false); onToast("Perubahan draf diperbarui."); }} disabled={!text.trim()}>Simpan draf</button><button className="button" onClick={() => setEditing(false)}>Batal</button></> : <><button className="text-button" disabled={copying} aria-busy={copying} onClick={async () => { setCopying(true); try { await navigator.clipboard.writeText(content); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { onToast("Clipboard tidak tersedia. Gunakan Edit untuk memilih dan menyalin teks.", "error"); } finally { setCopying(false); } }}>{copying || copied ? <PixelLoader done={copied} label="Sedang menyalin…" doneLabel="Tersalin"/> : <Copy size={14}/>} {copying ? "Menyalin…" : copied ? "Tersalin" : "Salin"}</button>{copies && <button className="text-button" onClick={() => copyText(copies.summary, "Ringkasan disalin.")}><ClipboardList size={14}/> Salin ringkas</button>}<button className="text-button" onClick={() => { setText(content); setEditing(true); }}><Pencil size={14}/> Edit</button><button className="text-button" onClick={() => downloadText(content, downloadName(aadi ? `analisis ${complaint}` : modeName ?? "draf", message.createdAt))}><Download size={14}/> Unduh</button><span>Tinjau sebelum digunakan</span></>}</footer>
+    <footer className="message-actions">{editing ? <><button className="button primary" onClick={() => { onEdit(text); setEditing(false); onToast("Perubahan draf diperbarui."); }} disabled={!text.trim()}>Simpan draf</button><button className="button" onClick={() => setEditing(false)}>Batal</button></> : <><button className="text-button" disabled={copying} aria-busy={copying} onClick={async () => { setCopying(true); try { await navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { onToast("Clipboard tidak tersedia. Gunakan Edit untuk memilih dan menyalin teks.", "error"); } finally { setCopying(false); } }}>{copying || copied ? <PixelLoader done={copied} label="Sedang menyalin…" doneLabel="Tersalin"/> : <Copy size={14}/>} {copying ? "Menyalin…" : copied ? "Tersalin" : "Salin"}</button>{copies && <button className="text-button" onClick={() => copyText(copies.summary, "Ringkasan disalin.")}><ClipboardList size={14}/> Salin ringkas</button>}<button className="text-button" onClick={() => { setText(content); setEditing(true); }}><Pencil size={14}/> Edit</button><button className="text-button" onClick={() => downloadText(output, downloadName(aadi ? `analisis ${complaint}` : modeName ?? "draf", message.createdAt))}><Download size={14}/> Unduh</button><span>Tinjau sebelum digunakan</span></>}</footer>
     {steps.length > 0 && !editing && <div className="next-steps" role="group" aria-label="Langkah berikutnya"><span>Lanjut:</span>{steps.map((step) => <button type="button" key={step.mode} className="action-chip" onClick={() => onStep?.(step.mode, step.text)}>{step.label}</button>)}</div>}
   </article>;
 }

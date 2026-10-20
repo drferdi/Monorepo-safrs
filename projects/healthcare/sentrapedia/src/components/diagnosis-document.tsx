@@ -6,6 +6,7 @@ import { documentSections, documentTitle, emptySection, replaceSection, supporti
 import { diagnosisReferenceMarker, diagnosisSectionTitles, legacyTheOracleReferencesTitle, splitQuotes, theOracleReferencesTitle } from "../lib/aadi/presentation";
 import { mobileQuery } from "../lib/layout";
 import { streamAt, typedAt, wordsUpTo } from "../lib/typing";
+import { autoNormalMarker } from "../lib/normal-exam";
 import { TheOracleReferences } from "./theoracle-references";
 import { useMediaQuery } from "./workspace-hooks";
 
@@ -24,7 +25,7 @@ const foldLine = (body: string) => body.split("\n").map(line => line.trim()).fil
   .map(line => line.startsWith("|") ? line.slice(1, -1).split("|").map(cell => cell.trim()).join(" · ") : line.replace(/\*\*/g, "").replace(/^(?:- |#+ )/, "")).join(" ").replace(/\s+/g, " ").trim().slice(0, 300);
 
 // Two columns: the section list beside the document (in the right margin on wide canvases). AADI analyses and local drafts (Chief: "Clinic note redesign menjadi 2 kolom") share it.
-export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderContent, typing = false, label = "Alur kasus", navLabel = "Bagian analisis kasus", showMeta = true, onEditSection }: { content: string; selected: number; onSelect: (index: number) => void; onEdit: (content: string) => void; renderContent: (content: string, onEdit: (content: string) => void) => ReactNode; typing?: boolean; label?: string; navLabel?: string; showMeta?: boolean; onEditSection?: (index: number) => void }) {
+export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderContent, typing = false, label = "Alur kasus", navLabel = "Bagian analisis kasus", showMeta = true, onEditSection, autoFilled = [] }: { content: string; selected: number; onSelect: (index: number) => void; onEdit: (content: string) => void; renderContent: (content: string, onEdit: (content: string) => void) => ReactNode; typing?: boolean; label?: string; navLabel?: string; showMeta?: boolean; onEditSection?: (index: number) => void; autoFilled?: string[] }) {
   const id = useId();
   const root = useRef<HTMLDivElement>(null);
   const sections = useMemo(() => documentSections(content), [content]);
@@ -33,6 +34,8 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
   const parts = useMemo(() => sections.map(section => { const split = section.body.indexOf(marker); return { section, split, body: split < 0 ? section.body : section.body.slice(0, split) }; }), [sections, marker]);
   // Sections still holding only the draft placeholder collapse into one line of links below the text.
   const empty = useMemo(() => parts.flatMap((part, index) => emptySection(part.body) ? [index] : []), [parts]);
+  // The exam lines the normal template filled are named once, in the same line style, until the draft is reviewed.
+  const autoSection = parts.findIndex((part) => part.body.includes(autoNormalMarker));
   const phone = useMediaQuery(mobileQuery);
   // The title shows at once. The references show as compact titles and a folded section starts closed, so neither
   // is typed text: they take no typing time and arrive whole once the text before them is typed. Nor do empty sections.
@@ -100,6 +103,7 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
         </section>;
       })}
       {!typingNow && empty.length > 0 && <p className="empty-sections">Belum diisi: {empty.map((index, order) => <Fragment key={index}>{order > 0 && ", "}<button type="button" id={`${id}-${index}`} data-empty-section={index} className="text-button" aria-label={`Isi bagian ${sections[index].title}`} onClick={() => onEditSection ? onEditSection(index) : navigate(index)}>{sections[index].title}</button></Fragment>)}</p>}
+      {!typingNow && autoFilled.length > 0 && autoSection >= 0 && <p className="empty-sections">Diisi templat normal: {autoFilled.map((label, order) => <Fragment key={label}>{order > 0 && ", "}<button type="button" className="text-button" aria-label={`Lihat ${label} di ${sections[autoSection].title}`} onClick={() => navigate(autoSection)}>{label}</button></Fragment>)}. Tinjau sebelum Ditinjau.</p>}
     </div>
   </div>;
 }

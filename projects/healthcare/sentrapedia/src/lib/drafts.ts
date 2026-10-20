@@ -1,6 +1,8 @@
 import type { Patient } from "./workspace";
 import { structureNote, type NoteField } from "./note-structure";
 import { missingField, missingFieldEnglish } from "./clinical-templates";
+import { normalExam } from "./normal-exam";
+import type { CaseFields } from "./aadi/composer";
 
 export const modeIds = ["question", "ddx", "ap", "clinic", "hpi", "telephone", "chronic", "handoff", "tasks", "avs", "education", "referral", "authorization", "scribe", "workup", "refer", "monitoring", "icd10"] as const;
 export type ModeId = typeof modeIds[number];
@@ -27,7 +29,7 @@ export const modes: { id: ModeId; label: string; title: string; description: str
   { id: "authorization", label: "Persetujuan Penjaminan (Prior Authorization)", title: "Prior authorization", description: "Susun permintaan penjaminan dengan detail pendukung.", placeholder: "Masukkan layanan, Clinical Indication, dan Previous Treatments..." },
 ];
 
-export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; patient?: Patient; instructions: string }
+export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; patient?: Patient; instructions: string; caseFields?: Partial<CaseFields> }
 
 export function createDraft(input: DraftInput): string {
   const prompt = input.prompt.trim();
@@ -76,15 +78,20 @@ export function createDraft(input: DraftInput): string {
     icd10: [["concern", "history", "examination"], ["assessment", "differential"]],
     scribe: [[], ["concern"], ["history"], ["examination"], ["assessment"], ["plan", "followup"]],
   };
+  // The Indonesian SOAP note fills its exam from the normal template once age and sex are known (normal-exam.ts).
+  const sex = input.patient?.sex === "Male" ? "M" : input.patient?.sex === "Female" ? "F" : undefined;
+  const exam = input.mode === "clinic" && id ? normalExam(prompt, input.caseFields ?? {}, { age: input.patient?.age.trim() || undefined, sex }) : undefined;
+  const recognized = note.recognized || !!exam?.labelled;
   const patientInfo = input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} ${id ? "tahun" : "years"}` : ""} · ${id && input.patient.sex === "Not specified" ? "Sex belum diisi" : input.patient.sex}` : id ? "Pasien belum dipilih" : "No patient selected";
   const body = input.mode === "tasks" ? `## ${sections.tasks[0]}\n${prompt.split(/\n+/).filter(Boolean).map((line) => `- [ ] ${line.replace(/^[-*]\s*(\[[ x]\]\s*)?/, "")}`).join("\n")}` : sections[input.mode].map((title, index) => {
     let value = mapping[input.mode][index].map((key) => note.fields[key]).filter(Boolean).join("\n");
     if (input.mode === "scribe" && index === 0) value = prompt;
     if ((input.mode === "scribe" && index === 2) || (input.mode === "clinic" && index === 1)) value ||= note.patientStatements;
     if (input.mode === "question" && index === 0) value ||= prompt;
-    if (!note.recognized && index === 0) value = prompt;
+    if (input.mode === "clinic" && index === 3 && exam) value = exam.text;
+    if (!note.recognized && index === 0) value = exam?.labelled ? exam.rest : prompt;
     return `## ${title}\n${value || missing}`;
-  }).join("\n\n") + (note.recognized && input.mode !== "scribe" ? `\n\n## ${id ? "Teks sumber (verbatim)" : "Source text (verbatim)"}\n${prompt}` : "");
+  }).join("\n\n") + (recognized && input.mode !== "scribe" ? `\n\n## ${id ? "Teks sumber (verbatim)" : "Source text (verbatim)"}\n${prompt}` : "");
   const context = [input.patient?.notes, input.context].filter(Boolean).join("\n");
   return `# ${mode.title}\n\n${id ? "Draf lokal" : "Local draft"} · ${input.specialty} · ${input.model}\n${patientInfo}\n\n${body}${context ? `\n\n## ${id ? "Konteks tambahan" : "Additional context"}\n${context}` : ""}${input.instructions ? `\n\n## ${id ? "Preferensi penulisan" : "Writing preferences"}\n${input.instructions}` : ""}${input.model === "Extended" ? `\n\n## Review checklist\n${id ? "- [ ] Konfirmasi identitas dan detail Encounter\n- [ ] Rekonsiliasi Medications dan Allergies\n- [ ] Lengkapi bagian yang belum tersedia\n- [ ] Verifikasi interpretasi Clinical dan Follow-up" : "- [ ] Confirm identity and encounter details\n- [ ] Reconcile medicines and allergies\n- [ ] Complete missing sections\n- [ ] Verify clinical interpretation and follow-up"}` : ""}`;
 }
