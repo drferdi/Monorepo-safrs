@@ -436,3 +436,11 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - Gaffer: "Kemudian stop penggunaan kata MIRA< ganti dengan AADI (Augmented Artificial Intelligence Diagnosis Integration)", for everything including code. The full name appears once in the report subtitle and once in the "Tentang workspace ini" dialog; everywhere else "AADI".
 - Saved answers are migrated when a workspace is read: marker and engine text become AADI, a doctor's edited text stays as written. Env vars, endpoint and headers changed without fallback; rollback to an older image is manual.
 - The capsule owns every engine file that named MIRA, including `common/providers.py`. Upstream identifiers (source paths, `upstreamCommit`, the source name, `provenance/*.txt`, schema `$id`) keep the upstream's MIRA naming.
+
+## 2026-10-21 - Back to consult-first; flow work parked
+
+- Gaffer: the product concept returns to consult-first. One composer: the doctor presents the case, Sentrapedia answers from Indonesian guidelines, and the answer becomes the note.
+- The Analisis tab stays the primary entry. Decision D2 is cancelled.
+- Decision D1 stands: the BETA accepts real clinical content without patient identity; identified records stay out of scope.
+- Parked until the consult answer is proven and real doctors have used it: the storage-format migration, the doctor flow (guided SOAP, section chips, completeness strip, practice-site default), the Puskesmas-flow phases, website and brand work, and the audit action items. `.claude/plans/puskesmas-flow-implementation-plan.md` is marked "STATUS: PARKED 2026-10-21 — do not execute." and kept.
+- The flow work already built stays committed on `feat/puskesmas-flow` (through f3577885); nothing is reverted.
