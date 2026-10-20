@@ -81,7 +81,7 @@ describe("nine-part clinical report", () => {
   it("orders the nine parts and preserves recorded facts, uncertainty and provenance", () => {
     const message = aadiMessage(analysis);
     expect(message.content.startsWith(`${reportTitle}\n\n**Analisis AADI (Augmented Artificial Intelligence Diagnosis Integration)**\n`)).toBe(true);
-    expect(diagnosisSectionTitles).toEqual(["1. Ringkasan kasus", "2. Skrining kegawatan", "3. Anamnesis terarah", "4. Pemeriksaan fisik", "5. Asesmen dan diagnosis banding", "6. Rencana pemeriksaan penunjang", "7. Rencana tata laksana", "8. Edukasi dan tindak lanjut", "9. Referensi dan status verifikasi"]);
+    expect(diagnosisSectionTitles).toEqual(["1. Ringkasan kasus", "2. Skrining kegawatan", "3. Anamnesis", "4. Pemeriksaan fisik", "5. Asesmen dan diagnosis banding", "6. Rencana pemeriksaan penunjang", "7. Rencana tata laksana", "8. Edukasi dan tindak lanjut", "9. Referensi dan status verifikasi"]);
     expect(documentSections(message.content).map(s => s.title)).toEqual([doctorSummaryTitle, ...diagnosisSectionTitles]);
     for (const text of ["Keluhan sintetis", "Gejala sintetis", "Obat tercatat", "Tes sintetis", "Jangan terlewat sintetis", "Alasan sintetis", "Penyangkal sintetis", "Data kurang sintetis", "Usulan tes sintetis", "Pertanyaan sintetis", "Belum cukup data", "synthetic-trace", "SHA-256"]) expect(message.content).toContain(text);
     expect(JSON.parse(message.sourceText!).case).toEqual(analysis.case);
@@ -90,20 +90,21 @@ describe("nine-part clinical report", () => {
   it("summarises the case as a table and says what is not yet available", () => {
     const summary = section(content, "1. Ringkasan kasus");
     expect(summary).toMatch(/^\| Komponen \| Keterangan \|\n\| --- \| --- \|\n/);
-    for (const row of ["| Keluhan utama | Keluhan sintetis |", "| Identitas klinis | Usia, jenis kelamin, dan status kehamilan/pascapersalinan belum tersedia |", "| Riwayat penyakit sekarang | Gejala sintetis |", "| Pemeriksaan fisik | Belum tersedia |", "| Hasil pemeriksaan | Tes sintetis: 3 unit |", `| Asesmen awal | Kandidat AADI: ${j00}; belum terkonfirmasi |`]) expect(summary).toContain(row);
+    for (const row of ["| Keluhan utama | Keluhan sintetis |", "| Identitas klinis | Usia, jenis kelamin, dan status kehamilan/pascapersalinan belum tersedia |", "| Riwayat penyakit sekarang | Gejala sintetis |", "| Pemeriksaan fisik | Belum tersedia |", "| Hasil pemeriksaan | Tes sintetis: 3 unit |", `| Asesmen awal | Kandidat AADI: ${j00} |`]) expect(summary).toContain(row);
     expect(summary).not.toContain("Alergi");
   });
   it("escapes a pipe and folds line breaks in case text, so a table row stays one row", () => {
     const piped = { ...analysis, case: { ...analysis.case, chiefComplaint: "Nyeri | dada\nsejak pagi" } };
     expect(section(aadiMessage(piped).content, "1. Ringkasan kasus")).toContain("| Keluhan utama | Nyeri \\| dada sejak pagi |");
   });
-  it("keeps the AADI candidate as the working diagnosis, labelled unconfirmed, and gives every candidate a status", () => {
+  it("keeps the AADI candidate as the working diagnosis and gives every candidate a plain status, without jargon", () => {
     const body = section(content, "5. Asesmen dan diagnosis banding");
-    expect(body).toContain(`**Diagnosis kerja sementara:** kandidat AADI ${j00}, belum terkonfirmasi.`);
-    expect(body).toContain(`| ${j00} | Mendukung: Alasan sintetis. Menyangkal: Penyangkal sintetis | Kandidat utama, belum terkonfirmasi |`);
+    expect(body).toContain(`**Diagnosis kerja sementara:** kandidat AADI ${j00}.`);
+    expect(body).toContain(`| ${j00} | Mendukung: Alasan sintetis. Menyangkal: Penyangkal sintetis | Kandidat utama |`);
+    expect(content).not.toMatch(/belum terkonfirmasi|belum final|belum difinalisasi|Belum tercatat/);
     expect(body).toContain("| Jangan terlewat sintetis (X00) | Belum tersedia | Perlu disaring segera |");
     expect(body).toContain("**Catatan penalaran:** belum tersedia untuk analisis ini.");
-    expect(body).toContain("**Kode ICD-10:** J00 (kandidat); belum final, ditetapkan setelah asesmen dokter.");
+    expect(body).toContain("**Kode ICD-10:** J00 (kandidat): Alasan sintetis");
     expect(section(content, "2. Skrining kegawatan")).toContain("**Diagnosis yang tidak boleh terlewat menurut AADI:**\n- Jangan terlewat sintetis (X00)");
   });
   it("uses the engine's reasoning note, discriminators, status and test indication when it gives them", () => {
@@ -127,14 +128,33 @@ describe("nine-part clinical report", () => {
   it("builds the directed history and examination from AADI's data for the case", () => {
     const exam = { kind: "exam" as const, item: "Pemeriksaan sintetis", reason: "Alasan periksa" };
     const report = aadiMessage({ ...analysis, result: { ...analysis.result, missingInformation: ["Data satu", "Data dua"], nextBestActions: [...analysis.result.nextBestActions, exam] } }).content;
-    expect(section(report, "3. Anamnesis terarah")).toBe("| Data yang perlu dilengkapi | Alasan |\n| --- | --- |\n| Pertanyaan sintetis | Alasan tanya |\n| Data satu | Belum tercatat; dapat mengubah asesmen |\n| Data dua | Belum tercatat; dapat mengubah asesmen |");
-    expect(section(report, "4. Pemeriksaan fisik")).toBe("**Temuan aktual: belum tersedia.**\n\n**Pemeriksaan terarah dari AADI:**\n- Pemeriksaan sintetis — Alasan periksa");
+    expect(section(report, "3. Anamnesis")).toBe("| Pertanyaan | Alasan |\n| --- | --- |\n| Pertanyaan sintetis | Alasan tanya |\n\n**Data yang perlu dilengkapi:**\n- Data satu\n- Data dua");
+    const physical = section(report, "4. Pemeriksaan fisik");
+    expect(physical).toContain("| Tekanan darah | Belum tersedia |");
+    expect(physical).toContain("**Temuan klinis:** belum tersedia.");
+    expect(physical).toContain("| **Pemeriksaan sintetis** | Alasan periksa |\n| **Tanda vital lengkap** | Melengkapi tekanan darah, frekuensi nadi, suhu tubuh, frekuensi napas, SpO₂, dan pemantauan hemodinamik. |");
+    expect(physical).toContain("**Status:** Pemeriksaan fisik belum lengkap.");
+  });
+  // Gaffer's format, 2026-10-21, on a fictional febrile headache case.
+  it("writes the physical exam as vital signs, findings in words, further exams and a conclusion", () => {
+    const febrile = { ...analysis, case: { ...analysis.case, chiefComplaint: "Demam dan nyeri kepala", vitals: { systolic: 110, diastolic: 70, heartRate: 110, temperature: 39.2 } }, result: { ...analysis.result, nextBestActions: [] } };
+    expect(section(aadiMessage(febrile).content, "4. Pemeriksaan fisik")).toBe([
+      "#### A. Hasil Pemeriksaan",
+      "**Tanda Vital**",
+      "| Parameter | Hasil |\n| --- | --- |\n| Tekanan darah | 110/70 mmHg |\n| Frekuensi nadi | 110 kali/menit |\n| Suhu tubuh | 39,2°C |\n| Frekuensi napas | Belum tersedia |\n| Saturasi oksigen (SpO₂) | Belum tersedia |",
+      "**Temuan klinis:** Demam (39,2°C) disertai takikardia (110 kali/menit).",
+      "#### B. Pemeriksaan Lanjutan yang Diperlukan",
+      "| Pemeriksaan | Tujuan Klinis |\n| --- | --- |\n| **Kesadaran dan neurologis** | Menilai tingkat kesadaran dan kemungkinan komplikasi neurologis. |\n| **Tanda rangsang meningeal** | Menilai kemungkinan iritasi meningeal bila terdapat indikasi klinis. |\n| **Kepala dan leher** | Menilai rentang gerak, nyeri tekan, dan ketegangan otot. |\n| **Mata dan funduskopi** | Mengidentifikasi kelainan okular sesuai indikasi dan kompetensi pemeriksa. |\n| **Tanda vital lengkap** | Melengkapi frekuensi napas, SpO₂, dan pemantauan hemodinamik. |",
+      "#### C. Kesimpulan Pemeriksaan Fisik",
+      "Pasien menunjukkan **demam tinggi disertai takikardia**. Pemeriksaan fisik tambahan diperlukan untuk menilai kondisi umum, status neurologis, dan kemungkinan tanda kegawatan.",
+      "**Status:** Pemeriksaan fisik belum lengkap. Penilaian tanda bahaya perlu diprioritaskan.",
+    ].join("\n\n"));
   });
   it("falls back to the template aspects when AADI asks for nothing", () => {
     const silent = aadiMessage({ ...analysis, result: { ...analysis.result, missingInformation: [], nextBestActions: [] } }).content;
-    expect(section(silent, "3. Anamnesis terarah")).toMatch(/^Aspek yang perlu dilengkapi \(AADI belum memberi data untuk kasus ini\):\n\n\| Aspek \| Data yang perlu dilengkapi \|/);
-    expect(section(silent, "3. Anamnesis terarah")).toContain("| Pencetus dan pereda | Aktivitas, posisi, makanan, obat, atau faktor lain |");
-    expect(section(silent, "4. Pemeriksaan fisik")).toContain("Pemeriksaan yang perlu didokumentasikan:\n- Tanda vital, termasuk tekanan darah, nadi, napas, suhu, dan saturasi oksigen.");
+    expect(section(silent, "3. Anamnesis")).toMatch(/^Aspek yang perlu dilengkapi \(AADI belum memberi data untuk kasus ini\):\n\n\| Aspek \| Data yang perlu dilengkapi \|/);
+    expect(section(silent, "3. Anamnesis")).toContain("| Pencetus dan pereda | Aktivitas, posisi, makanan, obat, atau faktor lain |");
+    expect(section(silent, "4. Pemeriksaan fisik")).toContain("| **Keadaan umum dan kesadaran** | Menilai kondisi umum dan tingkat kesadaran. |");
   });
   it("screens general red flags in every case and adds the headache list only for a headache case", () => {
     expect(section(content, "2. Skrining kegawatan")).toContain("- Gangguan jalan napas, sesak berat, atau saturasi oksigen rendah.");
@@ -148,8 +168,8 @@ describe("nine-part clinical report", () => {
     // Guideline links sit in part 9 only, not in the answer's parts (Gaffer, 2026-10-21).
     for (const part of diagnosisSectionTitles.slice(0, -1)) expect(section(headache, part)).not.toMatch(/NICE|ICHD/);
     const silent = aadiMessage({ ...headacheCase, result: { ...analysis.result, missingInformation: [], nextBestActions: [] } }).content;
-    expect(section(silent, "3. Anamnesis terarah")).toContain("| Lokasi dan penjalaran | Unilateral/bilateral; menjalar dari leher atau ke area lain |");
-    expect(section(headache, "4. Pemeriksaan fisik")).toContain("- Tanda rangsang meningeal sesuai indikasi.");
+    expect(section(silent, "3. Anamnesis")).toContain("| Lokasi dan penjalaran | Unilateral/bilateral; menjalar dari leher atau ke area lain |");
+    expect(section(headache, "4. Pemeriksaan fisik")).toContain("| **Tanda rangsang meningeal** | Menilai kemungkinan iritasi meningeal bila terdapat indikasi klinis. |");
     expect(section(headache, "6. Rencana pemeriksaan penunjang")).toContain("CT kepala nonkontras segera sesuai penilaian klinis.");
     expect(section(headache, "9. Referensi dan status verifikasi")).not.toContain("relevan bila");
     expect(aadiMessage(withDifferential({ likely: [{ icd10: "G44.2", label: "Tension-type headache", confidenceTier: "low" }], alternatives: [], cannotMiss: [] })).content).toContain("thunderclap");
@@ -205,7 +225,7 @@ describe("nine-part clinical report", () => {
     expect(report.split("## 1. Ringkasan kasus")[0]).toContain("Belum ada kandidat diagnosis dari keluhan ini");
     expect(section(report, therapyTitle)).toContain("Belum ada data terapi untuk diagnosis ini.");
     expect(section(report, "5. Asesmen dan diagnosis banding")).toContain("**Diagnosis kerja sementara:** belum dapat ditetapkan dari data yang ada.");
-    expect(section(report, "5. Asesmen dan diagnosis banding")).toContain("**Kode ICD-10:** ditentukan setelah asesmen dokter; kode diagnosis spesifik pada draf awal belum dapat dianggap final.");
+    expect(section(report, "5. Asesmen dan diagnosis banding")).toContain("**Kode ICD-10:** belum ada kandidat dari data yang ada.");
   });
   it("stores the analysis source as compact JSON", () => {
     const message = aadiMessage(analysis);
@@ -238,12 +258,12 @@ describe("nine-part clinical report", () => {
   it.skipIf(!withCatalog)("writes the pharmacological therapy as drug and compact dose per line, then DDI and contraindications", () => {
     const therapy = { forDiagnosis: { icd10: "J00", label: "Diagnosis sintetis" }, regimen: [{ drug: "Ceftriaxone", dose: "1x500mg", route: "IM", duration: "dosis tunggal", note: "1g bila >=150kg" }, { drug: "Azithromycin", dose: "1x1g", route: "PO", duration: "dosis tunggal", note: "" }], interactions: ["Azithromycin dengan warfarin: risiko perdarahan", "Ceftriaxone dengan kalsium IV: presipitasi"], contraindications: ["Ceftriaxone: alergi sefalosporin"] };
     const body = section(aadiMessage({ ...analysis, result: { ...analysis.result, therapy } }).content, therapyTitle);
-    expect(body).toContain("**Usulan terapi dari AADI:**\n\nUntuk Diagnosis sintetis (J00)\n\n- Ceftriaxone 500 mg, IM, dosis tunggal (1g bila >=150kg)\n- Azithromycin 1 g, dosis tunggal\n\nDDI\n- Azithromycin dengan warfarin: risiko perdarahan\n- Ceftriaxone dengan kalsium IV: presipitasi\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
+    expect(body).toContain("**Usulan terapi dari AADI:**\n\n- Ceftriaxone 500 mg, IM, dosis tunggal (1g bila >=150kg)\n- Azithromycin 1 g, dosis tunggal\n\nDDI\n- Azithromycin dengan warfarin: risiko perdarahan\n- Ceftriaxone dengan kalsium IV: presipitasi\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
     expect(body).toContain("**Catatan terapi draf awal:** Ceftriaxone, Azithromycin tercantum sebagai usulan.");
     const disease = withCode("J00")[0];
     expect(body.indexOf(disease.terapi)).toBeGreaterThan(body.indexOf("Referensi penyakit terkait"));
     const single = section(aadiMessage({ ...analysis, result: { ...analysis.result, therapy: { ...therapy, regimen: [therapy.regimen[1]], interactions: [] } } }).content, therapyTitle);
-    expect(single).toContain("Untuk Diagnosis sintetis (J00)\n\nAzithromycin 1 g, dosis tunggal\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
+    expect(single).toContain("**Usulan terapi dari AADI:**\n\nAzithromycin 1 g, dosis tunggal\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
   });
   it("keeps section edits and separators intact without replacing later content", () => {
     const edited = replaceSection(content, documentSections(content).find(s => s.title === therapyTitle)!, "Catatan manual sintetis\n\n");
@@ -313,12 +333,12 @@ describe("focus modes", () => {
     const icd10 = aadiMessage(analysis, undefined, "icd10");
     expect(icd10.mode).toBe("icd10");
     expect(titles(icd10.content)).toEqual([doctorSummaryTitle, icd10SectionTitle, ...diagnosisSectionTitles]);
-    expect(section(icd10.content, icd10SectionTitle)).toBe("Diagnosis kerja\nJ00 — Diagnosis sintetis\n\nJangan terlewat\nX00 — Jangan terlewat sintetis\n\nKode belum final; ditetapkan setelah asesmen dokter.");
+    expect(section(icd10.content, icd10SectionTitle)).toBe("Diagnosis kerja\nJ00 — Diagnosis sintetis\n\nJangan terlewat\nX00 — Jangan terlewat sintetis");
     expect(titles(diagnosisContent(icd10))[1]).toBe(icd10SectionTitle);
   });
   it("lists several codes in a group as bullets and says so when no code was returned", () => {
     const two = withDifferential({ likely: [{ icd10: "J00", label: "Diagnosis sintetis", confidenceTier: "low" }, { icd10: "J02.9", label: "Diagnosis sintetis dua", confidenceTier: "low" }], alternatives: [], cannotMiss: [] });
-    expect(section(aadiMessage(two, undefined, "icd10").content, icd10SectionTitle)).toBe("Diagnosis kerja\n- J00 — Diagnosis sintetis\n- J02.9 — Diagnosis sintetis dua\n\nKode belum final; ditetapkan setelah asesmen dokter.");
+    expect(section(aadiMessage(two, undefined, "icd10").content, icd10SectionTitle)).toBe("Diagnosis kerja\n- J00 — Diagnosis sintetis\n- J02.9 — Diagnosis sintetis dua");
     const none = withDifferential({ likely: [], alternatives: [], cannotMiss: [] });
     expect(section(aadiMessage(none, undefined, "icd10").content, icd10SectionTitle)).toBe("Belum ada kode diagnosis dari data yang ada.");
   });
@@ -438,7 +458,7 @@ describe("doctor's summary", () => {
     const summary = section(aadiMessage(analysis).content, doctorSummaryTitle);
     expect(summary).toBe([
       "**Perlu disaring segera:** Jangan terlewat sintetis (X00). Status tanda bahaya: belum dinilai (bagian 2).",
-      `**Diagnosis kerja (kandidat, belum terkonfirmasi):** ${j00}`,
+      `**Diagnosis kerja (kandidat):** ${j00}`,
       "**Periksa:** Usulan tes sintetis",
       "**Terapi usulan:** lihat bagian 7.",
       "**Rujuk:** belum dinilai.",
@@ -454,7 +474,7 @@ describe("doctor's summary", () => {
     expect(removed).toContain("**Terapi usulan:** Terapi tidak ditampilkan: Alasan gate sintetis.");
     const none = section(aadiDraft({ ...analysis.result, differential: { likely: [], alternatives: [], cannotMiss: [] }, nextBestActions: [] }, "t", "2026-10-20T00:00:00Z", analysis.case), doctorSummaryTitle);
     expect(none).toContain("**Perlu disaring segera:** Status tanda bahaya: belum dinilai (bagian 2).");
-    expect(none).toContain("**Diagnosis kerja (kandidat, belum terkonfirmasi):** belum dapat ditetapkan dari data yang ada.");
+    expect(none).toContain("**Diagnosis kerja (kandidat):** belum dapat ditetapkan dari data yang ada.");
     expect(none).toContain("**Periksa:** lihat bagian 3 dan 4.");
   });
   it("keeps a code without an exact catalog record under the engine's label", () => {

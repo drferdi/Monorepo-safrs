@@ -85,7 +85,7 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
         ? <>{renderContent(quotes[0], () => undefined)}<TheOracleReferences body={quotes[1]} fallback={renderContent(quotes[1], () => undefined)}/>{quotes[2] && renderContent(quotes[2], () => undefined)}</>
         : renderContent(fold, () => undefined)}</details>}
     </div>;
-    return <section key={section.title} id={`${id}-${index}`} className="diagnosis-section" data-diagnosis-section={index} data-active={current === index} data-arrived={arrived === index} data-typing={typingNow && index === typingSection} aria-labelledby={`${id}-heading-${index}`}>
+    return <section key={section.title} id={`${id}-${index}`} className="diagnosis-section" data-diagnosis-section={index} data-columns={section.title === diagnosisSectionTitles[1] || undefined} data-active={current === index} data-arrived={arrived === index} data-typing={typingNow && index === typingSection} aria-labelledby={`${id}-heading-${index}`}>
       {supportingSection(section.title)
         ? <details className="diagnosis-supporting"><summary>{heading}</summary>{edit}{sectionBody}</details>
         : foldedPart(section.title, phone)

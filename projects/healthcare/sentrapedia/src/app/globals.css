@@ -320,6 +320,10 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .diagnosis-list-item::before { content: ""; position: absolute; left: 4px; top: .7em; width: 5px; height: 5px; border-radius: 50%; background: var(--color-text-muted); }
 .draft-content .diagnosis-list-item { margin-bottom: 4px; }
 .draft-content .diagnosis-list-nested { margin-left: 16px; }
+/* Part 2 lists its red flags in two columns (Gaffer, 2026-10-21); other lines span both, and the phone keeps one. */
+.diagnosis-section[data-columns] .draft-content { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+.diagnosis-section[data-columns] .draft-content > :not(.diagnosis-list-item) { grid-column: 1 / -1; }
+@media (max-width: 600px) { .diagnosis-section[data-columns] .draft-content { grid-template-columns: minmax(0, 1fr); } }
 .draft-content .diagnosis-list-detail { padding-left: 16px; margin: 6px 0 2px; font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
 /* Reading measure: answers wrap near 95 characters instead of the full column. */
 .diagnosis-document .draft-content > :is(p, h4, label) { max-width: 52em; }

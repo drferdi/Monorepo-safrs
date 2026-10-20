@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## Report parts 2 to 7 reworded, part 4 in Gaffer's format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer: "Skrining kegawatan Jadikan 2 kolom", "Anamnesis terarah -> ganti jadi Anamnesis", "Belum tercatat; dapat mengubah asesmen -> ini maksudnya apa?", part 4 "Format baru" (A. Hasil Pemeriksaan / B. Pemeriksaan Lanjutan / C. Kesimpulan), "Status belum terkonfirmasi … kebanyakan jargon", "Tulis aja \"Kode ICD-10: B50.9 (kandidat): reason\"", "Status: belum difinalisasi … HAPUS", therapy straight under "Usulan terapi dari AADI:".
+- `presentation.ts`: section 3 title "3. Anamnesis" (stored edited reports keep their old title; untouched ones re-render). Part 3: AADI questions as a "Pertanyaan | Alasan" table, missing information as a "Data yang perlu dilengkapi:" list. Part 4: the five vital signs (GCS when given) with "Belum tersedia"; "Temuan klinis" names demam (≥ 37,5; "demam tinggi" ≥ 39 in the conclusion), suhu rendah, SpO₂ < 95 for everyone, and takikardia, bradikardia, hipotensi, tekanan darah tinggi, takipnea for adults only; B lists AADI's exam actions or the pack's [exam, purpose] pairs, plus "Tanda vital lengkap" naming the missing vitals; the "Status" line shows unless all vitals and an exam line are present. Part 5: status column "Keterangan" with plain labels; ICD line "B50.9 (kandidat): <AADI supporting evidence>". Part 7: status line and "Untuk <diagnosis>" line removed. "belum terkonfirmasi"/"belum final" also gone from the summary rows and the ICD-10 focus part.
+- Two columns: `diagnosis-document.tsx` sets `data-columns` on part 2; `globals.css` grids its list items in two columns, one column at ≤ 600 px. `document-studio.tsx` renders `#### ` lines as `.diagnosis-field-label`.
+- Verified: typecheck 0, lint 0, Vitest 35 files 448 tests; browser 3101 on the stored malaria case (part 4 matches Gaffer's sample word for word; part 2 in two columns; 400 px no page scroll).
+- Left as is: referral letter and SOAP lines still say "kandidat AADI, belum terkonfirmasi"; DDI/contraindication lines keep "(belum terverifikasi)"; part 7's "Catatan terapi draf awal" sentence and the "Komponen | Dokumentasi" table remain.
+
 ## Analysis report display trimmed (committed on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "hapus itu tulisan tulisan DRAF ANALISIS di ulang ulang", then "Analisis AADI (Augmented Artificial Intelligence Diagnosis Integration)", "Status ditetapkan pengguna … -> HAPUS", "NICE CG150 … nanti bisa di bawah", "Ringkasan untuk dokter ini buatkan section sendiri saja".

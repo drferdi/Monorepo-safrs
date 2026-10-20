@@ -77,7 +77,7 @@ export const icd10SectionTitle = "Kode ICD-10";
 export function aadiFocus(mode: ModeId): AadiFocus | undefined { return mode === "workup" || mode === "refer" || mode === "icd10" ? mode : undefined; }
 
 // The nine parts of the clinical report (Gaffer, 2026-10-20: "ini sangat penting"); answers drafted before it used the legacy titles.
-export const diagnosisSectionTitles = ["1. Ringkasan kasus", "2. Skrining kegawatan", "3. Anamnesis terarah", "4. Pemeriksaan fisik", "5. Asesmen dan diagnosis banding", "6. Rencana pemeriksaan penunjang", "7. Rencana tata laksana", "8. Edukasi dan tindak lanjut", "9. Referensi dan status verifikasi"];
+export const diagnosisSectionTitles = ["1. Ringkasan kasus", "2. Skrining kegawatan", "3. Anamnesis", "4. Pemeriksaan fisik", "5. Asesmen dan diagnosis banding", "6. Rencana pemeriksaan penunjang", "7. Rencana tata laksana", "8. Edukasi dan tindak lanjut", "9. Referensi dan status verifikasi"];
 // The doctor's five answers above part 1 (Gaffer, 2026-10-20, design C1 "Setuju semua"); every line comes from fields
 // the report already shows below, in the same wording.
 export const doctorSummaryTitle = "Ringkasan untuk dokter";
@@ -89,8 +89,9 @@ export const diagnosisReferenceMarker = "Referensi penyakit terkait";
 
 const recorded = (text: string) => text.split(/\r?\n/).map(line => `  ${line}`).join("\n");
 const vitalLabels: Record<string, string> = { systolic: "Sistolik (mmHg)", diastolic: "Diastolik (mmHg)", heartRate: "Nadi (/menit)", respiratoryRate: "Napas (/menit)", temperature: "Suhu (°C)", spo2: "SpO₂ (%)", gcs: "GCS" };
-const statusLabels: Record<DifferentialStatus, string> = { unconfirmed: "Belum terkonfirmasi", supported: "Didukung data, belum terkonfirmasi", unlikely: "Kurang mungkin", screenNow: "Perlu disaring segera", screenIfIndicated: "Perlu disaring sesuai temuan" };
-const groupStatus = { likely: "Kandidat utama, belum terkonfirmasi", alternatives: "Belum terkonfirmasi", cannotMiss: "Perlu disaring segera" } as const;
+// Plain words, no "belum terkonfirmasi" (Gaffer, 2026-10-21: "kebanyakan jargon").
+const statusLabels: Record<DifferentialStatus, string> = { unconfirmed: "Kandidat", supported: "Didukung data", unlikely: "Kurang mungkin", screenNow: "Perlu disaring segera", screenIfIndicated: "Perlu disaring sesuai temuan" };
+const groupStatus = { likely: "Kandidat utama", alternatives: "Alternatif", cannotMiss: "Perlu disaring segera" } as const;
 const links = {
   cg150: "[NICE CG150](https://www.nice.org.uk/guidance/cg150/chapter/recommendations)",
   ng228: "[NICE NG228](https://www.nice.org.uk/guidance/ng228/chapter/Recommendations)",
@@ -103,7 +104,8 @@ const headachePack = {
   redFlags: ["Nyeri mendadak yang mencapai intensitas maksimal dalam 1–5 menit (*thunderclap headache*).", "Demam, kaku kuduk, atau penurunan kesadaran.", "Defisit neurologis baru, kejang, atau gangguan penglihatan.", "Trauma kepala, perubahan bermakna pola nyeri, atau nyeri yang dipicu aktivitas/mengejan."],
   emergency: `**Jika dicurigai perdarahan subaraknoid, rujuk segera ke IGD.**`,
   history: [["Onset", "Kapan mulai? Mendadak atau bertahap? Berapa lama hingga nyeri maksimal?"], ["Pola", "Serangan pertama atau berulang; durasi setiap episode; frekuensi per bulan"], ["Karakteristik", "Berdenyut, menekan/mengikat, terbakar, atau seperti tersengat"], ["Intensitas dan dampak", "Skala nyeri 0–10; gangguan aktivitas dan tidur"], ["Lokasi dan penjalaran", "Unilateral/bilateral; menjalar dari leher atau ke area lain"], ["Gejala penyerta", "Mual, muntah, fotofobia, fonofobia, demam, kaku kuduk, atau kelainan neurologis"], ["Pencetus", "Aktivitas fisik, batuk/mengejan, perubahan posisi, atau gerakan leher"], ["Riwayat relevan", "Trauma, penyakit penyerta, kehamilan/pascapersalinan, serta riwayat nyeri kepala"], ["Obat dan alergi", "Analgesik beserta frekuensi penggunaan, antikoagulan, obat lain, dan alergi"]],
-  exam: ["Tanda vital, termasuk tekanan darah dan suhu.", "Tingkat kesadaran dan pemeriksaan neurologis terarah.", "Tanda rangsang meningeal sesuai indikasi.", "Pemeriksaan kepala dan leher: rentang gerak, nyeri tekan, serta ketegangan otot.", "Pemeriksaan mata/funduskopi sesuai indikasi dan kompetensi pemeriksa."],
+  // Part 4's further exams with their purpose; the vital-sign row is added when a vital is missing.
+  exam: [["Kesadaran dan neurologis", "Menilai tingkat kesadaran dan kemungkinan komplikasi neurologis."], ["Tanda rangsang meningeal", "Menilai kemungkinan iritasi meningeal bila terdapat indikasi klinis."], ["Kepala dan leher", "Menilai rentang gerak, nyeri tekan, dan ketegangan otot."], ["Mata dan funduskopi", "Mengidentifikasi kelainan okular sesuai indikasi dan kompetensi pemeriksa."]],
   workup: [`Bila dicurigai perdarahan subaraknoid, evaluasi rumah sakit mencakup pertimbangan CT kepala nonkontras segera sesuai penilaian klinis.`],
   diary: "Bila keluhan berulang, gunakan catatan nyeri kepala untuk mendokumentasikan pola, pencetus, obat, dan respons.",
 };
@@ -112,7 +114,7 @@ const generalPack: typeof headachePack = {
   redFlags: ["Gangguan jalan napas, sesak berat, atau saturasi oksigen rendah.", "Tanda syok atau tanda vital yang tidak stabil.", "Penurunan kesadaran, kejang, atau defisit neurologis baru.", "Nyeri dada, nyeri hebat yang mendadak, atau perdarahan aktif.", "Demam tinggi dengan tanda sepsis, atau perburukan yang cepat."],
   emergency: "**Bila ada tanda kegawatan, stabilkan dan rujuk segera ke IGD.**",
   history: [["Onset", "Kapan mulai? Mendadak atau bertahap?"], ["Perjalanan dan pola", "Pertama kali atau berulang; durasi; frekuensi; memberat atau membaik"], ["Karakteristik", "Sifat, lokasi, penjalaran, dan intensitas keluhan"], ["Gejala penyerta", "Demam, gejala sistemik, dan keluhan organ terkait"], ["Pencetus dan pereda", "Aktivitas, posisi, makanan, obat, atau faktor lain"], ["Riwayat relevan", "Penyakit penyerta, trauma, kehamilan/pascapersalinan, dan riwayat keluhan serupa"], ["Obat dan alergi", "Obat yang digunakan beserta frekuensinya, antikoagulan, dan alergi"]],
-  exam: ["Tanda vital, termasuk tekanan darah, nadi, napas, suhu, dan saturasi oksigen.", "Keadaan umum dan tingkat kesadaran.", "Pemeriksaan fisik terarah sesuai keluhan utama.", "Pemeriksaan sistem terkait untuk menyaring diagnosis yang tidak boleh terlewat."],
+  exam: [["Keadaan umum dan kesadaran", "Menilai kondisi umum dan tingkat kesadaran."], ["Pemeriksaan terarah", "Mencari temuan yang sesuai dengan keluhan utama."], ["Sistem terkait", "Menyaring diagnosis yang tidak boleh terlewat."]],
   workup: [],
   diary: "Bila keluhan berulang, catat pola, pencetus, obat, dan respons terhadap pengobatan.",
 };
@@ -166,8 +168,8 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
     return [`${group.length > 1 ? "- " : ""}${d.label} (${d.icd10})`, ...reasons("Mendukung", evidence.flatMap(e => e.supporting)), ...reasons("Menyangkal", evidence.flatMap(e => e.opposing))].join("\n");
   }).join("\n\n");
   const therapy = result.therapy?.regimen.length ? result.therapy : undefined;
+  // The drug lines straight under the label; the diagnosis already stands in part 5 (Gaffer, 2026-10-21).
   const regimen = therapy && join([
-    `Untuk ${therapy.forDiagnosis.label} (${therapy.forDiagnosis.icd10})`,
     points(therapy.regimen.map(r => regimenLine(r))),
     field("DDI", points(therapy.interactions.map(capital))),
     field("Kontraindikasi", points(therapy.contraindications.map(capital))),
@@ -197,7 +199,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
     narrative(primary, [["Segera kembali atau dirujuk bila", "rujukan"]]),
   ])];
   const codes = (key: keyof AadiResult["differential"]) => points(result.differential[key].map(d => `${d.icd10} — ${d.label}`));
-  const coding: [string, string] = [icd10SectionTitle, listedCodes.size ? join([field("Diagnosis kerja", codes("likely")), field("Alternatif", codes("alternatives")), field("Jangan terlewat", codes("cannotMiss")), "Kode belum final; ditetapkan setelah asesmen dokter."]) : "Belum ada kode diagnosis dari data yang ada."];
+  const coding: [string, string] = [icd10SectionTitle, listedCodes.size ? join([field("Diagnosis kerja", codes("likely")), field("Alternatif", codes("alternatives")), field("Jangan terlewat", codes("cannotMiss"))]) : "Belum ada kode diagnosis dari data yang ada."];
 
   // Headache cases get the headache lists; any other complaint gets the general ones.
   const complaintText = [caseData?.chiefComplaint ?? "", caseData?.anamnesis.freeText ?? ""].join(" ");
@@ -210,7 +212,40 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   const anamnesis = [historyText.replace(/^Konteks Encounter\n/, "").trim(), ...(caseData?.anamnesis.qa ?? []).map(qa => `${qa.question.trim()}: ${qa.answer.trim()}`)].filter(Boolean).join("; ");
   const findings = [vitalItems.length ? `Tanda vital: ${vitalItems.join("; ")}` : "", ...(caseData?.physicalExam ?? [])].filter(Boolean);
   const incomplete = result.missingInformation.length > 0;
-  const historyRows = [...actionsOf("question").map(a => [a.item, a.reason]), ...result.missingInformation.map(item => [item, "Belum tercatat; dapat mengubah asesmen"])];
+  const questionRows = actionsOf("question").map(a => [a.item, a.reason]);
+  // Part 4 (Gaffer's format, 2026-10-21): every vital sign with its value or "Belum tersedia", the signs outside the usual
+  // range named in words, then the further exams with their purpose. Pulse, pressure and breathing are judged for adults only.
+  const v = caseData?.vitals ?? {}, decimalComma = (n: number) => String(n).replace(".", ",");
+  const adult = (caseData?.demographics.ageYears ?? 18) >= 18;
+  const vitalRows: [name: string, value: string, short: string][] = [
+    ["Tekanan darah", v.systolic != null ? `${v.systolic}${v.diastolic != null ? `/${v.diastolic}` : ""} mmHg` : "", "tekanan darah"],
+    ["Frekuensi nadi", v.heartRate != null ? `${v.heartRate} kali/menit` : "", "frekuensi nadi"],
+    ["Suhu tubuh", v.temperature != null ? `${decimalComma(v.temperature)}°C` : "", "suhu tubuh"],
+    ["Frekuensi napas", v.respiratoryRate != null ? `${v.respiratoryRate} kali/menit` : "", "frekuensi napas"],
+    ["Saturasi oksigen (SpO₂)", v.spo2 != null ? `${v.spo2}%` : "", "SpO₂"],
+    ...(v.gcs != null ? [["GCS", String(v.gcs), "GCS"] as [string, string, string]] : []),
+  ];
+  const missingVitals = vitalRows.filter(([, value]) => !value).map(([, , short]) => short);
+  const [t, hr, sys, dia, rr, spo2] = [v.temperature, v.heartRate, v.systolic, v.diastolic, v.respiratoryRate, v.spo2];
+  // [the finding with its value, the word for the conclusion]
+  const signs = ([
+    [t != null && t >= 37.5, `demam (${vitalRows[2][1]})`, t != null && t >= 39 ? "demam tinggi" : "demam"],
+    [t != null && t < 36, `suhu rendah (${vitalRows[2][1]})`, "suhu rendah"],
+    [adult && hr != null && hr > 100, `takikardia (${vitalRows[1][1]})`, "takikardia"],
+    [adult && hr != null && hr < 60, `bradikardia (${vitalRows[1][1]})`, "bradikardia"],
+    [adult && sys != null && sys < 90, `hipotensi (${vitalRows[0][1]})`, "hipotensi"],
+    [adult && ((sys ?? 0) >= 140 || (dia ?? 0) >= 90), `tekanan darah tinggi (${vitalRows[0][1]})`, "tekanan darah tinggi"],
+    [adult && rr != null && rr > 20, `takipnea (${vitalRows[3][1]})`, "takipnea"],
+    [spo2 != null && spo2 < 95, `saturasi oksigen rendah (${vitalRows[4][1]})`, "saturasi oksigen rendah"],
+  ] as const).filter(([on]) => on);
+  const sentence = (items: string[]) => items.length > 1 ? `${items.slice(0, -1).join(", ")} disertai ${items[items.length - 1]}` : items.join("");
+  const series = (items: string[]) => items.length > 2 ? `${items.slice(0, -1).join(", ")}, dan ${items[items.length - 1]}` : items.join(" dan ");
+  const examRows = [
+    ...(actionsOf("exam").length ? actionsOf("exam").map(a => [capital(a.item), capital(a.reason)]) : pack.exam),
+    ...(missingVitals.length ? [["Tanda vital lengkap", `Melengkapi ${series([...missingVitals, "pemantauan hemodinamik"])}.`]] : []),
+  ].map(([name, purpose]) => [`**${name}**`, purpose]);
+  const examComplete = !missingVitals.length && !!caseData?.physicalExam.length;
+  const icdLines = likely.map(d => { const why = evidenceOf(d.icd10).flatMap(e => e.supporting).join("; "); return `${d.icd10} (kandidat)${why ? `: ${why}` : ""}`; });
   const discriminators = (code: string) => {
     const evidence = evidenceOf(code), supporting = evidence.flatMap(e => e.supporting), opposing = evidence.flatMap(e => e.opposing);
     return [supporting.length ? `Mendukung: ${supporting.join("; ")}` : "", opposing.length ? `Menyangkal: ${opposing.join("; ")}` : ""].filter(Boolean).join(". ") || "Belum tersedia";
@@ -234,7 +269,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
       ...(caseData?.knownConditions.length ? [["Kondisi yang diketahui", caseData.knownConditions.join("; ")]] : []),
       ...(caseData?.allergies.length ? [["Alergi", caseData.allergies.join("; ")]] : []),
       ...(caseData?.currentMedications.length ? [["Obat yang sedang digunakan", caseData.currentMedications.join("; ")]] : []),
-      ["Asesmen awal", candidates ? `Kandidat AADI: ${candidates}; belum terkonfirmasi` : `${headache ? "Nyeri kepala" : "Keluhan"} dengan penyebab belum ditentukan`],
+      ["Asesmen awal", candidates ? `Kandidat AADI: ${candidates}` : `${headache ? "Nyeri kepala" : "Keluhan"} dengan penyebab belum ditentukan`],
       ["Keterbatasan", incomplete ? "Data belum memadai untuk menetapkan diagnosis spesifik dan terapi individual" : "Draf dari data yang dimasukkan; memerlukan asesmen dokter"],
     ])],
     [diagnosisSectionTitles[1], join([
@@ -246,18 +281,26 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
       disposition ? `**Saran disposisi AADI:** ${disposition}` : "",
     ])],
     // Parts 3 and 4 come from what AADI asks for in this case; the template list stands in only when it asks for nothing.
-    [diagnosisSectionTitles[2], historyRows.length
-      ? table(["Data yang perlu dilengkapi", "Alasan"], historyRows)
+    [diagnosisSectionTitles[2], questionRows.length || result.missingInformation.length
+      ? join([questionRows.length ? table(["Pertanyaan", "Alasan"], questionRows) : "", bold("Data yang perlu dilengkapi:", bullets(result.missingInformation))])
       : `Aspek yang perlu dilengkapi (AADI belum memberi data untuk kasus ini):\n\n${table(["Aspek", "Data yang perlu dilengkapi"], pack.history)}`],
     [diagnosisSectionTitles[3], join([
-      findings.length ? bold("Temuan aktual:", bullets(findings)) : "**Temuan aktual: belum tersedia.**",
-      actionsOf("exam").length ? bold("Pemeriksaan terarah dari AADI:", bullets(actionsOf("exam").map(a => `${a.item} — ${a.reason}`))) : `Pemeriksaan yang perlu didokumentasikan:\n${bullets(pack.exam)}`,
+      "#### A. Hasil Pemeriksaan",
+      `**Tanda Vital**\n\n${table(["Parameter", "Hasil"], vitalRows.map(([name, value]) => [name, value || "Belum tersedia"]))}`,
+      `**Temuan klinis:** ${signs.length ? `${capital(sentence(signs.map(([, finding]) => finding)))}.` : caseData?.physicalExam.length ? "" : "belum tersedia."}`.trim(),
+      bullets(caseData?.physicalExam ?? []),
+      "#### B. Pemeriksaan Lanjutan yang Diperlukan",
+      table(["Pemeriksaan", "Tujuan Klinis"], examRows),
+      "#### C. Kesimpulan Pemeriksaan Fisik",
+      `${signs.length ? `Pasien menunjukkan **${sentence(signs.map(([, , word]) => word))}**. ` : ""}Pemeriksaan fisik tambahan diperlukan untuk menilai kondisi umum, status neurologis, dan kemungkinan tanda kegawatan.`,
+      examComplete ? "" : "**Status:** Pemeriksaan fisik belum lengkap. Penilaian tanda bahaya perlu diprioritaskan.",
     ])],
     [diagnosisSectionTitles[4], join([
-      `**Diagnosis kerja sementara:** ${candidates ? `kandidat AADI ${candidates}, belum terkonfirmasi.` : "belum dapat ditetapkan dari data yang ada."}`,
-      differentialRows.length || extraRows.length ? table(["Diagnosis banding", "Data pembeda yang perlu dicari", "Status"], [...differentialRows, ...extraRows]) : "",
+      `**Diagnosis kerja sementara:** ${candidates ? `kandidat AADI ${candidates}.` : "belum dapat ditetapkan dari data yang ada."}`,
+      differentialRows.length || extraRows.length ? table(["Diagnosis banding", "Data pembeda yang perlu dicari", "Keterangan"], [...differentialRows, ...extraRows]) : "",
       `**Catatan penalaran:** ${result.reasoningNote?.trim() || "belum tersedia untuk analisis ini."}`,
-      `**Kode ICD-10:** ${likely.length ? `${likely.map(d => d.icd10).join(", ")} (kandidat); belum final, ditetapkan setelah asesmen dokter.` : "ditentukan setelah asesmen dokter; kode diagnosis spesifik pada draf awal belum dapat dianggap final."}`,
+      // "B50.9 (kandidat): <reason>" (Gaffer, 2026-10-21); the reason is AADI's supporting evidence for that code.
+      `**Kode ICD-10:**${icdLines.length > 1 ? `\n${bullets(icdLines)}` : ` ${icdLines[0] ?? "belum ada kandidat dari data yang ada."}`}`,
       primary.length ? diagnosisReferenceMarker : "",
       narrative(primary, [["Definisi", "definisi"], ["Gejala khas", "gejala"], ["Kriteria diagnosis", "diagnosis"]]),
     ])],
@@ -268,7 +311,6 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
       caseData?.facilityCapabilities.length ? `**Kemampuan fasilitas:** ${caseData.facilityCapabilities.join(", ")}` : "",
     ])],
     [diagnosisSectionTitles[6], join([
-      `**Status: belum difinalisasi${incomplete ? " karena data klinis belum lengkap" : " sebelum diverifikasi dokter"}.**`,
       regimen ? "**Usulan terapi dari AADI:**" : primary.length ? "**Terapi referensi Oracle:**" : "",
       gate?.therapyRemoved ? join([`Terapi tidak ditampilkan: ${gate.reason}`, regimen || narrative(primary, [["Terapi", "terapi"]])]) : regimen || narrative(primary, [["Terapi", "terapi"]]) || "Belum ada data terapi untuk diagnosis ini.",
       `**Catatan terapi draf awal:** ${therapy ? `${therapy.regimen.map(r => unstrength(r.drug)).join(", ")} tercantum sebagai usulan. ` : ""}Dosis individual, interval, batas harian, interaksi obat, dan kontraindikasi perlu diverifikasi sebelum dijadikan instruksi pengobatan. Kutipan dosis tunggal tidak memverifikasi keseluruhan regimen.`,
@@ -304,7 +346,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   const checks = [...actionsOf("test").slice(0, 2), ...actionsOf("exam").slice(0, 2)].map(a => a.item);
   const summary: [string, string] = [doctorSummaryTitle, [
     `**Perlu disaring segera:** ${result.differential.cannotMiss.length ? `${result.differential.cannotMiss.map(named).join("; ")}. ` : ""}Status tanda bahaya: belum dinilai (bagian 2).`,
-    `**Diagnosis kerja (kandidat, belum terkonfirmasi):** ${candidates || "belum dapat ditetapkan dari data yang ada."}`,
+    `**Diagnosis kerja (kandidat):** ${candidates || "belum dapat ditetapkan dari data yang ada."}`,
     `**Periksa:** ${checks.length ? checks.join("; ") : "lihat bagian 3 dan 4."}`,
     `**Terapi usulan:** ${gateText || therapyLine || "lihat bagian 7."}`,
     `**Rujuk:** ${disposition || "belum dinilai."}`,
