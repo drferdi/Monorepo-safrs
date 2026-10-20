@@ -4,7 +4,8 @@ import { act, cleanup, fireEvent, render, screen, within } from "@testing-librar
 import { WorkspaceApp } from "../../src/components/workspace";
 import { initialWorkspace, storageKey, unreadableKey, type Encounter } from "../../src/lib/workspace";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
-import type { MiraAnalysis } from "../../src/lib/mira/contract";
+import type { AadiAnalysis } from "../../src/lib/aadi/contract";
+import { diagnosisSectionTitles, doctorSummaryTitle } from "../../src/lib/aadi/presentation";
 
 vi.mock("next/image", () => ({
   default: ({ src, alt, unoptimized, ...rest }: { src: unknown; alt?: string; unoptimized?: boolean; [key: string]: unknown }) => {
@@ -15,7 +16,7 @@ vi.mock("next/image", () => ({
   },
 }));
 
-const fixtureAnalysis: MiraAnalysis = {
+const fixtureAnalysis: AadiAnalysis = {
   traceId: "trace-smoke-test-123",
   createdAt: "2026-10-18T10:00:00.000Z",
   case: {
@@ -141,13 +142,13 @@ describe("workspace UI smoke tests", () => {
     global.fetch = vi.fn().mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
       const method = init?.method ?? (typeof input === "object" && "method" in input ? input.method : "GET");
-      if (url.includes("/api/mira") && method === "GET") {
+      if (url.includes("/api/aadi") && method === "GET") {
         return new Response(JSON.stringify({ configured: true, modelReady: true, groundingReady: true, ready: true }), {
           status: 200,
           headers: { "Content-Type": "application/json" },
         });
       }
-      if (url.includes("/api/mira") && method === "POST") {
+      if (url.includes("/api/aadi") && method === "POST") {
         return new Response(JSON.stringify(fixtureAnalysis), {
           status: 200,
           headers: { "Content-Type": "application/json" },
@@ -220,7 +221,24 @@ describe("workspace UI smoke tests", () => {
     expect(screen.queryByText(/1x1000mg/i)).toBeNull();
 
     // Assert that unverified dose wording or status appears
-    expect(screen.getAllByText(/dosis: cek pedoman|dosis tidak ditemukan di TheOracle/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/dosis: cek pedoman|dosis tidak ditemukan di Oracle/i).length).toBeGreaterThan(0);
+
+    // The answer is the nine-part report: its parts in the section list, real tables, and links that open outside
+    const parts = within(screen.getByRole("navigation", { name: "Bagian analisis kasus" })).getAllByRole("button").map(button => button.textContent);
+    expect(parts).toEqual([doctorSummaryTitle, ...diagnosisSectionTitles]);
+    // The guideline passages and the dose check are sub-parts of part 9's fold, the passages as compact titles
+    const fold = [...document.querySelectorAll<HTMLDetailsElement>("details.diagnosis-provenance")].at(-1)!;
+    expect(within(fold).getByRole("heading", { name: "Kutipan pedoman" })).toBeTruthy();
+    expect(within(fold).getByRole("heading", { name: "Cek dosis obat" })).toBeTruthy();
+    expect(fold.querySelector(".oracle-references details.oracle-reference")).toBeTruthy();
+    expect(fold.textContent).not.toMatch(/kemiripan/);
+    const summary = screen.getByRole("region", { name: "Tabel Komponen, Keterangan" });
+    expect(within(summary).getAllByRole("columnheader").map(cell => cell.textContent)).toEqual(["Komponen", "Keterangan"]);
+    expect(within(summary).getByRole("cell", { name: "Batuk dan demam tinggi sejak 3 hari" })).toBeTruthy();
+    const nice = screen.getAllByRole("link", { name: "NICE CG150" })[0];
+    expect(nice.getAttribute("href")).toBe("https://www.nice.org.uk/guidance/cg150/chapter/recommendations");
+    expect(nice.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(screen.queryByText(/\| --- \|/)).toBeNull();
 
     // Unmount and remount to verify persistence & restoration
     unmount();

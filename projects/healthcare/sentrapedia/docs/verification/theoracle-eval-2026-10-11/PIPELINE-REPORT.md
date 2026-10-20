@@ -1,6 +1,6 @@
 # TheOracle pipeline evaluation: legacy vs targeted therapy (2026-10-11)
 
-Live run, 61 cases each (`eval-set.json` gold queries, no exact-term rows), model `google/gemini-2.5-flash` via OpenRouter, TheOracle index `f9d64669...`. Same code, same engine; only `MIRA_TARGETED_THERAPY` differs. Script: `scripts/eval-theoracle-pipeline.mjs`. Raw rows: `pipeline-2026-10-11-{legacy,targeted}.json`.
+Live run, 61 cases each (`eval-set.json` gold queries, no exact-term rows), model `google/gemini-2.5-flash` via OpenRouter, TheOracle index `f9d64669...`. Same code, same engine; only `AADI_TARGETED_THERAPY` differs. Script: `scripts/eval-theoracle-pipeline.mjs`. Raw rows: `pipeline-2026-10-11-{legacy,targeted}.json`.
 
 ## Result (numbers first)
 
@@ -9,9 +9,9 @@ Live run, 61 cases each (`eval-set.json` gold queries, no exact-term rows), mode
 | Cases ok / run | 61 / 61 | 61 / 61 |
 | Latency total p50 / p95 | 2.50 s / 2.87 s | 4.55 s / 5.55 s |
 | retrieve_dx p50 / p95 | 79 / 96 ms | 78 / 94 ms |
-| mira_dx p50 / p95 | 2394 / 2785 ms | 2522 / 2949 ms |
+| aadi_dx p50 / p95 | 2394 / 2785 ms | 2522 / 2949 ms |
 | retrieve_tx p50 / p95 | - | 43 / 47 ms |
-| mira_tx p50 / p95 | - | 1879 / 2512 ms |
+| aadi_tx p50 / p95 | - | 1879 / 2512 ms |
 | gate p50 / p95 | 1 / 1 ms | 1 / 1 ms |
 | ICD-10 valid | 100% | 100% |
 | ICD-10 top-1 vs draft gold (queries name the disease; upper bound) | 98.4% (60/61) | 98.4% (60/61) |
@@ -25,7 +25,7 @@ Live run, 61 cases each (`eval-set.json` gold queries, no exact-term rows), mode
 | Cases with at least one verified dose | 27 | 31 |
 | Therapy retrieval success | n/a | 100% (61/61) |
 | Path taken | legacy 61 | targeted 61, no `TARGETED_UNAVAILABLE`, no failed stage |
-| Cost, audit log (all MIRA calls) | $0.8945 (61 calls) | $0.8401 (122 calls) |
+| Cost, audit log (all AADI calls) | $0.8945 (61 calls) | $0.8401 (122 calls) |
 
 Cost note: `result.meta.costUsd` summed to $0.6009 for targeted (diagnosis step only); the audit log adds the therapy calls, giving $0.8401. Targeted is not more expensive overall because the diagnosis call no longer writes therapy. Total spend of this evaluation: $1.7345 (audit total for the day $1.7673 including $0.0328 spent earlier).
 
@@ -38,7 +38,7 @@ The table above uses the gate at `c67639e6`. The final review then tightened the
 - both bounds of a range are checked;
 - mEq, mmol, "juta IU" and μg are recognised.
 
-The gate was replayed over the same 122 model replies stored in the MIRA audit log (`.runtime/mira-deepseek/audit/audit-2026-10-11.jsonl`, with the grounding bundle sent to each call). The replay with the old gate reproduces the committed counts exactly (36/20/9 and 41/28/2), so it is a faithful re-run.
+The gate was replayed over the same 122 model replies stored in the AADI audit log (`.runtime/aadi-deepseek/audit/audit-2026-10-11.jsonl`, with the grounding bundle sent to each call). The replay with the old gate reproduces the committed counts exactly (36/20/9 and 41/28/2), so it is a faithful re-run.
 
 | Gate counts (drugs) | Legacy | Targeted |
 |---|---|---|
@@ -128,7 +128,7 @@ The new verifications are furosemid 20-40 mg for acute heart failure ("furosemid
 
 ### ICD-10 "valid" only meant "the code exists" (commits `0663d938`, `df5829f8`)
 
-The 100% "ICD-10 valid" above only means that the code, or its 3-character category, exists in the BPJS e-Klaim list. The eval script now also records `icdNameMatch`: whether a meaningful word of the model's label occurs in the official name of the code or its category, using the same rule as the MIRA postcheck. This is approximate lexical overlap and can be wrong in both directions:
+The 100% "ICD-10 valid" above only means that the code, or its 3-character category, exists in the BPJS e-Klaim list. The eval script now also records `icdNameMatch`: whether a meaningful word of the model's label occurs in the official name of the code or its category, using the same rule as the AADI postcheck. This is approximate lexical overlap and can be wrong in both directions:
 
 - a synonym or an Indonesian label misses;
 - a wrong disease that shares a class word still matches ("Typhoid fever" for R50.9 Fever).
@@ -153,7 +153,7 @@ The headline ICD number remains top-1 against the draft gold: 98.4%.
 - The dose-correct path improved modestly end to end: verified doses 36 -> 41, drug removals 9 -> 2, cases with a usable dose 27 -> 31. Verified share of written drugs is 55% -> 58%; the larger change is that unsupported drugs are now kept with the dose blanked (28 vs 20) instead of the whole drug disappearing.
 - The offline gain (0.754 -> 0.885) is larger than the end-to-end gain. The remaining gap sits in what the model writes (child vs adult forms, combined products) and in the lexical gate, not in retrieval alone.
 - Diagnosis quality is unchanged (same 1 miss, `abbreviations-10`, P21.0). 4 of 61 cases picked a different top-1 code string between runs (three only in the subcode, e.g. L50.0 vs L50; one M17.9 vs M19.9); all 4 are correct under the 3-character rule in both runs.
-- Latency: +2.05 s at p50, +2.68 s at p95. The cost is the second MIRA call (about 1.9 s) plus retrieval (43 ms). The 15 s retrieval limit was never approached.
+- Latency: +2.05 s at p50, +2.68 s at p95. The cost is the second AADI call (about 1.9 s) plus retrieval (43 ms). The 15 s retrieval limit was never approached.
 
 ## Spot-check of 10 verified doses (targeted run)
 
@@ -183,4 +183,4 @@ Result: 8 yes, 1 no, 1 unclear. Both failures are of the kind a lexical gate pas
 - Spot-check is 10 rows, one rater, no second reading.
 - One run per path, temperature as configured; model variation between runs was not measured (4 of 61 top-1 code strings differed between the two runs).
 - Cost and latency are for 1 case at a time on local CPU with a warm index (cold start 2.6 s not included).
-- Therapy retrieval success was counted from `therapyGrounding`, which a `mira_tx` failure also clears; the script now reads the `retrieve_tx` stage. No `mira_tx` stage failed in the saved runs, so 61/61 still holds.
+- Therapy retrieval success was counted from `therapyGrounding`, which a `aadi_tx` failure also clears; the script now reads the `retrieve_tx` stage. No `aadi_tx` stage failed in the saved runs, so 61/61 still holds.

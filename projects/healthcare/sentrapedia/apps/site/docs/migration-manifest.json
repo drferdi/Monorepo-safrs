@@ -168,7 +168,7 @@
     },
     {
       "path": "assets/workflows.json",
-      "sha256": "8639e38a174b56a143635ea4430d6ac25cc511de6eb82dc526745164487d0914"
+      "sha256": "7fdf1b2deeed68a204e484499b3dc7743c96af612ea59ecd3b00459b3b32023c"
     },
     {
       "path": "assets/workflows/anamnesis-poster.webp",
@@ -284,7 +284,7 @@
     },
     {
       "path": "scripts/workflow-playback.test.mjs",
-      "sha256": "188235453fd7bb1f44e647f8c0faeb28b32154e18152d7d1c8505a4f0168bd1a"
+      "sha256": "8dc9d4d2746ef27b07f69177cd7472402cc886e25e19c56c66f72b22ee1ade2b"
     },
     {
       "path": "source/faq/index.html",
@@ -292,7 +292,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "b8795d1f2edd82f795dd5e208a06e6f4b9565a1dae88427b6a98bd2f0e57ee5c"
+      "sha256": "3841fc98cd81cb87baa52d418752f1474eb6ce32cff122ef01715f549c4f537c"
     },
     {
       "path": "assets/system-anatomy.css",
@@ -368,7 +368,7 @@
     },
     {
       "path": "source/ruang-kerja/index.html",
-      "sha256": "9c6f68c1295e2a366b5bfc9ca1c12ab09876a8518c94f30066a5ac22cc37170c"
+      "sha256": "100040a284f4ce89806a154f11f01e0fd6e53383471f883bf0157882c9c5f9a1"
     },
     {
       "path": "assets/sejarah-sentra.css",

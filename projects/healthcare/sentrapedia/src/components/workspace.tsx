@@ -5,7 +5,7 @@ import { useCallback, useEffect, useReducer, useRef, useState, type ComponentPro
 import { createDraft, type ModeId } from "../lib/drafts";
 import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Patient } from "../lib/workspace";
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
-import { intentGroups } from "../lib/studio";
+import { downloadName, intentGroups } from "../lib/studio";
 import { insertTemplate } from "../lib/clinical-templates";
 import { compactQuery, mobileQuery } from "../lib/layout";
 import { Composer } from "./composer";
@@ -19,10 +19,10 @@ import { TemplateLibrary } from "./template-library";
 import { WorkQueue } from "./work-queue";
 import { createPersonalDraft } from "../lib/workflow";
 import { KnowledgeDialog } from "./knowledge-dialog";
-import { diagnosisContent, miraMessage } from "../lib/mira/presentation";
-import type { MiraAnalysis } from "../lib/mira/contract";
-import { composerCase, composerUsesMira, composerMiraMessages } from "../lib/mira/composer";
-import { requestMiraAnalysis } from "../lib/mira/client";
+import { diagnosisContent, aadiMessage } from "../lib/aadi/presentation";
+import type { AadiAnalysis } from "../lib/aadi/contract";
+import { caseFieldKeys, composerCase, patientHints, composerUsesAadi, composerAadiMessages, emptyCaseFields, readCaseFields, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
+import { requestAadiAnalysis } from "../lib/aadi/client";
 import { smooth } from "./smooth";
 import { useMediaQuery, useToast, useWorkspacePersistence } from "./workspace-hooks";
 import { ChatComposer, Conversation, HomeFooter, HomeView, WorkspaceHeader } from "./workspace-views";
@@ -45,6 +45,10 @@ export function WorkspaceApp() {
   const [mode, setMode] = useState<ModeId>("question");
   const [templateKey, setTemplateKey] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // The analysis case strip: values read from the text refill as the text changes, until the doctor edits that field.
+  const [caseFields, setCaseFields] = useState<CaseFields>(emptyCaseFields);
+  const [manualFields, setManualFields] = useState<CaseFieldKey[]>([]);
+  const resetCaseFields = useCallback(() => { setCaseFields(emptyCaseFields()); setManualFields([]); }, []);
   const [analysisError, setAnalysisError] = useState("");
   // The question being analysed: shown at once as the user's message, saved only with its answer.
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
@@ -76,13 +80,24 @@ export function WorkspaceApp() {
   function openDialog(name: DialogName, id?: string) { if (analysisController.current) cancelAnalysis(); const open = () => { setDialog(name); setDialogId(id); }; if (dialog) smooth(open); else open(); }
   function hideDialog() { setDialog(null); setDialogId(undefined); }
   function closeDialog() { if (dialog) smooth(hideDialog); else hideDialog(); }
-  function selectEncounter(id: string) { dispatch({ type: "encounter.select", id }); setPrompt(""); changeMode("question"); if (mobile) setMobileNavOpen(false); closeDialog(); }
+  function selectEncounter(id: string) { dispatch({ type: "encounter.select", id }); setPrompt(""); resetCaseFields(); changeMode("question"); if (mobile) setMobileNavOpen(false); closeDialog(); }
   function startNew(patientId?: string) {
     if (patientId) dispatch({ type: "encounter.add", encounter: newEncounter(patientId) }); else dispatch({ type: "encounter.select", id: null });
-    setPrompt(""); changeMode("question"); if (mobile) setMobileNavOpen(false);
+    setPrompt(""); resetCaseFields(); changeMode("question"); if (mobile) setMobileNavOpen(false);
   }
   function savePatient(p: Patient) { const exists = state.patients.some((item) => item.id === p.id); dispatch({ type: exists ? "patient.edit" : "patient.add", patient: p }); if (!exists) { dispatch({ type: "encounter.add", encounter: newEncounter(p.id) }); setPrompt(""); } closeDialog(); notify(exists ? "Detail Pasien tersimpan." : "Pasien dibuat. Encounter pertama siap digunakan."); }
-  function updatePrompt(value: string) { setPrompt(value); setAnalysisError(""); }
+  function updatePrompt(value: string) {
+    setPrompt(value); setAnalysisError("");
+    const found = readCaseFields(value);
+    setCaseFields((fields) => { const next = { ...fields }; for (const key of caseFieldKeys) if (!manualFields.includes(key)) next[key] = found[key] ?? ""; return next; });
+  }
+  // A referral letter from an analysis (design D4): the local Surat Rujukan mode with the case filled in; the doctor adds the destination.
+  function startReferral(text: string) {
+    changeMode("referral"); updatePrompt(text);
+    requestAnimationFrame(() => { const box = document.querySelector<HTMLTextAreaElement>(".chat-composer textarea"); box?.focus(); box?.setSelectionRange(text.length, text.length); });
+    notify("Draf surat rujukan siap di kolom. Lengkapi penerima dan permintaan, lalu tekan Enter.");
+  }
+  function editCaseField(key: CaseFieldKey, value: string) { setCaseFields((fields) => ({ ...fields, [key]: value })); setManualFields((keys) => keys.includes(key) ? keys : [...keys, key]); }
   async function analyzeMain(text: string, selectedMode: ModeId, current: Encounter) {
     if (analysisController.current) return;
     const controller = new AbortController(); analysisController.current = controller;
@@ -90,10 +105,11 @@ export function WorkspaceApp() {
     // The home composer gives way to the chat composer; keep typing where the reader is.
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".chat-composer textarea")?.focus());
     try {
-      const analysis = await requestMiraAnalysis(composerCase(text, current.context, patient), { synthetic: true, signal: controller.signal });
+      const analysis = await requestAadiAnalysis(composerCase(text, current.context, patient, caseFields), { synthetic: true, signal: controller.signal });
       if (controller.signal.aborted || analysisController.current !== controller) return;
       if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
-      dispatch({ type: "message.add", encounterId: current.id, messages: composerMiraMessages(analysis, text, selectedMode, state.reviewDefaults) });
+      dispatch({ type: "message.add", encounterId: current.id, messages: composerAadiMessages(analysis, text, selectedMode, state.reviewDefaults) });
+      resetCaseFields();
       dispatch({ type: "encounter.select", id: current.id });
     } catch (error) {
       if (!controller.signal.aborted) { setAnalysisError(error instanceof Error ? error.message : "Analisis belum tersedia. Keluhan tetap tersedia."); setPrompt(text); }
@@ -106,7 +122,7 @@ export function WorkspaceApp() {
     const current: Encounter = encounter ?? newEncounter();
     let content: string;
     const personal = useTemplate && selectedTemplate?.mode === selectedMode ? selectedTemplate : undefined;
-    if (composerUsesMira(selectedMode, !!personal)) { void analyzeMain(text, selectedMode, current); return; }
+    if (composerUsesAadi(selectedMode, !!personal)) { void analyzeMain(text, selectedMode, current); return; }
     try { content = personal ? createPersonalDraft(personal, text, current.context) : createDraft({ mode: selectedMode, prompt: text, context: current.context, ...state.settings, patient }); } catch (error) { notify(error instanceof Error ? error.message : "Draf tidak dapat diformat.", "error"); return; }
     setBusy(true);
     if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
@@ -115,19 +131,20 @@ export function WorkspaceApp() {
     setPrompt(""); setBusy(false);
   }
 
-  function saveMiraAnalysis(analysis: MiraAnalysis) {
+  function saveAadiAnalysis(analysis: AadiAnalysis) {
     const current = encounter ?? newEncounter();
     if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: `Analisis kasus · ${analysis.case.chiefComplaint.slice(0, 40)}` } });
-    dispatch({ type: "message.add", encounterId: current.id, messages: [miraMessage(analysis, state.reviewDefaults)] });
+    dispatch({ type: "message.add", encounterId: current.id, messages: [aadiMessage(analysis, state.reviewDefaults)] });
     changeMode("ddx"); closeDialog(); notify("Analisis ditambahkan sebagai draf untuk ditinjau.");
   }
 
-  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, miraEnabled: composerUsesMira(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis };
+  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis,
+    caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };
 
   if (restoring) return <main className="system-loading" aria-busy="true"><PixelLoader label="Sedang membuka workspace…"/><p>Membuka workspace…</p></main>;
 
   return <div className={`app-shell ${sidebarOpen ? "" : "sidebar-collapsed"} ${focusMode ? "focus-mode" : ""}`}>
-    {dialog === "knowledge" && <KnowledgeDialog initialTab={dialogId} onClose={closeDialog} onSave={saveMiraAnalysis}/>}
+    {dialog === "knowledge" && <KnowledgeDialog initialTab={dialogId} onClose={closeDialog} onSave={saveAadiAnalysis}/>}
     {dialog === "templates" && <TemplateLibrary state={state} dispatch={dispatch} onChoose={chooseTemplate} onInsert={(next, text) => { chooseTemplate(`mode:${next}`); updatePrompt(insertTemplate(prompt, text)); }} onClose={closeDialog}/>}
     {dialog === "queue" && <WorkQueue state={state} dispatch={dispatch} onClose={closeDialog} onSelect={(id) => { selectEncounter(id); requestAnimationFrame(() => document.querySelectorAll(".assistant-message").item(document.querySelectorAll(".assistant-message").length - 1)?.scrollIntoView({ block: "nearest" })); }}/ >}
     <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify}/>
@@ -139,11 +156,11 @@ export function WorkspaceApp() {
         onCommands={() => openDialog("commands")}
         onFocus={() => smooth(() => { setMobileNavOpen(false); setFocusMode((value) => !value); })}
         onPanel={() => { if (compact || focusMode) openDialog("clinical"); else smooth(() => setPanelOpen((value) => !value)); }}
-        onExport={() => downloadText(encounter?.messages.map((m) => diagnosisContent(m)).join("\n\n---\n\n") ?? "", "encounter.md")}
+        onExport={() => downloadText(encounter?.messages.map((m) => diagnosisContent(m)).join("\n\n---\n\n") ?? "", downloadName(encounter?.title ?? "encounter"))}
         onUpgrade={() => openDialog("upgrade")}/>
       <div className="workspace-body">
         {!hasMessages ? <HomeView name={state.settings.name ?? ""} intent={intent} composer={composerProps}/> : <>
-          <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onCancel={cancelAnalysis}/>
+          <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onReferral={startReferral} onCancel={cancelAnalysis}/>
           <ChatComposer composer={composerProps} onAbout={() => openDialog("account")}/>
         </>}
       </div>

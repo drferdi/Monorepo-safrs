@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { emptyCase } from "../src/lib/mira/contract";
+import { emptyCase } from "../src/lib/aadi/contract";
 import { retrieveTheOracleGrounding, TheOracleGroundingError } from "../src/lib/theoracle-grounding";
 import sample from "../oracle/sentrapedia.sample.json";
 
@@ -15,7 +15,7 @@ describe("public build without the private database", () => {
       const failure = await retrieveTheOracleGrounding({ ...emptyCase(), chiefComplaint: "batuk" }, { indexDir: path.join(empty, "index"), embedder: async () => async () => new Float32Array(768) }).catch(error => error);
       expect(failure).toBeInstanceOf(TheOracleGroundingError);
       expect(failure.code).toBe("THEORACLE_UNAVAILABLE");
-      expect(failure.message).toBe("Database TheOracle belum terpasang di server ini. Analisis tidak dijalankan.");
+      expect(failure.message).toBe("Database Oracle belum terpasang di server ini. Analisis tidak dijalankan.");
     } finally { rmSync(empty, { recursive: true, force: true }); }
   });
   it("ships a sample catalog that is marked as sample and carries no clinical content", () => {

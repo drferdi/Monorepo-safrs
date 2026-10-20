@@ -41,7 +41,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      # Matches python3 in the Dockerfile's bookworm image; postinstall builds the MIRA venv with it.
+      # Matches python3 in the Dockerfile's bookworm image; postinstall builds the AADI venv with it.
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
@@ -54,8 +54,8 @@ jobs:
       # Runtime dependencies only; .npmrc keeps audit=false so local installs stay quiet.
       - run: npm audit --omit=dev --audit-level=high
       - run: npm run lint
-      # The ruff version is pinned because its default rules change between releases (mira/ruff.toml).
-      - run: pipx run ruff==0.17.1 check mira
+      # The ruff version is pinned because its default rules change between releases (aadi/ruff.toml).
+      - run: pipx run ruff==0.17.1 check aadi
       - run: npm run typecheck
       - run: npm run test:all
       - run: npm run site:verify

@@ -25,14 +25,14 @@ used in the model evaluation; the 101 new chunks differ only by their `published
 | `npm run typecheck` | exit 0 |
 | `npm run lint` | exit 0 |
 | `npm test` | 158/158 passed (includes the real index + local model test) |
-| `npm run test:mira` | 157 passed, 1 skipped |
+| `npm run test:aadi` | 157 passed, 1 skipped |
 | `npm run test:system` | 7/7 passed |
 | `npm run build` | exit 0 |
 | `npm run deploy:dry-run` | PASS, 7 traces |
 | Standalone smoke | `@huggingface/transformers` resolves inside `.next/standalone`, offline model load 1.3 s, 768-d output |
-| Dev system | `npm run dev` on 3105: MIRA ready, `/api/mira` health `groundingReady: true`; no paid analysis run |
+| Dev system | `npm run dev` on 3105: AADI ready, `/api/aadi` health `groundingReady: true`; no paid analysis run |
 | `docker build` | exit 0, image 3.1 GB (first attempt stopped when Docker Desktop's engine failed with HTTP 500; passed after restart, same 4 GB VM) |
-| Container (Linux x64) | onnxruntime-node and sharp Linux binaries present; offline embedding 768-d, load 2.7 s; full system on 127.0.0.1:3106 → home 200 in about 6 s, `/api/mira` `groundingReady: true`, 141 MiB before the first query; no paid analysis run |
+| Container (Linux x64) | onnxruntime-node and sharp Linux binaries present; offline embedding 768-d, load 2.7 s; full system on 127.0.0.1:3106 → home 200 in about 6 s, `/api/aadi` `groundingReady: true`, 141 MiB before the first query; no paid analysis run |
 
 ## Retrieval quality and cost (`npm run benchmark:oracle`, production module, CPU)
 
@@ -68,5 +68,5 @@ still used by that checkout's branch.
 - Eval gold labels are draft.
 - `npm ci` downloads 1.2 GB with no resume; the contract install timeout is 600 s.
 - The Docker image is 3.1 GB (model 1.2 GB); the first retrieval adds about 0.85 GB RSS.
-- MIRA's reasoning model is still `google/gemini-2.5-flash` via OpenRouter (pre-existing,
+- AADI's reasoning model is still `google/gemini-2.5-flash` via OpenRouter (pre-existing,
   outside this change).

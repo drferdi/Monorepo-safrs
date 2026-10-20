@@ -1,7 +1,7 @@
 # Oracle II grounding verification — 2026-10-10
 
 Status: local implementation verified; no push, publication, deployment or paid inference.
-Gaffer approved clinical-facing grounding and the local MIRA service scope, and separately
+Gaffer approved clinical-facing grounding and the local AADI service scope, and separately
 approved one isolated build/extraction after Jev returned stop_retry for the main-checkout build.
 Claude owns the ongoing design work; existing UI changes were preserved.
 
@@ -17,12 +17,12 @@ Claude owns the ongoing design work; existing UI changes were preserved.
 | Isolated capsule `npm run typecheck`, `npm run lint`, `npm test` | PASS, exits 0; 154 current application tests, 12 files |
 | Isolated capsule `npm run build` | PASS, exit 0, build `53NDRloPsbjPyFj3j5LW7` |
 | Isolated capsule `npm run deploy:dry-run` | PASS, exit 0, six traces, zero external source dependencies |
-| MIRA targeted `pytest assist/service/tests/test_step_api.py -q` | 50 passed, exit 0 |
-| MIRA full `pytest assist/service/tests -q --disable-warnings` | 155 passed, 1 skipped, exit 0; 17 inherited deprecation warnings |
-| Real forwarded Oracle bundle against MIRA request schema and full PII guard | PASS, exit 0 |
+| AADI targeted `pytest assist/service/tests/test_step_api.py -q` | 50 passed, exit 0 |
+| AADI full `pytest assist/service/tests -q --disable-warnings` | 155 passed, 1 skipped, exit 0; 17 inherited deprecation warnings |
+| Real forwarded Oracle bundle against AADI request schema and full PII guard | PASS, exit 0 |
 | Independent designated R2 review | Both P2 findings fixed and reviewed; no remaining actionable P1/P2 in scoped delta |
 
-The skipped MIRA test requires `MED_ASSIST_CONTRACT_DIR`. Exact-copy comparison is intentionally
+The skipped AADI test requires `MED_ASSIST_CONTRACT_DIR`. Exact-copy comparison is intentionally
 not asserted: the local service has documented optional `therapy` and `grounding` extensions.
 No Python lint/typecheck tool was installed in the existing venv; schema checks and service tests ran.
 No install was run, as requested: extraction used copied existing capsule dependencies.
@@ -37,10 +37,10 @@ Next dev was running and generating that file. Its exit code was not retained. T
 build passed without changing the dev process; the original attempt is superseded by this proof.
 
 The extracted standalone server returned HTTP 200 for `/` and a real static asset. Its real
-`/api/mira` route queried the packaged read-only SQLite, negotiated the capability with a local
+`/api/aadi` route queried the packaged read-only SQLite, negotiated the capability with a local
 mock, forwarded the exact fictional case separately from six passages, and returned the same
 bundle. A lexical no-match returned HTTP 422 with no second mocked inference request.
-The actual forwarded envelope passed Python MIRA schema and privacy validation. No real model
+The actual forwarded envelope passed Python AADI schema and privacy validation. No real model
 provider was called. Temporary standalone/mock processes were stopped after the check.
 
 Corpus SHA-256 before/after:
@@ -72,7 +72,7 @@ flowchart LR
     B --> C[Oracle II read-only retrieval]
     C --> D[Hashes + quote spans + source privacy filter]
     D --> E[At most 6 passages / 1600 chars each]
-    E --> F[MIRA capability + strict envelope validation]
+    E --> F[AADI capability + strict envelope validation]
     F --> G[System grounding rules / all prompt branches]
     G --> H[Response contract + model and cost checks]
     H --> I[Draft + immutable source snapshot]
@@ -91,7 +91,7 @@ flowchart LR
   this agent did not restart or take ownership of the design preview.
 - The older HANDOFF `Open SAFRS gaps` claims about absent src/CONTEXT/project contract are
   superseded by the current files/path-move note. This is not a claim that every old governance gap is closed.
-- HANDOFF/CONTEXT statements that MIRA never receives a database are superseded for the new 8791 process.
+- HANDOFF/CONTEXT statements that AADI never receives a database are superseded for the new 8791 process.
 - Corpus review fields are preserved as-is. Session-level Gaffer/Kemenkes provenance does not
   overwrite individual record statuses or turn retrieved sources into claim-level citations.
 - The original retrieval is lexical; it has no semantic reranker or clinical-performance evaluation.

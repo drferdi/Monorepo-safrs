@@ -271,20 +271,29 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .message-header .brand img { width: 30px; height: 30px; }
 .message-header strong { font-size: 12px; font-weight: 600; }
 .draft-badge { font-size: 9px; padding: 3px 6px; background: var(--workspace-accent-soft); border: 1px solid var(--color-border-subtle); color: var(--workspace-accent-ink); border-radius: var(--radius); margin-left: 3px; }
-.draft-content { font-size: 15px; line-height: 24px; color: var(--body-color); padding-left: 29px; overflow-wrap: anywhere; }
+.draft-content { font-size: 14px; line-height: 23px; color: var(--body-color); padding-left: 29px; overflow-wrap: anywhere; }
 .draft-content h2 { font-family: var(--font-title); font-weight: 300; letter-spacing: 0; color: var(--title-color); font-size: 28px; line-height: 36px; margin: 0 0 16px; }
 .draft-content h3 { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; color: var(--title-color); font-size: 18px; line-height: 26px; margin: 24px 0 8px; }
 .draft-content p { white-space: pre-wrap; margin: 0 0 8px; color: var(--body-color); }
 .draft-content hr { border: 0; border-top: 1px solid var(--color-border-subtle); margin: 22px 0 12px; }
 .draft-content hr + p { font-size: 12px; line-height: 18px; color: var(--color-text-muted); }
+/* A report table scrolls sideways inside its own frame, so the page never overflows on a phone. */
+.draft-table { max-width: 100%; overflow-x: auto; margin: 4px 0 16px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); overflow-wrap: break-word; }
+.draft-table table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 20px; }
+.draft-table :is(th, td) { min-width: 9em; padding: 8px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-border-subtle); }
+.draft-table th { font-weight: 600; color: var(--color-text-primary); background: var(--color-background-canvas); }
+.draft-table tbody tr:last-child td { border-bottom: 0; }
+.draft-content a { color: var(--workspace-accent-ink); text-underline-offset: 2px; }
 .diagnosis-document { display: grid; grid-template-columns: 165px minmax(0, 1fr); gap: 26px; align-items: start; }
 /* The section list hangs in the canvas's right margin so the document text lines up with the composer and the user's messages
    (Chief: "sejajar vertikal dengan kolom text user", then "bawa ke sebelah kanan"). The reading column moves left just enough
    to make room; narrow canvases keep the list inside the column. Measured on the canvas (cqw), so the conversation's
-   scrollbar cannot pull the document and the composer apart. */
+   scrollbar cannot pull the document and the composer apart. On a wide canvas the column grows to 960px and the column
+   with its list is centred as one block (Gaffer, 2026-10-20: "Proporsional? NOPE ... kenapa di limit sekecil itu lebar
+   horisontal?"; at 2000px the 780px column left 488px empty on the left and 297px on the right). */
 @media (min-width: 901px) {
   @container canvas (min-width: 720px) {
-    .main-canvas:has(.diagnosis-document) :is(.conversation-inner, .chat-composer) { margin-left: max(24px, min((100cqw - 780px) / 2, 100cqw - 992px)); width: min(780px, 100cqw - 236px); }
+    .main-canvas:has(.diagnosis-document) :is(.conversation-inner, .chat-composer) { --column: min(960px, 100cqw - 239px); margin-left: max(24px, (100cqw - var(--column) - 191px) / 2); width: var(--column); }
     .diagnosis-document { grid-template-columns: minmax(0, 1fr) 165px; margin-right: -191px; }
     .diagnosis-document .diagnosis-nav { order: 2; }
   }
@@ -306,14 +315,14 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .diagnosis-document .draft-content { padding-left: 0; }
 .diagnosis-field-label { font-size: 12px; line-height: 16px; font-weight: 600; color: var(--color-text-secondary); margin: 20px 0 6px; }
 .diagnosis-field-label:first-child { margin-top: 0; }
-.diagnosis-reference-heading { font-size: 15px; line-height: 24px; font-weight: 600; color: var(--workspace-accent-ink); margin: 20px 0 6px; }
+.diagnosis-reference-heading { font-size: 14px; line-height: 23px; font-weight: 600; color: var(--workspace-accent-ink); margin: 20px 0 6px; }
 .diagnosis-list-item { position: relative; padding-left: 16px; }
 .diagnosis-list-item::before { content: ""; position: absolute; left: 4px; top: .7em; width: 5px; height: 5px; border-radius: 50%; background: var(--color-text-muted); }
 .draft-content .diagnosis-list-item { margin-bottom: 4px; }
 .draft-content .diagnosis-list-nested { margin-left: 16px; }
 .draft-content .diagnosis-list-detail { padding-left: 16px; margin: 6px 0 2px; font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
-/* Reading measure: answers wrap near 70 characters instead of the full column. */
-.diagnosis-document .draft-content > :is(p, h4, label) { max-width: 38em; }
+/* Reading measure: answers wrap near 95 characters instead of the full column. */
+.diagnosis-document .draft-content > :is(p, h4, label) { max-width: 52em; }
 .diagnosis-document { font-variant-ligatures: no-contextual; }
 .diagnosis-section { border-top: 1px solid var(--color-border-subtle); padding: 22px 0 18px; scroll-margin-top: 24px; }
 .diagnosis-section-heading { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
@@ -341,7 +350,7 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 @starting-style { .diagnosis-supporting[open]::details-content { opacity: 0; } }
 /* TheOracle references (Gaffer, 2026-10-17): two one-line titles, the rest behind one disclosure; a title opens to its passage. */
 .oracle-references { display: grid; gap: 2px; }
-.oracle-reference > summary, .oracle-more > summary { display: flex; align-items: center; gap: 9px; min-height: 30px; cursor: pointer; list-style: none; font-size: 15px; color: var(--color-text-primary); }
+.oracle-reference > summary, .oracle-more > summary { display: flex; align-items: center; gap: 9px; min-height: 30px; cursor: pointer; list-style: none; font-size: 14px; color: var(--color-text-primary); }
 .oracle-more > summary { font-size: 13px; color: var(--color-text-secondary); }
 .oracle-reference > summary > small { flex: none; font-size: 12px; color: var(--color-text-secondary); }
 .oracle-reference > summary > span, .oracle-more > summary > span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
@@ -356,27 +365,14 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .oracle-reference[open]::details-content, .oracle-more[open]::details-content { opacity: 1; }
 @starting-style { .oracle-reference[open]::details-content, .oracle-more[open]::details-content { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .oracle-reference > summary::before, .oracle-more > summary::before, .oracle-reference::details-content, .oracle-more::details-content { transition: none; } }
-/* A new section unfolds like a submenu (heading drops in, the branch line draws down), then types. */
-.diagnosis-document[aria-busy="true"] .diagnosis-section-heading { animation: ink-in 420ms cubic-bezier(.33, 1, .68, 1) both; }
+/* A new section unfolds like a submenu (the branch line draws down), then types. */
 .diagnosis-section-body { position: relative; padding-left: 16px; }
 .diagnosis-section-body::before { content: ""; position: absolute; left: 3px; top: 2px; bottom: 2px; border-left: 1px solid var(--color-border-subtle); transform-origin: top; transition: border-color 320ms ease-out; }
 .diagnosis-section[data-typing="true"] .diagnosis-section-body::before { border-left: 2px solid var(--color-action-primary); left: 2px; animation: branch-reveal 320ms cubic-bezier(.23, 1, .32, 1); }
 .diagnosis-section[data-unfolding="true"] .diagnosis-section-body { display: grid; grid-template-rows: 0fr; animation: section-unfold 320ms cubic-bezier(.23, 1, .32, 1) forwards; min-height: 24px; }
-/* Every line of a typing answer arrives whole and settles into place: one calm fade and 6px rise, no blur, no caret
-   (Gaffer, 2026-10-17: "setiap kemunculan text harus halus"). Lines follow one another at the typing pace. */
-.diagnosis-document[aria-busy="true"] :is(.draft-content > *, .oracle-references) { animation: ink-in 420ms cubic-bezier(.33, 1, .68, 1) both; }
+/* A typing answer streams in word by word like a chat reply (Gaffer, 2026-10-20: "seperti claude.ai"): no fade or
+   rise on its lines, which arrived every few tens of milliseconds and read as a jitter. */
 @keyframes text-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-/* Answer reveal (Gaffer, 2026-10-19: "lebih halus"): lines fade in place like ink; rising lines arriving every few
-   tens of milliseconds read as a jitter. */
-@keyframes ink-in { from { opacity: 0; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .diagnosis-document[aria-busy="true"] :is(.diagnosis-section-heading, .draft-content > *, .oracle-references) { animation: none; } }
-/* Reading size of analyses and documents (2026-10-19): body 15 px on phones to 16 px on wide screens with a 1.65 line
-   height, labels and secondary text one step up, aligned dose figures, no single word left on a last line. */
-.diagnosis-document .draft-content { font-size: clamp(15px, 14px + .2vw, 16px); line-height: 1.65; font-variant-numeric: tabular-nums; }
-.diagnosis-document .draft-content :is(p, .diagnosis-list-item) { text-wrap: pretty; }
-.diagnosis-document .diagnosis-field-label { font-size: 13px; line-height: 18px; }
-.diagnosis-document .diagnosis-reference-heading { font-size: inherit; line-height: inherit; }
-.diagnosis-document .draft-content .diagnosis-list-detail, .diagnosis-document .diagnosis-supporting .draft-content { font-size: 14px; line-height: 22px; }
 @keyframes section-heading-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes section-unfold { to { grid-template-rows: 1fr; } }
 @keyframes typing-caret { 50% { opacity: 0; } }
@@ -403,7 +399,7 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 }
 @media (prefers-reduced-motion: reduce) {
   .diagnosis-nav button, .diagnosis-nav-branch, .diagnosis-supporting > summary::before, .diagnosis-supporting::details-content, .diagnosis-section-heading h3::after, .diagnosis-supporting h3::after, .diagnosis-section[data-arrived="true"] :is(.diagnosis-section-heading, .diagnosis-supporting > summary) > h3::after { transition: none; }
-  .diagnosis-nav-branch, .diagnosis-document[aria-busy="true"] .diagnosis-section-heading, .diagnosis-section-body::before, .diagnosis-document[aria-busy="true"] :is(.draft-content > *, .oracle-references), .thinking-steps li, .thinking-steps li > span:last-child { animation: none; }
+  .diagnosis-nav-branch, .diagnosis-section-body::before, .thinking-steps li, .thinking-steps li > span:last-child { animation: none; }
 }
 .draft-task { display: flex; gap: 7px; align-items: flex-start; margin: 7px 0; }
 .draft-task input { accent-color: var(--workspace-accent-ink); margin-top: 4px; }
@@ -704,7 +700,7 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .source-pane a { color: var(--workspace-accent-ink); text-underline-offset: 2px; }
 .source-pane li { padding-bottom: 8px; border-bottom: 1px solid var(--color-border-subtle); }
 .source-quote { margin: 4px 0 0; color: var(--color-text-secondary); }
-/* The stored MIRA source stays available for audit, folded away from clinical reading. */
+/* The stored AADI source stays available for audit, folded away from clinical reading. */
 .source-technical > summary { min-height: 24px; display: flex; align-items: center; font-size: 12px; color: var(--color-text-secondary); cursor: pointer; }
 .source-technical > summary:hover { color: var(--workspace-accent-ink); }
 .status-reviewed, .status-final { color: var(--workspace-accent-ink); background: var(--workspace-accent-soft); }
@@ -826,28 +822,28 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .theoracle-detail h4 { margin-bottom: 6px; }
 .theoracle-detail p, .theoracle-detail li { line-height: 1.65; }
 .source-hash { overflow-wrap: anywhere; font-size: 11px; }
-.mira-form .notice { align-items: flex-start; justify-content: space-between; gap: 12px; }
-.mira-form .notice p { margin-top: 6px; }
-.mira-fields { border: 0; margin: 0; padding: 0; min-width: 0; }
-.mira-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.mira-fields label { min-width: 0; }
-.mira-fields details { padding: 12px 0; border-top: 1px solid var(--color-border-subtle); }
-.mira-fields summary, .theoracle-detail summary { cursor: pointer; margin-bottom: 12px; }
-.mira-fields .mira-confirm { display: flex; flex-direction: row; align-items: flex-start; gap: 10px; line-height: 1.5; }
-.mira-fields .mira-confirm input { width: 16px; min-width: 16px; height: 16px; margin-top: 2px; }
-.mira-lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-bottom: 16px; }
-.mira-lab input, .mira-lab select { min-width: 0; }
-.mira-result { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--color-border-subtle); }
-.mira-result pre { font: inherit; font-size: 15px; line-height: 23px; color: var(--body-color); white-space: pre-wrap; overflow-wrap: anywhere; margin: 16px 0; }
+.aadi-form .notice { align-items: flex-start; justify-content: space-between; gap: 12px; }
+.aadi-form .notice p { margin-top: 6px; }
+.aadi-fields { border: 0; margin: 0; padding: 0; min-width: 0; }
+.aadi-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.aadi-fields label { min-width: 0; }
+.aadi-fields details { padding: 12px 0; border-top: 1px solid var(--color-border-subtle); }
+.aadi-fields summary, .theoracle-detail summary { cursor: pointer; margin-bottom: 12px; }
+.aadi-fields .aadi-confirm { display: flex; flex-direction: row; align-items: flex-start; gap: 10px; line-height: 1.5; }
+.aadi-fields .aadi-confirm input { width: 16px; min-width: 16px; height: 16px; margin-top: 2px; }
+.aadi-lab { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-bottom: 16px; }
+.aadi-lab input, .aadi-lab select { min-width: 0; }
+.aadi-result { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--color-border-subtle); }
+.aadi-result pre { font: inherit; font-size: 15px; line-height: 23px; color: var(--body-color); white-space: pre-wrap; overflow-wrap: anywhere; margin: 16px 0; }
 @media (max-width: 760px) {
-  .mira-grid, .mira-lab { grid-template-columns: minmax(0, 1fr); }
-  .mira-form input, .mira-form textarea, .mira-form select { font-size: 16px; }
+  .aadi-grid, .aadi-lab { grid-template-columns: minmax(0, 1fr); }
+  .aadi-form input, .aadi-form textarea, .aadi-form select { font-size: 16px; }
 }
 
 /* Smooth UI changes, opacity only: what appears on a click fades in place; what leaves or reflows
    (dialogs closing, sidebar, Focus Mode, panel, toast) cross-fades through components/smooth.ts. */
 @keyframes fade-in { from { opacity: 0; } }
-.quick-actions .action-chip, .dialog[open], .dialog[open]::backdrop, .toast, .home-content, .home-bottom, .conversation, .chat-composer, .user-message, .assistant-message, .header-left > :not(.expand-sidebar), .export-encounter, .panel-scroll, .document-studio > :not(.studio-toolbar, .studio-status-note), .draft-editor, .dialog-inner > :not(.dialog-header), .theoracle-detail, .template-preview, .workflow-form, .form-warning, .studio-columns, .mira-result, .queue-card, .composer-analysis, .slash-picker, .context-status > span, .storage-warning { animation: fade-in 160ms ease-out; }
+.quick-actions .action-chip, .dialog[open], .dialog[open]::backdrop, .toast, .home-content, .home-bottom, .conversation, .chat-composer, .user-message, .assistant-message, .header-left > :not(.expand-sidebar), .export-encounter, .panel-scroll, .document-studio > :not(.studio-toolbar, .studio-status-note), .draft-editor, .dialog-inner > :not(.dialog-header), .theoracle-detail, .template-preview, .workflow-form, .form-warning, .studio-columns, .aadi-result, .queue-card, .composer-analysis, .slash-picker, .context-status > span, .storage-warning { animation: fade-in 160ms ease-out; }
 @starting-style { .submenu-section[data-open="true"] .submenu-item { opacity: 0; } }
 /* Every fresh answer arrives the same way (Gaffer, 2026-10-17: smooth and simple): the card rises softly into focus,
    then a still document's blocks follow one by one. An analysis keeps its own typing reveal; a reopened answer appears at once. */
@@ -881,3 +877,25 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .not-found h1 { margin: 0; }
 .not-found p { margin: 0; font-size: 15px; color: var(--color-text-secondary); }
 .not-found a { color: var(--workspace-accent-ink); font-size: 14px; min-height: 24px; display: inline-flex; align-items: center; }
+/* Analysis case strip (2026-10-20): age, sex and vitals beside the complaint; a value read from the text is tinted until edited. */
+.case-strip { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 6px 0; }
+.case-field { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 4px 0 8px; border: 1px solid var(--workspace-control-border); border-radius: var(--radius); background: var(--workspace-white); font-size: 12px; color: var(--color-text-secondary); }
+.case-field[data-auto] { background: var(--workspace-accent-soft); border-color: var(--color-border-subtle); }
+.case-field :is(input, select) { width: 56px; height: 26px; border: none; background: none; outline: none; font: inherit; font-size: 13px; color: var(--body-color); }
+.case-field select { width: auto; cursor: pointer; }
+.case-field:focus-within { border-color: var(--workspace-accent-ink); }
+.case-field:has([aria-invalid="true"]) { border: 2px solid var(--workspace-error-text); background: var(--workspace-error-bg); }
+@media (max-width: 760px) { .case-strip { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } .case-field { flex: none; } }
+.quick-copy { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 0 29px; font-size: 12px; color: var(--color-text-secondary); }
+.quick-copy .action-chip { height: 28px; padding: 0 9px; font-size: 12px; }
+.focus-tag { font-size: 10px; padding: 2px 6px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); color: var(--color-text-secondary); margin-left: 3px; }
+/* Doctor flow C1 (2026-10-20): on the phone parts 2-4 start folded to their title, in the part title face, and one line. */
+.diagnosis-supporting[data-fold="part"] > summary { align-items: flex-start; color: var(--title-color); }
+.diagnosis-supporting[data-fold="part"] > summary::before { flex: none; margin-top: 10px; }
+.diagnosis-supporting[data-fold="part"] > summary > span { display: grid; gap: 2px; min-width: 0; }
+.diagnosis-supporting[data-fold="part"] h3 { font-family: var(--font-title); font-weight: 400; color: var(--title-color); font-size: 18px; line-height: 26px; }
+.diagnosis-section[data-arrived="true"] [data-fold="part"] > summary h3::after { transform: scaleX(1); opacity: 1; transition: transform 560ms cubic-bezier(.4, 0, .2, 1) 120ms, opacity 160ms ease-out 120ms; }
+@media (prefers-reduced-motion: reduce) { .diagnosis-section[data-arrived="true"] [data-fold="part"] > summary h3::after { transition: none; } }
+.diagnosis-fold-line { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
+.diagnosis-supporting[data-fold="part"][open] .diagnosis-fold-line { display: none; }
+.diagnosis-supporting[data-fold="part"] .draft-content { font-size: 14px; line-height: 23px; color: var(--body-color); }

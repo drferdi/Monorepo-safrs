@@ -1,29 +1,63 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Columns2, FileText, GitCompareArrows, Pencil, History, ListChecks } from "lucide-react";
 import { documentSections, replaceSection } from "../lib/studio";
 import type { Message, ReviewStatus, WorkspaceAction } from "../lib/workspace";
 import { reviewComplete } from "../lib/workflow";
 import { HistoryPanel, ReviewPanel } from "./document-workflow";
-import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, hasMiraSource, icd10SectionTitle, referralSectionTitle, sourceForDisplay, theOracleSourceLinks } from "../lib/mira/presentation";
+import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, doctorSummaryTitle, hasAadiSource, icd10SectionTitle, legacyDiagnosisSectionTitles, referralSectionTitle, sourceForDisplay, theOracleSourceLinks } from "../lib/aadi/presentation";
 import { DiagnosisDocument } from "./diagnosis-document";
 import { freshAnswer, markRevealed } from "../lib/fresh-answer";
 
 const diagnosisLabels = new Set(["Keluhan utama", "Kondisi yang tercatat", "Alergi tercatat", "Obat yang sedang digunakan (input kasus)", "Anamnesis tercatat", "Tanda vital tercatat", "Pemeriksaan fisik tercatat", "Informasi yang belum tersedia", "Pertanyaan lanjutan dari layanan", "Alternatif", "Jangan terlewat", "Kemungkinan utama — belum ditinjau klinisi", "Pertimbangan layanan", "Bidang belum terisi", "Hasil pemeriksaan tercatat", "Usulan pemeriksaan dari layanan", "Kemampuan fasilitas tercatat", "Jejak analisis"]);
 
 
+// Inline marks: **bold** (one still open at the end of a line, as while an answer types, runs to the line's end), *italic*,
+// and links, only to http(s) pages since the document holds model text.
+const inlineMarks = /\*\*(.+?)(?:\*\*|$)|\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)|(?<![\w*])\*(?!\s)([^*\n]+?)\*(?![\w*])/g;
+function inline(text: string): ReactNode {
+  const nodes: ReactNode[] = [];
+  let last = 0;
+  for (const match of text.matchAll(inlineMarks)) {
+    const [whole, strong, label, href, em] = match;
+    nodes.push(text.slice(last, match.index), strong !== undefined ? <strong key={match.index}>{inline(strong)}</strong> : href ? <a key={match.index} href={href} target="_blank" rel="noopener noreferrer">{label}</a> : <em key={match.index}>{em}</em>);
+    last = match.index + whole.length;
+  }
+  nodes.push(text.slice(last));
+  return nodes.filter(node => node !== "");
+}
+const tableCells = (line: string) => line.trim().replace(/^\||\|$/g, "").split(/(?<!\\)\|/).map(cell => cell.trim().replace(/\\\|/g, "|"));
+const tableSeparator = /^\|(?:\s*:?-{3,}:?\s*\|)+$/;
+
+// A markdown table scrolls sideways inside its own frame, never the page.
+function DocumentTable({ lines }: { lines: string[] }) {
+  const [head, ...rest] = lines.map(line => line.trim());
+  const body = (rest[0] && tableSeparator.test(rest[0]) ? rest.slice(1) : rest).map(tableCells);
+  const columns = tableCells(head);
+  return <div className="draft-table" role="region" aria-label={`Tabel ${columns.join(", ")}`} tabIndex={0}><table>
+    <thead><tr>{columns.map((cell, index) => <th scope="col" key={index}>{inline(cell)}</th>)}</tr></thead>
+    <tbody>{body.map((row, index) => <tr key={index}>{row.map((cell, column) => <td key={column}>{inline(cell)}</td>)}</tr>)}</tbody>
+  </table></div>;
+}
+
 export function DocumentContent({ content, onEdit, clinical = false }: { content: string; onEdit: (content: string) => void; clinical?: boolean }) {
-  return <div className="draft-content">{content.split("\n").map((line, index) => {
+  const lines = content.split("\n");
+  return <div className="draft-content">{lines.map((line, index) => {
+    if (line.startsWith("|")) {
+      if (lines[index - 1]?.startsWith("|")) return null;
+      const end = lines.findIndex((next, at) => at > index && !next.startsWith("|"));
+      return <DocumentTable key={index} lines={lines.slice(index, end < 0 ? lines.length : end)}/>;
+    }
     if (clinical && line.startsWith("### ")) return <h4 className="diagnosis-reference-heading" key={index}>{line.slice(4)}</h4>;
     if (line.startsWith("# ")) return <h2 key={index}>{line.slice(2)}</h2>;
     if (line.startsWith("## ")) return <h3 key={index}>{line.slice(3)}</h3>;
     if (line === "---") return <hr key={index}/>;
     if (/^- \[[ x]\]/.test(line)) return <label className="draft-task" key={index}><input type="checkbox" checked={line.startsWith("- [x]")} onChange={(event) => { const lines = content.split("\n"); lines[index] = lines[index].replace(/^- \[[ x]\]/, event.target.checked ? "- [x]" : "- [ ]"); onEdit(lines.join("\n")); }}/><span>{line.slice(6)}</span></label>;
     if (clinical && (diagnosisLabels.has(line) || diagnosisFieldLabels.has(line) || ["Gejala referensi dari database — bukan temuan pasien", "Definisi dan kriteria diagnosis dari database", "Kriteria rujukan dari database — narasi sumber"].includes(line))) return <h4 className="diagnosis-field-label" key={index}>{line}</h4>;
-    if (clinical && line.startsWith("  - ")) return <p className="diagnosis-list-item diagnosis-list-nested" key={index}>{line.slice(4)}</p>;
+    if (clinical && line.startsWith("  - ")) return <p className="diagnosis-list-item diagnosis-list-nested" key={index}>{inline(line.slice(4))}</p>;
     if (clinical && /^  (?:Mendukung|Menyangkal):/.test(line)) return <p className="diagnosis-list-detail" key={index}>{line.trim()}</p>;
-    return line ? <p className={clinical && line.startsWith("- ") ? "diagnosis-list-item" : undefined} key={index}>{clinical && line.startsWith("- ") ? line.slice(2) : line}</p> : null;
+    return line ? <p className={clinical && line.startsWith("- ") ? "diagnosis-list-item" : undefined} key={index}>{inline(clinical && line.startsWith("- ") ? line.slice(2) : line)}</p> : null;
   })}</div>;
 }
 
@@ -35,7 +69,7 @@ export function DocumentStudio({ message, onEdit, onReview, encounterId, dispatc
   const document = useRef<HTMLDivElement>(null);
   const content = diagnosisContent(message);
   const sections = documentSections(content);
-  const diagnosis = hasMiraSource(message) && ["Ringkasan Kasus", referralSectionTitle, icd10SectionTitle, ...diagnosisSectionTitles].includes(sections[0]?.title);
+  const diagnosis = hasAadiSource(message) && [doctorSummaryTitle, referralSectionTitle, icd10SectionTitle, ...diagnosisSectionTitles, ...legacyDiagnosisSectionTitles].includes(sections[0]?.title);
   const [typing] = useState(() => diagnosis && freshAnswer(message));
   // Any other fresh answer lets its blocks follow one another in (globals.css, data-reveal).
   const [cascade] = useState(() => !typing && freshAnswer(message));
@@ -54,7 +88,7 @@ export function DocumentStudio({ message, onEdit, onReview, encounterId, dispatc
       {sections.length > 0 && !twoColumn && <div className="section-control"><label>Bagian<select aria-label="Bagian dokumen" value={selected < sections.length ? selected : 0} disabled={editing} onChange={(event) => { const index = Number(event.target.value); setSelected(index); document.current?.querySelectorAll("h3")[index]?.scrollIntoView({ block: "nearest", behavior: "auto" }); }}>{sections.map((item, index) => <option key={`${item.start}-${item.title}`} value={index}>{item.title}</option>)}</select></label><button className="text-button" disabled={!section || editing} onClick={() => { setBody(section.body); setEditing(true); }}><Pencil size={12}/> Edit bagian</button></div>}
       {editing && section ? <div className="section-editor" key="edit"><label>{section.title}<textarea aria-label={`Edit bagian ${section.title}`} value={body} maxLength={50000} rows={8} onChange={(event) => setBody(event.target.value)}/></label><div><button className="button primary" onClick={() => { const newline = section.body.includes("\r\n") ? "\r\n" : "\n"; onEdit(replaceSection(content, section, body.endsWith("\n") ? body : body + newline)); setEditing(false); }}>Simpan bagian</button><button className="button" onClick={() => setEditing(false)}>Batal</button></div></div> : <div key="view" ref={document}>{diagnosis ? <DiagnosisDocument typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} onEditSection={editSection} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical/>}/> : sections.length > 1 ? <DiagnosisDocument content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} onEditSection={editSection} label="Bagian" navLabel="Bagian dokumen" showMeta={false} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit}/>}/> : <DocumentContent content={content} onEdit={onEdit}/>}</div>}
     </>}
-    {view === "source" && <div className="studio-columns"><div><h2>Dokumen saat ini</h2><DocumentContent content={content} onEdit={onEdit}/></div><div className="source-pane"><h2>Sumber saat dibuat</h2><p className="panel-caption">{theOracleSourceLinks(message).length ? "Salinan input dan referensi TheOracle yang dipilih sebelum analisis. Tidak berubah saat dokumen diedit." : "Salinan input lokal, bukan kutipan pedoman. Tidak berubah saat dokumen diedit."}</p><ul>{theOracleSourceLinks(message).map(source => <li key={source.id}><strong>{source.label}</strong><p className="source-quote">{source.text}</p></li>)}</ul>{hasMiraSource(message) ? <details className="source-technical"><summary>Data teknis untuk audit</summary><pre>{sourceForDisplay(message)}</pre></details> : <pre>{sourceForDisplay(message) ?? "Sumber asli belum tersedia untuk dokumen lama ini."}</pre>}</div></div>}
+    {view === "source" && <div className="studio-columns"><div><h2>Dokumen saat ini</h2><DocumentContent content={content} onEdit={onEdit}/></div><div className="source-pane"><h2>Sumber saat dibuat</h2><p className="panel-caption">{theOracleSourceLinks(message).length ? "Salinan input dan referensi Oracle yang dipilih sebelum analisis. Tidak berubah saat dokumen diedit." : "Salinan input lokal, bukan kutipan pedoman. Tidak berubah saat dokumen diedit."}</p><ul>{theOracleSourceLinks(message).map(source => <li key={source.id}><strong>{source.label}</strong><p className="source-quote">{source.text}</p></li>)}</ul>{hasAadiSource(message) ? <details className="source-technical"><summary>Data teknis untuk audit</summary><pre>{sourceForDisplay(message)}</pre></details> : <pre>{sourceForDisplay(message) ?? "Sumber asli belum tersedia untuk dokumen lama ini."}</pre>}</div></div>}
     {view === "compare" && <>{message.originalContent === undefined ? <p className="panel-empty">Draf awal belum tersedia. Perubahan berikutnya akan menyimpan isi sebelum edit sebagai pembanding.</p> : message.originalContent === message.content ? <p className="panel-empty">Belum ada perubahan dari draf awal.</p> : <div className="studio-columns comparison"><div><h2>Sebelum edit</h2><pre>{diagnosisContent({ ...message, content: message.originalContent })}</pre></div><div><h2>Saat ini</h2><pre>{message.content}</pre></div></div>}</>}
   </div>;
 }

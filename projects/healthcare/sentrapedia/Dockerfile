@@ -2,8 +2,8 @@ FROM node:24-bookworm-slim AS dependencies
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
 COPY package.json package-lock.json .npmrc ./
-COPY scripts/install-mira.mjs scripts/mira-runtime.mjs scripts/mira-profile.json scripts/theoracle-model.mjs scripts/install-theoracle-model.mjs ./scripts/
-COPY mira/requirements.lock mira/requirements-test.lock ./mira/
+COPY scripts/install-aadi.mjs scripts/aadi-runtime.mjs scripts/aadi-profile.json scripts/theoracle-model.mjs scripts/install-theoracle-model.mjs ./scripts/
+COPY aadi/requirements.lock aadi/requirements-test.lock ./aadi/
 # postinstall ends with the site's install:check, which reads these files.
 COPY apps/site/package.json ./apps/site/
 COPY apps/site/tools/install-check.mjs ./apps/site/tools/
@@ -33,14 +33,14 @@ ENV PORT=3000
 # loopback only, never on a public port:
 #   docker run -p 127.0.0.1:3000:3000 --env GEMINI_API_KEY <image>
 ENV HOSTNAME=0.0.0.0
-# Stable first: model (changes with package-lock), index (with the database), node_modules and the MIRA venv
+# Stable first: model (changes with package-lock), index (with the database), node_modules and the AADI venv
 # (with the locks), then the app.
 COPY --from=dependencies --chown=node:node /app/theoracle/model ./theoracle/model
 COPY --from=builder --chown=node:node /stage/theoracle/index ./theoracle/index
 COPY --from=builder --chown=node:node /stage/node_modules ./node_modules
-COPY scripts/install-mira.mjs scripts/mira-runtime.mjs scripts/mira-profile.json ./scripts/
-COPY mira/requirements.lock ./mira/
-RUN node scripts/install-mira.mjs --production && chown -R node:node /app/.runtime
+COPY scripts/install-aadi.mjs scripts/aadi-runtime.mjs scripts/aadi-profile.json ./scripts/
+COPY aadi/requirements.lock ./aadi/
+RUN node scripts/install-aadi.mjs --production && chown -R node:node /app/.runtime
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 USER node
 EXPOSE 3000

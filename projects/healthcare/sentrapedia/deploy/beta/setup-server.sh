@@ -23,7 +23,7 @@ if [ ! -f /etc/sentrapedia/beta.env ]; then
   cat > /etc/sentrapedia/beta.env <<'ENV'
 GEMINI_API_KEY=
 SENTRAPEDIA_PUBLIC_ORIGIN=https://beta.sentrapedia.com
-MIRA_MAX_CONCURRENT=3
+AADI_MAX_CONCURRENT=3
 ENV
   chmod 600 /etc/sentrapedia/beta.env
 fi

@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { emptyCase } from "../src/lib/mira/contract";
+import { emptyCase } from "../src/lib/aadi/contract";
 import { validTheOracleGrounding } from "../src/lib/theoracle-grounding-types";
 import {
   THEORACLE_GROUNDING_CAPABILITY,
@@ -74,14 +74,14 @@ describe("TheOracle vector grounding", () => {
     expect(Object.isFrozen(bundle) && Object.isFrozen(bundle.evidence) && Object.isFrozen(bundle.evidence[0].source) && Object.isFrozen(bundle.corpus.embeddingModel)).toBe(true);
   });
 
-  it("keeps at most two passages per document and skips sources that trip the MIRA privacy guard", async () => {
+  it("keeps at most two passages per document and skips sources that trip the AADI privacy guard", async () => {
     const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: fakeEmbedder([]) });
     expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1", "D1"]);
     expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3, 4]);
   });
 
   it("keeps exactly the parity passages the engine accepts: DOIs are not identifiers", async () => {
-    // mira/service/tests/test_step_api.py posts the same rows to the engine.
+    // aadi/service/tests/test_step_api.py posts the same rows to the engine.
     const rows = parity.evidence.map((row, index) => chunk(`E${index}`, `Doc${index}.md`, row.text, [1, index / 100, 0]));
     const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(false, rows), embedder: fakeEmbedder([]) });
     expect(bundle.evidence.map(item => item.text)).toEqual(parity.evidence.filter(row => row.kept).map(row => row.text));

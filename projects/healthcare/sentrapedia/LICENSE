@@ -63,8 +63,8 @@ reinstate it in writing.
 
 7. Third-party components
 
-The files in the mira/ folder include software by third parties under the
-MIT License (see mira/LICENSE and mira/SOURCE.json); those files remain under
+The files in the aadi/ folder include software by third parties under the
+MIT License (see aadi/LICENSE and aadi/SOURCE.json); those files remain under
 their own licence. Packages installed by npm or pip are under their own
 licences.
 

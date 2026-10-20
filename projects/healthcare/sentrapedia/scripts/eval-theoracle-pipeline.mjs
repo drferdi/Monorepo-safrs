@@ -11,14 +11,14 @@ const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" 
 const outDir = path.resolve(`docs/verification/theoracle-eval-${today}`);
 const { queries } = JSON.parse(readFileSync(path.join(dir, "eval-set.json"), "utf8"));
 const { labels } = JSON.parse(readFileSync(path.join(dir, "gold-icd10.json"), "utf8"));
-const names = new Map(JSON.parse(readFileSync(path.resolve("mira/service/data/icd10.json"), "utf8")).icd10.map(e => [e.kode, e.nama_en]));
+const names = new Map(JSON.parse(readFileSync(path.resolve("aadi/service/data/icd10.json"), "utf8")).icd10.map(e => [e.kode, e.nama_en]));
 const DOSE_STRENGTH = /(\d+(?:[.,]\d+)?)\s*(mcg|mg|g|iu|ml)\b/gi;
 const pct = (values, p) => { const s = [...values].sort((a, b) => a - b); return s.length ? Math.round(s[Math.min(s.length - 1, Math.floor(p * s.length))]) : null; };
 const rows = [];
 for (const item of queries.filter(q => q.gold?.length && !q.term)) {
   const caseData = { demographics: { ageYears: null, sex: "unknown" }, chiefComplaint: item.query, anamnesis: {}, vitals: {}, physicalExam: [], results: [], currentMedications: [], knownConditions: [], allergies: [], facilityCapabilities: [] };
   const started = performance.now();
-  const response = await fetch(`${base}/api/mira`, { method: "POST", headers: { "Content-Type": "application/json", Origin: base }, body: JSON.stringify({ case: caseData, synthetic: true }) });
+  const response = await fetch(`${base}/api/aadi`, { method: "POST", headers: { "Content-Type": "application/json", Origin: base }, body: JSON.stringify({ case: caseData, synthetic: true }) });
   const ms = Math.round(performance.now() - started);
   const body = await response.json().catch(() => null);
   if (!response.ok || !body) { rows.push({ id: item.id, ok: false, status: response.status, code: body?.error?.code ?? null, ms }); console.error(`${item.id} ${ms} ms FAIL ${response.status} ${body?.error?.code ?? ""}`); if (body?.error?.code === "BUDGET_EXHAUSTED") break; continue; }
@@ -50,7 +50,7 @@ const stageMs = name => done.flatMap(r => r.stages.filter(s => s.stage === name)
 const sum = key => done.reduce((n, r) => n + (r[key] ?? 0), 0);
 const summary = {
   label, measuredAt: new Date().toISOString(), cases: rows.length, ok: done.length,
-  latencyMs: { p50: pct(done.map(r => r.ms), 0.5), p95: pct(done.map(r => r.ms), 0.95), stages: Object.fromEntries(["retrieve_dx", "mira_dx", "retrieve_tx", "mira_tx", "gate"].map(s => [s, { p50: pct(stageMs(s), 0.5), p95: pct(stageMs(s), 0.95) }])) },
+  latencyMs: { p50: pct(done.map(r => r.ms), 0.5), p95: pct(done.map(r => r.ms), 0.95), stages: Object.fromEntries(["retrieve_dx", "aadi_dx", "retrieve_tx", "aadi_tx", "gate"].map(s => [s, { p50: pct(stageMs(s), 0.5), p95: pct(stageMs(s), 0.95) }])) },
   icd10: { valid: done.length ? done.filter(r => r.icdValid).length / done.length : null, nameMatch: done.length ? done.filter(r => r.icdNameMatch).length / done.length : null, correctTop1VsDraftGold: done.length ? done.filter(r => r.icdCorrect).length / done.length : null },
   dose: { written: sum("dosesWritten"), supportedByPassages: sum("dosesSupported"), supportedRate: sum("dosesWritten") ? sum("dosesSupported") / sum("dosesWritten") : null, displayed: sum("displayedDoses"), verified: sum("verified"), doseRemoved: sum("doseRemoved"), removed: sum("removed") },
   retrievalSuccess: label === "targeted" && done.length ? done.filter(r => r.therapyRetrieved).length / done.length : null,

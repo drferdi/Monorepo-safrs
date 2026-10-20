@@ -9,7 +9,7 @@
       "equal": true
     },
     {
-      "file": "app\\api\\mira\\route.ts",
+      "file": "app\\api\\aadi\\route.ts",
       "sourceSha256": "1b4b3be7fb511de1da443308e9a27a4210822870fd8864de42329bf0e5c463d5",
       "extractionSha256": "1b4b3be7fb511de1da443308e9a27a4210822870fd8864de42329bf0e5c463d5",
       "equal": true
@@ -117,7 +117,7 @@
       "equal": true
     },
     {
-      "file": "components\\mira-case-form.tsx",
+      "file": "components\\aadi-case-form.tsx",
       "sourceSha256": "d014e4df4ade1994857ec79aa49830cc5920f57082cba8e98acce6aa09f6c8ce",
       "extractionSha256": "d014e4df4ade1994857ec79aa49830cc5920f57082cba8e98acce6aa09f6c8ce",
       "equal": true
@@ -165,13 +165,13 @@
       "equal": true
     },
     {
-      "file": "config/mira-deepseek.env.example",
+      "file": "config/aadi-deepseek.env.example",
       "sourceSha256": "ecd2ccf9c7ca0db2832031e750f00aa68eeb4597530103e2e2acafb24312e036",
       "extractionSha256": "ecd2ccf9c7ca0db2832031e750f00aa68eeb4597530103e2e2acafb24312e036",
       "equal": true
     },
     {
-      "file": "config\\mira-free.env.example",
+      "file": "config\\aadi-free.env.example",
       "sourceSha256": "abee4228f43bf4bc8c502832c992677e016e765e52fd0b046debb1ec31eac87e",
       "extractionSha256": "abee4228f43bf4bc8c502832c992677e016e765e52fd0b046debb1ec31eac87e",
       "equal": true
@@ -189,13 +189,13 @@
       "equal": true
     },
     {
-      "file": "lib/mira/composer.ts",
+      "file": "lib/aadi/composer.ts",
       "sourceSha256": "0a12e7111fce466b62fb75740851e7b328237add67ef6c627ac16a8d190816f8",
       "extractionSha256": "0a12e7111fce466b62fb75740851e7b328237add67ef6c627ac16a8d190816f8",
       "equal": true
     },
     {
-      "file": "lib/mira/model-profile.ts",
+      "file": "lib/aadi/model-profile.ts",
       "sourceSha256": "c01a0d22321fa0fe5d3811cdb5662ddf5b4fbb3d393b8cb0adfa044311aeae74",
       "extractionSha256": "c01a0d22321fa0fe5d3811cdb5662ddf5b4fbb3d393b8cb0adfa044311aeae74",
       "equal": true
@@ -207,55 +207,55 @@
       "equal": true
     },
     {
-      "file": "lib\\mira\\contract.ts",
+      "file": "lib\\aadi\\contract.ts",
       "sourceSha256": "c829152bc3025641d81cfb5b69b6f0f5a781f474b73f06b9a676108a9a76ac0f",
       "extractionSha256": "c829152bc3025641d81cfb5b69b6f0f5a781f474b73f06b9a676108a9a76ac0f",
       "equal": true
     },
     {
-      "file": "lib\\mira\\free-profile.ts",
+      "file": "lib\\aadi\\free-profile.ts",
       "sourceSha256": "f8835d48f0b1a1cf1e25b5c2ecee25468cbc154629de00809318e27502dd6686",
       "extractionSha256": "f8835d48f0b1a1cf1e25b5c2ecee25468cbc154629de00809318e27502dd6686",
       "equal": true
     },
     {
-      "file": "lib\\mira\\gateway.ts",
+      "file": "lib\\aadi\\gateway.ts",
       "sourceSha256": "bb30f66e3e7456a4c70729e0ed84a551ac9a12bc70acbb34c1b9b3109286e2b6",
       "extractionSha256": "bb30f66e3e7456a4c70729e0ed84a551ac9a12bc70acbb34c1b9b3109286e2b6",
       "equal": true
     },
     {
-      "file": "lib\\mira\\presentation.ts",
+      "file": "lib\\aadi\\presentation.ts",
       "sourceSha256": "51b6e1234692f473092d2b3b02a2b2767236f1fa58b329b5c012ceb2cc545eb7",
       "extractionSha256": "51b6e1234692f473092d2b3b02a2b2767236f1fa58b329b5c012ceb2cc545eb7",
       "equal": true
     },
     {
-      "file": "lib\\mira\\request.schema.json",
+      "file": "lib\\aadi\\request.schema.json",
       "sourceSha256": "84eba75c9810b794d1875dde77fc204dd5515b879056a8b47c60eef398e607dc",
       "extractionSha256": "84eba75c9810b794d1875dde77fc204dd5515b879056a8b47c60eef398e607dc",
       "equal": true
     },
     {
-      "file": "lib\\mira\\response.schema.json",
+      "file": "lib\\aadi\\response.schema.json",
       "sourceSha256": "6bb903b94fc7d3b55a33cd230f2e44e9f295128eaaecd0c3547d5701f8d3bde4",
       "extractionSha256": "6bb903b94fc7d3b55a33cd230f2e44e9f295128eaaecd0c3547d5701f8d3bde4",
       "equal": true
     },
     {
-      "file": "lib\\mira\\SOURCE.md",
+      "file": "lib\\aadi\\SOURCE.md",
       "sourceSha256": "3f59336852ba2235976cf698b42d1ba88e2995ea31241cb15760d27c53887d2c",
       "extractionSha256": "3f59336852ba2235976cf698b42d1ba88e2995ea31241cb15760d27c53887d2c",
       "equal": true
     },
     {
-      "file": "lib\\mira\\types.ts",
+      "file": "lib\\aadi\\types.ts",
       "sourceSha256": "dbe0365b1bb026add2b872b7e89bc3700d5dab95a874731cf6c447a8cc9f2b2d",
       "extractionSha256": "dbe0365b1bb026add2b872b7e89bc3700d5dab95a874731cf6c447a8cc9f2b2d",
       "equal": true
     },
     {
-      "file": "lib\\mira\\validate-json.ts",
+      "file": "lib\\aadi\\validate-json.ts",
       "sourceSha256": "8494a84484afd1da990a0b97f3ec78371d675aed47c3d6ebb695990059cd0f95",
       "extractionSha256": "8494a84484afd1da990a0b97f3ec78371d675aed47c3d6ebb695990059cd0f95",
       "equal": true
@@ -345,7 +345,7 @@
       "equal": true
     },
     {
-      "file": "scripts/run-mira-deepseek.ps1",
+      "file": "scripts/run-aadi-deepseek.ps1",
       "sourceSha256": "da6b97d21118f8e55498c8e59070133748a613acd4a33dfda1913f9a8f015761",
       "extractionSha256": "da6b97d21118f8e55498c8e59070133748a613acd4a33dfda1913f9a8f015761",
       "equal": true
@@ -357,31 +357,31 @@
       "equal": true
     },
     {
-      "file": "scripts\\run-mira-free.ps1",
+      "file": "scripts\\run-aadi-free.ps1",
       "sourceSha256": "f339b6a8b7a6d7e63b3a338cc4827c076f7cf65b009a49fdeb3d0d5bf4c06263",
       "extractionSha256": "f339b6a8b7a6d7e63b3a338cc4827c076f7cf65b009a49fdeb3d0d5bf4c06263",
       "equal": true
     },
     {
-      "file": "tests/mira-composer.test.ts",
+      "file": "tests/aadi-composer.test.ts",
       "sourceSha256": "1a2b35e506c5ecd918c3386f28769b3b31857510ed83e00d56cbf6d0d5d8e643",
       "extractionSha256": "1a2b35e506c5ecd918c3386f28769b3b31857510ed83e00d56cbf6d0d5d8e643",
       "equal": true
     },
     {
-      "file": "tests/mira-paid.test.ts",
+      "file": "tests/aadi-paid.test.ts",
       "sourceSha256": "c30ad871f5b410e0252ac9a13da2adee1ad7b41d5cbfae157b17f6a6fdea5d67",
       "extractionSha256": "c30ad871f5b410e0252ac9a13da2adee1ad7b41d5cbfae157b17f6a6fdea5d67",
       "equal": true
     },
     {
-      "file": "tests\\mira-free.test.ts",
+      "file": "tests\\aadi-free.test.ts",
       "sourceSha256": "5dd178e369bb4fe0c72bbf4bc54453b64d8e65888b57e1c37b1a8951eaf4b973",
       "extractionSha256": "5dd178e369bb4fe0c72bbf4bc54453b64d8e65888b57e1c37b1a8951eaf4b973",
       "equal": true
     },
     {
-      "file": "tests\\oracle-mira.test.ts",
+      "file": "tests\\oracle-aadi.test.ts",
       "sourceSha256": "d143fac9ca3c18619935e194337d828725ec31c0232ab7c5d4bb95da855701c1",
       "extractionSha256": "d143fac9ca3c18619935e194337d828725ec31c0232ab7c5d4bb95da855701c1",
       "equal": true

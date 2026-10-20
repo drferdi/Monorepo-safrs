@@ -6,16 +6,16 @@ import { once } from "node:events";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { engineEnvironment, engineReady, geminiBaseUrl, installedPython, lockDigest, model, nextRestart, pythonPath } from "../scripts/mira-runtime.mjs";
+import { engineEnvironment, engineReady, geminiBaseUrl, installedPython, lockDigest, model, nextRestart, pythonPath } from "../scripts/aadi-runtime.mjs";
 import { fileSha256, profile as oracleModel } from "../scripts/theoracle-model.mjs";
-import profile from "../scripts/mira-profile.json" with { type: "json" };
+import profile from "../scripts/aadi-profile.json" with { type: "json" };
 
-test("postinstall opt-outs skip MIRA and TheOracle setup with one warning each", async () => {
+test("postinstall opt-outs skip AADI and TheOracle setup with one warning each", async () => {
   const cases = [
     {
-      script: "scripts/install-mira.mjs",
-      flag: "SENTRAPEDIA_SKIP_MIRA",
-      warning: "Sentrapedia: instalasi MIRA dilewati karena SENTRAPEDIA_SKIP_MIRA=1.",
+      script: "scripts/install-aadi.mjs",
+      flag: "SENTRAPEDIA_SKIP_AADI",
+      warning: "Sentrapedia: instalasi AADI dilewati karena SENTRAPEDIA_SKIP_AADI=1.",
     },
     {
       script: "scripts/install-theoracle-model.mjs",
@@ -58,33 +58,33 @@ test("the engine restarts with a doubling wait and the launcher gives up after f
   assert.deepEqual(nextRestart(4, 61000), { crashes: 1, delayMs: 2000 });
 });
 
-test("launcher takes model, step deadline, budget and fast copies from the shared MIRA profile", () => {
+test("launcher takes model, step deadline, budget and fast copies from the shared AADI profile", () => {
   const env = engineEnvironment(resolve("test-capsule"), { GEMINI_API_KEY: "fixture-only" }, "token");
   assert.equal(model, profile.model);
-  assert.equal(env.MIRA_STEP_DEADLINE_S, String(profile.stepDeadlineS));
-  assert.equal(env.MIRA_MAX_USD_PER_STEP, profile.stepBudgetUsd.toFixed(2));
+  assert.equal(env.AADI_STEP_DEADLINE_S, String(profile.stepDeadlineS));
+  assert.equal(env.AADI_MAX_USD_PER_STEP, profile.stepBudgetUsd.toFixed(2));
   assert.ok(Number.isInteger(profile.fastCopies) && profile.fastCopies >= 1, "fastCopies is a whole number of copies, at least 1");
-  assert.equal(env.MIRA_FAST_COPIES, String(profile.fastCopies));
+  assert.equal(env.AADI_FAST_COPIES, String(profile.fastCopies));
 });
 
 test("engine uses capsule runtime and preserves approved profile despite inherited external config", () => {
   const root = resolve("test-capsule");
-  const env = engineEnvironment(root, { GEMINI_API_KEY: "fixture-only", OPENROUTER_API_KEY: "old-route", OPENAI_BASE_URL: "https://external.example/v1", OPENAI_API_KEY: "other", MIRA_LLM_PROVIDER: "openrouter", MIRA_OPENROUTER_ZDR: "false", MIRA_FAST_COPY_PROVIDERS: "x", PYTHONPATH: "external", MIRA_AUDIT_DIR: "external", MIRA_DEV_TOKEN: "old", MIRA_DATA_POLICY: "openrouter-zdr", MIRA_PLAN_MODEL: "other" }, "new-token");
+  const env = engineEnvironment(root, { GEMINI_API_KEY: "fixture-only", OPENROUTER_API_KEY: "old-route", OPENAI_BASE_URL: "https://external.example/v1", OPENAI_API_KEY: "other", AADI_LLM_PROVIDER: "openrouter", AADI_OPENROUTER_ZDR: "false", AADI_FAST_COPY_PROVIDERS: "x", PYTHONPATH: "external", AADI_AUDIT_DIR: "external", AADI_DEV_TOKEN: "old", AADI_DATA_POLICY: "openrouter-zdr", AADI_PLAN_MODEL: "other" }, "new-token");
   assert.equal(env.PYTHONPATH, "");
-  assert.equal(env.MIRA_LLM_PROVIDER, "openai");
+  assert.equal(env.AADI_LLM_PROVIDER, "openai");
   assert.equal(env.OPENAI_BASE_URL, "https://generativelanguage.googleapis.com/v1beta/openai/");
   assert.equal(env.OPENAI_API_KEY, "fixture-only");
   assert.equal(env.OPENROUTER_API_KEY, undefined);
-  for (const name of ["MIRA_OPENROUTER_PROVIDER_SORT", "MIRA_OPENROUTER_ZDR", "MIRA_FAST_COPY_PROVIDERS"]) assert.equal(env[name], "");
-  assert.equal(env.MIRA_DEV_TOKEN, "new-token");
-  assert.equal(env.MIRA_DATA_POLICY, "synthetic-only");
-  assert.equal(env.MIRA_PLAN_MODEL, model);
-  assert.equal(env.MIRA_ASSESS_MODEL, model);
-  assert.equal(env.MIRA_FAST_THERAPY, "true");
-  assert.equal(env.MIRA_DAILY_BUDGET_USD, "5");
-  assert.equal(env.MIRA_AUDIT_DIR, resolve(root, ".runtime/mira-deepseek/audit"));
-  assert.equal(pythonPath(root, "win32"), resolve(root, ".runtime/mira/venv/Scripts/python.exe"));
-  assert.equal(pythonPath(root, "linux"), resolve(root, ".runtime/mira/venv/bin/python"));
+  for (const name of ["AADI_OPENROUTER_PROVIDER_SORT", "AADI_OPENROUTER_ZDR", "AADI_FAST_COPY_PROVIDERS"]) assert.equal(env[name], "");
+  assert.equal(env.AADI_DEV_TOKEN, "new-token");
+  assert.equal(env.AADI_DATA_POLICY, "synthetic-only");
+  assert.equal(env.AADI_PLAN_MODEL, model);
+  assert.equal(env.AADI_ASSESS_MODEL, model);
+  assert.equal(env.AADI_FAST_THERAPY, "true");
+  assert.equal(env.AADI_DAILY_BUDGET_USD, "5");
+  assert.equal(env.AADI_AUDIT_DIR, resolve(root, ".runtime/aadi-deepseek/audit"));
+  assert.equal(pythonPath(root, "win32"), resolve(root, ".runtime/aadi/venv/Scripts/python.exe"));
+  assert.equal(pythonPath(root, "linux"), resolve(root, ".runtime/aadi/venv/bin/python"));
 });
 
 test("startup requires a provider key without exposing values", () => {
@@ -93,7 +93,7 @@ test("startup requires a provider key without exposing values", () => {
 });
 
 test("workspace waits for grounded matching engine rather than old separate services", () => {
-  const health = { status: "ok", contractVersion: "1", capabilities: ["theoracle-grounding-v2"], version: `mira-service/0.1.0+contract=1+provider=openai+data=synthetic-only+plan=${model}+assess=${model}+experimental+ddx=provisional+assessment=fast+therapy=fast` };
+  const health = { status: "ok", contractVersion: "1", capabilities: ["theoracle-grounding-v2"], version: `aadi-service/0.1.0+contract=1+provider=openai+data=synthetic-only+plan=${model}+assess=${model}+experimental+ddx=provisional+assessment=fast+therapy=fast` };
   assert.equal(engineReady(health), true);
   for (const changed of [{ capabilities: [] }, { contractVersion: "2" }, { status: "unavailable" }, { version: health.version.replace(model, "other") }, { version: health.version.replace("provider=openai", "provider=openrouter") }, { version: health.version.replace("+therapy=fast", "") }]) assert.equal(engineReady({ ...health, ...changed }), false);
 });
@@ -101,7 +101,7 @@ test("workspace waits for grounded matching engine rather than old separate serv
 test("Windows job closes child and its descendant even when guardian is forcibly killed", { skip: process.platform !== "win32", timeout: 15000 }, async () => {
   const descendant = "const http=require('node:http');http.createServer((q,r)=>r.end('child')).listen(0,'127.0.0.1',function(){console.log('descendant:'+this.address().port)});";
   const parent = `const {spawn}=require('node:child_process');const http=require('node:http');spawn(process.execPath,['-e',${JSON.stringify(descendant)}],{stdio:'inherit',windowsHide:true});http.createServer((q,r)=>r.end('parent')).listen(0,'127.0.0.1',function(){console.log('parent:'+this.address().port)});`;
-  const guardian = spawn(pythonPath(process.cwd()), ["-I", resolve("mira/managed_child.py"), String(process.pid), process.execPath, "-e", parent], { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+  const guardian = spawn(pythonPath(process.cwd()), ["-I", resolve("aadi/managed_child.py"), String(process.pid), process.execPath, "-e", parent], { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
   let output = "";
   guardian.stdout.on("data", data => { output += data.toString(); });
   const exited = new Promise(done => guardian.once("exit", done));
@@ -124,7 +124,7 @@ test("Windows job closes child and its descendant even when guardian is forcibly
 });
 
 test("provider preflight reads the model from the Gemini API with the key and sends no completion", async () => {
-  const { preflightProvider } = await import("../scripts/mira-runtime.mjs");
+  const { preflightProvider } = await import("../scripts/aadi-runtime.mjs");
   const calls = [];
   await preflightProvider(async (url, init) => { calls.push({ url: String(url), init }); return Response.json({ id: `models/${model}`, object: "model" }); }, "fixture-only");
   assert.equal(calls.length, 1);
@@ -134,7 +134,7 @@ test("provider preflight reads the model from the Gemini API with the key and se
 });
 
 test("provider preflight refuses a rejected key or an unavailable model without echoing the key or body", async () => {
-  const { preflightProvider } = await import("../scripts/mira-runtime.mjs");
+  const { preflightProvider } = await import("../scripts/aadi-runtime.mjs");
   for (const status of [401, 403]) {
     await assert.rejects(() => preflightProvider(async () => Response.json({ error: "secret-echo" }, { status }), "fixture-only"), error => /GEMINI_API_KEY ditolak/.test(error.message) && !/fixture-only|secret-echo/.test(error.message));
   }
@@ -142,11 +142,11 @@ test("provider preflight refuses a rejected key or an unavailable model without 
 });
 
 test("launcher calls the workspace health check once Next answers, so TheOracle starts loading before the first case", async () => {
-  const { warmWorkspace } = await import("../scripts/mira-runtime.mjs");
+  const { warmWorkspace } = await import("../scripts/aadi-runtime.mjs");
   const calls = [];
   const warmed = await warmWorkspace("http://127.0.0.1:3101", async url => { calls.push(String(url)); if (calls.length < 3) throw new Error("ECONNREFUSED"); return Response.json({}); }, 5000, 1);
   assert.equal(warmed, true);
-  assert.deepEqual(calls, Array(3).fill("http://127.0.0.1:3101/api/mira"));
+  assert.deepEqual(calls, Array(3).fill("http://127.0.0.1:3101/api/aadi"));
   assert.equal(await warmWorkspace("http://127.0.0.1:3101", async () => { throw new Error("ECONNREFUSED"); }, 20, 1), false);
 });
 
@@ -159,17 +159,17 @@ test("launcher refuses an unknown mode before it reads keys or starts anything",
   assert.equal(stderr.trim(), "Gunakan dev, start, standalone, atau check.");
 });
 
-test("the installed MIRA runtime is used only while its stamp matches the current lock", () => {
+test("the installed AADI runtime is used only while its stamp matches the current lock", () => {
   const root = mkdtempSync(join(tmpdir(), "sentrapedia-runtime-"));
   try {
-    mkdirSync(join(root, "mira"));
-    writeFileSync(join(root, "mira/requirements.lock"), "fastapi==1.0\n");
-    assert.throws(() => installedPython(root), /Runtime MIRA lokal belum terpasang/);
+    mkdirSync(join(root, "aadi"));
+    writeFileSync(join(root, "aadi/requirements.lock"), "fastapi==1.0\n");
+    assert.throws(() => installedPython(root), /Runtime AADI lokal belum terpasang/);
     mkdirSync(dirname(pythonPath(root)), { recursive: true });
     writeFileSync(pythonPath(root), "");
-    writeFileSync(join(root, ".runtime/mira/installed.json"), JSON.stringify({ lockSha256: lockDigest(root) }));
+    writeFileSync(join(root, ".runtime/aadi/installed.json"), JSON.stringify({ lockSha256: lockDigest(root) }));
     assert.equal(installedPython(root), pythonPath(root));
-    writeFileSync(join(root, "mira/requirements.lock"), "fastapi==2.0\n");
+    writeFileSync(join(root, "aadi/requirements.lock"), "fastapi==2.0\n");
     assert.throws(() => installedPython(root), /lock berubah/);
   } finally {
     rmSync(root, { recursive: true, force: true });
@@ -177,8 +177,8 @@ test("the installed MIRA runtime is used only while its stamp matches the curren
 });
 
 test("the venv interpreter path follows the platform", () => {
-  assert.equal(pythonPath("/capsule", "win32"), resolve("/capsule", ".runtime/mira/venv/Scripts/python.exe"));
-  assert.equal(pythonPath("/capsule", "linux"), resolve("/capsule", ".runtime/mira/venv/bin/python"));
+  assert.equal(pythonPath("/capsule", "win32"), resolve("/capsule", ".runtime/aadi/venv/Scripts/python.exe"));
+  assert.equal(pythonPath("/capsule", "linux"), resolve("/capsule", ".runtime/aadi/venv/bin/python"));
 });
 
 test("the restart wait never exceeds the cap when more crashes are allowed", () => {

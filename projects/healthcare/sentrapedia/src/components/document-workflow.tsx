@@ -4,7 +4,7 @@ import { useState } from "react";
 import { defaultReviewItems, freshReview, revisionLimit, type ReviewItem } from "../lib/workflow";
 import { newId, type Message, type WorkspaceAction } from "../lib/workspace";
 import { documentSections } from "../lib/studio";
-import { diagnosisContent } from "../lib/mira/presentation";
+import { diagnosisContent } from "../lib/aadi/presentation";
 
 export function HistoryPanel({ message, encounterId, dispatch }: { message: Message; encounterId: string; dispatch: (action: WorkspaceAction) => void }) {
   const [selected, setSelected] = useState<string | null>(null);

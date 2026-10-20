@@ -1,23 +1,21 @@
 import type { ReactNode } from "react";
-import { theOracleReferenceItems, type TheOracleReferenceItem } from "../lib/mira/presentation";
+import { readableSource, theOracleReferenceItems, type TheOracleReferenceItem } from "../lib/aadi/presentation";
 
 // Two source documents stay in view; the rest wait behind one disclosure (Gaffer, 2026-10-17).
 const visible = 2;
-// "infeksi-dengue-pada-dewasa.md" reads as "Infeksi dengue pada dewasa"; the file name stays in the opened reference.
-const readable = (file: string) => { const name = file.replace(/\.(md|pdf)$/i, "").replace(/[-_]+/g, " ").trim(); return name.charAt(0).toUpperCase() + name.slice(1); };
 
-// One line per source document; it opens to every passage taken from that document.
+// One line per source document; it opens to every passage under its file name (the ID and similarity stay in the stored source).
 function Reference({ title, items }: { title: string; items: TheOracleReferenceItem[] }) {
   return <details className="oracle-reference">
-    <summary title={title}><span>{readable(title)}</span>{items.length > 1 && <small>{items.length} kutipan</small>}</summary>
+    <summary title={title}><span>{readableSource(title)}</span>{items.length > 1 && <small>{items.length} kutipan</small>}</summary>
     {items.map(item => <div key={item.id}>
       <p className="oracle-reference-text">{item.text}</p>
-      <p className="oracle-reference-meta">{item.title} · kemiripan {item.similarity} · {item.id}</p>
+      <p className="oracle-reference-meta">{item.title}</p>
     </div>)}
   </details>;
 }
 
-/** A "Referensi TheOracle" section as one-line document titles that open to their passages; other text falls back to the plain view. */
+/** A "Kutipan pedoman" section as one-line document titles that open to their passages; other text falls back to the plain view. */
 export function TheOracleReferences({ body, fallback }: { body: string; fallback: ReactNode }) {
   const documents = new Map<string, TheOracleReferenceItem[]>();
   for (const item of theOracleReferenceItems(body)) documents.set(item.title, [...(documents.get(item.title) ?? []), item]);

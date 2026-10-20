@@ -7,7 +7,7 @@
 ## Product topology
 
 - This directory is the single sovereign Sentrapedia capsule and future repository boundary.
-- The clinical workspace remains at the capsule root (`src/`, `mira/`, `theoracle/`).
+- The clinical workspace remains at the capsule root (`src/`, `aadi/`, `theoracle/`).
 - `apps/site/` owns the public marketing website and its site-specific SPDS record.
 - A future demo belongs under `apps/demo/` as configuration and synthetic data around shared application code, never as a forked capsule.
 - Root lifecycle commands must cover every shipped subsystem; run site-only commands from `apps/site/` when working exclusively on that surface.

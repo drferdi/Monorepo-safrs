@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../src/lib/studio";
+import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder, downloadName } from "../src/lib/studio";
 import { defaultReviewItems } from "../src/lib/workflow";
 import { createDraft, modeIds, modes } from "../src/lib/drafts";
 import { clinicalTemplates, insertTemplate, modeCategories, templateText } from "../src/lib/clinical-templates";
@@ -193,5 +193,14 @@ describe("empty document sections", () => {
     const sections = documentSections(createDraft({ mode: "clinic", prompt: "Keluhan: batuk 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" }));
     expect(sections.filter((section) => emptySection(section.body)).length).toBeGreaterThan(0);
     expect(emptySection(sections[0].body)).toBe(false);
+  });
+});
+
+describe("download names", () => {
+  it("names a download by product, Jakarta date and topic", () => {
+    expect(downloadName("Laki-laki 45 tahun, nyeri kepala hebat", "2026-10-19T18:30:00Z")).toBe("sentrapedia-2026-10-20-laki-laki-45-tahun-nyeri-kepala-hebat.md");
+    expect(downloadName("Demam & batuk — anak", "2026-10-20T01:00:00Z")).toBe("sentrapedia-2026-10-20-demam-batuk-anak.md");
+    expect(downloadName("Pemeriksaan sangat panjang dengan banyak kata yang terus berlanjut", "2026-10-20T01:00:00Z")).toBe("sentrapedia-2026-10-20-pemeriksaan-sangat-panjang-dengan-banyak.md");
+    expect(downloadName("", "not a date")).toBe("sentrapedia.md");
   });
 });

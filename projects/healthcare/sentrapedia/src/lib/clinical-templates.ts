@@ -2,7 +2,7 @@ import type { ModeId } from "./drafts";
 
 // Sentrapedia — Templat Klinis Indonesia v1 (Chief, 2026-10-09): the 18 modes in clinical-workflow order and six
 // categories, each with a structure the clinician can preview and insert into the composer. Content only: local drafts
-// and MIRA keep their own output. The four modes the pack marked for audit map to workup, icd10, monitoring and refer.
+// and AADI keep their own output. The four modes the pack marked for audit map to workup, icd10, monitoring and refer.
 export const templateCategories = ["Dokumentasi klinis", "Diagnosis dan evaluasi", "Komunikasi dan tindak lanjut", "Koordinasi pelayanan", "Evidence-based practice", "Administrasi klinis"] as const;
 export const missingField = "Belum tersedia — lengkapi dan verifikasi oleh klinisi";
 export const missingFieldEnglish = "Not provided — complete and verify with the clinician";

@@ -1,4 +1,4 @@
-import type { MiraResult, MiraTherapy } from "./mira/contract";
+import type { AadiResult, AadiTherapy } from "./aadi/contract";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "./theoracle-grounding-types";
 import { referenceIncludes, theOracleDiseases } from "./theoracle";
 import { objectLike } from "./guards";
@@ -244,10 +244,10 @@ export function gateEvidence(therapyGrounding: unknown, grounding: unknown): The
   return tx && dx ? { ...tx, evidence: [...tx.evidence, ...dx.evidence.filter(e => !tx.evidence.some(t => t.evidenceId === e.evidenceId))] } : tx ?? dx;
 }
 
-export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBundle | undefined, diagnosis: { icd10: string; label: string } | undefined): { therapy: MiraTherapy | undefined; report: EvidenceGateReport } {
+export function gateTherapy(therapy: AadiTherapy, bundle: TheOracleGroundingBundle | undefined, diagnosis: { icd10: string; label: string } | undefined): { therapy: AadiTherapy | undefined; report: EvidenceGateReport } {
   const forDiagnosis = therapy.forDiagnosis;
   const removed = (reason: string) => ({ therapy: undefined, report: { forDiagnosis, therapyRemoved: true, reason, drugs: therapy.regimen.map((r): GateDrug => ({ drug: r.drug, dose: r.dose, status: "removed", evidenceIds: [] })) } });
-  if (!bundle?.evidence.length) return removed("Referensi TheOracle untuk terapi tidak tersedia; dosis tidak ditampilkan.");
+  if (!bundle?.evidence.length) return removed("Referensi Oracle untuk terapi tidak tersedia; dosis tidak ditampilkan.");
   if (!diagnosis || forDiagnosis.icd10.trim().toUpperCase().slice(0, 3) !== diagnosis.icd10.trim().toUpperCase().slice(0, 3)) return removed(`Terapi ditulis untuk diagnosis lain (${forDiagnosis.icd10}), bukan ${diagnosis?.icd10 ?? "diagnosis kerja"}.`);
   const named = diagnosisWords(diagnosis);
   const passages = bundle.evidence.map(item => { const words = tokens(item.text); return { id: item.evidenceId, text: item.text, fornas: /fornas/i.test(item.source.title), words, about: [...tokens(item.source.title), ...words].some(word => named.has(word)) }; });
@@ -266,7 +266,7 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
     return dosing.length ? { drug: r.drug, dose: r.dose, status: "verified", evidenceIds: dosing.map(p => p.id) } : { drug: r.drug, dose: r.dose, status: "doseRemoved", evidenceIds: named.map(p => p.id) };
   });
   const kept = therapy.regimen.filter((_, i) => drugs[i].status !== "removed");
-  const shown = (r: MiraTherapy["regimen"][number]) => {
+  const shown = (r: AadiTherapy["regimen"][number]) => {
     // A field keeps its leading clauses up to the first unsupported one: "IV, 1 g dalam 100 ml" keeps "IV" when 1 g is unsupported.
     // It is blanked when that would cut a condition loose or drop an exception ("Hindari bila CrCl <30 ml/menit, kurangi dosis").
     const named = dosingFor(r.drug);
@@ -291,15 +291,15 @@ export function gateTherapy(therapy: MiraTherapy, bundle: TheOracleGroundingBund
     const supported = keptNamed.length > 0 && passages.some(p => keptNamed.every(r => mentions(p.words, r.drug)) && SAFETY_TERM.test(p.text.toLowerCase()) && specific.some(w => p.words.includes(w)));
     return [supported ? item : item + UNVERIFIED];
   });
-  const gated: MiraTherapy = { forDiagnosis, regimen: kept.map(shown), interactions: safety(therapy.interactions), contraindications: safety(therapy.contraindications) };
-  const reason = kept.length ? "" : "Tidak ada obat yang indikasinya terverifikasi di TheOracle.";
+  const gated: AadiTherapy = { forDiagnosis, regimen: kept.map(shown), interactions: safety(therapy.interactions), contraindications: safety(therapy.contraindications) };
+  const reason = kept.length ? "" : "Tidak ada obat yang indikasinya terverifikasi di Oracle.";
   return { therapy: kept.length ? gated : undefined, report: { forDiagnosis, therapyRemoved: !kept.length, reason, drugs } };
 }
 
 /** The one late-gate rule (Gaffer, 2026-10-17), used by the gateway, the browser client and stored drafts. The result's
  * therapy is gated for its likely diagnosis against the bundle. With an earlier report (`stored`), that report keeps its
  * removals and safety items and only the doses the current gate no longer verifies are downgraded to doseRemoved. */
-export function applyTherapyGate(result: MiraResult, bundle: TheOracleGroundingBundle | undefined, stored?: EvidenceGateReport): { result: MiraResult; gate: EvidenceGateReport | undefined } {
+export function applyTherapyGate(result: AadiResult, bundle: TheOracleGroundingBundle | undefined, stored?: EvidenceGateReport): { result: AadiResult; gate: EvidenceGateReport | undefined } {
   if (!result.therapy) return { result, gate: stored };
   const likely = result.differential.likely[0];
   const late = gateTherapy(result.therapy, bundle, likely && { icd10: likely.icd10, label: likely.label });

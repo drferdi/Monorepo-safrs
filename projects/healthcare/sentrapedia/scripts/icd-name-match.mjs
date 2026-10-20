@@ -1,4 +1,4 @@
-// Words that carry no meaning when a diagnosis label is compared with an official ICD-10 name (as in mira/service/postchecks.py).
+// Words that carry no meaning when a diagnosis label is compared with an official ICD-10 name (as in aadi/service/postchecks.py).
 const FILLER = new Set("a an and as by due in not of or the to with without".split(" "));
 const GENERIC = new Set([...FILLER, ..."acute chronic disease diseases disorder disorders other specified unspecified nos site type classified elsewhere".split(" ")]);
 const words = text => (text.toLowerCase().match(/[a-z0-9]+/g) ?? []).filter(word => !FILLER.has(word));

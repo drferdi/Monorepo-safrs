@@ -56,6 +56,14 @@ export function workspaceDate(value: string): string {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? "Tanggal belum tersedia" : new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).format(date) + " WIB";
 }
+// A download's file name: product, date in Jakarta, and the first words of what it is about ("encounter.md" told nothing).
+export function downloadName(topic: string, at: string | Date = new Date()): string {
+  const date = new Date(at);
+  const day = Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta" }).format(date);
+  const words = topic.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const slug = words.length > 40 ? words.slice(0, 41).replace(/-[^-]*$/, "") : words;
+  return ["sentrapedia", day, slug].filter(Boolean).join("-") + ".md";
+}
 export function contextFacts(context: string, notes: string) {
   const sources = [{ source: "Konteks Encounter", fields: structureNote(context).fields }, { source: "Catatan Pasien", fields: structureNote(notes).fields }];
   const fields: { key: NoteField; label: string }[] = [{ key: "concern", label: "Keluhan utama" }, { key: "history", label: "Anamnesis" }, { key: "background", label: "Riwayat" }, { key: "medications", label: "Obat" }, { key: "allergies", label: "Alergi" }];

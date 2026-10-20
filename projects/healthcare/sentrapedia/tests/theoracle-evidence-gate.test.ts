@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { gateEvidence, gateTherapy, unstrength } from "../src/lib/theoracle-evidence-gate";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
-import type { MiraTherapy } from "../src/lib/mira/contract";
+import type { AadiTherapy } from "../src/lib/aadi/contract";
 import { withCatalog } from "./private-data";
 
 // A plain string is a passage from a pneumonia document; { title, text } sets the document title.
@@ -11,7 +11,7 @@ const bundle = (...items: (string | { title: string; text: string })[]): TheOrac
   queryDigest: "b".repeat(64),
   evidence: items.map((item, i) => ({ evidenceId: `E${i + 1}`, text: typeof item === "string" ? item : item.text, retrievalRank: i + 1, similarity: 0.5, source: { title: typeof item === "string" ? `pneumonia-${i + 1}.md` : item.title, docSource: "uji", origin: "fixture", textSha256: "c".repeat(64) } })),
 });
-const therapy = (regimen: MiraTherapy["regimen"], extra: Partial<MiraTherapy> = {}): MiraTherapy => ({ forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, regimen, interactions: [], contraindications: [], ...extra });
+const therapy = (regimen: AadiTherapy["regimen"], extra: Partial<AadiTherapy> = {}): AadiTherapy => ({ forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, regimen, interactions: [], contraindications: [], ...extra });
 const drug = (name: string, dose: string) => ({ drug: name, dose, route: "PO", duration: "5 hari", note: "" });
 const pneumonia = { icd10: "J18.9", label: "Pneumonia" };
 
@@ -242,7 +242,7 @@ describe("clinical evidence gate", () => {
   it("removes all therapy when there is no evidence bundle", () => {
     const { therapy: out, report } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), undefined, pneumonia);
     expect(out).toBeUndefined();
-    expect(report).toMatchObject({ therapyRemoved: true, reason: "Referensi TheOracle untuk terapi tidak tersedia; dosis tidak ditampilkan." });
+    expect(report).toMatchObject({ therapyRemoved: true, reason: "Referensi Oracle untuk terapi tidak tersedia; dosis tidak ditampilkan." });
   });
   it("accepts a gram strength written as gram", () => {
     const { report } = gateTherapy(therapy([drug("Ceftriaxone", "1x2g")]), bundle("Seftriakson 2 gram IV dosis tunggal."), pneumonia);
@@ -263,7 +263,7 @@ describe("clinical evidence gate fix round 1", () => {
   it("removes all therapy with a reason when no drug is verified or dosed", () => {
     const { therapy: out, report } = gateTherapy(therapy([drug("Levofloxacin", "1x750mg")]), bundle("Amoksisilin 500 mg."), pneumonia);
     expect(out).toBeUndefined();
-    expect(report).toMatchObject({ therapyRemoved: true, reason: "Tidak ada obat yang indikasinya terverifikasi di TheOracle." });
+    expect(report).toMatchObject({ therapyRemoved: true, reason: "Tidak ada obat yang indikasinya terverifikasi di Oracle." });
   });
   it("keeps a drug-less warning with the unverified suffix and drops a warning that names only a removed drug", () => {
     const { therapy: out } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg"), drug("Levofloxacin", "1x750mg")], { interactions: ["Kehamilan trimester pertama", "Hindari NSAID"], contraindications: ["Levofloxacin: anak"] }), bundle("Amoksisilin 500 mg."), pneumonia);
@@ -285,7 +285,7 @@ describe("clinical evidence gate fix round 1", () => {
 });
 
 describe("clinical evidence gate final fix", () => {
-  const item = (name: string, dose: string, fields: Partial<MiraTherapy["regimen"][number]> = {}) => ({ ...drug(name, dose), ...fields });
+  const item = (name: string, dose: string, fields: Partial<AadiTherapy["regimen"][number]> = {}) => ({ ...drug(name, dose), ...fields });
   it("(a) blanks a doseRemoved drug's note that carries an unverified strength", () => {
     const { therapy: out, report } = gateTherapy(therapy([item("Kristaloid", "20ml/kg", { note: "dapat diulang sampai 40ml/kg dalam 1 jam" })]), bundle("Kristaloid untuk syok."), pneumonia);
     expect(report.drugs[0].status).toBe("doseRemoved");
@@ -386,7 +386,7 @@ describe("clinical evidence gate final fix", () => {
 
 describe("clinical evidence gate: the dose passage names the diagnosis", () => {
   const versicolor = { icd10: "B36.0", label: "Pityriasis versicolor" };
-  const forVersicolor = (regimen: MiraTherapy["regimen"]) => therapy(regimen, { forDiagnosis: versicolor });
+  const forVersicolor = (regimen: AadiTherapy["regimen"]) => therapy(regimen, { forDiagnosis: versicolor });
   const azoleList = { title: "dermatovenereologi-perdoski-2021.pdf", text: "Triazol: flukonazol oral 50 mg per hari selama 14-30 hari; itrakonazol 100-200 mg; posakonazol 400 mg/12 jam. Alternatif amfoterisin B." };
 
   it("does not verify a dose from a passage about another disease (lay_terms-03)", () => {
@@ -521,7 +521,7 @@ describe("clinical evidence gate: per-kg is decided for each strength", () => {
 });
 
 describe("clinical evidence gate: a field drops only its unsupported clauses", () => {
-  const amox = (fields: Partial<MiraTherapy["regimen"][number]>, text = "Amoksisilin 500 mg 3 kali sehari, 1 g bila berat.") => gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), ...fields }]), bundle(text), pneumonia).therapy?.regimen[0];
+  const amox = (fields: Partial<AadiTherapy["regimen"][number]>, text = "Amoksisilin 500 mg 3 kali sehari, 1 g bila berat.") => gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), ...fields }]), bundle(text), pneumonia).therapy?.regimen[0];
   const PARTIAL = " (sebagian belum terverifikasi)";
   it("keeps the route when only a trailing strength clause is unsupported, and marks the cut", () => {
     expect(amox({ route: "IV, 1 g dalam 100 ml NaCl" })?.route).toBe("IV" + PARTIAL);

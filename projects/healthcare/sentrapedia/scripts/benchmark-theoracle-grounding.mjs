@@ -61,7 +61,7 @@ try {
   if (after !== before) throw new Error("Index changed during benchmark");
   console.log(JSON.stringify({
     measuredAt: new Date().toISOString(), node: process.version,
-    scope: "Actual TheOracle retrieval (local CPU query embedding + cosine search + caps); excludes MIRA model inference and HTTP latency",
+    scope: "Actual TheOracle retrieval (local CPU query embedding + cosine search + caps); excludes AADI model inference and HTTP latency",
     indexSha256: first.corpus.indexSha256, embeddingModel: first.corpus.embeddingModel, indexUnchanged: true,
     coldStartMs, rssGrowthMb: Math.round((process.memoryUsage().rss - rssBefore) / 1048576),
     warmLatencyMs: { median: pct(latency, 0.5), p95: pct(latency, 0.95), max: pct(latency, 1) },

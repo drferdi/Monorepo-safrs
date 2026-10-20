@@ -8,8 +8,8 @@ const result = spawnSync(process.execPath, [resolve(root, "node_modules/next/dis
 if (result.error || result.status !== 0) process.exit(result.status || 1);
 const output = resolve(root, ".next/standalone");
 mkdirSync(resolve(output, "scripts"), { recursive: true });
-cpSync(resolve(root, "mira"), resolve(output, "mira"), { recursive: true, filter: file => !/[\\/](?:__pycache__|\.pytest_cache)(?:[\\/]|$)/.test(file) });
-for (const name of ["run-system.mjs", "mira-runtime.mjs", "mira-profile.json", "install-mira.mjs"]) cpSync(resolve(root, "scripts", name), resolve(output, "scripts", name));
+cpSync(resolve(root, "aadi"), resolve(output, "aadi"), { recursive: true, filter: file => !/[\\/](?:__pycache__|\.pytest_cache)(?:[\\/]|$)/.test(file) });
+for (const name of ["run-system.mjs", "aadi-runtime.mjs", "aadi-profile.json", "install-aadi.mjs"]) cpSync(resolve(root, "scripts", name), resolve(output, "scripts", name));
 // TheOracle: the verified index and the pinned local embedding model the retriever loads from cwd.
 // The public code repository has no index (2026-10-19); that build answers "Database TheOracle belum terpasang".
 // SENTRAPEDIA_SKIP_MODEL=1 installs leave the model out; such a build cannot run an analysis either.
@@ -22,4 +22,4 @@ for (const name of ["index", "model"]) {
 }
 cpSync(resolve(root, ".next/static"), resolve(output, ".next/static"), { recursive: true });
 if (existsSync(resolve(root, "public"))) cpSync(resolve(root, "public"), resolve(output, "public"), { recursive: true });
-console.log(`Sentrapedia: standalone output mencakup engine MIRA${copied.length ? `, ${copied.join(" + ")} TheOracle` : ""}, dan unified launcher.`);
+console.log(`Sentrapedia: standalone output mencakup engine AADI${copied.length ? `, ${copied.join(" + ")} TheOracle` : ""}, dan unified launcher.`);

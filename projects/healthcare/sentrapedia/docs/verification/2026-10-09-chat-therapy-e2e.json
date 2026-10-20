@@ -3,7 +3,7 @@
  "kind": "browser E2E, Playwright 1.63 + installed Chrome, fresh profile, synthetic cases only",
  "services": {
   "gateway": "127.0.0.1:3104 standalone build Vsy2e_MDr6t0b4Brg8mWq",
-  "mira": "127.0.0.1:8791 +ddx=provisional+assessment=fast+therapy=fast"
+  "aadi": "127.0.0.1:8791 +ddx=provisional+assessment=fast+therapy=fast"
  },
  "chatBehaviour": {
   "textarea": {

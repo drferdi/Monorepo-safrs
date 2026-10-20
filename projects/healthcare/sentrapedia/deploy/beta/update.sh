@@ -36,7 +36,7 @@ docker rm -f sentrapedia-beta >/dev/null 2>&1 || true
 docker run -d --name sentrapedia-beta --restart unless-stopped --memory "$MEMORY" --memory-swap 4g -p "127.0.0.1:$HOST_PORT:3000" --env-file /etc/sentrapedia/beta.env "$RUN_IMAGE"
 
 for _ in $(seq 1 60); do
-  if curl -fsS "http://127.0.0.1:$HOST_PORT/api/mira" | grep -q '"reachable":true'; then echo "Sentrapedia beta ($RUN_IMAGE) is up on 127.0.0.1:$HOST_PORT."; docker image prune -f >/dev/null; exit 0; fi
+  if curl -fsS "http://127.0.0.1:$HOST_PORT/api/aadi" | grep -q '"reachable":true'; then echo "Sentrapedia beta ($RUN_IMAGE) is up on 127.0.0.1:$HOST_PORT."; docker image prune -f >/dev/null; exit 0; fi
   sleep 5
 done
 echo "Sentrapedia beta did not become ready within 5 minutes. See: docker logs sentrapedia-beta" >&2

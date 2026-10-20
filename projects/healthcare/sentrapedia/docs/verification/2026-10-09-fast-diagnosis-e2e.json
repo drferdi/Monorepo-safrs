@@ -2,9 +2,9 @@
   "date": "2026-10-09",
   "target": "complete diagnosis draft rendered in under 5 s after Enter",
   "configuration": {
-    "service": "dedicated MIRA 127.0.0.1:8791 via scripts/run-mira-deepseek.ps1",
+    "service": "dedicated AADI 127.0.0.1:8791 via scripts/run-aadi-deepseek.ps1",
     "model": "google/gemini-2.5-flash (both parts)",
-    "flags": ["MIRA_PROVISIONAL_DIFFERENTIAL=true", "MIRA_FAST_ASSESSMENT=true", "MIRA_OPENROUTER_ZDR=false", "MIRA_OPENROUTER_PROVIDER_SORT=throughput"],
+    "flags": ["AADI_PROVISIONAL_DIFFERENTIAL=true", "AADI_FAST_ASSESSMENT=true", "AADI_OPENROUTER_ZDR=false", "AADI_OPENROUTER_PROVIDER_SORT=throughput"],
     "version_suffix": "+ddx=provisional+assessment=fast",
     "fast_mode": "no planning call; diagnosis (differential/evidence/disposition) and workup (missingInformation/nextBestActions) in parallel; each part sent 3 times, first valid JSON wins, losers cancelled and charged at the winner's cost"
   },

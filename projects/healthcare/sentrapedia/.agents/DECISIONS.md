@@ -40,15 +40,15 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - Template preferences are recorded without AI interpretation. Only explicit matching labels fill personal sections; missing sections remain unavailable. Capture the selected template in document provenance so later edits/deletion cannot change the source.
 - Queue status/pins/tasks remain manual per Encounter and independent of document/clinical status. Storage failures retain a visible warning; no successful-save claim on failed writes.
 
-## 2026-10-09 — Oracle catalog and existing MIRA adapter
+## 2026-10-09 — Oracle catalog and existing AADI adapter
 
 - Gaffer authorized integrate-both after comparison; execute solo. Oracle remains read-only, unreviewed source text with file/hash/record provenance. Use 15 actual categories rather than metadata's 14; never merge disease entries by repeated ICD code.
-- Localize Med Assist's v1 schema/type/validator snapshots with attribution, no runtime cross-capsule dependency. Reuse the existing MIRA service/provider; no install, credential copy, upstream change or paid verification. Optional server-only token and loopback URL; health availability is separate from authenticated readiness.
+- Localize Med Assist's v1 schema/type/validator snapshots with attribution, no runtime cross-capsule dependency. Reuse the existing AADI service/provider; no install, credential copy, upstream change or paid verification. Optional server-only token and loopback URL; health availability is separate from authenticated readiness.
 - Synthetic structured input only, no Patient/Encounter auto-copy. Same-origin/loopback/Host validation and bounds/timeout/cancel protect the local adapter; it is not a production authenticated API. Preserve full result/case/trace in an explicit draft, all model evidence and outside-Oracle diagnoses. Oracle narratives never generate regimens. Review metadata remains manual and not clinical certification; PNPK page sources still unavailable.
 ## 2026-10-09 — Free OpenRouter routing
 
-- Gaffer selects free OpenRouter models; both MIRA stages pinned to apodex/apodex-1.1-mini:free after official metadata/JSON/ZDR compatibility check. Experimental, not clinically validated. No random free router, paid fallback, privacy weakening or replacement of clinical postchecks.
-- Keep shared Med Assist MIRA instance untouched. Prepare a separate service using existing runtime, process-only profile and own ignored configuration. No external .env reads or installs; key missing is explicit readiness state. Gateway refuses non-free/mixed profiles before inference and missing/nonzero cost after response. Health/configuration is not authenticated provider verification.- 2026-10-09: Gaffer approves paid DeepSeek Flash and declines training-use consent. Select deepseek/deepseek-v4.1-flash for both MIRA stages, fixed ZDR/no-training privacy preserved, fictional-only local instance8791, service budgets0.10USD/step and1USD/day. Free-only selection superseded; no production/clinical accuracy authorization inferred.
+- Gaffer selects free OpenRouter models; both AADI stages pinned to apodex/apodex-1.1-mini:free after official metadata/JSON/ZDR compatibility check. Experimental, not clinically validated. No random free router, paid fallback, privacy weakening or replacement of clinical postchecks.
+- Keep shared Med Assist AADI instance untouched. Prepare a separate service using existing runtime, process-only profile and own ignored configuration. No external .env reads or installs; key missing is explicit readiness state. Gateway refuses non-free/mixed profiles before inference and missing/nonzero cost after response. Health/configuration is not authenticated provider verification.- 2026-10-09: Gaffer approves paid DeepSeek Flash and declines training-use consent. Select deepseek/deepseek-v4.1-flash for both AADI stages, fixed ZDR/no-training privacy preserved, fictional-only local instance8791, service budgets0.10USD/step and1USD/day. Free-only selection superseded; no production/clinical accuracy authorization inferred.
 
 ## 2026-10-09 — Kode ICD-10 quick action
 
@@ -67,7 +67,7 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 ## 2026-10-09 — Clinical template pack v1 (labels, order, insertable structures)
 
-- Source: Gaffer's `sentrapedia_templates_klinis_indonesia_v1.json` / `.md` (18 templates). Gaffer chose "Label, urutan, sisipkan": the pack sets the 18 mode labels, their order and six categories in the Mode picker, and 18 built-in structures that are previewed and appended to the composer on an explicit "Sisipkan ke input". Local draft output and MIRA are unchanged; making drafts follow the pack's fields was offered as R3 and not chosen.
+- Source: Gaffer's `sentrapedia_templates_klinis_indonesia_v1.json` / `.md` (18 templates). Gaffer chose "Label, urutan, sisipkan": the pack sets the 18 mode labels, their order and six categories in the Mode picker, and 18 built-in structures that are previewed and appended to the composer on an explicit "Sisipkan ke input". Local draft output and AADI are unchanged; making drafts follow the pack's fields was offered as R3 and not chosen.
 - The pack's four "audit" modes map to existing handlers: Pemeriksaan Penunjang = `workup`, Pengodean Diagnosis (ICD-10) = `icd10`, Pemantauan Klinis = `monitoring`, Telaah Rujukan = `refer`. Mode IDs are unchanged, so stored documents, favourites and personal templates keep working.
 - The four composer tabs (Analisis/Dokumentasi/Rencana/Komunikasi) and their quick actions stay; only their labels follow the pack. Inserted text keeps the pack wording, including the missing marker on every field, and never replaces what is typed.
 
@@ -80,8 +80,8 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 ## 2026-10-09 — Local documents in two columns
 
-- Gaffer: "Clinic note redesign menjadi 2 kolom", left column = the section list (his choice). Every local draft or personal-template document with two or more sections uses the same two-column view as MIRA analyses: a sticky section list on the left (label "Bagian"), the document on the right; the closing note after `---` stays visible. Content and draft logic unchanged; one-section documents (Daftar tugas) stay single column.
-- Then: "BAGIAN ... geser mentok kiri agar ... sejajar vertikal dengan kolom text user". On viewports wider than 900 px and canvases of 720 px or more, the section list hangs in the canvas's left margin and the document text starts on the same line as the composer, the intent tabs and the user's messages; the reading column shifts right only as far as needed (left margin at least 212 px). Applies to MIRA analyses too; narrower screens keep the list inside the column.
+- Gaffer: "Clinic note redesign menjadi 2 kolom", left column = the section list (his choice). Every local draft or personal-template document with two or more sections uses the same two-column view as AADI analyses: a sticky section list on the left (label "Bagian"), the document on the right; the closing note after `---` stays visible. Content and draft logic unchanged; one-section documents (Daftar tugas) stay single column.
+- Then: "BAGIAN ... geser mentok kiri agar ... sejajar vertikal dengan kolom text user". On viewports wider than 900 px and canvases of 720 px or more, the section list hangs in the canvas's left margin and the document text starts on the same line as the composer, the intent tabs and the user's messages; the reading column shifts right only as far as needed (left margin at least 212 px). Applies to AADI analyses too; narrower screens keep the list inside the column.
 
 ## 2026-10-09 — Catatan Klinis: list on the right, Edit per section, Indonesian names
 
@@ -123,10 +123,10 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 - Gaffer rejected the sky-blue quick actions ("warnanya jelek, text jadi gak jelas"), superseding the earlier "Biru sky" choice. They are white with a hairline border and ink text at 12 px 500; the chosen one has an ink outline.
 
-## 2026-10-10 — MIRA installed with Sentrapedia
+## 2026-10-10 — AADI installed with Sentrapedia
 
-- Gaffer requires one system: capsule-local MIRA source/runtime, installed by npm ci,
-  started and stopped with Next by dev/start. This supersedes external MiraRoot setup.
+- Gaffer requires one system: capsule-local AADI source/runtime, installed by npm ci,
+  started and stopped with Next by dev/start. This supersedes external AadiRoot setup.
 - Preserve clinical engine/prompt/schema bytes; snapshot exact planning schemas and
   routine prompt with source provenance, avoiding the research FHIR/ML import stack.
 - Use private loopback port and per-run token; preserve provider/model/privacy/price
@@ -319,7 +319,7 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - Two axe findings are recorded exceptions rather than fixes: the slash picker's scroll region (a `<textarea>` cannot carry `role=combobox`; keyboard access works through `aria-activedescendant`) and the Vera hero's normal-motion contrast reading (a finished `fill-mode: both` animation; the real hit-test shows the dark panel).
 
 ## 2026-10-16 - Dify is removed from Sentrapedia
-- Gaffer cancelled Dify. The Vera side chatbot, the `/dify` page and the `/api/dify/*` routes are deleted, not hidden behind a flag. MIRA with TheOracle grounding and the evidence gate remains the only clinical answer path.
+- Gaffer cancelled Dify. The Vera side chatbot, the `/dify` page and the `/api/dify/*` routes are deleted, not hidden behind a flag. AADI with TheOracle grounding and the evidence gate remains the only clinical answer path.
 - The bottom-right launcher footprint tokens and clearance rules went with the widget. A future floating control must define its own footprint and clearance.
 
 ## 2026-10-17 - One human anatomy study supports the clinical-workspace intro
@@ -333,18 +333,18 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - The built-in image edit was rejected by its output filter. Gaffer explicitly approved local extraction of the existing PNG, with no external upload or additional generation cost. Keep the original atlas PNG and Higgsfield MP4 as historical source assets, but do not play the opaque MP4 in this section.
 - Motion is a restrained CSS float and cyan pulse, paused offscreen or by the user and disabled under reduced-motion preference. The anatomy is conceptual illustration only, not clinical evidence or a diagnostic reference.
 
-## 2026-10-17 - MIRA uses google/gemini-3.1-flash-lite for both stages
-- Status: route and model id superseded by "2026-10-17 - MIRA calls the Gemini API directly instead of OpenRouter"; the model choice stays.
-- Gaffer asked for the fastest Gemini, then chose `google/gemini-3.1-flash-lite` as the default for planning and assessment (`scripts/mira-profile.json`, pinned in `tests/mira-paid.test.ts`). It supersedes `google/gemini-2.5-flash` from the 2026-10-09 model override; OpenRouter, synthetic-only data policy, no ZDR, throughput sorting and the Google fast-copy providers are unchanged.
+## 2026-10-17 - AADI uses google/gemini-3.1-flash-lite for both stages
+- Status: route and model id superseded by "2026-10-17 - AADI calls the Gemini API directly instead of OpenRouter"; the model choice stays.
+- Gaffer asked for the fastest Gemini, then chose `google/gemini-3.1-flash-lite` as the default for planning and assessment (`scripts/aadi-profile.json`, pinned in `tests/aadi-paid.test.ts`). It supersedes `google/gemini-2.5-flash` from the 2026-10-09 model override; OpenRouter, synthetic-only data policy, no ZDR, throughput sorting and the Google fast-copy providers are unchanged.
 - Basis: one live run per model on the same fictional case. Model stages took 4.5 s against 5.6 s for 2.5-flash, at 0.0135 against 0.0169 USD, with the same verified therapy (ambroxol, paracetamol). `gemini-3.5-flash-lite` was slightly faster (4.3 s) but cost more (0.0202 USD) and proposed dextromethorphan for a productive cough. Evidence: `verify-report/full-check/2026-10-16/results/mira-live-3.json` to `-5.json`.
 - Limits: a single run per model is not a benchmark, and the 5 s target is still missed because TheOracle retrieval takes 3.8 s warm and 12 s cold. Warming retrieval stays the larger latency fix.
 
-## 2026-10-17 - MIRA calls the Gemini API directly instead of OpenRouter
-- Status: live. The open item below is closed: three live runs on 2026-10-17 passed (HANDOFF archive, "MIRA calls the Gemini API directly, no OpenRouter").
+## 2026-10-17 - AADI calls the Gemini API directly instead of OpenRouter
+- Status: live. The open item below is closed: three live runs on 2026-10-17 passed (HANDOFF archive, "AADI calls the Gemini API directly, no OpenRouter").
 - Gaffer rejected the OpenRouter route and chose a Gemini API key (`GEMINI_API_KEY`). The model stays Gemini 3.1 Flash-Lite, now under its bare Gemini API id `gemini-3.1-flash-lite`. This supersedes the OpenRouter, no-ZDR, throughput-sorting and Google fast-copy-provider parts of the 2026-10-09 override and of the entry above.
 - Route: the engine's existing `openai` provider with `OPENAI_BASE_URL` set to Google's OpenAI-compatible endpoint, set by the launcher. A new `gemini` provider value was rejected because it would diverge `common/providers.py`, `common/guard.py` and `service/settings.py`, which `test_packaging.py` requires to match upstream. The only engine change is the Gemini price in `service/app.py`, already an allowed divergence. Consequence: the engine reports `provider=openai`.
 - Privacy: prompts now go to Google under the Gemini API terms. A paid-tier key is required, because free-tier prompts may be used to improve Google products. The data policy stays `synthetic-only`.
-- Gaffer approved repinning the `service/app.py` `packagedSha256` in `mira/SOURCE.json`; done the same day. Open: the route is not yet verified live.
+- Gaffer approved repinning the `service/app.py` `packagedSha256` in `aadi/SOURCE.json`; done the same day. Open: the route is not yet verified live.
 
 ## 2026-10-17 - Short promo prelude before the hero tablet
 - Status: superseded by "2026-10-17 - Promo film becomes the second editorial section".
@@ -382,14 +382,14 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 ## 2026-10-17 - Fast-assessment copies are a launcher knob; engine.py repinned
 
-- Gaffer approved reading the number of raced copies from `MIRA_FAST_COPIES` (engine default 3) and repinning `service/engine.py` in `mira/SOURCE.json`, the same mechanism as `app.py`. `settings.py` stays byte-identical to upstream, so the knob lives in `engine.py` (`fast_copies()`), not in `Settings`.
-- The launcher passes `fastCopies` from `scripts/mira-profile.json`. Measured on 2026-10-17 (fictional cough case, 3 runs each): 1 copy costs one third of 3 copies (0.0050 against 0.0153 USD per case) with the diagnosis stage about 0.2 s slower and the same answer; it gives up the one-hiccup retry and the complete-regimen grace. Gaffer kept the profile at 1 copy on 2026-10-17; numbers in the HANDOFF entry of the same day.
+- Gaffer approved reading the number of raced copies from `AADI_FAST_COPIES` (engine default 3) and repinning `service/engine.py` in `aadi/SOURCE.json`, the same mechanism as `app.py`. `settings.py` stays byte-identical to upstream, so the knob lives in `engine.py` (`fast_copies()`), not in `Settings`.
+- The launcher passes `fastCopies` from `scripts/aadi-profile.json`. Measured on 2026-10-17 (fictional cough case, 3 runs each): 1 copy costs one third of 3 copies (0.0050 against 0.0153 USD per case) with the diagnosis stage about 0.2 s slower and the same answer; it gives up the one-hiccup retry and the complete-regimen grace. Gaffer kept the profile at 1 copy on 2026-10-17; numbers in the HANDOFF entry of the same day.
 
-## 2026-10-17 - The capsule owns its diverged MIRA service files
+## 2026-10-17 - The capsule owns its diverged AADI service files
 
-- Status: the rule that `common/guard.py` and `service/settings.py` stay pinned is superseded by "2026-10-18 - The capsule owns the MIRA settings and guard"; `common/providers.py` stays pinned.
-- Gaffer chose option A for tech-debt row 15: the 14 files in `mira/` that diverged from upstream are capsule-owned (`owner: capsule` in `mira/SOURCE.json`). They keep `origin` and `sourceSha256` for history, but have no `packagedSha256` and are edited without a repin.
-- Files without an owner stay byte-identical to upstream and pinned. `common/providers.py`, `common/guard.py` and `service/settings.py` may never become capsule-owned; `mira/service/tests/test_packaging.py` enforces both rules.
+- Status: the rule that `common/guard.py` and `service/settings.py` stay pinned is superseded by "2026-10-18 - The capsule owns the AADI settings and guard"; `common/providers.py` stays pinned.
+- Gaffer chose option A for tech-debt row 15: the 14 files in `aadi/` that diverged from upstream are capsule-owned (`owner: capsule` in `aadi/SOURCE.json`). They keep `origin` and `sourceSha256` for history, but have no `packagedSha256` and are edited without a repin.
+- Files without an owner stay byte-identical to upstream and pinned. `common/providers.py`, `common/guard.py` and `service/settings.py` may never become capsule-owned; `aadi/service/tests/test_packaging.py` enforces both rules.
 
 ## 2026-10-17 - One strict therapy-gate rule
 
@@ -398,7 +398,7 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 ## 2026-10-17 - Browser storage limits
 
-- Gaffer agreed to tech-debt row 17: documents keep 20 revisions (was 50), the MIRA source is stored as compact JSON, and saving warns once the workspace reaches 4 million characters so a backup can be exported before the browser quota fills.
+- Gaffer agreed to tech-debt row 17: documents keep 20 revisions (was 50), the AADI source is stored as compact JSON, and saving warns once the workspace reaches 4 million characters so a backup can be exported before the browser quota fills.
 
 ## 2026-10-17 - Ruang Kerja follows the policy-page editorial language
 
@@ -415,10 +415,10 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - Gaffer approved a `Sejarah Sentra` link in both homepage head menus, after `Tentang`, while leaving the existing footer link in place.
 - On the existing history page, name dr. Novia Dwi Anggraini as `Hands-on Builder / Penggerak Implementasi` and Joseph Arianto as `Liaison Officer`. Gaffer explicitly confirmed `Arianto` as the correct spelling. Present their contributions as editorial narrative rows rather than generic cards or a separate page.
 
-## 2026-10-18 - The capsule owns the MIRA settings and guard
+## 2026-10-18 - The capsule owns the AADI settings and guard
 
-- Gaffer (tech-debt row 31): Sentrapedia publicly describes agentic model use by task, with at least three models (Claude, OpenAI, Gemini). `service/settings.py` and `common/guard.py` become `owner: capsule` in `mira/SOURCE.json` and keep their origin hashes; `common/providers.py` stays pinned. `mira/service/tests/test_packaging.py` enforces both.
-- Model prices belong in the guard's own `PRICES` table, not in `app.py`. Today's runtime calls Gemini only (`scripts/mira-profile.json`).
+- Gaffer (tech-debt row 31): Sentrapedia publicly describes agentic model use by task, with at least three models (Claude, OpenAI, Gemini). `service/settings.py` and `common/guard.py` become `owner: capsule` in `aadi/SOURCE.json` and keep their origin hashes; `common/providers.py` stays pinned. `aadi/service/tests/test_packaging.py` enforces both.
+- Model prices belong in the guard's own `PRICES` table, not in `app.py`. Today's runtime calls Gemini only (`scripts/aadi-profile.json`).
 
 ## 2026-10-18 - The site's build output is not committed
 
@@ -430,3 +430,9 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 - Gaffer: "itu video section 2 kok gak ada suaranya", then chose a separate sound button: "Tambahkan tombol Suara/Bisukan terpisah di video section 2 (opsi 1)". `promo-vid.mp4` has an audio track; until now the film was muted with no way to hear it.
 - The film still autoplays muted while in view, because browsers block autoplay with sound, and keeps pause/play and the reduced-motion rule. A separate "Suara"/"Bisukan" button beside "Putar" turns the sound on only after a visitor's click; turning sound on also resumes a paused film. The film's media file is unchanged.
+
+## 2026-10-20 - MIRA is named AADI
+
+- Gaffer: "Kemudian stop penggunaan kata MIRA< ganti dengan AADI (Augmented Artificial Intelligence Diagnosis Integration)", for everything including code. The full name appears once in the report subtitle and once in the "Tentang workspace ini" dialog; everywhere else "AADI".
+- Saved answers are migrated when a workspace is read: marker and engine text become AADI, a doctor's edited text stays as written. Env vars, endpoint and headers changed without fallback; rollback to an older image is manual.
+- The capsule owns every engine file that named MIRA, including `common/providers.py`. Upstream identifiers (source paths, `upstreamCommit`, the source name, `provenance/*.txt`, schema `$id`) keep the upstream's MIRA naming.

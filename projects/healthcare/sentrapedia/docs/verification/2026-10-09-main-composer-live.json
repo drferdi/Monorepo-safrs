@@ -1,5 +1,5 @@
 {
-  "kind": "MIRA",
+  "kind": "AADI",
   "contractVersion": "1",
   "case": {
     "demographics": {
@@ -212,7 +212,7 @@
       }
     ],
     "meta": {
-      "version": "mira-service/0.1.0+contract=1+provider=openrouter+data=synthetic-only+plan=deepseek/deepseek-v4.1-flash+assess=deepseek/deepseek-v4.1-flash+experimental",
+      "version": "aadi-service/0.1.0+contract=1+provider=openrouter+data=synthetic-only+plan=deepseek/deepseek-v4.1-flash+assess=deepseek/deepseek-v4.1-flash+experimental",
       "model": "deepseek/deepseek-v4.1-flash+deepseek/deepseek-v4.1-flash",
       "costUsd": 0.021168
     }

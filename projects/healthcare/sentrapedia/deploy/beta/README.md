@@ -25,7 +25,7 @@ One Ubuntu 24.04 server (2 vCPU, 4 GB RAM, Jakarta) runs the Docker image on loo
 | --- | --- |
 | `GEMINI_API_KEY` | Paid-tier Gemini API key. Never commit it. |
 | `SENTRAPEDIA_PUBLIC_ORIGIN` | `https://beta.sentrapedia.com`, the only origin the gateway accepts besides loopback. |
-| `MIRA_MAX_CONCURRENT` | `3`, analyses that may run at once (1-8). The 5 USD daily budget still applies. |
+| `AADI_MAX_CONCURRENT` | `3`, analyses that may run at once (1-8). The 5 USD daily budget still applies. |
 
 On a shared server, `update.sh` also reads `SENTRAPEDIA_HOST_PORT` (default `3201`, beside medboard on `3000`; change it only together with the tunnel's service URL) and `SENTRAPEDIA_MEMORY` (default `2500m`) from its own environment, for example `SENTRAPEDIA_HOST_PORT=3202 bash update.sh`.
 

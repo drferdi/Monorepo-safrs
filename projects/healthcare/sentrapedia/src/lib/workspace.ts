@@ -108,9 +108,20 @@ export function parseWorkspace(raw: string): Workspace | null {
       if (typeof clean.sourceText !== "string") delete clean.sourceText;
       if (typeof clean.originalContent !== "string") delete clean.originalContent;
       if (!["draft", "reviewed", "final"].includes(clean.reviewStatus ?? "")) delete clean.reviewStatus;
-      return cleanWorkflowMessage(clean);
+      return cleanWorkflowMessage(renamedAnalysis(clean));
     }) })) });
   } catch { return null; }
+}
+
+// MIRA was renamed AADI on 2026-10-20 (Gaffer: "Migrasi data lama"). A saved analysis gets the new marker, and its engine
+// text the new name; the doctor's edited text and revisions stay as written. Running it again changes nothing.
+const legacyAnalysisPrefix = '{"kind":"MIRA",';
+function renamedAnalysis(message: Message): Message {
+  if (!message.sourceText?.startsWith(legacyAnalysisPrefix)) return message;
+  const renamed = (text: string) => text.replace(/\bMIRA\b/g, "AADI");
+  const migrated = { ...message, sourceText: `{"kind":"AADI",${message.sourceText.slice(legacyAnalysisPrefix.length)}` };
+  if (message.originalContent === undefined) return migrated;
+  return { ...migrated, originalContent: renamed(message.originalContent), content: message.content === message.originalContent ? renamed(message.content) : message.content };
 }
 
 export function newId(): string { return crypto.randomUUID(); }

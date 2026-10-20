@@ -7,7 +7,7 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "postinstall": "node scripts/install-mira.mjs && node scripts/install-theoracle-model.mjs && npm --prefix apps/site run install:check",
+    "postinstall": "node scripts/install-aadi.mjs && node scripts/install-theoracle-model.mjs && npm --prefix apps/site run install:check",
     "dev": "node scripts/run-system.mjs dev",
     "build": "node scripts/build-system.mjs && npm --prefix apps/site run build",
     "start": "node scripts/run-system.mjs start",
@@ -16,8 +16,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run && npm --prefix apps/site test",
     "test:system": "node --test tests/system-runtime.node-test.mjs tests/lfs-media.node-test.mjs tests/scripts.node-test.mjs tests/export-split.node-test.mjs",
-    "test:mira": "node scripts/test-mira.mjs",
-    "test:all": "npm test && npm run test:system && npm run test:mira",
+    "test:aadi": "node scripts/test-aadi.mjs",
+    "test:all": "npm test && npm run test:system && npm run test:aadi",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs && npm --prefix apps/site run deploy:dry-run",
     "site:docs": "npm --prefix apps/site run docs:verify",
     "site:start": "npm --prefix apps/site run start",

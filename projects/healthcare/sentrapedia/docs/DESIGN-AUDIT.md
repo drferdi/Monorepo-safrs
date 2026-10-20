@@ -25,12 +25,12 @@ The brief's example of "IBM Plex for body" does not match any Sentra document. T
 ### What was audited (fingerprint)
 
 - Commit `ae58a789` on `codex/oracle-ii-grounding`, plus the uncommitted working tree. `git status --porcelain .` hash at start: `4a02b6cc…`. `src/app/globals.css` `c85bd0be…`, `src/app/layout.tsx` `a4c03482…`, `src/components/workspace.tsx` `f945e327…`. These three files did not change during the audit.
-- **Codex was editing MIRA and the database during the audit.** Between 19:43:56 and 19:44:49 (Asia/Jakarta) it changed `src/lib/mira/{client,contract,gateway,presentation}.ts`, `src/app/api/mira/route.ts`, `src/components/document-studio.tsx`, `src/components/mira-case-form.tsx` and `src/lib/oracle-grounding*.ts`. The MIRA client now rejects a response without a `grounding` bundle. Consequences:
+- **Codex was editing AADI and the database during the audit.** Between 19:43:56 and 19:44:49 (Asia/Jakarta) it changed `src/lib/aadi/{client,contract,gateway,presentation}.ts`, `src/app/api/aadi/route.ts`, `src/components/document-studio.tsx`, `src/components/aadi-case-form.tsx` and `src/lib/oracle-grounding*.ts`. The AADI client now rejects a response without a `grounding` bundle. Consequences:
   - The 1440 and 768 analysis-result screenshots (`30`–`32`) were captured against the earlier contract. The 390 result could not be captured, because my recorded fixture no longer passes validation. This is not a 390px bug.
   - All Document Studio screenshots (`23`–`28`, last one at 19:44:02) predate the `document-studio.tsx` change at 19:44:49.
   - Findings about the analysis flow are marked **In flux (Codex)** and kept to presentation only.
 - Dev server: `next dev` on `127.0.0.1:3101`, started from `.claude/launch.json` (`sentrapedia`). Lighthouse best-practices on a dev build includes dev-only noise.
-- Every Playwright run intercepted `/api/mira` (recorded fictional payload, 502, or a request that never answers). No run reached the real MIRA service, and each run used a fresh browser profile.
+- Every Playwright run intercepted `/api/aadi` (recorded fictional payload, 502, or a request that never answers). No run reached the real AADI service, and each run used a fresh browser profile.
 
 ### Method
 
@@ -38,7 +38,7 @@ The brief's example of "IBM Plex for body" does not match any Sentra document. T
 2. **Automated checks**: axe-core 4.10.3 (tags `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `best-practice`) on every primary state; Lighthouse 12.8.2 (accessibility and best-practices, mobile and desktop presets); a DOM metrics pass (target sizes, rendered font sizes, landmarks, radii); and a grep scan of `globals.css` and `src/**/*.tsx` for raw values. Both tools were installed in the session scratchpad, not in the project.
 3. **Review by eye** of each screen against the framework in the brief.
 
-Routes: `/` (the whole app, one route with many states), the 404 page, and `/api/mira` (not a screen).
+Routes: `/` (the whole app, one route with many states), the 404 page, and `/api/aadi` (not a screen).
 
 ## Accessibility results (tool output)
 
@@ -150,14 +150,14 @@ First impression: the document title and section headings lead, with the status 
 | D-05 | Placeholder sections fill the page: "Belum tersedia — lengkapi dan verifikasi oleh klinisi." repeats 4–6 times | Jdg | Min | `23-doc-studio-draft--768.png` | It hides the few filled sections | Collapse empty sections into one line, "Belum diisi: Assessment, Tata Laksana, …", each name linking to its editor |
 | D-06 | The review checklist uses the word "Wajib", which follows house form rules | Obj | (works) | `27-doc-studio-review--1440.png` | — | Keep. Use the same pattern in the Pasien form (E-03) |
 
-### 4. Case analysis (MIRA): In flux (Codex)
+### 4. Case analysis (AADI): In flux (Codex)
 
-Captured at 1440 and 768 before the contract change: `29-mira-loading--*`, `29b-mira-loading-late--*`, `30`–`32-mira-result-*`, `33-mira-error--*`. Presentation findings only. Content and data mapping are not judged.
+Captured at 1440 and 768 before the contract change: `29-mira-loading--*`, `29b-aadi-loading-late--*`, `30`–`32-mira-result-*`, `33-mira-error--*`. Presentation findings only. Content and data mapping are not judged.
 
 | # | Finding | Type | Sev | Evidence | Why it matters | Fix |
 | --- | --- | --- | --- | --- | --- | --- |
 | M-01 | `<ol role="status">` in the thinking card breaks list semantics | Obj | Crit (1.3.1 A) | axe `listitem` + `aria-allowed-role`; `src/components/thinking-card.tsx` | Screen readers announce neither a list nor the progress | Wrap the list: `<div role="status" aria-live="polite"><ol>…</ol></div>` |
-| M-02 | The step list advances on a 340ms timer ("Literatur dan pedoman klinis ditelusuri", "Bukti ilmiah sedang disintesis") that isn't tied to real progress | Jdg | Mod | `29-mira-loading--1440.png`, `29b-mira-loading-late--390.png`; `docs/sentrapedia-ui.md` "340 ms per langkah" | A clinician may believe guidelines were searched when the request is still pending, which over-claims in a clinical setting. The house rule allows progress display only when it is measured | Coordinate with Codex: show only steps the gateway confirms, or one honest status ("Menunggu analisis…") with a skeleton |
+| M-02 | The step list advances on a 340ms timer ("Literatur dan pedoman klinis ditelusuri", "Bukti ilmiah sedang disintesis") that isn't tied to real progress | Jdg | Mod | `29-mira-loading--1440.png`, `29b-aadi-loading-late--390.png`; `docs/sentrapedia-ui.md` "340 ms per langkah" | A clinician may believe guidelines were searched when the request is still pending, which over-claims in a clinical setting. The house rule allows progress display only when it is measured | Coordinate with Codex: show only steps the gateway confirms, or one honest status ("Menunggu analisis…") with a skeleton |
 | M-03 | Error text "Analisis belum tersedia. Keluhan tetap tersedia." says what still works, but not what failed or what to do | Jdg | Min | `33-mira-error--1440.png` | Users don't know whether to retry or switch to Dokumentasi | Add the cause class (layanan tidak menjawab / respons ditolak) and one action, "Coba lagi" |
 | M-04 | Result view: the "Alur kasus" rail sits in the right margin, away from the column it controls; the document strip is short (see D-01) | Jdg | Min | `30-mira-result-top--1440.png` | The eye jumps across 250px of empty canvas | Revisit after Codex lands. D-01 alone recovers most of the space |
 

@@ -1,4 +1,4 @@
-"""Turn a MIRA audit log into gate replay inputs: one item per eval case and path.
+"""Turn an AADI audit log into gate replay inputs: one item per eval case and path.
 
 usage: python -I .runtime/audit/extract.py <audit.jsonl> <since-iso> <out.json>
 The last entry per (path, query) wins, so earlier tries of the same case are ignored.

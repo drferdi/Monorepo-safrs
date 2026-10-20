@@ -11,7 +11,7 @@ export const PRIVATE_PATHS = [
   "docs/verification/", // evidence files quote passages, doses and live outputs
   ".agents/", // internal working notes
   "deploy/beta/", // closed-beta server layout and access setup
-  "mira/service/DESIGN.md", // upstream's private design notes (local paths, the crew portal's login)
+  "aadi/service/DESIGN.md", // upstream's private design notes (local paths, the crew portal's login)
 ];
 
 // The public tree gets this fictional catalogue in place of the real one, so the app builds and says it is a sample.

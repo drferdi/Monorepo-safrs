@@ -123,7 +123,7 @@ test("deploy dry-run refuses a workspace, file or link dependency", withCapsule(
 }));
 
 // build-system.mjs: a copy runs in a temporary capsule whose node_modules/next is a stub that only writes build output.
-const standaloneScripts = ["run-system.mjs", "mira-runtime.mjs", "mira-profile.json", "install-mira.mjs"];
+const standaloneScripts = ["run-system.mjs", "aadi-runtime.mjs", "aadi-profile.json", "install-aadi.mjs"];
 function buildFixture(root, nextExitCode = 0) {
   copyScripts(root, ["build-system.mjs", ...standaloneScripts]);
   write(root, "node_modules/next/package.json", JSON.stringify({ type: "commonjs" }));
@@ -132,23 +132,23 @@ if (process.argv[2] !== "build") process.exit(9);
 mkdirSync(".next/standalone", { recursive: true }); mkdirSync(".next/static/chunks", { recursive: true });
 writeFileSync(".next/standalone/server.js", ""); writeFileSync(".next/standalone/package.json", "{}"); writeFileSync(".next/static/chunks/app.js", "");
 process.exit(${nextExitCode});`);
-  for (const file of ["mira/service/app.py", "mira/requirements.lock", "mira/SOURCE.json", "mira/managed_child.py", "mira/service/__pycache__/app.cpython-312.pyc", "mira/.pytest_cache/v/cache/nodeids"]) write(root, file);
+  for (const file of ["aadi/service/app.py", "aadi/requirements.lock", "aadi/SOURCE.json", "aadi/managed_child.py", "aadi/service/__pycache__/app.cpython-312.pyc", "aadi/.pytest_cache/v/cache/nodeids"]) write(root, file);
   for (const file of ["index/manifest.json", "index/vectors.f32", "index/chunks.jsonl", "index/vectors.partial.f32", "index/vectors.partial.json", "model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data", "model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data.partial"]) write(root, `theoracle/${file}`);
   write(root, "theoracle/sources/tatalaksana/guide.md");
   write(root, "public/logo.svg");
 }
 
-test("standalone build copies MIRA, the TheOracle index and model, the launcher and public files, and leaves caches and partial downloads out", withCapsule("build", async root => {
+test("standalone build copies AADI, the TheOracle index and model, the launcher and public files, and leaves caches and partial downloads out", withCapsule("build", async root => {
   buildFixture(root);
   // Started from another directory: next build and every copy must still use the capsule.
   const { code, stdout, stderr } = await run(join(root, "scripts/build-system.mjs"), [], { cwd: tmpdir() });
   assert.equal(code, 0, stderr);
-  assert.match(stdout, /standalone output mencakup engine MIRA/);
+  assert.match(stdout, /standalone output mencakup engine AADI/);
   const output = join(root, ".next/standalone");
-  for (const file of ["mira/service/app.py", "mira/managed_child.py", ...standaloneScripts.map(name => `scripts/${name}`), "theoracle/index/vectors.f32", "theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data", ".next/static/chunks/app.js", "public/logo.svg"]) {
+  for (const file of ["aadi/service/app.py", "aadi/managed_child.py", ...standaloneScripts.map(name => `scripts/${name}`), "theoracle/index/vectors.f32", "theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data", ".next/static/chunks/app.js", "public/logo.svg"]) {
     assert.ok(existsSync(join(output, file)), `${file} is copied`);
   }
-  for (const file of ["mira/service/__pycache__", "mira/.pytest_cache", "theoracle/index/vectors.partial.f32", "theoracle/index/vectors.partial.json", "theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data.partial", "theoracle/sources", "scripts/build-system.mjs"]) {
+  for (const file of ["aadi/service/__pycache__", "aadi/.pytest_cache", "theoracle/index/vectors.partial.f32", "theoracle/index/vectors.partial.json", "theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data.partial", "theoracle/sources", "scripts/build-system.mjs"]) {
     assert.ok(!existsSync(join(output, file)), `${file} is left out`);
   }
   // Every standalone file the deploy gate requires is produced by the build.
@@ -157,9 +157,9 @@ test("standalone build copies MIRA, the TheOracle index and model, the launcher 
   const launcher = await run(join(output, "scripts/run-system.mjs"), ["bogus"]);
   assert.equal(launcher.code, 1);
   assert.equal(launcher.stderr.trim(), "Gunakan dev, start, standalone, atau check.");
-  const installer = await run(join(output, "scripts/install-mira.mjs"), [], { env: { ...process.env, SENTRAPEDIA_SKIP_MIRA: "1" } });
+  const installer = await run(join(output, "scripts/install-aadi.mjs"), [], { env: { ...process.env, SENTRAPEDIA_SKIP_AADI: "1" } });
   assert.equal(installer.code, 0, installer.stderr);
-  assert.match(installer.stderr, /instalasi MIRA dilewati/);
+  assert.match(installer.stderr, /instalasi AADI dilewati/);
 }));
 
 test("standalone build stops with the next build exit code and copies nothing", withCapsule("build-fail", async root => {
@@ -167,7 +167,7 @@ test("standalone build stops with the next build exit code and copies nothing", 
   const { code } = await run(join(root, "scripts/build-system.mjs"));
   assert.equal(code, 3);
   assert.ok(!existsSync(join(root, ".next/standalone/scripts")));
-  assert.ok(!existsSync(join(root, ".next/standalone/mira")));
+  assert.ok(!existsSync(join(root, ".next/standalone/aadi")));
 }));
 
 // Public code without the index, installed with SENTRAPEDIA_SKIP_MODEL=1: the build still finishes and names both gaps.
@@ -178,7 +178,7 @@ test("standalone build without the TheOracle index and model warns once for each
   assert.equal(code, 0, stderr);
   assert.match(stderr, /database TheOracle tidak terpasang/);
   assert.match(stderr, /model embedding TheOracle tidak terpasang/);
-  assert.match(stdout, /engine MIRA, dan unified launcher/);
+  assert.match(stdout, /engine AADI, dan unified launcher/);
   assert.ok(!existsSync(join(root, ".next/standalone/theoracle")));
 }));
 
@@ -308,7 +308,7 @@ test("a section that would exceed 2048 characters stops the run before anything 
   assert.equal(chunkLines(root).length, 1);
 }));
 
-// eval-theoracle-pipeline.mjs: runs in a temporary working directory against a local stub of /api/mira.
+// eval-theoracle-pipeline.mjs: runs in a temporary working directory against a local stub of /api/aadi.
 test("pipeline eval needs a base URL and a label", async () => {
   const { code, stderr } = await run(resolve("scripts/eval-theoracle-pipeline.mjs"), [], { cwd: tmpdir() });
   assert.equal(code, 1);
@@ -316,7 +316,7 @@ test("pipeline eval needs a base URL and a label", async () => {
 });
 
 test("pipeline eval scores ICD-10, dose support and the gate, skips term queries and stops at an exhausted budget", withCapsule("eval", async root => {
-  write(root, "mira/service/data/icd10.json", JSON.stringify({ icd10: [{ kode: "A01", nama_en: "Typhoid and paratyphoid fevers" }, { kode: "A01.0", nama_en: "Typhoid fever" }] }));
+  write(root, "aadi/service/data/icd10.json", JSON.stringify({ icd10: [{ kode: "A01", nama_en: "Typhoid and paratyphoid fevers" }, { kode: "A01.0", nama_en: "Typhoid fever" }] }));
   write(root, "set/eval-set.json", JSON.stringify({ queries: [
     { id: "q1", query: "demam tifoid", gold: ["tifoid.md"] },
     { id: "q2", query: "kata kunci", gold: ["x.md"], term: "seftriakson" },
@@ -337,7 +337,7 @@ test("pipeline eval scores ICD-10, dose support and the gate, skips term queries
         result: { differential: { likely: [{ icd10: "A01.0", label: "Typhoid fever" }] }, therapy: { regimen: [{ drug: "Seftriakson", dose: "2 g" }] }, meta: { costUsd: 0.0123 } },
         evidenceGate: { drugs: [{ drug: "Seftriakson", dose: "2 g", status: "verified", evidenceIds: ["e1"] }, { drug: "Kloramfenikol", dose: "500 mg", status: "doseRemoved", evidenceIds: [] }] },
         therapyGrounding: { evidence: [{ evidenceId: "e1", text: "Seftriakson 2 g IV sekali sehari", source: { title: "tifoid.md" } }] },
-        pipeline: { path: "targeted", stages: [{ stage: "retrieve_tx", ok: true, ms: 40 }, { stage: "mira_tx", ok: true, ms: 900 }] },
+        pipeline: { path: "targeted", stages: [{ stage: "retrieve_tx", ok: true, ms: 40 }, { stage: "aadi_tx", ok: true, ms: 900 }] },
       }));
     });
   });
@@ -348,7 +348,7 @@ test("pipeline eval scores ICD-10, dose support and the gate, skips term queries
     const { code, stdout, stderr } = await run(resolve("scripts/eval-theoracle-pipeline.mjs"), [base, "targeted", "set"], { cwd: root });
     assert.equal(code, 0, stderr);
     assert.deepEqual(requests.map(request => request.body.case.chiefComplaint), ["demam tifoid", "anggaran habis"]);
-    assert.equal(requests[0].url, "/api/mira");
+    assert.equal(requests[0].url, "/api/aadi");
     assert.equal(requests[0].origin, base);
     assert.equal(requests[0].body.synthetic, true);
     const summary = JSON.parse(stdout);
