@@ -19,4 +19,13 @@ describe("frozen v1 workspaces", () => {
     expect(parsed?.patients[0].name).toBe("Pasien");
     expect(parseWorkspace(JSON.stringify(parsed))).toEqual(parsed);
   });
+
+  it("keeps a field it does not know on a saved message and encounter", () => {
+    // A newer build may add optional fields; an import must carry them through untouched.
+    const data = JSON.parse(fixture("v1-workflow.json"));
+    const extra = { puskesmas: { note: "fiktif" } };
+    Object.assign(data.encounters[0], extra);
+    Object.assign(data.encounters[0].messages[1], extra);
+    expect(parseWorkspace(JSON.stringify(data))).toEqual(data);
+  });
 });

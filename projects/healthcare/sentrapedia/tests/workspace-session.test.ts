@@ -58,6 +58,15 @@ describe("a local draft", () => {
     expect(draft.templateSnapshot?.sections).toEqual(["S", "O"]);
     expect(draft.sourceText).toContain("Templat saat dibuat");
   });
+  it("records why a local draft stood in for a failed analysis, after the format block, and changes nothing else", () => {
+    const reason = "Layanan analisis tidak dapat dihubungi atau respons tidak dapat dibaca.";
+    const [, plain] = localDraftMessages({ text: "Batuk fiktif", content: "Draf", mode: "clinic", context: "", settings });
+    const [, fallback] = localDraftMessages({ text: "Batuk fiktif", content: "Draf", mode: "clinic", context: "", settings, fallback: reason });
+    const blocks = fallback.sourceText!.split("\n\n");
+    expect(blocks.at(-1)).toBe(`Analisis AADI tidak tersedia\n${reason}`);
+    expect(blocks.slice(0, -1).join("\n\n")).toBe(plain.sourceText);
+    expect(plain.sourceText).not.toContain("Analisis AADI tidak tersedia");
+  });
 });
 
 describe("the fresh-answer rule", () => {

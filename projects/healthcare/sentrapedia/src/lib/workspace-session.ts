@@ -30,8 +30,8 @@ export function restoreFromStorage(storage: Pick<Storage, "getItem" | "setItem">
   };
 }
 
-/** The user's text and its local draft, with the source the draft was made from. */
-export function localDraftMessages({ text, content, mode, context, patient, settings, reviewDefaults, personal }: { text: string; content: string; mode: ModeId; context: string; patient?: Patient; settings: Settings; reviewDefaults?: ReviewItem[]; personal?: PersonalTemplate }): Message[] {
+/** The user's text and its local draft, with the source the draft was made from; `fallback` records why the draft stood in for a failed analysis. */
+export function localDraftMessages({ text, content, mode, context, patient, settings, reviewDefaults, personal, fallback }: { text: string; content: string; mode: ModeId; context: string; patient?: Patient; settings: Settings; reviewDefaults?: ReviewItem[]; personal?: PersonalTemplate; fallback?: string }): Message[] {
   const createdAt = new Date().toISOString();
   const sourceText = [
     `Input\n${text}`,
@@ -39,6 +39,7 @@ export function localDraftMessages({ text, content, mode, context, patient, sett
     context && `Konteks Encounter\n${context}`,
     patient && `Pasien\n${patient.name}\n${patient.age}\n${patient.sex}\nCatatan Pasien\n${patient.notes}`,
     `Preferensi format\n${settings.specialty} · ${settings.model} · ${settings.language}\n${settings.instructions}`,
+    fallback && `Analisis AADI tidak tersedia\n${fallback}`,
   ].filter(Boolean).join("\n\n");
   return [
     { id: newId(), role: "user", content: text.trim(), mode, createdAt },
