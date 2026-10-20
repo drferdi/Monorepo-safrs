@@ -14,6 +14,8 @@ import { useMediaQuery } from "./workspace-hooks";
 // reader moves: empty sections never show, and a section's Edit and provenance arrive once its text is complete.
 
 // The guideline passages sit in part 9's fold, which arrives whole; an edited older answer still has them as a part.
+// Part 7's field labels listed under it in the case flow.
+const therapySubItems = ["DDI", "Kontraindikasi"];
 const quotesPart = (title: string) => title === theOracleReferencesTitle || title === legacyTheOracleReferencesTitle;
 
 // On the phone, parts 2-4 start folded to their title and one line, so parts 5-7 come sooner (doctor-flow design C1).
@@ -59,21 +61,31 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
 
   // The section last reached from the list; its heading draws a tosca underline.
   const [arrived, setArrived] = useState<number | null>(null);
-  const navigate = (index: number) => {
+  // A sub-item (DDI, Kontraindikasi) scrolls to its field label inside the part.
+  const [subSelected, setSubSelected] = useState<string | null>(null);
+  const navigate = (index: number, sub?: string) => {
     setElapsed(Infinity);
     onSelect(index);
     setArrived(index);
+    setSubSelected(sub ?? null);
     requestAnimationFrame(() => {
       const target = root.current?.querySelector<HTMLElement>(`[id="${id}-${index}"]`);
       const folded = target?.querySelector<HTMLDetailsElement>(":scope > .diagnosis-supporting");
       if (folded) folded.open = true;
-      target?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-      (target?.matches("button") ? target : target?.querySelector<HTMLElement>("h3"))?.focus({ preventScroll: true });
+      const label = sub ? [...target?.querySelectorAll<HTMLElement>("h4.diagnosis-field-label") ?? []].find((heading) => heading.textContent === sub) : undefined;
+      (label ?? target)?.scrollIntoView({ block: "start", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      if (!label) (target?.matches("button") ? target : target?.querySelector<HTMLElement>("h3"))?.focus({ preventScroll: true });
     });
   };
   const summaryFirst = parts[0]?.section.title === doctorSummaryTitle;
   const navStart = summaryFirst ? 1 : 0;
+  // One row per part, and under part 7 its DDI and Kontraindikasi when the part has them (Gaffer, 2026-10-21, RareUI RailTOC).
+  const navItems = sections.flatMap((section, index) => index < navStart ? [] : [{ index, label: section.title, sub: undefined as string | undefined },
+    ...(section.title === diagnosisSectionTitles[6] ? therapySubItems.filter((sub) => parts[index].body.split("\n").includes(sub)).map((sub) => ({ index, label: sub, sub })) : [])]);
+  const subRow = subSelected === null ? -1 : navItems.findIndex((item) => item.index === current && item.sub === subSelected);
+  const activeRow = subRow >= 0 ? subRow : navItems.findIndex((item) => item.index === current && !item.sub);
   const [hover, setHover] = useState<number | null>(null);
+  const depth = (row: number | null) => row !== null && navItems[row]?.sub ? 1 : 0;
   const renderPart = ({ section, split, body }: typeof parts[number], index: number) => {
     if ((typingNow && index > typingSection) || empty.includes(index)) return null;
     const editable = !typingNow, complete = editable || progress.visible[index + 1] >= lengths[index + 1];
@@ -98,12 +110,12 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
   return <div className="diagnosis-document" ref={root} aria-busy={typingNow}>
     {/* The case flow lists the report's parts only; the doctor's summary is a section of its own above it (Gaffer,
         2026-10-21). Rails as RareUI's HookSidebar: the accent one hooks into the current part, a muted one into the hovered. */}
-    <nav className="diagnosis-nav" aria-label={navLabel} data-active={current >= navStart || undefined} data-hover={hover !== null && hover !== current - navStart || undefined} style={{ "--active-section": current - navStart, "--hover-section": hover ?? 0 } as CSSProperties} onMouseLeave={() => setHover(null)}>
+    <nav className="diagnosis-nav" aria-label={navLabel} data-active={activeRow >= 0 || undefined} data-hover={hover !== null && hover !== activeRow || undefined} style={{ "--active-section": activeRow, "--active-depth": depth(activeRow), "--hover-section": hover ?? 0, "--hover-depth": depth(hover) } as CSSProperties} onMouseLeave={() => setHover(null)}>
       <span className="diagnosis-nav-label">{label}</span>
       <div className="diagnosis-nav-items">
         <span className="diagnosis-nav-hover" aria-hidden="true"/>
         <span className="diagnosis-nav-branch" aria-hidden="true"/>
-        {sections.map((section, index) => index < navStart ? null : <button type="button" key={section.title} style={{ "--item-order": index - navStart } as CSSProperties} aria-current={current === index ? "location" : undefined} aria-controls={`${id}-${index}`} data-pending={typingNow && index > typingSection} onMouseEnter={() => setHover(index - navStart)} onFocus={() => setHover(index - navStart)} onBlur={() => setHover(null)} onClick={() => navigate(index)}>{section.title}</button>)}
+        {navItems.map((item, row) => <button type="button" key={item.sub ? `${item.label}-${item.index}` : item.label} style={{ "--item-order": row } as CSSProperties} data-depth={item.sub ? 1 : undefined} aria-current={row === activeRow ? "location" : undefined} aria-controls={`${id}-${item.index}`} data-pending={typingNow && item.index > typingSection} onMouseEnter={() => setHover(row)} onFocus={() => setHover(row)} onBlur={() => setHover(null)} onClick={() => navigate(item.index, item.sub)}>{item.label}</button>)}
       </div>
     </nav>
     <div className="diagnosis-sections">

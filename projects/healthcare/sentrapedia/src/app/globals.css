@@ -308,11 +308,13 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .diagnosis-nav button { color: var(--color-text-muted); }
 .diagnosis-nav button:hover { color: var(--color-text-secondary); }
 .diagnosis-nav button[aria-current] { color: var(--color-text-primary); }
+/* A sub-item sits one RailTOC indent (14px) in; the rail's hook reaches it (--active-depth). */
+.diagnosis-nav button[data-depth] { padding-left: 20px; }
 .diagnosis-nav button:focus-visible { outline: 2px solid var(--workspace-focus); outline-offset: 2px; }
 .diagnosis-nav button[data-pending="true"] { opacity: 0; transform: translateY(-4px); pointer-events: none; }
-.diagnosis-nav-branch { position: absolute; z-index: 1; left: 4px; top: 0; width: 10px; height: calc(var(--active-section) * 34px + 17px); border-left: 1px dashed var(--color-action-primary); border-bottom: 1px dashed var(--color-action-primary); border-bottom-left-radius: var(--radius); pointer-events: none; transform-origin: top; transition: height 350ms cubic-bezier(.23, 1, .32, 1); animation: branch-reveal 400ms ease-out; }
+.diagnosis-nav-branch { position: absolute; z-index: 1; left: 4px; top: 0; width: calc(10px + var(--active-depth) * 14px); height: calc(var(--active-section) * 34px + 17px); border-left: 1px dashed var(--color-action-primary); border-bottom: 1px dashed var(--color-action-primary); border-bottom-left-radius: var(--radius); pointer-events: none; transform-origin: top; transition: height 350ms cubic-bezier(.23, 1, .32, 1); animation: branch-reveal 400ms ease-out; }
 .diagnosis-nav:not([data-active]) .diagnosis-nav-branch { opacity: 0; }
-.diagnosis-nav-hover { position: absolute; left: 4px; top: 0; width: 10px; height: calc(var(--hover-section) * 34px + 17px); border-left: 1px dashed var(--color-text-muted); border-bottom: 1px dashed var(--color-text-muted); border-bottom-left-radius: var(--radius); pointer-events: none; opacity: 0; transition: height 350ms cubic-bezier(.23, 1, .32, 1), opacity 200ms ease; }
+.diagnosis-nav-hover { position: absolute; left: 4px; top: 0; width: calc(10px + var(--hover-depth) * 14px); height: calc(var(--hover-section) * 34px + 17px); border-left: 1px dashed var(--color-text-muted); border-bottom: 1px dashed var(--color-text-muted); border-bottom-left-radius: var(--radius); pointer-events: none; opacity: 0; transition: height 350ms cubic-bezier(.23, 1, .32, 1), opacity 200ms ease; }
 .diagnosis-nav[data-hover] .diagnosis-nav-hover { opacity: 1; }
 .diagnosis-sections { min-width: 0; }
 .diagnosis-document .draft-content { padding-left: 0; }

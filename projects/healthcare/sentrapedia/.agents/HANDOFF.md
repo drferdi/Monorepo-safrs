@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## DDI and Kontraindikasi under part 7 in the case flow (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer: "https://www.rareui.com/components/railtoc . Rencana tata laksana / DDI / Kontraindikasi". Kept the HookSidebar rail approved earlier; took only RailTOC's nesting.
+- `diagnosis-document.tsx`: the list is built from `navItems` (one row per part, plus a depth-1 row for "DDI" and "Kontraindikasi" when part 7's body has that line). A sub-row click selects part 7 and scrolls to that field label (`h4.diagnosis-field-label`); rail position counts rows, `--active-depth`/`--hover-depth` widen the hook 14 px for a sub-row. `globals.css`: `button[data-depth]` padding 20 px.
+- New `tests/ui/diagnosis-nav.test.tsx` (sub-rows, click target, no sub-rows without the fields).
+- Verified: typecheck 0, lint 0, Vitest 35 files 448 tests before the new file; new file 2 passed; browser 3101: 11 rows on the malaria case, hook lands on "DDI", page scrolls to the DDI label.
+- Open: Gaffer's next message about the composer column ("user ngetik saat mulai keluar jawaban maka tinggi …") was garbled; asked which problem it is. Measured: the textarea grows 52 → 164 px at once on new lines, max 180 px.
+
 ## Checklist opens smoothly (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "keluar nya buat jadi halus" (the red-flag and question list before an analysis). Found in the browser: it opened on the first letter and the headache rows dropped in mid-word.
