@@ -88,7 +88,7 @@ describe("Indonesian patient wording", () => {
     for (const mode of modeIds) {
       const draft = createDraft({ mode, prompt: "Keluhan: sintetis", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
       expect(draft).not.toMatch(/\bpatient\b/i);
-      expect(draft).toContain(mode === "clinic" ? "**Pasien:** —" : "Pasien: —");
+      expect(draft).toContain(mode === "clinic" || mode === "hpi" ? "**Pasien:** —" : "Pasien: —");
     }
   });
 });

@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## Anamnesis (HPI) in the Catatan Klinis format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer: pressing "Anamnesis (HPI)" seemed to do nothing, and the draft kept English titles with the whole text in one section; asked for Indonesian parts and the complaint split "ke onset/durasi, gejala penyerta, dan negatif, seperti Catatan Klinis".
+- `drafts.ts` (hpi, Indonesian only): "# ANAMNESIS (HPI)", the same "**Pasien:**"/"**Status:**" lines, numbered filled parts (Keluhan Utama, Riwayat Penyakit Sekarang only when labelled, Onset dan Durasi, Lokasi / Sifat / Derajat, Gejala Penyerta, Faktor Pemberat / Peringan, Negatif Pertinen), "Kelengkapan Dokumentasi", then the source text always. `hpiParts` splits at commas, ";" and "disertai" and sorts by words only (tidak/tanpa/"(-)", memberat/setelah/saat, berdahak/menjalar/kanan…); labelled lines win. `numberedNote` is now shared with the SOAP note (its output unchanged).
+- Tests: new `tests/hpi-draft.test.ts` (full note for the sample case, modifiers and "(-)", labelled lines, English unchanged); `studio.test.ts` ("**Pasien:** —" for hpi too); `workspace.test.ts` (the language/model test uses the chronic mode for the "Draf lokal" line).
+- Verified: typecheck 0, lint 0, Vitest 37 files 455 tests; browser 3101: an HPI draft of "Perempuan 28 tahun batuk 5 hari, berdahak putih, demam ringan sejak 2 hari, tidak sesak" shows parts 1-6 as in the test, no page overflow; POSTs blocked.
+- Open: the word lists are small (e.g. "ulu hati" in the complaint is not copied to Lokasi); the composer hint for HPI is still "Jelaskan Onset, Duration, Course…".
+
 ## Catatan Klinis in Gaffer's pasted format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "Catatan Klinis / REFORMAT" with the exact target note pasted (header, numbered sections, A-D exam tables, "Kelengkapan Dokumentasi").

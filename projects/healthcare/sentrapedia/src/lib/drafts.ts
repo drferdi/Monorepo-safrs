@@ -53,7 +53,44 @@ function complaintSentence(text: string): string {
   const joined = lead + (rest.length ? `${first} disertai ${rest.length > 1 ? `${rest.slice(0, -1).join(", ")} dan ${rest[rest.length - 1]}` : rest[0]}` : first);
   return `${joined.charAt(0).toUpperCase()}${joined.slice(1)}${/[.!?]$/.test(joined) ? "" : "."}`;
 }
-const missingNames: Record<string, string> = { "Keluhan Utama": "Keluhan utama", "Riwayat Penyakit": "Riwayat penyakit", "Riwayat Pengobatan / Alergi": "Riwayat pengobatan dan alergi", "Pemeriksaan Fisik": "Pemeriksaan fisik", Assessment: "Assessment / Diagnosis", "Tata Laksana": "Tata laksana" };
+const missingNames: Record<string, string> = { "Keluhan Utama": "Keluhan utama", "Riwayat Penyakit": "Riwayat penyakit", "Riwayat Pengobatan / Alergi": "Riwayat pengobatan dan alergi", "Pemeriksaan Fisik": "Pemeriksaan fisik", Assessment: "Assessment / Diagnosis", "Tata Laksana": "Tata laksana", "Onset dan Durasi": "Onset dan durasi", "Lokasi / Sifat / Derajat": "Lokasi, sifat, dan derajat", "Gejala Penyerta": "Gejala penyerta", "Faktor Pemberat / Peringan": "Faktor pemberat dan peringan", "Negatif Pertinen": "Negatif pertinen" };
+
+// An Indonesian note in Gaffer's format (2026-10-21): the patient and status on top, the filled parts numbered, then
+// "Kelengkapan Dokumentasi" with what is still empty, any extra notes, and the closing status.
+function numberedNote(heading: string, status: string, patient: string, filled: [string, string][], notes = ""): string {
+  const empty = filled.filter(([, text]) => !text.trim()).map(([title]) => missingNames[title] ?? title);
+  const completeness = [
+    empty.length ? `**Belum diisi:**\n${empty.map((name) => `- ${name}`).join("\n")}` : "",
+    notes,
+    empty.length || notes ? "**Status akhir:** Belum lengkap — memerlukan verifikasi sebelum finalisasi catatan klinis." : "",
+  ].filter(Boolean).join("\n\n");
+  const numbered = [...filled.filter(([, text]) => text.trim()), ...(completeness ? [["Kelengkapan Dokumentasi", completeness] as [string, string]] : [])];
+  return `# ${heading}\n\n**Pasien:** ${patient}\n**Status:** ${status}\n\n${numbered.map(([title, text], index) => `${title === "Kelengkapan Dokumentasi" ? "---\n\n" : ""}## ${index + 1}. ${title}\n\n${text}`).join("\n\n")}`;
+}
+
+// Free text for the HPI note, split at commas, ";" and "disertai": the first part is the complaint, a duration goes to
+// onset, and words decide the rest (negatives, then aggravating/relieving, then character or site, else associated).
+// Word matching only: nothing is inferred, and the source text stays under the note.
+const durationWords = /\s*\b(?:(?:sejak|selama)\s+)?(?:\d+\s*(?:jam|hari|minggu|bulan|tahun)(?:\s+(?:yang\s+)?lalu)?|(?:sejak|selama)\s+(?:kemarin|semalam|tadi(?:\s+(?:pagi|siang|sore|malam))?))\b/i;
+const negativeWords = /^(?:tidak|tanpa|tak|bukan|menyangkal|disangkal)\b|\(-\)$/i;
+const modifierWords = /\b(?:memberat|membaik|berkurang|bertambah|dipicu|dicetuskan|setelah|saat|ketika|bila|jika)\b/i;
+const characterWords = /\b(?:berdahak|dahak|kering|tajam|tumpul|menusuk|berdenyut|seperti|menjalar|hilang timbul|terus[- ]menerus|ringan|sedang|berat|skala|kanan|kiri|ulu hati)\b/i;
+function hpiParts(text: string) {
+  const cap = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+  const parts = { complaint: "", onset: [] as string[], character: [] as string[], associated: [] as string[], modifiers: [] as string[], negatives: [] as string[] };
+  for (const clause of text.split(/\s*(?:[,;\n]|\bdisertai\b)\s*/i).map((part) => part.trim().replace(/\.$/, "")).filter(Boolean)) {
+    if (negativeWords.test(clause)) { parts.negatives.push(cap(clause)); continue; }
+    const duration = durationWords.exec(clause)?.[0].trim();
+    const symptom = duration ? clause.replace(durationWords, "").replace(/\s{2,}/g, " ").trim() : clause;
+    const since = duration && /^\d/.test(duration) ? `sejak ${duration}` : duration;
+    if (since && symptom) parts.onset.push(`${cap(symptom)}: ${since}`);
+    if (!parts.complaint) parts.complaint = `${cap(symptom || clause)}${since ? ` ${since}` : ""}.`;
+    else if (modifierWords.test(clause)) parts.modifiers.push(cap(clause));
+    else if (characterWords.test(symptom) && !since) parts.character.push(cap(symptom));
+    else if (symptom) parts.associated.push(cap(symptom));
+  }
+  return parts;
+}
 
 export function createDraft(input: DraftInput): string {
   const prompt = input.prompt.trim();
@@ -114,10 +151,27 @@ export function createDraft(input: DraftInput): string {
     : input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} years` : ""} · ${input.patient.sex}` : "No patient selected";
   const context = [input.patient?.notes, input.context].filter(Boolean).join("\n");
   const tail = `${context ? `\n\n## ${id ? "Konteks tambahan" : "Additional context"}\n${context}` : ""}${input.instructions ? `\n\n## ${id ? "Preferensi penulisan" : "Writing preferences"}\n${input.instructions}` : ""}${input.model === "Extended" ? `\n\n## Review checklist\n${id ? "- [ ] Konfirmasi identitas dan detail Encounter\n- [ ] Rekonsiliasi Medications dan Allergies\n- [ ] Lengkapi bagian yang belum tersedia\n- [ ] Verifikasi interpretasi Clinical dan Follow-up" : "- [ ] Confirm identity and encounter details\n- [ ] Reconcile medicines and allergies\n- [ ] Complete missing sections\n- [ ] Verify clinical interpretation and follow-up"}` : ""}`;
-  // The Indonesian SOAP note in Gaffer's format (2026-10-21): the patient and status on top, the filled sections numbered,
-  // then what is still missing and which findings came from the normal template.
+  const field = (keys: NoteField[]) => keys.map((key) => note.fields[key]).filter(Boolean).join("\n");
+  // The demo patient's name is the word "Pasien" itself, which the label already says.
+  const patientText = [input.patient?.name !== "Pasien" && input.patient?.name, sexText, age && `${age} tahun`].filter(Boolean).join(", ") || "—";
+  // The Indonesian HPI note (Gaffer, 2026-10-21: "keluhan dipecah ke onset/durasi, gejala penyerta, dan negatif"):
+  // labelled lines win, free text is split by hpiParts, and the typed text always stays under the note.
+  if (input.mode === "hpi" && id) {
+    const parts = hpiParts(complaintOnly(note.recognized ? field(["concern"]) || prompt : prompt, { demographics: !!(age || sexText), vitals: true }));
+    const list = (items: string[]) => items.map((item) => `- ${item}`).join("\n");
+    const filled: [string, string][] = [
+      ["Keluhan Utama", parts.complaint],
+      ...(note.fields.history ? [["Riwayat Penyakit Sekarang", note.fields.history] as [string, string]] : []),
+      ["Onset dan Durasi", field(["onset"]) || list(parts.onset)],
+      ["Lokasi / Sifat / Derajat", field(["character"]) || list(parts.character)],
+      ["Gejala Penyerta", field(["associated"]) || list(parts.associated)],
+      ["Faktor Pemberat / Peringan", field(["modifiers"]) || list(parts.modifiers)],
+      ["Negatif Pertinen", field(["negatives"]) || list(parts.negatives)],
+    ];
+    return `${numberedNote("ANAMNESIS (HPI)", "Draf anamnesis • Menunggu validasi dokter", patientText, filled)}\n\n## Teks sumber (verbatim)\n${prompt}${tail}`;
+  }
+  // The Indonesian SOAP note: its exam tables, and which findings came from the normal template.
   if (input.mode === "clinic" && id) {
-    const field = (keys: NoteField[]) => keys.map((key) => note.fields[key]).filter(Boolean).join("\n");
     const complaint = note.recognized ? field(["concern"]) : exam?.labelled ? exam.rest : prompt;
     const filled: [string, string][] = [
       ["Keluhan Utama", complaint && complaintSentence(complaintOnly(complaint, { demographics: !!(age || sexText), vitals: !!exam }))],
@@ -127,18 +181,10 @@ export function createDraft(input: DraftInput): string {
       ["Assessment", field(["assessment"])],
       ["Tata Laksana", field(["plan", "followup"])],
     ];
-    const empty = filled.filter(([, text]) => !text.trim()).map(([title]) => missingNames[title]);
     const auto = exam ? exam.rows.filter((row) => row.auto).map((row) => rowLabel(row, exam.adult)).map((label) => label === "THT" ? label : label.toLowerCase()) : [];
     const autoList = auto.length > 2 ? `${auto.slice(0, -1).join(", ")}, dan ${auto[auto.length - 1]}` : auto.join(" dan ");
-    const completeness = [
-      empty.length ? `**Belum diisi:**\n${empty.map((name) => `- ${name}`).join("\n")}` : "",
-      auto.length ? `**${templateNote} — perlu validasi dokter:**\n\n${autoList.charAt(0).toUpperCase() + autoList.slice(1)}.\n\n*Catatan: Temuan yang berasal dari templat normal belum dapat dianggap sebagai hasil pemeriksaan aktual sampai dikonfirmasi oleh dokter.*` : "",
-      empty.length || auto.length ? "**Status akhir:** Belum lengkap — memerlukan verifikasi sebelum finalisasi catatan klinis." : "",
-    ].filter(Boolean).join("\n\n");
-    const numbered = [...filled.filter(([, text]) => text.trim()), ...(completeness ? [["Kelengkapan Dokumentasi", completeness] as [string, string]] : [])];
-    // The demo patient's name is the word "Pasien" itself, which the label already says.
-    const patientText = [input.patient?.name !== "Pasien" && input.patient?.name, sexText, age && `${age} tahun`].filter(Boolean).join(", ") || "—";
-    return `# CATATAN KLINIS\n\n**Pasien:** ${patientText}\n**Status:** Draf pemeriksaan • Menunggu validasi dokter\n\n${numbered.map(([title, text], index) => `${title === "Kelengkapan Dokumentasi" ? "---\n\n" : ""}## ${index + 1}. ${title}\n\n${text}`).join("\n\n")}${recognized ? `\n\n## Teks sumber (verbatim)\n${prompt}` : ""}${tail}`;
+    const templatePart = auto.length ? `**${templateNote} — perlu validasi dokter:**\n\n${autoList.charAt(0).toUpperCase() + autoList.slice(1)}.\n\n*Catatan: Temuan yang berasal dari templat normal belum dapat dianggap sebagai hasil pemeriksaan aktual sampai dikonfirmasi oleh dokter.*` : "";
+    return `${numberedNote("CATATAN KLINIS", "Draf pemeriksaan • Menunggu validasi dokter", patientText, filled, templatePart)}${recognized ? `\n\n## Teks sumber (verbatim)\n${prompt}` : ""}${tail}`;
   }
   const body = input.mode === "tasks" ? `## ${sections.tasks[0]}\n${prompt.split(/\n+/).filter(Boolean).map((line) => `- [ ] ${line.replace(/^[-*]\s*(\[[ x]\]\s*)?/, "")}`).join("\n")}` : sections[input.mode].map((title, index) => {
     let value = mapping[input.mode][index].map((key) => note.fields[key]).filter(Boolean).join("\n");

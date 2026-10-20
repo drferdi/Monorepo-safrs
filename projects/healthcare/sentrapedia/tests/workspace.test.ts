@@ -38,7 +38,7 @@ describe("local drafts", () => {
     expect(() => createDraft({ mode: "ddx", prompt: "  ", context: "", specialty: "Primary Care", model: "Standard", language: "English", instructions: "" })).toThrow("Tambahkan pertanyaan atau konteks Clinical terlebih dahulu.");
   });
   it("respects language and detailed model preferences", () => {
-    const result = createDraft({ mode: "hpi", prompt: "Keluhan contoh", context: "", specialty: "Internal Medicine", model: "Extended", language: "Bahasa Indonesia", instructions: "Ringkas" });
+    const result = createDraft({ mode: "chronic", prompt: "Keluhan contoh", context: "", specialty: "Internal Medicine", model: "Extended", language: "Bahasa Indonesia", instructions: "Ringkas" });
     expect(result).toContain("Belum tersedia");
     expect(result).toContain("Internal Medicine");
     expect(result).toContain("Ringkas");
