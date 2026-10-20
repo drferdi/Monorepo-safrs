@@ -1,4 +1,4 @@
-import { validCase, validResult, type AadiResult, type AadiAnalysis } from "./contract";
+import { validCase, validResult, type AadiResult, type AadiAnalysis, type AadiTherapy } from "./contract";
 import type { CaseState, DifferentialStatus } from "./types";
 import { referenceIncludes, theOracleSource, theOracleDiseases, type Disease } from "../theoracle";
 import { newId, type Message } from "../workspace";
@@ -17,7 +17,7 @@ export function theOracleCitations(grounding: unknown, therapyGrounding?: unknow
   // A verified dose names the guideline it matched; the evidence IDs stay in the stored source.
   const evidence = [grounding, ...(validTheOracleGrounding(therapyGrounding) ? [therapyGrounding] : [])].flatMap(bundle => bundle.evidence);
   const sources = (ids: string[]) => [...new Set(evidence.filter(item => ids.includes(item.evidenceId)).map(item => readableSource(item.source.title)))].join(", ");
-  const verification = validGate(gate) ? `\n\n### ${therapyCheckTitle}\n\n` + [gate.reason, ...gate.drugs.map(d => `- ${d.status === "verified" ? d.drug : unstrength(d.drug)}: ${gateLine[d.status]}${d.status === "verified" && sources(d.evidenceIds) ? ` (${sources(d.evidenceIds)})` : ""}`)].filter(Boolean).join("\n") : "";
+  const verification = validGate(gate) ? `\n\n### ${therapyCheckTitle}\n\n` + [gate.reason, ...gate.drugs.map(d => `- ${capital(d.status === "verified" ? d.drug : unstrength(d.drug))}: ${gateLine[d.status]}${d.status === "verified" && sources(d.evidenceIds) ? ` (${sources(d.evidenceIds)})` : ""}`)].filter(Boolean).join("\n") : "";
   // Appended to part 9, which always comes last and ends after the marker, so both sit in its
   // "Referensi dan jejak analisis" fold rather than in parts of their own (Gaffer, 2026-10-20).
   return `\n\n### ${theOracleReferencesTitle}\n\nReferensi yang dipilih sebelum analisis:\n\n` + passages(grounding) + therapy + verification;
@@ -132,6 +132,24 @@ const cell = (text: string) => text.replace(/\s*\r?\n\s*/g, " ").replace(/\|/g, 
 const table = (head: string[], rows: string[][]) => [head.map(cell), head.map(() => "---"), ...rows.map(row => row.map(cell))].map(row => `| ${row.join(" | ")} |`).join("\n");
 const bullets = (items: string[]) => items.map(item => `- ${item}`).join("\n");
 
+// One therapy line (Gaffer, 2026-10-21: "Amoxicillin 500 mg, diminum tiga kali sehari", "Dihidroartemisinin 40 mg + piperakuin
+// 320 mg, 4 tablet sekali sehari selama 3 hari"): a capital first letter, the strength after the name, then how often a day;
+// a dose the gate removed reads "dosis: cek pedoman". The route is named only when it is not oral.
+const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+const timesWords = ["", "sekali", "dua kali", "tiga kali", "empat kali"];
+export function regimenLine(r: AadiTherapy["regimen"][number], withNote = true): string {
+  const oral = /^(?:po|oral|per\s*oral)$/i.test(r.route.trim());
+  const before = /^\s*(\d+)\s*[x×]\s*(\S.*?)\s*$/.exec(r.dose), after = /^\s*(\S.*?)\s*[x×]\s*(\d+)\s*$/.exec(r.dose);
+  const [times, amount] = before ? [Number(before[1]), before[2]] : after ? [Number(after[2]), after[1]] : [0, ""];
+  // "1x500mg" for a single dose ("dosis tunggal") is that dose, not once a day.
+  const often = times && !(times === 1 && /tunggal|satu kali pemberian/i.test(r.duration)) ? `${oral ? "diminum " : ""}${timesWords[times] ?? `${times} kali`} sehari` : "";
+  const dose = !r.dose ? "dosis: cek pedoman" : times ? [amount.replace(/(\d)\s*([a-zµμ%])/gi, "$1 $2"), often].filter(Boolean).join(", ") : r.dose;
+  // A name that already carries its strength per tablet, or a removed dose, is followed by a comma.
+  const comma = !r.dose || /\d\s*(?:mg|mcg|g)\b/i.test(r.drug);
+  const duration = r.duration ? (/^\d/.test(r.duration.trim()) ? ` selama ${r.duration.trim()}` : `, ${r.duration.trim()}`) : "";
+  return `${capital(r.drug.trim())}${comma ? ", " : " "}${dose}${!oral && r.route ? `, ${r.route}` : ""}${duration}${withNote && r.note ? ` (${r.note})` : ""}`;
+}
+
 export function aadiDraft(result: AadiResult, traceId: string, createdAt: string, caseData?: CaseState, focus?: AadiFocus, gate?: EvidenceGateReport): string {
   // Bullets only where there are several points; a single point stays a plain line.
   const points = (items: string[], indent = "") => items.length > 1 ? items.map(item => `${indent}- ${item}`).join("\n") : items.length ? `${indent}${items[0]}` : "";
@@ -150,9 +168,9 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   const therapy = result.therapy?.regimen.length ? result.therapy : undefined;
   const regimen = therapy && join([
     `Untuk ${therapy.forDiagnosis.label} (${therapy.forDiagnosis.icd10})`,
-    points(therapy.regimen.map(r => [r.drug, r.dose || "dosis: cek pedoman", r.route, r.duration].filter(Boolean).join(" ") + (r.note ? ` (${r.note})` : ""))),
-    field("DDI", points(therapy.interactions)),
-    field("Kontraindikasi", points(therapy.contraindications)),
+    points(therapy.regimen.map(r => regimenLine(r))),
+    field("DDI", points(therapy.interactions.map(capital))),
+    field("Kontraindikasi", points(therapy.contraindications.map(capital))),
   ]);
 
   const listedCodes = new Set(Object.values(result.differential).flat().map(d => d.icd10.toUpperCase()));
@@ -253,7 +271,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
       `**Status: belum difinalisasi${incomplete ? " karena data klinis belum lengkap" : " sebelum diverifikasi dokter"}.**`,
       regimen ? "**Usulan terapi dari AADI:**" : primary.length ? "**Terapi referensi Oracle:**" : "",
       gate?.therapyRemoved ? join([`Terapi tidak ditampilkan: ${gate.reason}`, regimen || narrative(primary, [["Terapi", "terapi"]])]) : regimen || narrative(primary, [["Terapi", "terapi"]]) || "Belum ada data terapi untuk diagnosis ini.",
-      `**Catatan terapi draf awal:** ${therapy ? `${therapy.regimen.map(r => r.drug).join(", ")} tercantum sebagai usulan. ` : ""}Dosis individual, interval, batas harian, interaksi obat, dan kontraindikasi perlu diverifikasi sebelum dijadikan instruksi pengobatan. Kutipan dosis tunggal tidak memverifikasi keseluruhan regimen.`,
+      `**Catatan terapi draf awal:** ${therapy ? `${therapy.regimen.map(r => unstrength(r.drug)).join(", ")} tercantum sebagai usulan. ` : ""}Dosis individual, interval, batas harian, interaksi obat, dan kontraindikasi perlu diverifikasi sebelum dijadikan instruksi pengobatan. Kutipan dosis tunggal tidak memverifikasi keseluruhan regimen.`,
       table(["Komponen", "Dokumentasi"], [["Penanganan awal", "Ditentukan berdasarkan kondisi pasien dan hasil skrining kegawatan"], ["Terapi farmakologis", "Nama obat, indikasi, dosis, rute, interval, durasi, dan batas dosis"], ["Pemeriksaan keamanan", "Usia/berat badan, alergi, fungsi hati/ginjal, kehamilan, obat penyerta"], ["Interaksi dan kontraindikasi", "Cantumkan sumber verifikasi dan relevansinya pada pasien"], ["Evaluasi respons", "Skala keluhan, fungsi, efek samping, dan waktu evaluasi ulang"]]),
       regimen && primary.length ? diagnosisReferenceMarker : "",
       regimen ? field("Terapi referensi", narrative(primary, [["Terapi", "terapi"]])) : "",
@@ -282,7 +300,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
     ])],
   ];
   const gateText = gate?.therapyRemoved ? `Terapi tidak ditampilkan: ${gate.reason}` : "";
-  const therapyLine = therapy && !gate?.therapyRemoved ? `${therapy.regimen.map(r => [r.drug, r.dose || "dosis: cek pedoman", r.route, r.duration].filter(Boolean).join(" ")).join("; ")} — untuk ${named(therapy.forDiagnosis)}` : "";
+  const therapyLine = therapy && !gate?.therapyRemoved ? `${therapy.regimen.map(r => regimenLine(r, false)).join("; ")} — untuk ${named(therapy.forDiagnosis)}` : "";
   const checks = [...actionsOf("test").slice(0, 2), ...actionsOf("exam").slice(0, 2)].map(a => a.item);
   const summary: [string, string] = [doctorSummaryTitle, [
     `**Perlu disaring segera:** ${result.differential.cannotMiss.length ? `${result.differential.cannotMiss.map(named).join("; ")}. ` : ""}Status tanda bahaya: belum dinilai (bagian 2).`,

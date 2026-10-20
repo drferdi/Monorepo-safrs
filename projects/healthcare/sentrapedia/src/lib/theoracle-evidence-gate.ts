@@ -75,8 +75,9 @@ const inRange = (pattern: RegExp, m: RegExpMatchArray) => {
 
 // English and Indonesian spellings of generic names converge: amoxicillin and amoksisilin -> amoksisilin,
 // chlorpheniramine and klorfeniramin -> klorfeniramin.
+// "Primaquin" and "primakuin" converge too.
 function spell(word: string): string {
-  return word.replace(/ph/g, "f").replace(/th/g, "t").replace(/ch/g, "k").replace(/x/g, "ks").replace(/c(?=[eiy])/g, "s").replace(/c/g, "k").replace(/y/g, "i").replace(/(.)\1+/g, "$1").replace(/(.{4,})e$/, "$1");
+  return word.replace(/qu/g, "ku").replace(/ph/g, "f").replace(/th/g, "t").replace(/ch/g, "k").replace(/x/g, "ks").replace(/c(?=[eiy])/g, "s").replace(/c/g, "k").replace(/y/g, "i").replace(/(.)\1+/g, "$1").replace(/(.{4,})e$/, "$1");
 }
 const tokens = (text: string) => text.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z]+/).filter(Boolean).map(spell);
 const names = (drug: string) => tokens(drug).filter(word => word.length >= 4);
@@ -236,6 +237,75 @@ const tidy = (text: string) => text.replace(STRIP, "")
 // and STRIP matches every strength, so the fixed point holds none.
 export const unstrength = (text: string): string => { const next = tidy(text); return next === text ? text : unstrength(next); };
 
+// Tablet-count doses (Gaffer, 2026-10-21: "kekuatan per tablet + jumlah + frekuensi"). A draft dose that is only a count
+// ("1x4tablet") is verified when a passage about the diagnosis gives, in one "dan"-separated part of a clause that names the drug
+// or the alias the guideline gives it ("Piperakuin (DHP)"; for a combination only an alias after its last component), the same
+// count and the same times a day, and a passage gives its strength per tablet ("tiap tablet mengandung 40 mg … dan 320 mg …", or
+// for one drug a FORNAS entry with one tablet strength). A clause with a weight band ("BB > 60 kg") verifies only a draft that
+// names that weight. It is shown with the strength per tablet: "dihidroartemisinin 40 mg + piperakuin 320 mg", "4 tablet sekali sehari".
+const COUNT_UNIT = String.raw`(tablets?|tabs?|kaplets?|kapsul|kaps|capsules?)\b`;
+const MASS = /\d\s*(?:mg|mcg|µg|μg|ug|g|gram|miligram|ml|iu|ui|%)(?![a-z])/i;
+const TIMES: Record<string, number> = { sekali: 1, satu: 1, dua: 2, tiga: 3, empat: 4 };
+const timesOf = (text: string) => {
+  const digits = /(?<![\d.,])(\d+)\s*(?:[x×]|kali\b)/i.exec(text)?.[1];
+  const word = /\b(sekali|(?:satu|dua|tiga|empat)\s+kali)\b/i.exec(text)?.[1].split(/\s+/)[0].toLowerCase();
+  return digits ? Number(digits) : word ? TIMES[word] : undefined;
+};
+const timesText = (n: number) => n === 1 ? "sekali sehari" : `${["", "", "dua", "tiga", "empat"][n] ?? n} kali sehari`;
+const WEIGHT = new RegExp(String.raw`(?:\bBB\b|berat\s*badan)\)?\s*(?:\(BB\))?[^\d;]{0,20}?(\d{2,3})\s*kg`, "gi");
+const PER_TABLET = /(?:tiap|setiap|per)\s+(?:tablet|kaplet|kapsul)\s+(?:mengandung|berisi)\s*:?\s*([^.;]{0,200})/gi;
+const tabletDose = (r: AadiTherapy["regimen"][number], passages: { id: string; text: string; fornas: boolean }[]) => {
+  const count = new RegExp(String.raw`(?<![\d.,])(\d+)\s*${COUNT_UNIT}`, "i").exec(r.dose);
+  const times = timesOf(r.dose.replace(count?.[0] ?? "", " "));
+  if (!count || !times) return undefined;
+  const unit = /^ka?ps|^cap/i.test(count[2]) ? "kapsul" : "tablet";
+  const parts = r.drug.split(/\s*\+\s*/).map(part => unstrength(part).trim()).filter(part => names(part).length);
+  if (!parts.length) return undefined;
+  const last = names(parts.at(-1)!)[0];
+  const aliases = passages.flatMap(p => [...p.text.matchAll(/(\p{L}+)\s*\(([A-Z]{2,5})\)/gu)]
+    .filter(m => tokens(m[1]).includes(last) && parts.slice(0, -1).every(part => names(part).every(word => tokens(p.text.slice(Math.max(0, m.index - 120), m.index)).includes(word))))
+    .map(m => tokens(m[2])[0]));
+  const ownCount = new RegExp(String.raw`(?<![\d.,])(?<![${DASH}]\s*)${count[1]}\s*${COUNT_UNIT}`, "i");
+  const weighed = (r.dose + " " + r.note + " " + r.duration);
+  const counted = passages.filter(p => p.text.split(/;|\n|,(?!\d)|\.\s/).some(clause => {
+    const weights = [...clause.matchAll(WEIGHT)].map(m => m[1]);
+    if (!weights.every(w => new RegExp(`(?<!\\d)${w}(?!\\d)`).test(weighed))) return false;
+    return clause.split(/\s(?:dan|serta|atau)\s/i).some(part => {
+      const words = tokens(part);
+      const named = parts.every(own => names(own).every(word => words.includes(word))) || aliases.some(alias => words.includes(alias));
+      return named && ownCount.test(part) && timesOf(part.replace(ownCount, " ")) === times;
+    });
+  }));
+  // The strength of each component, from one passage: number before or after the component's name.
+  const strengthOf = (text: string, part: string) => {
+    const first = names(part)[0];
+    const before = [...text.matchAll(new RegExp(String.raw`(${NUMBER})\s*(mg|mcg|g)\s+(\p{L}+)`, "giu"))].find(m => tokens(m[3])[0] === first);
+    const after = [...text.matchAll(new RegExp(String.raw`(\p{L}+)\s+(${NUMBER})\s*(mg|mcg|g)\b`, "giu"))].find(m => tokens(m[1])[0] === first);
+    return before ? `${before[1]} ${before[2].toLowerCase()}` : after ? `${after[2]} ${after[3].toLowerCase()}` : undefined;
+  };
+  const fornasStrength = (text: string) => {
+    const first = names(parts[0])[0];
+    const values = [...text.matchAll(/\p{L}+/gu)].filter(m => tokens(m[0]).includes(first)).flatMap(m => {
+      const window = text.slice(m.index + m[0].length, m.index + m[0].length + 160);
+      // The next numbered entry ("8 kina"), not a strength ("15 mg").
+      const end = window.search(/\s\d{1,3}\s+(?!(?:mg|mcg|g|gram|ml|iu|tab|tablet|kaps|kapsul)\b)\p{L}/u);
+      return [...(end < 0 ? window : window.slice(0, end)).matchAll(new RegExp(String.raw`(?<![\d.,])\d\.\s*(?:tab|tablet|kaps|kapsul)\s+(${NUMBER})\s*(mg|mcg|g)\b`, "gi"))].map(s => `${s[1]} ${s[2].toLowerCase()}`);
+    });
+    return new Set(values).size === 1 ? values[0] : undefined;
+  };
+  const strong = passages.map(p => {
+    const sentence = [...p.text.matchAll(PER_TABLET)].map(m => parts.map(part => strengthOf(m[1], part))).find(found => found.every(Boolean));
+    const strengths = sentence ?? (parts.length === 1 && p.fornas ? [fornasStrength(p.text)] : undefined);
+    return strengths?.every(Boolean) ? { id: p.id, strengths: strengths as string[] } : undefined;
+  }).find(Boolean);
+  if (!counted.length || !strong) return undefined;
+  return {
+    drug: parts.map((part, i) => `${part} ${strong.strengths[i]}`).join(" + "),
+    dose: `${count[1]} ${unit} ${timesText(times)}`,
+    evidenceIds: passages.filter(p => counted.includes(p) || p.id === strong.id).map(p => p.id),
+  };
+};
+
 // The gate reads the therapy passages and then the diagnosis passages of the same case, each passage once: a dose the
 // diagnosis retrieval found (tenofovir 300 mg for HIV) is evidence too, and both bundles are cited with the draft.
 export function gateEvidence(therapyGrounding: unknown, grounding: unknown): TheOracleGroundingBundle | undefined {
@@ -256,9 +326,14 @@ export function gateTherapy(therapy: AadiTherapy, bundle: TheOracleGroundingBund
   const dosingFor = (drug: string) => naming(drug).filter(p => p.about);
   // A strength outside `dose` is shown only when one passage naming the drug carries all of it.
   const carried = (text: string, among: { text: string }[], percent = true) => { const patterns = strengths(text, percent); return !patterns.length || among.some(p => patterns.every(pattern => pattern.test(p.text))); };
-  const drugs = therapy.regimen.map((r): GateDrug => {
+  const counted = new Map<number, { drug: string; dose: string }>();
+  const drugs = therapy.regimen.map((r, i): GateDrug => {
     const named = naming(r.drug);
     if (!named.length) return { drug: r.drug, dose: r.dose, status: "removed", evidenceIds: [] };
+    // A dose that is only a tablet or capsule count tries the tablet rule first, which also shows the strength per tablet;
+    // otherwise the count is read as before.
+    const tablet = new RegExp(String.raw`\d\s*${COUNT_UNIT}`, "i").test(r.dose) && !MASS.test(r.dose) ? tabletDose(r, dosingFor(r.drug)) : undefined;
+    if (tablet) { counted.set(i, { drug: tablet.drug, dose: tablet.dose }); return { drug: r.drug, dose: r.dose, status: "verified", evidenceIds: tablet.evidenceIds }; }
     const patterns = strengths(r.dose + " " + r.drug, true, true);
     // "3x1mg", "2-3x2%", "1mg 3 kali sehari", "1mg x 3", "1mg tiap 8 jam", "q8h" and "tid" are several doses; the "x3" of "1x3g" is not a frequency.
     const several = /\b(?:bid|tid|qid|bd)\b/i.test(r.dose) || [...r.dose.matchAll(/(?<![\d.,])(\d+)\s*(?:[x×]|kali)|[x×]\s*(\d+)(?![\d.,]*\s*[a-zµμ%])|(?:tiap\s*|q)(\d+)\s*(?:jam|h)\b/gi)].some(m => m[3] ? Number(m[3]) < 24 : Number(m[1] ?? m[2]) >= 2);
@@ -279,7 +354,8 @@ export function gateTherapy(therapy: AadiTherapy, bundle: TheOracleGroundingBund
       const balanced = (kept.match(/\(/g) ?? []).length === (kept.match(/\)/g) ?? []).length;
       return cut && balanced && carried(kept, named) && !clauses.slice(cut).some(clause => CONDITION.test(clause.trim())) ? kept + PARTIAL : "";
     };
-    return { ...(drugs[therapy.regimen.indexOf(r)].status === "verified" ? r : { ...r, drug: unstrength(r.drug), dose: "" }), route: text(r.route), duration: text(r.duration), note: text(r.note) };
+    const i = therapy.regimen.indexOf(r);
+    return { ...(drugs[i].status === "verified" ? { ...r, ...counted.get(i) } : { ...r, drug: unstrength(r.drug), dose: "" }), route: text(r.route), duration: text(r.duration), note: text(r.note) };
   };
   const safety = (items: string[]) => items.flatMap(item => {
     const words = tokens(item);
@@ -298,20 +374,31 @@ export function gateTherapy(therapy: AadiTherapy, bundle: TheOracleGroundingBund
 
 /** The one late-gate rule (Gaffer, 2026-10-17), used by the gateway, the browser client and stored drafts. The result's
  * therapy is gated for its likely diagnosis against the bundle. With an earlier report (`stored`), that report keeps its
- * removals and safety items and only the doses the current gate no longer verifies are downgraded to doseRemoved. */
+ * removals and safety items; the doses the current gate no longer verifies are downgraded to doseRemoved, and (2026-10-21,
+ * the tablet rule) a doseRemoved dose the current gate verifies from the same stored evidence is upgraded, so the report
+ * never contradicts the dose shown. */
 export function applyTherapyGate(result: AadiResult, bundle: TheOracleGroundingBundle | undefined, stored?: EvidenceGateReport): { result: AadiResult; gate: EvidenceGateReport | undefined } {
   if (!result.therapy) return { result, gate: stored };
   const likely = result.differential.likely[0];
-  const late = gateTherapy(result.therapy, bundle, likely && { icd10: likely.icd10, label: likely.label });
+  // A stored regimen is the gated one, its removed doses blank; they are gated again from the report's audit copy.
+  const regimen = result.therapy.regimen.map(r => {
+    const removed = !r.dose && stored?.drugs.find(d => d.status === "doseRemoved" && d.dose && unstrength(d.drug) === r.drug);
+    return removed ? { ...r, drug: removed.drug, dose: removed.dose } : r;
+  });
+  const late = gateTherapy({ ...result.therapy, regimen }, bundle, likely && { icd10: likely.icd10, label: likely.label });
   if (!late.therapy) {
     const withoutTherapy = { ...result };
     delete withoutTherapy.therapy;
     return { result: withoutTherapy, gate: late.report };
   }
   if (!stored) return { result: { ...result, therapy: late.therapy }, gate: late.report };
-  const unverified = new Set(late.report.drugs.filter(d => d.status !== "verified").map(d => d.drug));
+  // Drugs match without their strengths: a tablet dose is stored with the strength per tablet in its name.
+  const key = (drug: string) => unstrength(drug).toLowerCase();
+  const unverified = new Set(late.report.drugs.filter(d => d.status !== "verified").map(d => key(d.drug)));
+  const verified = new Map(late.report.drugs.filter(d => d.status === "verified").map(d => [key(d.drug), d.evidenceIds]));
   return {
     result: { ...result, therapy: { ...result.therapy, regimen: late.therapy.regimen } },
-    gate: { ...stored, drugs: stored.drugs.map(d => d.status === "verified" && unverified.has(d.drug) ? { ...d, status: "doseRemoved" as const } : d) },
+    gate: { ...stored, drugs: stored.drugs.map(d => d.status === "verified" && unverified.has(key(d.drug)) ? { ...d, status: "doseRemoved" as const }
+      : d.status === "doseRemoved" && verified.has(key(d.drug)) ? { ...d, status: "verified" as const, evidenceIds: verified.get(key(d.drug))! } : d) },
   };
 }

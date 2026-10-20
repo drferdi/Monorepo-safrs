@@ -7,7 +7,7 @@ import { missingField } from "../src/lib/clinical-templates";
 import { localDraftMessages } from "../src/lib/workspace-session";
 import { theOracleDiseases } from "../src/lib/theoracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
-import { theOracleSourceLinks } from "../src/lib/aadi/presentation";
+import { regimenLine, theOracleSourceLinks } from "../src/lib/aadi/presentation";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import { initialWorkspace, workspaceReducer, loadWorkspace } from "../src/lib/workspace";
 import { gateTherapy } from "../src/lib/theoracle-evidence-gate";
@@ -236,12 +236,12 @@ describe("nine-part clinical report", () => {
   it.skipIf(!withCatalog)("writes the pharmacological therapy as drug and compact dose per line, then DDI and contraindications", () => {
     const therapy = { forDiagnosis: { icd10: "J00", label: "Diagnosis sintetis" }, regimen: [{ drug: "Ceftriaxone", dose: "1x500mg", route: "IM", duration: "dosis tunggal", note: "1g bila >=150kg" }, { drug: "Azithromycin", dose: "1x1g", route: "PO", duration: "dosis tunggal", note: "" }], interactions: ["Azithromycin dengan warfarin: risiko perdarahan", "Ceftriaxone dengan kalsium IV: presipitasi"], contraindications: ["Ceftriaxone: alergi sefalosporin"] };
     const body = section(aadiMessage({ ...analysis, result: { ...analysis.result, therapy } }).content, therapyTitle);
-    expect(body).toContain("**Usulan terapi dari AADI:**\n\nUntuk Diagnosis sintetis (J00)\n\n- Ceftriaxone 1x500mg IM dosis tunggal (1g bila >=150kg)\n- Azithromycin 1x1g PO dosis tunggal\n\nDDI\n- Azithromycin dengan warfarin: risiko perdarahan\n- Ceftriaxone dengan kalsium IV: presipitasi\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
+    expect(body).toContain("**Usulan terapi dari AADI:**\n\nUntuk Diagnosis sintetis (J00)\n\n- Ceftriaxone 500 mg, IM, dosis tunggal (1g bila >=150kg)\n- Azithromycin 1 g, dosis tunggal\n\nDDI\n- Azithromycin dengan warfarin: risiko perdarahan\n- Ceftriaxone dengan kalsium IV: presipitasi\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
     expect(body).toContain("**Catatan terapi draf awal:** Ceftriaxone, Azithromycin tercantum sebagai usulan.");
     const disease = withCode("J00")[0];
     expect(body.indexOf(disease.terapi)).toBeGreaterThan(body.indexOf("Referensi penyakit terkait"));
     const single = section(aadiMessage({ ...analysis, result: { ...analysis.result, therapy: { ...therapy, regimen: [therapy.regimen[1]], interactions: [] } } }).content, therapyTitle);
-    expect(single).toContain("Untuk Diagnosis sintetis (J00)\n\nAzithromycin 1x1g PO dosis tunggal\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
+    expect(single).toContain("Untuk Diagnosis sintetis (J00)\n\nAzithromycin 1 g, dosis tunggal\n\nKontraindikasi\nCeftriaxone: alergi sefalosporin");
   });
   it("keeps section edits and separators intact without replacing later content", () => {
     const edited = replaceSection(content, documentSections(content).find(s => s.title === therapyTitle)!, "Catatan manual sintetis\n\n");
@@ -346,7 +346,7 @@ describe("therapy verification presentation", () => {
   it("shows a removed dose as 'dosis: cek pedoman' and lists therapy verification after the references", () => {
     const result = { ...analysis.result, therapy: { forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, regimen: [{ drug: "Amoxicillin", dose: "", route: "PO", duration: "5 hari", note: "" }], interactions: [], contraindications: ["Amoxicillin: alergi penisilin (belum terverifikasi)"] } };
     const draft = aadiDraft(result, "trace", "2026-10-11T00:00:00.000Z");
-    expect(draft).toContain("Amoxicillin dosis: cek pedoman PO 5 hari");
+    expect(draft).toContain("Amoxicillin, dosis: cek pedoman selama 5 hari");
     const gate = { forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, therapyRemoved: false, reason: "", drugs: [{ drug: "Amoxicillin", dose: "3x500mg", status: "doseRemoved", evidenceIds: ["E1"] }, { drug: "Levofloxacin", dose: "1x750mg", status: "removed", evidenceIds: [] }] };
     const citations = theOracleCitations(grounding, grounding, gate);
     expect(citations).toContain("\n\n### Cek dosis obat\n\n");
@@ -394,7 +394,7 @@ describe("therapy verification presentation", () => {
     const therapy = { forDiagnosis: pneumonia, regimen: [{ drug: "Amoxicillin", dose: "3x500mg", route: "PO", duration: "5 hari", note: "" }, { drug: "Paracetamol", dose: "3x1000mg", route: "PO", duration: "", note: "" }, { drug: "Levofloxacin", dose: "1x750mg", route: "PO", duration: "", note: "" }], interactions: [], contraindications: [] };
     const result = { ...analysis.result, differential: { ...analysis.result.differential, likely: [{ ...pneumonia, confidenceTier: "low" as const }] }, therapy };
     const old = aadiMessage({ ...analysis, result, grounding: dosed });
-    expect(old.content).toContain("1x750mg");
+    expect(old.content).toContain("Levofloxacin 750 mg, diminum sekali sehari");
     const gated = gateTherapy(therapy, dosed, pneumonia);
     const now = aadiMessage({ ...analysis, result: { ...result, therapy: gated.therapy! }, grounding: dosed, evidenceGate: gated.report });
     expect(diagnosisContent(old)).toBe(now.content);
@@ -446,7 +446,7 @@ describe("doctor's summary", () => {
     const therapy = { forDiagnosis: { icd10: "J00", label: "Diagnosis sintetis" }, regimen: [{ drug: "Amoxicillin", dose: "3x500mg", route: "PO", duration: "5 hari", note: "" }, { drug: "Paracetamol", dose: "", route: "PO", duration: "", note: "" }], interactions: [], contraindications: [] };
     const given = { ...analysis.result, therapy, disposition: { decision: "refer" as const, urgency: "urgent" as const, reason: "Alasan" } };
     const shown = section(aadiDraft(given, "t", "2026-10-20T00:00:00Z", analysis.case), doctorSummaryTitle);
-    expect(shown).toContain(`**Terapi usulan:** Amoxicillin 3x500mg PO 5 hari; Paracetamol dosis: cek pedoman PO — untuk ${j00}`);
+    expect(shown).toContain(`**Terapi usulan:** Amoxicillin 500 mg, diminum tiga kali sehari selama 5 hari; Paracetamol, dosis: cek pedoman — untuk ${j00}`);
     expect(shown).toContain("**Rujuk:** Rujuk · segera");
     const removed = section(aadiDraft(given, "t", "2026-10-20T00:00:00Z", analysis.case, undefined, { forDiagnosis: therapy.forDiagnosis, therapyRemoved: true, reason: "Alasan gate sintetis.", drugs: [] }), doctorSummaryTitle);
     expect(removed).toContain("**Terapi usulan:** Terapi tidak ditampilkan: Alasan gate sintetis.");
@@ -486,7 +486,7 @@ describe("copy and referral from an analysis", () => {
     expect(copies.summary).not.toContain("**");
     expect(copies.summary).not.toMatch(/Trace|SHA-256|kemiripan/);
     expect(copies.codes).toEqual([{ code: "X60.9", text: "X60.9 — Gawat sintetis" }, { code: "X01.2", text: "X01.2 — Kandidat sintetis" }]);
-    expect(copies.therapy).toBe("Parasetamol 3x500mg PO — untuk Kandidat sintetis (X01.2)");
+    expect(copies.therapy).toBe("Parasetamol 500 mg, diminum tiga kali sehari — untuk Kandidat sintetis (X01.2)");
     expect(summaryCopies(aadiMessage(analysis).content)!.therapy).toBe("");
     expect(summaryCopies("# Draf lokal\n\n## Catatan\n\nIsi")).toBeNull();
   });
@@ -530,10 +530,10 @@ describe("copy and referral from an analysis", () => {
   });
   it("copies the codes and therapy as the doctor edited them", () => {
     const message = aadiMessage(pneumonia);
-    const content = message.content.replace("Pneumonia (J18.9)", "Pneumonia lain (J18.0)").replace("Amoxicillin 3x500mg", "Amoxicillin 3x250mg");
+    const content = message.content.replace("Pneumonia (J18.9)", "Pneumonia lain (J18.0)").replace("Amoxicillin 500 mg", "Amoxicillin 250 mg");
     const copies = pcareCopies(message, content);
     expect(copies.filter(item => item.field === "Diagnosa").map(item => item.value)).toEqual(["J18.0"]);
-    expect(copies.find(item => item.field === "Terapi")!.value).toContain("Amoxicillin 3x250mg");
+    expect(copies.find(item => item.field === "Terapi")!.value).toContain("Amoxicillin 250 mg, diminum tiga kali sehari");
   });
   it("maps a local SOAP draft's filled sections to P-Care fields and skips the placeholder", () => {
     const prompt = "Keluhan utama: Batuk 5 hari\nAnamnesis: Demam sejak kemarin\nTanda vital: TD 120/80, N 88\nAsesmen: Infeksi saluran napas atas\nRencana: Edukasi minum air";
@@ -573,5 +573,15 @@ describe("copy and referral from an analysis", () => {
     expect(steps.every(step => step.text === text)).toBe(true);
     expect(nextSteps(local("referral")[1]).map(step => step.mode)).toEqual(["question", "workup", "icd10"]);
     expect(nextSteps(user)).toEqual([]);
+  });
+});
+
+// Gaffer, 2026-10-21: "Amoxicillin 500 mg, diminum tiga kali sehari", and a tablet dose with its strength per tablet.
+describe("therapy line", () => {
+  it("writes name, strength and times a day with a capital first letter", () => {
+    expect(regimenLine({ drug: "amoxicillin", dose: "3x500mg", route: "PO", duration: "5 hari", note: "" })).toBe("Amoxicillin 500 mg, diminum tiga kali sehari selama 5 hari");
+    expect(regimenLine({ drug: "dihidroartemisinin 40 mg + piperakuin 320 mg", dose: "4 tablet sekali sehari", route: "PO", duration: "3 hari", note: "dosis untuk berat badan >60kg" })).toBe("Dihidroartemisinin 40 mg + piperakuin 320 mg, 4 tablet sekali sehari selama 3 hari (dosis untuk berat badan >60kg)");
+    expect(regimenLine({ drug: "primakuin", dose: "", route: "PO", duration: "dosis tunggal", note: "" })).toBe("Primakuin, dosis: cek pedoman, dosis tunggal");
+    expect(regimenLine({ drug: "ceftriaxone", dose: "2x1g", route: "IV", duration: "5 hari", note: "" }, false)).toBe("Ceftriaxone 1 g, dua kali sehari, IV selama 5 hari");
   });
 });

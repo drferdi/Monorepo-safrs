@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { gateEvidence, gateTherapy, unstrength } from "../src/lib/theoracle-evidence-gate";
+import { applyTherapyGate, gateEvidence, gateTherapy, unstrength } from "../src/lib/theoracle-evidence-gate";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
-import type { AadiTherapy } from "../src/lib/aadi/contract";
+import type { AadiResult, AadiTherapy } from "../src/lib/aadi/contract";
 import { withCatalog } from "./private-data";
 
 // A plain string is a passage from a pneumonia document; { title, text } sets the document title.
@@ -625,4 +625,59 @@ describe("clinical evidence gate: every range separator needs both ends", () => 
   it("strips such a range whole from a drug name", () => {
     expect(["Amoksisilin 250—500 mg", "Amoksisilin 250 s/d 500 mg", "Amoksisilin 250 sampai 500 mg"].map(unstrength)).toEqual(["Amoksisilin", "Amoksisilin", "Amoksisilin"]);
   });
+});
+
+// Gaffer, 2026-10-21: a tablet-count dose is shown when the guideline gives the count, the same frequency and the strength
+// per tablet. The IDI passage is the one the malaria case retrieved; the FORNAS one is a fixture in its entry style.
+// Each negative case below breaks exactly one rule.
+describe("tablet-count doses", () => {
+  const malaria = { icd10: "B50.9", label: "Plasmodium falciparum malaria" };
+  const idiText = "Pengobatan Malaria falsiparum 1. Lini pertama: dengan Fixed Dose Combination (FDC) yang terdiri dari Dihydroartemisinin (DHA) + Piperakuin (DHP) tiap tablet mengandung 40 mg Dihydroartemisinin dan 320 mg Piperakuin. Untuk dewasa dengan Berat Badan (BB) sampai dengan 59 kg diberikan DHP per oral 3 tablet satu kali per hari selama 3 hari dan Primakuin 2 tablet sekali sehari satu kali pemberian, sedangkan untuk BB > 60 kg diberikan 4 tablet DHP satu kali sehari selama 3 hari dan Primaquin 3 tablet sekali sehari satu kali pemberian. Dosis DHA = 2-4 mg/kgBB (dosis tunggal), Piperakuin = 16-32 mg/kgBB";
+  const idi = { title: "fasyankes-primer-idi-2017.pdf", text: idiText };
+  const fornas = { title: "fornas-2025.pdf", text: "6 kuinin [P] 1. tab 200 mg Untuk terapi lini kedua pada malaria. 7 primakuin [P] Terapi radikal malaria falsiparum dan vivaks. 1. tab 15 mg" };
+  const malariaTherapy = (regimen: AadiTherapy["regimen"]) => therapy(regimen, { forDiagnosis: malaria });
+  const tablets = (name: string, dose: string, note = "dosis untuk berat badan >60kg") => ({ drug: name, dose, route: "PO", duration: "3 hari", note });
+  const status = (regimen: AadiTherapy["regimen"], ...passages: { title: string; text: string }[]) => gateTherapy(malariaTherapy(regimen), bundle(...passages), malaria).report.drugs.map(d => d.status);
+  const dhp = "dihidroartemisinin + piperakuin";
+
+  it("verifies the guideline's count, frequency and weight band, and shows the strength per tablet", () => {
+    const { therapy: out, report } = gateTherapy(malariaTherapy([tablets(dhp, "1x4tablet"), tablets("primakuin", "1x3tablet")]), bundle(idi, fornas), malaria);
+    expect(report.drugs.map(d => d.status)).toEqual(["verified", "verified"]);
+    expect(report.drugs.map(d => d.evidenceIds)).toEqual([["E1"], ["E1", "E2"]]);
+    expect(out?.regimen.map(r => [r.drug, r.dose])).toEqual([["dihidroartemisinin 40 mg + piperakuin 320 mg", "4 tablet sekali sehari"], ["primakuin 15 mg", "3 tablet sekali sehari"]]);
+  });
+
+  it("does not verify the other weight band's count", () => expect(status([tablets(dhp, "1x3tablet")], idi)).toEqual(["doseRemoved"]));
+  it("does not verify another frequency", () => expect(status([tablets(dhp, "2x4tablet")], idi)).toEqual(["doseRemoved"]));
+  it("does not verify a count whose weight band the draft does not state", () => expect(status([tablets(dhp, "1x4tablet", "")], idi)).toEqual(["doseRemoved"]));
+  it("does not verify a count without a dose frequency", () => expect(status([tablets(dhp, "4 tablet")], idi)).toEqual(["doseRemoved"]));
+  it("adds no strength when no passage gives one per tablet, and leaves the count to the count rule", () => {
+    const { therapy: out } = gateTherapy(malariaTherapy([tablets("primakuin", "1x3tablet")]), bundle(idi), malaria);
+    expect(out?.regimen[0]).toMatchObject({ drug: "primakuin", dose: "1x3tablet" });
+  });
+  it("does not take the count of a single component's alias for the combination", () => expect(status([tablets(dhp, "1x4tablet")], { ...idi, text: idiText.replace("4 tablet DHP", "4 tablet DHA") })).toEqual(["doseRemoved"]));
+  it("does not take a count from a clause about another drug", () => {
+    const other = { title: "fasyankes-primer-idi-2017.pdf", text: "Malaria falsiparum: primakuin, tiap tablet mengandung 15 mg primakuin. Klorokuin 3 tablet sekali sehari." };
+    expect(status([tablets("primakuin", "1x3tablet", "")], other)).toEqual(["doseRemoved"]);
+  });
+  it("upgrades a stored doseRemoved that the current gate verifies, so the report matches the dose shown", () => {
+    const regimen = [tablets(dhp, "1x4tablet"), tablets("primakuin", "1x45mg")];
+    // As stored: the regimen gated earlier, its removed doses blank; the raw doses only in the report.
+    const result: AadiResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "B50.9", label: malaria.label, confidenceTier: "high" }], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: [], nextBestActions: [], disposition: null, unfilled: [], meta: { version: "test", model: "test", costUsd: 0 }, therapy: malariaTherapy(regimen.map(r => ({ ...r, dose: "" }))) };
+    const stored = { forDiagnosis: malaria, therapyRemoved: false, reason: "", drugs: regimen.map(r => ({ drug: r.drug, dose: r.dose, status: "doseRemoved" as const, evidenceIds: ["E1"] })) };
+    const { result: gated, gate } = applyTherapyGate(result, bundle(idi), stored);
+    expect(gate?.drugs.map(d => [d.status, d.evidenceIds])).toEqual([["verified", ["E1"]], ["doseRemoved", ["E1"]]]);
+    expect(gated.therapy?.regimen[0]).toMatchObject({ drug: "dihidroartemisinin 40 mg + piperakuin 320 mg", dose: "4 tablet sekali sehari" });
+  });
+  it("keeps a stored tablet dose on render, and downgrades it when the evidence no longer carries it", () => {
+    const fresh = gateTherapy(malariaTherapy([tablets(dhp, "1x4tablet")]), bundle(idi), malaria);
+    const result: AadiResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "B50.9", label: malaria.label, confidenceTier: "high" }], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: [], nextBestActions: [], disposition: null, unfilled: [], meta: { version: "test", model: "test", costUsd: 0 }, therapy: fresh.therapy };
+    const again = applyTherapyGate(result, bundle(idi), fresh.report);
+    expect(again.result.therapy?.regimen).toEqual(fresh.therapy?.regimen);
+    expect(again.gate?.drugs.map(d => d.status)).toEqual(["verified"]);
+    const without = applyTherapyGate(result, bundle({ ...idi, text: idiText.replace("4 tablet DHP", "5 tablet DHP") }), fresh.report);
+    expect(without.gate?.drugs.map(d => d.status)).toEqual(["doseRemoved"]);
+    expect(without.result.therapy?.regimen[0]).toMatchObject({ drug: "dihidroartemisinin + piperakuin", dose: "" });
+  });
+  it("leaves a strength dose to the strength rule", () => expect(status([tablets("primakuin", "1x45mg")], idi, fornas)).toEqual(["doseRemoved"]));
 });
