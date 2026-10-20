@@ -97,6 +97,16 @@ export function WorkspaceApp() {
     requestAnimationFrame(() => { const box = document.querySelector<HTMLTextAreaElement>(".chat-composer textarea"); box?.focus(); box?.setSelectionRange(text.length, text.length); });
     notify("Draf surat rujukan siap di kolom. Lengkapi penerima dan permintaan, lalu tekan Enter.");
   }
+  // A failed analysis can still become the local SOAP note (Puskesmas flow, decision 3): offered next to "Coba lagi",
+  // never automatic; the draft's source records why AADI did not answer.
+  function fallbackDraft() {
+    if (!prompt.trim() || busy) return;
+    const reason = analysisError; setAnalysisError("");
+    generate(prompt, "clinic", false, true, reason);
+    // Like an answered analysis, the next case starts with an empty strip.
+    resetCaseFields();
+    notify("Draf SOAP lokal disusun tanpa analisis AADI. Lengkapi dan verifikasi oleh klinisi.");
+  }
   function editCaseField(key: CaseFieldKey, value: string) { setCaseFields((fields) => ({ ...fields, [key]: value })); setManualFields((keys) => keys.includes(key) ? keys : [...keys, key]); }
   async function analyzeMain(text: string, selectedMode: ModeId, current: Encounter) {
     if (analysisController.current) return;
@@ -117,16 +127,16 @@ export function WorkspaceApp() {
       if (analysisController.current === controller) { analysisController.current = null; setBusy(false); setPendingQuestion(null); pendingText.current = null; }
     }
   }
-  function generate(text = prompt, selectedMode = mode, useTemplate = true) {
+  function generate(text = prompt, selectedMode = mode, useTemplate = true, local = false, fallback?: string) {
     if (busy || analysisController.current || !text.trim()) return;
     const current: Encounter = encounter ?? newEncounter();
     let content: string;
     const personal = useTemplate && selectedTemplate?.mode === selectedMode ? selectedTemplate : undefined;
-    if (composerUsesAadi(selectedMode, !!personal)) { void analyzeMain(text, selectedMode, current); return; }
+    if (!local && composerUsesAadi(selectedMode, !!personal)) { void analyzeMain(text, selectedMode, current); return; }
     try { content = personal ? createPersonalDraft(personal, text, current.context) : createDraft({ mode: selectedMode, prompt: text, context: current.context, ...state.settings, patient }); } catch (error) { notify(error instanceof Error ? error.message : "Draf tidak dapat diformat.", "error"); return; }
     setBusy(true);
     if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
-    const messages = localDraftMessages({ text, content, mode: selectedMode, context: current.context, patient, settings: state.settings, reviewDefaults: state.reviewDefaults, personal });
+    const messages = localDraftMessages({ text, content, mode: selectedMode, context: current.context, patient, settings: state.settings, reviewDefaults: state.reviewDefaults, personal, fallback });
     dispatch({ type: "message.add", encounterId: current.id, messages });
     setPrompt(""); setBusy(false);
   }
@@ -138,7 +148,7 @@ export function WorkspaceApp() {
     changeMode("ddx"); closeDialog(); notify("Analisis ditambahkan sebagai draf untuk ditinjau.");
   }
 
-  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis,
+  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
     caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };
 
   if (restoring) return <main className="system-loading" aria-busy="true"><PixelLoader label="Sedang membuka workspace…"/><p>Membuka workspace…</p></main>;
