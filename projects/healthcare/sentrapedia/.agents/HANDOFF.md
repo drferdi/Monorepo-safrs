@@ -1,5 +1,12 @@
 # Sentrapedia handoff
 
+## Checklist opens smoothly (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer: "keluar nya buat jadi halus" (the red-flag and question list before an analysis). Found in the browser: it opened on the first letter and the headache rows dropped in mid-word.
+- `case-guide.tsx`: the list follows a settled copy of the text (450 ms after typing stops), so it opens once with its final rows and changes only on a pause; ticks still read the live text. `globals.css`: `.case-checklist` grows from height 0 (`@starting-style`, `interpolate-size`, 480 ms, the answer's curve); reduced motion turns it off.
+- `tests/ui/case-guide.test.tsx`: a `pause()` after typing in the checklist tests; the first one also checks the list is absent before the pause.
+- Verified: typecheck 0, lint 0, Vitest 35 files 448 tests; browser 3101: no list while typing "demam dan nyeri kepala", then 9 red flags at once, height 530 → 701 px over ~0.4 s.
+
 ## Case-flow list without the doctor's summary, HookSidebar look (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "kan sudah saya bilang pindahakan!", pointing at the "Alur kasus" list, then "gunakan https://www.rareui.com/components/hooksidebar". My reading (stated to Gaffer): the summary stays its own section above the report but leaves the case-flow list.

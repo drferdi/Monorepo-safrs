@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ClipboardCheck, Plus, Stethoscope, TriangleAlert } from "lucide-react";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import type { ModeId } from "../lib/drafts";
 import type { CaseFields } from "../lib/aadi/composer";
 import { missingField } from "../lib/clinical-templates";
@@ -21,6 +21,10 @@ export function CaseGuide({ prompt, mode, fields, patientAge, patientSex, onInse
   const [soapOpen, setSoapOpen] = useState(false);
   const [questionsOpen, setQuestionsOpen] = useState(true);
   const id = useId();
+  // The list follows the text once typing pauses, so it does not open on the first letter or reshuffle mid-word (Gaffer,
+  // 2026-10-21: "keluar nya buat jadi halus").
+  const [settled, setSettled] = useState(prompt);
+  useEffect(() => { const timer = setTimeout(() => setSettled(prompt), 450); return () => clearTimeout(timer); }, [prompt]);
   const clinic = mode === "clinic";
   const patient = examPatient(prompt, fields, { age: patientAge, sex: patientSex });
   // In the SOAP mode the template completes the exam, so the doctor is not asked to write a normal one.
@@ -31,7 +35,7 @@ export function CaseGuide({ prompt, mode, fields, patientAge, patientSex, onInse
   const female = (fields.sex ? fields.sex === "F" : patientSex === "F") && (!patient || patient.months >= 120);
   const minimum = minimumModes.includes(mode) ? missingMinimum(prompt, fields, { patientAge, patientSex }, mode) : null;
   // As soon as a complaint is typed, the red flags and history questions the report would list are asked here instead.
-  const asked = (clinic || minimumModes.includes(mode)) && items.some((item) => item.key === "concern" && item.filled) ? symptomQuestions(prompt) : null;
+  const asked = (clinic || minimumModes.includes(mode)) && items.some((item) => item.key === "concern" && item.filled) && settled.trim() ? symptomQuestions(settled) : null;
   const marked = readFlags(prompt), done = askedQuestions(prompt, asked?.questions.map(([aspect]) => aspect) ?? []);
   const template = patient ? `Templat normal: ${examGroupLabel(patient)}` : "Templat normal menunggu usia dan jenis kelamin";
   // The count is plain text, not a live region: it changes on every keystroke.

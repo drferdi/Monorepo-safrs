@@ -917,12 +917,14 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .soap-row[data-empty] span { color: var(--color-text-secondary); font-style: italic; }
 /* The checklist before an analysis arrives like the analysis answer: the block rises in (answer-in), the branch line draws
    down, and the rows follow one by one (text-in). */
-.case-checklist { flex-basis: 100%; animation: answer-in 520ms cubic-bezier(.16, 1, .3, 1) both; }
+.case-checklist { flex-basis: 100%; animation: answer-in 520ms cubic-bezier(.16, 1, .3, 1) both; interpolate-size: allow-keywords; overflow: clip; overflow-clip-margin: 4px; transition: height 480ms cubic-bezier(.16, 1, .3, 1); }
+/* The list opens from nothing to its height instead of pushing the page down at once. */
+@starting-style { .case-checklist { height: 0; } }
 .case-checklist .diagnosis-section { padding: 18px 0 8px; }
 .case-checklist .diagnosis-section-body::before { animation: branch-reveal 320ms cubic-bezier(.23, 1, .32, 1); }
 .case-checklist .diagnosis-section-body > * { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) 160ms both; }
 @supports (animation-delay: calc(sibling-index() * 1ms)) { .case-checklist .diagnosis-section-body > * { animation-delay: calc(100ms + min(sibling-index(), 12) * 60ms); } }
-@media (prefers-reduced-motion: reduce) { .case-checklist, .case-checklist .diagnosis-section-body::before, .case-checklist .diagnosis-section-body > * { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .case-checklist, .case-checklist .diagnosis-section-body::before, .case-checklist .diagnosis-section-body > * { animation: none; transition: none; } }
 .case-checklist input[type="checkbox"] { accent-color: var(--workspace-accent-ink); }
 .case-checklist .draft-task { margin: 0 0 6px; }
 .flag-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; margin-bottom: 6px; }

@@ -151,11 +151,15 @@ describe("the checklist and minimum data before a case analysis", () => {
   const box = (name: string) => screen.getByRole("checkbox", { name }) as HTMLInputElement;
   const fever = "Demam tinggi dengan tanda sepsis, atau perburukan yang cepat";
   const shock = "Tanda syok atau tanda vital yang tidak stabil";
+  // The list follows the text once typing pauses (case-guide.tsx).
+  const pause = () => act(async () => { await new Promise((resolve) => setTimeout(resolve, 500)); });
 
   it("asks at once in the default mode, names the missing minimum, and holds the analysis back until it is typed", async () => {
     await start();
     fireEvent.change(textarea(), { target: { value: "nyeri kepala" } });
     expect(within(guide()!).getByText("Data minimal sebelum analisis: Usia, Jenis kelamin, Tanda vital")).toBeTruthy();
+    expect(region("Sebelum analisis: nyeri kepala")).toBeNull();
+    await pause();
     // The general red flags, the headache ones, and the report's headache questions.
     const list = within(region("Sebelum analisis: nyeri kepala")!);
     expect(list.getByText(shock)).toBeTruthy();
@@ -175,6 +179,7 @@ describe("the checklist and minimum data before a case analysis", () => {
   it("writes Ada and Tidak ada into one line, leaves the rest unassessed, and sends that line", async () => {
     await start();
     fireEvent.change(textarea(), { target: { value: "demam 3 hari" } });
+    await pause();
     fireEvent.click(box(`${fever}: ada`));
     expect(textarea().value).toBe("Keluhan utama: demam 3 hari\n\nTanda bahaya: ada demam tinggi dengan tanda sepsis, atau perburukan yang cepat");
     fireEvent.click(box(`${shock}: tidak ada`));
@@ -193,6 +198,7 @@ describe("the checklist and minimum data before a case analysis", () => {
   it("adds a ticked question under Anamnesis for the answer, and removes it when unticked", async () => {
     await start();
     fireEvent.change(textarea(), { target: { value: "demam 3 hari" } });
+    await pause();
     fireEvent.click(box("Onset — Kapan mulai? Mendadak atau bertahap?"));
     expect(textarea().value).toBe("Keluhan utama: demam 3 hari\n\nAnamnesis:\nOnset — ");
     fireEvent.change(textarea(), { target: { value: `${textarea().value}mendadak, 3 hari lalu` } });
@@ -207,6 +213,7 @@ describe("the checklist and minimum data before a case analysis", () => {
   it("hides the checklist behind a toggle and shows none outside the analysis and SOAP modes", async () => {
     await start();
     fireEvent.change(textarea(), { target: { value: "demam 3 hari" } });
+    await pause();
     fireEvent.click(screen.getByRole("button", { name: "Sembunyikan daftar" }));
     expect(region("Sebelum analisis: keluhan")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Tanda bahaya dan pertanyaan" }));
