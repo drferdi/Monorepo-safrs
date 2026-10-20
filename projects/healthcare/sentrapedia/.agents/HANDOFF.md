@@ -1,6 +1,6 @@
 # Sentrapedia handoff
 
-## Puskesmas clinical flow, phase 4 of 5 (committed on feat/puskesmas-flow, local) - 2026-10-21 Asia/Jakarta
+## Puskesmas clinical flow, phase 5 of 5 (committed on feat/puskesmas-flow, local) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "Go. Buat feat/puskesmas-flow dari 08b31f78, pakai semua rekomendasi di bagian 7 (keputusan 1–9), lalu jalankan Fase 1–5." Plan: `docs/plans/active/2026-10-20-puskesmas-flow.md` (verbatim copy of the gitignored `.claude/plans/puskesmas-flow-implementation-plan.md`, drafted by Fable 5.1 from `.claude/plans/handoff-for-puskesmas-plan.md`). Phase 0 (no edits): gate 0, Vitest 30 files 384 tests, A2, A4, A5, A8 confirmed.
 - Branch `feat/puskesmas-flow` from `08b31f78` (decision 1). Local only, not pushed, no PR.
@@ -20,15 +20,24 @@
   - `src/app/globals.css`: `.soap-view`/`.soap-row`, one column at `(max-width: 760px)`.
   - Tests: `tests/ui/case-guide.test.tsx` +3 (toggle and rows; mode switch then Enter makes a local draft with no POST and no ICD-10 pattern; free text never fills A or P).
   - Browser: rows render as designed; at 400x844 one column, no horizontal scroll.
-- Phase 4 (this commit), local SOAP draft when an AADI analysis fails:
+- Phase 4 (`348fcf9e`), local SOAP draft when an AADI analysis fails:
   - `src/components/workspace.tsx`: `generate` takes `local` (skip the AADI branch) and `fallback` (passed to `localDraftMessages`). New `fallbackDraft` builds the `clinic` draft from the restored text (decision 3), clears the error, resets the case strip as an answered analysis does, and toasts "Draf SOAP lokal disusun tanpa analisis AADI. Lengkapi dan verifikasi oleh klinisi." The strip reset is a deviation from plan 4.1: the browser check showed the old case's values left in the strip under an empty composer.
   - `src/components/composer.tsx`: `onFallback`; the error line offers "Coba lagi" and "Susun draf SOAP lokal" in the same `role="alert"` paragraph. Offered, never automatic.
   - Tests: new `tests/ui/draft-actions.test.tsx` (3): offer and draft with exactly one POST and an empty strip after (fails without the reset); the reason in `sourceText`, a `missingField` assessment, no ICD-10 pattern; both offers withdrawn when the text is cleared.
   - Browser (POSTs blocked in the page): the alert offers both buttons; the fallback makes a "Catatan Klinis (SOAP)" card badged "Draf lokal", one blocked POST in total.
-- Gate for each phase, exit 0 each: `npm run typecheck`; `npm run lint`; `npm test` (phase 4: Vitest 33 files 405 tests, site node tests 49/49); `npm run build`; `npm run deploy:dry-run`; `npx vitest run` on the touched test files.
+- Phase 5 (this commit), P-Care field copies and next-step chips:
+  - `src/lib/aadi/presentation.ts`: `pcareCopies` gives P-Care's fields in its order. On an analysis: Keluhan, Pemeriksaan fisik (short vitals and exam), one Diagnosa per candidate code (the bare code, toast "Konfirmasi diagnosis sebelum dientri."), Terapi (the gated summary line), Alergi. On a local draft: its filled sections, with the assessment as "Diagnosa (teks)". Each value is read from the draft as currently written; a field without a value has no chip.
+  - `nextSteps`: after an analysis, "Catatan SOAP", "Surat rujukan" and, when AADI listed next actions, "Daftar tugas". After a local draft: "Analisis AADI", "Pemeriksaan penunjang", "Kode ICD-10", "Surat rujukan", minus the draft's own mode. The SOAP prefill holds recorded facts and AADI's candidates labelled as candidates; "Rencana: " stays empty and the regimen is never copied. `referralPrompt` now shares the case-parsing helpers; its output is unchanged (pinned by its test).
+  - `src/components/message-card.tsx`: the row "Salin ke P-Care" replaces "Salin cepat"; a "Langkah berikutnya" row sits under the footer; the footer's "Surat rujukan" button became the chip of the same name. `src/components/workspace.tsx`: `startReferral` → `startStep` with `stepToast`. `src/components/workspace-views.tsx`: passes `onStep`. `src/app/globals.css`: two selector additions.
+  - Deviation from plan 5.1: a local draft's input runs to the next block header `localDraftMessages` writes, not to the first blank line. The phase 2 chips insert each section after a blank line, so the plan's rule would cut a guided input to its first section. A test covers an input with a blank line.
+  - Deviation from plan 5.2: the Diagnosa chip's aria-label branches on a candidate code's `name`, not on the field, so the local "Diagnosa (teks)" chip carries no candidate wording.
+  - Tests: `diagnosis-presentation` +5; `draft-actions` +2; `case-strip` line 78 now names the group "Salin ke P-Care".
+  - Browser (`next dev` alone; POSTs to `/api/aadi` answered by a fixture inside the page, nothing sent): the answer card shows both rows under the document; "Catatan SOAP" switches to `clinic`, prefills, focuses with the caret at the end and toasts; Enter makes a local SOAP draft (no Terapi chip, "Diagnosa (teks)" without candidate wording) whose "Pemeriksaan penunjang" step toasts "Tekan Enter untuk menjalankan analisis AADI." One POST in total. At 400x844 both rows wrap, scrollWidth 400, focus ring 2px.
+- Gate for each phase, exit 0 each: `npm run typecheck`; `npm run lint`; `npm test` (phase 5: Vitest 33 files 412 tests, site node tests 49/49); `npm run build`; `npm run deploy:dry-run`; `npx vitest run` on the touched test files.
 - Open: `.env.local` sets `AADI_SERVICE_URL` (a localhost port) and `AADI_SERVICE_TOKEN`, so `next dev` alone is not "no engine" as plan 4.4 assumes; it only fails while nothing listens on that port. Block non-GET `/api/aadi` in any browser check.
 - Open: the fallback is also offered after a client-side refusal (identity found, invalid case), not only after a service failure. It adds no capability (local modes already accept any text); limiting it to service failures is a phase 6 (data policy) question.
-- Next: phase 5, P-Care field copies and next-step chips.
+- Open: AADI's `chiefComplaint` is the whole typed text (`composerCase`), so a guided input's labelled lines repeat inside the SOAP prefill's "Keluhan utama:" line and the P-Care Keluhan copy; the referral prefill already did this before phase 5.
+- Next: phase 6 (data-policy copy and the synthetic/de-identified contract) is not in this run and waits for Gaffer. Nothing pushed.
 
 ## Wide-screen answer column and the chat composer restored (committed in 08b31f78) - 2026-10-20 Asia/Jakarta
 

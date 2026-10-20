@@ -886,8 +886,8 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .case-field:focus-within { border-color: var(--workspace-accent-ink); }
 .case-field:has([aria-invalid="true"]) { border: 2px solid var(--workspace-error-text); background: var(--workspace-error-bg); }
 @media (max-width: 760px) { .case-strip { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } .case-field { flex: none; } }
-.quick-copy { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 0 29px; font-size: 12px; color: var(--color-text-secondary); }
-.quick-copy .action-chip { height: 28px; padding: 0 9px; font-size: 12px; }
+.quick-copy, .next-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 0 29px; font-size: 12px; color: var(--color-text-secondary); }
+.quick-copy .action-chip, .next-steps .action-chip { height: 28px; padding: 0 9px; font-size: 12px; }
 .focus-tag { font-size: 10px; padding: 2px 6px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); color: var(--color-text-secondary); margin-left: 3px; }
 /* Doctor flow C1 (2026-10-20): on the phone parts 2-4 start folded to their title, in the part title face, and one line. */
 .diagnosis-supporting[data-fold="part"] > summary { align-items: flex-start; color: var(--title-color); }

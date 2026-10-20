@@ -2,7 +2,7 @@
 
 import { Check, CircleAlert, X } from "lucide-react";
 import { useCallback, useEffect, useReducer, useRef, useState, type ComponentProps } from "react";
-import { createDraft, type ModeId } from "../lib/drafts";
+import { createDraft, modes, type ModeId } from "../lib/drafts";
 import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Patient } from "../lib/workspace";
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
 import { downloadName, intentGroups } from "../lib/studio";
@@ -27,6 +27,13 @@ import { smooth } from "./smooth";
 import { useMediaQuery, useToast, useWorkspacePersistence } from "./workspace-hooks";
 import { ChatComposer, Conversation, HomeFooter, HomeView, WorkspaceHeader } from "./workspace-views";
 import { WorkspaceDialogs } from "./workspace-forms";
+
+// What Enter will do after a next step: a local draft, or an AADI analysis of the prefilled text.
+function stepToast(mode: ModeId): string {
+  const label = modes.find((m) => m.id === mode)?.label;
+  if (mode === "referral") return "Draf surat rujukan siap di kolom. Lengkapi penerima dan permintaan, lalu tekan Enter.";
+  return composerUsesAadi(mode, false) ? `Mode ${label} siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.` : `Mode ${label} siap dengan data kasus. Lengkapi, lalu tekan Enter.`;
+}
 
 export function WorkspaceApp() {
   const [state, dispatch] = useReducer(workspaceReducer, initialWorkspace);
@@ -91,11 +98,12 @@ export function WorkspaceApp() {
     const found = readCaseFields(value);
     setCaseFields((fields) => { const next = { ...fields }; for (const key of caseFieldKeys) if (!manualFields.includes(key)) next[key] = found[key] ?? ""; return next; });
   }
-  // A referral letter from an analysis (design D4): the local Surat Rujukan mode with the case filled in; the doctor adds the destination.
-  function startReferral(text: string) {
-    changeMode("referral"); updatePrompt(text);
+  // A next step from a draft (design D4's referral letter, generalised by the Puskesmas flow): the composer in that mode
+  // with the case filled in; nothing is sent until the doctor presses Enter.
+  function startStep(next: ModeId, text: string) {
+    changeMode(next); updatePrompt(text);
     requestAnimationFrame(() => { const box = document.querySelector<HTMLTextAreaElement>(".chat-composer textarea"); box?.focus(); box?.setSelectionRange(text.length, text.length); });
-    notify("Draf surat rujukan siap di kolom. Lengkapi penerima dan permintaan, lalu tekan Enter.");
+    notify(stepToast(next));
   }
   // A failed analysis can still become the local SOAP note (Puskesmas flow, decision 3): offered next to "Coba lagi",
   // never automatic; the draft's source records why AADI did not answer.
@@ -170,7 +178,7 @@ export function WorkspaceApp() {
         onUpgrade={() => openDialog("upgrade")}/>
       <div className="workspace-body">
         {!hasMessages ? <HomeView name={state.settings.name ?? ""} intent={intent} composer={composerProps}/> : <>
-          <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onReferral={startReferral} onCancel={cancelAnalysis}/>
+          <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onStep={startStep} onCancel={cancelAnalysis}/>
           <ChatComposer composer={composerProps} onAbout={() => openDialog("account")}/>
         </>}
       </div>

@@ -2,7 +2,7 @@ import { validCase, validResult, type AadiResult, type AadiAnalysis } from "./co
 import type { CaseState, DifferentialStatus } from "./types";
 import { referenceIncludes, theOracleSource, theOracleDiseases, type Disease } from "../theoracle";
 import { newId, type Message } from "../workspace";
-import { documentSections } from "../studio";
+import { documentSections, emptySection } from "../studio";
 import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
@@ -301,14 +301,12 @@ export function summaryCopies(content: string): { summary: string; codes: { code
 // A referral letter prefilled from the analysis (design D4): labelled lines the local referral draft understands; the
 // destination and request stay for the doctor. Nothing is inferred beyond what the case and AADI's candidates say.
 export function referralPrompt(message: Pick<Message, "sourceText">): string {
-  if (!hasAadiSource(message)) return "";
-  const source: unknown = JSON.parse(message.sourceText!);
-  if (!source || typeof source !== "object" || !("case" in source) || !("result" in source) || !validCase(source.case) || !validResult(source.result)) return "";
-  const data = source.case, likely = source.result.differential.likely.map(d => `${d.label} (${d.icd10})`).join("; ");
-  const [history, notes = ""] = (data.anamnesis.freeText ?? "").split(/(?:^|\n\n)Catatan kasus\n/);
+  const stored = storedCase(message);
+  if (!stored) return "";
+  const { data } = stored, likely = candidates(stored.result), { history, notes } = caseHistory(data);
   const person = [data.demographics.ageYears == null ? "" : `${data.demographics.ageYears} tahun`, data.demographics.sex === "M" ? "laki-laki" : data.demographics.sex === "F" ? "perempuan" : ""].filter(Boolean).join(", ");
-  const story = [person, history.replace(/^Konteks Encounter\n/, "").trim(), notes.trim()].filter(Boolean).join(". ").replace(/\s*\n\s*/g, " ");
-  const exam = [...Object.entries(data.vitals).map(([key, value]) => `${vitalLabels[key] ?? key} ${value}`), ...data.physicalExam, ...data.results.map(r => `${r.name}: ${r.value}${r.unit ? ` ${r.unit}` : ""}`)].join("; ");
+  const story = [person, history, notes].filter(Boolean).join(". ").replace(/\s*\n\s*/g, " ");
+  const exam = [...Object.entries(data.vitals).map(([key, value]) => `${vitalLabels[key] ?? key} ${value}`), ...findings(data)].join("; ");
   return [
     `Keluhan utama: ${data.chiefComplaint.trim()}${likely ? `. Diagnosis kerja (kandidat AADI, belum terkonfirmasi): ${likely}` : ""}`,
     story ? `Riwayat penyakit sekarang: ${story}` : "",
@@ -316,6 +314,92 @@ export function referralPrompt(message: Pick<Message, "sourceText">): string {
     data.currentMedications.length ? `Terapi sebelumnya: ${data.currentMedications.join("; ")}` : "",
     "Permintaan: ",
     "Penerima: ",
+  ].filter(Boolean).join("\n");
+}
+
+// The case and result stored with an AADI answer; a local draft or an unreadable source has none.
+function storedCase(message: Pick<Message, "sourceText">): { data: CaseState; result: AadiResult } | null {
+  if (!hasAadiSource(message)) return null;
+  const source: unknown = JSON.parse(message.sourceText!);
+  return source && typeof source === "object" && "case" in source && "result" in source && validCase(source.case) && validResult(source.result) ? { data: source.case, result: source.result } : null;
+}
+// The history as typed, without the encounter heading, and the saved patient's notes apart.
+function caseHistory(data: CaseState): { history: string; notes: string } {
+  const [history, notes = ""] = (data.anamnesis.freeText ?? "").split(/(?:^|\n\n)Catatan kasus\n/);
+  return { history: history.replace(/^Konteks Encounter\n/, "").trim(), notes: notes.trim() };
+}
+const candidates = (result: AadiResult) => result.differential.likely.map(d => `${d.label} (${d.icd10})`).join("; ");
+const findings = (data: CaseState) => [...data.physicalExam, ...data.results.map(r => `${r.name}: ${r.value}${r.unit ? ` ${r.unit}` : ""}`)];
+const decimal = (value: number) => String(value).replace(".", ",");
+const shortVitals = ({ systolic, diastolic, heartRate, respiratoryRate, temperature, spo2 }: CaseState["vitals"]) => [
+  systolic != null && diastolic != null ? `TD ${systolic}/${diastolic} mmHg` : "", heartRate != null ? `Nadi ${heartRate}/mnt` : "", respiratoryRate != null ? `Napas ${respiratoryRate}/mnt` : "",
+  temperature != null ? `Suhu ${decimal(temperature)} °C` : "", spo2 != null ? `SpO₂ ${spo2}%` : "",
+].filter(Boolean);
+
+// P-Care's entry fields in its order (Puskesmas flow, feature 4): each chip copies one value the draft holds, read as
+// currently written; a field without a value has no chip. Diagnosa is the bare candidate code, with a reminder to confirm it.
+export interface PcareCopy { field: string; label: string; value: string; done: string; name?: string }
+const copy = (field: string, value: string, label = field): PcareCopy[] => value.trim() ? [{ field, label, value: value.trim(), done: `${label} disalin.` }] : [];
+export function pcareCopies(message: Pick<Message, "sourceText" | "mode">, content: string): PcareCopy[] {
+  if (hasAadiSource(message)) {
+    const stored = storedCase(message);
+    if (!stored) return [];
+    const { data } = stored, summary = summaryCopies(content);
+    return [
+      ...copy("Keluhan", [data.chiefComplaint.trim(), caseHistory(data).history].filter(Boolean).join("\n")),
+      ...copy("Pemeriksaan fisik", [...shortVitals(data.vitals), ...data.physicalExam].join("; ")),
+      ...(summary?.codes ?? []).map(item => ({ field: "Diagnosa", label: `Diagnosa ${item.code}`, value: item.code, name: item.text.replace(`${item.code} — `, ""), done: `Kode kandidat ${item.code} disalin. Konfirmasi diagnosis sebelum dientri.` })),
+      ...copy("Terapi", summary?.therapy ?? "").map(item => ({ ...item, done: "Terapi usulan disalin." })),
+      ...copy("Alergi", data.allergies.join(", ")),
+    ];
+  }
+  // A local draft: its filled sections by title; "Riwayat Pengobatan / Alergi" mixes two fields and is not mapped.
+  const filled = documentSections(content).filter(section => !emptySection(section.body));
+  const body = (...titles: string[]) => filled.filter(section => titles.includes(section.title)).map(section => section.body.trim()).join("\n");
+  return [
+    ...copy("Keluhan", body("Keluhan Utama", "Riwayat Penyakit", "Chief concern", "History of present illness")),
+    ...copy("Pemeriksaan fisik", body("Pemeriksaan Fisik", "Examination")),
+    ...copy("Diagnosa", body("Assessment"), "Diagnosa (teks)"),
+    ...copy("Terapi", body("Tata Laksana", "Plan")),
+  ];
+}
+
+// What to do next with a draft (Puskesmas flow, feature 6, generalising the referral letter of design D4): each step
+// only prefills the composer in an existing mode; nothing is sent until the doctor presses Enter.
+export interface NextStep { mode: ModeId; label: string; text: string }
+const actionVerb = { question: "Tanyakan", exam: "Periksa", test: "Pemeriksaan penunjang" } as const;
+// "Analisis AADI", not "Analisis kasus": that is the send button's name.
+const analysisSteps: Omit<NextStep, "text">[] = [{ mode: "question", label: "Analisis AADI" }, { mode: "workup", label: "Pemeriksaan penunjang" }, { mode: "icd10", label: "Kode ICD-10" }, { mode: "referral", label: "Surat rujukan" }];
+// A local draft's typed input runs to the next block localDraftMessages writes; the input itself may hold blank lines.
+const localInput = /^Input\n([\s\S]*?)\n\n(?:Templat saat dibuat|Konteks Encounter|Pasien|Preferensi format|Analisis AADI tidak tersedia)\n/;
+export function nextSteps(message: Pick<Message, "sourceText" | "mode" | "role">): NextStep[] {
+  if (message.role !== "assistant") return [];
+  const stored = storedCase(message);
+  if (stored) return [
+    { mode: "clinic", label: "Catatan SOAP", text: soapPrompt(stored.data, stored.result) },
+    { mode: "referral", label: "Surat rujukan", text: referralPrompt(message) },
+    ...(stored.result.nextBestActions.length ? [{ mode: "tasks" as const, label: "Daftar tugas", text: stored.result.nextBestActions.map(action => `${actionVerb[action.kind]}: ${action.item}`).join("\n") }] : []),
+  ];
+  const input = localInput.exec(message.sourceText ?? "")?.[1].trim();
+  return input ? analysisSteps.filter(step => step.mode !== message.mode).map(step => ({ ...step, text: input })) : [];
+}
+
+// The labelled lines the local SOAP draft reads: recorded facts and AADI's candidates, labelled as candidates. The plan is
+// the doctor's, so the line stays empty and the gated regimen is never copied into it.
+function soapPrompt(data: CaseState, result: AadiResult): string {
+  const { history, notes } = caseHistory(data), likely = candidates(result), exam = findings(data).join("; ");
+  const { systolic, diastolic, heartRate, respiratoryRate, temperature, spo2 } = data.vitals;
+  const vitals = [systolic != null && diastolic != null ? `TD ${systolic}/${diastolic}` : "", heartRate != null ? `N ${heartRate}` : "", respiratoryRate != null ? `RR ${respiratoryRate}` : "", temperature != null ? `S ${decimal(temperature)}` : "", spo2 != null ? `SpO2 ${spo2}` : ""].filter(Boolean).join(", ");
+  const story = [history, notes].filter(Boolean).join(". ").replace(/\s*\n\s*/g, " ");
+  return [
+    `Keluhan utama: ${data.chiefComplaint.trim()}`,
+    story && `Anamnesis: ${story}`,
+    vitals && `Tanda vital: ${vitals}`,
+    exam && `Pemeriksaan fisik: ${exam}`,
+    data.currentMedications.length ? `Obat: ${data.currentMedications.join("; ")}` : "",
+    data.allergies.length ? `Alergi: ${data.allergies.join(", ")}` : "",
+    likely && `Asesmen: Diagnosis kerja (kandidat AADI, belum terkonfirmasi): ${likely}`,
+    "Rencana: ",
   ].filter(Boolean).join("\n");
 }
 

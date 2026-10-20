@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { WorkspaceApp } from "../../src/components/workspace";
 import { missingField } from "../../src/lib/clinical-templates";
 import { hasAadiSource } from "../../src/lib/aadi/presentation";
@@ -88,5 +88,35 @@ describe("local draft when the analysis fails", () => {
     fireEvent.change(textarea(), { target: { value: "" } });
     expect(screen.queryByRole("button", { name: "Coba lagi" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Susun draf SOAP lokal" })).toBeNull();
+  });
+});
+
+describe("next steps and P-Care copies", () => {
+  it("routes a next step into the composer in its mode, prefilled, and says what Enter will do", async () => {
+    await failedAnalysis();
+    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Susun draf SOAP lokal" })); });
+    // The quick actions under the composer carry a near-identical "Pemeriksaan Penunjang".
+    fireEvent.click(within(screen.getByRole("group", { name: "Langkah berikutnya" })).getByRole("button", { name: "Pemeriksaan penunjang" }));
+    expect(screen.getByRole("combobox", { name: "Mode atau templat" }).textContent).toContain("Pemeriksaan Penunjang");
+    expect(textarea().value).toBe(complaint);
+    expect(screen.getByText("Mode Pemeriksaan Penunjang siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.", { selector: ".toast span" })).toBeTruthy();
+    expect(sent).toHaveLength(1);
+  });
+
+  it("copies a P-Care field and warns on a candidate code", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
+    render(<WorkspaceApp/>);
+    await act(async () => { await Promise.resolve(); });
+    fireEvent.change(textarea(), { target: { value: complaint } });
+    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Analisis kasus" })); });
+    await act(async () => { await Promise.resolve(); });
+    const row = within(await screen.findByRole("group", { name: "Salin ke P-Care" }));
+    await act(async () => { fireEvent.click(row.getByRole("button", { name: "Salin G44.2 — Tension-type headache ke Diagnosa P-Care (kandidat, belum terkonfirmasi)" })); });
+    expect(writeText).toHaveBeenLastCalledWith("G44.2");
+    expect(screen.getByText("Kode kandidat G44.2 disalin. Konfirmasi diagnosis sebelum dientri.", { selector: ".toast span" })).toBeTruthy();
+    await act(async () => { fireEvent.click(row.getByRole("button", { name: "Salin Keluhan ke Keluhan P-Care" })); });
+    expect(writeText).toHaveBeenLastCalledWith(complaint);
+    expect(sent).toHaveLength(1);
   });
 });

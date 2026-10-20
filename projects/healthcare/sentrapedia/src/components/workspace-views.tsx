@@ -4,6 +4,7 @@ import { ArrowDownToLine, ChevronDown, Command, Maximize2, Menu, Minimize2, Pane
 import { useEffect, useRef, type ComponentProps } from "react";
 import type { Encounter, WorkspaceAction } from "../lib/workspace";
 import type { intentGroups } from "../lib/studio";
+import type { ModeId } from "../lib/drafts";
 import { Composer } from "./composer";
 import { MessageCard } from "./message-card";
 import { ThinkingCard } from "./thinking-card";
@@ -46,7 +47,7 @@ export function HomeFooter({ onLegal }: { onLegal: (label: string) => void }) {
 
 // Like a chat: a growing conversation keeps the view at the bottom unless the reader has scrolled up; an answer that
 // types out is read from its top instead.
-export function Conversation({ encounter, pendingQuestion, dispatch, onToast, onReuse, onReferral, onCancel }: { encounter?: Encounter; pendingQuestion: string | null; dispatch: (action: WorkspaceAction) => void; onToast: (text: string, tone?: "error") => void; onReuse: (content: string) => void; onReferral?: (text: string) => void; onCancel: () => void }) {
+export function Conversation({ encounter, pendingQuestion, dispatch, onToast, onReuse, onStep, onCancel }: { encounter?: Encounter; pendingQuestion: string | null; dispatch: (action: WorkspaceAction) => void; onToast: (text: string, tone?: "error") => void; onReuse: (content: string) => void; onStep?: (mode: ModeId, text: string) => void; onCancel: () => void }) {
   const end = useRef<HTMLDivElement>(null);
   const conversation = useRef<HTMLDivElement>(null);
   const conversationInner = useRef<HTMLDivElement>(null);
@@ -107,7 +108,7 @@ export function Conversation({ encounter, pendingQuestion, dispatch, onToast, on
   }, []);
   return <div className="conversation" ref={conversation} onScroll={(event) => { const box = event.currentTarget; stickToBottom.current = box.scrollHeight - box.scrollTop - box.clientHeight < 80; }} aria-label="Percakapan Encounter">
     <div className="conversation-inner" ref={conversationInner}>
-      {encounter?.messages.map((message) => <MessageCard encounterId={encounter.id} dispatch={dispatch} key={message.id} message={message} onEdit={(content) => dispatch({ type: "message.edit", encounterId: encounter.id, messageId: message.id, content })} onToast={onToast} onReuse={onReuse} onReferral={onReferral} onReview={(status) => dispatch({ type: "message.review", encounterId: encounter.id, messageId: message.id, status })}/>)}
+      {encounter?.messages.map((message) => <MessageCard encounterId={encounter.id} dispatch={dispatch} key={message.id} message={message} onEdit={(content) => dispatch({ type: "message.edit", encounterId: encounter.id, messageId: message.id, content })} onToast={onToast} onReuse={onReuse} onStep={onStep} onReview={(status) => dispatch({ type: "message.review", encounterId: encounter.id, messageId: message.id, status })}/>)}
       {pendingQuestion !== null && <><div className="user-message"><div>{pendingQuestion}</div></div><ThinkingCard onCancel={onCancel}/></>}
       <div ref={end}/>
     </div>
