@@ -189,7 +189,8 @@ describe("workspace UI smoke tests", () => {
     });
 
     const textarea = screen.getByLabelText("Pertanyaan atau catatan klinis");
-    fireEvent.change(textarea, { target: { value: "Batuk dan demam tinggi sejak 3 hari" } });
+    // Age, sex and a vital sign meet the minimum data an analysis needs.
+    fireEvent.change(textarea, { target: { value: "Laki-laki 35 tahun, batuk dan demam tinggi sejak 3 hari, S 38,5" } });
 
     // Confirm fictional-data prompt if present
     const fictionalCheckbox = screen.queryByRole("checkbox", { name: /fiktif/i });
@@ -234,7 +235,7 @@ describe("workspace UI smoke tests", () => {
     expect(fold.textContent).not.toMatch(/kemiripan/);
     const summary = screen.getByRole("region", { name: "Tabel Komponen, Keterangan" });
     expect(within(summary).getAllByRole("columnheader").map(cell => cell.textContent)).toEqual(["Komponen", "Keterangan"]);
-    expect(within(summary).getByRole("cell", { name: "Batuk dan demam tinggi sejak 3 hari" })).toBeTruthy();
+    expect(within(summary).getByRole("cell", { name: "Laki-laki 35 tahun, batuk dan demam tinggi sejak 3 hari, S 38,5" })).toBeTruthy();
     const nice = screen.getAllByRole("link", { name: "NICE CG150" })[0];
     expect(nice.getAttribute("href")).toBe("https://www.nice.org.uk/guidance/cg150/chapter/recommendations");
     expect(nice.getAttribute("rel")).toBe("noopener noreferrer");

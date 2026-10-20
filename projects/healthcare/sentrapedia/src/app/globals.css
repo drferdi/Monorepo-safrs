@@ -909,6 +909,18 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .soap-row { display: grid; grid-template-columns: 7.5em 1fr; gap: 8px; overflow-wrap: anywhere; white-space: pre-line; }
 .soap-row strong { color: var(--color-text-primary); }
 .soap-row[data-empty] span { color: var(--color-text-secondary); font-style: italic; }
+/* The checklist before an analysis arrives like the analysis answer: the block rises in (answer-in), the branch line draws
+   down, and the rows follow one by one (text-in). */
+.case-checklist { flex-basis: 100%; animation: answer-in 520ms cubic-bezier(.16, 1, .3, 1) both; }
+.case-checklist .diagnosis-section { padding: 18px 0 8px; }
+.case-checklist .diagnosis-section-body::before { animation: branch-reveal 320ms cubic-bezier(.23, 1, .32, 1); }
+.case-checklist .diagnosis-section-body > * { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) 160ms both; }
+@supports (animation-delay: calc(sibling-index() * 1ms)) { .case-checklist .diagnosis-section-body > * { animation-delay: calc(100ms + min(sibling-index(), 12) * 60ms); } }
+@media (prefers-reduced-motion: reduce) { .case-checklist, .case-checklist .diagnosis-section-body::before, .case-checklist .diagnosis-section-body > * { animation: none; } }
+.case-checklist input[type="checkbox"] { accent-color: var(--workspace-accent-ink); }
+.case-checklist .draft-task { margin: 0 0 6px; }
+.flag-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; margin-bottom: 6px; }
+.flag-row label { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: var(--color-text-secondary); }
 @media (max-width: 760px) { .soap-row { grid-template-columns: 1fr; gap: 2px; } }
 /* Normal exam template (2026-10-21): the template the SOAP draft will use and the value flags. */
 .case-guide-item[data-optional] { border-style: dashed; }

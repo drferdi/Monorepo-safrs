@@ -145,3 +145,73 @@ describe("guided SOAP view", () => {
     expect(row("P — Rencana")).toBe(missingField);
   });
 });
+
+describe("the checklist and minimum data before a case analysis", () => {
+  const region = (name: string) => screen.queryByRole("region", { name });
+  const box = (name: string) => screen.getByRole("checkbox", { name }) as HTMLInputElement;
+  const fever = "Demam tinggi dengan tanda sepsis, atau perburukan yang cepat";
+  const shock = "Tanda syok atau tanda vital yang tidak stabil";
+
+  it("asks at once in the default mode, names the missing minimum, and holds the analysis back until it is typed", async () => {
+    await start();
+    fireEvent.change(textarea(), { target: { value: "nyeri kepala" } });
+    expect(within(guide()!).getByText("Data minimal sebelum analisis: Usia, Jenis kelamin, Tanda vital")).toBeTruthy();
+    // The general red flags, the headache ones, and the report's headache questions.
+    const list = within(region("Sebelum analisis: nyeri kepala")!);
+    expect(list.getByText(shock)).toBeTruthy();
+    expect(list.getByText("Nyeri mendadak yang mencapai intensitas maksimal dalam 1–5 menit (thunderclap headache)")).toBeTruthy();
+    expect(list.getByText("Kapan mulai? Mendadak atau bertahap? Berapa lama hingga nyeri maksimal?", { exact: false })).toBeTruthy();
+    await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
+    expect(sent).toHaveLength(0);
+    expect(screen.getByRole("alert").textContent).toBe("Analisis belum dijalankan. Lengkapi data minimal: Usia, Jenis kelamin, Tanda vital.");
+    fireEvent.change(textarea(), { target: { value: complaint } });
+    expect(within(guide()!).getByText("Data minimal lengkap")).toBeTruthy();
+    expect(screen.queryByRole("alert")).toBeNull();
+    await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
+    await act(async () => { await Promise.resolve(); });
+    expect(sent).toHaveLength(1);
+  });
+
+  it("writes Ada and Tidak ada into one line, leaves the rest unassessed, and sends that line", async () => {
+    await start();
+    fireEvent.change(textarea(), { target: { value: "demam 3 hari" } });
+    fireEvent.click(box(`${fever}: ada`));
+    expect(textarea().value).toBe("Keluhan utama: demam 3 hari\n\nTanda bahaya: ada demam tinggi dengan tanda sepsis, atau perburukan yang cepat");
+    fireEvent.click(box(`${shock}: tidak ada`));
+    expect(textarea().value).toBe("Keluhan utama: demam 3 hari\n\nTanda bahaya: tidak ada tanda syok atau tanda vital yang tidak stabil; ada demam tinggi dengan tanda sepsis, atau perburukan yang cepat");
+    expect(box(`${fever}: ada`).checked).toBe(true);
+    expect(box(`${fever}: tidak ada`).checked).toBe(false);
+    expect(box("Penurunan kesadaran, kejang, atau defisit neurologis baru: ada").checked).toBe(false);
+    // Choosing the other answer replaces it; choosing it again makes it unassessed.
+    fireEvent.click(box(`${fever}: tidak ada`));
+    expect(textarea().value).toContain("tidak ada demam tinggi");
+    fireEvent.click(box(`${fever}: tidak ada`));
+    fireEvent.click(box(`${shock}: tidak ada`));
+    expect(textarea().value).toBe("Keluhan utama: demam 3 hari");
+  });
+
+  it("adds a ticked question under Anamnesis for the answer, and removes it when unticked", async () => {
+    await start();
+    fireEvent.change(textarea(), { target: { value: "demam 3 hari" } });
+    fireEvent.click(box("Onset — Kapan mulai? Mendadak atau bertahap?"));
+    expect(textarea().value).toBe("Keluhan utama: demam 3 hari\n\nAnamnesis:\nOnset — ");
+    fireEvent.change(textarea(), { target: { value: `${textarea().value}mendadak, 3 hari lalu` } });
+    fireEvent.click(box("Gejala penyerta — Demam, gejala sistemik, dan keluhan organ terkait"));
+    expect(textarea().value).toBe("Keluhan utama: demam 3 hari\n\nAnamnesis:\nOnset — mendadak, 3 hari lalu\nGejala penyerta — ");
+    expect(box("Onset — Kapan mulai? Mendadak atau bertahap?").checked).toBe(true);
+    expect(item("Anamnesis")?.hasAttribute("data-filled")).toBe(true);
+    fireEvent.click(box("Gejala penyerta — Demam, gejala sistemik, dan keluhan organ terkait"));
+    expect(textarea().value).toBe("Keluhan utama: demam 3 hari\n\nAnamnesis:\nOnset — mendadak, 3 hari lalu");
+  });
+
+  it("hides the checklist behind a toggle and shows none outside the analysis and SOAP modes", async () => {
+    await start();
+    fireEvent.change(textarea(), { target: { value: "demam 3 hari" } });
+    fireEvent.click(screen.getByRole("button", { name: "Sembunyikan daftar" }));
+    expect(region("Sebelum analisis: keluhan")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Tanda bahaya dan pertanyaan" }));
+    expect(region("Sebelum analisis: keluhan")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Komunikasi" }));
+    expect(region("Sebelum analisis: keluhan")).toBeNull();
+  });
+});

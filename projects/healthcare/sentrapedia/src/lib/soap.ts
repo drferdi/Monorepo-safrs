@@ -38,6 +38,18 @@ export function caseGuide(text: string, fields: CaseFields, hints: { patientAge?
   return guideItems(mode).map((key) => ({ key, label: labels[key], filled: filled[key], skeleton: `${labels[key]}: ` }));
 }
 
+// Gaffer, 2026-10-21: a case analysis needs these before it is sent, so the report is never built on an empty case.
+// The free clinical question ("question") and the local SOAP note ("clinic") are not held back.
+const minimumItems: GuideKey[] = ["concern", "age", "sex", "vitals"];
+// "question" is held back too: it makes the same nine-part report.
+export const minimumModes: ModeId[] = ["question", "ddx", "workup", "refer", "icd10"];
+
+/** The labels of the minimum items still missing in a mode that needs them; empty elsewhere. */
+export function missingMinimum(text: string, fields: CaseFields, hints: { patientAge?: string; patientSex?: "M" | "F" }, mode: ModeId): string[] {
+  if (!minimumModes.includes(mode)) return [];
+  return caseGuide(text, fields, hints, mode).filter((item) => minimumItems.includes(item.key) && !item.filled).map((item) => item.label);
+}
+
 /** The strip's readable vitals as one line ("TD 170/100 mmHg · Nadi 98/mnt"); "" when none. */
 export function vitalsLine(fields: CaseFields): string {
   return vitalKeys.filter((key) => readable(fields, key)).map((key) => `${vitalLabels[key][0]} ${fields[key].trim()}${vitalLabels[key][1]}`).join(" · ");
@@ -54,6 +66,53 @@ export function soapView(text: string, fields: CaseFields): { key: "S" | "O" | "
     { key: "A", label: "A — Asesmen", text: join(of(["assessment", "differential"])) },
     { key: "P", label: "P — Rencana", text: join(of(["plan", "followup"])) },
   ];
+}
+
+// The checklist before an analysis (Gaffer, 2026-10-21, "Ada / Tidak ada"). The typed text is its only state: one line
+// "Tanda bahaya: ada …; tidak ada …" and one "<aspect> — " line per asked question under "Anamnesis:", so what is ticked
+// is what is sent, and an unchosen red flag stays unassessed rather than negative.
+export type FlagValue = "ada" | "tidak";
+const flagLine = /^Tanda bahaya\s*:(.*)$/im;
+const lowerFirst = (value: string) => value.charAt(0).toLowerCase() + value.slice(1);
+const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/** The red flags the text marks, keyed by their lower-cased text. */
+export function readFlags(text: string): Map<string, FlagValue> {
+  const marked = new Map<string, FlagValue>();
+  for (const part of (flagLine.exec(text)?.[1] ?? "").split(";")) {
+    const match = /^\s*(ada|tidak ada)\s+(.+?)\s*$/i.exec(part);
+    if (match) marked.set(match[2].toLowerCase(), match[1].toLowerCase() === "ada" ? "ada" : "tidak");
+  }
+  return marked;
+}
+
+/** The text with one red flag set (null: unassessed again), the line kept in the checklist's order. */
+export function setFlag(text: string, flags: string[], flag: string, value: FlagValue | null): string {
+  const marked = readFlags(text);
+  if (value) marked.set(lowerFirst(flag).toLowerCase(), value); else marked.delete(lowerFirst(flag).toLowerCase());
+  const parts = flags.flatMap((item) => { const state = marked.get(item.toLowerCase()); return state ? [`${state === "ada" ? "ada" : "tidak ada"} ${lowerFirst(item)}`] : []; });
+  const line = parts.length ? `Tanda bahaya: ${parts.join("; ")}` : "";
+  if (flagLine.test(text)) return text.replace(flagLine, line).replace(/\n{3,}/g, "\n\n").trimEnd();
+  return line ? insertSection(text, line) : text;
+}
+
+/** The aspects whose question line is in the text. */
+export function askedQuestions(text: string, aspects: string[]): Set<string> {
+  return new Set(aspects.filter((aspect) => new RegExp(`^${escape(aspect)} — `, "m").test(text)));
+}
+
+/** The text with an aspect's question line added at the end of the Anamnesis block (or removed), and where to type. */
+export function toggleQuestion(text: string, aspect: string): { text: string; caret?: number } {
+  const own = new RegExp(`^${escape(aspect)} — .*(?:\\r?\\n|$)`, "m");
+  if (own.test(text)) return { text: text.replace(own, "").trimEnd() };
+  const line = `${aspect} — `;
+  const lines = text.split("\n");
+  const start = lines.findIndex((value) => /^\s*Anamnesis\s*:/i.test(value));
+  if (start < 0) { const next = insertSection(text, `Anamnesis:\n${line}`); return { text: next, caret: next.length }; }
+  let end = start;
+  while (end + 1 < lines.length && lines[end + 1].trim()) end++;
+  lines.splice(end + 1, 0, line);
+  return { text: lines.join("\n"), caret: lines.slice(0, end + 2).join("\n").length };
 }
 
 /** What an insert chip puts in the composer: the skeleton after the text, with unlabelled text first given the complaint

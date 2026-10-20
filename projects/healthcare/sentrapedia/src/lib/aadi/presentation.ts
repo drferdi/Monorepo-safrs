@@ -119,6 +119,14 @@ const generalPack: typeof headachePack = {
 const headacheCodes = /^(?:R51|G43|G44|I60|G03|G00)/;
 const headacheWords = /nyeri kepala|sakit kepala|kepala (?:terasa )?(?:sakit|nyeri|pusing)|cephal|headache|migr[ae]in/i;
 
+/** The report's red flags and history questions for typed text, so the composer can ask them before the analysis
+ *  (Gaffer, 2026-10-21). Red flags as plain text: no emphasis marks, no closing full stop. */
+export function symptomQuestions(text: string): { complaint: string; redFlags: string[]; questions: string[][] } {
+  const headache = headacheWords.test(text), pack = headache ? headachePack : generalPack;
+  const plain = (flag: string) => flag.replace(/\*/g, "").replace(/\.$/, "");
+  return { complaint: pack.complaint, redFlags: [...generalPack.redFlags, ...(headache ? headachePack.redFlags : [])].map(plain), questions: pack.history };
+}
+
 /** A markdown table; a cell holds one line, and a "|" in case text is escaped. */
 const cell = (text: string) => text.replace(/\s*\r?\n\s*/g, " ").replace(/\|/g, "\\|").trim() || "—";
 const table = (head: string[], rows: string[][]) => [head.map(cell), head.map(() => "---"), ...rows.map(row => row.map(cell))].map(row => `| ${row.join(" | ")} |`).join("\n");

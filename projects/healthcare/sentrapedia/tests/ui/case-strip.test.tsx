@@ -88,14 +88,15 @@ describe("analysis case strip", () => {
     render(<WorkspaceApp/>);
     await act(async () => { await Promise.resolve(); });
     fireEvent.click(screen.getByRole("button", { name: "Pengodean Diagnosis (ICD-10)" }));
-    fireEvent.change(screen.getByLabelText("Pertanyaan atau catatan klinis"), { target: { value: "nyeri kepala" } });
-    expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Usia dan tanda vital" }));
+    fireEvent.change(screen.getByLabelText("Pertanyaan atau catatan klinis"), { target: { value: "Laki-laki 45 tahun, nyeri kepala, N 88" } });
+    // Values read from the text open the strip.
+    expect(screen.getByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeTruthy();
     fireEvent.change(field("SpO₂"), { target: { value: "140" } });
     expect(field("SpO₂").getAttribute("aria-invalid")).toBe("true");
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Analisis kasus" })); });
     await act(async () => { await Promise.resolve(); });
-    expect(sent[0].vitals).toEqual({});
+    // The readable pulse meets the minimum data; the unreadable SpO₂ is still not sent.
+    expect(sent[0].vitals).toEqual({ heartRate: 88 });
     expect(await screen.findByText("fokus: ICD-10")).toBeTruthy();
   });
 
