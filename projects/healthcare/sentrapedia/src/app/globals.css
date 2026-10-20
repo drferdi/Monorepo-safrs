@@ -899,3 +899,9 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .diagnosis-fold-line { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; line-height: 20px; color: var(--color-text-secondary); }
 .diagnosis-supporting[data-fold="part"][open] .diagnosis-fold-line { display: none; }
 .diagnosis-supporting[data-fold="part"] .draft-content { font-size: 14px; line-height: 23px; color: var(--body-color); }
+/* Puskesmas flow: the case guide under the composer (phase 2), one wrapping row, no animation. */
+.case-guide { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 12px; color: var(--color-text-secondary); }
+.case-guide-count { margin-right: 4px; }
+.case-guide-item { display: inline-flex; align-items: center; gap: 5px; }
+.case-guide .action-chip { height: 28px; padding: 0 9px; font-size: 12px; }
+.case-guide-item[data-filled] { height: 28px; padding: 0 9px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); }

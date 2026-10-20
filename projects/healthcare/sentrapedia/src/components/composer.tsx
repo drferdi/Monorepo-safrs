@@ -8,10 +8,12 @@ import { composerPlaceholder, intentGroups } from "../lib/studio";
 import { modeCategories } from "../lib/clinical-templates";
 import { modelLabel } from "../lib/ui-labels";
 import { focusStep } from "../lib/nav-tree";
-import { invalidCaseField, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
+import { emptyCaseFields, invalidCaseField, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
+import { insertSection } from "../lib/soap";
 import type { PersonalTemplate } from "../lib/workflow";
 import type { Settings } from "../lib/workspace";
 import { useDictation } from "./use-dictation";
+import { CaseGuide } from "./case-guide";
 
 interface Props { prompt: string; onPrompt: (value: string) => void; mode: ModeId; onMode: (mode: ModeId) => void; settings: Settings; onModel: (model: Settings["model"]) => void; context: string; onContext: () => void; patientName?: string; templates: PersonalTemplate[]; favorites: string[]; templateKey: string | null; onTemplate: (key: string) => void; onSubmit: () => void; busy: boolean; aadiEnabled?: boolean; analysisError?: string; onCancelAnalysis?: () => void; inChat?: boolean; caseFields?: CaseFields; autoFields?: CaseFieldKey[]; onCaseField?: (key: CaseFieldKey, value: string) => void; patientAge?: string; patientSex?: "M" | "F" }
 
@@ -130,10 +132,13 @@ export function Composer(props: Props) {
   const [stripOpen, setStripOpen] = useState(false);
   const hasStrip = Boolean(props.aadiEnabled && props.caseFields && props.onCaseField);
   const showStrip = hasStrip && (stripOpen || !!props.autoFields?.length || Object.values(props.caseFields ?? {}).some(Boolean));
+  // A guide chip adds its label after the text and leaves the caret after it.
+  const box = useRef<HTMLTextAreaElement>(null);
+  const insert = (skeleton: string) => { const next = insertSection(props.prompt, skeleton); props.onPrompt(next); requestAnimationFrame(() => { box.current?.focus(); box.current?.setSelectionRange(next.length, next.length); }); };
 
   return <div className="composer-area"><IntentTabs mode={props.mode} onMode={props.onMode}/><form className={`composer ${props.busy ? "is-busy" : ""}`} aria-busy={props.busy} onSubmit={(event) => { event.preventDefault(); if (slashOpen) { if (matches[slashIndex]) chooseMode(matches[slashIndex].id); } else props.onSubmit(); }}>
     {!quietPicker && picker}
-    <textarea aria-label="Pertanyaan atau catatan klinis" placeholder={composerPlaceholder(props.mode)} value={props.prompt} onChange={(e) => { props.onPrompt(e.target.value); setSlashClosed(false); setSlashIndex(0); }} aria-controls={slashOpen ? pickerId : undefined} aria-activedescendant={slashOpen && matches[slashIndex] ? `${pickerId}-${matches[slashIndex].id}` : undefined} rows={2} maxLength={30000} onKeyDown={(e) => { if (e.nativeEvent.isComposing) return; if (slashOpen) { if (e.key === "Escape") { e.preventDefault(); setSlashClosed(true); return; } if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); const next = Math.max(0, Math.min(matches.length - 1, slashIndex + (e.key === "ArrowDown" ? 1 : -1))); setSlashIndex(next); document.getElementById(`${pickerId}-${matches[next]?.id}`)?.scrollIntoView({ block: "nearest" }); return; } if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (matches[slashIndex]) chooseMode(matches[slashIndex].id); return; } } if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (props.prompt.trim()) props.onSubmit(); } }}/>
+    <textarea ref={box} aria-label="Pertanyaan atau catatan klinis" placeholder={composerPlaceholder(props.mode)} value={props.prompt} onChange={(e) => { props.onPrompt(e.target.value); setSlashClosed(false); setSlashIndex(0); }} aria-controls={slashOpen ? pickerId : undefined} aria-activedescendant={slashOpen && matches[slashIndex] ? `${pickerId}-${matches[slashIndex].id}` : undefined} rows={2} maxLength={30000} onKeyDown={(e) => { if (e.nativeEvent.isComposing) return; if (slashOpen) { if (e.key === "Escape") { e.preventDefault(); setSlashClosed(true); return; } if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); const next = Math.max(0, Math.min(matches.length - 1, slashIndex + (e.key === "ArrowDown" ? 1 : -1))); setSlashIndex(next); document.getElementById(`${pickerId}-${matches[next]?.id}`)?.scrollIntoView({ block: "nearest" }); return; } if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (matches[slashIndex]) chooseMode(matches[slashIndex].id); return; } } if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (props.prompt.trim()) props.onSubmit(); } }}/>
     {showStrip && props.caseFields && props.onCaseField && <CaseStrip fields={props.caseFields} auto={props.autoFields ?? []} onField={props.onCaseField} patientAge={props.patientAge} patientSex={props.patientSex}/>}
     <div className="composer-toolbar"><div className="composer-tools-left">
       <button type="button" className="icon-tool mic-button" data-state={dictation.recording ? "listening" : "idle"} aria-pressed={dictation.recording} disabled={dictation.starting} aria-label={dictation.recording ? "Hentikan dikte" : "Dikte ke kolom teks"} title={dictation.recording ? "Mendengarkan · klik untuk berhenti" : "Dikte ke kolom teks (layanan speech browser)"} onClick={dictation.toggle}><Mic size={16}/></button>
@@ -145,7 +150,8 @@ export function Composer(props: Props) {
       {props.busy && props.aadiEnabled ? <button type="button" className="button square send-button" aria-label="Hentikan analisis" title="Hentikan analisis" onClick={props.onCancelAnalysis}><Square size={13} fill="currentColor"/></button> : <button className="button square send-button" aria-label={props.aadiEnabled ? "Analisis kasus" : "Buat draf"} title={props.aadiEnabled ? "Analisis langsung · Enter" : "Buat draf · Enter"} disabled={!props.prompt.trim() || props.busy}>{props.busy ? <PixelLoader label="Sedang menyusun draf…"/> : <ArrowUp size={18}/>}</button>}
     </div></div>
   </form>
-    {dictation.error && <div className="composer-analysis"><p className="form-warning" role="alert">{dictation.error}</p></div>}
+    <CaseGuide prompt={props.prompt} mode={props.mode} fields={props.caseFields ?? emptyCaseFields()} patientAge={props.patientAge} patientSex={props.patientSex} onInsert={insert}/>
+    {dictation.error &&<div className="composer-analysis"><p className="form-warning" role="alert">{dictation.error}</p></div>}
     {props.aadiEnabled && props.analysisError && <div className="composer-analysis"><p className="form-warning" role="alert">{props.analysisError} {props.prompt.trim() && !props.busy && <button type="button" className="text-button" onClick={props.onSubmit}>Coba lagi</button>}</p></div>}
     {/* Options are the rows themselves: focus stays in the textarea, which points at the active row. */}
     {slashOpen && <div className="slash-picker" id={pickerId} role="listbox" aria-label="Pilih templat">{matches.map((item, index) => <div role="option" aria-selected={slashIndex === index} id={`${pickerId}-${item.id}`} key={item.id} onPointerDown={(event) => event.preventDefault()} onClick={() => chooseMode(item.id)}><strong>{item.label}</strong><span>/{item.id}</span></div>)}{!matches.length && <p>Tidak ada templat yang cocok.</p>}</div>}

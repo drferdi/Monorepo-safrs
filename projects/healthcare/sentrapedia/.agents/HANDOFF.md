@@ -1,17 +1,23 @@
 # Sentrapedia handoff
 
-## Puskesmas clinical flow, phase 1 of 5 (committed on feat/puskesmas-flow, local) - 2026-10-21 Asia/Jakarta
+## Puskesmas clinical flow, phase 2 of 5 (committed on feat/puskesmas-flow, local) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "Go. Buat feat/puskesmas-flow dari 08b31f78, pakai semua rekomendasi di bagian 7 (keputusan 1–9), lalu jalankan Fase 1–5." Plan: `docs/plans/active/2026-10-20-puskesmas-flow.md` (verbatim copy of the gitignored `.claude/plans/puskesmas-flow-implementation-plan.md`, drafted by Fable 5.1 from `.claude/plans/handoff-for-puskesmas-plan.md`). Phase 0 (no edits): gate 0, Vitest 30 files 384 tests, A2, A4, A5, A8 confirmed.
 - Branch `feat/puskesmas-flow` from `08b31f78` (decision 1). Local only, not pushed, no PR.
-- Phase 1, lib only, no UI change:
+- Phase 1 (`7ac09b8b`), lib only:
   - New `src/lib/soap.ts`: `guideItems` (six items for the five AADI modes, eight for `clinic`), `caseGuide` (filled from labelled lines, the case strip and the saved patient only), `vitalsLine`, `soapView` (S/O/A/P; an empty row is `missingField`; A and P only from labelled lines), `insertSection` (labels unlabelled text "Keluhan utama: " at the first insert, decision 9).
   - `src/lib/note-structure.ts`: alias "tanda vital" → examination (decision 8).
   - `src/lib/workspace-session.ts`: `localDraftMessages` takes an optional `fallback` and appends an "Analisis AADI tidak tersedia" block to `sourceText`. No new persisted field; storage key and `Workspace.version` unchanged.
-- Tests: new `tests/soap.test.ts` (9); `tests/workspace-session.test.ts` +1 (fallback block); `tests/workspace-fixtures.test.ts` +1 (an unknown field on a saved message and encounter survives import, A2 as a guard).
-- Gate, exit 0 each: `npm run typecheck`; `npm run lint`; `npm test` (Vitest 31 files 395 tests, site node tests 49/49); `npm run build`; `npm run deploy:dry-run`; `npx vitest run` on the five touched or related files (90).
-- HANDOFF rotation: the two oldest entries moved verbatim to `HANDOFF.archive.md`; the five entries whose work is in `08b31f78` now say so in their status line (decision 7).
-- Next: phase 2, the completeness strip with section-insert chips under the composer.
+  - Tests: new `tests/soap.test.ts` (9); `workspace-session` +1; `workspace-fixtures` +1 (an unknown field on a saved message and encounter survives import).
+  - HANDOFF rotation: the two oldest entries moved verbatim to `HANDOFF.archive.md`; five entries now name `08b31f78` in their status line (decision 7).
+- Phase 2 (this commit), completeness strip with section-insert chips:
+  - New `src/components/case-guide.tsx`: "Kelengkapan kasus: n dari m" under the composer box (outside `form.composer`, decision 2), only in the five AADI modes and `clinic`, only once text is typed. A filled item is a mark with an icon labelled "terisi"; a missing item is a chip "Sisipkan <label>" that appends its label.
+  - `src/components/composer.tsx`: textarea ref, `insert` (via `insertSection`, caret after the label), the guide after `</form>`. `src/app/globals.css`: one block at the end, existing tokens only.
+  - Tests: new `tests/ui/case-guide.test.tsx` (4). `case-strip` and `workspace-smoke` unchanged and passing.
+  - Browser (`next dev` alone on 3106, POSTs to `/api/aadi` blocked in the page): the box keeps its design; the chip inserts and leaves the caret at the end; at 400x844 no horizontal scroll (scrollWidth 400) and the guide wraps.
+- Gate for each phase, exit 0 each: `npm run typecheck`; `npm run lint`; `npm test` (phase 2: Vitest 32 files 399 tests, site node tests 49/49); `npm run build`; `npm run deploy:dry-run`; `npx vitest run` on the touched test files.
+- Open: `.env.local` sets `AADI_SERVICE_URL` (a localhost port) and `AADI_SERVICE_TOKEN`, so `next dev` alone is not "no engine" as plan 4.4 assumes; it only fails while nothing listens on that port. Block non-GET `/api/aadi` in any browser check.
+- Next: phase 3, the guided SOAP view.
 
 ## Wide-screen answer column and the chat composer restored (committed in 08b31f78) - 2026-10-20 Asia/Jakarta
 
