@@ -1,5 +1,16 @@
 # Sentrapedia handoff
 
+## Catatan Klinis in Gaffer's pasted format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer: "Catatan Klinis / REFORMAT" with the exact target note pasted (header, numbered sections, A-D exam tables, "Kelengkapan Dokumentasi").
+- `drafts.ts` (clinic, Indonesian only): "# CATATAN KLINIS", "**Pasien:** <name>, <sex>, <age> tahun" (the demo name "Pasien" is left out), "**Status:** Draf pemeriksaan • Menunggu validasi dokter"; only filled sections, numbered; a last part "Kelengkapan Dokumentasi" (after "---") lists what is empty, which findings came from the normal template, a note and "**Status akhir:**". No "Draf lokal · …" line. `complaintSentence`: "demam 3 hari, nyeri kepala" reads "Demam sejak 3 hari disertai nyeri kepala."; a leading "Laki-laki 45 tahun" stays in front; multi-line text stays as typed. English drafts and the AADI report unchanged.
+- `normal-exam.ts`: `normalExam` returns `rows` and `extra`; new `examTables` (A Keadaan Umum & Tanda Vital, B Antropometri, C Pemeriksaan Sistemik, D Pemeriksaan Lainnya; "Belum diukur"/"Belum dihitung"; bold label when there is a value; marker kept at the end of a template cell), `rowLabel`, `templateNote`. Suhu now comes before Napas; "Bunyi jantung I–II" uses an en dash. `autoNormalLabels` also reads table rows.
+- `document-studio.tsx`: `### ` is a heading in local drafts too; table cells hide the marker; "- " lines are bullets in every document; the "Diisi templat normal" view line is left out when the note carries its own template paragraph. `diagnosis-document.tsx`: the header shows the "**Pasien:**" and "**Status:**" lines.
+- P-Care copy: section titles match without their number; `physicalExamPlain` flattens the "### A." tables into "Label: value", without rows not measured or not examined.
+- Tests: `normal-exam.test.ts` (Gaffer's note line for line), `studio`, `soap`, `workspace`, `diagnosis-presentation`, `ui/normal-exam`, `ui/case-guide`, `ui/draft-actions`.
+- Verified: typecheck 0, lint 0, Vitest 36 files 451 tests; browser 3101: new Dokumentasi draft of "Laki-laki 40 tahun demam 3 hari, nyeri kepala, TD 120/80, N 96, S 38,6" matches the paste; nav lists 1-3; no page overflow at 400 px; POSTs blocked.
+- Open: "**Status:**" and "**Status akhir:**" are stored text, so they stay after Ditinjau/Final until the doctor edits them; empty sections are no longer separate parts, so their "Belum diisi" jump links are gone (the list in part 3 replaces them); older drafts keep their old text.
+
 ## SOAP note: patient line, complaint alone, exam in the report's A/B/C format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
 
 - Gaffer, on a Dokumentasi draft: "Rapi gak tu? ngawur", "Masih aja ada \"belum diukur\", … buatkan nama dan usia pasiennya", "Pemeriksaan Fisik itu lho, kok balik awal lagi".

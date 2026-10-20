@@ -88,7 +88,7 @@ describe("Indonesian patient wording", () => {
     for (const mode of modeIds) {
       const draft = createDraft({ mode, prompt: "Keluhan: sintetis", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
       expect(draft).not.toMatch(/\bpatient\b/i);
-      expect(draft).toContain("Pasien: —");
+      expect(draft).toContain(mode === "clinic" ? "**Pasien:** —" : "Pasien: —");
     }
   });
 });
@@ -127,8 +127,8 @@ describe("two-column document", () => {
   });
   it("shows a local draft's title without the draft and patient line above the first section", () => {
     const draft = createDraft({ mode: "clinic", prompt: "Keluhan: batuk sintetis 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
-    expect(draft).toContain("Draf lokal · Primary Care · Standard");
-    expect(documentTitle(draft)).toBe("# Catatan Klinis");
+    expect(draft).not.toContain("Draf lokal");
+    expect(documentTitle(draft)).toBe("# CATATAN KLINIS");
     expect(documentTitle("Tanpa judul\n\n## Satu\nisi")).toBe("");
   });
 });
@@ -190,7 +190,7 @@ describe("empty document sections", () => {
     expect(emptySection("")).toBe(false);
   });
   it("matches what createDraft writes for a section without input", () => {
-    const sections = documentSections(createDraft({ mode: "clinic", prompt: "Keluhan: batuk 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" }));
+    const sections = documentSections(createDraft({ mode: "referral", prompt: "Keluhan: batuk 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" }));
     expect(sections.filter((section) => emptySection(section.body)).length).toBeGreaterThan(0);
     expect(emptySection(sections[0].body)).toBe(false);
   });

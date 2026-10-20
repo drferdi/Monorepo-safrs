@@ -78,7 +78,8 @@ describe("local draft when the analysis fails", () => {
     const draft = savedDraft();
     expect(draft.mode).toBe("clinic");
     expect(draft.sourceText).toContain(`Analisis AADI tidak tersedia\n${failure}`);
-    expect(draft.content).toContain(`## Assessment\n${missingField}.`);
+    expect(draft.content).toContain("- Assessment / Diagnosis\n");
+    expect(draft.content).toContain("\n**Pasien:** Laki-laki, 45 tahun\n");
     expect(draft.content).not.toMatch(/\b[A-Z]\d{2}(\.\d)?\b/);
     expect(hasAadiSource(draft)).toBe(false);
   });

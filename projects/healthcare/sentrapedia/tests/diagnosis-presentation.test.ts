@@ -561,16 +561,16 @@ describe("copy and referral from an analysis", () => {
     const prompt = "Keluhan utama: Batuk 5 hari\nAnamnesis: Demam sejak kemarin\nTanda vital: TD 120/80, N 88\nAsesmen: Infeksi saluran napas atas\nRencana: Edukasi minum air";
     const copies = pcareCopies({ sourceText: `Input\n${prompt}`, mode: "clinic" }, createDraft({ mode: "clinic", prompt, ...draftInput }));
     expect(copies.map(item => item.label)).toEqual(["Keluhan", "Pemeriksaan fisik", "Diagnosa (teks)", "Terapi"]);
-    expect(copies[0].value).toBe("Batuk 5 hari\nDemam sejak kemarin");
+    expect(copies[0].value).toBe("Batuk sejak 5 hari.\nDemam sejak kemarin");
     expect(copies[2]).toEqual({ field: "Diagnosa", label: "Diagnosa (teks)", value: "Infeksi saluran napas atas", done: "Diagnosa (teks) disalin." });
     expect(copies[3].value).toBe("Edukasi minum air");
     const free = createDraft({ mode: "clinic", prompt: "Batuk 5 hari dan demam", ...draftInput });
-    expect(pcareCopies({ sourceText: "Input\nBatuk 5 hari dan demam", mode: "clinic" }, free)).toEqual([{ field: "Keluhan", label: "Keluhan", value: "Batuk 5 hari dan demam", done: "Keluhan disalin." }]);
-    // The exam in the report's format copies as plain lines: measured vital signs, then the exam lines.
+    expect(pcareCopies({ sourceText: "Input\nBatuk 5 hari dan demam", mode: "clinic" }, free)).toEqual([{ field: "Keluhan", label: "Keluhan", value: "Batuk 5 hari dan demam.", done: "Keluhan disalin." }]);
+    // The exam tables copy as plain lines, without the rows not measured or not examined.
     const examined = "Laki-laki 40 tahun demam 3 hari, TD 120/80, N 96";
     const exam = pcareCopies({ sourceText: `Input\n${examined}`, mode: "clinic" }, createDraft({ mode: "clinic", prompt: examined, ...draftInput, caseFields: { age: "40", sex: "M", bp: "120/80", heartRate: "96", temperature: "", respiratoryRate: "", spo2: "" } })).find(item => item.field === "Pemeriksaan fisik")!.value;
-    expect(exam).toMatch(/^Tekanan darah: 120\/80 mmHg\nFrekuensi nadi: 96 kali\/menit\nKeadaan umum: Baik \[otomatis normal\]\n/);
-    expect(exam).not.toMatch(/\||####|\*\*|Belum tersedia|Temuan klinis|Pemeriksaan Lanjutan|Kesimpulan/);
+    expect(exam).toMatch(/^Keadaan umum: Baik \[otomatis normal\]\nKesadaran: Compos mentis \[otomatis normal\]\nTekanan darah: 120\/80 mmHg\nNadi: 96 x\/menit\nKepala: /);
+    expect(exam).not.toMatch(/\||###|\*\*|Belum|Tidak diperiksa|---/);
   });
   it("offers local next steps after an analysis, prefilled from recorded facts, with the plan left to the doctor", () => {
     const message = aadiMessage(pneumonia);
@@ -586,8 +586,9 @@ describe("copy and referral from an analysis", () => {
     expect(steps[2].text.split("\n")).toEqual(["Tanyakan: Riwayat kontak", "Periksa: Auskultasi ulang", "Pemeriksaan penunjang: Rontgen toraks"]);
     // The prefill becomes the local SOAP note: AADI's candidate stays labelled as one, and the plan stays empty.
     const note = createDraft({ mode: "clinic", prompt: soap, ...draftInput });
-    expect(section(note, "Assessment")).toBe("Diagnosis kerja (kandidat AADI, belum terkonfirmasi): Pneumonia (J18.9)");
-    expect(section(note, "Tata Laksana")).toBe(`${missingField}.`);
+    expect(note).toMatch(/\n## \d\. Assessment\n\nDiagnosis kerja \(kandidat AADI, belum terkonfirmasi\): Pneumonia \(J18\.9\)\n/);
+    expect(note).not.toMatch(/## \d\. Tata Laksana/);
+    expect(note).toContain("- Tata laksana\n");
     expect(nextSteps(aadiMessage(headache)).map(step => step.mode)).toEqual(["clinic", "referral"]);
   });
   it("offers analysis steps after a local draft, without the draft's own mode", () => {

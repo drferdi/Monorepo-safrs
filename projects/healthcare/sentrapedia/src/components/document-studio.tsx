@@ -9,7 +9,7 @@ import { HistoryPanel, ReviewPanel } from "./document-workflow";
 import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, doctorSummaryTitle, hasAadiSource, icd10SectionTitle, legacyDiagnosisSectionTitles, referralSectionTitle, sourceForDisplay, theOracleSourceLinks } from "../lib/aadi/presentation";
 import { DiagnosisDocument } from "./diagnosis-document";
 import { freshAnswer, markRevealed } from "../lib/fresh-answer";
-import { autoNormalLabels } from "../lib/normal-exam";
+import { autoNormalLabels, templateNote } from "../lib/normal-exam";
 
 const diagnosisLabels = new Set(["Keluhan utama", "Kondisi yang tercatat", "Alergi tercatat", "Obat yang sedang digunakan (input kasus)", "Anamnesis tercatat", "Tanda vital tercatat", "Pemeriksaan fisik tercatat", "Informasi yang belum tersedia", "Pertanyaan lanjutan dari layanan", "Alternatif", "Jangan terlewat", "Kemungkinan utama — belum ditinjau klinisi", "Pertimbangan layanan", "Bidang belum terisi", "Hasil pemeriksaan tercatat", "Usulan pemeriksaan dari layanan", "Kemampuan fasilitas tercatat", "Jejak analisis"]);
 
@@ -38,7 +38,7 @@ function DocumentTable({ lines }: { lines: string[] }) {
   const columns = tableCells(head);
   return <div className="draft-table" role="region" aria-label={`Tabel ${columns.join(", ")}`} tabIndex={0}><table>
     <thead><tr>{columns.map((cell, index) => <th scope="col" key={index}>{inline(cell)}</th>)}</tr></thead>
-    <tbody>{body.map((row, index) => <tr key={index}>{row.map((cell, column) => <td key={column}>{inline(cell)}</td>)}</tr>)}</tbody>
+    <tbody>{body.map((row, index) => <tr key={index}>{row.map((cell, column) => <td key={column}>{autoNormal(cell)}</td>)}</tr>)}</tbody>
   </table></div>;
 }
 
@@ -54,9 +54,9 @@ export function DocumentContent({ content, onEdit, clinical = false }: { content
       const end = lines.findIndex((next, at) => at > index && !next.startsWith("|"));
       return <DocumentTable key={index} lines={lines.slice(index, end < 0 ? lines.length : end)}/>;
     }
-    // The exam's A/B/C headings, in the AADI report and the SOAP note alike (physical-exam.ts).
+    // The exam's A/B/C headings: "####" in the AADI report, "###" in the SOAP note (normal-exam.ts examTables).
     if (line.startsWith("#### ")) return <h4 className="diagnosis-field-label" key={index}>{line.slice(5)}</h4>;
-    if (clinical && line.startsWith("### ")) return <h4 className="diagnosis-reference-heading" key={index}>{line.slice(4)}</h4>;
+    if (line.startsWith("### ")) return <h4 className={clinical ? "diagnosis-reference-heading" : "diagnosis-field-label"} key={index}>{line.slice(4)}</h4>;
     if (line.startsWith("# ")) return <h2 key={index}>{line.slice(2)}</h2>;
     if (line.startsWith("## ")) return <h3 key={index}>{line.slice(3)}</h3>;
     if (line === "---") return <hr key={index}/>;
@@ -64,7 +64,8 @@ export function DocumentContent({ content, onEdit, clinical = false }: { content
     if (clinical && (diagnosisLabels.has(line) || diagnosisFieldLabels.has(line) || ["Gejala referensi dari database — bukan temuan pasien", "Definisi dan kriteria diagnosis dari database", "Kriteria rujukan dari database — narasi sumber"].includes(line))) return <h4 className="diagnosis-field-label" key={index}>{line}</h4>;
     if (clinical && line.startsWith("  - ")) return <p className="diagnosis-list-item diagnosis-list-nested" key={index}>{inline(line.slice(4))}</p>;
     if (clinical && /^  (?:Mendukung|Menyangkal):/.test(line)) return <p className="diagnosis-list-detail" key={index}>{line.trim()}</p>;
-    return line ? <p className={clinical && line.startsWith("- ") ? "diagnosis-list-item" : undefined} key={index}>{autoNormal(clinical && line.startsWith("- ") ? line.slice(2) : line)}</p> : null;
+    // "- " lines read as bullets in every document (the SOAP note's "Belum diisi" list among them).
+    return line ? <p className={line.startsWith("- ") ? "diagnosis-list-item" : undefined} key={index}>{autoNormal(line.startsWith("- ") ? line.slice(2) : line)}</p> : null;
   })}</div>;
 }
 
@@ -93,7 +94,7 @@ export function DocumentStudio({ message, onEdit, onReview, encounterId, dispatc
     {view === "review" && <ReviewPanel message={{ ...message, content }} encounterId={encounterId} dispatch={dispatch} onNavigate={(target) => { if (target === "source") setView("source"); else { setView("document"); const index = sections.findIndex((item) => item.title === target); if (index >= 0) { setSelected(index); requestAnimationFrame(() => document.current?.querySelector(`[data-diagnosis-section="${index}"], [data-empty-section="${index}"]`)?.scrollIntoView({ block: "nearest" })); } } }}/ >}
     {view === "document" && <>
       {sections.length > 0 && !twoColumn && <div className="section-control"><label>Bagian<select aria-label="Bagian dokumen" value={selected < sections.length ? selected : 0} disabled={editing} onChange={(event) => { const index = Number(event.target.value); setSelected(index); document.current?.querySelectorAll("h3")[index]?.scrollIntoView({ block: "nearest", behavior: "auto" }); }}>{sections.map((item, index) => <option key={`${item.start}-${item.title}`} value={index}>{item.title}</option>)}</select></label><button className="text-button" disabled={!section || editing} onClick={() => { setBody(section.body); setEditing(true); }}><Pencil size={12}/> Edit bagian</button></div>}
-      {editing && section ? <div className="section-editor" key="edit"><label>{section.title}<textarea aria-label={`Edit bagian ${section.title}`} value={body} maxLength={50000} rows={8} onChange={(event) => setBody(event.target.value)}/></label><div><button className="button primary" onClick={() => { const newline = section.body.includes("\r\n") ? "\r\n" : "\n"; onEdit(replaceSection(content, section, body.endsWith("\n") ? body : body + newline)); setEditing(false); }}>Simpan bagian</button><button className="button" onClick={() => setEditing(false)}>Batal</button></div></div> : <div key="view" ref={document}>{diagnosis ? <DiagnosisDocument typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} onEditSection={editSection} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical/>}/> : sections.length > 1 ? <DiagnosisDocument typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} onEditSection={editSection} label="Bagian" navLabel="Bagian dokumen" showMeta={false} autoFilled={status === "draft" ? autoNormalLabels(content) : []} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit}/>}/> : <DocumentContent content={content} onEdit={onEdit}/>}</div>}
+      {editing && section ? <div className="section-editor" key="edit"><label>{section.title}<textarea aria-label={`Edit bagian ${section.title}`} value={body} maxLength={50000} rows={8} onChange={(event) => setBody(event.target.value)}/></label><div><button className="button primary" onClick={() => { const newline = section.body.includes("\r\n") ? "\r\n" : "\n"; onEdit(replaceSection(content, section, body.endsWith("\n") ? body : body + newline)); setEditing(false); }}>Simpan bagian</button><button className="button" onClick={() => setEditing(false)}>Batal</button></div></div> : <div key="view" ref={document}>{diagnosis ? <DiagnosisDocument typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} onEditSection={editSection} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical/>}/> : sections.length > 1 ? <DiagnosisDocument typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} onEditSection={editSection} label="Bagian" navLabel="Bagian dokumen" showMeta={false} autoFilled={status === "draft" && !content.includes(templateNote) ? autoNormalLabels(content) : []} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit}/>}/> : <DocumentContent content={content} onEdit={onEdit}/>}</div>}
     </>}
     {view === "source" && <div className="studio-columns"><div><h2>Dokumen saat ini</h2><DocumentContent content={content} onEdit={onEdit}/></div><div className="source-pane"><h2>Sumber saat dibuat</h2><p className="panel-caption">{theOracleSourceLinks(message).length ? "Salinan input dan referensi Oracle yang dipilih sebelum analisis. Tidak berubah saat dokumen diedit." : "Salinan input lokal, bukan kutipan pedoman. Tidak berubah saat dokumen diedit."}</p><ul>{theOracleSourceLinks(message).map(source => <li key={source.id}><strong>{source.label}</strong><p className="source-quote">{source.text}</p></li>)}</ul>{hasAadiSource(message) ? <details className="source-technical"><summary>Data teknis untuk audit</summary><pre>{sourceForDisplay(message)}</pre></details> : <pre>{sourceForDisplay(message) ?? "Sumber asli belum tersedia untuk dokumen lama ini."}</pre>}</div></div>}
     {view === "compare" && <>{message.originalContent === undefined ? <p className="panel-empty">Draf awal belum tersedia. Perubahan berikutnya akan menyimpan isi sebelum edit sebagai pembanding.</p> : message.originalContent === message.content ? <p className="panel-empty">Belum ada perubahan dari draf awal.</p> : <div className="studio-columns comparison"><div><h2>Sebelum edit</h2><pre>{diagnosisContent({ ...message, content: message.originalContent })}</pre></div><div><h2>Saat ini</h2><pre>{message.content}</pre></div></div>}</>}

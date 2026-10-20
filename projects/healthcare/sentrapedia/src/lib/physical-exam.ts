@@ -60,6 +60,10 @@ export function physicalExamText({ vitals: v, adult, findings, exams, examined }
 
 /** The exam as P-Care takes it: part A's vital signs as "Parameter: hasil" (measured ones only) and its exam lines. */
 export function physicalExamPlain(text: string): string {
+  // The SOAP note's "### A." tables (normal-exam.ts examTables): each examined row as "Label: value".
+  if (text.startsWith("### A.")) return text.split("\n").map(line => line.trim())
+    .filter(line => line.startsWith("|") && !/^\|\s*(?:-{3}|Parameter\s*\||Organ \/ Sistem\s*\||Pemeriksaan\s*\|)/.test(line) && !/\|\s*(?:Belum (?:diukur|dihitung|dinilai|tersedia)|Tidak (?:diperiksa|dilakukan))\s*\|$/.test(line))
+    .map(line => line.slice(1, -1).split("|").map(part => part.trim().replace(/\*\*/g, "")).join(": ")).join("\n");
   if (!text.startsWith("#### A.")) return text;
   const end = text.indexOf("#### B.");
   return text.slice(0, end < 0 ? undefined : end).split("\n").map(line => line.trim())

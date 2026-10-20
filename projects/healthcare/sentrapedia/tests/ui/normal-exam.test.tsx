@@ -68,15 +68,15 @@ describe("normal exam template in the composer", () => {
     await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
     expect(await screen.findByText("Draf lokal", { selector: ".draft-badge" })).toBeTruthy();
     const draft = (JSON.parse(localStorage.getItem(storageKey)!) as Workspace).encounters[0].messages.find((message) => message.role === "assistant")!;
-    expect(draft.content).toContain("Paru: ronki (+/+)\n");
-    expect(draft.content).toContain("| Tekanan darah | 150/90 mmHg |\n");
-    expect(draft.content).toContain("## Keluhan Utama\nBatuk 3 hari\n");
-    expect(draft.content).toContain("Mata: Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+) [otomatis normal]");
+    expect(draft.content).toContain("| **Paru** | Ronki (+/+). |\n");
+    expect(draft.content).toContain("| **Tekanan darah** | 150/90 mmHg |\n");
+    expect(draft.content).toContain("## 1. Keluhan Utama\n\nBatuk sejak 3 hari.\n");
+    expect(draft.content).toContain("| **Mata** | Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+). [otomatis normal] |");
     expect(draft.content).not.toContain("PERHI");
-    // The view names the template lines once, in the "Belum diisi" line style; the lines themselves read clean.
-    expect(screen.getByText(/^Diisi templat normal:/, { selector: ".empty-sections" }).textContent).toMatch(/^Diisi templat normal: Keadaan umum, Kesadaran, Kepala, Mata, .*\. Tinjau sebelum Ditinjau\.$/);
-    expect(screen.queryByRole("button", { name: "Lihat Paru di Pemeriksaan Fisik" })).toBeNull();
-    expect(screen.getByText(/^Mata: Konjungtiva anemis/).textContent).not.toContain("otomatis");
+    // The note names the template rows itself (Kelengkapan Dokumentasi), so the view adds no line of its own; the cells read clean.
+    expect(screen.getByText(/^Keadaan umum, kesadaran, kepala, mata, .*, dan kulit\.$/)).toBeTruthy();
+    expect(screen.queryByText(/^Diisi templat normal:/)).toBeNull();
+    expect(screen.getByText(/^Konjungtiva anemis/).textContent).not.toContain("otomatis");
   });
 });
 
@@ -92,8 +92,8 @@ describe("the auto-normal marker on the draft card", () => {
 
   it("names the template lines once while the draft is Draf, and copies the marker", async () => {
     const writeText = await card("draft");
-    expect(screen.getByText(/^Mata: Konjungtiva anemis/).textContent).toBe("Mata: Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+)");
-    expect(screen.getByRole("button", { name: "Lihat Mata di Pemeriksaan Fisik" })).toBeTruthy();
+    expect(screen.getByText(/^Konjungtiva anemis/).textContent).toBe("Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+).");
+    expect(screen.getByText(/^Catatan: Temuan yang berasal dari templat normal/)).toBeTruthy();
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: /^Salin$/ })); });
     expect(writeText.mock.calls[0][0]).toContain("[otomatis normal]");
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Salin Pemeriksaan fisik ke Pemeriksaan fisik P-Care" })); });
@@ -104,10 +104,10 @@ describe("the auto-normal marker on the draft card", () => {
     const writeText = await card(status);
     expect(document.body.textContent).not.toContain("[otomatis normal]");
     expect(screen.queryByText(/^Diisi templat normal:/)).toBeNull();
-    expect(screen.getByText(/^Mata: Konjungtiva anemis/).textContent).toBe("Mata: Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+)");
+    expect(screen.getByText(/^Konjungtiva anemis/).textContent).toBe("Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+).");
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: /^Salin$/ })); });
     expect(writeText.mock.calls[0][0]).not.toContain("[otomatis normal]");
-    expect(writeText.mock.calls[0][0]).toContain("Mata: Konjungtiva anemis (-/-)");
+    expect(writeText.mock.calls[0][0]).toContain("| **Mata** | Konjungtiva anemis (-/-)");
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Salin Pemeriksaan fisik ke Pemeriksaan fisik P-Care" })); });
     expect(writeText.mock.calls[1][0]).not.toContain("[otomatis normal]");
   });

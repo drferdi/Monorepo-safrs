@@ -44,7 +44,7 @@ describe("case guide", () => {
     expect(insertSection("", "Anamnesis: ")).toBe("Anamnesis: ");
     expect(filled(first)).toMatchObject({ concern: true });
     const draft = createDraft({ mode: "clinic", prompt: first, context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
-    expect(draft).toContain("## Keluhan Utama\nLaki-laki 45 tahun, nyeri kepala");
+    expect(draft).toContain("## 1. Keluhan Utama\n\nLaki-laki 45 tahun, nyeri kepala.\n");
   });
 });
 

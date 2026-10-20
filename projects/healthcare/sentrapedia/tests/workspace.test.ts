@@ -65,13 +65,11 @@ describe("local drafts", () => {
   });
   it("names the clinic note's headings in Indonesian as Chief chose and keeps unfamiliar free text", () => {
     const result = createDraft({ mode: "clinic", prompt: "Keluhan: Keluhan contoh.\nAsesmen: Asesmen yang diberikan.\nRencana: Kontrol sesuai pembahasan.\nInformasi lain yang tidak berlabel.", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
-    expect(result).toContain("# Catatan Klinis\n");
-    expect(result).toContain("## Keluhan Utama\nKeluhan contoh.");
-    expect(result).toContain("## Riwayat Penyakit\n");
-    expect(result).toContain("## Riwayat Pengobatan / Alergi\n");
-    expect(result).toContain("## Pemeriksaan Fisik\n");
-    expect(result).toContain("## Assessment\nAsesmen yang diberikan.");
-    expect(result).toContain("## Tata Laksana\nKontrol sesuai pembahasan.");
+    expect(result).toContain("# CATATAN KLINIS\n");
+    expect(result).toContain("## 1. Keluhan Utama\n\nKeluhan contoh.\n");
+    expect(result).toMatch(/## \d\. Assessment\n\nAsesmen yang diberikan\.\n/);
+    expect(result).toMatch(/## \d\. Tata Laksana\n\nKontrol sesuai pembahasan\.\n/);
+    expect(result).toContain("**Belum diisi:**\n- Riwayat penyakit\n- Riwayat pengobatan dan alergi\n- Pemeriksaan fisik\n");
     expect(result).toContain("Informasi lain yang tidak berlabel.");
   });
 });

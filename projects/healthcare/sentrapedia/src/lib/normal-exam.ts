@@ -4,7 +4,7 @@
 import type { CaseFields } from "./aadi/composer";
 import type { ReviewStatus } from "./workspace";
 import { structureNote } from "./note-structure";
-import type { ExamVitals } from "./physical-exam";
+import { table, type ExamVitals } from "./physical-exam";
 
 export const autoNormalMarker = "[otomatis normal]";
 export type ExamGroup = "adult" | "child" | "infant" | "pregnant" | "postpartum";
@@ -23,8 +23,8 @@ const examLines: ExamLine[] = [
   { id: "general.consciousness", label: "Kesadaran", policy: "normal", cells: { adult: "Compos mentis" }, terms: ["kesadaran", "apatis", "somnolen", "sopor", "koma", "delirium", "gelisah", "GCS"] },
   measure("vitals.bp", "Tekanan darah", ["td", "tensi"], " mmHg"),
   measure("vitals.hr", "Nadi", ["hr", "frekuensi nadi"], " /menit"),
-  measure("vitals.rr", "Napas", ["rr", "frekuensi napas", "respirasi"], " /menit"),
   measure("vitals.temp", "Suhu", ["temp"], " °C"),
+  measure("vitals.rr", "Napas", ["rr", "frekuensi napas", "respirasi"], " /menit"),
   measure("vitals.spo2", "SpO₂", ["spo2", "saturasi"], "%"),
   measure("anthro.weight", "Berat badan", ["bb"], " kg"),
   measure("anthro.height", "Tinggi badan / panjang badan", ["tinggi badan", "panjang badan", "tb", "pb"], " cm"),
@@ -39,7 +39,7 @@ const examLines: ExamLine[] = [
   { id: "mouth", label: "Mulut", policy: "normal", cells: { adult: "Mukosa bibir lembap, sianosis (-)" }, terms: ["mulut", "mukosa", "bibir", "sianosis", "stomatitis", "sariawan", "lidah"] },
   { id: "neck", label: "Leher", policy: "normal", cells: { adult: "Pembesaran KGB (-), pembesaran tiroid (-)" }, terms: ["leher", "KGB", "kelenjar getah bening", "limfadenopati", "tiroid", "struma", "JVP"] },
   { id: "chest.lungs", label: "Paru", policy: "normal", cells: { adult: "Gerak napas simetris, retraksi (-), suara napas vesikuler (+/+), ronki (-/-), wheezing (-/-)", child: "Gerak napas simetris, tarikan dinding dada ke dalam (-), suara napas vesikuler (+/+), ronki (-/-), wheezing (-/-)" }, aliases: ["paru-paru", "pulmo"], terms: ["paru", "sesak", "retraksi", "tarikan dinding dada", "vesikuler", "ronki", "rhonki", "wheezing", "mengi", "stridor", "redup", "hipersonor"] },
-  { id: "chest.heart", label: "Jantung", policy: "normal", cells: { adult: "Bunyi jantung I-II reguler, murmur (-), gallop (-)" }, aliases: ["cor"], terms: ["jantung", "bunyi jantung", "BJ", "murmur", "gallop", "iktus", "ireguler"] },
+  { id: "chest.heart", label: "Jantung", policy: "normal", cells: { adult: "Bunyi jantung I–II reguler, murmur (-), gallop (-)" }, aliases: ["cor"], terms: ["jantung", "bunyi jantung", "BJ", "murmur", "gallop", "iktus", "ireguler"] },
   { id: "breast", label: "Payudara", policy: "normal", female: true, cells: { adult: ["notExamined", "Tidak diperiksa"], child: null, pregnant: "Massa (-), retraksi puting (-)", postpartum: "Massa (-), puting lecet (-), bendungan ASI (-)" }, aliases: ["mammae"], terms: ["payudara", "mammae", "massa payudara", "puting", "areola", "ASI", "lecet", "bendungan"] },
   { id: "abdomen", label: "Abdomen", policy: "normal", cells: { adult: "Supel, bising usus (+) normal, nyeri tekan (-), hepar dan lien tidak teraba", pregnant: "Membesar (hamil), nyeri tekan (-)", postpartum: "Supel, nyeri tekan (-)" }, aliases: ["perut"], terms: ["abdomen", "perut", "supel", "distensi", "kembung", "nyeri tekan", "defans", "bising usus", "hepar", "lien", "hepatomegali", "splenomegali", "asites", "McBurney", "Murphy"] },
   measure("obstetric.fundus", "Tinggi fundus uteri", ["tfu", "tinggi fundus", "fundus uteri"], " cm", { adult: null, pregnant: "", postpartum: "" }),
@@ -132,29 +132,61 @@ function bmi(typed: Map<string, string>): number | undefined {
 
 /** The assembled "Pemeriksaan Fisik" section, or undefined until age and sex are known (the placeholder stays).
  *  `rest` is the text without the lines the section consumed; `labelled` is true when the doctor labelled exam lines. */
-export function normalExam(text: string, fields: Partial<CaseFields>, hints: { age?: string; sex?: "M" | "F" }): { text: string; rest: string; labelled: boolean; vitals: ExamVitals; adult: boolean } | undefined {
+/** One exam line for the SOAP note's tables: its value ("" when unmeasured) and whether the normal template filled it. */
+export interface ExamRow { id: string; label: string; value: string; policy: Policy; auto: boolean }
+
+export function normalExam(text: string, fields: Partial<CaseFields>, hints: { age?: string; sex?: "M" | "F" }): { text: string; rest: string; labelled: boolean; vitals: ExamVitals; adult: boolean; rows: ExamRow[]; extra: string[] } | undefined {
   const patient = examPatient(text, fields, hints);
   if (!patient) return undefined;
   const { typed, stray, consumed, rest, finding, scanned } = readExam(text, fields, patient);
   const derived = bmi(typed);
   if (derived && !typed.has("anthro.bmi")) typed.set("anthro.bmi", comma(derived));
-  const out = [finding && `Temuan dokter: ${finding}`, ...stray].filter(Boolean) as string[];
+  const extra = [finding && `Temuan dokter: ${finding}`, ...stray].filter(Boolean) as string[];
+  const out = [...extra], rows: ExamRow[] = [];
   for (const line of examLines) {
     const value = cell(line, patient);
-    // The vital signs go to the exam's own table (physical-exam.ts).
-    if (value === null || line.id.startsWith("vitals.")) continue;
+    if (value === null) continue;
     const [policy, base] = Array.isArray(value) ? value : [line.policy, value];
-    const entry = typed.get(line.id);
-    // An unmeasured line is left out rather than written "belum diukur" (Gaffer, 2026-10-21).
-    if (!entry && policy === "measure" && !mentions(line.terms ?? [], scanned)) continue;
+    const entry = typed.get(line.id), mentioned = mentions(line.terms ?? [], scanned);
     const shown = entry ? (line.unit && /^\d+(?:[.,]\d+)?(?:\/\d+)?$/.test(entry) ? entry + line.unit : entry)
-      : mentions(line.terms ?? [], scanned) ? (finding ? "lihat temuan dokter" : "lihat catatan dokter")
-      : policy === "normal" ? `${base} ${autoNormalMarker}` : base;
-    out.push(`${line.label}: ${shown}`);
+      : mentioned ? (finding ? "lihat temuan dokter" : "lihat catatan dokter") : policy === "measure" ? "" : base;
+    const auto = !entry && !mentioned && policy === "normal";
+    rows.push({ id: line.id, label: line.label, value: shown, policy, auto });
+    // The vital signs go to the exam's own table (physical-exam.ts), and an unmeasured line is left out rather than
+    // written "belum diukur" (Gaffer, 2026-10-21).
+    if (line.id.startsWith("vitals.") || !shown) continue;
+    out.push(`${line.label}: ${auto ? `${shown} ${autoNormalMarker}` : shown}`);
   }
   const bp = /(\d{2,3})\s*\/\s*(\d{2,3})/.exec(typed.get("vitals.bp") ?? "");
   const vitals: ExamVitals = { systolic: bp ? Number(bp[1]) : undefined, diastolic: bp ? Number(bp[2]) : undefined, heartRate: decimal(typed.get("vitals.hr")), temperature: decimal(typed.get("vitals.temp")), respiratoryRate: decimal(typed.get("vitals.rr")), spo2: decimal(typed.get("vitals.spo2")) };
-  return { text: out.join("\n"), rest, labelled: [...consumed].length > 0, vitals, adult: patient.months >= 216 };
+  return { text: out.join("\n"), rest, labelled: [...consumed].length > 0, vitals, adult: patient.months >= 216, rows, extra };
+}
+
+// The SOAP note's exam (Gaffer's format, 2026-10-21): general state and vital signs, anthropometry, the organ systems,
+// and what was not examined, each a table. A template value keeps its marker at the end of its cell.
+export const templateNote = "Temuan dari templat normal";
+const rowNames: Record<string, string> = { "vitals.hr": "Nadi", "vitals.rr": "Frekuensi napas", ent: "THT", anorectal: "Anus & rektum" };
+const notMeasured: Record<string, string> = { "anthro.bmi": "Belum dihitung", "anthro.nutrition": "Belum dinilai" };
+export const rowLabel = (row: Pick<ExamRow, "id" | "label">, adult: boolean) => row.id === "anthro.height" && adult ? "Tinggi badan" : rowNames[row.id] ?? row.label;
+export function examTables(rows: ExamRow[], extra: string[], adult: boolean): string {
+  const marked = (row: ExamRow, value: string) => row.auto ? `${value} ${autoNormalMarker}` : value;
+  const sentence = (text: string) => { const value = text.charAt(0).toUpperCase() + text.slice(1); return /[.!?]$/.test(value) ? value : `${value}.`; };
+  const measured = (row: ExamRow) => [row.value ? `**${rowLabel(row, adult)}**` : rowLabel(row, adult), marked(row, row.value.replace(/ \/menit$/, " x/menit") || (notMeasured[row.id] ?? "Belum diukur"))];
+  const notExamined = (row: ExamRow) => /^Tidak (?:diperiksa|dilakukan)$/.test(row.value);
+  const general = rows.filter(row => row.id.startsWith("general.") || row.id.startsWith("vitals."));
+  const anthro = rows.filter(row => row.id.startsWith("anthro."));
+  const other = rows.filter(row => !general.includes(row) && !anthro.includes(row) && notExamined(row));
+  const systems = rows.filter(row => !general.includes(row) && !anthro.includes(row) && !other.includes(row));
+  const parts: [string, string][] = [
+    ["Keadaan Umum & Tanda Vital", table(["Parameter", "Hasil"], general.map(measured))],
+    ["Antropometri", anthro.length ? table(["Parameter", "Hasil"], anthro.map(measured)) : ""],
+    ["Pemeriksaan Sistemik", table(["Organ / Sistem", "Temuan Pemeriksaan"], [
+      ...extra.map(line => [`**${line.slice(0, line.indexOf(":")).trim()}**`, sentence(line.slice(line.indexOf(":") + 1).trim())]),
+      ...systems.map(row => [`**${rowLabel(row, adult)}**`, row.value ? marked(row, sentence(row.value)) : "Belum diukur"]),
+    ])],
+    ["Pemeriksaan Lainnya", other.length ? table(["Pemeriksaan", "Status"], other.map(row => [rowLabel(row, adult), row.value])) : ""],
+  ];
+  return parts.filter(([, body]) => body).map(([title, body], index) => `### ${"ABCD"[index]}. ${title}\n\n${body}`).join("\n\n");
 }
 
 /** Warnings for typed values against the section 7 ranges. UI only: never written into the record, never a diagnosis. */
@@ -229,7 +261,11 @@ export function missingPregnancyLines(text: string): ("Hamil" | "Nifas")[] {
 
 /** The labels of the lines the template filled ("Keadaan umum", "Paru"), in document order. */
 export function autoNormalLabels(text: string): string[] {
-  return text.split(/\r?\n/).filter((line) => line.endsWith(autoNormalMarker)).map((line) => line.slice(0, line.indexOf(":")).trim());
+  // "Label: value [otomatis normal]" lines, and table rows "| **Label** | value [otomatis normal] |" (examTables).
+  return text.split(/\r?\n/).flatMap((line) => {
+    const row = /^\|\s*(?:\*\*)?([^|*]+?)(?:\*\*)?\s*\|.*\[otomatis normal\]\s*\|$/.exec(line);
+    return row ? [row[1]] : line.endsWith(autoNormalMarker) ? [line.slice(0, line.indexOf(":")).trim()] : [];
+  });
 }
 
 /** The text as every output shows it: the marker hides once the doctor marks the draft Ditinjau or Final (decision D10).

@@ -380,9 +380,10 @@ export function pcareCopies(message: Pick<Message, "sourceText" | "mode">, conte
       ...copy("Alergi", data.allergies.join(", ")),
     ];
   }
-  // A local draft: its filled sections by title; "Riwayat Pengobatan / Alergi" mixes two fields and is not mapped.
+  // A local draft: its filled sections by title ("1. Keluhan Utama" in the SOAP note); "Riwayat Pengobatan / Alergi"
+  // mixes two fields and is not mapped.
   const filled = documentSections(content).filter(section => !emptySection(section.body));
-  const body = (...titles: string[]) => filled.filter(section => titles.includes(section.title)).map(section => section.body.trim()).join("\n");
+  const body = (...titles: string[]) => filled.filter(section => titles.includes(section.title.replace(/^\d+\.\s+/, ""))).map(section => section.body.trim()).join("\n");
   return [
     ...copy("Keluhan", body("Keluhan Utama", "Riwayat Penyakit", "Chief concern", "History of present illness")),
     ...copy("Pemeriksaan fisik", physicalExamPlain(body("Pemeriksaan Fisik", "Examination"))),

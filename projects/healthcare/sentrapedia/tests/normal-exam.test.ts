@@ -21,7 +21,7 @@ describe("normal exam templates", () => {
       "Mulut: Mukosa bibir lembap, sianosis (-) [otomatis normal]",
       "Leher: Pembesaran KGB (-), pembesaran tiroid (-) [otomatis normal]",
       "Paru: Gerak napas simetris, tarikan dinding dada ke dalam (-), suara napas vesikuler (+/+), ronki (-/-), wheezing (-/-) [otomatis normal]",
-      "Jantung: Bunyi jantung I-II reguler, murmur (-), gallop (-) [otomatis normal]",
+      "Jantung: Bunyi jantung I–II reguler, murmur (-), gallop (-) [otomatis normal]",
       "Abdomen: Supel, bising usus (+) normal, nyeri tekan (-), hepar dan lien tidak teraba [otomatis normal]",
       "Genitalia: Tidak diperiksa",
       "Anus dan rektum: Tidak diperiksa",
@@ -42,7 +42,7 @@ describe("normal exam templates", () => {
       "Mulut: Mukosa bibir lembap, sianosis (-) [otomatis normal]",
       "Leher: Pembesaran KGB (-), pembesaran tiroid (-) [otomatis normal]",
       "Paru: Gerak napas simetris, retraksi (-), suara napas vesikuler (+/+), ronki (-/-), wheezing (-/-) [otomatis normal]",
-      "Jantung: Bunyi jantung I-II reguler, murmur (-), gallop (-) [otomatis normal]",
+      "Jantung: Bunyi jantung I–II reguler, murmur (-), gallop (-) [otomatis normal]",
       "Payudara: Massa (-), retraksi puting (-) [otomatis normal]",
       "Abdomen: Membesar (hamil), nyeri tekan (-) [otomatis normal]",
       "Tinggi fundus uteri: 30 cm",
@@ -129,40 +129,85 @@ describe("normal exam templates", () => {
 
 describe("the local SOAP draft", () => {
   const draft = (prompt: string, language: "Bahasa Indonesia" | "English" = "Bahasa Indonesia") => createDraft({ mode: "clinic", prompt, context: "", specialty: "Umum", model: "Standard", language, instructions: "", caseFields: readCaseFields(prompt) });
-  const section = (text: string, title: string) => text.split(`## ${title}\n`)[1]?.split("\n\n## ")[0];
+  const section = (text: string, title: string) => text.split(new RegExp(`\\n## \\d+\\. ${title}\\n\\n`))[1]?.split(/\n\n(?:---\n\n)?## /)[0];
 
   it("fills Pemeriksaan Fisik from the template and keeps exam lines out of the complaint", () => {
     const text = draft("Demam 3 hari, laki-laki 4 tahun\nTenggorok: faring hiperemis (+)");
-    expect(section(text, "Keluhan Utama")).toBe("Demam 3 hari");
-    expect(section(text, "Pemeriksaan Fisik")).toContain("Telinga, hidung, tenggorok: faring hiperemis (+)");
-    expect(section(text, "Pemeriksaan Fisik")).toContain("Paru: Gerak napas simetris");
-    expect(section(text, "Assessment")).toBe(`${missingField}.`);
+    expect(section(text, "Keluhan Utama")).toBe("Demam sejak 3 hari.");
+    expect(section(text, "Pemeriksaan Fisik")).toContain("| **THT** | Faring hiperemis (+). |");
+    expect(section(text, "Pemeriksaan Fisik")).toContain("| **Paru** | Gerak napas simetris");
+    expect(section(text, "Assessment")).toBeUndefined();
+    expect(section(text, "Kelengkapan Dokumentasi")).toContain("- Assessment / Diagnosis\n");
     expect(text).toContain("## Teks sumber (verbatim)\nDemam 3 hari, laki-laki 4 tahun\nTenggorok: faring hiperemis (+)");
   });
 
-  // Gaffer, 2026-10-21: the patient's name and age on top, the complaint alone, and the exam as the AADI report's part 4.
-  it("names the patient, keeps the complaint alone, and writes the exam in the report's format", () => {
-    const text = draft("Laki-laki 40 tahun demam 3 hari, nyeri kepala, TD 120/80, N 96, S 38,6");
-    expect(text).toContain("\nPasien: — · 40 tahun · Laki-laki\n");
-    expect(section(text, "Keluhan Utama")).toBe("Demam 3 hari, nyeri kepala");
-    const physical = section(text, "Pemeriksaan Fisik");
-    expect(physical).toMatch(/^#### A\. Hasil Pemeriksaan\n\n\*\*Tanda Vital\*\*\n\n\| Parameter \| Hasil \|/);
-    for (const row of ["| Tekanan darah | 120/80 mmHg |", "| Frekuensi nadi | 96 kali/menit |", "| Suhu tubuh | 38,6°C |", "| Frekuensi napas | Belum tersedia |"]) expect(physical).toContain(row);
-    expect(physical).toContain("**Temuan klinis:** Demam (38,6°C).\n\nKeadaan umum: Baik [otomatis normal]");
-    expect(physical).toContain("| **Tanda rangsang meningeal** | Menilai kemungkinan iritasi meningeal bila terdapat indikasi klinis. |");
-    expect(physical).toContain("Pasien menunjukkan **demam**.");
-    expect(text).not.toMatch(/belum diukur|Pasien belum dipilih/);
+  // Gaffer, 2026-10-21 ("Catatan Klinis / REFORMAT"): his pasted note, line for line.
+  it("writes the clinical note in Gaffer's format", () => {
+    expect(draft("Laki-laki 40 tahun demam 3 hari, nyeri kepala, TD 120/80, N 96, S 38,6")).toBe([
+      "# CATATAN KLINIS", "",
+      "**Pasien:** Laki-laki, 40 tahun",
+      "**Status:** Draf pemeriksaan • Menunggu validasi dokter", "",
+      "## 1. Keluhan Utama", "",
+      "Demam sejak 3 hari disertai nyeri kepala.", "",
+      "## 2. Pemeriksaan Fisik", "",
+      "### A. Keadaan Umum & Tanda Vital", "",
+      "| Parameter | Hasil |", "| --- | --- |",
+      "| **Keadaan umum** | Baik [otomatis normal] |",
+      "| **Kesadaran** | Compos mentis [otomatis normal] |",
+      "| **Tekanan darah** | 120/80 mmHg |",
+      "| **Nadi** | 96 x/menit |",
+      "| **Suhu** | 38,6 °C |",
+      "| Frekuensi napas | Belum diukur |",
+      "| SpO₂ | Belum diukur |", "",
+      "### B. Antropometri", "",
+      "| Parameter | Hasil |", "| --- | --- |",
+      "| Berat badan | Belum diukur |",
+      "| Tinggi badan | Belum diukur |",
+      "| IMT | Belum dihitung |",
+      "| Lingkar perut | Belum diukur |", "",
+      "### C. Pemeriksaan Sistemik", "",
+      "| Organ / Sistem | Temuan Pemeriksaan |", "| --- | --- |",
+      "| **Kepala** | Lihat catatan dokter. |",
+      "| **Mata** | Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+). [otomatis normal] |",
+      "| **THT** | Sekret telinga (-/-), sekret hidung (-), faring hiperemis (-), tonsil tidak hiperemis, detritus (-). [otomatis normal] |",
+      "| **Mulut** | Mukosa bibir lembap, sianosis (-). [otomatis normal] |",
+      "| **Leher** | Pembesaran KGB (-), pembesaran tiroid (-). [otomatis normal] |",
+      "| **Paru** | Gerak napas simetris, retraksi (-), suara napas vesikuler (+/+), ronki (-/-), wheezing (-/-). [otomatis normal] |",
+      "| **Jantung** | Bunyi jantung I–II reguler, murmur (-), gallop (-). [otomatis normal] |",
+      "| **Abdomen** | Supel, bising usus (+) normal, nyeri tekan (-), hepar dan lien tidak teraba. [otomatis normal] |",
+      "| **Ekstremitas** | Akral hangat, CRT < 2 detik, edema (-/-). [otomatis normal] |",
+      "| **Kulit** | Ruam (-). [otomatis normal] |", "",
+      "### D. Pemeriksaan Lainnya", "",
+      "| Pemeriksaan | Status |", "| --- | --- |",
+      "| Genitalia | Tidak diperiksa |",
+      "| Anus & rektum | Tidak diperiksa |",
+      "| Status neurologis | Tidak diperiksa |", "",
+      "---", "",
+      "## 3. Kelengkapan Dokumentasi", "",
+      "**Belum diisi:**",
+      "- Riwayat penyakit",
+      "- Riwayat pengobatan dan alergi",
+      "- Assessment / Diagnosis",
+      "- Tata laksana", "",
+      "**Temuan dari templat normal — perlu validasi dokter:**", "",
+      "Keadaan umum, kesadaran, mata, THT, mulut, leher, paru, jantung, abdomen, ekstremitas, dan kulit.", "",
+      "*Catatan: Temuan yang berasal dari templat normal belum dapat dianggap sebagai hasil pemeriksaan aktual sampai dikonfirmasi oleh dokter.*", "",
+      "**Status akhir:** Belum lengkap — memerlukan verifikasi sebelum finalisasi catatan klinis.",
+    ].join("\n"));
     const named = createDraft({ mode: "clinic", prompt: "Demam 3 hari", context: "", specialty: "Umum", model: "Standard", language: "Bahasa Indonesia", instructions: "", patient: { id: "p1", name: "Pasien Fiktif", age: "30", sex: "Female", notes: "" } });
-    expect(named).toContain("\nPasien: Pasien Fiktif · 30 tahun · Perempuan\n");
+    expect(named).toContain("\n**Pasien:** Pasien Fiktif, Perempuan, 30 tahun\n");
   });
 
-  it("keeps the placeholder until age and sex are known, and in English drafts", () => {
-    expect(section(draft("Demam 3 hari"), "Pemeriksaan Fisik")).toBe(`${missingField}.`);
+  it("leaves the exam to the completeness list until age and sex are known, and keeps English drafts unmarked", () => {
+    const text = draft("Demam 3 hari");
+    expect(section(text, "Pemeriksaan Fisik")).toBeUndefined();
+    expect(section(text, "Kelengkapan Dokumentasi")).toContain("- Pemeriksaan fisik\n");
+    expect(text).not.toContain("templat normal");
     expect(draft("Fever, male 40 tahun", "English")).not.toContain("[otomatis normal]");
   });
 
   it("uses the saved patient's age and sex", () => {
     const text = createDraft({ mode: "clinic", prompt: "Keluhan utama: batuk", context: "", specialty: "Umum", model: "Standard", language: "Bahasa Indonesia", instructions: "", patient: { id: "p1", name: "Pasien Fiktif", age: "30", sex: "Female", notes: "" } });
-    expect(section(text, "Pemeriksaan Fisik")).toContain("Payudara: Tidak diperiksa");
+    expect(section(text, "Pemeriksaan Fisik")).toContain("| Payudara | Tidak diperiksa |");
   });
 });
