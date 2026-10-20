@@ -121,7 +121,8 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
     <div className="diagnosis-sections">
       {/* The doctor's summary stands as its own section above the report (Gaffer, 2026-10-21). */}
       {summaryFirst && renderPart(parts[0], 0)}
-      {renderContent(showMeta ? prefix : documentTitle(content), () => undefined)}
+      {/* Without the meta line a local draft still names its patient under the title (Gaffer, 2026-10-21). */}
+      {renderContent(showMeta ? prefix : [documentTitle(content), prefix.split("\n").find((line) => line.startsWith("Pasien: "))].filter(Boolean).join("\n"), () => undefined)}
       {parts.map((part, index) => summaryFirst && index === 0 ? null : renderPart(part, index))}
       {!typingNow && empty.length > 0 && <p className="empty-sections">Belum diisi: {empty.map((index, order) => <Fragment key={index}>{order > 0 && ", "}<button type="button" id={`${id}-${index}`} data-empty-section={index} className="text-button" aria-label={`Isi bagian ${sections[index].title}`} onClick={() => onEditSection ? onEditSection(index) : navigate(index)}>{sections[index].title}</button></Fragment>)}</p>}
       {!typingNow && autoFilled.length > 0 && autoSection >= 0 && <p className="empty-sections">Diisi templat normal: {autoFilled.map((label, order) => <Fragment key={label}>{order > 0 && ", "}<button type="button" className="text-button" aria-label={`Lihat ${label} di ${sections[autoSection].title}`} onClick={() => navigate(autoSection)}>{label}</button></Fragment>)}. Tinjau sebelum Ditinjau.</p>}

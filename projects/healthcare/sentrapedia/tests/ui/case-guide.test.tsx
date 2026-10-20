@@ -129,7 +129,7 @@ describe("guided SOAP view", () => {
     expect(sent).toEqual([]);
     const saved = JSON.parse(localStorage.getItem(storageKey)!) as Workspace;
     const draft = saved.encounters[0].messages.find((message) => message.role === "assistant")!;
-    expect(draft.content).toContain("## Keluhan Utama\ndemam 3 hari");
+    expect(draft.content).toContain("## Keluhan Utama\nDemam 3 hari");
     expect(draft.content).toContain(`## Assessment\n${missingField}.`);
     expect(draft.content).not.toMatch(/\b[A-Z]\d{2}(\.\d)?\b/);
   });

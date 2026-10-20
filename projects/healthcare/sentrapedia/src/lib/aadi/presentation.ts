@@ -6,6 +6,7 @@ import { documentSections, emptySection } from "../studio";
 import type { ModeId } from "../drafts";
 import { freshReview, type ReviewItem } from "../workflow";
 import { validTheOracleGrounding, type TheOracleGroundingBundle } from "../theoracle-grounding-types";
+import { furtherExams, headacheWords, physicalExamPlain, physicalExamText, table } from "../physical-exam";
 import { applyTherapyGate, gateEvidence, unstrength, validGate, type EvidenceGateReport, type GateStatus } from "../theoracle-evidence-gate";
 
 const gateLine: Record<GateStatus, string> = { verified: "dosis terverifikasi", doseRemoved: "dosis tidak ditemukan di Oracle, cek pedoman", removed: "tidak ditampilkan, indikasi tidak terverifikasi di Oracle" };
@@ -104,8 +105,7 @@ const headachePack = {
   redFlags: ["Nyeri mendadak yang mencapai intensitas maksimal dalam 1–5 menit (*thunderclap headache*).", "Demam, kaku kuduk, atau penurunan kesadaran.", "Defisit neurologis baru, kejang, atau gangguan penglihatan.", "Trauma kepala, perubahan bermakna pola nyeri, atau nyeri yang dipicu aktivitas/mengejan."],
   emergency: `**Jika dicurigai perdarahan subaraknoid, rujuk segera ke IGD.**`,
   history: [["Onset", "Kapan mulai? Mendadak atau bertahap? Berapa lama hingga nyeri maksimal?"], ["Pola", "Serangan pertama atau berulang; durasi setiap episode; frekuensi per bulan"], ["Karakteristik", "Berdenyut, menekan/mengikat, terbakar, atau seperti tersengat"], ["Intensitas dan dampak", "Skala nyeri 0–10; gangguan aktivitas dan tidur"], ["Lokasi dan penjalaran", "Unilateral/bilateral; menjalar dari leher atau ke area lain"], ["Gejala penyerta", "Mual, muntah, fotofobia, fonofobia, demam, kaku kuduk, atau kelainan neurologis"], ["Pencetus", "Aktivitas fisik, batuk/mengejan, perubahan posisi, atau gerakan leher"], ["Riwayat relevan", "Trauma, penyakit penyerta, kehamilan/pascapersalinan, serta riwayat nyeri kepala"], ["Obat dan alergi", "Analgesik beserta frekuensi penggunaan, antikoagulan, obat lain, dan alergi"]],
-  // Part 4's further exams with their purpose; the vital-sign row is added when a vital is missing.
-  exam: [["Kesadaran dan neurologis", "Menilai tingkat kesadaran dan kemungkinan komplikasi neurologis."], ["Tanda rangsang meningeal", "Menilai kemungkinan iritasi meningeal bila terdapat indikasi klinis."], ["Kepala dan leher", "Menilai rentang gerak, nyeri tekan, dan ketegangan otot."], ["Mata dan funduskopi", "Mengidentifikasi kelainan okular sesuai indikasi dan kompetensi pemeriksa."]],
+  exam: furtherExams.headache,
   workup: [`Bila dicurigai perdarahan subaraknoid, evaluasi rumah sakit mencakup pertimbangan CT kepala nonkontras segera sesuai penilaian klinis.`],
   diary: "Bila keluhan berulang, gunakan catatan nyeri kepala untuk mendokumentasikan pola, pencetus, obat, dan respons.",
 };
@@ -114,12 +114,11 @@ const generalPack: typeof headachePack = {
   redFlags: ["Gangguan jalan napas, sesak berat, atau saturasi oksigen rendah.", "Tanda syok atau tanda vital yang tidak stabil.", "Penurunan kesadaran, kejang, atau defisit neurologis baru.", "Nyeri dada, nyeri hebat yang mendadak, atau perdarahan aktif.", "Demam tinggi dengan tanda sepsis, atau perburukan yang cepat."],
   emergency: "**Bila ada tanda kegawatan, stabilkan dan rujuk segera ke IGD.**",
   history: [["Onset", "Kapan mulai? Mendadak atau bertahap?"], ["Perjalanan dan pola", "Pertama kali atau berulang; durasi; frekuensi; memberat atau membaik"], ["Karakteristik", "Sifat, lokasi, penjalaran, dan intensitas keluhan"], ["Gejala penyerta", "Demam, gejala sistemik, dan keluhan organ terkait"], ["Pencetus dan pereda", "Aktivitas, posisi, makanan, obat, atau faktor lain"], ["Riwayat relevan", "Penyakit penyerta, trauma, kehamilan/pascapersalinan, dan riwayat keluhan serupa"], ["Obat dan alergi", "Obat yang digunakan beserta frekuensinya, antikoagulan, dan alergi"]],
-  exam: [["Keadaan umum dan kesadaran", "Menilai kondisi umum dan tingkat kesadaran."], ["Pemeriksaan terarah", "Mencari temuan yang sesuai dengan keluhan utama."], ["Sistem terkait", "Menyaring diagnosis yang tidak boleh terlewat."]],
+  exam: furtherExams.general,
   workup: [],
   diary: "Bila keluhan berulang, catat pola, pencetus, obat, dan respons terhadap pengobatan.",
 };
 const headacheCodes = /^(?:R51|G43|G44|I60|G03|G00)/;
-const headacheWords = /nyeri kepala|sakit kepala|kepala (?:terasa )?(?:sakit|nyeri|pusing)|cephal|headache|migr[ae]in/i;
 
 /** The report's red flags and history questions for typed text, so the composer can ask them before the analysis
  *  (Gaffer, 2026-10-21). Red flags as plain text: no emphasis marks, no closing full stop. */
@@ -129,9 +128,6 @@ export function symptomQuestions(text: string): { complaint: string; redFlags: s
   return { complaint: pack.complaint, redFlags: [...generalPack.redFlags, ...(headache ? headachePack.redFlags : [])].map(plain), questions: pack.history };
 }
 
-/** A markdown table; a cell holds one line, and a "|" in case text is escaped. */
-const cell = (text: string) => text.replace(/\s*\r?\n\s*/g, " ").replace(/\|/g, "\\|").trim() || "—";
-const table = (head: string[], rows: string[][]) => [head.map(cell), head.map(() => "---"), ...rows.map(row => row.map(cell))].map(row => `| ${row.join(" | ")} |`).join("\n");
 const bullets = (items: string[]) => items.map(item => `- ${item}`).join("\n");
 
 // One therapy line (Gaffer, 2026-10-21: "Amoxicillin 500 mg, diminum tiga kali sehari", "Dihidroartemisinin 40 mg + piperakuin
@@ -213,38 +209,11 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   const findings = [vitalItems.length ? `Tanda vital: ${vitalItems.join("; ")}` : "", ...(caseData?.physicalExam ?? [])].filter(Boolean);
   const incomplete = result.missingInformation.length > 0;
   const questionRows = actionsOf("question").map(a => [a.item, a.reason]);
-  // Part 4 (Gaffer's format, 2026-10-21): every vital sign with its value or "Belum tersedia", the signs outside the usual
-  // range named in words, then the further exams with their purpose. Pulse, pressure and breathing are judged for adults only.
-  const v = caseData?.vitals ?? {}, decimalComma = (n: number) => String(n).replace(".", ",");
-  const adult = (caseData?.demographics.ageYears ?? 18) >= 18;
-  const vitalRows: [name: string, value: string, short: string][] = [
-    ["Tekanan darah", v.systolic != null ? `${v.systolic}${v.diastolic != null ? `/${v.diastolic}` : ""} mmHg` : "", "tekanan darah"],
-    ["Frekuensi nadi", v.heartRate != null ? `${v.heartRate} kali/menit` : "", "frekuensi nadi"],
-    ["Suhu tubuh", v.temperature != null ? `${decimalComma(v.temperature)}°C` : "", "suhu tubuh"],
-    ["Frekuensi napas", v.respiratoryRate != null ? `${v.respiratoryRate} kali/menit` : "", "frekuensi napas"],
-    ["Saturasi oksigen (SpO₂)", v.spo2 != null ? `${v.spo2}%` : "", "SpO₂"],
-    ...(v.gcs != null ? [["GCS", String(v.gcs), "GCS"] as [string, string, string]] : []),
-  ];
-  const missingVitals = vitalRows.filter(([, value]) => !value).map(([, , short]) => short);
-  const [t, hr, sys, dia, rr, spo2] = [v.temperature, v.heartRate, v.systolic, v.diastolic, v.respiratoryRate, v.spo2];
-  // [the finding with its value, the word for the conclusion]
-  const signs = ([
-    [t != null && t >= 37.5, `demam (${vitalRows[2][1]})`, t != null && t >= 39 ? "demam tinggi" : "demam"],
-    [t != null && t < 36, `suhu rendah (${vitalRows[2][1]})`, "suhu rendah"],
-    [adult && hr != null && hr > 100, `takikardia (${vitalRows[1][1]})`, "takikardia"],
-    [adult && hr != null && hr < 60, `bradikardia (${vitalRows[1][1]})`, "bradikardia"],
-    [adult && sys != null && sys < 90, `hipotensi (${vitalRows[0][1]})`, "hipotensi"],
-    [adult && ((sys ?? 0) >= 140 || (dia ?? 0) >= 90), `tekanan darah tinggi (${vitalRows[0][1]})`, "tekanan darah tinggi"],
-    [adult && rr != null && rr > 20, `takipnea (${vitalRows[3][1]})`, "takipnea"],
-    [spo2 != null && spo2 < 95, `saturasi oksigen rendah (${vitalRows[4][1]})`, "saturasi oksigen rendah"],
-  ] as const).filter(([on]) => on);
-  const sentence = (items: string[]) => items.length > 1 ? `${items.slice(0, -1).join(", ")} disertai ${items[items.length - 1]}` : items.join("");
-  const series = (items: string[]) => items.length > 2 ? `${items.slice(0, -1).join(", ")}, dan ${items[items.length - 1]}` : items.join(" dan ");
-  const examRows = [
-    ...(actionsOf("exam").length ? actionsOf("exam").map(a => [capital(a.item), capital(a.reason)]) : pack.exam),
-    ...(missingVitals.length ? [["Tanda vital lengkap", `Melengkapi ${series([...missingVitals, "pemantauan hemodinamik"])}.`]] : []),
-  ].map(([name, purpose]) => [`**${name}**`, purpose]);
-  const examComplete = !missingVitals.length && !!caseData?.physicalExam.length;
+  // Part 4 in Gaffer's format (physical-exam.ts, shared with the SOAP note): AADI's exam actions, else the pack's list.
+  const physical = physicalExamText({
+    vitals: caseData?.vitals ?? {}, adult: (caseData?.demographics.ageYears ?? 18) >= 18, findings: bullets(caseData?.physicalExam ?? []),
+    exams: actionsOf("exam").length ? actionsOf("exam").map(a => [capital(a.item), capital(a.reason)]) : pack.exam, examined: !!caseData?.physicalExam.length,
+  });
   const icdLines = likely.map(d => { const why = evidenceOf(d.icd10).flatMap(e => e.supporting).join("; "); return `${d.icd10} (kandidat)${why ? `: ${why}` : ""}`; });
   const discriminators = (code: string) => {
     const evidence = evidenceOf(code), supporting = evidence.flatMap(e => e.supporting), opposing = evidence.flatMap(e => e.opposing);
@@ -284,17 +253,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
     [diagnosisSectionTitles[2], questionRows.length || result.missingInformation.length
       ? join([questionRows.length ? table(["Pertanyaan", "Alasan"], questionRows) : "", bold("Data yang perlu dilengkapi:", bullets(result.missingInformation))])
       : `Aspek yang perlu dilengkapi (AADI belum memberi data untuk kasus ini):\n\n${table(["Aspek", "Data yang perlu dilengkapi"], pack.history)}`],
-    [diagnosisSectionTitles[3], join([
-      "#### A. Hasil Pemeriksaan",
-      `**Tanda Vital**\n\n${table(["Parameter", "Hasil"], vitalRows.map(([name, value]) => [name, value || "Belum tersedia"]))}`,
-      `**Temuan klinis:** ${signs.length ? `${capital(sentence(signs.map(([, finding]) => finding)))}.` : caseData?.physicalExam.length ? "" : "belum tersedia."}`.trim(),
-      bullets(caseData?.physicalExam ?? []),
-      "#### B. Pemeriksaan Lanjutan yang Diperlukan",
-      table(["Pemeriksaan", "Tujuan Klinis"], examRows),
-      "#### C. Kesimpulan Pemeriksaan Fisik",
-      `${signs.length ? `Pasien menunjukkan **${sentence(signs.map(([, , word]) => word))}**. ` : ""}Pemeriksaan fisik tambahan diperlukan untuk menilai kondisi umum, status neurologis, dan kemungkinan tanda kegawatan.`,
-      examComplete ? "" : "**Status:** Pemeriksaan fisik belum lengkap. Penilaian tanda bahaya perlu diprioritaskan.",
-    ])],
+    [diagnosisSectionTitles[3], physical],
     [diagnosisSectionTitles[4], join([
       `**Diagnosis kerja sementara:** ${candidates ? `kandidat AADI ${candidates}.` : "belum dapat ditetapkan dari data yang ada."}`,
       differentialRows.length || extraRows.length ? table(["Diagnosis banding", "Data pembeda yang perlu dicari", "Keterangan"], [...differentialRows, ...extraRows]) : "",
@@ -426,7 +385,7 @@ export function pcareCopies(message: Pick<Message, "sourceText" | "mode">, conte
   const body = (...titles: string[]) => filled.filter(section => titles.includes(section.title)).map(section => section.body.trim()).join("\n");
   return [
     ...copy("Keluhan", body("Keluhan Utama", "Riwayat Penyakit", "Chief concern", "History of present illness")),
-    ...copy("Pemeriksaan fisik", body("Pemeriksaan Fisik", "Examination")),
+    ...copy("Pemeriksaan fisik", physicalExamPlain(body("Pemeriksaan Fisik", "Examination"))),
     ...copy("Diagnosa", body("Assessment"), "Diagnosa (teks)"),
     ...copy("Terapi", body("Tata Laksana", "Plan")),
   ];

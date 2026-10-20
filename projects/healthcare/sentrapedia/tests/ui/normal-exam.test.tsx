@@ -69,7 +69,8 @@ describe("normal exam template in the composer", () => {
     expect(await screen.findByText("Draf lokal", { selector: ".draft-badge" })).toBeTruthy();
     const draft = (JSON.parse(localStorage.getItem(storageKey)!) as Workspace).encounters[0].messages.find((message) => message.role === "assistant")!;
     expect(draft.content).toContain("Paru: ronki (+/+)\n");
-    expect(draft.content).toContain("Tekanan darah: 150/90 mmHg\n");
+    expect(draft.content).toContain("| Tekanan darah | 150/90 mmHg |\n");
+    expect(draft.content).toContain("## Keluhan Utama\nBatuk 3 hari\n");
     expect(draft.content).toContain("Mata: Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+) [otomatis normal]");
     expect(draft.content).not.toContain("PERHI");
     // The view names the template lines once, in the "Belum diisi" line style; the lines themselves read clean.

@@ -54,7 +54,8 @@ export function DocumentContent({ content, onEdit, clinical = false }: { content
       const end = lines.findIndex((next, at) => at > index && !next.startsWith("|"));
       return <DocumentTable key={index} lines={lines.slice(index, end < 0 ? lines.length : end)}/>;
     }
-    if (clinical && line.startsWith("#### ")) return <h4 className="diagnosis-field-label" key={index}>{line.slice(5)}</h4>;
+    // The exam's A/B/C headings, in the AADI report and the SOAP note alike (physical-exam.ts).
+    if (line.startsWith("#### ")) return <h4 className="diagnosis-field-label" key={index}>{line.slice(5)}</h4>;
     if (clinical && line.startsWith("### ")) return <h4 className="diagnosis-reference-heading" key={index}>{line.slice(4)}</h4>;
     if (line.startsWith("# ")) return <h2 key={index}>{line.slice(2)}</h2>;
     if (line.startsWith("## ")) return <h3 key={index}>{line.slice(3)}</h3>;

@@ -4,6 +4,7 @@
 import type { CaseFields } from "./aadi/composer";
 import type { ReviewStatus } from "./workspace";
 import { structureNote } from "./note-structure";
+import type { ExamVitals } from "./physical-exam";
 
 export const autoNormalMarker = "[otomatis normal]";
 export type ExamGroup = "adult" | "child" | "infant" | "pregnant" | "postpartum";
@@ -11,7 +12,7 @@ type Policy = "normal" | "measure" | "notExamined";
 // A cell is the group's text ("" for a measure line), null when the line is absent for the group, or a pair when the
 // group has its own policy (the breast line).
 type Cell = string | null | [Policy, string];
-interface ExamLine { id: string; label: string; policy: Policy; cells: Partial<Record<ExamGroup, Cell>>; aliases?: string[]; terms?: string[]; unit?: string; empty?: string; female?: true }
+interface ExamLine { id: string; label: string; policy: Policy; cells: Partial<Record<ExamGroup, Cell>>; aliases?: string[]; terms?: string[]; unit?: string; female?: true }
 
 const measure = (id: string, label: string, aliases: string[], unit?: string, cells: ExamLine["cells"] = { adult: "" }): ExamLine => ({ id, label, policy: "measure", cells, aliases, unit });
 const onlyAdult = { adult: "", child: null, pregnant: null, postpartum: null };
@@ -30,7 +31,7 @@ const examLines: ExamLine[] = [
   measure("anthro.bmi", "IMT", ["bmi"], " kg/m²", onlyAdult),
   measure("anthro.waist", "Lingkar perut", ["lingkar pinggang", "lp"], " cm", onlyAdult),
   measure("anthro.headCirc", "Lingkar kepala", ["lk"], " cm", { adult: null, infant: "" }),
-  { ...measure("anthro.nutrition", "Status gizi", [], undefined, { adult: null, child: "" }), empty: "belum dinilai" },
+  measure("anthro.nutrition", "Status gizi", [], undefined, { adult: null, child: "" }),
   { id: "head", label: "Kepala", policy: "normal", cells: { adult: "Normocephal" }, terms: ["kepala", "normocephal", "mikrosefal", "makrosefal", "deformitas kepala", "hematoma"] },
   measure("head.fontanelle", "Ubun-ubun besar", ["ubun-ubun", "uub", "fontanel"], undefined, { adult: null, infant: "" }),
   { id: "eyes", label: "Mata", policy: "normal", cells: { adult: "Konjungtiva anemis (-/-), sklera ikterik (-/-), pupil isokor, refleks cahaya (+/+)", child: "Konjungtiva anemis (-/-), sklera ikterik (-/-), mata cekung (-), pupil isokor, refleks cahaya (+/+)" }, terms: ["mata", "konjungtiva", "anemis", "sklera", "ikterik", "pupil", "anisokor", "refleks cahaya", "mata cekung"] },
@@ -131,7 +132,7 @@ function bmi(typed: Map<string, string>): number | undefined {
 
 /** The assembled "Pemeriksaan Fisik" section, or undefined until age and sex are known (the placeholder stays).
  *  `rest` is the text without the lines the section consumed; `labelled` is true when the doctor labelled exam lines. */
-export function normalExam(text: string, fields: Partial<CaseFields>, hints: { age?: string; sex?: "M" | "F" }): { text: string; rest: string; labelled: boolean } | undefined {
+export function normalExam(text: string, fields: Partial<CaseFields>, hints: { age?: string; sex?: "M" | "F" }): { text: string; rest: string; labelled: boolean; vitals: ExamVitals; adult: boolean } | undefined {
   const patient = examPatient(text, fields, hints);
   if (!patient) return undefined;
   const { typed, stray, consumed, rest, finding, scanned } = readExam(text, fields, patient);
@@ -140,15 +141,20 @@ export function normalExam(text: string, fields: Partial<CaseFields>, hints: { a
   const out = [finding && `Temuan dokter: ${finding}`, ...stray].filter(Boolean) as string[];
   for (const line of examLines) {
     const value = cell(line, patient);
-    if (value === null) continue;
+    // The vital signs go to the exam's own table (physical-exam.ts).
+    if (value === null || line.id.startsWith("vitals.")) continue;
     const [policy, base] = Array.isArray(value) ? value : [line.policy, value];
     const entry = typed.get(line.id);
+    // An unmeasured line is left out rather than written "belum diukur" (Gaffer, 2026-10-21).
+    if (!entry && policy === "measure" && !mentions(line.terms ?? [], scanned)) continue;
     const shown = entry ? (line.unit && /^\d+(?:[.,]\d+)?(?:\/\d+)?$/.test(entry) ? entry + line.unit : entry)
       : mentions(line.terms ?? [], scanned) ? (finding ? "lihat temuan dokter" : "lihat catatan dokter")
-      : policy === "normal" ? `${base} ${autoNormalMarker}` : policy === "measure" ? line.empty ?? "belum diukur" : base;
+      : policy === "normal" ? `${base} ${autoNormalMarker}` : base;
     out.push(`${line.label}: ${shown}`);
   }
-  return { text: out.join("\n"), rest, labelled: [...consumed].length > 0 };
+  const bp = /(\d{2,3})\s*\/\s*(\d{2,3})/.exec(typed.get("vitals.bp") ?? "");
+  const vitals: ExamVitals = { systolic: bp ? Number(bp[1]) : undefined, diastolic: bp ? Number(bp[2]) : undefined, heartRate: decimal(typed.get("vitals.hr")), temperature: decimal(typed.get("vitals.temp")), respiratoryRate: decimal(typed.get("vitals.rr")), spo2: decimal(typed.get("vitals.spo2")) };
+  return { text: out.join("\n"), rest, labelled: [...consumed].length > 0, vitals, adult: patient.months >= 216 };
 }
 
 /** Warnings for typed values against the section 7 ranges. UI only: never written into the record, never a diagnosis. */

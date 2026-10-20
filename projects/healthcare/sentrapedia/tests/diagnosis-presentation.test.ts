@@ -566,6 +566,11 @@ describe("copy and referral from an analysis", () => {
     expect(copies[3].value).toBe("Edukasi minum air");
     const free = createDraft({ mode: "clinic", prompt: "Batuk 5 hari dan demam", ...draftInput });
     expect(pcareCopies({ sourceText: "Input\nBatuk 5 hari dan demam", mode: "clinic" }, free)).toEqual([{ field: "Keluhan", label: "Keluhan", value: "Batuk 5 hari dan demam", done: "Keluhan disalin." }]);
+    // The exam in the report's format copies as plain lines: measured vital signs, then the exam lines.
+    const examined = "Laki-laki 40 tahun demam 3 hari, TD 120/80, N 96";
+    const exam = pcareCopies({ sourceText: `Input\n${examined}`, mode: "clinic" }, createDraft({ mode: "clinic", prompt: examined, ...draftInput, caseFields: { age: "40", sex: "M", bp: "120/80", heartRate: "96", temperature: "", respiratoryRate: "", spo2: "" } })).find(item => item.field === "Pemeriksaan fisik")!.value;
+    expect(exam).toMatch(/^Tekanan darah: 120\/80 mmHg\nFrekuensi nadi: 96 kali\/menit\nKeadaan umum: Baik \[otomatis normal\]\n/);
+    expect(exam).not.toMatch(/\||####|\*\*|Belum tersedia|Temuan klinis|Pemeriksaan Lanjutan|Kesimpulan/);
   });
   it("offers local next steps after an analysis, prefilled from recorded facts, with the plan left to the doctor", () => {
     const message = aadiMessage(pneumonia);

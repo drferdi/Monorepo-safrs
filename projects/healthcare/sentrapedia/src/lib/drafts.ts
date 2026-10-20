@@ -2,6 +2,7 @@ import type { Patient } from "./workspace";
 import { structureNote, type NoteField } from "./note-structure";
 import { missingField, missingFieldEnglish } from "./clinical-templates";
 import { normalExam } from "./normal-exam";
+import { furtherExams, headacheWords, physicalExamText } from "./physical-exam";
 import type { CaseFields } from "./aadi/composer";
 
 export const modeIds = ["question", "ddx", "ap", "clinic", "hpi", "telephone", "chronic", "handoff", "tasks", "avs", "education", "referral", "authorization", "scribe", "workup", "refer", "monitoring", "icd10"] as const;
@@ -30,6 +31,15 @@ export const modes: { id: ModeId; label: string; title: string; description: str
 ];
 
 export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; patient?: Patient; instructions: string; caseFields?: Partial<CaseFields> }
+
+// The labels readCaseFields (aadi/composer.ts) reads: sex words, an age in years, and labelled vital signs.
+const demographicWords = [/\b(?:laki-laki|laki laki|lelaki|pria|perempuan|wanita)\b/gi, /\b(?:usia|umur)\s*:?\s*\d{1,3}(?:\s*(?:tahun|thn|th))?\b/gi, /(?<!\b(?:sejak|selama|sudah|lebih|kurang|hampir)\s+)\b\d{1,3}\s*(?:tahun|thn|th|yo)\b(?!\s+(?:lalu|yang lalu|terakhir))/gi];
+const vitalWords = [/\b(?:TD|tekanan darah|tensi|BP)\s*[:=]?\s*\d{2,3}\s*\/\s*\d{2,3}(?:\s*mmHg)?/gi, /(?:\b(?:nadi|HR|frekuensi nadi)|\bN)\s*[:=]?\s*\d{2,3}(?:\s*(?:x\/?\s*(?:mnt|menit)|\/\s*(?:mnt|menit)))?(?![\d/]|\s*(?:hari|jam|minggu|bulan|tahun))/gi, /(?:\b(?:suhu|temp)|\b[ST])\s*[:=]?\s*\d{2}(?:[.,]\d)?(?:\s*°?\s*C\b)?(?![\d/]|\s*(?:hari|jam|minggu|bulan|tahun))/gi, /\b(?:RR|frekuensi napas|respirasi)\s*[:=]?\s*\d{1,2}(?:\s*x\/?\s*(?:mnt|menit))?/gi, /\b(?:SpO2|SpO₂|saturasi|sat)\s*[:=]?\s*\d{2,3}\s*%?/gi];
+function complaintOnly(text: string, drop: { demographics: boolean; vitals: boolean }): string {
+  const words = [...(drop.demographics ? demographicWords : []), ...(drop.vitals ? vitalWords : [])];
+  const left = words.reduce((rest, pattern) => rest.replace(pattern, ""), text).split("\n").map(line => line.replace(/\s*([,;])(?:\s*[,;])+/g, "$1").replace(/^[\s,;.]+|[\s,;]+$/g, "").replace(/\s{2,}/g, " ")).filter(Boolean).join("\n");
+  return left ? left.charAt(0).toUpperCase() + left.slice(1) : text;
+}
 
 export function createDraft(input: DraftInput): string {
   const prompt = input.prompt.trim();
@@ -82,14 +92,21 @@ export function createDraft(input: DraftInput): string {
   const sex = input.patient?.sex === "Male" ? "M" : input.patient?.sex === "Female" ? "F" : undefined;
   const exam = input.mode === "clinic" && id ? normalExam(prompt, input.caseFields ?? {}, { age: input.patient?.age.trim() || undefined, sex }) : undefined;
   const recognized = note.recognized || !!exam?.labelled;
-  const patientInfo = input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} ${id ? "tahun" : "years"}` : ""} · ${id && input.patient.sex === "Not specified" ? "Sex belum diisi" : input.patient.sex}` : id ? "Pasien belum dipilih" : "No patient selected";
+  // The patient line names who the note is for: name, age and sex, from the chosen patient or the typed text (Gaffer,
+  // 2026-10-21: "buatkan nama dan usia pasiennya").
+  const sexWord = (value?: string) => value === "Male" || value === "M" ? "Laki-laki" : value === "Female" || value === "F" ? "Perempuan" : "";
+  const age = input.patient?.age.trim() || input.caseFields?.age?.trim() || "", sexText = sexWord(input.patient?.sex) || sexWord(input.caseFields?.sex);
+  const patientInfo = id ? `Pasien: ${[input.patient?.name || "—", age && `${age} tahun`, sexText].filter(Boolean).join(" · ")}`
+    : input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} years` : ""} · ${input.patient.sex}` : "No patient selected";
   const body = input.mode === "tasks" ? `## ${sections.tasks[0]}\n${prompt.split(/\n+/).filter(Boolean).map((line) => `- [ ] ${line.replace(/^[-*]\s*(\[[ x]\]\s*)?/, "")}`).join("\n")}` : sections[input.mode].map((title, index) => {
     let value = mapping[input.mode][index].map((key) => note.fields[key]).filter(Boolean).join("\n");
     if (input.mode === "scribe" && index === 0) value = prompt;
     if ((input.mode === "scribe" && index === 2) || (input.mode === "clinic" && index === 1)) value ||= note.patientStatements;
     if (input.mode === "question" && index === 0) value ||= prompt;
-    if (input.mode === "clinic" && index === 3 && exam) value = exam.text;
+    if (input.mode === "clinic" && index === 3 && exam) value = physicalExamText({ vitals: exam.vitals, adult: exam.adult, findings: exam.text, exams: headacheWords.test(prompt) ? furtherExams.headache : furtherExams.general, examined: exam.labelled });
     if (!note.recognized && index === 0) value = exam?.labelled ? exam.rest : prompt;
+    // The complaint without what the patient line and the vital-sign table already hold.
+    if (input.mode === "clinic" && id && index === 0) value = complaintOnly(value, { demographics: !!(age || sexText), vitals: !!exam });
     return `## ${title}\n${value || missing}`;
   }).join("\n\n") + (recognized && input.mode !== "scribe" ? `\n\n## ${id ? "Teks sumber (verbatim)" : "Source text (verbatim)"}\n${prompt}` : "");
   const context = [input.patient?.notes, input.context].filter(Boolean).join("\n");

@@ -1,5 +1,16 @@
 # Sentrapedia handoff
 
+## SOAP note: patient line, complaint alone, exam in the report's A/B/C format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer, on a Dokumentasi draft: "Rapi gak tu? ngawur", "Masih aja ada \"belum diukur\", … buatkan nama dan usia pasiennya", "Pemeriksaan Fisik itu lho, kok balik awal lagi".
+- New `src/lib/physical-exam.ts`: `physicalExamText` (vitals table with "Belum tersedia", "Temuan klinis" from vital thresholds, B further exams, C conclusion and status), `furtherExams`, `headacheWords`, `table`, and `physicalExamPlain` (P-Care copy: measured vitals as "Parameter: hasil" plus exam lines). `presentation.ts` part 4 now calls it (output unchanged; 57 tests pass).
+- `normal-exam.ts`: `normalExam` returns `vitals` and `adult`; vital lines leave the template list (they go to the table) and an unmeasured line is left out ("belum diukur"/"belum dinilai" gone, incl. Leopold, his, lingkar kepala, ubun-ubun, kontraksi uterus when not typed).
+- `drafts.ts` (clinic, Indonesian): patient line "Pasien: <name or —> · <age> tahun · <Laki-laki|Perempuan>" from the chosen patient or the typed text (English drafts unchanged); Keluhan Utama drops the sex word, age and labelled vitals (`complaintOnly`, same labels as `readCaseFields`) and starts with a capital; Pemeriksaan Fisik = `physicalExamText`.
+- `document-studio.tsx`: `#### ` is a heading in every document; `diagnosis-document.tsx`: a local draft shows the "Pasien:" line under its title.
+- Tests: `normal-exam.test.ts` (samples without vital/unmeasured lines, vitals parsed, Gaffer's case end to end), `studio.test.ts` ("Pasien: —"), `diagnosis-presentation.test.ts` (P-Care exam copy plain), `ui/case-guide`, `ui/normal-exam`.
+- Verified: typecheck 0, lint 0, Vitest 36 files 451 tests; browser 3101: a new Dokumentasi draft of "Laki-laki 40 tahun demam 3 hari, nyeri kepala, TD 120/80, N 96, S 38,6" shows "Pasien: — · 40 tahun · Laki-laki", Keluhan "Demam 3 hari, nyeri kepala", the A/B/C exam, no "belum diukur"; 0 POSTs. That draft is now in the current encounter (local only).
+- Open: notes made before this keep their old text (local drafts are not re-rendered); "Kepala: lihat catatan dokter" still shows when the complaint names the head.
+
 ## DDI and Kontraindikasi under part 7 in the case flow (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "https://www.rareui.com/components/railtoc . Rencana tata laksana / DDI / Kontraindikasi". Kept the HookSidebar rail approved earlier; took only RailTOC's nesting.
