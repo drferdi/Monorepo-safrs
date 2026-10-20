@@ -2,6 +2,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { WorkspaceApp } from "../../src/components/workspace";
+import { missingField } from "../../src/lib/clinical-templates";
+import { storageKey, type Workspace } from "../../src/lib/workspace";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
 import type { CaseState } from "../../src/lib/aadi/types";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
@@ -90,5 +92,56 @@ describe("case guide under the composer", () => {
     expect(bp.value).toBe("170/100");
     expect(bp.closest(".case-field")?.hasAttribute("data-auto")).toBe(true);
     expect(screen.getAllByRole("button", { name: "Analisis kasus" })).toHaveLength(1);
+  });
+});
+
+describe("guided SOAP view", () => {
+  const soapToggle = () => screen.getByRole("button", { name: /susunan SOAP/i });
+  const row = (label: string) => within(screen.getByRole("region", { name: "Susunan SOAP" })).getByText(label).nextElementSibling?.textContent;
+
+  it("opens behind a toggle and shows S/O/A/P from the typed text with the placeholder in empty rows", async () => {
+    await start();
+    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    fireEvent.change(textarea(), { target: { value: "Keluhan utama: demam 3 hari\nTanda vital: TD 120/80, N 88" } });
+    expect(soapToggle().getAttribute("aria-expanded")).toBe("false");
+    expect(screen.queryByRole("region", { name: "Susunan SOAP" })).toBeNull();
+    fireEvent.click(soapToggle());
+    expect(soapToggle().getAttribute("aria-expanded")).toBe("true");
+    expect(soapToggle().textContent).toBe("Sembunyikan susunan SOAP");
+    expect(row("S — Subjektif")).toBe("demam 3 hari");
+    expect(row("O — Objektif")).toBe("TD 120/80 mmHg · Nadi 88/mnt\nTD 120/80, N 88");
+    expect(row("A — Asesmen")).toBe(missingField);
+    expect(row("P — Rencana")).toBe(missingField);
+    expect(screen.queryByRole("button", { name: "Gunakan mode Catatan Klinis (SOAP)" })).toBeNull();
+    fireEvent.click(soapToggle());
+    expect(screen.queryByRole("region", { name: "Susunan SOAP" })).toBeNull();
+  });
+
+  it("switches to the SOAP mode and Enter makes the local draft without any analysis call", async () => {
+    await start();
+    fireEvent.change(textarea(), { target: { value: "Keluhan utama: demam 3 hari" } });
+    fireEvent.click(soapToggle());
+    fireEvent.click(screen.getByRole("button", { name: "Gunakan mode Catatan Klinis (SOAP)" }));
+    expect(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }).getAttribute("aria-pressed")).toBe("true");
+    await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
+    expect(await screen.findByText("Draf lokal", { selector: ".draft-badge" })).toBeTruthy();
+    expect(screen.getByText("Catatan Klinis (SOAP)", { selector: ".message-header strong" })).toBeTruthy();
+    expect(sent).toEqual([]);
+    const saved = JSON.parse(localStorage.getItem(storageKey)!) as Workspace;
+    const draft = saved.encounters[0].messages.find((message) => message.role === "assistant")!;
+    expect(draft.content).toContain("## Keluhan Utama\ndemam 3 hari");
+    expect(draft.content).toContain(`## Assessment\n${missingField}.`);
+    expect(draft.content).not.toMatch(/\b[A-Z]\d{2}(\.\d)?\b/);
+  });
+
+  it("never shows a diagnosis, code or drug in the SOAP rows for free text", async () => {
+    await start();
+    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    const narrative = "Perempuan 30 tahun batuk berdahak 5 hari, demam, sesak bila berjalan";
+    fireEvent.change(textarea(), { target: { value: narrative } });
+    fireEvent.click(soapToggle());
+    expect(row("S — Subjektif")).toBe(narrative);
+    expect(row("A — Asesmen")).toBe(missingField);
+    expect(row("P — Rencana")).toBe(missingField);
   });
 });

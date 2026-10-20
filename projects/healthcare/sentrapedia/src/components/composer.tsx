@@ -150,7 +150,7 @@ export function Composer(props: Props) {
       {props.busy && props.aadiEnabled ? <button type="button" className="button square send-button" aria-label="Hentikan analisis" title="Hentikan analisis" onClick={props.onCancelAnalysis}><Square size={13} fill="currentColor"/></button> : <button className="button square send-button" aria-label={props.aadiEnabled ? "Analisis kasus" : "Buat draf"} title={props.aadiEnabled ? "Analisis langsung · Enter" : "Buat draf · Enter"} disabled={!props.prompt.trim() || props.busy}>{props.busy ? <PixelLoader label="Sedang menyusun draf…"/> : <ArrowUp size={18}/>}</button>}
     </div></div>
   </form>
-    <CaseGuide prompt={props.prompt} mode={props.mode} fields={props.caseFields ?? emptyCaseFields()} patientAge={props.patientAge} patientSex={props.patientSex} onInsert={insert}/>
+    <CaseGuide prompt={props.prompt} mode={props.mode} fields={props.caseFields ?? emptyCaseFields()} patientAge={props.patientAge} patientSex={props.patientSex} onInsert={insert} onMode={props.onMode}/>
     {dictation.error &&<div className="composer-analysis"><p className="form-warning" role="alert">{dictation.error}</p></div>}
     {props.aadiEnabled && props.analysisError && <div className="composer-analysis"><p className="form-warning" role="alert">{props.analysisError} {props.prompt.trim() && !props.busy && <button type="button" className="text-button" onClick={props.onSubmit}>Coba lagi</button>}</p></div>}
     {/* Options are the rows themselves: focus stays in the textarea, which points at the active row. */}

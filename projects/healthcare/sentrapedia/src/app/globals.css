@@ -905,3 +905,8 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .case-guide-item { display: inline-flex; align-items: center; gap: 5px; }
 .case-guide .action-chip { height: 28px; padding: 0 9px; font-size: 12px; }
 .case-guide-item[data-filled] { height: 28px; padding: 0 9px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); }
+.soap-view { flex-basis: 100%; display: grid; gap: 6px; padding: 8px 10px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); background: var(--workspace-white); color: var(--color-text-secondary); font-size: 12px; line-height: 1.6; }
+.soap-row { display: grid; grid-template-columns: 7.5em 1fr; gap: 8px; overflow-wrap: anywhere; white-space: pre-line; }
+.soap-row strong { color: var(--color-text-primary); }
+.soap-row[data-empty] span { color: var(--color-text-secondary); font-style: italic; }
+@media (max-width: 760px) { .soap-row { grid-template-columns: 1fr; gap: 2px; } }

@@ -1,6 +1,6 @@
 # Sentrapedia handoff
 
-## Puskesmas clinical flow, phase 2 of 5 (committed on feat/puskesmas-flow, local) - 2026-10-21 Asia/Jakarta
+## Puskesmas clinical flow, phase 3 of 5 (committed on feat/puskesmas-flow, local) - 2026-10-21 Asia/Jakarta
 
 - Gaffer: "Go. Buat feat/puskesmas-flow dari 08b31f78, pakai semua rekomendasi di bagian 7 (keputusan 1–9), lalu jalankan Fase 1–5." Plan: `docs/plans/active/2026-10-20-puskesmas-flow.md` (verbatim copy of the gitignored `.claude/plans/puskesmas-flow-implementation-plan.md`, drafted by Fable 5.1 from `.claude/plans/handoff-for-puskesmas-plan.md`). Phase 0 (no edits): gate 0, Vitest 30 files 384 tests, A2, A4, A5, A8 confirmed.
 - Branch `feat/puskesmas-flow` from `08b31f78` (decision 1). Local only, not pushed, no PR.
@@ -10,14 +10,19 @@
   - `src/lib/workspace-session.ts`: `localDraftMessages` takes an optional `fallback` and appends an "Analisis AADI tidak tersedia" block to `sourceText`. No new persisted field; storage key and `Workspace.version` unchanged.
   - Tests: new `tests/soap.test.ts` (9); `workspace-session` +1; `workspace-fixtures` +1 (an unknown field on a saved message and encounter survives import).
   - HANDOFF rotation: the two oldest entries moved verbatim to `HANDOFF.archive.md`; five entries now name `08b31f78` in their status line (decision 7).
-- Phase 2 (this commit), completeness strip with section-insert chips:
+- Phase 2 (`0843b795`), completeness strip with section-insert chips:
   - New `src/components/case-guide.tsx`: "Kelengkapan kasus: n dari m" under the composer box (outside `form.composer`, decision 2), only in the five AADI modes and `clinic`, only once text is typed. A filled item is a mark with an icon labelled "terisi"; a missing item is a chip "Sisipkan <label>" that appends its label.
   - `src/components/composer.tsx`: textarea ref, `insert` (via `insertSection`, caret after the label), the guide after `</form>`. `src/app/globals.css`: one block at the end, existing tokens only.
   - Tests: new `tests/ui/case-guide.test.tsx` (4). `case-strip` and `workspace-smoke` unchanged and passing.
   - Browser (`next dev` alone on 3106, POSTs to `/api/aadi` blocked in the page): the box keeps its design; the chip inserts and leaves the caret at the end; at 400x844 no horizontal scroll (scrollWidth 400) and the guide wraps.
-- Gate for each phase, exit 0 each: `npm run typecheck`; `npm run lint`; `npm test` (phase 2: Vitest 32 files 399 tests, site node tests 49/49); `npm run build`; `npm run deploy:dry-run`; `npx vitest run` on the touched test files.
+- Phase 3 (this commit), guided SOAP view:
+  - `src/components/case-guide.tsx`: a "Susunan SOAP" toggle (`aria-expanded`, `aria-controls`) opens a region "Susunan SOAP" with S/O/A/P rows from `soapView` (empty rows show `missingField`), the caption "Disusun lokal dari teks yang diketik; bukan interpretasi klinis.", and outside `clinic` a button "Gunakan mode Catatan Klinis (SOAP)"; Enter then makes the existing local SOAP draft. The view sends and saves nothing.
+  - `src/app/globals.css`: `.soap-view`/`.soap-row`, one column at `(max-width: 760px)`.
+  - Tests: `tests/ui/case-guide.test.tsx` +3 (toggle and rows; mode switch then Enter makes a local draft with no POST and no ICD-10 pattern; free text never fills A or P).
+  - Browser: rows render as designed; at 400x844 one column, no horizontal scroll.
+- Gate for each phase, exit 0 each: `npm run typecheck`; `npm run lint`; `npm test` (phase 3: Vitest 32 files 402 tests, site node tests 49/49); `npm run build`; `npm run deploy:dry-run`; `npx vitest run` on the touched test files.
 - Open: `.env.local` sets `AADI_SERVICE_URL` (a localhost port) and `AADI_SERVICE_TOKEN`, so `next dev` alone is not "no engine" as plan 4.4 assumes; it only fails while nothing listens on that port. Block non-GET `/api/aadi` in any browser check.
-- Next: phase 3, the guided SOAP view.
+- Next: phase 4, a local SOAP draft offered when an AADI analysis fails.
 
 ## Wide-screen answer column and the chat composer restored (committed in 08b31f78) - 2026-10-20 Asia/Jakarta
 
