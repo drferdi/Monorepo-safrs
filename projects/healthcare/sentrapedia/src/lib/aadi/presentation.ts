@@ -101,10 +101,10 @@ const links = {
 const headachePack = {
   complaint: "nyeri kepala",
   redFlags: ["Nyeri mendadak yang mencapai intensitas maksimal dalam 1–5 menit (*thunderclap headache*).", "Demam, kaku kuduk, atau penurunan kesadaran.", "Defisit neurologis baru, kejang, atau gangguan penglihatan.", "Trauma kepala, perubahan bermakna pola nyeri, atau nyeri yang dipicu aktivitas/mengejan."],
-  emergency: `**Jika dicurigai perdarahan subaraknoid, rujuk segera ke IGD.** ${links.cg150}`,
+  emergency: `**Jika dicurigai perdarahan subaraknoid, rujuk segera ke IGD.**`,
   history: [["Onset", "Kapan mulai? Mendadak atau bertahap? Berapa lama hingga nyeri maksimal?"], ["Pola", "Serangan pertama atau berulang; durasi setiap episode; frekuensi per bulan"], ["Karakteristik", "Berdenyut, menekan/mengikat, terbakar, atau seperti tersengat"], ["Intensitas dan dampak", "Skala nyeri 0–10; gangguan aktivitas dan tidur"], ["Lokasi dan penjalaran", "Unilateral/bilateral; menjalar dari leher atau ke area lain"], ["Gejala penyerta", "Mual, muntah, fotofobia, fonofobia, demam, kaku kuduk, atau kelainan neurologis"], ["Pencetus", "Aktivitas fisik, batuk/mengejan, perubahan posisi, atau gerakan leher"], ["Riwayat relevan", "Trauma, penyakit penyerta, kehamilan/pascapersalinan, serta riwayat nyeri kepala"], ["Obat dan alergi", "Analgesik beserta frekuensi penggunaan, antikoagulan, obat lain, dan alergi"]],
   exam: ["Tanda vital, termasuk tekanan darah dan suhu.", "Tingkat kesadaran dan pemeriksaan neurologis terarah.", "Tanda rangsang meningeal sesuai indikasi.", "Pemeriksaan kepala dan leher: rentang gerak, nyeri tekan, serta ketegangan otot.", "Pemeriksaan mata/funduskopi sesuai indikasi dan kompetensi pemeriksa."],
-  workup: [`Bila dicurigai perdarahan subaraknoid, evaluasi rumah sakit mencakup pertimbangan CT kepala nonkontras segera sesuai penilaian klinis. ${links.ng228}`],
+  workup: [`Bila dicurigai perdarahan subaraknoid, evaluasi rumah sakit mencakup pertimbangan CT kepala nonkontras segera sesuai penilaian klinis.`],
   diary: "Bila keluhan berulang, gunakan catatan nyeri kepala untuk mendokumentasikan pola, pencetus, obat, dan respons.",
 };
 const generalPack: typeof headachePack = {
@@ -311,7 +311,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   ].join("\n\n")];
   // The doctor's summary comes first, then the mode's focus; every part keeps its number.
   const ordered = focus === "workup" ? [parts[5], ...parts.filter((_, i) => i !== 5)] : focus === "refer" ? [referral, ...parts] : focus === "icd10" ? [coding, ...parts] : parts;
-  return [reportTitle, "**Draf analisis AADI (Augmented Artificial Intelligence Diagnosis Integration) • Untuk tinjauan dokter**", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), [summary, ...ordered].map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
+  return [reportTitle, "**Analisis AADI (Augmented Artificial Intelligence Diagnosis Integration)**", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), [summary, ...ordered].map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
 }
 
 // What the answer card offers to copy (design D1, D2), read from the summary as currently written, so an edit is copied as edited.

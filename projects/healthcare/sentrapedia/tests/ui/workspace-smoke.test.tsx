@@ -236,6 +236,11 @@ describe("workspace UI smoke tests", () => {
     const summary = screen.getByRole("region", { name: "Tabel Komponen, Keterangan" });
     expect(within(summary).getAllByRole("columnheader").map(cell => cell.textContent)).toEqual(["Komponen", "Keterangan"]);
     expect(within(summary).getByRole("cell", { name: "Laki-laki 35 tahun, batuk dan demam tinggi sejak 3 hari, S 38,5" })).toBeTruthy();
+    // One draft marker only: the Status field; no "Draf analisis" badge or subtitle.
+    expect(screen.queryByText(/Draf analisis/)).toBeNull();
+    // The doctor's summary stands as its own section above the report title.
+    const doctor = screen.getByRole("heading", { name: "Ringkasan untuk dokter" });
+    expect(doctor.compareDocumentPosition(screen.getByRole("heading", { name: "LAPORAN ANALISIS KASUS KLINIS" })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     const nice = screen.getAllByRole("link", { name: "NICE CG150" })[0];
     expect(nice.getAttribute("href")).toBe("https://www.nice.org.uk/guidance/cg150/chapter/recommendations");
     expect(nice.getAttribute("rel")).toBe("noopener noreferrer");

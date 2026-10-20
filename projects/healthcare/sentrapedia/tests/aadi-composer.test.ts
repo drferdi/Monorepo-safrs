@@ -41,7 +41,7 @@ describe("main clinical composer", () => {
     expect(messages[0].role).toBe("user");
     expect(messages[0].content).toBe("pertanyaan asli");
     expect(messages[1].content).toContain("# LAPORAN ANALISIS KASUS KLINIS");
-    expect(messages[1].content).not.toContain("Analisis AADI");
+    expect(messages[1].content).not.toContain("# Analisis AADI");
     expect(messages[1].content).not.toContain("Model:");
     expect(messages[1].content).not.toContain("Versi:");
     expect(messages[1].content).not.toContain("Clinical question brief");

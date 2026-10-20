@@ -1,5 +1,11 @@
 # Sentrapedia handoff
 
+## Analysis report display trimmed (committed on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer: "hapus itu tulisan tulisan DRAF ANALISIS di ulang ulang", then "Analisis AADI (Augmented Artificial Intelligence Diagnosis Integration)", "Status ditetapkan pengguna … -> HAPUS", "NICE CG150 … nanti bisa di bawah", "Ringkasan untuk dokter ini buatkan section sendiri saja".
+- The report subtitle reads "**Analisis AADI (Augmented Artificial Intelligence Diagnosis Integration)**"; an analysis in Draf shows no header badge (the Status field says Draf; Ditinjau, Final and "Draf lokal" badges stay); the studio status note is gone (`.studio-toolbar` got `margin-bottom: 22px` for the spacing it gave); the headache emergency and workup lines no longer carry NICE links (part 9 lists them); the doctor's summary renders above the report title (`DiagnosisDocument`, display only, stored text unchanged).
+- Verified: typecheck 0, lint 0, Vitest 35 files 447 tests; browser 3101 on the stored malaria case.
+
 ## Minimum data and history questions before a case analysis (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
 
 - Gaffer sent a sample AADI report built on an empty case ("Belum tersedia" in every row), then: "Justru ini yang harus di hindari, data klinis minimal apa yang harus di isi, beritahu dokter" and "harus user masukin gejala di kolom, lalu langsung keluar beberapa pertanyaan penting". The sample is read as the thing to avoid; the report format (`aadiDraft`, section titles) is unchanged.

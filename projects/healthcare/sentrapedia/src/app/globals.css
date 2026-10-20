@@ -673,13 +673,12 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .slash-picker [role="option"] span { color: var(--color-text-secondary); font-size: 11px; }
 .slash-picker [aria-selected="true"], .slash-picker [role="option"]:hover { background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); }
 .slash-picker p { padding: 10px; color: var(--color-text-muted); }
-.studio-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--color-border-subtle); }
+.studio-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 0; margin-bottom: 22px; border-bottom: 1px solid var(--color-border-subtle); }
 .studio-toolbar > div { display: flex; gap: 3px; }
 .studio-toolbar button { display: flex; align-items: center; gap: 5px; padding: 7px 8px; border-radius: var(--radius); font-size: 12px; color: var(--color-text-muted); }
 .studio-toolbar button.active { color: var(--workspace-accent-ink); background: var(--workspace-accent-soft); }
 .review-control { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--color-text-muted); }
 .review-control select { font-size: 12px; padding: 5px; background: var(--workspace-white); border: 1px solid var(--color-border-subtle); border-radius: var(--radius); color: var(--color-text-secondary); }
-.studio-status-note { margin: 9px 0 18px; font-size: 12px; line-height: 1.6; color: var(--color-text-muted); }
 .section-control { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 11px 12px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); background: var(--color-background-canvas); margin-bottom: 22px; }
 .section-control label { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--color-text-muted); min-width: 0; flex: 1; }
 .section-control select { background: transparent; border: 0; color: var(--color-text-secondary); font-size: 12px; width: 100%; max-width: 265px; min-width: 0; padding: 5px; }
@@ -843,7 +842,7 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 /* Smooth UI changes, opacity only: what appears on a click fades in place; what leaves or reflows
    (dialogs closing, sidebar, Focus Mode, panel, toast) cross-fades through components/smooth.ts. */
 @keyframes fade-in { from { opacity: 0; } }
-.quick-actions .action-chip, .dialog[open], .dialog[open]::backdrop, .toast, .home-content, .home-bottom, .conversation, .chat-composer, .user-message, .assistant-message, .header-left > :not(.expand-sidebar), .export-encounter, .panel-scroll, .document-studio > :not(.studio-toolbar, .studio-status-note), .draft-editor, .dialog-inner > :not(.dialog-header), .theoracle-detail, .template-preview, .workflow-form, .form-warning, .studio-columns, .aadi-result, .queue-card, .composer-analysis, .slash-picker, .context-status > span, .storage-warning { animation: fade-in 160ms ease-out; }
+.quick-actions .action-chip, .dialog[open], .dialog[open]::backdrop, .toast, .home-content, .home-bottom, .conversation, .chat-composer, .user-message, .assistant-message, .header-left > :not(.expand-sidebar), .export-encounter, .panel-scroll, .document-studio > :not(.studio-toolbar), .draft-editor, .dialog-inner > :not(.dialog-header), .theoracle-detail, .template-preview, .workflow-form, .form-warning, .studio-columns, .aadi-result, .queue-card, .composer-analysis, .slash-picker, .context-status > span, .storage-warning { animation: fade-in 160ms ease-out; }
 @starting-style { .submenu-section[data-open="true"] .submenu-item { opacity: 0; } }
 /* Every fresh answer arrives the same way (Gaffer, 2026-10-17: smooth and simple): the card rises softly into focus,
    then a still document's blocks follow one by one. An analysis keeps its own typing reveal; a reopened answer appears at once. */

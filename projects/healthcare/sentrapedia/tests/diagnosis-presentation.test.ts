@@ -80,7 +80,7 @@ describe("nine-part clinical report", () => {
   const content = aadiMessage(analysis).content;
   it("orders the nine parts and preserves recorded facts, uncertainty and provenance", () => {
     const message = aadiMessage(analysis);
-    expect(message.content.startsWith(`${reportTitle}\n\n**Draf analisis AADI (Augmented Artificial Intelligence Diagnosis Integration) • Untuk tinjauan dokter**\n`)).toBe(true);
+    expect(message.content.startsWith(`${reportTitle}\n\n**Analisis AADI (Augmented Artificial Intelligence Diagnosis Integration)**\n`)).toBe(true);
     expect(diagnosisSectionTitles).toEqual(["1. Ringkasan kasus", "2. Skrining kegawatan", "3. Anamnesis terarah", "4. Pemeriksaan fisik", "5. Asesmen dan diagnosis banding", "6. Rencana pemeriksaan penunjang", "7. Rencana tata laksana", "8. Edukasi dan tindak lanjut", "9. Referensi dan status verifikasi"]);
     expect(documentSections(message.content).map(s => s.title)).toEqual([doctorSummaryTitle, ...diagnosisSectionTitles]);
     for (const text of ["Keluhan sintetis", "Gejala sintetis", "Obat tercatat", "Tes sintetis", "Jangan terlewat sintetis", "Alasan sintetis", "Penyangkal sintetis", "Data kurang sintetis", "Usulan tes sintetis", "Pertanyaan sintetis", "Belum cukup data", "synthetic-trace", "SHA-256"]) expect(message.content).toContain(text);
@@ -144,11 +144,13 @@ describe("nine-part clinical report", () => {
     const headache = aadiMessage(headacheCase).content;
     expect(section(headache, "2. Skrining kegawatan")).toContain("- Gangguan jalan napas, sesak berat, atau saturasi oksigen rendah.");
     expect(section(headache, "2. Skrining kegawatan")).toContain("Khusus nyeri kepala:\n- Nyeri mendadak yang mencapai intensitas maksimal dalam 1–5 menit (*thunderclap headache*).");
-    expect(section(headache, "2. Skrining kegawatan")).toContain("**Bila ada tanda kegawatan, stabilkan dan rujuk segera ke IGD.** **Jika dicurigai perdarahan subaraknoid, rujuk segera ke IGD.** [NICE CG150](https://www.nice.org.uk/guidance/cg150/chapter/recommendations)");
+    expect(section(headache, "2. Skrining kegawatan")).toContain("**Bila ada tanda kegawatan, stabilkan dan rujuk segera ke IGD.** **Jika dicurigai perdarahan subaraknoid, rujuk segera ke IGD.**");
+    // Guideline links sit in part 9 only, not in the answer's parts (Gaffer, 2026-10-21).
+    for (const part of diagnosisSectionTitles.slice(0, -1)) expect(section(headache, part)).not.toMatch(/NICE|ICHD/);
     const silent = aadiMessage({ ...headacheCase, result: { ...analysis.result, missingInformation: [], nextBestActions: [] } }).content;
     expect(section(silent, "3. Anamnesis terarah")).toContain("| Lokasi dan penjalaran | Unilateral/bilateral; menjalar dari leher atau ke area lain |");
     expect(section(headache, "4. Pemeriksaan fisik")).toContain("- Tanda rangsang meningeal sesuai indikasi.");
-    expect(section(headache, "6. Rencana pemeriksaan penunjang")).toContain("[NICE NG228](https://www.nice.org.uk/guidance/ng228/chapter/Recommendations)");
+    expect(section(headache, "6. Rencana pemeriksaan penunjang")).toContain("CT kepala nonkontras segera sesuai penilaian klinis.");
     expect(section(headache, "9. Referensi dan status verifikasi")).not.toContain("relevan bila");
     expect(aadiMessage(withDifferential({ likely: [{ icd10: "G44.2", label: "Tension-type headache", confidenceTier: "low" }], alternatives: [], cannotMiss: [] })).content).toContain("thunderclap");
   });
