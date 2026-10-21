@@ -22,21 +22,20 @@ The full plan is `docs/plans/active/2026-10-19-workspace-v2-migration.md`.
 
 ## Bundled reference data
 
-- `oracle/sentrapedia.json`: the disease knowledge base (`metadata`, `categories`, `diseases`), read by `src/lib/theoracle.ts`.
+- `oracle/sentrapedia.json`: the disease catalogue (`metadata`, `categories`, `diseases`), read by `src/lib/theoracle.ts`. It is derived from the knowledge SSOT by `scripts/build-oracle-catalog.mjs`, which also writes its SHA-256 into `src/lib/theoracle.ts`; do not edit it by hand.
 - Earlier forms of the same data (`oracle/diseases.json`, `oracle/diseases-data.ts`, `oracle/data.ts`) were removed on 2026-10-17 (tech-debt row 20); git history keeps them.
 
 The reference data ships with the build. The app does not change it at runtime.
 
 ## TheOracle
 
-TheOracle is the single source of truth for Sentra knowledge used to ground AADI (Gaffer, 2026-10-11).
+Structured clinical facts live only in `theoracle/ssot/sentrapedia-knowledge-ssot.json` (the SSOT); guideline PDF texts are the citation library. Both feed one index through `npm run knowledge:build`, which runs `scripts/build-theoracle-chunks.mjs`, `scripts/build-theoracle-index.mjs` and `scripts/build-oracle-catalog.mjs` in that order (2026-10-21). Nothing clinical is edited anywhere else.
 
-- `theoracle/index/chunks.jsonl`: 20,423 chunks (20,322 exported from the TheOracle LanceDB store unchanged, plus 101 chunks from the 44 Kemenkes markdown files that were missing, split with the same AnythingLLM splitter, 2048 characters, overlap 20). Each record has `origin` and `textSha256`.
+- `theoracle/index/chunks.jsonl`: 18,992 chunks. 664 come from the SSOT (origin `ssot`, one document per entry: name, alias, ICD-10, competence, definition, symptoms, diagnosis, therapy text per source, one line per dose statement with source and page, referral; split at 2048 characters with overlap 20, the disease name in every chunk). 18,328 are guideline-PDF chunks from the TheOracle LanceDB export, carried over unchanged; `faa-aviation-medical-examiners.pdf` is left out. Each record has `origin` and `textSha256`.
 - `theoracle/index/vectors.f32` and `manifest.json`: one L2-normalised 768-dimension EmbeddingGemma-300m vector per chunk, with the model id, revision, file hashes, prefixes, chunk and vector hashes and `indexSha256`.
 - `theoracle/model/`: the pinned ONNX model, installed by `scripts/install-theoracle-model.mjs` (postinstall) and checked by SHA-256. Not in git.
-- `theoracle/provenance/oracle-ii/`: the former Oracle II sources, evidence, QA and tools.
 
-`src/lib/theoracle-grounding.ts` verifies the manifest hashes, embeds the query locally with the same model and returns at most six passages (two per document). Rebuild the vectors with `node scripts/build-theoracle-index.mjs [--device dml]` after changing `chunks.jsonl`.
+`src/lib/theoracle-grounding.ts` verifies the manifest hashes, embeds the query locally with the same model and returns at most six passages (two per document). Rebuild everything with `npm run knowledge:build` after changing the SSOT (`node scripts/build-theoracle-index.mjs --device dml` embeds on the GPU when the chunks are already written).
 
 ## AADI service
 
@@ -46,7 +45,7 @@ TheOracle is the single source of truth for Sentra knowledge used to ground AADI
 
 Gaffer's decision of 2026-10-19: the code may be published under the royalty licence in `LICENSE`; the database stays private.
 
-- `scripts/private-data.mjs` lists what is private: `theoracle/index/`, `theoracle/sources/`, `theoracle/provenance/`, `oracle/sentrapedia.json`, `oracle-ii/`, `data/dose-inventory/`, `docs/verification/` and `.agents/`.
+- `scripts/private-data.mjs` lists what is private: `theoracle/ssot/`, `theoracle/index/`, `oracle/sentrapedia.json`, `oracle-ii/`, `docs/verification/` and `.agents/`.
 - `npm run export:split -- <empty folder outside the capsule>` copies the tracked files into `<folder>/public` (code, with `oracle/sentrapedia.sample.json` as the catalogue) and `<folder>/data` (the private files at the same paths). It stops if a file is still a Git LFS pointer. Daily work in the monorepo is unchanged.
 - Without the data, the app builds and runs: the library shows the fictional sample, analyses answer "Database TheOracle belum terpasang di server ini", and tests that need the real catalogue or index are skipped (`tests/private-data.ts`).
 - To build with the data (for example on the beta server): check out the code, copy the contents of the private data repository over it, then `npm run build` or `docker build`.

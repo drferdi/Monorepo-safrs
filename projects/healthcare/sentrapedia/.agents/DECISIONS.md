@@ -42,6 +42,7 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 
 ## 2026-10-09 — Oracle catalog and existing AADI adapter
 
+- Status: the catalogue content and its categories are derived from the knowledge SSOT since 2026-10-21 (see "Single knowledge source").
 - Gaffer authorized integrate-both after comparison; execute solo. Oracle remains read-only, unreviewed source text with file/hash/record provenance. Use 15 actual categories rather than metadata's 14; never merge disease entries by repeated ICD code.
 - Localize Med Assist's v1 schema/type/validator snapshots with attribution, no runtime cross-capsule dependency. Reuse the existing AADI service/provider; no install, credential copy, upstream change or paid verification. Optional server-only token and loopback URL; health availability is separate from authenticated readiness.
 - Synthetic structured input only, no Patient/Encounter auto-copy. Same-origin/loopback/Host validation and bounds/timeout/cancel protect the local adapter; it is not a production authenticated API. Preserve full result/case/trace in an explicit draft, all model evidence and outside-Oracle diagnoses. Oracle narratives never generate regimens. Review metadata remains manual and not clinical certification; PNPK page sources still unavailable.
@@ -444,3 +445,12 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - Decision D1 stands: the BETA accepts real clinical content without patient identity; identified records stay out of scope.
 - Parked until the consult answer is proven and real doctors have used it: the storage-format migration, the doctor flow (guided SOAP, section chips, completeness strip, practice-site default), the Puskesmas-flow phases, website and brand work, and the audit action items. `.claude/plans/puskesmas-flow-implementation-plan.md` is marked "STATUS: PARKED 2026-10-21 — do not execute." and kept.
 - The flow work already built stays committed on `feat/puskesmas-flow` (through f3577885); nothing is reverted.
+
+## 2026-10-21 - Single knowledge source
+
+- Single knowledge source: `theoracle/ssot/sentrapedia-knowledge-ssot.json`. Structured clinical facts live only in the SSOT; guideline PDF texts are the citation library; both feed one index through `npm run knowledge:build`, which also derives the Pustaka Klinis catalogue. Nothing clinical is edited anywhere else.
+- The index has two layers: one document per SSOT entry (origin `ssot`) and the guideline-PDF chunks of the former AnythingLLM export, carried over unchanged. `faa-aviation-medical-examiners.pdf` is left out (not Indonesian clinical guidance); the 154 disease markdown documents are dropped because the SSOT supersedes them.
+- The catalogue leaves out SSOT entries of type "topik pedoman"; an entry without a category takes the chapter of its first ICD-10 code.
+- `theoracle/provenance/`, `theoracle/sources/`, `data/dose-inventory/`, the hand-written catalogue and `scripts/add-theoracle-docs.mjs` are retired: archived in `D:\DEV\archive\sentrapedia-knowledge-2026-10-21.zip` and kept in git history.
+- Gaffer accepted the rebuilt index as measured (recall@5 0.818 with gold mapped to SSOT names, against 0.864 before; dose recall 0.77 to 0.852; targeted 0.902 to 0.934). Evidence: `docs/verification/theoracle-eval-2026-10-21/`.
+- The grounding bundle states that the corpus is derived from official guidelines and not yet clinically reviewed; review status lives in the SSOT.

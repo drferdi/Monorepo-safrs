@@ -134,7 +134,7 @@ writeFileSync(".next/standalone/server.js", ""); writeFileSync(".next/standalone
 process.exit(${nextExitCode});`);
   for (const file of ["aadi/service/app.py", "aadi/requirements.lock", "aadi/SOURCE.json", "aadi/managed_child.py", "aadi/service/__pycache__/app.cpython-312.pyc", "aadi/.pytest_cache/v/cache/nodeids"]) write(root, file);
   for (const file of ["index/manifest.json", "index/vectors.f32", "index/chunks.jsonl", "index/vectors.partial.f32", "index/vectors.partial.json", "model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data", "model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data.partial"]) write(root, `theoracle/${file}`);
-  write(root, "theoracle/sources/tatalaksana/guide.md");
+  write(root, "theoracle/ssot/sentrapedia-knowledge-ssot.json");
   write(root, "public/logo.svg");
 }
 
@@ -148,7 +148,7 @@ test("standalone build copies AADI, the TheOracle index and model, the launcher 
   for (const file of ["aadi/service/app.py", "aadi/managed_child.py", ...standaloneScripts.map(name => `scripts/${name}`), "theoracle/index/vectors.f32", "theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data", ".next/static/chunks/app.js", "public/logo.svg"]) {
     assert.ok(existsSync(join(output, file)), `${file} is copied`);
   }
-  for (const file of ["aadi/service/__pycache__", "aadi/.pytest_cache", "theoracle/index/vectors.partial.f32", "theoracle/index/vectors.partial.json", "theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data.partial", "theoracle/sources", "scripts/build-system.mjs"]) {
+  for (const file of ["aadi/service/__pycache__", "aadi/.pytest_cache", "theoracle/index/vectors.partial.f32", "theoracle/index/vectors.partial.json", "theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data.partial", "theoracle/ssot", "scripts/build-system.mjs"]) {
     assert.ok(!existsSync(join(output, file)), `${file} is left out`);
   }
   // Every standalone file the deploy gate requires is produced by the build.
@@ -268,45 +268,6 @@ test("the committed TheOracle index matches its manifest the way the index build
   assert.equal(vectors.byteLength, manifest.chunks.count * manifest.model.dims * 4);
   assert.equal(manifest.indexSha256, indexSha(manifest));
 });
-
-// add-theoracle-docs.mjs: a copy runs next to the real theoracle-model.mjs, whose root is then the temporary capsule.
-const uuid = hex => `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
-function docsFixture(root) {
-  copyScripts(root, ["add-theoracle-docs.mjs", "theoracle-model.mjs"]);
-  write(root, "theoracle/index/chunks.jsonl", JSON.stringify({ id: "existing", text: "old" }) + "\n");
-  write(root, "theoracle/sources/tatalaksana/malaria.md", "# Malaria\r\nIntro line.\r\n\r\n## Dewasa\r\nArtesunat 2,4 mg/kgBB.\r\n\r\n## Anak\r\nDosis anak.\r\n");
-  write(root, "theoracle/sources/tatalaksana/notes.txt", "## not markdown");
-}
-const chunkLines = root => readFileSync(join(root, "theoracle/index/chunks.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
-
-test("reviewed tatalaksana documents become one chunk per section with the title and intro repeated, once", withCapsule("docs", async root => {
-  docsFixture(root);
-  const { code, stdout, stderr } = await run(join(root, "scripts/add-theoracle-docs.mjs"));
-  assert.equal(code, 0, stderr);
-  assert.deepEqual(JSON.parse(stdout), { added: 2, documents: 1 });
-  const [existing, adult, child] = chunkLines(root);
-  assert.equal(existing.id, "existing");
-  assert.deepEqual([adult.id, child.id], [uuid(sha("malaria.md#0")), uuid(sha("malaria.md#1"))]);
-  // CRLF becomes LF; the blank line that ends each part stays in the chunk text.
-  const header = `<document_metadata>\nsourceDocument: malaria.md\npublished: ${adult.published}\n</document_metadata>\n\n# Malaria\nIntro line.\n\n\n`;
-  assert.equal(adult.text, `${header}## Dewasa\nArtesunat 2,4 mg/kgBB.\n`);
-  assert.equal(child.text, `${header}## Anak\nDosis anak.`);
-  assert.equal(adult.url, "theoracle/sources/tatalaksana/malaria.md");
-  assert.equal(adult.origin, "sentrapedia-tatalaksana");
-  assert.equal(adult.textSha256, sha(adult.text));
-  const again = await run(join(root, "scripts/add-theoracle-docs.mjs"));
-  assert.deepEqual(JSON.parse(again.stdout), { added: 0, documents: 0 });
-  assert.equal(chunkLines(root).length, 3);
-}));
-
-test("a section that would exceed 2048 characters stops the run before anything is appended", withCapsule("docs-long", async root => {
-  docsFixture(root);
-  write(root, "theoracle/sources/tatalaksana/long.md", `# Long\n\n## Short\nok\n\n## Too long\n${"x".repeat(2100)}\n`);
-  const { code, stderr } = await run(join(root, "scripts/add-theoracle-docs.mjs"));
-  assert.equal(code, 1);
-  assert.match(stderr, /long\.md section 2 is \d+ chars; split it below 2048\./);
-  assert.equal(chunkLines(root).length, 1);
-}));
 
 // eval-theoracle-pipeline.mjs: runs in a temporary working directory against a local stub of /api/aadi.
 test("pipeline eval needs a base URL and a label", async () => {

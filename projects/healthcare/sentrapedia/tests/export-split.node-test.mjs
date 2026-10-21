@@ -9,7 +9,7 @@ import { dirname, join, resolve } from "node:path";
 import { isPrivate } from "../scripts/private-data.mjs";
 
 test("private paths cover the database, verification evidence, internal notes and the beta server setup, not the code", () => {
-  for (const file of ["theoracle/ssot/sentrapedia-knowledge-ssot.json", "theoracle/index/chunks.jsonl", "theoracle/index/vectors.f32", "theoracle/index/manifest.json", "theoracle/sources/tatalaksana/x.md", "theoracle/provenance/oracle-ii/README.md", "oracle/sentrapedia.json", "data/dose-inventory/inventory.json", "docs/verification/x.json", ".agents/HANDOFF.md", "oracle-ii/x.sqlite-shm", "deploy/beta/update.sh", "aadi/service/DESIGN.md"]) assert.equal(isPrivate(file), true, file);
+  for (const file of ["theoracle/ssot/sentrapedia-knowledge-ssot.json", "theoracle/index/chunks.jsonl", "theoracle/index/vectors.f32", "theoracle/index/manifest.json", "oracle/sentrapedia.json", "docs/verification/x.json", ".agents/HANDOFF.md", "oracle-ii/x.sqlite-shm", "deploy/beta/update.sh", "aadi/service/DESIGN.md"]) assert.equal(isPrivate(file), true, file);
   for (const file of ["src/lib/theoracle-grounding.ts", "oracle/sentrapedia.sample.json", "scripts/export-split.mjs", "README.md", "LICENSE", "aadi/service/app.py", "tests/public-data.test.ts", "apps/site/source/index.html", "docs/data.md", "docs/verificationx.md", "Dockerfile"]) assert.equal(isPrivate(file), false, file);
 });
 

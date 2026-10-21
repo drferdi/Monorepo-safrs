@@ -174,7 +174,7 @@ flowchart TB
 <table width="100%">
 <tr>
 <td width="50%" valign="top"><small><b><code>01 · WORKSPACE</code></b></small><br /><small>Fictional patients, lists, encounters, tasks, templates, draft review and backups.</small><br /><sub>IMPLEMENTED · src/components · src/lib/workspace.ts</sub></td>
-<td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>144 disease records across 15 categories, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/theoracle.ts</sub></td>
+<td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>347 disease records across 43 categories, derived from the knowledge SSOT, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/theoracle.ts</sub></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><small><b><code>03 · THEORACLE</code></b></small><br /><small>Local vector retrieval (EmbeddingGemma-300m on this machine) with index, model and per-passage hashes and bounded passages.</small><br /><sub>IMPLEMENTED · theoracle · src/lib/theoracle-grounding.ts</sub></td>
@@ -302,7 +302,7 @@ Sentrapedia/
 │   ├── lib/theoracle-grounding.ts  # Read-only retrieval
 │   └── app/sentra-tokens.css    # Local token snapshot
 ├── oracle/                      # Disease reference JSON
-├── theoracle/                   # TheOracle: index (chunks, vectors, manifest), model (installed), provenance
+├── theoracle/                   # TheOracle: knowledge SSOT, derived index (chunks, vectors, manifest), model (installed)
 ├── aadi/                        # Bundled Python service and locks
 ├── tests/                       # App, gateway and supervisor tests
 └── docs/                        # Architecture and dated evidence reports
@@ -580,7 +580,7 @@ Primary code: [route](src/app/api/aadi/route.ts) · [gateway](src/lib/aadi/gatew
 </tr>
 </table>
 
-**Oracle is not TheOracle.** The UI disease catalog reads `oracle/sentrapedia.json`. TheOracle is the single knowledge source for AADI grounding: 20,423 chunks with local EmbeddingGemma-300m vectors in `theoracle/index/`. The former Oracle II SQLite was removed; its sources and QA moved to `theoracle/provenance/oracle-ii/`. [Its source parser QA](theoracle/provenance/oracle-ii/README.md) documents **72 newly reprocessed PDFs, 8,332 source-page text records and 904 machine-selected literal excerpts**. Machine-selected text may be semantically misclassified: unreviewed candidate fields remain quarantined, not promoted as clinician-approved facts.
+**Oracle is not TheOracle.** Structured clinical facts live only in the knowledge SSOT (`theoracle/ssot/`); guideline PDF texts are the citation library. `npm run knowledge:build` derives both the UI disease catalog (`oracle/sentrapedia.json`) and TheOracle, the index that grounds AADI: 18,992 chunks with local EmbeddingGemma-300m vectors in `theoracle/index/`. The SSOT is not yet clinically reviewed; its review status is recorded per entry.
 
 The account dialog supports JSON export and clearing browser-local records, but no authenticated multiuser database or guaranteed sync/retention exists. The AADI audit ledger under `.runtime/aadi-deepseek/audit` records metadata and SHA-256 hashes (`requestSha256` / `responseSha256`, never raw case text) and deletes day files older than 14 days at engine start; preserve it when relocating an existing installation to retain daily-budget context.
 
@@ -609,7 +609,7 @@ The account dialog supports JSON export and clearing browser-local records, but 
 
 **Explicit limitations:** software test passes do not verify diagnostic accuracy, treatment quality, guideline currency or patient outcomes. Real use requires clinical validation, secure persistence, consent/transcription governance, regulated privacy/security controls, role authorization, EHR integrations and appropriate approvals. Browser speech recognition may invoke a vendor service. Provider billing can occur even for aborted requests. The five-second response target is an aspiration, not established end-to-end performance.
 
-See [current integration](docs/aadi-integration.md), [data contract](docs/data.md), [testing](docs/testing.md) and [Oracle II QA](theoracle/provenance/oracle-ii/QA_REPORT.md).
+See [current integration](docs/aadi-integration.md), [data contract](docs/data.md) and [testing](docs/testing.md).
 
 ## 14 / OFFICIAL SPONSOR & INSTITUTIONAL CONTEXT
 
@@ -673,7 +673,7 @@ Contributors should use scoped branches and PRs, preserve clinical/synthetic-onl
 
 Sentrapedia is **source-available, not open source**: see [LICENSE](LICENSE) (Sentrapedia Source-Available License 1.0, draft of 2026-10-19). Reading, studying and running the code locally for evaluation, research or education with fictional data is free. Use with real patients by any organisation, hosting it as a service, distribution and other commercial use require a paid commercial licence from SENTRA ARTIFICIAL INTELLIGENCE (info@sentrapedia.com).
 
-The clinical database (TheOracle index, clinical catalogue, dose data and their sources) is **not included** in the public repository and not covered by the licence; a fictional sample catalogue takes its place, and analyses answer "Database TheOracle belum terpasang". The file `aadi/LICENSE` grants MIT terms to its bundled upstream AADI component only, with its own author/copyright attribution. Source attribution is available in [AADI SOURCE](aadi/SOURCE.json) and [contract provenance](aadi/service/contract/SOURCE.md).
+The clinical database (the knowledge SSOT and the TheOracle index and clinical catalogue derived from it) is **not included** in the public repository and not covered by the licence; a fictional sample catalogue takes its place, and analyses answer "Database TheOracle belum terpasang". The file `aadi/LICENSE` grants MIT terms to its bundled upstream AADI component only, with its own author/copyright attribution. Source attribution is available in [AADI SOURCE](aadi/SOURCE.json) and [contract provenance](aadi/service/contract/SOURCE.md).
 
 ### Support and security
 
@@ -697,7 +697,7 @@ The following is **historical repository evidence from October 10, 2026**. The R
 | <small>Docker image build/run</small> | <small>NOT VERIFIED</small> | <small>[Integrated runtime report](docs/verification/2026-10-10-integrated-aadi.md)</small> | <small>Docker daemon unavailable in reported test</small> |
 | <small>Clinical validity / production</small> | <small>NOT ESTABLISHED</small> | <small>[Current integration contract](docs/aadi-integration.md)</small> | <small>Requires separate safety/security approval</small> |
 
-**Engineering references:** [AADI integration](docs/aadi-integration.md) · [Architecture](docs/architecture.md) · [Data](docs/data.md) · [Testing](docs/testing.md) · [Oracle II QA](theoracle/provenance/oracle-ii/README.md).
+**Engineering references:** [AADI integration](docs/aadi-integration.md) · [Architecture](docs/architecture.md) · [Data](docs/data.md) · [Testing](docs/testing.md).
 
 <p align="center">
 <b>Architected and built by dr. Ferdi Iskandar (the Gaffer) · Sentra Artificial Intelligence.</b><br />

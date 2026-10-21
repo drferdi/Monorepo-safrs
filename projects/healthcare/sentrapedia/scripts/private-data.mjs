@@ -4,11 +4,8 @@
 export const PRIVATE_PATHS = [
   "theoracle/ssot/", // the single knowledge source; the index and the catalogue are derived from it
   "theoracle/index/", // TheOracle: chunks, vectors and manifest
-  "theoracle/sources/", // hand-written treatment documents that are part of the index
-  "theoracle/provenance/", // Oracle II sources, PNPK pages and QA
-  "oracle/sentrapedia.json", // the clinical catalogue (144 diseases)
+  "oracle/sentrapedia.json", // the clinical catalogue, derived from the SSOT by npm run knowledge:build
   "oracle-ii/",
-  "data/dose-inventory/",
   "docs/verification/", // evidence files quote passages, doses and live outputs
   ".agents/", // internal working notes
   "deploy/beta/", // closed-beta server layout and access setup

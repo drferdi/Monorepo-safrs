@@ -20,7 +20,7 @@ const THERAPY_EVIDENCE = 1;
 const THERAPY_QUERY = "\npenatalaksanaan terapi dosis obat";
 // A drug amount such as 500 mg or 1 g, not a laboratory value such as 126 mg/dL.
 const DOSE = /\d+(?:[.,]\d+)?\s?(?:mg|mcg|g|iu)\b(?!\s*\/\s*(?:dl|l)\b)/i;
-const REVIEW_PROVENANCE = "Gaffer stated on 2026-10-11 that Gaffer reviewed and approved the TheOracle corpus; per-chunk review fields are not recorded.";
+const REVIEW_PROVENANCE = "Derived from official guidelines (KMK 1186/2022, Permenkes 5/2014, PNPK); not yet clinically reviewed. Review status per entry is recorded in the knowledge SSOT.";
 
 export interface TheOracleManifest {
   model: { id: string; revision: string; dtype: string; dims: number; files: Record<string, { size: number; sha256: string }> };
