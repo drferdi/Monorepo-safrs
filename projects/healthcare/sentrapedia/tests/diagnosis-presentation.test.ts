@@ -192,7 +192,7 @@ describe("nine-part clinical report", () => {
     const input = withDifferential({ likely: [{ icd10: "R10.3", label: "Nyeri perut bawah", confidenceTier: "low" }], alternatives: [{ icd10: "K35.8", label: "Appendicitis", confidenceTier: "low" }], cannotMiss: [{ icd10: "A06.0", label: "Amoebic dysentery", confidenceTier: "low" }] });
     expect(withCode("R10.3")).toHaveLength(0);
     const report = aadiMessage(input).content;
-    const appendicitis = theOracleDiseases.find(d => d.kode === "K35")!, dysentery = theOracleDiseases.find(d => d.kode === "A03-A09")!;
+    const appendicitis = theOracleDiseases.find(d => d.kode === "K35")!, dysentery = theOracleDiseases.find(d => d.kode === "A06.0")!;
     expect(section(report, "5. Asesmen dan diagnosis banding")).toContain(appendicitis.definisi);
     expect(section(report, "5. Asesmen dan diagnosis banding")).not.toContain(dysentery.definisi);
     expect(section(report, therapyTitle)).not.toContain(dysentery.terapi);
@@ -209,8 +209,8 @@ describe("nine-part clinical report", () => {
     const unmatched = withDifferential({ likely: [{ icd10: "C92.0", label: "Kandidat sintetis", confidenceTier: "low" }], alternatives: [], cannotMiss: [] });
     expect(section(aadiMessage(unmatched).content, therapyTitle)).toContain("Belum ada data terapi untuk diagnosis ini.");
   });
-  it.skipIf(!withCatalog)("resolves explicit ranges, category coverage and comma-separated codes as labeled references", () => {
-    for (const [code, sourceCode] of [["J02.9", "J02-J03"], ["J00.1", "J00"], ["R42", "H81-H83, R42"], ["G47.0", "G47.0, F51.0"]]) {
+  it.skipIf(!withCatalog)("resolves category coverage and comma-separated codes as labeled references", () => {
+    for (const [code, sourceCode] of [["J03.9", "J03, J35"], ["J00.1", "J00"], ["R42", "H81, H81.1, H82, R42"], ["G47.0", "F51.0, G47.0"]]) {
       const input = withDifferential({ likely: [{ icd10: code, label: "Kandidat sintetis", confidenceTier: "low" }], alternatives: [], cannotMiss: [] });
       const report = aadiMessage(input).content;
       const reference = theOracleDiseases.find(d => d.kode === sourceCode)!;

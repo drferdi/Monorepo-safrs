@@ -2,6 +2,7 @@
 // public code under the royalty licence, private database). Folders end with "/". Used by scripts/export-split.mjs
 // and pinned by tests/export-split.node-test.mjs.
 export const PRIVATE_PATHS = [
+  "theoracle/ssot/", // the single knowledge source; the index and the catalogue are derived from it
   "theoracle/index/", // TheOracle: chunks, vectors and manifest
   "theoracle/sources/", // hand-written treatment documents that are part of the index
   "theoracle/provenance/", // Oracle II sources, PNPK pages and QA
