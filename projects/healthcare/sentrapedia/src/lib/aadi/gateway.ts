@@ -6,7 +6,7 @@ import type { CaseState } from "./types";
 
 type Options = { fetchFn?: typeof fetch; baseUrl?: string; token?: string; timeoutMs?: number; model?: string; maxCostUsd?: number; retrieveGrounding?: (caseData: CaseState) => Promise<TheOracleGroundingBundle>; retrieveTherapyGrounding?: (caseData: CaseState, diagnosis: { icd10: string; label: string }) => Promise<TheOracleGroundingBundle>; targetedTherapy?: boolean; retrievalTimeoutMs?: number; publicOrigin?: string; maxConcurrent?: number; log?: (entry: StageLog) => void };
 export interface StageLog { traceId: string; stage: string; ms: number; ok: boolean; code?: string }
-class ServiceFailure extends Error { constructor(readonly code: string) { super(code); } }
+class ServiceFailure extends Error { constructor(readonly code: string, readonly retryAfter = 0) { super(code); } }
 // Targeted retrieval limit: a cold start loads the index and hashes the model files (measured 2.5-3 s).
 const RETRIEVAL_TIMEOUT_MS = 15000;
 // The therapy step ends this long before the overall timer, so a slow therapy loses only the therapy, not the diagnosis.
@@ -17,6 +17,10 @@ const DEFAULT_TIMEOUT_MS = 20000;
 const HEALTH_TIMEOUT_MS = 2500;
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 const failure = (code: string, message: string, status: number) => reply({ error: { code, message } }, status);
+// The engine's per-minute limit (429) reaches the caller as 429 with its Retry-After, so a client can wait and resend.
+const RATE_LIMIT_WAIT_S = 60;
+const rateLimited = (seconds: number) => Response.json({ error: { code: "RATE_LIMITED", message: `Layanan sedang sibuk, coba lagi dalam ${seconds} detik.` } }, { status: 429, headers: { "Cache-Control": "no-store", "Retry-After": String(seconds) } });
+const retryAfterSeconds = (value: string | null) => { const seconds = Number(value); return Number.isInteger(seconds) && seconds >= 1 && seconds <= RATE_LIMIT_WAIT_S ? seconds : RATE_LIMIT_WAIT_S; };
 async function boundedBody(response: Response | Request, limit: number): Promise<string> {
   const reader = response.body?.getReader(); if (!reader) return "";
   const parts: Uint8Array[] = []; let size = 0;
@@ -106,6 +110,7 @@ export function createAadiGateway(options: Options = {}) {
         const serviceBody = JSON.stringify(body);
         if (new TextEncoder().encode(serviceBody).length > 65536) throw new ServiceFailure("INPUT");
         const response = await fetchFn(`${base}${path}`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, "X-AADI-Case-Origin": "synthetic" }, body: serviceBody, signal, cache: "no-store", redirect: "error" });
+        if (response.status === 429) throw new ServiceFailure("RATE_LIMITED", retryAfterSeconds(response.headers.get("retry-after")));
         if (!response.ok) throw new ServiceFailure("SERVICE");
         const raw = await boundedBody(response, 1048576);
         if (token.length > 8 && raw.includes(token)) throw new ServiceFailure("RESPONSE");
@@ -128,7 +133,7 @@ export function createAadiGateway(options: Options = {}) {
         controller.signal.throwIfAborted();
         let result: unknown;
         try { result = await timed("aadi_dx", () => postService("/v1/diagnosis/step", { contractVersion: "1", traceId, case: caseData, ...(grounding ? { grounding } : {}), ...(targeted ? { omitTherapy: true } : {}) })); }
-        catch (error) { if (error instanceof ServiceFailure) return error.code === "INPUT" ? failure("INPUT", "Kasus dan referensi melebihi batas layanan.", 413) : error.code === "RESPONSE" ? failure("RESPONSE", "Respons layanan tidak dapat ditampilkan.", 502) : failure("SERVICE", "Layanan analisis menolak permintaan atau belum tersedia.", 502); throw error; }
+        catch (error) { if (error instanceof ServiceFailure) return error.code === "RATE_LIMITED" ? rateLimited(error.retryAfter) : error.code === "INPUT" ? failure("INPUT", "Kasus dan referensi melebihi batas layanan.", 413) : error.code === "RESPONSE" ? failure("RESPONSE", "Respons layanan tidak dapat ditampilkan.", 502) : failure("SERVICE", "Layanan analisis menolak permintaan atau belum tersedia.", 502); throw error; }
         if (!validResult(result)) return failure("CONTRACT", "Respons layanan analisis tidak sesuai kontrak. Tidak ada hasil yang digunakan.", 502);
         if (selectedModel && (!profileMatches(result.meta.version) || result.meta.model !== `${selectedModel}+${selectedModel}` || typeof result.meta.costUsd !== "number" || !Number.isFinite(result.meta.costUsd) || result.meta.costUsd < 0 || !Number.isFinite(maxCostUsd) || maxCostUsd < 0 || result.meta.costUsd > maxCostUsd)) return failure("MODEL_RESPONSE", "Profil model atau biaya respons tidak sesuai batas yang dipilih. Hasil tidak digunakan.", 502);
         if (result.status !== "ok") {
@@ -181,6 +186,7 @@ export function createAadiGateway(options: Options = {}) {
           } catch (error) {
             // A stage failure leaves the diagnosis without therapy; an overall timeout or cancel still ends the request.
             if (controller.signal.aborted) throw error;
+            if (error instanceof ServiceFailure && error.code === "RATE_LIMITED") return rateLimited(error.retryAfter);
             therapyGrounding = undefined;
             evidenceGate = absent("Referensi atau langkah terapi Oracle tidak tersedia; terapi dan dosis tidak ditampilkan.");
           } finally { stage.abort(); }

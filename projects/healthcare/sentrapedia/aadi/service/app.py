@@ -132,7 +132,7 @@ def create_app(settings: Settings | None = None, client=None) -> FastAPI:
         if principal is None:
             return JSONResponse({"detail": "unauthorized"}, status_code=401)
         if not limiter.allow(principal):
-            return JSONResponse({"detail": "rate limit exceeded"}, status_code=429)
+            return JSONResponse({"detail": "rate limit exceeded"}, status_code=429, headers={"Retry-After": str(limiter.retry_after(principal))})
         body = await request.body()
         if len(body) > settings.max_body_bytes:
             return JSONResponse({"detail": "request too large"}, status_code=413)

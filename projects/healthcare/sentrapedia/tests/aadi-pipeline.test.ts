@@ -49,6 +49,16 @@ describe("targeted therapy pipeline", () => {
     expect(logs.map(l => l.stage)).toEqual(["retrieve_dx", "aadi_dx", "retrieve_tx", "aadi_tx", "gate"]);
     expect(JSON.stringify(logs)).not.toContain("Batuk");
   });
+  it("passes the engine's per-minute limit through as 429 with Retry-After, at the diagnosis and the therapy step", async () => {
+    for (const [limitedPath, header, expected] of [["/v1/diagnosis/step", "17", "17"], ["/v1/therapy/step", "17", "17"], ["/v1/diagnosis/step", "", "60"], ["/v1/diagnosis/step", "9999", "60"]] as const) {
+      const { fetchFn } = service();
+      const limited: typeof fetch = async (url, init) => new URL(String(url)).pathname === limitedPath ? new Response(JSON.stringify({ detail: "rate limit exceeded" }), { status: 429, headers: header ? { "Retry-After": header } : {} }) : fetchFn(url, init);
+      const response = await gatewayWith(limited).gateway.step(input());
+      expect(response.status).toBe(429);
+      expect(response.headers.get("retry-after")).toBe(expected);
+      expect((await response.json()).error).toEqual({ code: "RATE_LIMITED", message: `Layanan sedang sibuk, coba lagi dalam ${expected} detik.` });
+    }
+  });
   it("makes no therapy call when targeted retrieval fails, and returns the diagnosis", async () => {
     const { fetchFn, posts } = service();
     const { gateway, logs } = gatewayWith(fetchFn, { retrieveTherapyGrounding: async () => { throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "x"); } });

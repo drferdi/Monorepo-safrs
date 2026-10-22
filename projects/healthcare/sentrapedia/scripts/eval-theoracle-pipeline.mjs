@@ -15,12 +15,23 @@ const names = new Map(JSON.parse(readFileSync(path.resolve("aadi/service/data/ic
 const DOSE_STRENGTH = /(\d+(?:[.,]\d+)?)\s*(mcg|mg|g|iu|ml)\b/gi;
 const pct = (values, p) => { const s = [...values].sort((a, b) => a - b); return s.length ? Math.round(s[Math.min(s.length - 1, Math.floor(p * s.length))]) : null; };
 const rows = [];
+const MAX_RATE_RETRIES = 3;
+let rateLimitRetries = 0;
 for (const item of queries.filter(q => q.gold?.length && !q.term)) {
   const caseData = { demographics: { ageYears: null, sex: "unknown" }, chiefComplaint: item.query, anamnesis: {}, vitals: {}, physicalExam: [], results: [], currentMedications: [], knownConditions: [], allergies: [], facilityCapabilities: [] };
-  const started = performance.now();
-  const response = await fetch(`${base}/api/aadi`, { method: "POST", headers: { "Content-Type": "application/json", Origin: base }, body: JSON.stringify({ case: caseData, synthetic: true }) });
+  // The gateway answers the engine's per-minute limit with 429 RATE_LIMITED and Retry-After: wait, then resend (at most 3 times).
+  let started, response, body;
+  for (let attempt = 0; ; attempt++) {
+    started = performance.now();
+    response = await fetch(`${base}/api/aadi`, { method: "POST", headers: { "Content-Type": "application/json", Origin: base }, body: JSON.stringify({ case: caseData, synthetic: true }) });
+    body = await response.json().catch(() => null);
+    if (response.status !== 429 || body?.error?.code !== "RATE_LIMITED" || attempt === MAX_RATE_RETRIES) break;
+    const wait = Number(response.headers.get("retry-after")) || 60;
+    rateLimitRetries++;
+    console.error(`${item.id} rate limited, waiting ${wait} s (${attempt + 1}/${MAX_RATE_RETRIES})`);
+    await new Promise(done => setTimeout(done, wait * 1000));
+  }
   const ms = Math.round(performance.now() - started);
-  const body = await response.json().catch(() => null);
   if (!response.ok || !body) { rows.push({ id: item.id, ok: false, status: response.status, code: body?.error?.code ?? null, ms }); console.error(`${item.id} ${ms} ms FAIL ${response.status} ${body?.error?.code ?? ""}`); if (body?.error?.code === "BUDGET_EXHAUSTED") break; continue; }
   const likely = body.result.differential.likely[0] ?? null;
   const gate = body.evidenceGate ?? null;
@@ -55,6 +66,7 @@ const summary = {
   dose: { written: sum("dosesWritten"), supportedByPassages: sum("dosesSupported"), supportedRate: sum("dosesWritten") ? sum("dosesSupported") / sum("dosesWritten") : null, displayed: sum("displayedDoses"), verified: sum("verified"), doseRemoved: sum("doseRemoved"), removed: sum("removed") },
   retrievalSuccess: label === "targeted" && done.length ? done.filter(r => r.therapyRetrieved).length / done.length : null,
   costUsd: Math.round(sum("costUsd") * 10000) / 10000,
+  rateLimitRetries,
 };
 mkdirSync(outDir, { recursive: true });
 writeFileSync(path.join(outDir, `pipeline-${today}-${label}.json`), JSON.stringify({ summary, rows }, null, 2));

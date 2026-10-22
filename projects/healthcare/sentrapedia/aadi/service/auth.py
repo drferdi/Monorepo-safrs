@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import math
 import time
 from collections import defaultdict, deque
 from typing import Protocol
@@ -56,3 +57,8 @@ class RateLimiter:
             return False
         hits.append(now)
         return True
+
+    def retry_after(self, principal: str) -> int:
+        """Whole seconds until the oldest hit leaves the window, for a Retry-After header."""
+        hits = self._hits[principal]
+        return max(1, math.ceil(60 - (self._clock() - hits[0]))) if hits else 1

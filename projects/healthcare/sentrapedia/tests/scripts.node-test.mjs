@@ -276,7 +276,7 @@ test("pipeline eval needs a base URL and a label", async () => {
   assert.match(stderr, /usage: node scripts\/eval-theoracle-pipeline\.mjs/);
 });
 
-test("pipeline eval scores ICD-10, dose support and the gate, skips term queries and stops at an exhausted budget", withCapsule("eval", async root => {
+test("pipeline eval scores ICD-10, dose support and the gate, skips term queries, waits out a per-minute limit and stops at an exhausted budget", withCapsule("eval", async root => {
   write(root, "aadi/service/data/icd10.json", JSON.stringify({ icd10: [{ kode: "A01", nama_en: "Typhoid and paratyphoid fevers" }, { kode: "A01.0", nama_en: "Typhoid fever" }] }));
   write(root, "set/eval-set.json", JSON.stringify({ queries: [
     { id: "q1", query: "demam tifoid", gold: ["tifoid.md"] },
@@ -293,7 +293,9 @@ test("pipeline eval scores ICD-10, dose support and the gate, skips term queries
     request.on("end", () => {
       requests.push({ url: request.url, origin: request.headers.origin, body: JSON.parse(body) });
       response.setHeader("Content-Type", "application/json");
-      if (requests.length > 1) { response.statusCode = 429; response.end(JSON.stringify({ error: { code: "BUDGET_EXHAUSTED" } })); return; }
+      // The first call meets the per-minute limit once; the runner waits for Retry-After and resends it.
+      if (requests.length === 1) { response.statusCode = 429; response.setHeader("Retry-After", "1"); response.end(JSON.stringify({ error: { code: "RATE_LIMITED" } })); return; }
+      if (requests.length > 2) { response.statusCode = 429; response.end(JSON.stringify({ error: { code: "BUDGET_EXHAUSTED" } })); return; }
       response.end(JSON.stringify({
         result: { differential: { likely: [{ icd10: "A01.0", label: "Typhoid fever" }] }, therapy: { regimen: [{ drug: "Seftriakson", dose: "2 g" }] }, meta: { costUsd: 0.0123 } },
         evidenceGate: { drugs: [{ drug: "Seftriakson", dose: "2 g", status: "verified", evidenceIds: ["e1"] }, { drug: "Kloramfenikol", dose: "500 mg", status: "doseRemoved", evidenceIds: [] }] },
@@ -308,7 +310,7 @@ test("pipeline eval scores ICD-10, dose support and the gate, skips term queries
     const base = `http://127.0.0.1:${server.address().port}`;
     const { code, stdout, stderr } = await run(resolve("scripts/eval-theoracle-pipeline.mjs"), [base, "targeted", "set"], { cwd: root });
     assert.equal(code, 0, stderr);
-    assert.deepEqual(requests.map(request => request.body.case.chiefComplaint), ["demam tifoid", "anggaran habis"]);
+    assert.deepEqual(requests.map(request => request.body.case.chiefComplaint), ["demam tifoid", "demam tifoid", "anggaran habis"]);
     assert.equal(requests[0].url, "/api/aadi");
     assert.equal(requests[0].origin, base);
     assert.equal(requests[0].body.synthetic, true);
@@ -319,6 +321,7 @@ test("pipeline eval scores ICD-10, dose support and the gate, skips term queries
     assert.deepEqual(summary.dose, { written: 2, supportedByPassages: 1, supportedRate: 0.5, displayed: 1, verified: 1, doseRemoved: 1, removed: 0 });
     assert.equal(summary.retrievalSuccess, 1);
     assert.equal(summary.costUsd, 0.0123);
+    assert.equal(summary.rateLimitRetries, 1);
     const today = new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Jakarta" });
     const saved = JSON.parse(readFileSync(join(root, `docs/verification/theoracle-eval-${today}/pipeline-${today}-targeted.json`), "utf8"));
     assert.deepEqual(saved.summary, summary);

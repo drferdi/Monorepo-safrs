@@ -386,7 +386,9 @@ def test_oversized_requests_are_refused(make_client, example_request):
 def test_rate_limit_per_token(make_client, example_request):
     client, _ = make_client(model_outputs(), rate_limit_per_minute=1)
     assert post(client, example_request).status_code == 200
-    assert post(client, example_request).status_code == 429
+    refused = post(client, example_request)
+    assert refused.status_code == 429
+    assert 1 <= int(refused.headers["retry-after"]) <= 60
 
 
 def test_healthz_needs_no_token(make_client):
