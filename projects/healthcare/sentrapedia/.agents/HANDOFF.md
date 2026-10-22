@@ -10,6 +10,7 @@
 - E2E (`v0.6-gold/e2e-analisis-v06.md`, trace `34b70c3e…`): Typhoid fever (A01.0), Chloramphenicol 4x500 mg 14 days; no case-report passages; SSOT Demam Tifoid ×3, PPK FKTP ×3, PAPDI 2024, Sirosis Hati PNPK hal. 239/242/257, TB 2019 ×2, Perdoski 2017/2021.
 - Dose gate: v0.6 merged "Ambeien (Hemoroid)" (K64) into "Hemoroid grade 1/2" (I84) and the catalogue carries no aliases, so a passage saying only "ambeien" no longer verified a haemorrhoid dose. Fixed by Gaffer's choice: `SYNONYMS` in `src/lib/theoracle-evidence-gate.ts` adds hemoroid → ambeien, wasir (like hiv → odha). `tests/ui/draft-actions.test.tsx` now reads the G44.2 name from the catalogue (v0.6 codes TTH exactly G44.2).
 - Gate before commit: typecheck 0, lint 0, vitest 463/463, node tests 21/21, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
+- Eval re-run (Gaffer, browser pane idle): 61/61 ok, ICD top-1 0.934 (D 0.951), doses supported 84/84, shown 49 (D 56), removed 33 (D 25), 0.32 USD (`v0.6-gold/eval-rerun-v06.md`). Fewer doses shown in 8 cases (e.g. J45.9, J44.1, N30.0, G44.2); not investigated or tuned.
 - Next: Gaffer's clinical review. No further retrieval tuning planned.
 
 ## Follow-ups after 68dffeeb: per-document cap fix, case-report PDF excluded, W92 traced (two commits on feat/puskesmas-flow) - 2026-10-22 Asia/Jakarta
