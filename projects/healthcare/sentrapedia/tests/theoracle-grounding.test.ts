@@ -97,6 +97,20 @@ describe("TheOracle vector grounding", () => {
     expect((await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: therapyEmbedder, limit: 3 })).evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "D1"]);
   });
 
+  it("keeps the two-per-document cap: the dose passage takes its document's lower match and the next match moves up", async () => {
+    const rows = [
+      chunk("A1", "Doc A.md", "Batuk pada pneumonia.", [1, 0, 0]),
+      chunk("A2", "Doc A.md", "Demam pada pneumonia.", [0.95, 0.05, 0]),
+      chunk("B1", "Doc B.md", "Batuk lama.", [0.9, 0.1, 0]),
+      chunk("A3", "Doc A.md", "Amoksisilin 3 x 500 mg.", [0, 0, 1]),
+      chunk("D1", "Doc D.md", "Penatalaksanaan: amoksisilin 500 mg.", [0, 0.3, 1]),
+    ];
+    const therapyEmbedder = async () => async (text: string) => Float32Array.from(text.endsWith("dosis obat") ? [0, 0, 1] : [1, 0, 0]);
+    const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(false, rows), embedder: therapyEmbedder, limit: 3 });
+    expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "B1", "A3"]);
+    expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3]);
+  });
+
   it("retrieves therapy for a diagnosis: dose passages first, then others, with patient context in the query", async () => {
     const calls: string[] = [];
     const embedder = async () => async (text: string) => { calls.push(text); return Float32Array.from([0, 0, 1]); };

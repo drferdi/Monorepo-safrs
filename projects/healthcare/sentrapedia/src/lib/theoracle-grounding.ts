@@ -182,7 +182,18 @@ export async function retrieveTheOracleGrounding(caseData: CaseState, options: R
       therapy.push(item);
     }
   }
-  const evidence = [...selected.slice(0, limit - therapy.length), ...therapy];
+  // When the dose passage's document already holds two matches, it takes the place of that document's lower match and the
+  // freed slot goes to the next match, so no document gets a third slot.
+  const matches = selected.slice(0, limit - therapy.length);
+  const spare = selected.slice(limit - therapy.length);
+  for (const item of therapy) {
+    const same = matches.filter(match => match.source.title === item.source.title);
+    if (same.length < MAX_PER_DOCUMENT) continue;
+    matches.splice(matches.indexOf(same[same.length - 1]), 1);
+    const next = spare.shift();
+    if (next) matches.push(next);
+  }
+  const evidence = [...matches, ...therapy];
   return freezeBundle({
     version: THEORACLE_GROUNDING_CAPABILITY,
     corpus: {
