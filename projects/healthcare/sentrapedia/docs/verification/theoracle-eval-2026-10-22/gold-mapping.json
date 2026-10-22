@@ -1,0 +1,295 @@
+{
+  "method": "Mechanical: each gold .md file of docs/verification/theoracle-eval-2026-10-11/eval-set.json maps to the SSOT entries whose dokumen list has that file as jenis index_md; alias matching was the fallback and was not needed. v0_2 lists the v0.2 name where it differs and is used only to score the v0.2 index.",
+  "ssotV05Sha256": "eb75de8dd8877176f6e0d60d43d4e8bd83597d72283f6a8772d21c8636be832b",
+  "ssotV02Sha256": "0f17dedfb170cc4e2b8b046a3e1220444795a1bb3c3a6c47d922880cdd9d201b",
+  "mapped": 56,
+  "unmapped": [],
+  "mapping": {
+    "asma-bronkiale.md": {
+      "v0_5": [
+        "Asma Bronkiale"
+      ]
+    },
+    "demam-tifoid.md": {
+      "v0_5": [
+        "Demam Tifoid"
+      ]
+    },
+    "dermatitis-atopik.md": {
+      "v0_5": [
+        "Dermatitis Atopik (Eksim)"
+      ]
+    },
+    "diabetes-melitus-tipe-2-dewasa.md": {
+      "v0_5": [
+        "Diabetes Melitus Tipe 2"
+      ]
+    },
+    "epistaksis.md": {
+      "v0_5": [
+        "Epistaksis"
+      ]
+    },
+    "gagal-jantung.md": {
+      "v0_5": [
+        "Gagal Jantung"
+      ]
+    },
+    "gangguan-cemas-menyeluruh-gad.md": {
+      "v0_5": [
+        "Gangguan Cemas Menyeluruh (GAD)"
+      ]
+    },
+    "gastritis.md": {
+      "v0_5": [
+        "Gastritis"
+      ]
+    },
+    "gastroenteritis-akut-diare-akut.md": {
+      "v0_5": [
+        "Gastroenteritis Akut"
+      ]
+    },
+    "gastroesophageal-reflux-disease-gerd.md": {
+      "v0_5": [
+        "Refluks Gastroesofageal"
+      ],
+      "v0_2": [
+        "Gastroesophageal Reflux Disease (GERD)"
+      ]
+    },
+    "glaukoma.md": {
+      "v0_5": [
+        "Glaukoma"
+      ]
+    },
+    "hemoroid-eksterna-dan-interna-derajat-1-2.md": {
+      "v0_5": [
+        "Hemoroid Eksterna dan Interna Derajat 1-2"
+      ]
+    },
+    "hepatitis-b.md": {
+      "v0_5": [
+        "Hepatitis B"
+      ]
+    },
+    "hipertensi-dewasa.md": {
+      "v0_5": [
+        "Hipertensi Esensial"
+      ]
+    },
+    "hipertensi-pada-anak.md": {
+      "v0_5": [
+        "Hipertensi Pada Anak"
+      ]
+    },
+    "hiv.md": {
+      "v0_5": [
+        "HIV/AIDS"
+      ]
+    },
+    "hordeolum-bintitan.md": {
+      "v0_5": [
+        "Hordeolum (Bintitan) & Kalazion"
+      ]
+    },
+    "impetigo-krustosa-dan-bulosa.md": {
+      "v0_5": [
+        "Impetigo"
+      ],
+      "v0_2": [
+        "Impetigo Krustosa dan Bulosa"
+      ]
+    },
+    "infeksi-dengue-anak-dan-remaja.md": {
+      "v0_5": [
+        "Infeksi Dengue Anak Dan Remaja"
+      ]
+    },
+    "infeksi-dengue-pada-dewasa.md": {
+      "v0_5": [
+        "Demam Berdarah Dengue (DBD)"
+      ]
+    },
+    "infeksi-saluran-kemih.md": {
+      "v0_5": [
+        "Infeksi Saluran Kemih (ISK)"
+      ]
+    },
+    "kanker-payudara.md": {
+      "v0_5": [
+        "Kanker Payudara"
+      ]
+    },
+    "katarak-pada-anak.md": {
+      "v0_5": [
+        "Katarak Pada Anak"
+      ]
+    },
+    "konjungtivitis-bakteri-dan-viral.md": {
+      "v0_5": [
+        "Konjungtivitis Bakteri dan Viral"
+      ]
+    },
+    "leukemia-limfoblastik-akut-pada-anak.md": {
+      "v0_5": [
+        "Leukemia Limfoblastik Akut Pada Anak"
+      ]
+    },
+    "malaria.md": {
+      "v0_5": [
+        "Malaria"
+      ]
+    },
+    "migren-tanpa-aura.md": {
+      "v0_5": [
+        "Migren Tanpa Aura"
+      ]
+    },
+    "miliaria-biang-keringat.md": {
+      "v0_5": [
+        "Miliaria (Biang Keringat)"
+      ]
+    },
+    "oksiuriasis-enterobiasis-cacing-kremi.md": {
+      "v0_5": [
+        "Oksiuriasis (Enterobiasis / Cacing Kremi)"
+      ]
+    },
+    "osteoartritis.md": {
+      "v0_5": [
+        "Osteoartritis"
+      ]
+    },
+    "otitis-eksterna.md": {
+      "v0_5": [
+        "Otitis Eksterna"
+      ]
+    },
+    "otitis-media-akut-oma.md": {
+      "v0_5": [
+        "Otitis Media Akut (OMA)"
+      ]
+    },
+    "otitis-media-supuratif-kronik.md": {
+      "v0_5": [
+        "Otitis Media Supuratif Kronik"
+      ]
+    },
+    "parotitis-epidemika-gondongan-mumps.md": {
+      "v0_5": [
+        "Parotitis Epidemika (Gondongan / Mumps)"
+      ]
+    },
+    "penyakit-ginjal-kronik.md": {
+      "v0_5": [
+        "Penyakit Ginjal Kronik"
+      ]
+    },
+    "penyakit-ginjal-tahap-akhir.md": {
+      "v0_5": [
+        "Penyakit Ginjal Tahap Akhir"
+      ]
+    },
+    "penyakit-paru-obstruktif.md": {
+      "v0_5": [
+        "COPD (Penyakit Paru Obstruktif Kronik)"
+      ]
+    },
+    "pertusis-batuk-rejan.md": {
+      "v0_5": [
+        "Pertusis (Batuk Rejan)"
+      ]
+    },
+    "pneumonia-pada-dewasa.md": {
+      "v0_5": [
+        "Pneumonia Komuniti"
+      ]
+    },
+    "pneumonia.md": {
+      "v0_5": [
+        "Pneumonia Komuniti"
+      ]
+    },
+    "sepsis-pada-anak.md": {
+      "v0_5": [
+        "Sepsis Pada Anak"
+      ]
+    },
+    "serumen-prop-impaksi-serumen.md": {
+      "v0_5": [
+        "Serumen Prop (Impaksi Serumen)"
+      ]
+    },
+    "sindroma-koroner-akut.md": {
+      "v0_5": [
+        "Sindroma Koroner Akut"
+      ]
+    },
+    "skabies-kudis.md": {
+      "v0_5": [
+        "Skabies (Kudis)"
+      ]
+    },
+    "skizofrenia.md": {
+      "v0_5": [
+        "Skizofrenia"
+      ]
+    },
+    "stroke.md": {
+      "v0_5": [
+        "Stroke"
+      ]
+    },
+    "stunting.md": {
+      "v0_5": [
+        "Stunting (Pendek)"
+      ]
+    },
+    "tension-type-headache-tth.md": {
+      "v0_5": [
+        "Tension-Type Headache (TTH)"
+      ]
+    },
+    "thalasemia.md": {
+      "v0_5": [
+        "Thalasemia"
+      ]
+    },
+    "tindakan-resusitasi-stabilitasi-dan-tranpor-bayi-berat-lahir-r.md": {
+      "v0_5": [
+        "Tindakan Resusitasi Stabilitasi Dan Tranpor Bayi Berat Lahir R"
+      ]
+    },
+    "tinea-versikolor-pitiriasis-versikolor-panu.md": {
+      "v0_5": [
+        "Tinea Versikolor (Pitiriasis Versikolor / Panu)"
+      ]
+    },
+    "tuberkolosis.md": {
+      "v0_5": [
+        "Tuberkulosis Paru"
+      ]
+    },
+    "ulkus-mulut-stomatitis-aftosa-rekuren.md": {
+      "v0_5": [
+        "Ulkus Mulut (Stomatitis Aftosa Rekuren)"
+      ]
+    },
+    "urtikaria-akut.md": {
+      "v0_5": [
+        "Urtikaria Akut"
+      ]
+    },
+    "varisela-cacar-air.md": {
+      "v0_5": [
+        "Varisela (Cacar Air)"
+      ]
+    },
+    "vertigo-posisi-paroksismal-jinak-bppv.md": {
+      "v0_5": [
+        "Vertigo Posisi Paroksismal Jinak (BPPV)"
+      ]
+    }
+  }
+}

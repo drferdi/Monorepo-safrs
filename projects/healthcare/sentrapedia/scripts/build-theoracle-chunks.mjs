@@ -10,7 +10,21 @@ import { clean, doseLines, list, sha256, ssot, ssotPath, therapyText } from "./k
 import { indexDir } from "./theoracle-model.mjs";
 
 const CHUNK_SIZE = 2048, OVERLAP = 20;
-const NOT_GUIDANCE = new Set(["faa-aviation-medical-examiners.pdf"]);
+// Library PDFs that are not Indonesian clinical guidance (aviation medicine, curricula, competence and service standards,
+// forensics, sports nutrition, a classification table): left out of the index (2026-10-21, 2026-10-22). The two clinical
+// pathology texts stay in: without them lab-interpretation recall drops (benchmark 2026-10-22, columns C and D).
+// The library is read from the current chunks.jsonl, so a title dropped here comes back only from git history.
+const EXCLUDED_LIBRARY_PDFS = new Set([
+  "faa-aviation-medical-examiners.pdf",
+  "standar-pelayanan-patologi-anatomik.pdf",
+  "kurikulum-mikrobiologi-klinik-2022.pdf",
+  "standar-kompetensi-dokter-indonesia.pdf",
+  "gizi-olahraga-pdsko.pdf",
+  "forensik-medikolegal-2020.pdf",
+  "pelayanan-kesehatan-bergerak.pdf",
+  "standar-pelayanan-kedokteran-nuklir-2009.pdf",
+  "klasifikasi-diagnosis-pak-2021.pdf",
+]);
 const uuid = hex => `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
 
 // Recursive character splitting: pieces that fit are merged up to size, keeping trailing pieces of at most OVERLAP characters.
@@ -49,7 +63,7 @@ const ssotRows = ssot.penyakit.flatMap(entry => {
 // Library lines are copied as read, so their ids, text and hashes stay byte-identical.
 const library = readFileSync(`${indexDir}chunks.jsonl`, "utf8").trim().split("\n").filter(line => {
   const { title } = JSON.parse(line);
-  return title.endsWith(".pdf") && !NOT_GUIDANCE.has(title);
+  return title.endsWith(".pdf") && !EXCLUDED_LIBRARY_PDFS.has(title);
 });
 const out = process.argv[2] ?? `${indexDir}chunks.jsonl`;
 writeFileSync(out, [...ssotRows.map(row => JSON.stringify(row)), ...library].join("\n") + "\n");

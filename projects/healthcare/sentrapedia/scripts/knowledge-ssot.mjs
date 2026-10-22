@@ -9,7 +9,9 @@ export const ssotBytes = readFileSync(root + ssotPath);
 export const ssot = JSON.parse(ssotBytes.toString("utf8"));
 export const sha256 = data => createHash("sha256").update(data).digest("hex");
 
-const LABELS = { daftar_kki: "Daftar KKI", katalog_skdi: "Katalog SKDI 4A", oracle_ii: "Oracle II / PNPK", index_md: "Dokumen index", ppk_idi_2017: "PPK IDI 2017" };
+const LABELS = { daftar_kki: "Daftar KKI", katalog_skdi: "Katalog SKDI 4A", oracle_ii: "Oracle II / PNPK", index_md: "Dokumen index", ppk_idi_2017: "PPK IDI 2017", kmk_1186_2022: "KMK 1186/2022", ppk_permenkes_5_2014: "Permenkes 5/2014" };
+// v0.5 keys carry the source and page: "pnpk_PNPK_2019_Tata_Laksana_Malaria (hal. 26)" reads "PNPK 2019 Tata Laksana Malaria (hal. 26)".
+const sourceLabel = base => LABELS[base] ?? (base.startsWith("pnpk_") ? `PNPK ${base.slice(5).replace(/^PNPK_/, "").replaceAll("_", " ")}` : base);
 const DOCUMENTS = { katalog_skdi: "katalog", oracle_ii: "PNPK", index_md: "index_md", ppk_idi_2017: "PPK IDI 2017" };
 const clean = text => String(text ?? "").replace(/\r\n?/g, "\n").trim();
 
@@ -20,7 +22,7 @@ export function therapyText(entry) {
     const [base, note] = key.split(/ (?=\()/);
     const doc = entry.dokumen.find(d => d.jenis === DOCUMENTS[base]);
     const where = doc ? ` · ${doc.file}${typeof doc.halaman === "number" && doc.jenis !== "PNPK" ? `, hlm. ${doc.halaman}` : ""}` : "";
-    const label = `${LABELS[base] ?? base}${note ? ` ${note}` : ""}${where}`;
+    const label = `${sourceLabel(base)}${note ? ` ${note}` : ""}${where}`;
     if (clean(text)) bySource.set(clean(text), [...(bySource.get(clean(text)) ?? []), label]);
   }
   return [...bySource].map(([text, labels]) => `[${labels.join("; ")}]\n${text}`).join("\n\n");

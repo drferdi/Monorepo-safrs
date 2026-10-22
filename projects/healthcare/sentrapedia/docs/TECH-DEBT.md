@@ -22,6 +22,8 @@ Accepted risks (known, recorded, not planned):
 | 40 | Whether Gemini answers an invalid key with 400 (then counted as `MODEL_ERROR`) is unchecked. | Checking needs a paid live call; the cost is a less precise error message. |
 | 46 | Whether Gemini bills a request the engine cuts off is unknown. | Not observable without the billing dashboard; the engine already charges each cut-off call the dearest recorded call. |
 
+Note 2026-10-22: the passage counts in this list (20,465; row 47's 15 and 852) describe the index of 2026-10-19. Since 2026-10-21 the index is derived from the knowledge SSOT by `npm run knowledge:build`; with SSOT v0.5 it has 18,665 chunks (1,979 SSOT, 16,686 guideline PDFs), and the row 47 counts were not re-measured on it. Row 20 is resolved: `theoracle/provenance/`, `theoracle/sources/` and `data/dose-inventory/` were archived outside the repository and removed (`13e03099`).
+
 ## Basis
 
 - Branch `feat/sentrapedia-hero-workspace`, HEAD `f5aa7427`, audited 2026-10-17. Line numbers refer to that commit; another session was editing `aadi/service/engine.py`, `aadi/SOURCE.json`, `scripts/aadi-runtime.mjs`, `scripts/aadi-profile.json`, `README.md`, `config/aadi-deepseek.env.example` and the architecture docs while this audit ran, so rows about those files name identifiers rather than lines.

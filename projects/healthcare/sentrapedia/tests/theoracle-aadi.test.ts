@@ -20,8 +20,8 @@ const request = (body: unknown = { case: caseData, synthetic: true }, origin = "
 
 describe("TheOracle local catalog", () => {
   it.skipIf(!withCatalog)("ties provenance to the exact original source bytes", () => { expect(createHash("sha256").update(readFileSync("oracle/sentrapedia.json")).digest("hex")).toBe(theOracleSource.hash); });
-  it.skipIf(!withCatalog)("uses all actual categories and preserves repeated codes", () => { expect(theOracleDiseases).toHaveLength(347); expect(theOracleCategories).toHaveLength(43); expect(theOracleCategories).toContain("Pernapasan Bawah"); expect(withCode("B01")).toHaveLength(2); expect(withCode("C92.0")).toEqual([]); });
-  it.skipIf(!withCatalog)("searches name, code and category with no clinical ranking", () => { expect(searchDiseases("pneumonia", "all").length).toBeGreaterThan(0); expect(searchDiseases("J00", "all")[0].id).toBe(45); expect(searchDiseases("", "Saluran Cerna").every(d => d.kategori === "Saluran Cerna")).toBe(true); expect(searchDiseases("zzzz", "all")).toEqual([]); expect(theOracleSource.hash).toHaveLength(64); });
+  it.skipIf(!withCatalog)("uses all actual categories and preserves repeated codes", () => { expect(theOracleDiseases).toHaveLength(333); expect(theOracleCategories).toHaveLength(42); expect(theOracleCategories).toContain("Pernapasan Bawah"); expect(withCode("I10")).toHaveLength(2); expect(withCode("C92.0")).toEqual([]); });
+  it.skipIf(!withCatalog)("searches name, code and category with no clinical ranking", () => { expect(searchDiseases("pneumonia", "all").length).toBeGreaterThan(0); expect(searchDiseases("J00", "all")[0].id).toBe(43); expect(searchDiseases("", "Saluran Cerna").every(d => d.kategori === "Saluran Cerna")).toBe(true); expect(searchDiseases("zzzz", "all")).toEqual([]); expect(theOracleSource.hash).toHaveLength(64); });
 });
 describe("AADI contract and presentation", () => {
   it("supports every keyword of the localized contract snapshots", () => {
