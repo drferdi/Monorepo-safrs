@@ -210,7 +210,7 @@ describe("nine-part clinical report", () => {
     expect(section(aadiMessage(unmatched).content, therapyTitle)).toContain("Belum ada data terapi untuk diagnosis ini.");
   });
   it.skipIf(!withCatalog)("resolves category coverage and comma-separated codes as labeled references", () => {
-    for (const [code, sourceCode] of [["J03.9", "J03, J35"], ["J00.1", "J00"], ["R42", "H81, H81.1, H82, R42"], ["G47.0", "F51, F51.0, G47, G47.0"]]) {
+    for (const [code, sourceCode] of [["J03.9", "J03"], ["J00.1", "J00"], ["R42", "R42"], ["G47.0", "F51, G47.0"]]) {
       const input = withDifferential({ likely: [{ icd10: code, label: "Kandidat sintetis", confidenceTier: "low" }], alternatives: [], cannotMiss: [] });
       const report = aadiMessage(input).content;
       const reference = theOracleDiseases.find(d => d.kode === sourceCode)!;

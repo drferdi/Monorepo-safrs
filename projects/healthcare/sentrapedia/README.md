@@ -174,7 +174,7 @@ flowchart TB
 <table width="100%">
 <tr>
 <td width="50%" valign="top"><small><b><code>01 · WORKSPACE</code></b></small><br /><small>Fictional patients, lists, encounters, tasks, templates, draft review and backups.</small><br /><sub>IMPLEMENTED · src/components · src/lib/workspace.ts</sub></td>
-<td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>333 disease records across 42 categories, derived from the knowledge SSOT, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/theoracle.ts</sub></td>
+<td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>330 disease records across 42 categories, derived from the knowledge SSOT, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/theoracle.ts</sub></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><small><b><code>03 · THEORACLE</code></b></small><br /><small>Local vector retrieval (EmbeddingGemma-300m on this machine) with index, model and per-passage hashes and bounded passages.</small><br /><sub>IMPLEMENTED · theoracle · src/lib/theoracle-grounding.ts</sub></td>

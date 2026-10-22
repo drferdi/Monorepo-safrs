@@ -185,9 +185,10 @@ theOracleDiseases.forEach(d => new Set(tokens(d.nama)).forEach(word => catalogCo
 const GENERIC = new Set(["kronis", "infeksi", "tanpa", "dengan", "komplikasi", "lain", "lainnya", "pada", "anak", "dewasa", "umum", "tidak", "lokasi", "spesifik", "acute", "chronic", "disease", "infection", "syndrome", "disorder", "without", "complication", "unspecified", "specified", "other", "status", "type", "tipe", "primer", "sekunder", "adult", "child", "fever", "signs", "warning", "human", "virus", "organism", "origin", "site", "acquired", "upper", "lower", "tract", "essential", "primary", "secondary", "mild", "moderate", "severe", "recurrent", "bacterial", "viral", "elsewhere", "classified", "presumed", "nos", "nec"].map(spell));
 // The distinctive words of the diagnosis label and of the TheOracle catalog names for its code.
 // Short capitals such as HIV count too, but not Roman numerals (stage II) or the words of a label written all in capitals.
-// ICD-10 2010 (the BPJS list) codes haemorrhoids I84; the catalog uses the later K64. Guidelines write ODHA (orang dengan HIV/AIDS) for HIV.
+// ICD-10 2010 (the BPJS list) codes haemorrhoids I84; the catalog uses the later K64. Guidelines write ODHA (orang dengan HIV/AIDS) for HIV,
+// and ambeien or wasir for hemoroid (since SSOT v0.6 the catalog has one hemoroid entry, without those lay names).
 const CATALOG_CODE: Record<string, string> = { I84: "K64" };
-const SYNONYMS: Record<string, string[]> = { hiv: ["odha"] };
+const SYNONYMS: Record<string, string[]> = { hiv: ["odha"], hemoroid: ["ambeien", "wasir"] };
 const diagnosisWords = (diagnosis: { icd10: string; label: string }) => {
   const code = diagnosis.icd10.trim().toUpperCase();
   const codes = [code, ...(CATALOG_CODE[code.slice(0, 3)] ? [CATALOG_CODE[code.slice(0, 3)]] : [])];

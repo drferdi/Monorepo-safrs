@@ -8,6 +8,10 @@ import { storageKey, type Workspace } from "../../src/lib/workspace";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
 import type { CaseState } from "../../src/lib/aadi/types";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
+import { theOracleDiseases } from "../../src/lib/theoracle";
+
+// Oracle's name when the catalog has G44.2 exactly (the public sample catalog may not).
+const g442 = theOracleDiseases.find(d => d.kode.trim().toUpperCase() === "G44.2")?.nama ?? "Tension-type headache";
 
 const analysis = (data: CaseState): AadiAnalysis => ({
   traceId: "trace-draft-actions", createdAt: "2026-10-21T05:00:00.000Z", case: data,
@@ -113,7 +117,7 @@ describe("next steps and P-Care copies", () => {
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Analisis kasus" })); });
     await act(async () => { await Promise.resolve(); });
     const row = within(await screen.findByRole("group", { name: "Salin ke P-Care" }));
-    await act(async () => { fireEvent.click(row.getByRole("button", { name: "Salin G44.2 — Tension-type headache ke Diagnosa P-Care (kandidat, belum terkonfirmasi)" })); });
+    await act(async () => { fireEvent.click(row.getByRole("button", { name: `Salin G44.2 — ${g442} ke Diagnosa P-Care (kandidat, belum terkonfirmasi)` })); });
     expect(writeText).toHaveBeenLastCalledWith("G44.2");
     expect(screen.getByText("Kode kandidat G44.2 disalin. Konfirmasi diagnosis sebelum dientri.", { selector: ".toast span" })).toBeTruthy();
     await act(async () => { fireEvent.click(row.getByRole("button", { name: "Salin Keluhan ke Keluhan P-Care" })); });

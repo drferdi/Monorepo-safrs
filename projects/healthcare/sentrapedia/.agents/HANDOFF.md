@@ -1,5 +1,17 @@
 # Sentrapedia handoff
 
+## Knowledge rebuild on SSOT v0.6 (one commit on feat/puskesmas-flow, closes the knowledge rebuild) - 2026-10-22 Asia/Jakarta
+
+- SSOT v0.6 copied from Gaffer's Downloads (`sentrapedia-knowledge-ssot_2.json`, sha256 `338316f5…`): 336 entries, new `nama_awam` (all 190 values already in `alias`, so the builder is unchanged). Hemorrhoid entries merged into "Hemoroid grade 1/2" (alias wasir, ambeien).
+- `npm run knowledge:build`: 17,560 chunks (1,974 SSOT + 15,586 PDF), `indexSha256` `e46a2fb0…`; full re-embed (the builder only appends), resumed once from `vectors.partial.*`; PDF vectors match the previous index (min cosine 0.99999994). Catalogue 330 diseases / 42 categories.
+- Gold for v0.6 in `docs/verification/theoracle-eval-2026-10-22/v0.6-gold/`: 53 names kept, 2 mapped through v0.6 aliases (Hemoroid Eksterna dan Interna Derajat 1-2 → Hemoroid grade 1/2, Asma Bronkiale → Asma Bronkial), 0 unmapped.
+- Benchmark recall@5 vs E+cap (v0.5, final of the previous round): lay 0.875 → 0.938, overall 0.852 → 0.864; every other category unchanged (abbr 0.933, mixed 1, typos 1, drug_dose 0.625, icd10 0.5, lab 0.8, score 0.625); dose 0.82, targeted 0.934.
+- Paid eval (`pipeline-2026-10-22-targeted-v06-index.json`): 49/61 ok, 0.26 USD. The 12 failures (typos-04..15) are 429 `BUSY` from the gateway's one-at-a-time lock: another client ran an analysis in the browser pane during the eval (server log: two stray BUSY lines and a 4.5 s request the runner never sent). On the 49 completed cases ICD top-1 differs from the v0.5 run in three: lay_terms-05 and mixed_id_en-09 now wrong, abbreviations-14 now right. Not re-run (Gaffer: one paid run).
+- E2E (`v0.6-gold/e2e-analisis-v06.md`, trace `34b70c3e…`): Typhoid fever (A01.0), Chloramphenicol 4x500 mg 14 days; no case-report passages; SSOT Demam Tifoid ×3, PPK FKTP ×3, PAPDI 2024, Sirosis Hati PNPK hal. 239/242/257, TB 2019 ×2, Perdoski 2017/2021.
+- Dose gate: v0.6 merged "Ambeien (Hemoroid)" (K64) into "Hemoroid grade 1/2" (I84) and the catalogue carries no aliases, so a passage saying only "ambeien" no longer verified a haemorrhoid dose. Fixed by Gaffer's choice: `SYNONYMS` in `src/lib/theoracle-evidence-gate.ts` adds hemoroid → ambeien, wasir (like hiv → odha). `tests/ui/draft-actions.test.tsx` now reads the G44.2 name from the catalogue (v0.6 codes TTH exactly G44.2).
+- Gate before commit: typecheck 0, lint 0, vitest 463/463, node tests 21/21, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
+- Next: Gaffer's clinical review. No further retrieval tuning planned.
+
 ## Follow-ups after 68dffeeb: per-document cap fix, case-report PDF excluded, W92 traced (two commits on feat/puskesmas-flow) - 2026-10-22 Asia/Jakarta
 
 - Cap fix (`src/lib/theoracle-grounding.ts`, test in `tests/theoracle-grounding.test.ts`): the dose passage no longer gives a document a third slot. When its document already holds two matches it replaces that document's lower match and the next match moves up. A stricter first variant (skip such dose passages) dropped doseRecall 0.82 → 0.59 and was rejected.
@@ -37,13 +49,4 @@
 - Do not continue: doctor flow, guided SOAP, section chips, completeness strip, practice-site default, Puskesmas-flow phases, storage-format migration, website/brand work, audit action items. The plan file `.claude/plans/puskesmas-flow-implementation-plan.md` is marked PARKED (gitignored, local only).
 - Checkpoint commit 8f960f4c (empty, `wip:`): typecheck 0, lint 0, `npx vitest run` 0 (38 files, 461 tests), build 0, deploy:dry-run 0 (win32-x64 binaries only); `npm test -- tests/workspace.test.ts` exit 1 because npm passes the path to `apps/site`'s `node --test`, not because a test failed. The entries below describe work that is built and committed but now parked.
 - Next: prove the consult answer (Analisis → `/api/aadi` → TheOracle → Gemini) with real doctors before reopening any parked item.
-
-## Nine more Indonesian notes in the numbered format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
-
-- Gaffer: "Evaluasi dan perbaiki juga untuk section lain, misal Catatan penyakit kronis, SBAR", then the Rencana tab (A&P, Daftar Tugas, Surat Rujukan, Pemantauan Klinis) and the Komunikasi tab (Edukasi Pasien, Ringkasan Kunjungan, Konsultasi Telepon).
-- `drafts.ts`: one table, `noteSpecs`, for chronic, handoff, ap, referral, monitoring, education, avs and telephone: heading, status, parts `[title, missing name ("" = only when filled), labelled fields, words]`, the order words are tried (`check`) and the part for unclaimed clauses (`main`, written as a sentence; the rest are bullets). Typed vital signs leave the clauses and come back as one "Tanda vital: …" line in the spec's vitals part (SBAR Penilaian, chronic results, referral Pemeriksaan, monitoring Parameter). No normal-template fill outside the SOAP note. `tasks` keeps its "- [ ]" lines under the same header, without a completeness part. All end with the source text. `numberedNote` takes the missing names per note. English drafts and the other modes (question, ddx, scribe, workup, icd10, refer, authorization) unchanged.
-- A&P keeps the "Assessment" and "Tata Laksana" titles so its Diagnosa/Terapi P-Care copy still works.
-- Tests: new `tests/other-notes.test.ts` (SBAR line for line, chronic, tasks, A&P with P-Care, referral/monitoring/education/avs/telephone, English unchanged); `studio.test.ts` (monitoring in the new format, the "Pasien —" check reads both forms, the empty-section test uses `refer`); `workspace.test.ts` (language/model test uses `question`).
-- Verified: typecheck 0, lint 0, Vitest 38 files 461 tests. Browser check stopped: Gaffer was using the 3101 tab at the same time, and one typed SBAR sample landed inside his own Analisis input (not sent; no POST seen).
-- Open: word lists are short and only sort the doctor's own words; Ringkasan Kunjungan and Edukasi Pasien are patient-facing but carry the same internal Status/Kelengkapan lines (assumption, ask Gaffer).
 

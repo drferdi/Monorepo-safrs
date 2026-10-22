@@ -1,5 +1,16 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-22 - handoff rotation for the SSOT v0.6 rebuild (newest five kept)
+
+## Nine more Indonesian notes in the numbered format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer: "Evaluasi dan perbaiki juga untuk section lain, misal Catatan penyakit kronis, SBAR", then the Rencana tab (A&P, Daftar Tugas, Surat Rujukan, Pemantauan Klinis) and the Komunikasi tab (Edukasi Pasien, Ringkasan Kunjungan, Konsultasi Telepon).
+- `drafts.ts`: one table, `noteSpecs`, for chronic, handoff, ap, referral, monitoring, education, avs and telephone: heading, status, parts `[title, missing name ("" = only when filled), labelled fields, words]`, the order words are tried (`check`) and the part for unclaimed clauses (`main`, written as a sentence; the rest are bullets). Typed vital signs leave the clauses and come back as one "Tanda vital: …" line in the spec's vitals part (SBAR Penilaian, chronic results, referral Pemeriksaan, monitoring Parameter). No normal-template fill outside the SOAP note. `tasks` keeps its "- [ ]" lines under the same header, without a completeness part. All end with the source text. `numberedNote` takes the missing names per note. English drafts and the other modes (question, ddx, scribe, workup, icd10, refer, authorization) unchanged.
+- A&P keeps the "Assessment" and "Tata Laksana" titles so its Diagnosa/Terapi P-Care copy still works.
+- Tests: new `tests/other-notes.test.ts` (SBAR line for line, chronic, tasks, A&P with P-Care, referral/monitoring/education/avs/telephone, English unchanged); `studio.test.ts` (monitoring in the new format, the "Pasien —" check reads both forms, the empty-section test uses `refer`); `workspace.test.ts` (language/model test uses `question`).
+- Verified: typecheck 0, lint 0, Vitest 38 files 461 tests. Browser check stopped: Gaffer was using the 3101 tab at the same time, and one typed SBAR sample landed inside his own Analisis input (not sent; no POST seen).
+- Open: word lists are short and only sort the doctor's own words; Ringkasan Kunjungan and Edukasi Pasien are patient-facing but carry the same internal Status/Kelengkapan lines (assumption, ask Gaffer).
+
 ## Archived on 2026-10-22 - handoff rotation for the follow-ups after 68dffeeb (newest five kept)
 
 ## Anamnesis (HPI) in the Catatan Klinis format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta

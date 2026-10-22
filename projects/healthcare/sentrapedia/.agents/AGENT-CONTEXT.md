@@ -20,7 +20,7 @@ Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on confli
 2. One sovereign capsule: a Next.js 16.4 / React 19.3 / TypeScript app at the capsule root, a bundled Python 3.11 FastAPI engine (`aadi/`), a local vector index (`theoracle/`), and a static marketing site (`apps/site/`).
 3. 18 composer modes in 4 intent groups. 5 modes call AI (`question`, `ddx`, `workup`, `icd10`, `refer`); 13 build documents locally from templates, with no AI and no network.
 4. AI path: browser, then `POST /api/aadi` (Next server), then TheOracle retrieval on local CPU, then the AADI engine on a random loopback port, then Google Gemini `gemini-3.1-flash-lite`. A therapy evidence gate removes any dose the retrieved passages do not support.
-5. One knowledge source (2026-10-21): structured clinical facts live only in `theoracle/ssot/sentrapedia-knowledge-ssot.json`; guideline PDF texts are the citation library. `npm run knowledge:build` derives TheOracle (17,565 chunks, EmbeddingGemma-300m vectors, 768-d, vector search only) and the read-only catalog `oracle/sentrapedia.json` (333 diseases) from them.
+5. One knowledge source (2026-10-21): structured clinical facts live only in `theoracle/ssot/sentrapedia-knowledge-ssot.json`; guideline PDF texts are the citation library. `npm run knowledge:build` derives TheOracle (17,560 chunks, EmbeddingGemma-300m vectors, 768-d, vector search only) and the read-only catalog `oracle/sentrapedia.json` (330 diseases) from them.
 6. All patient-like data lives in unencrypted browser `localStorage` (`sentrapedia-workspace-v1`). There is no database server.
 7. Start the system with `npm run dev` (launcher). `npx next dev` alone starts no engine and every analysis returns HTTP 502.
 8. Every AI call costs money (0.10 USD cap per step, 5 USD per day). Never run a live or paid call without Gaffer's explicit approval.
@@ -90,7 +90,7 @@ sentrapedia/                     capsule root = future standalone repo (drferdi/
 │  ├─ index/                     chunks.jsonl, vectors.f32, manifest.json   (Git LFS)
 │  ├─ model/                     EmbeddingGemma-300m ONNX, 1.2 GB, downloaded at install (gitignored)
 │  └─ ssot/                      the knowledge SSOT: every structured clinical fact, edited only here
-├─ oracle/sentrapedia.json       333 disease records derived from the SSOT: library catalog and drug-name matching
+├─ oracle/sentrapedia.json       330 disease records derived from the SSOT: library catalog and drug-name matching
 ├─ apps/site/                    static marketing site (no framework, no shared code with the app)
 ├─ scripts/                      run-system.mjs (launcher), aadi-runtime.mjs, aadi-profile.json, build/install/eval
 ├─ tests/                        Vitest (*.test.ts[x]), node --test (*.node-test.mjs), fixtures/
@@ -169,13 +169,13 @@ UI shell: a three-column Clinical Cockpit (navigation, document canvas, and abov
 
 | Name | File(s) | Used for | Sent to the AI? |
 | --- | --- | --- | --- |
-| **TheOracle** | `theoracle/index/` (17,565 chunks derived by `npm run knowledge:build`; count and hashes in `manifest.json`) | Grounding every AI answer; the dose gate's evidence | Yes, the retrieved passages |
-| **Oracle catalog** | `oracle/sentrapedia.json` (333 diseases, 42 categories, derived from the SSOT) | "Pustaka Klinis" library, Penyakit tab; drug-name matching in the gate | Never |
+| **TheOracle** | `theoracle/index/` (17,560 chunks derived by `npm run knowledge:build`; count and hashes in `manifest.json`) | Grounding every AI answer; the dose gate's evidence | Yes, the retrieved passages |
+| **Oracle catalog** | `oracle/sentrapedia.json` (330 diseases, 42 categories, derived from the SSOT) | "Pustaka Klinis" library, Penyakit tab; drug-name matching in the gate | Never |
 | **ICD-10 dictionary** | `aadi/service/data/icd10.json`, `aadi/service/rules/` | Engine postchecks | No |
 
 TheOracle facts:
 
-- Two layers, written by `scripts/build-theoracle-chunks.mjs`: 1,979 SSOT v0.5 chunks (origin `ssot`, one document per entry, disease name in every chunk) and 15,586 guideline-PDF chunks carried over unchanged from Gaffer's AnythingLLM "theoracle" export, minus 10 off-topic PDFs (`EXCLUDED_LIBRARY_PDFS`). Splitter 2048 characters, overlap 20.
+- Two layers, written by `scripts/build-theoracle-chunks.mjs`: 1,974 SSOT v0.6 chunks (origin `ssot`, one document per entry, disease name in every chunk) and 15,586 guideline-PDF chunks carried over unchanged from Gaffer's AnythingLLM "theoracle" export, minus 10 off-topic PDFs (`EXCLUDED_LIBRARY_PDFS`). Splitter 2048 characters, overlap 20.
 - Embedded with `onnx-community/embeddinggemma-300m-ONNX` at a pinned revision, fp32, 768 dimensions, L2-normalised, prefixes `task: search result | query: ` and `title: none | text: `.
 - `indexSha256` is `7c5877fc...`. Rebuild with `npm run knowledge:build` after changing the SSOT (embedding alone: `node scripts/build-theoracle-index.mjs [--device dml]`).
 - Retrieval is **vector only, by Gaffer's decision**. Do not add BM25 or keyword hybrid search, regex-only search, or hardcoded disease-to-drug tables.
@@ -367,8 +367,8 @@ Trust the code; fix these when you touch them.
 | --- | --- |
 | Capsule | A self-contained project folder in the monorepo with its own dependencies, config, tests and CI. |
 | AADI | The bundled Python FastAPI diagnosis engine (`aadi/`). |
-| TheOracle | The local vector index of 17,565 medical passages (SSOT plus guideline PDFs) that grounds AI answers. |
-| Oracle catalog | `oracle/sentrapedia.json`, 333 disease records derived from the SSOT for the library. Never sent to the AI. |
+| TheOracle | The local vector index of 17,560 medical passages (SSOT plus guideline PDFs) that grounds AI answers. |
+| Oracle catalog | `oracle/sentrapedia.json`, 330 disease records derived from the SSOT for the library. Never sent to the AI. |
 | Evidence gate | `applyTherapyGate`: keeps a dose only if the retrieved evidence supports it. |
 | PNPK / PPK | Indonesian national clinical practice guidelines / primary-care clinical guidelines. |
 | SKDI 4A | Indonesian physician competency level: diseases a GP must manage independently. |
