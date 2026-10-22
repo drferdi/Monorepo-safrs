@@ -1,5 +1,14 @@
 # Sentrapedia handoff
 
+## Follow-ups after 68dffeeb: per-document cap fix, case-report PDF excluded, W92 traced (two commits on feat/puskesmas-flow) - 2026-10-22 Asia/Jakarta
+
+- Cap fix (`src/lib/theoracle-grounding.ts`, test in `tests/theoracle-grounding.test.ts`): the dose passage no longer gives a document a third slot. When its document already holds two matches it replaces that document's lower match and the next match moves up. A stricter first variant (skip such dose passages) dropped doseRecall 0.82 → 0.59 and was rejected.
+- `patologi-klinik-anatomik-unair.pdf` (case-report collection) added to `EXCLUDED_LIBRARY_PDFS`; `peran-patologi-klinik-unair.pdf` stays. Index 17,565 chunks (1,979 SSOT + 15,586 PDF), `indexSha256` `da2fe92f…`; built by dropping the rows and `--append` for the 125 peran rows.
+- Benchmark (`docs/verification/theoracle-eval-2026-10-22/follow-ups-2026-10-22.md`), D → final: overall 0.852 → 0.852, lay 0.813 → 0.875, lab 0.8 → 0.8, score 0.75 → 0.625 (`exact_terms-25` "skor ABCD2" only matched a stroke case report), dose 0.82, targeted 0.934. Tifoid diagnosis retrieval no longer cites the HIV/toxoplasmosis case reports; it now includes SSOT Demam Tifoid and PAPDI 2024.
+- W92: no derived field reads it now. It was SSOT v0.2 `penyakit[SP0179].icd10` (`["W92"]`, from PPK FKTP); the source is the ICPC-2 line "No. ICPC-2 : W92" in `fasyankes-primer-idi-2017.pdf`, read as ICD-10 by the v0.2 extraction. Other PPK FKTP entries may carry ICPC-2 codes the same way (not checked).
+- Held for SSOT v0.6 (Gaffer): hemorrhoid duplicates and lay-term aliases; no hand edits to catalogue names.
+- Not run this time: pipeline eval and browser E2E on the final index (retrieval probe only).
+
 ## Knowledge rebuild on SSOT v0.5 with index D (committed on feat/puskesmas-flow after `1cad9276`) - 2026-10-22 Asia/Jakarta
 
 - 429 fix committed separately in `1cad9276`: the engine sends Retry-After, the gateway passes 429 `RATE_LIMITED` with "Layanan sedang sibuk, coba lagi dalam N detik." (the existing "Coba lagi" button retries), the eval runner waits and retries up to 3 times. Engine limit stays 30/min.
@@ -37,12 +46,4 @@
 - Tests: new `tests/other-notes.test.ts` (SBAR line for line, chronic, tasks, A&P with P-Care, referral/monitoring/education/avs/telephone, English unchanged); `studio.test.ts` (monitoring in the new format, the "Pasien —" check reads both forms, the empty-section test uses `refer`); `workspace.test.ts` (language/model test uses `question`).
 - Verified: typecheck 0, lint 0, Vitest 38 files 461 tests. Browser check stopped: Gaffer was using the 3101 tab at the same time, and one typed SBAR sample landed inside his own Analisis input (not sent; no POST seen).
 - Open: word lists are short and only sort the doctor's own words; Ringkasan Kunjungan and Edukasi Pasien are patient-facing but carry the same internal Status/Kelengkapan lines (assumption, ask Gaffer).
-
-## Anamnesis (HPI) in the Catatan Klinis format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
-
-- Gaffer: pressing "Anamnesis (HPI)" seemed to do nothing, and the draft kept English titles with the whole text in one section; asked for Indonesian parts and the complaint split "ke onset/durasi, gejala penyerta, dan negatif, seperti Catatan Klinis".
-- `drafts.ts` (hpi, Indonesian only): "# ANAMNESIS (HPI)", the same "**Pasien:**"/"**Status:**" lines, numbered filled parts (Keluhan Utama, Riwayat Penyakit Sekarang only when labelled, Onset dan Durasi, Lokasi / Sifat / Derajat, Gejala Penyerta, Faktor Pemberat / Peringan, Negatif Pertinen), "Kelengkapan Dokumentasi", then the source text always. `hpiParts` splits at commas, ";" and "disertai" and sorts by words only (tidak/tanpa/"(-)", memberat/setelah/saat, berdahak/menjalar/kanan…); labelled lines win. `numberedNote` is now shared with the SOAP note (its output unchanged).
-- Tests: new `tests/hpi-draft.test.ts` (full note for the sample case, modifiers and "(-)", labelled lines, English unchanged); `studio.test.ts` ("**Pasien:** —" for hpi too); `workspace.test.ts` (the language/model test uses the chronic mode for the "Draf lokal" line).
-- Verified: typecheck 0, lint 0, Vitest 37 files 455 tests; browser 3101: an HPI draft of "Perempuan 28 tahun batuk 5 hari, berdahak putih, demam ringan sejak 2 hari, tidak sesak" shows parts 1-6 as in the test, no page overflow; POSTs blocked.
-- Open: the word lists are small (e.g. "ulu hati" in the complaint is not copied to Lokasi); the composer hint for HPI is still "Jelaskan Onset, Duration, Course…".
 

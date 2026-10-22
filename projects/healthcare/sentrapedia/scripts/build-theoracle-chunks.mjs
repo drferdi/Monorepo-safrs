@@ -11,11 +11,13 @@ import { indexDir } from "./theoracle-model.mjs";
 
 const CHUNK_SIZE = 2048, OVERLAP = 20;
 // Library PDFs that are not Indonesian clinical guidance (aviation medicine, curricula, competence and service standards,
-// forensics, sports nutrition, a classification table): left out of the index (2026-10-21, 2026-10-22). The two clinical
-// pathology texts stay in: without them lab-interpretation recall drops (benchmark 2026-10-22, columns C and D).
+// a pathology case-report collection, forensics, sports nutrition, a classification table): left out of the index
+// (2026-10-21, 2026-10-22). peran-patologi-klinik-unair.pdf stays in: without the clinical pathology texts
+// lab-interpretation recall drops (benchmark 2026-10-22, columns C and D).
 // The library is read from the current chunks.jsonl, so a title dropped here comes back only from git history.
 const EXCLUDED_LIBRARY_PDFS = new Set([
   "faa-aviation-medical-examiners.pdf",
+  "patologi-klinik-anatomik-unair.pdf",
   "standar-pelayanan-patologi-anatomik.pdf",
   "kurikulum-mikrobiologi-klinik-2022.pdf",
   "standar-kompetensi-dokter-indonesia.pdf",
