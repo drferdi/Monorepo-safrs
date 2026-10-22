@@ -32,3 +32,7 @@ Also model variation, no gate loss: lay_terms-04 (hordeolum, 2 drugs written ins
   - Or the gate could match on the 3-character category.
 - Cause 2: an upstream SSOT question. Either the merged entry keeps its dose text in its own section, or the per-document cap is accepted as is.
 - Causes 3 and 4: no action suggested.
+
+## Follow-up 2026-10-23: cause 1 fixed (Gaffer's choice)
+
+`scripts/build-oracle-catalog.mjs` now writes the sorted union of `icd10` and `icd10_sumber_lama` into the catalogue `kode` (COPD "J44, J44.9", ISK "N30, N39, N39.0", TTH "G44, G44.2", BPPV "H81, H81.1, H82, R42"). Replay on the v0.6 index (`dose-gate-replay-after-fix.jsonl`) now gives the same statuses as the v0.5 catalogue column: PPOK J44.1 and cystitis N30.0 are verified again. Asthma, TTH, heart failure I50.0 and BPPV are unchanged; they were not catalogue causes. No paid eval was re-run.
