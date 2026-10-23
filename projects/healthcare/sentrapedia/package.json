@@ -15,7 +15,8 @@
     "lint": "eslint src tests scripts vitest.config.ts && npm --prefix apps/site run lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && npm --prefix apps/site test",
-    "test:system": "node --test tests/system-runtime.node-test.mjs tests/lfs-media.node-test.mjs tests/scripts.node-test.mjs tests/export-split.node-test.mjs",
+    "test:system": "node --test tests/system-runtime.node-test.mjs tests/lfs-media.node-test.mjs tests/scripts.node-test.mjs tests/export-split.node-test.mjs tests/beta-access-operator.node-test.mjs",
+    "beta:access": "node scripts/beta-access.mjs",
     "test:aadi": "node scripts/test-aadi.mjs",
     "test:all": "npm test && npm run test:system && npm run test:aadi",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs && npm --prefix apps/site run deploy:dry-run",
@@ -27,6 +28,7 @@
     "export:split": "node scripts/export-split.mjs"
   },
   "dependencies": {
+    "@clerk/backend": "3.26.2",
     "@clerk/nextjs": "7.9.20",
     "@huggingface/transformers": "4.3.0",
     "lucide-react": "1.53.0",

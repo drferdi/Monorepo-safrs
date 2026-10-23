@@ -14,6 +14,8 @@ RUN npm ci --workspaces=false
 
 FROM dependencies AS builder
 COPY . .
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 # Layers for a small update (2026-10-20): the large, rarely changed parts leave the standalone tree and get their own
@@ -28,10 +30,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3 python3
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
-# Single-user and local only: the workspace has no login, so anyone who reaches the port can spend the Gemini key
-# (capped by the 5 USD daily budget). The server listens on all interfaces inside the container; publish it on
-# loopback only, never on a public port:
-#   docker run -p 127.0.0.1:3000:3000 --env GEMINI_API_KEY <image>
+# Runtime requires Clerk live keys and the exact public origin; missing config fails closed.
+# Never use a secret build ARG. Pass CLERK_SECRET_KEY only at runtime through a protected env file.
+# Keep the host-published port on loopback even with Clerk; preserve the tunnel and edge gate until authorized cutover.
+#   docker run -p 127.0.0.1:3000:3000 --env-file /protected/beta.env <image>
 ENV HOSTNAME=0.0.0.0
 # Stable first: model (changes with package-lock), index (with the database), node_modules and the AADI venv
 # (with the locks), then the app.
