@@ -6,7 +6,8 @@
 - Tests (fictional, `tests/theoracle-evidence-gate.test.ts` "cross-referenced SSOT doses"): three failed before the change, all pass after; one reads the builder's own `doseLines` format with whitespace collapsed as in the evidence.
 - Local replay, no model call (`v0.6-gold/cross-reference-gate-replay.jsonl`, drugs from the v0.6 rerun): abbreviations-07 (A15.0) isoniazid 300 mg was verified only by the Skrofuloderma cross-referenced line and is now `doseRemoved`, although TB's own chunks and `tuberkulosis-2019.pdf` were retrieved (none of them doses 300 mg in a form the gate reads). lay_terms-08 (food allergy) cetirizine 10 mg stays verified, now only through Rinitis Alergika, which the gate counts as about the diagnosis: a separate cross-disease question, not changed.
 - Gate before commit: typecheck 0, lint 0, vitest 467/467, node tests 22/22, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
-- Next: Gaffer's call on the TB isoniazid passage and the Rinitis-for-food-allergy match; options B-E of the dose audit still open.
+- TB isoniazid diagnosed read-only (`v0.6-gold/tb-isoniazid-diagnosis.md`, no code change): TB's own SSOT chunks with "isoniazid; dosis: 300 mg" (`b40c5b44`, `a3e6681f`, `434ad41c`) each verify the dose alone but were not retrieved (two-per-document cap; the therapy, narrative and referral chunks were taken). The retrieved TB chunks hold the IDI 2017 table "INH* 5(4-6) max 300mg/hr": "INH" is not linked to isoniazid by the gate (deliberate), and the value is a daily maximum. No retrieved `tuberkulosis-2019.pdf` chunk gives a strength.
+- Next: Gaffer's call on the TB isoniazid options (retrieval preference for the entry's own dose chunk, an OAT abbreviation table in the gate, or accept) and the Rinitis-for-food-allergy match; options B-E of the dose audit still open.
 
 ## Dose schema audit and option A: cross-referenced doses keep their caveat (one commit on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
 
