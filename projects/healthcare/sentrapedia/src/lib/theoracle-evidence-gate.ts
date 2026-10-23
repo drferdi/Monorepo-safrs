@@ -315,13 +315,17 @@ export function gateEvidence(therapyGrounding: unknown, grounding: unknown): The
   return tx && dx ? { ...tx, evidence: [...tx.evidence, ...dx.evidence.filter(e => !tx.evidence.some(t => t.evidenceId === e.evidenceId))] } : tx ?? dx;
 }
 
+// A cross-referenced dose (SSOT v0.6, `sumber` "rujukan silang") is another disease's general dose (Gaffer, 2026-10-23): its
+// statement, from "- obat:" to the next one or the next "## " section, still names the drug, but no strength is read from it.
+const CROSS_REFERENCED = /- obat: (?:(?!- obat: |## )[\s\S])*?; sumber: rujukan silang(?:(?!- obat: |## )[\s\S])*/g;
+
 export function gateTherapy(therapy: AadiTherapy, bundle: TheOracleGroundingBundle | undefined, diagnosis: { icd10: string; label: string } | undefined): { therapy: AadiTherapy | undefined; report: EvidenceGateReport } {
   const forDiagnosis = therapy.forDiagnosis;
   const removed = (reason: string) => ({ therapy: undefined, report: { forDiagnosis, therapyRemoved: true, reason, drugs: therapy.regimen.map((r): GateDrug => ({ drug: r.drug, dose: r.dose, status: "removed", evidenceIds: [] })) } });
   if (!bundle?.evidence.length) return removed("Referensi Oracle untuk terapi tidak tersedia; dosis tidak ditampilkan.");
   if (!diagnosis || forDiagnosis.icd10.trim().toUpperCase().slice(0, 3) !== diagnosis.icd10.trim().toUpperCase().slice(0, 3)) return removed(`Terapi ditulis untuk diagnosis lain (${forDiagnosis.icd10}), bukan ${diagnosis?.icd10 ?? "diagnosis kerja"}.`);
   const named = diagnosisWords(diagnosis);
-  const passages = bundle.evidence.map(item => { const words = tokens(item.text); return { id: item.evidenceId, text: item.text, fornas: /fornas/i.test(item.source.title), words, about: [...tokens(item.source.title), ...words].some(word => named.has(word)) }; });
+  const passages = bundle.evidence.map(item => { const words = tokens(item.text); return { id: item.evidenceId, text: item.source.origin === "ssot" ? item.text.replace(CROSS_REFERENCED, " ") : item.text, fornas: /fornas/i.test(item.source.title), words, about: [...tokens(item.source.title), ...words].some(word => named.has(word)) }; });
   const naming = (drug: string) => passages.filter(p => mentions(p.words, drug));
   // A strength counts only from a passage about the diagnosis: an azole list for cryptococcosis does not dose pityriasis versicolor.
   const dosingFor = (drug: string) => naming(drug).filter(p => p.about);

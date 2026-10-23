@@ -69,3 +69,7 @@ Any of A–D changes the index and so the retrieval numbers; per Gaffer's rule t
 - Rebuild: 17,570 chunks (1,984 SSOT + 15,586 PDF), all 106 caveats present, `indexSha256` `0dccb6dc…`. The 17,541 chunks with unchanged text keep their vectors (min cosine 0.99999994 against the previous index).
 - Benchmark (`benchmark-v06-optA.json` vs `benchmark-v06-index.json`): identical in every category; overall recall@5 0.864, doseRecall 0.82, targetedDoseRecall 0.934.
 - Limit: the evidence gate still matches dose strengths and does not read the caveat; a gate rule for cross-referenced doses is gate-logic work.
+
+## Gate rule for cross-referenced doses (Gaffer, 2026-10-23)
+
+- `gateTherapy` no longer reads a strength from an SSOT dose statement whose `sumber` is "rujukan silang"; the drug can still be named from it and is then shown without a dose. Replay: `cross-reference-gate-replay.jsonl` (TB isoniazid 300 mg now `doseRemoved`; food-allergy cetirizine still verified through Rinitis Alergika).

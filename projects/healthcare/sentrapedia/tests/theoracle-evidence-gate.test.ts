@@ -3,6 +3,7 @@ import { applyTherapyGate, gateEvidence, gateTherapy, unstrength } from "../src/
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import type { AadiResult, AadiTherapy } from "../src/lib/aadi/contract";
 import { withCatalog } from "./private-data";
+import { doseLines } from "../scripts/knowledge-ssot.mjs";
 
 // A plain string is a passage from a pneumonia document; { title, text } sets the document title.
 const bundle = (...items: (string | { title: string; text: string })[]): TheOracleGroundingBundle => ({
@@ -680,4 +681,30 @@ describe("tablet-count doses", () => {
     expect(without.result.therapy?.regimen[0]).toMatchObject({ drug: "dihidroartemisinin + piperakuin", dose: "" });
   });
   it("leaves a strength dose to the strength rule", () => expect(status([tablets("primakuin", "1x45mg")], idi, fornas)).toEqual(["doseRemoved"]));
+});
+
+// A cross-referenced dose ("rujukan silang", SSOT v0.6) is another disease's dose: it names the drug but never doses it.
+describe("cross-referenced SSOT doses", () => {
+  const ssot = (text: string): TheOracleGroundingBundle => { const b = bundle({ title: "Pneumonia", text }); return { ...b, evidence: b.evidence.map(e => ({ ...e, source: { ...e.source, origin: "ssot" } })) }; };
+  const cross = (line: string) => `- obat: ${line}; sumber: rujukan silang (dosis obat dari entri Penyakit Fiktif): PPK fiktif; catatan: Dosis umum obat ini dari penyakit lain; bukan regimen khusus Pneumonia. Verifikasi.`;
+  it("keeps the drug without its dose when only a cross-referenced line doses it", () => {
+    const { therapy: out, report } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg"), drug("Azitromisin", "1x500mg")]), ssot(`# Pneumonia ## Dosis ${cross("amoksisilin; dosis: 500 mg")} - obat: azitromisin; dosis: 500 mg; sumber: PPK fiktif ## Rujukan Rujuk bila sesak.`), pneumonia);
+    expect(report.drugs).toEqual([{ drug: "Amoxicillin", dose: "3x500mg", status: "doseRemoved", evidenceIds: ["E1"] }, { drug: "Azitromisin", dose: "1x500mg", status: "verified", evidenceIds: ["E1"] }]);
+    expect(out?.regimen.map(r => [r.drug, r.dose])).toEqual([["Amoxicillin", ""], ["Azitromisin", "1x500mg"]]);
+  });
+  it("does not carry a note's strength or a tablet dose from a cross-referenced line", () => {
+    const text = `# Pneumonia ## Dosis - obat: amoksisilin; dosis: 500 mg; sumber: PPK fiktif ${cross("amoksisilin; dosis: 1 g")} ${cross("parasetamol; dosis: parasetamol 2 tablet 3 kali sehari, tiap tablet mengandung 500 mg parasetamol")}`;
+    const { therapy: out, report } = gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), note: "atau 1 g" }, drug("Parasetamol", "3x2tablet")]), ssot(text), pneumonia);
+    expect(report.drugs.map(d => d.status)).toEqual(["verified", "doseRemoved"]);
+    expect(out?.regimen[0].note).toBe("");
+  });
+  it("still doses from a passage that is not from the SSOT", () => {
+    const pdf = bundle({ title: "Pneumonia", text: `Pneumonia ${cross("amoksisilin; dosis: 500 mg")}` });
+    expect(gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), pdf, pneumonia).report.drugs[0].status).toBe("verified");
+  });
+  it("reads the builder's own line format (doseLines, whitespace collapsed as in the evidence)", () => {
+    const lines = doseLines({ dosis: [{ obat: "amoksisilin", dosis: "500 mg", sumber: "rujukan silang (dosis obat dari entri Penyakit Fiktif): ", catatan: "Dosis umum obat ini dari penyakit lain; bukan regimen khusus Pneumonia. Verifikasi." }] });
+    const text = `# Pneumonia\n\n## Dosis\n${lines.join("\n")}`.replace(/\s+/g, " ");
+    expect(gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), ssot(text), pneumonia).report.drugs[0].status).toBe("doseRemoved");
+  });
 });
