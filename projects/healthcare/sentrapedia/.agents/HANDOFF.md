@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## SSOT marked clinically reviewed; therapy and dose gaps referenced (two commits on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
+
+- Gaffer: "Semua sudah saya review itu, kasih tanda", then the 42 / 17 / 1 gaps, "cari referensi".
+- `f6e05e9e`: every SSOT entry carries `status.review_klinis` {ditinjau, Gaffer, 2026-10-23}; `_meta.catatan`, the grounding `reviewProvenance`, the Pustaka Klinis warning ("Referensi ditinjau klinisi (2026-10-23)") and the README row say so. The SSOT round-trips byte for byte apart from the mark (indent 1, no trailing newline); new sha256 `8157e1b4…`. Chunk texts unchanged, index `c63b1627…` still valid; catalogue rebuilt. Checked in the browser (Demam Tifoid entry shows the new warning and the konteks/kutipan dose lines).
+- Gate: typecheck 0, lint 0, vitest 471/471, node tests 23/23, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
+- Gap report (`docs/verification/theoracle-eval-2026-10-23/knowledge-gaps.md`, candidates JSON beside it), no SSOT content added: of the 42 entries with therapy text but no dose line, 15 already hold the dose in the text (extract rows), 4 name a drug without a dose, 23 name no drug (mostly procedural; cardiorespiratory arrest, cerebral malaria and peritonitis may still need one). The 17 entries with doses but no therapy text are mostly PNPK entries; their PNPK file and Penatalaksanaan page come from `dokumen`, plus library passages for sepsis, SKA, BBLR, ulkus kornea and TB/HIV. "Benda asing" (T17) has neither; `bedah-toraks-2020.pdf` has an airway foreign-body chapter, and it overlaps SP0028/SP0029.
+- Next: the SSOT author fills the gaps from the referenced pages in the next SSOT version; open SSOT questions from the entry below still stand. No push.
+
 ## Gate rules (OAT abbreviations, own-entry SSOT passages) and dose options B-E, verified end to end (three commits on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
 
 - Gaffer: "Tambah tabel singkatan OAT", the Rinitis-for-food-allergy match, "Kerjakan Opsi B sampai dengan E", "End to end and verify always".
@@ -47,12 +55,3 @@
   - ICPC-2 codes may still be read as ICD-10 in PPK FKTP entries (the W92 case); not re-checked.
   - The catalogue's category taxonomy still mixes two systems.
 - Next: Gaffer's clinical review; retrieval is not tuned again. After that: dose schema, gate logic or the eval benchmark (Gaffer picks).
-
-## Follow-ups after 68dffeeb: per-document cap fix, case-report PDF excluded, W92 traced (two commits on feat/puskesmas-flow) - 2026-10-22 Asia/Jakarta
-
-- Cap fix (`src/lib/theoracle-grounding.ts`, test in `tests/theoracle-grounding.test.ts`): the dose passage no longer gives a document a third slot. When its document already holds two matches it replaces that document's lower match and the next match moves up. A stricter first variant (skip such dose passages) dropped doseRecall 0.82 → 0.59 and was rejected.
-- `patologi-klinik-anatomik-unair.pdf` (case-report collection) added to `EXCLUDED_LIBRARY_PDFS`; `peran-patologi-klinik-unair.pdf` stays. Index 17,565 chunks (1,979 SSOT + 15,586 PDF), `indexSha256` `da2fe92f…`; built by dropping the rows and `--append` for the 125 peran rows.
-- Benchmark (`docs/verification/theoracle-eval-2026-10-22/follow-ups-2026-10-22.md`), D → final: overall 0.852 → 0.852, lay 0.813 → 0.875, lab 0.8 → 0.8, score 0.75 → 0.625 (`exact_terms-25` "skor ABCD2" only matched a stroke case report), dose 0.82, targeted 0.934. Tifoid diagnosis retrieval no longer cites the HIV/toxoplasmosis case reports; it now includes SSOT Demam Tifoid and PAPDI 2024.
-- W92: no derived field reads it now. It was SSOT v0.2 `penyakit[SP0179].icd10` (`["W92"]`, from PPK FKTP); the source is the ICPC-2 line "No. ICPC-2 : W92" in `fasyankes-primer-idi-2017.pdf`, read as ICD-10 by the v0.2 extraction. Other PPK FKTP entries may carry ICPC-2 codes the same way (not checked).
-- Held for SSOT v0.6 (Gaffer): hemorrhoid duplicates and lay-term aliases; no hand edits to catalogue names.
-- Not run this time: pipeline eval and browser E2E on the final index (retrieval probe only).

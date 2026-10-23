@@ -1,5 +1,16 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-23 - handoff rotation for the clinical review mark (newest five kept)
+
+## Follow-ups after 68dffeeb: per-document cap fix, case-report PDF excluded, W92 traced (two commits on feat/puskesmas-flow) - 2026-10-22 Asia/Jakarta
+
+- Cap fix (`src/lib/theoracle-grounding.ts`, test in `tests/theoracle-grounding.test.ts`): the dose passage no longer gives a document a third slot. When its document already holds two matches it replaces that document's lower match and the next match moves up. A stricter first variant (skip such dose passages) dropped doseRecall 0.82 → 0.59 and was rejected.
+- `patologi-klinik-anatomik-unair.pdf` (case-report collection) added to `EXCLUDED_LIBRARY_PDFS`; `peran-patologi-klinik-unair.pdf` stays. Index 17,565 chunks (1,979 SSOT + 15,586 PDF), `indexSha256` `da2fe92f…`; built by dropping the rows and `--append` for the 125 peran rows.
+- Benchmark (`docs/verification/theoracle-eval-2026-10-22/follow-ups-2026-10-22.md`), D → final: overall 0.852 → 0.852, lay 0.813 → 0.875, lab 0.8 → 0.8, score 0.75 → 0.625 (`exact_terms-25` "skor ABCD2" only matched a stroke case report), dose 0.82, targeted 0.934. Tifoid diagnosis retrieval no longer cites the HIV/toxoplasmosis case reports; it now includes SSOT Demam Tifoid and PAPDI 2024.
+- W92: no derived field reads it now. It was SSOT v0.2 `penyakit[SP0179].icd10` (`["W92"]`, from PPK FKTP); the source is the ICPC-2 line "No. ICPC-2 : W92" in `fasyankes-primer-idi-2017.pdf`, read as ICD-10 by the v0.2 extraction. Other PPK FKTP entries may carry ICPC-2 codes the same way (not checked).
+- Held for SSOT v0.6 (Gaffer): hemorrhoid duplicates and lay-term aliases; no hand edits to catalogue names.
+- Not run this time: pipeline eval and browser E2E on the final index (retrieval probe only).
+
 ## Archived on 2026-10-23 - handoff rotation for the gate rules and dose options B-E (newest five kept)
 
 ## Knowledge rebuild on SSOT v0.5 with index D (committed on feat/puskesmas-flow after `1cad9276`) - 2026-10-22 Asia/Jakarta

@@ -1,0 +1,2124 @@
+{
+ "txNoDose": [
+  {
+   "id": "SP0001",
+   "nama": "Aborsi spontan komplit",
+   "icd10": [
+    "O03"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0003",
+   "nama": "Abses folikel rambut atau kelenjar sebasea",
+   "icd10": [
+    "L08"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "amoksisilin"
+   ],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0017",
+   "nama": "Apendisitis Akut",
+   "icd10": [
+    "K35",
+    "K35.8"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 6,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 97,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 107,
+     "penatalaksanaan": 110,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 173,
+     "penatalaksanaan": 176,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0024",
+   "nama": "Astigmatism ringan",
+   "icd10": [
+    "H52.2"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 4,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 161,
+     "penatalaksanaan": 162,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 219,
+     "penatalaksanaan": 219,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0028",
+   "nama": "Benda Asing Di Hidung",
+   "icd10": [
+    "T17.1"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 6,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 276,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 183,
+     "penatalaksanaan": 183,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 500,
+     "penatalaksanaan": 501,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0029",
+   "nama": "Benda Asing Di Telinga",
+   "icd10": [
+    "T16"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [
+    "alkohol",
+    "lidokain"
+   ],
+   "chunksNamingDisease": 7,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 263,
+     "penatalaksanaan": 265,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0039",
+   "nama": "Cardiorespiratory Arrest",
+   "icd10": [
+    "R09.2"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 8,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 161,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 200,
+     "penatalaksanaan": 201,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 285,
+     "penatalaksanaan": 286,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0063",
+   "nama": "Diabetes melitus tipe 1",
+   "icd10": [
+    "E10",
+    "E11",
+    "E14"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "insulin"
+   ],
+   "chunksNamingDisease": 42,
+   "library": [
+    {
+     "title": "fornas-2023.pdf",
+     "page": "133",
+     "drug": "insulin",
+     "snippet": "insulin dibutuhkan untuk mempertahankan pengendalian glukosa darah. 1. inj 100 IU/mL (kemasan vial, disposable cartridge, penfill cartridge)   Dalam kondisi t"
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "134",
+     "drug": "insulin",
+     "snippet": "insulin dibutuhkan untuk mempertahankan pengendalian glukosa darah. 1. inj 100 IU/mL (kemasan vial, disposable cartridge, penfill cartridge)    Analog Insul"
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "135",
+     "drug": "insulin",
+     "snippet": "insulin dibutuhkan untuk mempertahankan pengendalian glukosa darah. 1. inj 100 IU/mL (kemasan vial, disposable cartridge, penfill cartridge)   Dalam kondisi t"
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "137",
+     "drug": "insulin",
+     "snippet": "insulin dibutuhkan untuk mempertahankan pengendalian glukosa darah. 1. inj 100 IU/mL (kemasan vial, disposable cartridge, penfill cartridge)   2 kombinasi 75"
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "138",
+     "drug": "insulin",
+     "snippet": "insulin dibutuhkan untuk mempertahankan pengendalian glukosa darah. 1. inj 100 IU/mL (kemasan vial, disposable cartridge, penfill cartridge)   3 kombinasi 50"
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "139",
+     "drug": "insulin",
+     "snippet": "insulin dibutuhkan untuk mempertahankan pengendalian glukosa darah. 1. inj 100 IU/mL (kemasan vial, disposable cartridge, penfill cartridge)   4 Co-formulati"
+    }
+   ],
+   "documents": []
+  },
+  {
+   "id": "SP0082",
+   "nama": "Failure to Thrive (Gagal Tumbuh)",
+   "icd10": [
+    "R62.8"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 17,
+   "library": [
+    {
+     "title": "thalasemia-2018.pdf",
+     "page": "",
+     "drug": "desferoksamin",
+     "snippet": "desferoksamin intravena kontinu dengan dosis 50-60 mg/kg/hari. Terapi kombinasi menggunakan deferipron 75 mg/kg/hari ditambah dengan desferoksamin 40 -50 mg/kg/"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 690,
+     "penatalaksanaan": 691,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0090",
+   "nama": "Fraktur Terbuka",
+   "icd10": [
+    "T14"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "sefalosporin",
+    "imunoglobulin"
+   ],
+   "chunksNamingDisease": 9,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 166,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 211,
+     "penatalaksanaan": 211,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 294,
+     "penatalaksanaan": 296,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0091",
+   "nama": "Fraktur Tertutup",
+   "icd10": [
+    "T14"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 3,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 215,
+     "penatalaksanaan": 216,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 297,
+     "penatalaksanaan": 298,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0092",
+   "nama": "Fraktur Tulang",
+   "icd10": [
+    "S02"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [
+    "morfin",
+    "fentanil",
+    "sefazolin",
+    "gentamisin",
+    "kalsium"
+   ],
+   "chunksNamingDisease": 44,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "katalog",
+     "file": "oracle/sentrapedia.json",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0114",
+   "nama": "Hernia",
+   "icd10": [
+    "K40"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 24,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "katalog",
+     "file": "oracle/sentrapedia.json",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0123",
+   "nama": "Hipermetropia ringan",
+   "icd10": [
+    "H52.0"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 11,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 125,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 163,
+     "penatalaksanaan": 163,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 220,
+     "penatalaksanaan": 222,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0134",
+   "nama": "Impetigo ulseratif (ektima)",
+   "icd10": [
+    "L02"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "amoksisilin"
+   ],
+   "chunksNamingDisease": 18,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0142",
+   "nama": "Intoleransi makanan",
+   "icd10": [
+    "K90.4"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 3,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 89,
+     "penatalaksanaan": 89,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 127,
+     "penatalaksanaan": 128,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0143",
+   "nama": "Inverted nipple",
+   "icd10": [
+    "O92.02"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 3,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 424,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 776,
+     "penatalaksanaan": 777,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0163",
+   "nama": "Kekerasan tajam",
+   "icd10": [
+    "S10"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0164",
+   "nama": "Kekerasan tumpul",
+   "icd10": [
+    "S09"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "parasetamol"
+   ],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0180",
+   "nama": "Laserasi Kelopak Mata",
+   "icd10": [
+    "S01"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 2,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 138,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 244,
+     "penatalaksanaan": 245,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0185",
+   "nama": "Lipoma",
+   "icd10": [
+    "D17.9"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 15,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 178,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 226,
+     "penatalaksanaan": 226,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 314,
+     "penatalaksanaan": 315,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0192",
+   "nama": "Malabsorbsi Makanan",
+   "icd10": [
+    "K90.9"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 2,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 71,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 91,
+     "penatalaksanaan": 92,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 129,
+     "penatalaksanaan": 131,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0194",
+   "nama": "Malaria Serebral",
+   "icd10": [
+    "B50.0"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 8,
+   "library": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "drug": "klindamisin",
+     "snippet": "Klindamycin 10mg/kgBB selama 7 hari. 2. Trimester kedua dan ketiga diberikan DHP tablet selama 3 hari. 3. Pencegahan / profilaksis digunakan Doksisiklin 1 kapsu"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 348,
+     "penatalaksanaan": 350,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0202",
+   "nama": "Miopia ringan",
+   "icd10": [
+    "H52.1"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 3,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 165,
+     "penatalaksanaan": 165,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 222,
+     "penatalaksanaan": 223,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0203",
+   "nama": "Moluskum kontagiosum",
+   "icd10": [
+    "B08.1"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 27,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 299,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 394,
+     "penatalaksanaan": 394,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 541,
+     "penatalaksanaan": 543,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0218",
+   "nama": "Parafimosis",
+   "icd10": [
+    "N47.2"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 5,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 705,
+     "penatalaksanaan": 706,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0236",
+   "nama": "Perdarahan Subkonjungtiva",
+   "icd10": [
+    "H57.8"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 7,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 158,
+     "penatalaksanaan": 158,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 213,
+     "penatalaksanaan": 215,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "index_md",
+     "file": "perdarahan-subkonjungtiva.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0237",
+   "nama": "Peritonitis",
+   "icd10": [
+    "K65.9"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 114,
+   "library": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "drug": "nistatin",
+     "snippet": "Nistatin 100.000- 400.000 IU, 2 x/hari. Untuk faringitis kronik hiperplastik terapi lokal dengan melakukan kaustik faring dengan memakai zat kimia larutan Nitra"
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "165",
+     "drug": "bedak",
+     "snippet": "bedak salisil Hati-hati penggunaan pada bayi. 1. serb 2%    2 kalamin 1. lotio   3 triamsinolon asetonid Hanya untuk keloid. 1. inj 10 mg/mL  2. inj 40 mg"
+    },
+    {
+     "title": "fornas-2025.pdf",
+     "page": "170",
+     "drug": "bedak",
+     "snippet": "bedak salisil Hati-hati penggunaan pada bayi. 1. serb 2%    2 kalamin 1. lotio    3 triamsinolon asetonid Hanya untuk keloid. 1. inj 10 mg/mL  2. inj 40 "
+    },
+    {
+     "title": "penyakit-dalam-papdi-2024.pdf",
+     "page": "",
+     "drug": "terlipresin",
+     "snippet": "terlipresin c) Esofagogastroduodenoskopi ( Ligasi varises esofagus ) jika kondisi hemodinamik stabil. d) Antibotika profilaksis dengan injeksi Ceftriaxon 1 gram"
+    },
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "page": "",
+     "drug": "albumin",
+     "snippet": "albumin ser um-asites/Serum Ascites Albumin Gradient (SAAG) dapat membantu di mana SAAG > 1,1 g/dL mengindikasikan keterlibatan hipertensi portal dalam pembentu"
+    },
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "page": "",
+     "drug": "serum",
+     "snippet": "serum dapat diberikan 1,5 g KEMENTERIAN KESEHATAN jdih.kemkes.go.id"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 144,
+     "penatalaksanaan": 144,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 177,
+     "penatalaksanaan": 179,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0246",
+   "nama": "Pneumotoraks",
+   "icd10": [
+    "J93.9"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 99,
+   "library": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "drug": "nitrat",
+     "snippet": "Nitrat, ISDN 5-10 mg sublingual maksimal 3 kali 3. Aspirin, dosis awal 320 mg dilanjutkan dosis pemeliharaan 1 x 160 mg"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "",
+     "drug": "nitrat",
+     "snippet": "Nitrat, ISDN 5-10 mg sublingual maksimal 3 kali c. Aspirin, dosis awal 320 mg dilanjutkan dosis pemeliharaan 1 x 160 mg d. Dirujuk dengan terpasang infus dan ok"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "katalog",
+     "file": "oracle/sentrapedia.json",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 484,
+     "penatalaksanaan": 485,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0250",
+   "nama": "Presbiopia",
+   "icd10": [
+    "H52.4"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 4,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 127,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 166,
+     "penatalaksanaan": 167,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 224,
+     "penatalaksanaan": 225,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0251",
+   "nama": "Pterigium",
+   "icd10": [
+    "H11.0"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 2,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "index_md",
+     "file": "pterigium.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "index_md",
+     "file": "pterigium-tatalaksana.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0265",
+   "nama": "Salpingitis",
+   "icd10": [
+    "N70"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "seftriakson",
+    "doksisiklin"
+   ],
+   "chunksNamingDisease": 1,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0277",
+   "nama": "Sinusitis (Rinosinusitis)",
+   "icd10": [
+    "J01",
+    "J32"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [
+    "salin",
+    "kortikosteroid"
+   ],
+   "chunksNamingDisease": 47,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 517,
+     "penatalaksanaan": 523,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0304",
+   "nama": "Tinea barbe",
+   "icd10": [
+    "B35"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "griseofulvin"
+   ],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0312",
+   "nama": "Tinea unguium",
+   "icd10": [
+    "B35"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "itrakonazol"
+   ],
+   "chunksNamingDisease": 12,
+   "library": [
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "page": "",
+     "drug": "itrakonazol",
+     "snippet": "itrakonazol 2x100 mg/hari selama 3 minggu atau 100 mg/hari selama 4 minggu. 15,18,20 (A,1) Tinea unguium 1. Obat pilihan: terbinafin 1x250 mg/hari selama 6 ming"
+    }
+   ],
+   "documents": []
+  },
+  {
+   "id": "SP0315",
+   "nama": "Tonsilitis Kronik",
+   "icd10": [
+    "J35"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 13,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "katalog",
+     "file": "oracle/sentrapedia.json",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0316",
+   "nama": "Transient Ischemic Attack (Tia)",
+   "icd10": [
+    "G45.9"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [
+    "klopidogrel",
+    "dipiridamol",
+    "silostazol",
+    "dabigatran",
+    "apiksaban"
+   ],
+   "chunksNamingDisease": 16,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 361,
+     "penatalaksanaan": 365,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0318",
+   "nama": "Trauma Kimia Mata",
+   "icd10": [
+    "T26.4"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 3,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 241,
+     "penatalaksanaan": 243,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0324",
+   "nama": "Ulkus pada tungkai",
+   "icd10": [
+    "I83.0"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 6,
+   "library": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "drug": "diklofenak",
+     "snippet": "diklofenak 50- 100 mg 2x/hari, meloksikam 7,5–15 mg/hari, celecoxib 200- 400 mg/sehari. 3. Pemberian golongan steroid, seperti: prednison atau metil prednisolon"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": 354,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 638,
+     "penatalaksanaan": 642,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0328",
+   "nama": "Vaginosis bakterialis",
+   "icd10": [
+    "N76"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [
+    "metronidazol"
+   ],
+   "chunksNamingDisease": 22,
+   "library": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "drug": "metronidazol",
+     "snippet": "metronidazol 400 mg 2x sehari untuk 5-7 hari atau pervaginam. Tidak direkomendasikan untuk minum 2 gram peroral."
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "drug": "metronidazol",
+     "snippet": "Metronidazol 500 mg peroral 2 x sehari selama 7 hari • Metronidazol pervagina 2 x sehari selama 5 hari • Krim klindamisin 2% pervagina 1 x sehari selama 7 hari "
+    }
+   ],
+   "documents": []
+  },
+  {
+   "id": "SP0330",
+   "nama": "Varises dan Insufisiensi Vena Kronik",
+   "icd10": [
+    "I83"
+   ],
+   "statusTerapi": "narasi_tanpa_dosis",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "katalog",
+     "file": "oracle/sentrapedia.json",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0334",
+   "nama": "Vulnus laseratum, punctum",
+   "icd10": [
+    "T00"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": true,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": []
+  }
+ ],
+ "doseNoTx": [
+  {
+   "id": "SP0043",
+   "nama": "Corona Virus Disease 2019 (COVID-19)",
+   "icd10": [
+    "B34.2"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 191,
+   "library": [
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "page": "",
+     "snippet": "f evidence (LOE) khususnya dalam subbab tatalaksana dan edukasi sesuai pedoman yang ditetapkan oleh Kementerian Kesehatan Republik Indonesia. Berneda dengan PPK tahun 2017, pada edisi ini penetapan LOE kali ini menggunakan Grading"
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "page": "",
+     "snippet": "pengobatan, pencegahan penyakit dan trauma, penelitian dan evaluasi,serta pendidikan yang bertujuan untuk kepentingan peningkatan individu dan kesehatan masyarakat. Teledermatologi adalah bagian dari "
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "page": "",
+     "snippet": "h petugas kesehatan untuk memberdayakan pengobatan di masyarakat • Melibatkan pasien • Pasien diberikan keluasaan dalam melakukan perawatan mereka sendiri; dengan pemberian edukasi dan promosi tentang kondisi penyakit dan kelainan yang dide"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "",
+     "snippet": "7.000 kasus meninggal dunia. Diperlukan penatalaksanaan kasus yang baik agar tidak menyebabkan peningkatan kasus kematian. Hasil Anamnesis (Subjective) Keluhan pasien covid 19 sangat bervariasi mulai dari tidak ada keluhan dan gejala sampai"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "85",
+     "snippet": "isik dan pemeriksaan penunjang. Rencana Penatalaksanaan Komprehensif (Plan) Penatalaksanaan Standar penatalaksanaan setelah tegak diagnosis pada pasien digambarkan dalam gambar 1. Gambar 1. Bagan Standar Pelaksanaan COVID-19 jdih.kemkes.go."
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "86",
+     "snippet": "- 86 - Penatalaksanaan klinis covid 19 di FKTP dilakukan pada pasien COVID-19 tanpa gejala, dan gejala ringan, untuk gejala sedang dan gejala berat atau kondisi kritis, dilakukan rujukan ke Rumah Sakit a. Ta"
+    }
+   ],
+   "documents": []
+  },
+  {
+   "id": "SP0102",
+   "nama": "Gangguan Depresi Ringan-Sedang",
+   "icd10": [
+    "F32.0",
+    "F32.1"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 2,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0119",
+   "nama": "Hiperbilirubinemia",
+   "icd10": [
+    "P59"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 3,
+   "library": [
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "page": "",
+     "snippet": "emungkinkan rotasi penggunaannya dengan terapi lain atau gunakan pada periode kambuh yang berat.  Interaksi obat: obat-obatan yang menginduksi/menghambat sitokrom P450 3A4. Menurunkan pembuangan (clearence) digoksin, prednisolon, statin, d"
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "page": "",
+     "snippet": "keganasan. o Bila sudah 1 tahun lakukan terapi rotasi. o Interaksi obat: obat-obatan yang menginduksi/menghambat sitokrom P450 3A4. Menurunkan pembuangan (clearence) digoksin, prednisolon, statin, diuretik (potasium sparing), tiazid, vaksin"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "062_PNPK_2019_Tata_Laksana_Hiperbilirubinemia.pdf",
+     "halaman": 97,
+     "penatalaksanaan": null,
+     "dosis": [
+      4,
+      9,
+      11,
+      13,
+      14,
+      19,
+      22,
+      29,
+      33,
+      35,
+      47,
+      48
+     ],
+     "drive": "https://drive.google.com/file/d/1A5lBLbPCwWM3ZeBw8WC8qfQMmspteIa1/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "hiperbilirubinemia.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0125",
+   "nama": "Hipertensi Pada Anak",
+   "icd10": [
+    "I10"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 9,
+   "library": [
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "",
+     "snippet": "masih banyak pasien yang belum mendapat pengobatan, maupun yang telah mendapat terapi tetapi target tekanan darah belum tercapai serta adanya penyakit penyerta dan komplikasi yang dapat meningkatkan morbiditas dan mortalitas. Hipertensi pad"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "135",
+     "snippet": "- 135 - Gambar 7. Strategi Pengobatan pada Hipertensi dan Gagal jantung dengan Fraksi Ejeksi Menurun Gambar 8. Strategi Pengobatan pada Hipertensi dan Fibrilasi Atrial b. Pada Hipertensi Anak Tujuan pengobatan hipertensi pada a"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "136",
+     "snippet": "tingkat hipertensi dan respons terhadap pengobatan. 1) Pengobatan Non-Farmakologis: a) Mengubah Gaya Hidup penurunan berat badan, Penurunan berat badan terbukti efektif mengobati hipertensi pada anak yang mengalami obesitas. b) diet rendah "
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "",
+     "snippet": "g Pedoman Nasional Pelayanan Kedokteran Tata Laksana Hipertensi Pada Anak c. Keputusan Menteri Kesehatan Republik Indonesia Nomor HK.01.07/Menkes/4634/2021 tentang Pedoman Nasional Pelayanan Kedokteran Tata Laksana Hipertensi Dewasa d. Perh"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "034_PNPK_2021_Tata_Laksana_Hipertensi_Pada_Anak.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": "https://drive.google.com/file/d/18W8zIF-NhFj3JUt6DzI_CptUAMCCShBU/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "hipertensi-pada-anak.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0137",
+   "nama": "Infeksi Intraabdominal",
+   "icd10": [
+    "K65"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 3,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "077_PNPK_2017_Tata_Laksana_Infeksi_Intraabdominal.pdf",
+     "halaman": 73,
+     "penatalaksanaan": null,
+     "dosis": [],
+     "drive": "https://drive.google.com/file/d/1YuyxeG_gIk42zFA_rd5aJw46q3Ejl1M3/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "infeksi-intraabdominal.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "index_md",
+     "file": "infeksi-intraabdominal-tatalaksana.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0147",
+   "nama": "Kandidosis mukokutan ringan",
+   "icd10": [
+    "B35"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0148",
+   "nama": "Kanker Kolorektal",
+   "icd10": [
+    "C18"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 17,
+   "library": [
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "270",
+     "snippet": "g Pedoman Nasional Pelayanan Kedokteran Tata Laksana Kanker Kolorektal. L. Sistem Reproduksi 2. Asuhan Persalinan Normal Tingkat Keterampilan: 4A Persalinan dilakukan oleh tim paling sedikit 1 (satu) orang tenaga medis dan 2 (dua) orang ten"
+    },
+    {
+     "title": "fornas-2025.pdf",
+     "page": "75",
+     "snippet": " mengalami kekambuhan setelah menjalani pengobatan sekurang- kurangnya dengan golongan antrasiklin sebelumnya. e) Untuk kanker ovarium yang mengalami kekambuhan setelah menggunakan terapi berbasis platinum. 1. inj 200 mg  1.250 mg/m²/mingg"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "",
+     "snippet": " a. ditambahkan 2 angka setelah angka 4 Terapi Oksigen dan Inhalasi dalam Huruf H Sistem Respirasi yakni angka 5 Skrining PPOK (Penyakit Paru Obstruktif Kronis) dan angka 6 Skrining Kanker Paru; b. ditambahkan 1 angka setelah angka 10 Peraw"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "269",
+     "snippet": "ria pemilihan pasien yang akan mendapat terapi lokal adalah terbatas. b. Pemeriksaan Darah Samar pada Feses seperti Benzidine Test dan Guaiac-Based Fecal Occult Blood Tests (gFOBTs) Pemeriksaan ini bermanfaat pada kanker kolorektal stadium "
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "73",
+     "snippet": "- 73 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL bladder cancer. d) Kombinasi dengan paklitaksel untuk "
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "76",
+     "snippet": "- 76 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL b) Untuk limfoma maligna. c) Tidak digunakan untuk int"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "073_PNPK_2018_Tata_Laksana_Kanker_Kolorektal.pdf",
+     "halaman": 160,
+     "penatalaksanaan": null,
+     "dosis": [
+      11,
+      52,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      100,
+      108
+     ],
+     "drive": "https://drive.google.com/file/d/13EA4YFw7vYOBmlWIp2W8bLAchnmKmy6_/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "kanker-kolorektal.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0157",
+   "nama": "Katarak Pada Anak",
+   "icd10": [
+    "H25"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 0,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "043_PNPK_2020_Tata_Laksana_Katarak_Pada_Anak.pdf",
+     "halaman": 37,
+     "penatalaksanaan": null,
+     "dosis": [],
+     "drive": "https://drive.google.com/file/d/1hJuJnR65ruvo5w30_xb0E01PFU8qLviO/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "katarak-pada-anak.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0188",
+   "nama": "Luka bakar derajat 1 dan 2",
+   "icd10": [
+    "T30"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 62,
+   "library": [
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "page": "",
+     "snippet": " Tanpa pengobatan, pasien tipe-B akan downgrading ke kutub lepromatosa dan mempunyai konsekuensi menularkan penyakit dan berisiko mengalami reaksi tipe-1 yang akan menyebabkan kerusakan saraf  Komplikasi be"
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "page": "",
+     "snippet": "rusakan saraf pda saat awal diagnosis • Pengobatan cepat dan tepat dan adekuat • Melaksanakan kegiatan perawatan diri. 2. Cenderung ke dubia ad malam: • Tanpa pengobatan, pasien tipe-B akan downgrading ke kutub lepromatosa dan mempunyai kon"
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "snippet": " cedera inhalasi, disertai trauma lain. Penatalaksanaan (Plan) Penatalaksanaan 1. Luka bakar derajat 1 penyembuhan terjadi secara spontan tanpa pengobatan khusus. 2. Penatalaksanaan luka bakar derajat II tergantung luas luka bakar. Pada pen"
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "snippet": "nternational,55, 9-16 224. Vidiawati,D. Penatalaksanaan Obesitas.Pedoman Praktik Klinik untuk Dokter Keluarga. Ikatan Dokter Indonesia. HWS-IDI. 200. (Trisna, 2008) 225. Djokomoeljanto, R. Buku Ajar Ilmu Penyakit Dalam. Jilid III. Edisi ke "
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "page": "",
+     "snippet": "283Bab 21 – Tatalaksana Perdarahan Saluran Cerna Bagian Atas mukosa lambung sering pula terjadi pada penderita dengan trauma berat, setelah pembedahan, penyakit sistemik yang berat, luka bakar, dan penderita deng"
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "page": "",
+     "snippet": "2 • Observasi dan penyesuaian dosis fototerapi setiap kunjungan sesuai dengan panduan berikut: 27 o Pada setiap kunjungan dilakukan penilaian respons terhadap fototerapi sesuai derajat dan durasi eritema dan kemungkinan gejala subjektif luk"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PPK IDI 2017",
+     "file": "fasyankes-primer-idi-2017.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "Permenkes 5/2014 PPK",
+     "file": "Permenkes 5/2014 Lampiran (medbox.org)",
+     "halaman": 406,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "KMK 1186/2022 PPK",
+     "file": "KMK HK.01.07/MENKES/1186/2022 Lampiran (jdih.kemkes.go.id)",
+     "halaman": 634,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0224",
+   "nama": "Penyakit Ginjal Tahap Akhir",
+   "icd10": [
+    "N18.6"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 2,
+   "library": [
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "230",
+     "snippet": "yakit ginjal dengan penyebab yang lain. Tatalaksana Rujuk Balik Pasien Penyakit Ginjal Diabetik dalam kondisi stabil dengan eLFG 30-60 ml/menit/1,73m 2 dapat dirujuk kembali ke FKTP untuk mendapatkan pengobatan lanjutan sesuai dengan anjura"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "227",
+     "snippet": "njal tahap akhir (PGTA) yang memerlukan terapi pengganti ginjal. Kejadian PGD ini terkait dengan kadar glukosa dalam darah yang tidak terkontrol dan adanya gangguan metabolisme lainnya. Menurut laporan, pasien yang terkontrol dengan gula da"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "074_PNPK_2017_Tata_Laksana_Penyakit_Ginjal_Tahap_Akhir.pdf",
+     "halaman": 143,
+     "penatalaksanaan": null,
+     "dosis": [
+      73,
+      74,
+      106,
+      110,
+      111,
+      114,
+      115,
+      121
+     ],
+     "drive": "https://drive.google.com/file/d/1IBwiVa9qcAoegtRw8lOZCiqlq4NW6K2o/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "penyakit-ginjal-tahap-akhir.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0225",
+   "nama": "Penyakit Hirschsprung",
+   "icd10": [
+    "Q43.1"
+   ],
+   "statusTerapi": "dosis_tanpa_frekuensi",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 2,
+   "library": [],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "080_PNPK_2017_Tata_Laksana_Penyakit_Hirschprung.pdf",
+     "halaman": 31,
+     "penatalaksanaan": null,
+     "dosis": [],
+     "drive": "https://drive.google.com/file/d/1oYDL1d5qMnpJDsikAhTLEc6sISTZTXPB/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "penyakit-hirschprung.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    },
+    {
+     "jenis": "index_md",
+     "file": "penyakit-hirschsprung-tatalaksana.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0232",
+   "nama": "Perdarahan Post Partum / Pendarahan Pascasalin",
+   "icd10": [
+    "O72",
+    "O72.1"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 1,
+   "library": [],
+   "documents": []
+  },
+  {
+   "id": "SP0267",
+   "nama": "Sepsis",
+   "icd10": [
+    "A41"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 297,
+   "library": [
+    {
+     "title": "sepsis-2017.pdf",
+     "page": "",
+     "snippet": "G PEDOMAN NASIONAL PELAYANAN KEDOKTERAN TATA LAKSANA SEPSIS DENGAN RAHMAT TUHAN YANG MAHA ESA MENTERI KESEHATAN REPUBLIK INDONESIA, Menimbang : a. bahwa penyelenggaraan praktik kedokteran harus dilakukan sesuai dengan standar pelayanan kedo"
+    },
+    {
+     "title": "sepsis-2017.pdf",
+     "page": "3",
+     "snippet": "n Pedoman Nasional Pelayanan Kedokteran Tata Laksana Sepsis. KEDUA : Pedoman Nasional Pelayanan Kedokteran Tata Laksana Sepsis yang selanjutnya disebut PNPK Tata Laksana Sepsis merupakan pedoman bagi dokter sebagai pembuat keputusan klinis "
+    },
+    {
+     "title": "sepsis-2017.pdf",
+     "page": "",
+     "snippet": ": Penyesuaian terhadap pelaksanaan PNPK Tata Laksana Sepsis dapat dilakukan oleh dokter hanya berdasarkan keadaan tertentu yang memaksa untuk kepentingan pasien, dan dicatat dalam rekam medis. KETUJUH : Menteri Kesehatan, Gubernur, dan Bupa"
+    },
+    {
+     "title": "sepsis-2017.pdf",
+     "page": "5",
+     "snippet": "G PEDOMAN NASIONAL PELAYANAN KEDOKTERAN TATA LAKSANA SEPSI BAB I PENDAHULUAN A. Latar Belakang: Sepsis, sepsis berat dan renjatan septik menjadi masalah kesehatan utama di seluruh dunia. Hal ini terlihat dari tingginya angka kejadian, kemat"
+    },
+    {
+     "title": "sepsis-2017.pdf",
+     "page": "8",
+     "snippet": "paign 2012 yang telah dijadikan pedoman penatalaksanaan sepsis berat dan renjatan septik di seluruh dunia. Panduan ini mengikuti prinsip yang terdapat pada sistem Grading of Recommendations Assessment, Development and Evaluation (GRADE) dal"
+    },
+    {
+     "title": "sepsis-2017.pdf",
+     "page": "13",
+     "snippet": ". Crit Care Med 2003; 31; 1250-1256. C. Tata Laksana Sepsis Penapisan pada pasien yang berpotensi menjadi sepsis perlu dilakukan secara rutin agar implementasi terapi dapat dilakukan lebih awal, antara lain dengan perangkat seperti yang ter"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "078_PNPK_2017_Tata_Laksana_Sepsis.pdf",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": "https://drive.google.com/file/d/1RFBrtsWx9-yXNIuWF0Jj5lpxheszBI-l/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "sepsis.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0276",
+   "nama": "Sindroma Koroner Akut",
+   "icd10": [
+    "I20"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 16,
+   "library": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "snippet": "somatik Komplikasi Sindrom koroner akut Penatalaksanaan Komprehensif (Plan) Penatalaksanaan Terapi farmakologi: 1. Oksigen dimulai 2 L/menit 2. Nitrat dikombinasikan dengan ß-blocker atau Calcium Channel Blocker (CCB) non dihidropiridin yan"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "225",
+     "snippet": "PP > 180 mg/dL atau HbA1C >7 % 2) Dalam terapi OAD tunggal dalam 3 bulan tidak tercapai target 3) Dalam terapi kombinasi OAD dalam 3 bulan tidak tercapai target b. Complication: DM tipe 2 dengan komplikasi, seperti : retinopati diabetik dan"
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "10",
+     "snippet": "- 10 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL Diberikan pada salah satu atau lebih kondisi berikut: "
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "111",
+     "snippet": "- 111 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL 2. kaps 110 mg  30 kaps, pascaoperasi. 3 enoksaparin "
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "112",
+     "snippet": "- 112 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL b) Tidak digunakan sebelum dan selama prosedur Interve"
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "page": "153",
+     "snippet": "- 153 - KELAS TERAPI SUB KELAS TERAPI/NAMA GENERIK/SEDIAAN/KEKUATAN DAN RESTRIKSI PENGGUNAAN FASILITAS PELAYANAN KESEHATAN PERESEPAN MAKSIMAL OEN FPK TP FPK TL dilanjutkan dosis rumatan (maintenance) 1 x 75 mg/hari"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "058_PNPK_2019_Tata_Laksana_Sindroma_Koroner_Akut.pdf",
+     "halaman": 90,
+     "penatalaksanaan": null,
+     "dosis": [
+      18,
+      23,
+      29,
+      35,
+      37,
+      65,
+      67,
+      68,
+      69,
+      70,
+      71,
+      73
+     ],
+     "drive": "https://drive.google.com/file/d/15f2ePl4mo3bWxIYJe3jHRknS2Pm0OGL3/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "sindroma-koroner-akut.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0296",
+   "nama": "Tatalaksana Berat Bayi Lahir Rendah (BBLR)",
+   "icd10": [
+    "P07.1"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 1,
+   "library": [
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "293",
+     "snippet": "tang Skrinning Hipotiroid Kongenital 6. Tatalaksana Berat Bayi Lahir Rendah (BBLR) Tingkat Keterampilan: 4A BBLR adalah bayi yang lahir dengan berat lahir kurang dari 2500 gram tanpa memandang masa kehamilan. Berat lahir adalah berat bayi y"
+    }
+   ],
+   "documents": []
+  },
+  {
+   "id": "SP0297",
+   "nama": "Tatalaksana Ulkus Kornea Bakteri",
+   "icd10": [
+    "H16.0"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 6,
+   "library": [
+    {
+     "title": "ulkus-kornea-bakteri-2025.pdf",
+     "page": "",
+     "snippet": "NTANG PEDOMAN NASIONAL PELAYANAN KLINIS TATALAKSANA ULKUS KORNEA BAKTERI DENGAN RAHMAT TUHAN YANG MAHA ESA MENTERI KESEHATAN REPUBLIK INDONESIA, Menimbang : a. bahwa dalam rangka tata laksana penyakit atau kondisi klinis yang spesifik dan d"
+    },
+    {
+     "title": "ulkus-kornea-bakteri-2025.pdf",
+     "page": "2",
+     "snippet": "NTANG PEDOMAN NASIONAL PELAYANAN KLINIS TATALAKSANA ULKUS KORNEA BAKTERI. KESATU : Menetapkan Pedoman Nasional Pelayanan Klinis Tatalaksana Ulkus Kornea Bakteri yang selanjutnya disebut PNPK Ulkus Kornea Bakteri sebagaimana tercantum dalam "
+    },
+    {
+     "title": "ulkus-kornea-bakteri-2025.pdf",
+     "page": "",
+     "snippet": "Keputusan Menteri ini. KEDUA : PNPK Tatalaksana Ulkus Kornea Bakteri sebagaimana dimaksud dalam Diktum KESATU merupakan pedoman bagi dokter sebagai pembuat keputusan klinis di fasilitas pelayanan kesehatan, institusi pendidikan, dan kel"
+    },
+    {
+     "title": "ulkus-kornea-bakteri-2025.pdf",
+     "page": "3",
+     "snippet": "LIMA : Penyesuaian terhadap pelaksanaan tatalaksana Ulkus Kornea Bakteri dapat dilakukan oleh dokter hanya berdasarkan keadaan tertentu yang memaksa untuk kepentingan penderita dan dicatat dalam rekam medis. KEENAM : Menteri Kesehatan, gube"
+    },
+    {
+     "title": "ulkus-kornea-bakteri-2025.pdf",
+     "page": "4",
+     "snippet": "NTANG PEDOMAN NASIONAL PELAYANAN KLINIS TATALAKSANA ULKUS KORNEA BAKTERI PEDOMAN NASIONAL PELAYANAN KLINIS TATALAKSANA ULKUS KORNEA BAKTERI BAB I PENDAHULUAN A. Latar Belakang World Health Organization (WHO) melaporkan bahwa pada tahun 2019"
+    },
+    {
+     "title": "ulkus-kornea-bakteri-2025.pdf",
+     "page": "",
+     "snippet": "nya risiko resistensi antibiotik akibat tatalaksana ulkus kornea bakteri yang tidak tepat. 5. Strategi promosi dan prevensi kesehatan mata yang efektif diperlukan untuk mencegah morbiditas ulkus kornea bakteri. 6. Buku pedoman penatalaksana"
+    }
+   ],
+   "documents": [
+    {
+     "jenis": "PNPK",
+     "file": "011_PEDOMAN_NASIONAL_PELAYANAN_KLINIS_TATALAKSANA_ULKUS_KORNEA_BAKTERI.pdf",
+     "halaman": 41,
+     "penatalaksanaan": null,
+     "dosis": [],
+     "drive": "https://drive.google.com/file/d/1n6PVI8-UJlXowNwQl6aolDlbMgesum8l/view"
+    },
+    {
+     "jenis": "index_md",
+     "file": "tatalaksana-ulkus-kornea-bakteri.md",
+     "halaman": null,
+     "penatalaksanaan": null,
+     "dosis": null,
+     "drive": null
+    }
+   ]
+  },
+  {
+   "id": "SP0298",
+   "nama": "TB dengan HIV",
+   "icd10": [
+    "A15",
+    "B20"
+   ],
+   "statusTerapi": "lengkap",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 15,
+   "library": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "snippet": "pertahanan hidup lebih singkat walaupun pengobatan TB berhasil. Penderita TB/HIV mempunyai kemungkinan hidup lebih singkat dibandingkan penderita HIV yang tidak pernah kena TB. Obat antivirus HIV (ART)"
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "snippet": "IDS yang tidak memberi respons terhadap pengobatan, selain dipikirkan terdapatnya malabsorbsi obat. Pada pasien HIV/AIDS terdapat korelasi antara imunosupresi yang berat dengan derajat penyerapan, karenanya dosis standar yang diterima subop"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "54",
+     "snippet": "agnosis yang disarankan dan mendapatkan terapi sesuai dengan ketentuan pengobatan. Keterlambatan diagnosis setelah prosedur skrining TB akan mempengaruhi severity of disease dan meningkatkan kemungkinan terjadinya hasil pengobatan yang tida"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "55",
+     "snippet": "tanda/gejala TB jika memang tidak dalam terapi pengobatan TB. 5 tanda/gejala TB yakni sebagai berikut: a. Batuk b. Demam c. BB Menurun tanpa sebab jelas d. Berkeringat tanpa aktifitas e. Tanda gejala ekstra paru (misal pebesaran KGB dileher"
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "page": "58",
+     "snippet": "IDS yang tidak memberi respons terhadap pengobatan, selain dipikirkan terdapatnya malabsorbsi obat. Pada pasien HIV/AIDS terdapat korelasi antara imunosupresi yang berat dengan derajak penyerapan, karenanya dosis standar yang diterima subop"
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "page": "",
+     "snippet": "egrasi untuk pencegahan, diagnosis, dan pengobatan baik infeksi TB maupun HIV direkomendasikan pada daerah dengan prevalensi HIV yang tinggi. Pemeriksaan HIV terutama penting sebagai bagian dari tata laksanarutin di daerah dengan prevalensi"
+    }
+   ],
+   "documents": []
+  }
+ ],
+ "none": [
+  {
+   "id": "SP0027",
+   "nama": "Benda asing",
+   "icd10": [
+    "T17"
+   ],
+   "statusTerapi": "kosong",
+   "doseInTherapyText": false,
+   "drugsInTherapyText": [],
+   "chunksNamingDisease": 114,
+   "library": [
+    {
+     "title": "bedah-toraks-2020.pdf",
+     "page": "",
+     "snippet": "oorganisme, BTA, jamur • Bronkoskopi 8. Tata laksana Drainase postural dan fisioterapi dada agresif Indikasi pembedahan: • Hemoptisis • Bronkopleural fistula • Empiema sekunder akibat erosi abses ke rongga pleura Pasang IPC Medikamentosa; a"
+    },
+    {
+     "title": "bedah-toraks-2020.pdf",
+     "page": "",
+     "snippet": "ARDIAK & VASKULAR INDONESIA 2016 – 2018 TATALAKSANA KLINIS Benda Asing pada saluran nafas (ICD X:17.90) 1. Pengertian (definisi) Adanya benda asing pada saluran nafas . Dapat berupa benda tumpul atau tajam. 2. Anamnesis Terdapat riwayat tra"
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "page": "",
+     "snippet": " 1 3. Starch Iodine test. 10 (A,1) III. Penatalaksanaan 1. Injeksi toksin botulinum A 1,6,8 (C,4) 2. Laser Q-switched Nd: YAG 10 (C,3) 3. Simpatektomi untuk kelenjar apokrin aksila 6,7 (C,3) 4. Apokrinektomi/bedah eksisi apokrin 11 (C,4)"
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "page": "",
+     "snippet": "Dermatologi Infeksi 112 III. Penatalaksanaan Prinsip secara umum 6 1. Deteksi penyakit awal 2. Resusitasi (suportif cairan, pernafasan dan inotropik) 3. Melepaskan sumber infeksi 4. Antibiotik yang rasional 5. Terapi tambahan (IV"
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "page": "",
+     "snippet": "nunjang Starch lodine test. 2 (1C) III. Penatalaksanaan Non Medikamentosa 1,2 (1C) 1. Edukasi"
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "page": "",
+     "snippet": "i jika benda asing merupakan zat kimia. Penatalaksanaan Komprehensif (Plan) Penatalaksanaan 1. Non-medikamentosa: Pengangkatan benda asing. Berikut adalah cara yang dapat dilakukan: a. Berikan tetes mata Tetrakain 0,5%"
+    }
+   ],
+   "documents": []
+  }
+ ]
+}
