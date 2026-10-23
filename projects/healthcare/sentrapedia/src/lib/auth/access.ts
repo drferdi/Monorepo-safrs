@@ -11,7 +11,7 @@ type Dependencies = {
   now?: () => Date;
 };
 
-function bounded<T>(operation: () => Promise<T>): Promise<T> {
+export function boundedIdentity<T>(operation: () => Promise<T>): Promise<T> {
   let timer: ReturnType<typeof setTimeout>;
   return Promise.race([Promise.resolve().then(operation), new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Identity unavailable")), identityTimeoutMs); })]).finally(() => clearTimeout(timer));
 }
@@ -36,15 +36,18 @@ async function readConsent(request: Request): Promise<unknown> {
   const reader = request.body.getReader();
   const chunks: Uint8Array[] = [];
   let size = 0;
-  const timer = setTimeout(() => { void reader.cancel(); }, identityTimeoutMs);
+  let expired = false;
+  const cancel = () => { void reader.cancel().catch(() => undefined); };
+  const timer = setTimeout(() => { expired = true; cancel(); }, identityTimeoutMs);
   try {
     while (true) {
       const next = await reader.read();
       if (next.done) break;
       size += next.value.byteLength;
-      if (size > consentBytes) { await reader.cancel(); throw new Error("Invalid body"); }
+      if (size > consentBytes) { cancel(); throw new Error("Invalid body"); }
       chunks.push(next.value);
     }
+    if (expired) throw new Error("Invalid body");
     const bytes = new Uint8Array(size); let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
     return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes));
@@ -56,7 +59,7 @@ export function createBetaAccess(deps: Dependencies) {
     if (deps.config.mode === "unavailable") return { status: "unavailable" };
     if (deps.config.mode === "local") return { status: "allowed", userId: deps.config.userId };
     try {
-      return await bounded(async () => {
+      return await boundedIdentity(async () => {
         const id = await deps.session();
         if (!id) return { status: "signed-out" };
         if (!validUserId(id)) return { status: "unavailable" };
@@ -74,7 +77,7 @@ export function createBetaAccess(deps: Dependencies) {
     try { body = await readConsent(request); } catch { return inputFailure(); }
     if (!isRecord(body) || Object.keys(body).length !== 3 || body.version !== betaPolicyVersion || body.accepted !== true || body.syntheticOnly !== true) return inputFailure();
     if (deps.config.mode !== "local") {
-      try { await bounded(() => deps.writeConsent(result.userId, { version: betaPolicyVersion, acceptedAt: (deps.now?.() ?? new Date()).toISOString(), syntheticOnly: true })); }
+      try { await boundedIdentity(() => deps.writeConsent(result.userId, { version: betaPolicyVersion, acceptedAt: (deps.now?.() ?? new Date()).toISOString(), syntheticOnly: true })); }
       catch { return accessFailure({ status: "unavailable" }); }
     }
     return Response.json({ status: "ok" }, { headers: { "Cache-Control": "no-store" } });

@@ -96,6 +96,39 @@ describe("server-owned access decisions", () => {
 });
 
 describe("consent mutation", () => {
+  it("rejects delayed trailing bytes and handles rejected cancellation without writing", async () => {
+    const { access, writes } = setup(user({}));
+    const prefix = JSON.stringify({ version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true });
+    const encoder = new TextEncoder();
+    const streams = [
+      new ReadableStream({ start(controller) { controller.enqueue(encoder.encode(prefix)); queueMicrotask(() => { controller.enqueue(encoder.encode("trailing-invalid")); controller.close(); }); } }),
+      new ReadableStream({ start(controller) { controller.enqueue(new Uint8Array(1025)); }, cancel() { return Promise.reject(new Error("private cancellation details")); } }),
+    ];
+    for (const stream of streams) {
+      const incoming = new Request("http://127.0.0.1:3101/api/onboarding/consent", { method: "POST", headers: { Origin: "http://127.0.0.1:3101", "Content-Type": "application/json" }, body: stream, duplex: "half" } as RequestInit);
+      expect((await access.consent(incoming)).status).toBe(400);
+    }
+    expect(writes).toEqual([]);
+  });
+  it("rejects oversized input without waiting for an uncooperative stream cancellation", async () => {
+    vi.useFakeTimers();
+    const { access, writes } = setup(user({}));
+    const stream = new ReadableStream({ start(controller) { controller.enqueue(new Uint8Array(1025)); }, cancel() { return new Promise(() => undefined); } });
+    const incoming = new Request("http://127.0.0.1:3101/api/onboarding/consent", { method: "POST", headers: { Origin: "http://127.0.0.1:3101", "Content-Type": "application/json" }, body: stream, duplex: "half" } as RequestInit);
+    let response: Response | undefined;
+    const pending = access.consent(incoming).then(value => { response = value; });
+    await vi.advanceTimersByTimeAsync(5001);
+    expect(response?.status).toBe(400); await pending; expect(writes).toEqual([]);
+  });
+  it("rejects a timed-out stream even when its unterminated prefix is valid acceptance JSON", async () => {
+    vi.useFakeTimers();
+    const { access, writes } = setup(user({}));
+    const stream = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode(JSON.stringify({ version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true }))); } });
+    const incoming = new Request("http://127.0.0.1:3101/api/onboarding/consent", { method: "POST", headers: { Origin: "http://127.0.0.1:3101", "Content-Type": "application/json" }, body: stream, duplex: "half" } as RequestInit);
+    const pending = access.consent(incoming);
+    await vi.advanceTimersByTimeAsync(5001);
+    expect((await pending).status).toBe(400); expect(writes).toEqual([]);
+  });
   it("records only the authenticated user's server-stamped consent and retains unrelated metadata", async () => {
     const { access, current, writes } = setup(user({ unrelated: { keep: true }, sentrapediaBetaAccess: { disabled: false } }));
     expect((await access.resolve()).status).toBe("consent-required");
