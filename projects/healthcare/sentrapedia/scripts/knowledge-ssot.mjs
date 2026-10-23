@@ -28,11 +28,30 @@ export function therapyText(entry) {
   return [...bySource].map(([text, labels]) => `[${labels.join("; ")}]\n${text}`).join("\n\n");
 }
 
-// One line per dose statement, with every non-empty field the SSOT carries for it.
-const DOSE_FIELDS = ["obat", "dosis", "frekuensi", "durasi", "rute", "populasi", "sumber", "halaman", "kelas"];
+// One line per dose statement, with every non-empty field the SSOT carries for it, each on one line ("6\njam" reads "6 jam").
+const DOSE_FIELDS = ["obat", "dosis", "frekuensi", "durasi", "rute", "populasi", "konteks", "sumber", "halaman", "kutipan"];
+const field = value => clean(value).replace(/\s+/g, " ");
 // A cross-referenced dose ("rujukan silang", SSOT v0.6) is another disease's dose; its catatan says so and stays on the line.
-const doseFields = s => clean(s.sumber).startsWith("rujukan silang") ? [...DOSE_FIELDS, "catatan"] : DOSE_FIELDS;
-export const doseLines = entry => entry.dosis.map(s => "- " + doseFields(s).filter(k => clean(s[k])).map(k => `${k}: ${clean(s[k])}`).join("; "));
+const crossReferenced = s => field(s.sumber).startsWith("rujukan silang");
+const doseFields = s => crossReferenced(s) ? [...DOSE_FIELDS, "catatan"] : DOSE_FIELDS;
+// Auto-extracted rows whose "obat" is a statistic, a lab value or a sentence fragment, not a drug ("Sekitar 90%",
+// "Sensitivitas 95%", "TBSA 25%", "Kadar urea 150 mg"; dose audit 2026-10-23). Manual rows are kept whatever they say.
+const NOT_A_DRUG = /^(?:sekitar|sebanyak|minggu|angka|pasien|penurunan|peningkatan|hbsag|hbeag|target|mulai|maksimal|indonesia|dari|setelah|kadar|kgbb|prevalensi|insidens|sensitivitas|spesifisitas|anemia|usia|risiko|berat|grade|spuit|tbsa|glukosa darah)(?![\p{L}\d])/iu;
+const isDose = s => !(field(s.catatan).startsWith("Diekstrak otomatis") && NOT_A_DRUG.test(field(s.obat)));
+// Statements that say the same thing (every field but sumber and halaman) become one line listing each source and page;
+// a cross-referenced statement never merges with the entry's own.
+export const doseLines = entry => {
+  const merged = new Map();
+  for (const s of entry.dosis.filter(isDose)) {
+    const key = JSON.stringify([crossReferenced(s), ...doseFields(s).filter(k => k !== "sumber" && k !== "halaman").map(k => field(s[k]))]);
+    const line = merged.get(key) ?? merged.set(key, { s, sumber: [], halaman: [] }).get(key);
+    for (const k of ["sumber", "halaman"]) if (field(s[k]) && !line[k].includes(field(s[k]))) line[k].push(field(s[k]));
+  }
+  return [...merged.values()].map(({ s, sumber, halaman }) => {
+    const values = { ...s, sumber: sumber.join(" / "), halaman: halaman.join(" / ") };
+    return "- " + doseFields(s).filter(k => field(values[k])).map(k => `${k}: ${field(values[k])}`).join("; ");
+  });
+};
 
 export const list = value => (Array.isArray(value) ? value : [value]).map(clean).filter(Boolean);
 export { clean };

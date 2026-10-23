@@ -73,3 +73,13 @@ Any of A–D changes the index and so the retrieval numbers; per Gaffer's rule t
 ## Gate rule for cross-referenced doses (Gaffer, 2026-10-23)
 
 - `gateTherapy` no longer reads a strength from an SSOT dose statement whose `sumber` is "rujukan silang"; the drug can still be named from it and is then shown without a dose. Replay: `cross-reference-gate-replay.jsonl` (TB isoniazid 300 mg now `doseRemoved`; food-allergy cetirizine still verified through Rinitis Alergika).
+
+## Options B-E applied (Gaffer, 2026-10-23)
+
+- B: `konteks` and `kutipan` are rendered; every field is kept on one line ("6\njam" reads "6 jam").
+- C: 754 auto-extracted rows whose `obat` starts with a statistic, lab or fragment word (sekitar, sebanyak, angka, sensitivitas, kadar, TBSA, glukosa darah, …) are left out; manual rows are never dropped. Spot check: the clinically relevant dropped fragments (measles vitamin A by age, iron 120 mg in pregnancy, delirium "maksimal 20 mg") are still in their entry's therapy text or another dose row.
+- D: 406 rows merge into lines that say the same thing (every field but `sumber` and `halaman`), with sources and pages joined by " / "; a cross-referenced row never merges with the entry's own.
+- E: `kelas` left the field list; `halaman` numbers and digit strings render alike.
+- Rebuild: 7,765 dose lines from 8,925 rows; 17,993 chunks (2,407 SSOT + 15,586 PDF), `indexSha256` `c63b1627…`; the 16,654 chunks with unchanged text keep their vectors (min cosine 0.99999994). No cross-referenced line is cut before its `sumber` at a chunk boundary.
+- Benchmark (`benchmark-v06-optBE.json` vs `benchmark-v06-optA.json`): no category drops; drug_dose 0.625 → 0.75, exact_terms 0.63 → 0.667, overall 0.864 → 0.875; doseRecall 0.82 and targeted 0.934 unchanged. Warm query latency p50 73.7 → 86.1 ms.
+- Replay of the shown doses (`gate-rules-replay-optBE.jsonl` vs `gate-rules-replay.jsonl`): 48 → 47 verified. typos-11 (D56.1) asam folat 2x1mg is now `removed`: the Thalasemia entry grew from 13 to 17 chunks and its dose chunk holding asam folat is no longer among the retrieved passages (two-per-document cap). Reported, not tuned.

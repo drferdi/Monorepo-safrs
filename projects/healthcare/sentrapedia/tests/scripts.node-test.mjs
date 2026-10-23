@@ -364,3 +364,23 @@ test("dose lines keep the catatan of a cross-referenced dose only", async () => 
   assert.equal(lines[0], "- obat: obat fiktif; dosis: 10 mg; sumber: rujukan silang (dosis obat dari entri Penyakit Fiktif):; catatan: Dosis umum obat ini dari penyakit lain; bukan regimen khusus. Verifikasi.");
   assert.equal(lines[1], "- obat: obat fiktif; dosis: 20 mg; sumber: PNPK (fiktif.pdf)");
 });
+
+// Dose audit options B-E (Gaffer, 2026-10-23): konteks and kutipan are rendered on one line, auto-extracted statistics are
+// not doses, identical statements from several sources become one line, and kelas (gone in v0.6) is not a field.
+test("dose lines render konteks and kutipan, drop non-drug rows and merge identical statements", async () => {
+  const { doseLines } = await import(pathToFileURL(resolve("scripts/knowledge-ssot.mjs")).href);
+  const auto = "Diekstrak otomatis dari naskah PNPK; cek kutipan.";
+  const lines = doseLines({ dosis: [
+    { obat: "obat fiktif", dosis: "5 mg", konteks: "fase awal", sumber: "Sumber A", halaman: 12, kutipan: "obat fiktif 5 mg\nsetiap 8 jam", kelas: "x" },
+    { obat: "obat fiktif", dosis: "5 mg", konteks: "fase awal", sumber: "Sumber B", halaman: "30", kutipan: "obat fiktif 5 mg setiap 8 jam" },
+    { obat: "Sensitivitas", dosis: "95%", sumber: "Sumber A", kutipan: "Sensitivitas 95%", catatan: auto },
+    { obat: "Kadar urea", dosis: "150 mg", sumber: "Sumber A", kutipan: "Kadar urea 150 mg", catatan: auto },
+    { obat: "Sekitar", dosis: "10%", sumber: "Sumber manual", kutipan: "Sekitar 10%" },
+    { obat: "obat fiktif", dosis: "5 mg", konteks: "fase awal", sumber: "rujukan silang (dosis obat dari entri Penyakit Fiktif): Sumber C", kutipan: "obat fiktif 5 mg setiap 8 jam", catatan: "Dosis umum obat ini dari penyakit lain; bukan regimen khusus." },
+  ] });
+  assert.deepEqual(lines, [
+    "- obat: obat fiktif; dosis: 5 mg; konteks: fase awal; sumber: Sumber A / Sumber B; halaman: 12 / 30; kutipan: obat fiktif 5 mg setiap 8 jam",
+    "- obat: Sekitar; dosis: 10%; sumber: Sumber manual; kutipan: Sekitar 10%",
+    "- obat: obat fiktif; dosis: 5 mg; konteks: fase awal; sumber: rujukan silang (dosis obat dari entri Penyakit Fiktif): Sumber C; kutipan: obat fiktif 5 mg setiap 8 jam; catatan: Dosis umum obat ini dari penyakit lain; bukan regimen khusus.",
+  ]);
+});
