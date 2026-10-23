@@ -214,7 +214,21 @@
    "terapi_teks": {
     "daftar_kki": "Methylergometrine 0.2 mg 3x sehari 3 hari"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Methylergometrine",
+     "dosis": "0.2 mg",
+     "rute": "",
+     "frekuensi": "3x sehari",
+     "durasi": "3 hari",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Methylergometrine 0.2 mg 3x sehari 3 hari",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [
     "Abortus"
@@ -546,7 +560,21 @@
    "terapi_teks": {
     "daftar_kki": "Incisi drainase - Jika fluktuasi (+); Amoxicillin-clavulanate 625 mg 3x sehari 5-7 hari"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Amoxicillin-clavulanate",
+     "dosis": "625 mg",
+     "rute": "",
+     "frekuensi": "3x sehari",
+     "durasi": "5-7 hari",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Amoxicillin-clavulanate 625 mg 3x sehari 5-7 hari",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [
     "Eritrasma",
@@ -25681,7 +25709,21 @@
    "terapi_teks": {
     "daftar_kki (teks gabungan beberapa penyakit)": "Insulin Sesuai kebutuhan Multiple daily injection || Metformin 500 mg 2-3x sehari bersama makan"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Insulin",
+     "dosis": "Sesuai kebutuhan",
+     "rute": "",
+     "frekuensi": "Multiple daily injection",
+     "durasi": "",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Insulin Sesuai kebutuhan Multiple daily injection",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki (teks gabungan beberapa penyakit)\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [
     "Diabetes Melitus Pada Anak",
@@ -33555,7 +33597,34 @@
     "ppk_permenkes_5_2014 (hal. 211)": "Prinsip penanganan fraktur terbuka\n a. Semua fraktur terbuka dikelola secara emergensi.\n b. Lakukan penilaian awal akan adanya cedera lain yang dapat\n mengancam jiwa.\n c. Lakukan irigasi luka\n d. Lakukan stabilisasi fraktur\n e. Pasang cairan dan berikan antibiotika intravena yang sesuai dan\n adekuat misalnya setriakson dan segera rujuk ke layanan sekunder.\n Penatalaksanaan\n a. Pembersihan terhadap luka fraktur, dengan cara irigasi dengan NaCl\n fisiologis secara mekanis untuk mengeluarkan benda asing yang\n melekat.\n b. Balut luka untuk menghentikan perdarahan, pada fraktur dengan\n tulang menonjol keluar sedapat mungkin dihindari memasukkan\n komponen tulang tersebut kembali ke dalam luka.\n c. Fraktur dengan luka yang berat memerlukan suatu traksi skeletal.\n Fraktur grade II dan III sebaiknya difiksasi dengan fiksasi eksterna. Alat\n sederhana yang bisa digunakan dalam\n d. Pemberian antibiotika: merupakan cara efektif mencegah terjadinya\n infeksi pada fraktur terbuka. Antibiotika yang diberikan sebaiknya\n dengan dosis yang besar. Untuk fraktur terbuka antibiotika yang\n dianjurkan adalah golongan cephalosporin, dan dikombinasi dengan\n golongan aminoglikosida.\n e. Pencegahan tetanus: Semua penderita dengan fraktur terbuka perlu\n diberikan pencegahan tetanus. Pada penderita yang telah mendapat\n imunisasi aktif cukup dengan pemberian toksoid tapi bagi yang belum,\n dapat diberikan 250 unit tetanus imunoglobulin (manusia).\nPasien segera dirujuk setelah kondisi lebih stabil.",
     "kmk_1186_2022 (hal. 296)": "Prinsip penanganan fraktur terbuka\na. Semua fraktur terbuka dikelola secara emergensi dengan\nmetode ATLS\nb. Lakukan irigasi luka\nc. Lakukan imobilisasi fraktur\nd. Pasang cairan dan berikan antibiotika intra vena yang sesuai\ndan adekuat kemudian segera rujuk kelayanan sekunder.\nPenatalaksanaan\na. Pembersihan terhadap luka fraktur, dengan cara irigasi dengan\nNaCl fisiologis secara mekanis untuk mengeluarkan benda asing\nyang melekat.\nb. Balut luka untuk menghentikan perdarahan, pada fraktur\ndengan tulang menonjol keluarsedapat mungkin dihindari\nmemasukkan komponen tulang tersebut kembali kedalam luka.\nc. Fraktur grade II dan III sebaiknya difiksasi dengan fiksasi\neksterna.\nd. Pemberian antibiotika: merupakan cara efektif mencegah\nterjadinya infeksi pada fraktur terbuka. Antibiotika yang\ndiberikan sebaiknya dengan dosis yang besar. Untuk fraktur\nterbuka antibiotika yang dianjurkan adalah golongan\ncephalosporin, dan dikombinasi dengan golongan\naminoglikosida.\ne. Pencegahan tetanus: semua penderita dengan fraktur terbuka\nperlu diberikan pencegahan tetanus. Pada penderita yang telah\nmendapat imunisasi aktif cukup dengan pemberian tetanus\ntoksoid tapi bagi yang belum, dapat diberikan 250 unit tetanus\nimunoglobulin."
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Tetanus imunoglobulin (manusia)",
+     "dosis": "250 unit",
+     "rute": "",
+     "frekuensi": "",
+     "durasi": "",
+     "populasi": "penderita yang belum mendapat imunisasi aktif tetanus",
+     "konteks": "pencegahan tetanus pada fraktur terbuka",
+     "kutipan": "Pada penderita yang telah mendapat imunisasi aktif cukup dengan pemberian toksoid tapi bagi yang belum, dapat diberikan 250 unit tetanus imunoglobulin (manusia).",
+     "sumber": "Permenkes 5/2014 PPK",
+     "halaman": 211,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"ppk_permenkes_5_2014 (hal. 211)\"), 2026-10-23; ditinjau Gaffer."
+    },
+    {
+     "obat": "Tetanus imunoglobulin",
+     "dosis": "250 unit",
+     "rute": "",
+     "frekuensi": "",
+     "durasi": "",
+     "populasi": "penderita yang belum mendapat imunisasi aktif tetanus",
+     "konteks": "pencegahan tetanus pada fraktur terbuka",
+     "kutipan": "Pada penderita yang telah mendapat imunisasi aktif cukup dengan pemberian tetanus toksoid tapi bagi yang belum, dapat diberikan 250 unit tetanus imunoglobulin.",
+     "sumber": "KMK 1186/2022 PPK",
+     "halaman": 296,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"kmk_1186_2022 (hal. 296)\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [
     {
      "jenis": "PPK IDI 2017",
@@ -53909,7 +53978,21 @@
    "terapi_teks": {
     "daftar_kki": "Amoxicillin-clavulanate 625 mg 3x sehari 7 hari"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Amoxicillin-clavulanate",
+     "dosis": "625 mg",
+     "rute": "",
+     "frekuensi": "3x sehari",
+     "durasi": "7 hari",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Amoxicillin-clavulanate 625 mg 3x sehari 7 hari",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [
     "Furunkel dan Karbunkel",
@@ -57725,7 +57808,21 @@
     "ppk_permenkes_5_2014 (hal. 89)": "Penatalaksanaan\n a. Pembatasan nutrisi tertentu\n b. Suplemen vitamin dan mineral\n c. Suplemen enzim pencernaan\nRencana Tindak Lanjut\nSetelah gejala menghilang, makanan yang dicurigai diberikan kembali untuk\nmelihat reaksi yang terjadi. Hal ini bertujuan untuk memperoleh penyebab\nintoleransi.",
     "kmk_1186_2022 (hal. 128)": "Penatalaksanaan dapat berupa\na. Pembatasan nutrisi tertentu\nb. Suplemen vitamin dan mineral\nc. Suplemen enzim pencernaan\nRencana Tindak Lanjut\nSetelah gejala menghilang, makanan yang dicurigai diberikan\nkembali untuk melihat reaksi yang terjadi. Hal ini bertujuan untuk\nmemperoleh penyebab intoleransi."
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Simethicone",
+     "dosis": "80 mg",
+     "rute": "",
+     "frekuensi": "3x sehari setelah makan",
+     "durasi": "",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Simethicone 80 mg 3x sehari setelah makan",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [
     {
      "jenis": "PPK IDI 2017",
@@ -71013,7 +71110,21 @@
    "terapi_teks": {
     "daftar_kki": "Analgesik Paracetamol 500 mg 3x sehari"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Paracetamol",
+     "dosis": "500 mg",
+     "rute": "",
+     "frekuensi": "3x sehari",
+     "durasi": "",
+     "populasi": "",
+     "konteks": "analgesik",
+     "kutipan": "Analgesik Paracetamol 500 mg 3x sehari",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [],
    "status": {
@@ -114574,7 +114685,34 @@
    "terapi_teks": {
     "daftar_kki": "Ceftriaxone 250 mg IM dosis tunggal; Doxycycline 100 mg 2x sehari 14 hari"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Ceftriaxone",
+     "dosis": "250 mg",
+     "rute": "IM",
+     "frekuensi": "dosis tunggal",
+     "durasi": "",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Ceftriaxone 250 mg IM dosis tunggal",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    },
+    {
+     "obat": "Doxycycline",
+     "dosis": "100 mg",
+     "rute": "",
+     "frekuensi": "2x sehari",
+     "durasi": "14 hari",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Doxycycline 100 mg 2x sehari 14 hari",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [],
    "status": {
@@ -133770,7 +133908,21 @@
    "terapi_teks": {
     "daftar_kki": "Griseofulvin 500 mg sekali sehari 4-6 minggu"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Griseofulvin",
+     "dosis": "500 mg",
+     "rute": "",
+     "frekuensi": "sekali sehari",
+     "durasi": "4-6 minggu",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Griseofulvin 500 mg sekali sehari 4-6 minggu",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [
     "Dermatofitosis",
@@ -134942,7 +135094,21 @@
    "terapi_teks": {
     "daftar_kki": "Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Itraconazole",
+     "dosis": "200 mg",
+     "rute": "",
+     "frekuensi": "sekali sehari",
+     "durasi": "3 bulan",
+     "populasi": "",
+     "konteks": "pulse therapy (tertulis di sumber)",
+     "kutipan": "Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [
     "Dermatofitosis",
@@ -142522,7 +142688,21 @@
    "terapi_teks": {
     "daftar_kki": "Metronidazole 500 mg 2x sehari 7 hari"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Metronidazole",
+     "dosis": "500 mg",
+     "rute": "",
+     "frekuensi": "2x sehari",
+     "durasi": "7 hari",
+     "populasi": "",
+     "konteks": "",
+     "kutipan": "Metronidazole 500 mg 2x sehari 7 hari",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [
     "Vaginitis (Keputihan)",
@@ -143759,7 +143939,21 @@
    "terapi_teks": {
     "daftar_kki": "Wound care + suturing - segera; Tetanus prophylaxis 0.5 ml IM jika perlu"
    },
-   "dosis": [],
+   "dosis": [
+    {
+     "obat": "Tetanus prophylaxis",
+     "dosis": "0.5 ml",
+     "rute": "IM",
+     "frekuensi": "",
+     "durasi": "",
+     "populasi": "",
+     "konteks": "jika perlu",
+     "kutipan": "Tetanus prophylaxis 0.5 ml IM jika perlu",
+     "sumber": "Daftar KKI",
+     "halaman": null,
+     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+    }
+   ],
    "dokumen": [],
    "terkait": [
     "Kecelakaan dan Trauma Soft Tissue (KTS)",

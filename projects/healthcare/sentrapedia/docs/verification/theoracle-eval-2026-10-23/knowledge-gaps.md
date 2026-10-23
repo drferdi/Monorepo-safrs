@@ -101,3 +101,15 @@ These are mostly PNPK entries whose doses were extracted but whose management na
 
 - The 34-PDF library does not hold the PNPK, PPK IDI 2017 page numbers are often missing in the SSOT, and the KMK/Permenkes pages point to the official lampiran, not to a file in the repository.
 - The lexical search finds a passage only when the disease name and the drug or heading sit close together; absence of a library hit does not mean the guideline has no dose.
+
+## A1 applied (Gaffer, 2026-10-23)
+
+Dose rows were added to 12 of the 15 entries, each quoted word for word from the entry's own `terapi_teks` (the script stops if a quote is not in the text), `sumber` the text's source (Daftar KKI, Permenkes 5/2014 PPK hal. 211, KMK 1186/2022 PPK hal. 296), `catatan` "Diambil dari teks terapi entri ini (terapi_teks …), 2026-10-23; ditinjau Gaffer.": SP0001, SP0003, SP0063 (insulin only), SP0090 (tetanus immunoglobulin 250 unit, two sources), SP0134, SP0142, SP0164, SP0265 (two rows), SP0304, SP0312, SP0328, SP0334. Diseases with a dose line: 287 → 299.
+
+Not taken:
+- SP0017 Apendisitis Akut, SP0143 Inverted nipple, SP0246 Pneumotoraks: their therapy text has no drug dose ("sekitar 20%", a syringe size, a needle gauge); the SSOT's `teks_ada_dosis_numerik` flag is a false positive for them.
+- SP0063 metformin 500 mg: the source is a combined KKI text for several diseases and metformin is not a type 1 diabetes regimen.
+
+For Gaffer: SP0312 reads "Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)"; a daily dose for 3 months is a continuous regimen, while pulse therapy is usually given one week a month. Transcribed as written. The SSOT's automatic `status` counts (`n_pernyataan_dosis`, `n_obat_berdosis`) were not recomputed.
+
+Rebuild: 17,994 chunks (2,408 SSOT + 15,586 PDF), `indexSha256` `57ca2482…`; the 17,981 chunks with unchanged text keep their vectors (min cosine 0.99999994). Benchmark (`../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-a1.json` vs `benchmark-v06-optBE.json`): identical in every category (overall 0.875, dose 0.82, targeted 0.934). The gate verifies the new rows from their own chunk (metronidazol 2x500 mg for N76, doksisiklin 2x100 mg for N70, griseofulvin 500 mg for B35, methylergometrine 3x0.2 mg for O03, tetanus immunoglobulin 250 unit for T14).

@@ -5,7 +5,7 @@
     "total_diseases": 330,
     "total_categories": 42,
     "description": "Derived from theoracle/ssot/sentrapedia-knowledge-ssot.json by npm run knowledge:build; do not edit by hand. Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur).",
-    "ssotSha256": "8157e1b4f163a51fc72c57187adaec38348d5930511dfff707f0e517c4071493",
+    "ssotSha256": "37d2cf2080887f7d49e7d858220c3ab093a41943abe825312c9c56722d049bee",
     "stats": [],
     "nationalSources": [],
     "professionalSources": [],
@@ -275,7 +275,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nMethylergometrine 0.2 mg 3x sehari 3 hari",
+      "terapi": "[Daftar KKI]\nMethylergometrine 0.2 mg 3x sehari 3 hari\n\nDosis:\n- obat: Methylergometrine; dosis: 0.2 mg; frekuensi: 3x sehari; durasi: 3 hari; sumber: Daftar KKI; kutipan: Methylergometrine 0.2 mg 3x sehari 3 hari",
       "rujukan": ""
     },
     {
@@ -310,7 +310,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nIncisi drainase - Jika fluktuasi (+); Amoxicillin-clavulanate 625 mg 3x sehari 5-7 hari",
+      "terapi": "[Daftar KKI]\nIncisi drainase - Jika fluktuasi (+); Amoxicillin-clavulanate 625 mg 3x sehari 5-7 hari\n\nDosis:\n- obat: Amoxicillin-clavulanate; dosis: 625 mg; frekuensi: 3x sehari; durasi: 5-7 hari; sumber: Daftar KKI; kutipan: Amoxicillin-clavulanate 625 mg 3x sehari 5-7 hari",
       "rujukan": ""
     },
     {
@@ -1396,7 +1396,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI (teks gabungan beberapa penyakit)]\nInsulin Sesuai kebutuhan Multiple daily injection || Metformin 500 mg 2-3x sehari bersama makan",
+      "terapi": "[Daftar KKI (teks gabungan beberapa penyakit)]\nInsulin Sesuai kebutuhan Multiple daily injection || Metformin 500 mg 2-3x sehari bersama makan\n\nDosis:\n- obat: Insulin; dosis: Sesuai kebutuhan; frekuensi: Multiple daily injection; sumber: Daftar KKI; kutipan: Insulin Sesuai kebutuhan Multiple daily injection",
       "rujukan": ""
     },
     {
@@ -1913,7 +1913,7 @@
         "Pemeriksaan Fisik"
       ],
       "diagnosis": "Diagnosis klinis\nDiagnosis ditegakkan berdasar anamnesis, pemeriksaan fisik dan penunjang.\nKlasifikasi\nFraktur terbuka dibagi menjadi tiga kelompok:\n a. Grade I\n 1. Fraktur terbuka dengan luka kulit kurang dari 1 cm dan bersih\n 2. Kerusakan jaringan minimal, frakturnya simple atau oblique dan\n sedikit kominutif .\n b. Grade II\n 1. Fraktur terbuka dengan luka robek lebih dari 1 cm, tanpa ada\n kerusakan jaringan lunak,\n 2. Flap kontusio avulsi yang luas serta fraktur kominutif sedang dan\n kontaminasi sedang.\n c. Grade III\n Fraktur terbuka segmental atau kerusakan jaringan lunak yang luas\n atau amputasi traumatic, derajad kontaminasi yang berat dan trauma\n dengan kecepatan tinggi.\n Fraktur grade III dibagi menjadi tiga, yaitu:\n 1. Grade IIIa : Fraktur segmental atau sangat kominutif penutupan\n tulang dengan jaringan lunak cukup adekuat.\n 2. Grade IIIb : Trauma sangat berat atau kehilangan jaringan lunak\n yang cukup luas, terkelupasnya daerah periosteum dan\n tulang tampak terbuka, serta adanya kontaminasi yang\n cukup berat.\n 3. Grade IIIc : Fraktur dengan kerusakan pembuluh darah.\nDiagnosis Banding : -\nKomplikasi\n a. Perdarahan, syok septik sampai kematian\n b. Septikemia, toksemia oleh karena infeksi piogenik\n c. Tetanus\n d. Gangren\n e. Perdarahan sekunder\n f. Osteomielitis kronik\n g. Delayed union\n h. Nonunion dan malunion\n i. Kekakuan sendi\n\n j. Komplikasi lain oleh karena perawatan yang lama",
-      "terapi": "[Permenkes 5/2014 (hal. 211)]\nPrinsip penanganan fraktur terbuka\n a. Semua fraktur terbuka dikelola secara emergensi.\n b. Lakukan penilaian awal akan adanya cedera lain yang dapat\n mengancam jiwa.\n c. Lakukan irigasi luka\n d. Lakukan stabilisasi fraktur\n e. Pasang cairan dan berikan antibiotika intravena yang sesuai dan\n adekuat misalnya setriakson dan segera rujuk ke layanan sekunder.\n Penatalaksanaan\n a. Pembersihan terhadap luka fraktur, dengan cara irigasi dengan NaCl\n fisiologis secara mekanis untuk mengeluarkan benda asing yang\n melekat.\n b. Balut luka untuk menghentikan perdarahan, pada fraktur dengan\n tulang menonjol keluar sedapat mungkin dihindari memasukkan\n komponen tulang tersebut kembali ke dalam luka.\n c. Fraktur dengan luka yang berat memerlukan suatu traksi skeletal.\n Fraktur grade II dan III sebaiknya difiksasi dengan fiksasi eksterna. Alat\n sederhana yang bisa digunakan dalam\n d. Pemberian antibiotika: merupakan cara efektif mencegah terjadinya\n infeksi pada fraktur terbuka. Antibiotika yang diberikan sebaiknya\n dengan dosis yang besar. Untuk fraktur terbuka antibiotika yang\n dianjurkan adalah golongan cephalosporin, dan dikombinasi dengan\n golongan aminoglikosida.\n e. Pencegahan tetanus: Semua penderita dengan fraktur terbuka perlu\n diberikan pencegahan tetanus. Pada penderita yang telah mendapat\n imunisasi aktif cukup dengan pemberian toksoid tapi bagi yang belum,\n dapat diberikan 250 unit tetanus imunoglobulin (manusia).\nPasien segera dirujuk setelah kondisi lebih stabil.\n\n[KMK 1186/2022 (hal. 296)]\nPrinsip penanganan fraktur terbuka\na. Semua fraktur terbuka dikelola secara emergensi dengan\nmetode ATLS\nb. Lakukan irigasi luka\nc. Lakukan imobilisasi fraktur\nd. Pasang cairan dan berikan antibiotika intra vena yang sesuai\ndan adekuat kemudian segera rujuk kelayanan sekunder.\nPenatalaksanaan\na. Pembersihan terhadap luka fraktur, dengan cara irigasi dengan\nNaCl fisiologis secara mekanis untuk mengeluarkan benda asing\nyang melekat.\nb. Balut luka untuk menghentikan perdarahan, pada fraktur\ndengan tulang menonjol keluarsedapat mungkin dihindari\nmemasukkan komponen tulang tersebut kembali kedalam luka.\nc. Fraktur grade II dan III sebaiknya difiksasi dengan fiksasi\neksterna.\nd. Pemberian antibiotika: merupakan cara efektif mencegah\nterjadinya infeksi pada fraktur terbuka. Antibiotika yang\ndiberikan sebaiknya dengan dosis yang besar. Untuk fraktur\nterbuka antibiotika yang dianjurkan adalah golongan\ncephalosporin, dan dikombinasi dengan golongan\naminoglikosida.\ne. Pencegahan tetanus: semua penderita dengan fraktur terbuka\nperlu diberikan pencegahan tetanus. Pada penderita yang telah\nmendapat imunisasi aktif cukup dengan pemberian tetanus\ntoksoid tapi bagi yang belum, dapat diberikan 250 unit tetanus\nimunoglobulin.",
+      "terapi": "[Permenkes 5/2014 (hal. 211)]\nPrinsip penanganan fraktur terbuka\n a. Semua fraktur terbuka dikelola secara emergensi.\n b. Lakukan penilaian awal akan adanya cedera lain yang dapat\n mengancam jiwa.\n c. Lakukan irigasi luka\n d. Lakukan stabilisasi fraktur\n e. Pasang cairan dan berikan antibiotika intravena yang sesuai dan\n adekuat misalnya setriakson dan segera rujuk ke layanan sekunder.\n Penatalaksanaan\n a. Pembersihan terhadap luka fraktur, dengan cara irigasi dengan NaCl\n fisiologis secara mekanis untuk mengeluarkan benda asing yang\n melekat.\n b. Balut luka untuk menghentikan perdarahan, pada fraktur dengan\n tulang menonjol keluar sedapat mungkin dihindari memasukkan\n komponen tulang tersebut kembali ke dalam luka.\n c. Fraktur dengan luka yang berat memerlukan suatu traksi skeletal.\n Fraktur grade II dan III sebaiknya difiksasi dengan fiksasi eksterna. Alat\n sederhana yang bisa digunakan dalam\n d. Pemberian antibiotika: merupakan cara efektif mencegah terjadinya\n infeksi pada fraktur terbuka. Antibiotika yang diberikan sebaiknya\n dengan dosis yang besar. Untuk fraktur terbuka antibiotika yang\n dianjurkan adalah golongan cephalosporin, dan dikombinasi dengan\n golongan aminoglikosida.\n e. Pencegahan tetanus: Semua penderita dengan fraktur terbuka perlu\n diberikan pencegahan tetanus. Pada penderita yang telah mendapat\n imunisasi aktif cukup dengan pemberian toksoid tapi bagi yang belum,\n dapat diberikan 250 unit tetanus imunoglobulin (manusia).\nPasien segera dirujuk setelah kondisi lebih stabil.\n\n[KMK 1186/2022 (hal. 296)]\nPrinsip penanganan fraktur terbuka\na. Semua fraktur terbuka dikelola secara emergensi dengan\nmetode ATLS\nb. Lakukan irigasi luka\nc. Lakukan imobilisasi fraktur\nd. Pasang cairan dan berikan antibiotika intra vena yang sesuai\ndan adekuat kemudian segera rujuk kelayanan sekunder.\nPenatalaksanaan\na. Pembersihan terhadap luka fraktur, dengan cara irigasi dengan\nNaCl fisiologis secara mekanis untuk mengeluarkan benda asing\nyang melekat.\nb. Balut luka untuk menghentikan perdarahan, pada fraktur\ndengan tulang menonjol keluarsedapat mungkin dihindari\nmemasukkan komponen tulang tersebut kembali kedalam luka.\nc. Fraktur grade II dan III sebaiknya difiksasi dengan fiksasi\neksterna.\nd. Pemberian antibiotika: merupakan cara efektif mencegah\nterjadinya infeksi pada fraktur terbuka. Antibiotika yang\ndiberikan sebaiknya dengan dosis yang besar. Untuk fraktur\nterbuka antibiotika yang dianjurkan adalah golongan\ncephalosporin, dan dikombinasi dengan golongan\naminoglikosida.\ne. Pencegahan tetanus: semua penderita dengan fraktur terbuka\nperlu diberikan pencegahan tetanus. Pada penderita yang telah\nmendapat imunisasi aktif cukup dengan pemberian tetanus\ntoksoid tapi bagi yang belum, dapat diberikan 250 unit tetanus\nimunoglobulin.\n\nDosis:\n- obat: Tetanus imunoglobulin (manusia); dosis: 250 unit; populasi: penderita yang belum mendapat imunisasi aktif tetanus; konteks: pencegahan tetanus pada fraktur terbuka; sumber: Permenkes 5/2014 PPK; halaman: 211; kutipan: Pada penderita yang telah mendapat imunisasi aktif cukup dengan pemberian toksoid tapi bagi yang belum, dapat diberikan 250 unit tetanus imunoglobulin (manusia).\n- obat: Tetanus imunoglobulin; dosis: 250 unit; populasi: penderita yang belum mendapat imunisasi aktif tetanus; konteks: pencegahan tetanus pada fraktur terbuka; sumber: KMK 1186/2022 PPK; halaman: 296; kutipan: Pada penderita yang telah mendapat imunisasi aktif cukup dengan pemberian tetanus toksoid tapi bagi yang belum, dapat diberikan 250 unit tetanus imunoglobulin.",
       "rujukan": "Pasien segera dirujuk setelah kondisi lebih stabil dengan tetap\nmengawasi tanda vital."
     },
     {
@@ -2747,7 +2747,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nAmoxicillin-clavulanate 625 mg 3x sehari 7 hari",
+      "terapi": "[Daftar KKI]\nAmoxicillin-clavulanate 625 mg 3x sehari 7 hari\n\nDosis:\n- obat: Amoxicillin-clavulanate; dosis: 625 mg; frekuensi: 3x sehari; durasi: 7 hari; sumber: Daftar KKI; kutipan: Amoxicillin-clavulanate 625 mg 3x sehari 7 hari",
       "rujukan": ""
     },
     {
@@ -2898,7 +2898,7 @@
         "meningkat dan mungkin terdapat tanda-tanda dehidrasi."
       ],
       "diagnosis": "Diagnosis Klinis\nDiagnosis ditegakkan berdasar anamnesis, pemeriksaan fisik, dan penunjang.\nDiagnosis Banding\n a. Pankreatitis\n b. Penyakitt Chrons pada illeum terminalis\n c. Sprue Celiac\n d. Penyakit whipple\n e. Amiloidosis\n f. Defisiensi laktase\n g. Sindrom Zollinger-Ellison\n h. Gangguan paska gasterektomi, reseksi usus halus atau kolon\nKomplikasi: dehidrasi",
-      "terapi": "[Daftar KKI]\nSimethicone 80 mg 3x sehari setelah makan\n\n[Permenkes 5/2014 (hal. 89)]\nPenatalaksanaan\n a. Pembatasan nutrisi tertentu\n b. Suplemen vitamin dan mineral\n c. Suplemen enzim pencernaan\nRencana Tindak Lanjut\nSetelah gejala menghilang, makanan yang dicurigai diberikan kembali untuk\nmelihat reaksi yang terjadi. Hal ini bertujuan untuk memperoleh penyebab\nintoleransi.\n\n[KMK 1186/2022 (hal. 128)]\nPenatalaksanaan dapat berupa\na. Pembatasan nutrisi tertentu\nb. Suplemen vitamin dan mineral\nc. Suplemen enzim pencernaan\nRencana Tindak Lanjut\nSetelah gejala menghilang, makanan yang dicurigai diberikan\nkembali untuk melihat reaksi yang terjadi. Hal ini bertujuan untuk\nmemperoleh penyebab intoleransi.",
+      "terapi": "[Daftar KKI]\nSimethicone 80 mg 3x sehari setelah makan\n\n[Permenkes 5/2014 (hal. 89)]\nPenatalaksanaan\n a. Pembatasan nutrisi tertentu\n b. Suplemen vitamin dan mineral\n c. Suplemen enzim pencernaan\nRencana Tindak Lanjut\nSetelah gejala menghilang, makanan yang dicurigai diberikan kembali untuk\nmelihat reaksi yang terjadi. Hal ini bertujuan untuk memperoleh penyebab\nintoleransi.\n\n[KMK 1186/2022 (hal. 128)]\nPenatalaksanaan dapat berupa\na. Pembatasan nutrisi tertentu\nb. Suplemen vitamin dan mineral\nc. Suplemen enzim pencernaan\nRencana Tindak Lanjut\nSetelah gejala menghilang, makanan yang dicurigai diberikan\nkembali untuk melihat reaksi yang terjadi. Hal ini bertujuan untuk\nmemperoleh penyebab intoleransi.\n\nDosis:\n- obat: Simethicone; dosis: 80 mg; frekuensi: 3x sehari setelah makan; sumber: Daftar KKI; kutipan: Simethicone 80 mg 3x sehari setelah makan",
       "rujukan": "Perlu dilakukan konsultasi ke layanan sekunder bila keluhan tidak\nmenghilang walaupun tanpa terpapar."
     },
     {
@@ -3223,7 +3223,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nAnalgesik Paracetamol 500 mg 3x sehari",
+      "terapi": "[Daftar KKI]\nAnalgesik Paracetamol 500 mg 3x sehari\n\nDosis:\n- obat: Paracetamol; dosis: 500 mg; frekuensi: 3x sehari; konteks: analgesik; sumber: Daftar KKI; kutipan: Analgesik Paracetamol 500 mg 3x sehari",
       "rujukan": ""
     },
     {
@@ -5125,7 +5125,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nCeftriaxone 250 mg IM dosis tunggal; Doxycycline 100 mg 2x sehari 14 hari",
+      "terapi": "[Daftar KKI]\nCeftriaxone 250 mg IM dosis tunggal; Doxycycline 100 mg 2x sehari 14 hari\n\nDosis:\n- obat: Ceftriaxone; dosis: 250 mg; frekuensi: dosis tunggal; rute: IM; sumber: Daftar KKI; kutipan: Ceftriaxone 250 mg IM dosis tunggal\n- obat: Doxycycline; dosis: 100 mg; frekuensi: 2x sehari; durasi: 14 hari; sumber: Daftar KKI; kutipan: Doxycycline 100 mg 2x sehari 14 hari",
       "rujukan": ""
     },
     {
@@ -5812,7 +5812,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nGriseofulvin 500 mg sekali sehari 4-6 minggu",
+      "terapi": "[Daftar KKI]\nGriseofulvin 500 mg sekali sehari 4-6 minggu\n\nDosis:\n- obat: Griseofulvin; dosis: 500 mg; frekuensi: sekali sehari; durasi: 4-6 minggu; sumber: Daftar KKI; kutipan: Griseofulvin 500 mg sekali sehari 4-6 minggu",
       "rujukan": ""
     },
     {
@@ -5924,7 +5924,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nItraconazole 200 mg sekali sehari 3 bulan (pulse therapy)",
+      "terapi": "[Daftar KKI]\nItraconazole 200 mg sekali sehari 3 bulan (pulse therapy)\n\nDosis:\n- obat: Itraconazole; dosis: 200 mg; frekuensi: sekali sehari; durasi: 3 bulan; konteks: pulse therapy (tertulis di sumber); sumber: Daftar KKI; kutipan: Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)",
       "rujukan": ""
     },
     {
@@ -6204,7 +6204,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nMetronidazole 500 mg 2x sehari 7 hari",
+      "terapi": "[Daftar KKI]\nMetronidazole 500 mg 2x sehari 7 hari\n\nDosis:\n- obat: Metronidazole; dosis: 500 mg; frekuensi: 2x sehari; durasi: 7 hari; sumber: Daftar KKI; kutipan: Metronidazole 500 mg 2x sehari 7 hari",
       "rujukan": ""
     },
     {
@@ -6306,7 +6306,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nWound care + suturing - segera; Tetanus prophylaxis 0.5 ml IM jika perlu",
+      "terapi": "[Daftar KKI]\nWound care + suturing - segera; Tetanus prophylaxis 0.5 ml IM jika perlu\n\nDosis:\n- obat: Tetanus prophylaxis; dosis: 0.5 ml; rute: IM; konteks: jika perlu; sumber: Daftar KKI; kutipan: Tetanus prophylaxis 0.5 ml IM jika perlu",
       "rujukan": ""
     },
     {
