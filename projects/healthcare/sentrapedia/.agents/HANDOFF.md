@@ -1,5 +1,15 @@
 # Sentrapedia handoff
 
+## Dose schema audit and option A: cross-referenced doses keep their caveat (one commit on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
+
+- Read-only audit of the SSOT v0.6 dose rows: `docs/verification/theoracle-eval-2026-10-22/v0.6-gold/dose-schema-audit.md` (8,925 rows, 72% auto-extracted; `konteks`, `kutipan`, `catatan` not rendered; ~590 non-drug `obat` rows; 1,550 duplicates; mixed `halaman` types; options A-E).
+- Option A (Gaffer's choice): `doseLines` in `scripts/knowledge-ssot.mjs` adds `catatan` to a row whose `sumber` starts with "rujukan silang" (106 rows, 14 entries: another disease's dose, "bukan regimen khusus … Verifikasi"). Other rows unchanged. Test: `tests/scripts.node-test.mjs` "dose lines keep the catatan of a cross-referenced dose only" (failed first, then passed).
+- `npm run knowledge:build`: 17,570 chunks (1,984 SSOT + 15,586 PDF), all 106 caveats in the chunks, `indexSha256` `0dccb6dc…`. Full re-embed on DirectML stopped once at 8,816 (exit 4, no message) and resumed from `vectors.partial.*`; the 17,541 chunks with unchanged text match the previous vectors (min cosine 0.99999994, before and after the resume). Catalogue 330 diseases / 42 categories.
+- Benchmark vs v0.6 (`v0.6-gold/benchmark-v06-optA.json` vs `benchmark-v06-index.json`): identical in every category (overall 0.864, dose 0.82, targeted 0.934). No paid eval run.
+- Limit: the caveat is now visible to the model and in "Kutipan pedoman", but the evidence gate still matches dose strengths only and does not read it; a gate rule for cross-referenced doses belongs to the gate-logic area.
+- Gate before commit: typecheck 0, lint 0, vitest 463/463, node tests 22/22, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
+- Next: Gaffer picks among options B-E, gate logic or the eval benchmark; the open items of the entry below still stand.
+
 ## Knowledge rebuild on SSOT v0.6 (one commit on feat/puskesmas-flow, closes the knowledge rebuild) - 2026-10-22 Asia/Jakarta
 
 - SSOT v0.6 copied from Gaffer's Downloads (`sentrapedia-knowledge-ssot_2.json`, sha256 `338316f5…`): 336 entries, new `nama_awam` (all 190 values already in `alias`, so the builder is unchanged). Hemorrhoid entries merged into "Hemoroid grade 1/2" (alias wasir, ambeien).
@@ -49,11 +59,3 @@
 - Verified before each commit: typecheck 0, lint 0, `npx vitest run` 0 (38 files, 461 tests), build 0, deploy:dry-run 0; node tests `scripts` + `export-split` pass.
 - Open (not touched): SSOT duplicates (24 whole-code repeats, e.g. Scabies/Skabies, Kusta/Leprosy), `Ketuban Pecah Dini` coded `W92`, 7 entries without ICD-10, no `kelas`/`edukasi` fields; the catalogue mixes two category taxonomies; off-topic PDFs still indexed (patologi-klinik-anatomik-unair, kurikulum-mikrobiologi, standar-kompetensi-dokter, gizi-olahraga, forensik, pelayanan-kesehatan-bergerak, peran-patologi-klinik, kedokteran-nuklir, patologi-anatomik, klasifikasi-diagnosis-pak); `knowledge-dialog.tsx` still says "Kutipan halaman PNPK belum tersedia"; `docs/architecture.md`, `.agents/CONTEXT.md` and `docs/TECH-DEBT.md` still describe the retired folders and 20,465 chunks; the eval set's gold labels name retired `.md` files.
 - Next: Gaffer decides on the off-topic PDFs and the stale docs; re-label the eval gold to SSOT names before the next benchmark.
-
-## FREEZE: back to consult-first, flow work parked (on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
-
-- Gaffer's decision (`.agents/DECISIONS.md`, 2026-10-21): one composer, the doctor presents the case, Sentrapedia answers from Indonesian guidelines, the answer becomes the note. Analisis stays the primary entry (D2 cancelled); D1 stands (real clinical content without patient identity; identified records out of scope).
-- Do not continue: doctor flow, guided SOAP, section chips, completeness strip, practice-site default, Puskesmas-flow phases, storage-format migration, website/brand work, audit action items. The plan file `.claude/plans/puskesmas-flow-implementation-plan.md` is marked PARKED (gitignored, local only).
-- Checkpoint commit 8f960f4c (empty, `wip:`): typecheck 0, lint 0, `npx vitest run` 0 (38 files, 461 tests), build 0, deploy:dry-run 0 (win32-x64 binaries only); `npm test -- tests/workspace.test.ts` exit 1 because npm passes the path to `apps/site`'s `node --test`, not because a test failed. The entries below describe work that is built and committed but now parked.
-- Next: prove the consult answer (Analisis → `/api/aadi` → TheOracle → Gemini) with real doctors before reopening any parked item.
-

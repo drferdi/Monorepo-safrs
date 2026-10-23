@@ -1,5 +1,14 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-23 - handoff rotation for the dose schema option A (newest five kept)
+
+## FREEZE: back to consult-first, flow work parked (on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
+
+- Gaffer's decision (`.agents/DECISIONS.md`, 2026-10-21): one composer, the doctor presents the case, Sentrapedia answers from Indonesian guidelines, the answer becomes the note. Analisis stays the primary entry (D2 cancelled); D1 stands (real clinical content without patient identity; identified records out of scope).
+- Do not continue: doctor flow, guided SOAP, section chips, completeness strip, practice-site default, Puskesmas-flow phases, storage-format migration, website/brand work, audit action items. The plan file `.claude/plans/puskesmas-flow-implementation-plan.md` is marked PARKED (gitignored, local only).
+- Checkpoint commit 8f960f4c (empty, `wip:`): typecheck 0, lint 0, `npx vitest run` 0 (38 files, 461 tests), build 0, deploy:dry-run 0 (win32-x64 binaries only); `npm test -- tests/workspace.test.ts` exit 1 because npm passes the path to `apps/site`'s `node --test`, not because a test failed. The entries below describe work that is built and committed but now parked.
+- Next: prove the consult answer (Analisis → `/api/aadi` → TheOracle → Gemini) with real doctors before reopening any parked item.
+
 ## Archived on 2026-10-22 - handoff rotation for the SSOT v0.6 rebuild (newest five kept)
 
 ## Nine more Indonesian notes in the numbered format (not committed, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta

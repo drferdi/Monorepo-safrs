@@ -30,7 +30,9 @@ export function therapyText(entry) {
 
 // One line per dose statement, with every non-empty field the SSOT carries for it.
 const DOSE_FIELDS = ["obat", "dosis", "frekuensi", "durasi", "rute", "populasi", "sumber", "halaman", "kelas"];
-export const doseLines = entry => entry.dosis.map(s => "- " + DOSE_FIELDS.filter(k => clean(s[k])).map(k => `${k}: ${clean(s[k])}`).join("; "));
+// A cross-referenced dose ("rujukan silang", SSOT v0.6) is another disease's dose; its catatan says so and stays on the line.
+const doseFields = s => clean(s.sumber).startsWith("rujukan silang") ? [...DOSE_FIELDS, "catatan"] : DOSE_FIELDS;
+export const doseLines = entry => entry.dosis.map(s => "- " + doseFields(s).filter(k => clean(s[k])).map(k => `${k}: ${clean(s[k])}`).join("; "));
 
 export const list = value => (Array.isArray(value) ? value : [value]).map(clean).filter(Boolean);
 export { clean };

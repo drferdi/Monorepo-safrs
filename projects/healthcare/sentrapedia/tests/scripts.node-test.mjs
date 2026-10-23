@@ -10,6 +10,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const sha = data => createHash("sha256").update(data).digest("hex");
 
@@ -351,4 +352,15 @@ test("benchmark compiles every local module the retriever imports", () => {
       assert.ok(compiled.includes(local), `${name}.ts imports ./${local}, which the benchmark does not compile`);
     }
   }
+});
+
+// knowledge-ssot.mjs: a cross-referenced dose ("rujukan silang") is another disease's dose, so its catatan stays on the line.
+test("dose lines keep the catatan of a cross-referenced dose only", async () => {
+  const { doseLines } = await import(pathToFileURL(resolve("scripts/knowledge-ssot.mjs")).href);
+  const lines = doseLines({ dosis: [
+    { obat: "obat fiktif", dosis: "10 mg", sumber: "rujukan silang (dosis obat dari entri Penyakit Fiktif): ", catatan: "Dosis umum obat ini dari penyakit lain; bukan regimen khusus. Verifikasi." },
+    { obat: "obat fiktif", dosis: "20 mg", sumber: "PNPK (fiktif.pdf)", catatan: "Diekstrak otomatis dari naskah PNPK; cek kutipan." },
+  ] });
+  assert.equal(lines[0], "- obat: obat fiktif; dosis: 10 mg; sumber: rujukan silang (dosis obat dari entri Penyakit Fiktif):; catatan: Dosis umum obat ini dari penyakit lain; bukan regimen khusus. Verifikasi.");
+  assert.equal(lines[1], "- obat: obat fiktif; dosis: 20 mg; sumber: PNPK (fiktif.pdf)");
 });

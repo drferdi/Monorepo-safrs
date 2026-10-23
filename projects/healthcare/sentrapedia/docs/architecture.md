@@ -10,7 +10,7 @@ Current reference as of 2026-10-18 and the only architecture document (TD-38). I
 | Next.js | The web framework that serves the workspace page and its one server endpoint, `/api/aadi`. Version 16.4, which has breaking changes from older Next.js. |
 | AADI | The bundled Python (FastAPI) diagnosis engine. It sends a case to an AI model and returns a structured differential. |
 | Gemini | Google's AI model service. AADI calls `gemini-3.1-flash-lite` directly; every call costs money. |
-| TheOracle | The local search index of 17,560 medical reference passages that grounds every AI answer. |
+| TheOracle | The local search index of 17,570 medical reference passages that grounds every AI answer. |
 | Oracle (catalog) | A different file of 330 disease records, derived from the knowledge SSOT, shown in the "Pustaka Klinis" library. The similar names are a trap. |
 | Evidence gate | Code that removes any drug dose it cannot find word for word in the retrieved passages. |
 | Synthetic data | Fictional patient cases. The whole product is for synthetic data only. |
@@ -65,7 +65,7 @@ The system consists of a browser clinical cockpit, a local Next.js server, a bun
 | `src/lib/` | Core logic: `workspace.ts` & `workspace-session.ts` (storage & restore), `workflow.ts` (review & drafts), `drafts.ts` (18 modes), `theoracle-evidence-gate.ts`. | Live |
 | `src/lib/aadi/` | AADI client & gateway: `gateway.ts` (safety & orchestration), `client.ts` (browser fetch), `composer.ts` (case mapping), `presentation.ts` (formatting). | Live |
 | `aadi/` | Bundled Python 3.11 FastAPI diagnosis engine. `SOURCE.json` records every file's origin; capsule-owned files (most of `service/`, `common/guard.py`) carry no pin, the rest stay byte-identical to upstream. `ruff.toml` lints the capsule-owned files. | Live |
-| `theoracle/` | Knowledge SSOT (`theoracle/ssot/`) and the index derived from it by `npm run knowledge:build`: 17,560 reference chunks (`theoracle/index/`), verified by manifest, embedded via local `EmbeddingGemma-300m-ONNX` (1.2 GB on CPU, downloaded at install into the gitignored `theoracle/model/`). | Live |
+| `theoracle/` | Knowledge SSOT (`theoracle/ssot/`) and the index derived from it by `npm run knowledge:build`: 17,570 reference chunks (`theoracle/index/`), verified by manifest, embedded via local `EmbeddingGemma-300m-ONNX` (1.2 GB on CPU, downloaded at install into the gitignored `theoracle/model/`). | Live |
 | `oracle/sentrapedia.json` | 330 disease records derived from the knowledge SSOT, feeding the clinical library dialog and drug-name matching. | Live |
 | `apps/site/` | Decoupled static marketing site (section 9). | Live, separate |
 | `scripts/` | System launcher `run-system.mjs`, runtime helpers `aadi-runtime.mjs`, build, install, and test tools. | Live |
@@ -119,7 +119,7 @@ The system is started via `npm run dev` (or `npm start` for production), which e
    - Applies single-flight lock (`active` flag; returns `BUSY` on concurrent calls).
 4. **Local TheOracle grounding (`src/lib/theoracle-grounding.ts`)**:
    - Runs local CPU ONNX embedding (`embeddinggemma-300m`).
-   - Retrieves top 6 relevant diagnosis passages plus 1 therapy dose passage from 17,560 indexed chunks.
+   - Retrieves top 6 relevant diagnosis passages plus 1 therapy dose passage from 17,570 indexed chunks.
 5. **AADI diagnosis step (`aadi/service/app.py`)**:
    - AADI verifies HMAC token and synthetic headers.
    - Sends case narrative and evidence passages to Google Gemini API (`gemini-3.1-flash-lite`).
@@ -144,7 +144,7 @@ The system is started via `npm run dev` (or `npm start` for production), which e
 
 | Source | What it does |
 | --- | --- |
-| `theoracle/index/` | 17,560 passages (1,974 from the SSOT, 15,586 from guideline PDFs) searched for each case and sent to the AI. |
+| `theoracle/index/` | 17,570 passages (1,984 from the SSOT, 15,586 from guideline PDFs) searched for each case and sent to the AI. |
 | `theoracle/ssot/sentrapedia-knowledge-ssot.json` | The single knowledge source (v0.6, 336 entries); the index and the catalog are derived from it. |
 | `aadi/service/data/icd10.json` and `aadi/service/rules/` | Code and sex checks after the AI answers. |
 | `oracle/sentrapedia.json` | Library catalog and drug-name matching in the dose gate. Never sent to the AI. |
