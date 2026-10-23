@@ -1,5 +1,17 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-23 - handoff rotation for the gate rules and dose options B-E (newest five kept)
+
+## Knowledge rebuild on SSOT v0.5 with index D (committed on feat/puskesmas-flow after `1cad9276`) - 2026-10-22 Asia/Jakarta
+
+- 429 fix committed separately in `1cad9276`: the engine sends Retry-After, the gateway passes 429 `RATE_LIMITED` with "Layanan sedang sibuk, coba lagi dalam N detik." (the existing "Coba lagi" button retries), the eval runner waits and retries up to 3 times. Engine limit stays 30/min.
+- SSOT v0.5 in `theoracle/ssot/` (sha256 starts `eb75de8d`): 339 entries. `npm run knowledge:build` gives 18,665 chunks (1,979 SSOT + 16,686 PDF), catalogue 333 diseases / 42 categories. `EXCLUDED_LIBRARY_PDFS` keeps 9 off-topic PDFs out; the clinical-pathology texts `peran-patologi-klinik-unair.pdf` and `patologi-klinik-anatomik-unair.pdf` are back in (Gaffer's correction, lab recall). Gold relabelled to v0.5 names in `docs/verification/theoracle-eval-2026-10-22/` (56/56 mapped, none unmapped; `gold-mapping.json`).
+- Benchmark recall@5, relabelled gold (A v0.2 index / B A minus excluded PDFs / C v0.5 / D v0.5 + pathology, `indexSha256` `1b965faf…`): overall 0.818 / 0.807 / 0.830 / 0.852; lay 0.938 / 0.938 / 0.813 / 0.813; typos 0.8 / 0.867 / 1 / 1; exact lab 0.8 / 0.6 / 0.6 / 0.8; score 0.75 / 0.625 / 0.625 / 0.75; dose 0.803 / 0.803 / 0.82 / 0.82; targeted 0.902 / 0.902 / 0.934 / 0.934. Gaffer accepted D as measured despite lay_terms (probe: `lay_terms-13` hits SSOT hemorrhoid duplicates, `lay_terms-08` loses Urtikaria Akut to "Reaksi gigitan serangga").
+- Pipeline eval A / D (`pipeline-2026-10-22-targeted-{A-v02,D-v05}-index.json`, v0.5 catalogue both runs): ok 61/61 both, ICD top-1 0.951 both, ICD valid 0.967 / 0.984, dose supported 80/81 / 82/82, rate-limit retries 5 / 6, cost 0.31 / 0.32 USD.
+- E2E (`e2e-analisis-2026-10-22.md`, trace `8b404e3c…`): Typhoid fever (A01.0), Chloramphenicol 4x500 mg 14 days; cited Demam Tifoid SSOT therapy chunk ("Permenkes 5/2014 (hal. 93)"), Sirosis Hati PNPK hal. 239/242/257, `fasyankes-primer-idi-2017.pdf`, and 2 off-topic `patologi-klinik-anatomik-unair.pdf` passages.
+- Gate before commit: typecheck 0, lint 0 (`rtk proxy npm run lint`; the RTK wrapper alone reports vendor min.js errors), vitest 462/462, node tests 21/21, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
+- Open: SSOT duplicates (three hemorrhoid entries), an entry filling 3 of 5 top-5 slots (check the 2-per-title cap), `W92` for KPD, mixed category taxonomies, row 47 privacy-filter counts not re-measured on the new index.
+
 ## Archived on 2026-10-23 - handoff rotation for the cross-referenced dose gate rule (newest five kept)
 
 ## SSOT is the single knowledge source; index and catalogue derived by npm run knowledge:build (committed in 19200965 and the commit that follows it, on feat/puskesmas-flow) - 2026-10-21 Asia/Jakarta
