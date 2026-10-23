@@ -195,7 +195,7 @@ flowchart TB
 | <small>Five AADI-routed modes: question, DDx, workup, referral review, ICD-10</small> | <small>IMPLEMENTED</small> | <small>`src/lib/aadi/composer.ts`</small> | <small>Fictional cases only</small> |
 | <small>Templates, revisions, checklist, export</small> | <small>IMPLEMENTED</small> | <small>`src/lib/workflow.ts` · `src/components/workspace.tsx`</small> | <small>Review status is not clinical authorization</small> |
 | <small>Oracle local disease search</small> | <small>IMPLEMENTED</small> | <small>`src/lib/theoracle.ts`</small> | <small>Narratives not certified PNPK citations</small> |
-| <small>TheOracle grounding / provenance</small> | <small>IMPLEMENTED</small> | <small>`src/lib/theoracle-grounding.ts`</small> | <small>Unreviewed candidates not approved clinical facts</small> |
+| <small>TheOracle grounding / provenance</small> | <small>IMPLEMENTED</small> | <small>`src/lib/theoracle-grounding.ts`</small> | <small>SSOT clinically reviewed by Gaffer (2026-10-23); passages are references, not prescriptions</small> |
 | <small>Managed AADI standalone lifecycle</small> | <small>HISTORICALLY VERIFIED</small> | <small>`docs/verification/2026-10-10-integrated-aadi.md`</small> | <small>Local/extracted runtime proof only</small> |
 | <small>Optional browser dictation</small> | <small>IMPLEMENTED</small> | <small>`src/components/use-dictation.ts`</small> | <small>Vendor-dependent speech privacy</small> |
 | <small>Production auth, EHR integration, clinical validation</small> | <small>NOT ESTABLISHED</small> | <small>`docs/data.md` · `docs/aadi-integration.md`</small> | <small>Not for real patient care</small> |

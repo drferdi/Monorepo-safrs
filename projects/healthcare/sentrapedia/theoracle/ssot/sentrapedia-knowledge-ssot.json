@@ -13,7 +13,7 @@
    "index": "theoracle/index/chunks.jsonl (154 dokumen md + 44 PDF pedoman)",
    "dosis": "PPK FKTP 757, PNPK 1491, ISO 120 pernyataan dengan halaman dan kutipan"
   },
-  "catatan": "Belum ditinjau klinisi. Status dihitung otomatis dari teks dan pernyataan dosis. 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur).",
+  "catatan": "Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur).",
   "pdf_pedoman": [
    {
     "file": "aha-asa-stroke-primary-prevention-2024.pdf",
@@ -230,7 +230,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -508,7 +513,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 740)",
      "ppk_permenkes_5_2014 (hal. 466)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "keguguran"
@@ -553,7 +563,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -624,7 +639,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -703,7 +723,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -1053,7 +1078,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "jerawat"
@@ -1631,7 +1661,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2024_Tata_Laksana_Akupunktur_Medik (hal. 32)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -1898,7 +1933,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 73)",
      "ppk_permenkes_5_2014 (hal. 46)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "T78",
@@ -1993,7 +2033,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -2132,7 +2177,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "ppk_permenkes_5_2014 (hal. 66)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -2337,7 +2387,12 @@
     "sumber_teks": [
      "katalog_skdi",
      "kmk_1186_2022 (hal. 97)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kurang darah",
@@ -2410,7 +2465,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -2715,7 +2775,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 724)",
      "ppk_permenkes_5_2014 (hal. 471)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "D51",
@@ -9274,7 +9339,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2022_Tata_Laksana_Anestesiologi_dan_Terapi_Intensif (hal. 263)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -10869,7 +10939,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 273)",
      "ppk_permenkes_5_2014 (hal. 189)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "angin duduk",
@@ -11192,7 +11267,12 @@
      "index_md",
      "kmk_1186_2022 (hal. 190)",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -11289,7 +11369,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 176)",
      "ppk_permenkes_5_2014 (hal. 110)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "usus buntu"
@@ -11384,7 +11469,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -11504,7 +11594,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -11677,7 +11772,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 307)",
      "ppk_permenkes_5_2014 (hal. 219)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -12547,7 +12647,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2019_Tata_Laksana_Asfiksia (hal. 20)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -12862,7 +12967,12 @@
      "kmk_1186_2022 (hal. 186)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 131)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "B77"
@@ -13204,7 +13314,12 @@
      "kmk_1186_2022 (hal. 450)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 337)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "asma",
@@ -13303,7 +13418,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 219)",
      "ppk_permenkes_5_2014 (hal. 162)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "H52"
@@ -13828,7 +13948,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2022_Tata_Laksana_Batu_Saluran_Kemih (hal. 23)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "batu ginjal",
@@ -14187,7 +14312,12 @@
      "kmk_1186_2022 (hal. 380)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 271)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "wajah mencong",
@@ -14231,7 +14361,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -14313,7 +14448,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 501)",
      "ppk_permenkes_5_2014 (hal. 183)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -14383,7 +14523,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 265)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -14643,7 +14788,12 @@
      "kmk_1186_2022 (hal. 217)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 160)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "T15",
@@ -14726,7 +14876,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -14887,7 +15042,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2019_Tata_Laksana_Bibir_Sumbing (hal. 5)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -15064,7 +15224,12 @@
      "kmk_1186_2022 (hal. 212)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 156)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "H01"
@@ -15132,7 +15297,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -15404,7 +15574,12 @@
      "kmk_1186_2022 (hal. 443)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 323)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "J20"
@@ -15543,7 +15718,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 204)",
      "ppk_permenkes_5_2014 (hal. 151)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "E50"
@@ -15628,7 +15808,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -15862,7 +16047,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 35)",
      "ppk_permenkes_5_2014 (hal. 17)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "campak",
@@ -15953,7 +16143,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 286)",
      "ppk_permenkes_5_2014 (hal. 201)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -17292,7 +17487,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2022_Tata_Laksana_Cidera_Otak_Traumatik (hal. 31)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -17377,7 +17577,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "batuk pilek",
@@ -18461,7 +18666,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 490)",
      "pnpk_PNPK_2019_Tata_Laksana_Penyakit_Paru_Obstruktif (hal. 32)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "PPOK",
@@ -19115,7 +19325,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -19183,7 +19398,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -19306,7 +19526,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 780)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "puting lecet"
@@ -19437,7 +19662,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 632)",
      "ppk_permenkes_5_2014 (hal. 133)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "B74"
@@ -19557,7 +19787,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -19621,7 +19856,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -19698,7 +19938,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -19810,7 +20055,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 387)",
      "ppk_permenkes_5_2014 (hal. 237)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -20245,7 +20495,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 90)",
      "ppk_permenkes_5_2014 (hal. 26)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "demam berdarah",
@@ -20368,7 +20623,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -20960,7 +21220,12 @@
      "kmk_1186_2022 (hal. 136)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 93)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "tipes",
@@ -21160,7 +21425,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 407)",
      "ppk_permenkes_5_2014 (hal. 277)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "F00",
@@ -21285,7 +21555,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -21720,7 +21995,12 @@
      "kmk_1186_2022 (hal. 579)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 373)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "eksim",
@@ -22390,7 +22670,12 @@
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 383)",
      "ppk_permenkes_5_2014 (hal. 386)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L23.9"
@@ -22675,7 +22960,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 583)",
      "ppk_permenkes_5_2014 (hal. 378)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L20"
@@ -22996,7 +23286,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 601)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L30"
@@ -23624,7 +23919,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 573)",
      "ppk_permenkes_5_2014 (hal. 370)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "ketombe",
@@ -23915,7 +24215,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 559)",
      "ppk_permenkes_5_2014 (hal. 360)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "jamur kulit"
@@ -25346,7 +25651,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2024_Tata_Laksana_Diabetes_Melitus_pada_Anak (hal. 11)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -25391,7 +25701,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki (teks gabungan beberapa penyakit)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -27202,7 +27517,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 659)",
      "pnpk_PNPK_2020_Tata_Laksana_Diabetes_Melitus_Tipe_2_Dewasa (hal. 19)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kencing manis",
@@ -27319,7 +27639,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -27414,7 +27739,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -27505,7 +27835,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -27613,7 +27948,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -27722,7 +28062,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -27884,7 +28229,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -28096,7 +28446,12 @@
      "daftar_kki (teks gabungan beberapa penyakit)",
      "kmk_1186_2022 (hal. 153)",
      "ppk_permenkes_5_2014 (hal. 104)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "A03",
@@ -28207,7 +28562,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -28625,7 +28985,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 734)",
      "ppk_permenkes_5_2014 (hal. 465)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -28757,7 +29122,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -29367,7 +29737,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 354)",
      "ppk_permenkes_5_2014 (hal. 254)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "ayan",
@@ -29737,7 +30112,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2017_Tata_Laksana_Epilepsi_Pada_Anak (hal. 33)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -29924,7 +30304,12 @@
      "index_md",
      "kmk_1186_2022 (hal. 240)",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -30184,7 +30569,12 @@
      "kmk_1186_2022 (hal. 496)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 290)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "mimisan"
@@ -30594,7 +30984,12 @@
      "index_md",
      "kmk_1186_2022 (hal. 570)",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -30724,7 +31119,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 606)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L08"
@@ -31286,7 +31686,12 @@
      "kmk_1186_2022 (hal. 629)",
      "ppk_permenkes_5_2014 (hal. 49)",
      "ppk_permenkes_5_2014 (hal. 52)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L27"
@@ -31354,7 +31759,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 691)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -31927,7 +32337,12 @@
      "kmk_1186_2022 (hal. 427)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 294)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "radang tenggorokan",
@@ -32002,7 +32417,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -32171,7 +32591,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 52)",
      "ppk_permenkes_5_2014 (hal. 404)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -32274,7 +32699,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 704)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -32608,7 +33038,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 784)",
      "ppk_permenkes_5_2014 (hal. 497)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "keputihan"
@@ -32721,7 +33156,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -33071,7 +33511,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2021_Fraktur_Kraniomaksilofasial (hal. 24)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -33153,7 +33598,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 296)",
      "ppk_permenkes_5_2014 (hal. 211)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -33238,7 +33688,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 298)",
      "ppk_permenkes_5_2014 (hal. 216)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -33297,7 +33752,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "patah tulang"
@@ -33432,7 +33892,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -33634,7 +34099,12 @@
      "index_md",
      "katalog_skdi",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "bisul"
@@ -33812,7 +34282,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 504)",
      "ppk_permenkes_5_2014 (hal. 293)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "J34"
@@ -33950,7 +34425,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -35019,7 +35499,12 @@
      "kmk_1186_2022 (hal. 283)",
      "pnpk_PNPK_2021_Tata_Laksana_Gagal_Jantung (hal. 47)",
      "ppk_permenkes_5_2014 (hal. 196)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "jantung lemah",
@@ -35956,7 +36441,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2023_Tata_Laksana_Gagal_Jantung_Pada_Anak (hal. 63)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -36060,7 +36550,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -36403,7 +36898,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 413)",
      "ppk_permenkes_5_2014 (hal. 280)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -36683,7 +37183,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "cemas",
@@ -36815,7 +37320,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -37249,7 +37759,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 417)",
      "ppk_permenkes_5_2014 (hal. 283)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -37341,7 +37856,12 @@
      "index_md",
      "kmk_1186_2022 (hal. 402)",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -37816,7 +38336,12 @@
      "kmk_1186_2022 (hal. 126)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 87)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -38620,7 +39145,12 @@
      "kmk_1186_2022 (hal. 144)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 101)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "mencret",
@@ -39689,7 +40219,12 @@
      "kmk_1186_2022 (hal. 234)",
      "pnpk_PNPK_2023_Tata_Laksana_Glaukoma (hal. 52)",
      "ppk_permenkes_5_2014 (hal. 170)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "H40"
@@ -40005,7 +40540,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 797)",
      "ppk_permenkes_5_2014 (hal. 506)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kencing nanah",
@@ -41286,7 +41826,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2021_Tata_Laksana_Hemofilia (hal. 30)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -41549,7 +42094,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 163)",
      "ppk_permenkes_5_2014 (hal. 121)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "wasir",
@@ -41898,7 +42448,12 @@
      "kmk_1186_2022 (hal. 165)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 125)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "sakit kuning",
@@ -43594,7 +44149,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 169)",
      "ppk_permenkes_5_2014 (hal. 126)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "hepatitis B",
@@ -44658,7 +45218,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2019_Tata_Laksana_Hepatitis_C (hal. 41)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -44714,7 +45279,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "hernia",
@@ -44898,7 +45468,12 @@
     "sumber_teks": [
      "daftar_kki",
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -45216,7 +45791,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 536)",
      "ppk_permenkes_5_2014 (hal. 349)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "cacar ular",
@@ -45401,7 +45981,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 612)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L30"
@@ -45550,7 +46135,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 248)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -45942,7 +46532,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -46436,7 +47031,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 721)",
      "ppk_permenkes_5_2014 (hal. 450)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "mual hamil",
@@ -46560,7 +47160,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 667)",
      "ppk_permenkes_5_2014 (hal. 418)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -47115,7 +47720,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 676)",
      "ppk_permenkes_5_2014 (hal. 441)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "E78",
@@ -47210,7 +47820,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 222)",
      "ppk_permenkes_5_2014 (hal. 163)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "rabun dekat",
@@ -47985,7 +48600,12 @@
      "kmk_1186_2022 (hal. 289)",
      "pnpk_PNPK_2021_Tata_Laksana_Hipertensi_Dewasa (hal. 23)",
      "ppk_permenkes_5_2014 (hal. 203)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "darah tinggi",
@@ -48329,7 +48949,12 @@
     "ada_definisi": false,
     "ada_diagnosis": true,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -48576,7 +49201,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 656)",
      "ppk_permenkes_5_2014 (hal. 413)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "E05"
@@ -48965,7 +49595,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 673)",
      "ppk_permenkes_5_2014 (hal. 438)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "asam urat",
@@ -49474,7 +50109,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 670)",
      "ppk_permenkes_5_2014 (hal. 419)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "R57"
@@ -49586,7 +50226,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -52359,7 +53004,12 @@
      "kmk_1186_2022 (hal. 102)",
      "pnpk_PNPK_2019_Tata_Laksana_HIV (hal. 99)",
      "ppk_permenkes_5_2014 (hal. 71)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "HIV",
@@ -52657,7 +53307,12 @@
      "kmk_1186_2022 (hal. 206)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 152)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "bintitan",
@@ -52951,7 +53606,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2022_Tata_Laksana_Impaksi_Gigi (hal. 77)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -53221,7 +53881,12 @@
      "index_md",
      "katalog_skdi",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -53261,7 +53926,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -53524,7 +54194,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 277)",
      "ppk_permenkes_5_2014 (hal. 190)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -53820,7 +54495,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2021_Infeksi_Dengue_Anak_dan_Remaja (hal. 8)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "DBD anak"
@@ -54117,7 +54797,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -54237,7 +54922,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 56)",
      "ppk_permenkes_5_2014 (hal. 31)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -56180,7 +56870,12 @@
      "kmk_1186_2022 (hal. 696)",
      "pnpk_PEDOMAN_NASIONAL_PELAYANAN_KLINIS_TATA_LAKSANA_INFEKSI_SALURAN_KEMIH (hal. 53)",
      "ppk_permenkes_5_2014 (hal. 448)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "anyang-anyangan",
@@ -56678,7 +57373,12 @@
      "kmk_1186_2022 (hal. 422)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 327)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "J10",
@@ -56969,7 +57669,12 @@
      "kmk_1186_2022 (hal. 410)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 275)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "susah tidur",
@@ -57063,7 +57768,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 128)",
      "ppk_permenkes_5_2014 (hal. 89)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "K90"
@@ -57145,7 +57855,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 777)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "O92"
@@ -57233,7 +57948,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -57416,7 +58136,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -57665,7 +58390,12 @@
      "kmk_1186_2022 (hal. 58)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 33)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "jamur mulut",
@@ -57836,7 +58566,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -61006,7 +61741,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -61264,7 +62004,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2019_Tata_Laksana_Kanker_Nasofaring (hal. 44)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -63113,7 +63858,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2023_Tata_Laksana_Kanker_Paru (hal. 76)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -63903,7 +64653,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2018_Tata_Laksana_Kanker_Payudara (hal. 46)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -64395,7 +65150,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2018_Tata_Laksana_Kanker_Prostat (hal. 50)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -64652,7 +65412,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2018_Tata_Laksana_Kanker_Serviks (hal. 25)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -64854,7 +65619,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2024_Tata_Laksana_Karies_Gigi (hal. 29)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -65530,7 +66300,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2022_Tata_Laksana_Karsinoma_Sel_Hati (hal. 50)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -65718,7 +66493,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 228)",
      "ppk_permenkes_5_2014 (hal. 169)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "katarak",
@@ -65911,7 +66691,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -66024,7 +66809,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "cacingan"
@@ -66097,7 +66887,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -69244,7 +70039,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2015_Kedokteran_Jiwa (hal. 11)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -69458,7 +70258,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 712)",
      "ppk_permenkes_5_2014 (hal. 457)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "Z34"
@@ -70128,7 +70933,12 @@
      "kmk_1186_2022 (hal. 391)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 227)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "step",
@@ -70175,7 +70985,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -70212,7 +71027,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -70295,7 +71115,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -70358,7 +71183,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -70422,7 +71252,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -70547,7 +71382,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 70)",
      "ppk_permenkes_5_2014 (hal. 43)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "keracunan makanan",
@@ -70698,7 +71538,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 746)",
      "ppk_permenkes_5_2014 (hal. 474)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -70908,7 +71753,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -71194,7 +72044,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -71537,7 +72392,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 172)",
      "ppk_permenkes_5_2014 (hal. 148)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "K81.1"
@@ -71675,7 +72535,12 @@
     "sumber_teks": [
      "daftar_kki",
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "mata merah",
@@ -71895,7 +72760,12 @@
      "kmk_1186_2022 (hal. 210)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 154)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -72055,7 +72925,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -72160,7 +73035,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -74089,7 +74969,12 @@
      "kmk_1186_2022 (hal. 65)",
      "pnpk_PNPK_2019_Tata_Laksana_Kusta (hal. 41)",
      "ppk_permenkes_5_2014 (hal. 35)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -75768,7 +76653,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2017_Tata_Lakasana_Komplikasi_Kehamilan (hal. 14)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -75930,7 +76820,12 @@
      "kmk_1186_2022 (hal. 433)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 318)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "J04"
@@ -75999,7 +76894,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 245)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -76143,7 +77043,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 46)",
      "ppk_permenkes_5_2014 (hal. 29)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "A27"
@@ -78880,7 +79785,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PEDOMAN_NASIONAL_PELAYANAN_KLINIS_TATA_LAKSANA_LEUKEMIA_LIMFOBLASTIK_AKUT_PADA_ANAK (hal. 32)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -79196,7 +80106,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 586)",
      "ppk_permenkes_5_2014 (hal. 381)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -79367,7 +80282,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 114)",
      "ppk_permenkes_5_2014 (hal. 80)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -79434,7 +80354,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 315)",
      "ppk_permenkes_5_2014 (hal. 226)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "D17"
@@ -79520,7 +80445,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "sakit pinggang",
@@ -80668,7 +81598,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_Tata_Laksana_Luka_Bakar (hal. 23)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -80879,7 +81814,12 @@
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "luka bakar",
@@ -80961,7 +81901,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -81096,7 +82041,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 110)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -81262,7 +82212,12 @@
      "daftar_kki",
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -81344,7 +82299,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 131)",
      "ppk_permenkes_5_2014 (hal. 92)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -83078,7 +84038,12 @@
      "kmk_1186_2022 (hal. 41)",
      "pnpk_PNPK_2019_Tata_Laksana_Malaria (hal. 26)",
      "ppk_permenkes_5_2014 (hal. 23)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "malaria"
@@ -83149,7 +84114,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 350)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -83286,7 +84256,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 686)",
      "ppk_permenkes_5_2014 (hal. 434)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "gizi buruk",
@@ -85547,7 +86522,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2019_Tata_Laksana_Malnutrisi_Pada_Dewasa (hal. 134)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -85790,7 +86770,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 774)",
      "ppk_permenkes_5_2014 (hal. 493)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "payudara bengkak",
@@ -85939,7 +86924,12 @@
      "kmk_1186_2022 (hal. 202)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 149)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "H04"
@@ -86052,7 +87042,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -87037,7 +88032,12 @@
      "kmk_1186_2022 (hal. 323)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 261)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "migrain",
@@ -87359,7 +88359,12 @@
      "kmk_1186_2022 (hal. 529)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 343)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L30"
@@ -87449,7 +88454,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 223)",
      "ppk_permenkes_5_2014 (hal. 165)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "rabun jauh",
@@ -87538,7 +88548,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 543)",
      "ppk_permenkes_5_2014 (hal. 394)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "B08"
@@ -87668,7 +88683,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 598)",
      "ppk_permenkes_5_2014 (hal. 389)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -87781,7 +88801,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -87913,7 +88938,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -88383,7 +89413,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2019_Tata_Laksana_Nyeri (hal. 15)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -89123,7 +90158,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 652)",
      "ppk_permenkes_5_2014 (hal. 410)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kegemukan",
@@ -89289,7 +90329,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -89403,7 +90448,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -89790,7 +90840,12 @@
      "kmk_1186_2022 (hal. 309)",
      "pnpk_Tata_Laksana_Osteoartritis_Pedoman_Nasional_Pelayanan_Klinis_PNPK (hal. 46)",
      "ppk_permenkes_5_2014 (hal. 224)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "encok",
@@ -90761,7 +91816,12 @@
     "sumber_teks": [
      "katalog_skdi",
      "pnpk_PNPK_2023_Tata_Laksana_Osteoporosis (hal. pdf71)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -91074,7 +92134,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2019_Tata_Laksana_Osteosarkoma (hal. 10)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -91365,7 +92430,12 @@
      "kmk_1186_2022 (hal. 254)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 173)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "H60"
@@ -91969,7 +93039,12 @@
      "kmk_1186_2022 (hal. 258)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 176)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "sakit telinga",
@@ -93674,7 +94749,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 261)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "congek",
@@ -93762,7 +94842,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -93830,7 +94915,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 706)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "N47"
@@ -94004,7 +95094,12 @@
      "kmk_1186_2022 (hal. 183)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 129)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "gondongan",
@@ -94276,7 +95371,12 @@
      "kmk_1186_2022 (hal. 556)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 358)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kutu rambut",
@@ -95496,7 +96596,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2019_Tata_Laksana_Penatalaksanaan_Fraktur (hal. 16)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -95603,7 +96708,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "ppk_permenkes_5_2014 (hal. 135)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "B76"
@@ -99516,7 +100626,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2023_Tata_Laksana_Penyakit_Ginjal_Kronik (hal. 27)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -99984,7 +101099,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -100070,7 +101190,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -100178,7 +101303,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -100283,7 +101413,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -100362,7 +101497,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -100426,7 +101566,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -100496,7 +101641,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -101146,7 +102296,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PEDOMAN_NASIONAL_PELAYANAN_KLINIS_TATA_LAKSANA_PENYAKIT_PERIODONTAL (hal. 19)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -101389,7 +102544,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -102255,7 +103415,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 156)",
      "pnpk_PNPK_2023_Tata_Laksana_Perdarahan_Saluran_Cerna (hal. 19)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -102397,7 +103562,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "ppk_permenkes_5_2014 (hal. 111)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -102459,7 +103629,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "ppk_permenkes_5_2014 (hal. 115)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -102548,7 +103723,12 @@
      "oracle_ii",
      "ppk_idi_2017",
      "ppk_permenkes_5_2014 (hal. 158)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "H11",
@@ -102634,7 +103814,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 179)",
      "ppk_permenkes_5_2014 (hal. 144)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -102847,7 +104032,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 751)",
      "ppk_permenkes_5_2014 (hal. 478)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -103113,7 +104303,12 @@
      "index_md",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 335)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "A37",
@@ -103337,7 +104532,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 700)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -103711,7 +104911,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 567)",
      "ppk_permenkes_5_2014 (hal. 366)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -103929,7 +105134,12 @@
      "kmk_1186_2022 (hal. 604)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 393)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -104009,7 +105219,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -104364,7 +105579,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 472)",
      "ppk_permenkes_5_2014 (hal. 329)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "J18.0"
@@ -107641,7 +108861,12 @@
      "pnpk_PNPK_2023_Tata_Laksana_Pneumonia_Pada_Dewasa (hal. 24)",
      "pnpk_Pedoman_Nasional_Pelayanan_Klinis_Penanganan_Pneumonia (hal. 27)",
      "ppk_permenkes_5_2014 (hal. 331)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "paru-paru basah",
@@ -107720,7 +108945,12 @@
     "sumber_teks": [
      "katalog_skdi",
      "kmk_1186_2022 (hal. 485)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "J93"
@@ -107871,7 +109101,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 301)",
      "ppk_permenkes_5_2014 (hal. 217)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -108189,7 +109424,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 728)",
      "ppk_permenkes_5_2014 (hal. 461)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -108366,7 +109606,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -108455,7 +109700,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 225)",
      "ppk_permenkes_5_2014 (hal. 167)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "mata tua",
@@ -108521,7 +109771,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -108625,7 +109880,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -109589,7 +110849,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2023_Tata_Laksana_Pulpa_Periradikuler (hal. 119)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -109809,7 +111074,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 345)",
      "ppk_permenkes_5_2014 (hal. 245)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "digigit anjing",
@@ -110125,7 +111395,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 83)",
      "ppk_permenkes_5_2014 (hal. 53)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "T78"
@@ -110421,7 +111696,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 546)",
      "ppk_permenkes_5_2014 (hal. 346)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L25"
@@ -110882,7 +112162,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 123)",
      "ppk_permenkes_5_2014 (hal. 85)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "asam lambung",
@@ -111836,7 +113121,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2022_Tata_Laksana_Retinoblastoma (hal. 5)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -112203,7 +113493,12 @@
     "sumber_teks": [
      "katalog_skdi",
      "kmk_1186_2022 (hal. 251)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "E10.3",
@@ -112342,7 +113637,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -112622,7 +113922,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 508)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "J30",
@@ -112877,7 +114182,12 @@
      "index_md",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 303)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "alergi debu",
@@ -113098,7 +114408,12 @@
      "index_md",
      "kmk_1186_2022 (hal. 511)",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "J30",
@@ -113227,7 +114542,12 @@
      "daftar_kki",
      "kmk_1186_2022 (hal. 766)",
      "ppk_permenkes_5_2014 (hal. 489)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "O70"
@@ -113268,7 +114588,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -113538,7 +114863,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2024_Tata_Laksana_Sarkopenia (hal. 28)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -113968,7 +115298,12 @@
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -114701,7 +116036,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2021_Tata_Laksana_Sepsis_Pada_Anak (hal. 21)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -114924,7 +116264,12 @@
      "kmk_1186_2022 (hal. 267)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 181)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "H61"
@@ -115044,7 +116389,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 793)",
      "ppk_permenkes_5_2014 (hal. 499)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "sipilis",
@@ -115171,7 +116521,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -115235,7 +116590,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -115300,7 +116660,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -115368,7 +116733,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -115457,7 +116827,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 647)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -116921,7 +118296,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -116984,7 +118364,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 523)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -117062,7 +118447,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -117995,7 +119385,12 @@
     "sumber_teks": [
      "katalog_skdi",
      "pnpk_PNPK_2022_Tata_Laksana_Rinosinusitis_Kronik (hal. 11)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -121104,7 +122499,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PEDOMAN_NASIONAL_PELAYANAN_KLINIS_TATA_LAKSANA_SIROSIS_HATI_PADA_DEWASA (hal. 36)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -121297,7 +122697,12 @@
      "kmk_1186_2022 (hal. 550)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 355)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kudis",
@@ -121406,7 +122811,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 193)",
      "ppk_permenkes_5_2014 (hal. 137)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "B65"
@@ -123182,7 +124592,12 @@
     "sumber_teks": [
      "katalog_skdi",
      "pnpk_PEDOMAN_NASIONAL_PELAYANAN_KLINIS_TATA_LAKSANA_SKIZOFRENIA (hal. 31)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -123827,7 +125242,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2021_Tata_Laksana_Skoliosis_Idiopatik_Remaja (hal. 36)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -124027,7 +125447,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 609)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -124124,7 +125549,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 467)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -124252,7 +125682,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 383)",
      "ppk_permenkes_5_2014 (hal. 260)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -127147,7 +128582,12 @@
      "kmk_1186_2022 (hal. 371)",
      "pnpk_PNPK_2019_Tata_Laksana_Stroke (hal. 81)",
      "ppk_permenkes_5_2014 (hal. 208)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "stroke",
@@ -127223,7 +128663,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -127370,7 +128815,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -127497,7 +128947,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 199)",
      "ppk_permenkes_5_2014 (hal. 140)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "B78"
@@ -127746,7 +129201,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 693)",
      "pnpk_PNPK_2022_Tata_Laksana_Stunting (hal. 37)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "stunting",
@@ -127950,7 +129410,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 77)",
      "ppk_permenkes_5_2014 (hal. 58)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -128133,7 +129598,12 @@
      "kmk_1186_2022 (hal. 197)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 142)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "B68"
@@ -128274,7 +129744,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 280)",
      "ppk_permenkes_5_2014 (hal. 193)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -128323,7 +129798,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -128585,7 +130065,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -128633,7 +130118,12 @@
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": []
+    "sumber_teks": [],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -128960,7 +130450,12 @@
      "kmk_1186_2022 (hal. 318)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 272)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "sakit kepala tegang",
@@ -129644,7 +131139,12 @@
      "kmk_1186_2022 (hal. 339)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 240)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "A33"
@@ -129979,7 +131479,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 396)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -130967,7 +132472,12 @@
     "sumber_teks": [
      "katalog_skdi",
      "pnpk_PNPK_2018_Tata_Laksana_Thalasemia (hal. 30)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -132232,7 +133742,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2018_Tata_Laksana_Tindakan_Resusitasi_Stabilitasi_dan_Tranpor_Bayi_Berat_Lahir_R (hal. 50)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -132281,7 +133796,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -132448,7 +133968,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -132563,7 +134088,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -132713,7 +134243,12 @@
     "sumber_teks": [
      "daftar_kki (teks gabungan beberapa penyakit)",
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kurap",
@@ -132988,7 +134523,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -133083,7 +134623,12 @@
     "sumber_teks": [
      "daftar_kki (teks gabungan beberapa penyakit)",
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -133250,7 +134795,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -133360,7 +134910,12 @@
     "sumber_teks": [
      "daftar_kki",
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kutu air",
@@ -133413,7 +134968,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -133867,7 +135427,12 @@
      "kmk_1186_2022 (hal. 562)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 364)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "panu"
@@ -134630,7 +136195,12 @@
      "kmk_1186_2022 (hal. 438)",
      "pnpk_PNPK_2018_Tata_Laksana_Tonsilitis (hal. 28)",
      "ppk_permenkes_5_2014 (hal. 311)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "amandel",
@@ -134691,7 +136261,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -134752,7 +136327,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 365)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -135438,7 +137018,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2017_Tata_Laksana_Trauma (hal. 50)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -135506,7 +137091,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 243)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
   },
@@ -135609,7 +137199,12 @@
      "index_md",
      "kmk_1186_2022 (hal. 236)",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -137358,7 +138953,12 @@
      "kmk_1186_2022 (hal. 17)",
      "pnpk_PNPK_2019_Tata_Laksana_Tuberkolosis (hal. 35)",
      "ppk_permenkes_5_2014 (hal. 9)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "TBC",
@@ -137689,7 +139289,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2022_Tata_Laksana_Tuli_Sensorineural_Kongenital (hal. 74)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -139481,7 +141086,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "pnpk_PNPK_2020_Tata_Laksana_Tumor_Otak (hal. 30)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -139775,7 +141385,12 @@
      "index_md",
      "kmk_1186_2022 (hal. 116)",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "sariawan"
@@ -139853,7 +141468,12 @@
     "sumber_teks": [
      "daftar_kki",
      "kmk_1186_2022 (hal. 642)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "L97"
@@ -140337,7 +141957,12 @@
      "kmk_1186_2022 (hal. 622)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 399)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "biduran",
@@ -140451,7 +142076,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -140857,7 +142487,12 @@
      "katalog_skdi",
      "kmk_1186_2022 (hal. 801)",
      "ppk_permenkes_5_2014 (hal. 509)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "keputihan"
@@ -140904,7 +142539,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -141241,7 +142881,12 @@
      "kmk_1186_2022 (hal. 38)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 19)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "cacar air"
@@ -141301,7 +142946,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -141738,7 +143388,12 @@
     "sumber_teks": [
      "index_md",
      "oracle_ii"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "tingkat_kemampuan": "4A",
    "nama_awam": [
@@ -141964,7 +143619,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 532)",
      "ppk_permenkes_5_2014 (hal. 344)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "nama_awam": [
     "kutil"
@@ -142069,7 +143729,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "kmk_1186_2022 (hal. 314)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -142111,7 +143776,12 @@
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   },
   {
@@ -142247,7 +143917,12 @@
     "sumber_teks": [
      "kmk_1186_2022 (hal. 804)",
      "ppk_permenkes_5_2014 (hal. 512)"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    },
    "icd10_sumber_lama": [
     "N76"
@@ -142400,7 +144075,12 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "katalog_skdi"
-    ]
+    ],
+    "review_klinis": {
+     "status": "ditinjau",
+     "oleh": "Gaffer",
+     "tanggal": "2026-10-23"
+    }
    }
   }
  ]
