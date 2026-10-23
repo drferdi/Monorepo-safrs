@@ -79,7 +79,9 @@ const inRange = (pattern: RegExp, m: RegExpMatchArray) => {
 function spell(word: string): string {
   return word.replace(/qu/g, "ku").replace(/ph/g, "f").replace(/th/g, "t").replace(/ch/g, "k").replace(/x/g, "ks").replace(/c(?=[eiy])/g, "s").replace(/c/g, "k").replace(/y/g, "i").replace(/(.)\1+/g, "$1").replace(/(.{4,})e$/, "$1");
 }
-const tokens = (text: string) => text.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z]+/).filter(Boolean).map(spell);
+// The OAT dose tables write the drugs as INH, RIF, PZA and EMB (Gaffer, 2026-10-23); each reads as the drug's name.
+const ABBREVIATIONS: Record<string, string> = { inh: "isoniazid", rif: "rifampisin", pza: "pirazinamid", emb: "etambutol" };
+const tokens = (text: string) => text.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").split(/[^a-z]+/).filter(Boolean).map(spell).map(word => ABBREVIATIONS[word] ?? word);
 const names = (drug: string) => tokens(drug).filter(word => word.length >= 4);
 const mentions = (passage: string[], drug: string) => { const wanted = names(drug); return wanted.length > 0 && wanted.every(word => passage.includes(word)); };
 // A drug's window is the 200 characters after each mention of its first name word, cut at the next lettered item ("b." or "B.",
@@ -189,10 +191,13 @@ const GENERIC = new Set(["kronis", "infeksi", "tanpa", "dengan", "komplikasi", "
 // and ambeien or wasir for hemoroid (since SSOT v0.6 the catalog has one hemoroid entry, without those lay names).
 const CATALOG_CODE: Record<string, string> = { I84: "K64" };
 const SYNONYMS: Record<string, string[]> = { hiv: ["odha"], hemoroid: ["ambeien", "wasir"] };
-const diagnosisWords = (diagnosis: { icd10: string; label: string }) => {
+const catalogEntries = (diagnosis: { icd10: string }) => {
   const code = diagnosis.icd10.trim().toUpperCase();
   const codes = [code, ...(CATALOG_CODE[code.slice(0, 3)] ? [CATALOG_CODE[code.slice(0, 3)]] : [])];
-  return new Set([diagnosis.label, ...theOracleDiseases.filter(d => codes.some(c => referenceIncludes(d.kode, c))).map(d => d.nama)]
+  return theOracleDiseases.filter(d => codes.some(c => referenceIncludes(d.kode, c))).map(d => d.nama);
+};
+const diagnosisWords = (diagnosis: { icd10: string; label: string }) => {
+  return new Set([diagnosis.label, ...catalogEntries(diagnosis)]
     .flatMap(name => [...tokens(name).filter(word => word.length >= 4 && (catalogCounts.get(word) ?? 0) < 3), ...(name === name.toUpperCase() ? [] : (name.match(/\b[A-Z]{2,}\b/g) ?? []).filter(word => !/^[IVXL]+$/.test(word)).flatMap(tokens))])
     .filter(word => !GENERIC.has(word)).flatMap(word => [word, ...(SYNONYMS[word] ?? [])]));
 };
@@ -318,6 +323,7 @@ export function gateEvidence(therapyGrounding: unknown, grounding: unknown): The
 // A cross-referenced dose (SSOT v0.6, `sumber` "rujukan silang") is another disease's general dose (Gaffer, 2026-10-23): its
 // statement, from "- obat:" to the next one or the next "## " section, still names the drug, but no strength is read from it.
 const CROSS_REFERENCED = /- obat: (?:(?!- obat: |## )[\s\S])*?; sumber: rujukan silang(?:(?!- obat: |## )[\s\S])*/g;
+const CATALOG_NAMES = new Set(theOracleDiseases.map(d => d.nama));
 
 export function gateTherapy(therapy: AadiTherapy, bundle: TheOracleGroundingBundle | undefined, diagnosis: { icd10: string; label: string } | undefined): { therapy: AadiTherapy | undefined; report: EvidenceGateReport } {
   const forDiagnosis = therapy.forDiagnosis;
@@ -325,7 +331,13 @@ export function gateTherapy(therapy: AadiTherapy, bundle: TheOracleGroundingBund
   if (!bundle?.evidence.length) return removed("Referensi Oracle untuk terapi tidak tersedia; dosis tidak ditampilkan.");
   if (!diagnosis || forDiagnosis.icd10.trim().toUpperCase().slice(0, 3) !== diagnosis.icd10.trim().toUpperCase().slice(0, 3)) return removed(`Terapi ditulis untuk diagnosis lain (${forDiagnosis.icd10}), bukan ${diagnosis?.icd10 ?? "diagnosis kerja"}.`);
   const named = diagnosisWords(diagnosis);
-  const passages = bundle.evidence.map(item => { const words = tokens(item.text); return { id: item.evidenceId, text: item.source.origin === "ssot" ? item.text.replace(CROSS_REFERENCED, " ") : item.text, fornas: /fornas/i.test(item.source.title), words, about: [...tokens(item.source.title), ...words].some(word => named.has(word)) }; });
+  // An SSOT disease entry (one document per entry) is about the diagnosis only when it is one of the diagnosis's own catalog
+  // entries: "Rinitis Alergika" does not dose food allergy, whatever its text says (Gaffer, 2026-10-23). A guideline topic outside
+  // the catalog ("Nyeri") and the PDFs are about it when their title or text names it.
+  const own = catalogEntries(diagnosis);
+  const about = (item: TheOracleGroundingBundle["evidence"][number], words: string[]) => item.source.origin === "ssot" && CATALOG_NAMES.has(item.source.title)
+    ? own.includes(item.source.title) : [...tokens(item.source.title), ...words].some(word => named.has(word));
+  const passages = bundle.evidence.map(item => { const words = tokens(item.text); return { id: item.evidenceId, text: item.source.origin === "ssot" ? item.text.replace(CROSS_REFERENCED, " ") : item.text, fornas: /fornas/i.test(item.source.title), words, about: about(item, words) }; });
   const naming = (drug: string) => passages.filter(p => mentions(p.words, drug));
   // A strength counts only from a passage about the diagnosis: an azole list for cryptococcosis does not dose pityriasis versicolor.
   const dosingFor = (drug: string) => naming(drug).filter(p => p.about);

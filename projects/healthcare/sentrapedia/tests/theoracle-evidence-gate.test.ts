@@ -708,3 +708,30 @@ describe("cross-referenced SSOT doses", () => {
     expect(gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), ssot(text), pneumonia).report.drugs[0].status).toBe("doseRemoved");
   });
 });
+
+// The OAT dose tables write INH, RIF, PZA and EMB (Gaffer, 2026-10-23): the abbreviation names the drug like its full name.
+describe("OAT abbreviations", () => {
+  const table = "Pneumonia: Tabel 2. Dosis Obat TB Rekomendasi dosis dalam mg/kgBB Obat Harian 3x seminggu INH* 5(4-6) max 300mg/hr 10(8-12) max 900 mg/dosis RIF 10 (8-12) max 600 mg/hr 10 (8-12) max 600 mg/dosis PZA 25 (20-30) max 1600 mg/hr 35 (30-40) max 2400 mg/dosis EMB 15 (15-20) max 1600 mg/hr";
+  const one = (name: string, dose: string) => gateTherapy(therapy([drug(name, dose)]), bundle(table), pneumonia).report.drugs[0].status;
+  it("reads a table row under the abbreviation as the drug's own", () => {
+    expect([one("Isoniazid", "1x300mg"), one("Rifampicin", "1x600mg"), one("Pyrazinamide", "1x1600mg"), one("Ethambutol", "1x1600mg")]).toEqual(["verified", "verified", "verified", "verified"]);
+  });
+  it("does not take another row's strength", () => {
+    expect([one("Isoniazid", "1x600mg"), one("Rifampicin", "1x300mg")]).toEqual(["doseRemoved", "doseRemoved"]);
+  });
+});
+
+// An SSOT entry is one disease (one document per entry): another disease's entry never doses the diagnosis, whatever its text says.
+// A guideline topic outside the catalog ("Nyeri") and the PDFs are read as before (Gaffer, 2026-10-23).
+describe.skipIf(!withCatalog)("SSOT entries dose only their own disease", () => {
+  const food = { icd10: "L27.2", label: "Food allergy" };
+  const status = (title: string, origin: string) => {
+    const b = bundle({ title, text: `${title}: pada alergi makanan diberikan setirizin 10 mg sekali sehari.` });
+    const evidence = b.evidence.map(e => ({ ...e, source: { ...e.source, origin } }));
+    return gateTherapy(therapy([drug("Cetirizine", "1x10mg")], { forDiagnosis: food }), { ...b, evidence }, food).report.drugs[0].status;
+  };
+  it("does not verify from another disease's entry", () => expect(status("Rinitis Alergika", "ssot")).toBe("doseRemoved"));
+  it("verifies from the diagnosis's own entry, a guideline topic and a PDF", () => {
+    expect([status("Alergi Makanan", "ssot"), status("Nyeri", "ssot"), status("Rinitis Alergika", "theoracle-anythingllm-export")]).toEqual(["verified", "verified", "verified"]);
+  });
+});
