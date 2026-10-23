@@ -1,10 +1,13 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
+const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
+void storageKey; void unreadableKey;
 import { WorkspaceApp } from "../../src/components/workspace";
 import { missingField } from "../../src/lib/clinical-templates";
 import { hasAadiSource } from "../../src/lib/aadi/presentation";
-import { storageKey, type Workspace } from "../../src/lib/workspace";
+import { type Workspace } from "../../src/lib/workspace";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
 import type { CaseState } from "../../src/lib/aadi/types";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
@@ -51,7 +54,7 @@ const complaint = "Laki-laki 45 tahun, nyeri kepala hebat sejak 2 jam, TD 170/10
 const textarea = () => screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement;
 async function failedAnalysis() {
   failAnalysis = true;
-  render(<WorkspaceApp/>);
+  render(<WorkspaceApp principalId="user_test"/>);
   await act(async () => { await Promise.resolve(); });
   fireEvent.change(textarea(), { target: { value: complaint } });
   await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Analisis kasus" })); });
@@ -111,7 +114,7 @@ describe("next steps and P-Care copies", () => {
   it("copies a P-Care field and warns on a candidate code", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
-    render(<WorkspaceApp/>);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     fireEvent.change(textarea(), { target: { value: complaint } });
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Analisis kasus" })); });

@@ -1,11 +1,14 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
+const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
+void storageKey; void unreadableKey;
 import { WorkspaceApp } from "../../src/components/workspace";
 import { MessageCard } from "../../src/components/message-card";
 import { createDraft } from "../../src/lib/drafts";
 import { readCaseFields } from "../../src/lib/aadi/composer";
-import { storageKey, type Message, type ReviewStatus, type Workspace } from "../../src/lib/workspace";
+import { type Message, type ReviewStatus, type Workspace } from "../../src/lib/workspace";
 
 // Fictional case. Nothing in this file reaches a server: the only fetch is the readiness check, answered locally.
 beforeEach(() => {
@@ -25,7 +28,7 @@ const guide = () => within(screen.getByRole("group", { name: "Kelengkapan kasus"
 
 describe("normal exam template in the composer", () => {
   it("names the template, offers Hamil for a P patient, and flags a typed value", async () => {
-    render(<WorkspaceApp/>);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
     fireEvent.change(textarea(), { target: { value: "Keluhan utama: pusing\nDemam 3 hari" } });
@@ -47,7 +50,7 @@ describe("normal exam template in the composer", () => {
   });
 
   it("does not offer Hamil or Nifas for a girl under 10, and lists the typed exam lines in row O", async () => {
-    render(<WorkspaceApp/>);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
     fireEvent.change(textarea(), { target: { value: "Keluhan utama: demam, usia: 8 bulan, perempuan, RR 56\nParu: ronki (+/+)" } });
@@ -61,7 +64,7 @@ describe("normal exam template in the composer", () => {
   });
 
   it("makes a local SOAP draft whose exam is filled and marked, with the flag kept out of the record", async () => {
-    render(<WorkspaceApp/>);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
     fireEvent.change(textarea(), { target: { value: "Keluhan utama: batuk 3 hari, laki-laki 40 tahun, TD 150/90\nParu: ronki (+/+)" } });

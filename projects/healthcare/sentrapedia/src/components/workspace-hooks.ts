@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type Dispatch } from "react";
-import { storageKey, type Workspace, type WorkspaceAction } from "../lib/workspace";
+import { type Workspace, type WorkspaceAction } from "../lib/workspace";
+import type { WorkspaceStorageKeys } from "../lib/workspace-storage";
 import { restoreFromStorage } from "../lib/workspace-session";
 import { saveLocalWorkspace } from "../lib/workflow";
 import { smooth } from "./smooth";
@@ -22,13 +23,29 @@ export function useToast() {
 }
 
 // Restore and save stay in one hook so the restore effect always runs before the first save.
-export function useWorkspacePersistence(state: Workspace, dispatch: Dispatch<WorkspaceAction>, notify: (text: string, tone?: "error") => void) {
+export function useWorkspacePersistence(state: Workspace, dispatch: Dispatch<WorkspaceAction>, notify: (text: string, tone?: "error") => void, keys: WorkspaceStorageKeys) {
   const [storageError, setStorageError] = useState("");
   // Saved text that failed validation at load; kept (memory and unreadableKey) so it can be downloaded instead of lost.
   const [unreadable, setUnreadable] = useState<string | null>(null);
   const [restoring, setRestoring] = useState(true);
-  const hydrated = useRef(false);
-  useEffect(() => { try { const restored = restoreFromStorage(localStorage); const notice = restored.notice; if (notice) queueMicrotask(() => notify(notice, "error")); queueMicrotask(() => setUnreadable(restored.unreadable)); dispatch({ type: "restore", state: restored.workspace }); } catch { queueMicrotask(() => notify("Penyimpanan browser tidak tersedia. Perubahan hanya bertahan selama sesi ini.", "error")); } finally { queueMicrotask(() => setRestoring(false)); } }, [notify, dispatch]);
-  useEffect(() => { if (!hydrated.current) { hydrated.current = true; return; } const error = saveLocalWorkspace(state, (raw) => localStorage.setItem(storageKey, raw)); queueMicrotask(() => setStorageError(error ?? "")); }, [state]);
-  return { storageError, unreadable, setUnreadable, restoring };
+  const writable = useRef(false);
+  const { storageKey, unreadableKey } = keys;
+  useEffect(() => {
+    let mounted = true;
+    writable.current = false;
+    try {
+      const restored = restoreFromStorage(localStorage, { storageKey, unreadableKey });
+      writable.current = restored.notice === null;
+      dispatch({ type: "restore", state: restored.workspace });
+      queueMicrotask(() => { if (!mounted) return; setUnreadable(restored.unreadable); if (restored.notice) notify(restored.notice, "error"); setRestoring(false); });
+    } catch { queueMicrotask(() => { if (!mounted) return; notify("Penyimpanan browser tidak tersedia. Perubahan hanya bertahan selama sesi ini.", "error"); setRestoring(false); }); }
+    return () => { mounted = false; writable.current = false; };
+  }, [notify, dispatch, storageKey, unreadableKey]);
+  useEffect(() => {
+    if (restoring || !writable.current) return;
+    const error = saveLocalWorkspace(state, raw => localStorage.setItem(storageKey, raw));
+    queueMicrotask(() => setStorageError(error ?? ""));
+  }, [state, restoring, storageKey]);
+  const allowSave = () => { writable.current = true; };
+  return { storageError, unreadable, setUnreadable, restoring, allowSave };
 }

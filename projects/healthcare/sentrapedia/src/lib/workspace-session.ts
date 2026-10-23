@@ -2,6 +2,7 @@
 import type { ModeId } from "./drafts";
 import { freshReview, type PersonalTemplate, type ReviewItem } from "./workflow";
 import { loadWorkspace, newId, storageKey, unreadableKey, type Message, type Patient, type Settings, type Workspace } from "./workspace";
+import type { WorkspaceStorageKeys } from "./workspace-storage";
 
 export type Shortcut = "commands" | "search" | "new";
 
@@ -18,14 +19,14 @@ export function shortcutFor(event: Pick<KeyboardEvent, "key" | "ctrlKey" | "meta
  * Reads the saved workspace. Saved text that fails validation is copied to `unreadableKey` (when it fits) and returned
  * so it can be downloaded instead of lost; an earlier unreadable copy stays on offer. Throws when storage is unavailable.
  */
-export function restoreFromStorage(storage: Pick<Storage, "getItem" | "setItem">): { workspace: Workspace; unreadable: string | null; notice: string | null } {
-  const loaded = loadWorkspace(storage.getItem(storageKey));
+export function restoreFromStorage(storage: Pick<Storage, "getItem" | "setItem">, keys: WorkspaceStorageKeys = { storageKey, unreadableKey }): { workspace: Workspace; unreadable: string | null; notice: string | null } {
+  const loaded = loadWorkspace(storage.getItem(keys.storageKey));
   if (loaded.unreadable) {
-    try { storage.setItem(unreadableKey, loaded.unreadable); } catch { /* no room for a second copy: the copy in memory stays downloadable until reload */ }
+    try { storage.setItem(keys.unreadableKey, loaded.unreadable); } catch { /* no room for a second copy: the copy in memory stays downloadable until reload */ }
   }
   return {
     workspace: loaded.workspace,
-    unreadable: loaded.unreadable ?? storage.getItem(unreadableKey),
+    unreadable: loaded.unreadable ?? storage.getItem(keys.unreadableKey),
     notice: loaded.unreadable ? "Workspace tersimpan tidak dapat dibaca. Datanya disimpan sebagai cadangan dan dapat diunduh dari menu Workspace." : null,
   };
 }

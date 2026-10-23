@@ -1,9 +1,12 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
+const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
+void storageKey; void unreadableKey;
 import { WorkspaceApp } from "../../src/components/workspace";
 import { missingField } from "../../src/lib/clinical-templates";
-import { storageKey, type Workspace } from "../../src/lib/workspace";
+import { type Workspace } from "../../src/lib/workspace";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
 import type { CaseState } from "../../src/lib/aadi/types";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
@@ -43,7 +46,7 @@ const textarea = () => screen.getByLabelText("Pertanyaan atau catatan klinis") a
 const guide = () => screen.queryByRole("group", { name: "Kelengkapan kasus" });
 const item = (label: string) => within(guide()!).getByText(label).closest(".case-guide-item");
 async function start() {
-  render(<WorkspaceApp/>);
+  render(<WorkspaceApp principalId="user_test"/>);
   await act(async () => { await Promise.resolve(); });
 }
 
