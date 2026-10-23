@@ -86,7 +86,7 @@ These are mostly PNPK entries whose doses were extracted but whose management na
 | SP0225 | Penyakit Hirschsprung | PNPK 2017 Hirschsprung hal. 31 | - |
 | SP0232 | Perdarahan Post Partum | - | - |
 | SP0267 | Sepsis | PNPK 2017 Sepsis | `sepsis-2017.pdf` (the same PNPK) |
-| SP0276 | Sindroma Koroner Akut | PNPK 2019 SKA hal. 90 | `fasyankes-primer-idi-2017.pdf` SKA: "Penatalaksanaan … Terapi farmakologi: oksigen, nitrat, aspirin" |
+| SP0276 | Sindroma Koroner Akut | PNPK 2019 SKA hal. 90 | - (corrected 2026-10-24: the PPK IDI 2017 passage that follows the words "Sindrom koroner akut" is the management of Angina Pektoris Stabil, the end of its "Komplikasi" line) |
 | SP0296 | Tatalaksana BBLR | - | `fktp-kmk-2022.pdf` hal. 293 (Tatalaksana BBLR); `resusitasi-bblr-2018.pdf` |
 | SP0297 | Tatalaksana Ulkus Kornea Bakteri | PNPK Ulkus Kornea Bakteri hal. 41 | `ulkus-kornea-bakteri-2025.pdf` (the same PNPK) |
 | SP0298 | TB dengan HIV | - | `fasyankes-primer-idi-2017.pdf` TB/HIV chapter |
@@ -113,3 +113,25 @@ Not taken:
 For Gaffer: SP0312 reads "Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)"; a daily dose for 3 months is a continuous regimen, while pulse therapy is usually given one week a month. Transcribed as written. The SSOT's automatic `status` counts (`n_pernyataan_dosis`, `n_obat_berdosis`) were not recomputed.
 
 Rebuild: 17,994 chunks (2,408 SSOT + 15,586 PDF), `indexSha256` `57ca2482…`; the 17,981 chunks with unchanged text keep their vectors (min cosine 0.99999994). Benchmark (`../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-a1.json` vs `benchmark-v06-optBE.json`): identical in every category (overall 0.875, dose 0.82, targeted 0.934). The gate verifies the new rows from their own chunk (metronidazol 2x500 mg for N76, doksisiklin 2x100 mg for N70, griseofulvin 500 mg for B35, methylergometrine 3x0.2 mg for O03, tetanus immunoglobulin 250 unit for T14).
+
+## Item by item (Gaffer, "Kerjakan satu per satu", 2026-10-24)
+
+1. Therapy and dose gaps. Five entries got a therapy text quoted from a library PDF (joined chunks; running page headers removed), keyed with the source and "ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer"; the same note is in each entry's `status.review_klinis.catatan`:
+   - SP0298 TB dengan HIV: PPK IDI 2017, chapter TB dengan HIV (from p. 15), Penatalaksanaan to Kriteria Rujukan.
+   - SP0188 Luka bakar derajat 1 dan 2: PPK IDI 2017, chapter Luka Bakar Derajat I dan II (from p. 352).
+   - SP0232 Perdarahan Post Partum: PPK IDI 2017, chapter Perdarahan Post Partum (from p. 412).
+   - SP0296 Tatalaksana BBLR: `fktp-kmk-2022.pdf` (KMK 1936/2022), BBLR (p. 293), "Tata laksana BBLR" to Pemantauan.
+   - SP0027 Benda asing (T17): `bedah-toraks-2020.pdf` (PPK HBTKVI 2016-2018), "8. Tata laksana Bronkoskopi Operasi eksplorasi Thoracotomy".
+   The builder labels the two new sources ("KMK 1936/2022", "PPK HBTKVI 2016-2018").
+   Not filled: SKA (the library passage belongs to Angina Pektoris Stabil); Sepsis and Ulkus kornea (whole PNPKs, no single management passage to quote); Depresi and Kandidosis mukokutan (PPK IDI 2017 has only "Gangguan Campuran Anxietas dan Depresi" and "Kandidiasis Mulut"); Hiperbilirubinemia, COVID-19 and the other PNPK entries (no library text). A2 (SP0029, SP0092, SP0277, SP0316) and the starred A3 entries (SP0039, SP0194, SP0237): their KMK/Permenkes texts give no dose. Malaria serebral: PPK IDI 2017 gives a pre-referral dose "Artemisinin atau Artesunat … dosis awal 3,2mg /kg BB", which is the artemether dose (artesunate is usually 2.4 mg/kg); not added, for Gaffer.
+2. DM tipe 1 (SP0063): `icd10` E10, E11, E14 → E10. DM tipe 2 was already E11 only. `terkait` is curated, not derived from the codes, and is unchanged.
+3. ICPC-2 codes: none left in `icd10`. The W92 case was gone in v0.5; no code of an entry collides with an ICPC-2 code of PPK IDI 2017 while being absent from the entry's ICD text. Code-text differences for Gaffer: SP0112 Hepatitis B is coded B18.1 (chronic) while its PPK text says B16 Acute Hepatitis B; SP0168 Keracunan makanan is coded T47 while its PPK text says T62.2.
+4. Categories: the catalogue shows 42 categories, because 228 entries carry a source category (27 names from several sources: "Kulit" and "Penyakit Kulit dan Kelamin", "Neurologi" and "Penyakit Saraf", "Musculoskeletal" and "Muskuloskeletal", …) and 108 take the ICD-10 chapter. Not changed: the target taxonomy is Gaffer's choice.
+5. SP0312 itrakonazol: Perdoski 2017 (Tinea unguium) gives "itrakonazol dosis denyut (2x200 mg/hari selama 1 minggu, istirahat 3 minggu) sebanyak 2 denyut untuk kuku tangan dan 3-4 denyut untuk kuku kaki atau 200 mg/hari selama 2 bulan untuk kuku tangan dan minimal 3 bulan untuk kuku kaki". The KKI row "200 mg sekali sehari 3 bulan (pulse therapy)" is the continuous toenail regimen with the wrong label. Row unchanged, for Gaffer.
+6. Non-drug rows: `NOT_A_DRUG` also drops auto-extracted rows whose `obat` starts with normal, studi, lebih, kurang, volume, mortalitas, survival, data, tidak, nilai, skor, penelitian, hasil, jumlah, total, rerata, sebesar, hingga, kemudian, kelompok, stadium, derajat, ukuran, frekuensi, saturasi, tekanan, hemoglobin, kreatinin or leukosit (every dropped value was checked: lab values, statistics, sentence fragments). Rendered dose lines 7,779 → 7,624. Kept on purpose: albumin, natrium, kalium, umur (vitamin A by age), bayi, lesi, fase, trombosit.
+7. Status counts: recomputed for every entry with the rules the SSOT's own values follow (n_pernyataan_dosis = rows, n_obat_berdosis = distinct obat ignoring case, sumber_teks = sorted keys, ada_teks_terapi). 39 entries changed: the 12 A1 entries, the 5 new texts, and about 22 entries whose counts were already stale before A1 (rows or texts merged after the counts were made). `teks_ada_dosis_numerik` was set only for the five new texts; its original rule is not reproducible exactly.
+8. Thalassemia folic acid (report only): the dose chunk of the 17-chunk entry is still not in the retrieved set; retrieval is not tuned.
+9. ICD top-1 (read-only): abbreviations-13 "BPPV manuver Epley" now returns R42 with the right name; SSOT v0.6 codes SP0331 BPPV as R42 (the guideline's "No. ICD") and keeps H81.1 in `icd10_sumber_lama`, while the gold is H81.1. abbreviations-14 "LLA pada anak kemoterapi induksi" returned D61.8 febrile neutropenia; SP0182 is coded C91.0 and did not change, so this reads as the model taking the complication in the query.
+
+
+Rebuild (one for items 1, 2, 6, 7): 17,990 chunks (2,404 SSOT + 15,586 PDF; fewer SSOT chunks because the dropped rows shortened some entries), `indexSha256` `fc028da5…`, full re-embed on DirectML in 1,406 s. Benchmark (`../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-itemized.json` vs `benchmark-v06-a1.json`): identical in every category (overall 0.875, drug_dose 0.75, dose 0.82, targeted 0.934), and no query changed hit or miss.

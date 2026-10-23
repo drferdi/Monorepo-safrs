@@ -375,6 +375,7 @@ test("dose lines render konteks and kutipan, drop non-drug rows and merge identi
     { obat: "obat fiktif", dosis: "5 mg", konteks: "fase awal", sumber: "Sumber B", halaman: "30", kutipan: "obat fiktif 5 mg setiap 8 jam" },
     { obat: "Sensitivitas", dosis: "95%", sumber: "Sumber A", kutipan: "Sensitivitas 95%", catatan: auto },
     { obat: "Kadar urea", dosis: "150 mg", sumber: "Sumber A", kutipan: "Kadar urea 150 mg", catatan: auto },
+    { obat: "Normal", dosis: "100 mg", sumber: "Sumber A", kutipan: "Normal 100 mg", catatan: auto },
     { obat: "Sekitar", dosis: "10%", sumber: "Sumber manual", kutipan: "Sekitar 10%" },
     { obat: "obat fiktif", dosis: "5 mg", konteks: "fase awal", sumber: "rujukan silang (dosis obat dari entri Penyakit Fiktif): Sumber C", kutipan: "obat fiktif 5 mg setiap 8 jam", catatan: "Dosis umum obat ini dari penyakit lain; bukan regimen khusus." },
   ] });

@@ -1,5 +1,14 @@
 # Sentrapedia handoff
 
+## Satu per satu: library therapy texts, DM code, non-drug filter, status counts (one commit on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+
+- Gaffer: "Kerjakan satu per satu" (items 1-11). Report: `docs/verification/theoracle-eval-2026-10-23/knowledge-gaps.md`, section "Item by item".
+- SSOT: five entries got a therapy text quoted from a library PDF, flagged "ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer" in the key and in `status.review_klinis.catatan` (SP0298 TB-HIV, SP0188 luka bakar, SP0232 PPP from PPK IDI 2017; SP0296 BBLR from KMK 1936/2022; SP0027 benda asing T17 from PPK HBTKVI). SP0063 DM tipe 1 `icd10` → E10. `status` counts recomputed (39 entries changed, ~22 of them stale before A1).
+- Builder: labels for `kmk_1936_2022` and `ppk_bedah_toraks_2018`; `NOT_A_DRUG` drops 29 more non-drug words ("Normal", "Lebih dari", "Studi", lab values); dose lines 7,779 → 7,624; node test covers "Normal".
+- Index `fc028da5…`, 17,990 chunks (2,404 SSOT + 15,586 PDF). Benchmark `benchmark-v06-itemized.json` identical to A1 in every category. Gate: typecheck 0, lint 0, vitest 471/471, node tests 23/23, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0. No gate replay or paid eval yet.
+- Correction: the PPK IDI 2017 "SKA" passage cited on 2026-10-23 is the Angina Pektoris Stabil management; SKA got no text.
+- Open for Gaffer: category taxonomy (42 names, item 4); itrakonazol row SP0312 vs Perdoski 2017 (item 5); malaria serebral pre-referral 3,2 mg/kg (artemether dose); Hepatitis B B18.1 vs PPK B16 and keracunan makanan T47 vs T62.2; BPPV coded R42 vs gold H81.1 (abbreviations-13); review of the five new texts. Nothing pushed.
+
 ## SSOT marked clinically reviewed; therapy and dose gaps referenced (two commits on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
 
 - Gaffer: "Semua sudah saya review itu, kasih tanda", then the 42 / 17 / 1 gaps, "cari referensi".
@@ -37,22 +46,3 @@
 - Limit: the caveat is now visible to the model and in "Kutipan pedoman", but the evidence gate still matches dose strengths only and does not read it; a gate rule for cross-referenced doses belongs to the gate-logic area.
 - Gate before commit: typecheck 0, lint 0, vitest 463/463, node tests 22/22, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
 - Next: Gaffer picks among options B-E, gate logic or the eval benchmark; the open items of the entry below still stand.
-
-## Knowledge rebuild on SSOT v0.6 (one commit on feat/puskesmas-flow, closes the knowledge rebuild) - 2026-10-22 Asia/Jakarta
-
-- SSOT v0.6 copied from Gaffer's Downloads (`sentrapedia-knowledge-ssot_2.json`, sha256 `338316f5…`): 336 entries, new `nama_awam` (all 190 values already in `alias`, so the builder is unchanged). Hemorrhoid entries merged into "Hemoroid grade 1/2" (alias wasir, ambeien).
-- `npm run knowledge:build`: 17,560 chunks (1,974 SSOT + 15,586 PDF), `indexSha256` `e46a2fb0…`; full re-embed (the builder only appends), resumed once from `vectors.partial.*`; PDF vectors match the previous index (min cosine 0.99999994). Catalogue 330 diseases / 42 categories.
-- Gold for v0.6 in `docs/verification/theoracle-eval-2026-10-22/v0.6-gold/`: 53 names kept, 2 mapped through v0.6 aliases (Hemoroid Eksterna dan Interna Derajat 1-2 → Hemoroid grade 1/2, Asma Bronkiale → Asma Bronkial), 0 unmapped.
-- Benchmark recall@5 vs E+cap (v0.5, final of the previous round): lay 0.875 → 0.938, overall 0.852 → 0.864; every other category unchanged (abbr 0.933, mixed 1, typos 1, drug_dose 0.625, icd10 0.5, lab 0.8, score 0.625); dose 0.82, targeted 0.934.
-- Paid eval (`pipeline-2026-10-22-targeted-v06-index.json`): 49/61 ok, 0.26 USD. The 12 failures (typos-04..15) are 429 `BUSY` from the gateway's one-at-a-time lock: another client ran an analysis in the browser pane during the eval (server log: two stray BUSY lines and a 4.5 s request the runner never sent). On the 49 completed cases ICD top-1 differs from the v0.5 run in three: lay_terms-05 and mixed_id_en-09 now wrong, abbreviations-14 now right. Not re-run (Gaffer: one paid run).
-- E2E (`v0.6-gold/e2e-analisis-v06.md`, trace `34b70c3e…`): Typhoid fever (A01.0), Chloramphenicol 4x500 mg 14 days; no case-report passages; SSOT Demam Tifoid ×3, PPK FKTP ×3, PAPDI 2024, Sirosis Hati PNPK hal. 239/242/257, TB 2019 ×2, Perdoski 2017/2021.
-- Dose gate: v0.6 merged "Ambeien (Hemoroid)" (K64) into "Hemoroid grade 1/2" (I84) and the catalogue carries no aliases, so a passage saying only "ambeien" no longer verified a haemorrhoid dose. Fixed by Gaffer's choice: `SYNONYMS` in `src/lib/theoracle-evidence-gate.ts` adds hemoroid → ambeien, wasir (like hiv → odha). `tests/ui/draft-actions.test.tsx` now reads the G44.2 name from the catalogue (v0.6 codes TTH exactly G44.2).
-- Gate before commit: typecheck 0, lint 0, vitest 463/463, node tests 21/21, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
-- Eval re-run (Gaffer, browser pane idle): 61/61 ok, ICD top-1 0.934 (D 0.951), doses supported 84/84, shown 49 (D 56), removed 33 (D 25), 0.32 USD (`v0.6-gold/eval-rerun-v06.md`). Fewer doses shown in 8 cases (e.g. J45.9, J44.1, N30.0, G44.2); not investigated or tuned.
-- Dose drop diagnosed read-only (`v0.6-gold/dose-drop-diagnosis.md`, `b1bca1db`). Main cause: v0.6 moved category codes to `icd10_sumber_lama` (95 of 336 entries), so the gate missed sibling codes (J44.1, N30.0). Fixed by Gaffer's choice: `scripts/build-oracle-catalog.mjs` writes `icd10` plus `icd10_sumber_lama` into `kode`; replay verifies PPOK and cystitis again. Open: merged asthma entry's 2.5 mg chunk not retrieved (SSOT question).
-- 2026-10-23: `next build` on 16.4.0 stopped with SecurityFatalError (a published advisory covers that version). With Gaffer's approval, Next.js and eslint-config-next were upgraded to 16.4.2 in worktree `D:\DEV\Monorepo.worktrees\chore-sentrapedia-next-security` (`804f8055`) and fast-forwarded into feat/puskesmas-flow. The CLI's `experimental.agentUpgrade` config and its telemetry report were not applied. Gate after `npm ci`: typecheck 0, lint 0, vitest 463/463, node tests 21/21, test:aadi 237 passed, build 0, deploy:dry-run 0.
-- Open items (Gaffer, 2026-10-23):
-  - Asthma: the merged entry's salbutamol 2.5 mg chunk is not retrieved; a question for the SSOT content.
-  - ICPC-2 codes may still be read as ICD-10 in PPK FKTP entries (the W92 case); not re-checked.
-  - The catalogue's category taxonomy still mixes two systems.
-- Next: Gaffer's clinical review; retrieval is not tuned again. After that: dose schema, gate logic or the eval benchmark (Gaffer picks).

@@ -237,8 +237,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -584,8 +584,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -13969,12 +13969,13 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 31,
-    "n_obat_berdosis": 24,
+    "n_pernyataan_dosis": 34,
+    "n_obat_berdosis": 26,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
     "sumber_teks": [
+     "katalog_skdi",
      "pnpk_PNPK_2022_Tata_Laksana_Batu_Saluran_Kemih (hal. 23)"
     ],
     "review_klinis": {
@@ -14374,26 +14375,31 @@
    "gejala": [],
    "diagnosis": null,
    "rujukan": null,
-   "terapi_teks": {},
+   "terapi_teks": {
+    "ppk_bedah_toraks_2018 (bedah-toraks-2020.pdf, bab Benda Asing pada saluran nafas; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)": "8. Tata laksana Bronkoskopi Operasi eksplorasi Thoracotomy"
+   },
    "dosis": [],
    "dokumen": [],
    "terkait": [
     "Benda Asing Di Hidung"
    ],
    "status": {
-    "terapi": "kosong",
-    "ada_teks_terapi": false,
+    "terapi": "narasi_tanpa_dosis",
+    "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": false,
     "n_pernyataan_dosis": 0,
     "n_obat_berdosis": 0,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": [],
+    "sumber_teks": [
+     "ppk_bedah_toraks_2018 (bedah-toraks-2020.pdf, bab Benda Asing pada saluran nafas; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)"
+    ],
     "review_klinis": {
      "status": "ditinjau",
      "oleh": "Gaffer",
-     "tanggal": "2026-10-23"
+     "tanggal": "2026-10-23",
+     "catatan": "terapi_teks \"ppk_bedah_toraks_2018 (bedah-toraks-2020.pdf, bab Benda Asing pada saluran nafas; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)\" ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer."
     }
    }
   },
@@ -22685,14 +22691,15 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 38,
-    "n_obat_berdosis": 10,
+    "n_pernyataan_dosis": 41,
+    "n_obat_berdosis": 13,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "daftar_kki",
      "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 589)",
      "kmk_1186_2022 (hal. 594)",
      "oracle_ii",
@@ -25692,9 +25699,7 @@
    "nama": "Diabetes melitus tipe 1",
    "alias": [],
    "icd10": [
-    "E10",
-    "E11",
-    "E14"
+    "E10"
    ],
    "asal": [
     "daftar KKI"
@@ -25736,8 +25741,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -31016,14 +31021,15 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 17,
-    "n_obat_berdosis": 9,
+    "n_pernyataan_dosis": 24,
+    "n_obat_berdosis": 14,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "daftar_kki",
      "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 570)",
      "oracle_ii"
     ],
@@ -33072,7 +33078,7 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 16,
+    "n_pernyataan_dosis": 19,
     "n_obat_berdosis": 10,
     "ada_definisi": true,
     "ada_diagnosis": true,
@@ -33659,8 +33665,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 2,
+    "n_obat_berdosis": 2,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
@@ -36503,12 +36509,13 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": false,
-    "n_pernyataan_dosis": 61,
-    "n_obat_berdosis": 43,
+    "n_pernyataan_dosis": 65,
+    "n_obat_berdosis": 45,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
     "sumber_teks": [
+     "katalog_skdi",
      "pnpk_PNPK_2023_Tata_Laksana_Gagal_Jantung_Pada_Anak (hal. 63)"
     ],
     "review_klinis": {
@@ -37244,13 +37251,14 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 8,
-    "n_obat_berdosis": 4,
+    "n_pernyataan_dosis": 16,
+    "n_obat_berdosis": 11,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "index_md",
+     "katalog_skdi",
      "oracle_ii"
     ],
     "review_klinis": {
@@ -42154,14 +42162,17 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 1,
-    "n_obat_berdosis": 1,
+    "n_pernyataan_dosis": 12,
+    "n_obat_berdosis": 7,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": false,
     "sumber_teks": [
      "daftar_kki",
+     "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 163)",
+     "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 121)"
     ],
     "review_klinis": {
@@ -49655,13 +49666,14 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 12,
-    "n_obat_berdosis": 8,
+    "n_pernyataan_dosis": 22,
+    "n_obat_berdosis": 16,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "daftar_kki",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 673)",
      "ppk_permenkes_5_2014 (hal. 438)"
     ],
@@ -54002,8 +54014,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -57741,14 +57753,15 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 9,
-    "n_obat_berdosis": 4,
+    "n_pernyataan_dosis": 14,
+    "n_obat_berdosis": 8,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "daftar_kki",
      "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 410)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 275)"
@@ -57856,8 +57869,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
@@ -71131,8 +71144,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -75071,12 +75084,13 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 134,
-    "n_obat_berdosis": 20,
+    "n_pernyataan_dosis": 139,
+    "n_obat_berdosis": 22,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 65)",
      "pnpk_PNPK_2019_Tata_Laksana_Kusta (hal. 41)",
      "ppk_permenkes_5_2014 (hal. 35)"
@@ -81756,7 +81770,9 @@
    ],
    "diagnosis": "Diagnosis Klinis\nLuka bakar derajat I atau II berdasarkan anamnesis dan pemeriksaan fisik.\nKriteria Berat Ringannya luka bakar dapat dipakai ketentuan berdasarkan\nAmerican Burn Association, yaitu sebagai berikut:\n a. Luka bakar Ringan\n 1. Luka bakar derajat II < 15%\n 2. Luka bakar derajat II < 10% pada anak-anak\n 3. Luka bakar derajat III< 2%\n b. Luka Bakar Sedang\n 1. Luka bakar derajat II 15-25% pada orang dewasa\n 2. Luka bakar II 10-25% pada anak-anak\n 3. Luka bakar derajat III< 10%\n c. Luka Bakar Berat\n 1. Luka bakar derajat II 25% atau lebih pada orang dewasa\n 2. Luka bakar derajat II 20% atau lebih pada anak-anak\n 3. Luka bakar derajat II 10% atau lebih\n 4. Luka bakar mengenai tangan, wajah, telinga, mata, kaki dan\n genitalia/perinerium\n 5. Luka bakar dengan cedera inhalasi, disertai trauma lain.\n\nPenatalaksanaan (Plan)\nPenatalaksanaan\nLuka bakar derajat 1 penyembuhan terjadi secara spontan tanpa pengobatan\nkhusus.\nPenatalaksanaan luka bakar derajat II tergantung luas luka bakar.\nPada penanganan perbaikan sirkulasi pada luka bakar dikenal beberapa\nformula salah satunya yaitu formua Baxter sebagai berikut:\nFormula Baxter:\n a. Hari Pertama:\n Dewasa: Ringer Laktat 4 cc x berat badan x % luas bakar per 24 jam\n Anak:\n Ringer Laktat : Dextran = 17 : 3\n 2 cc x berat badan x % luas luka ditambah kebutuhan faali.\n Kebutuhan faali :\n < 1 Tahun : berat badan x 100 cc\n 1-3 Tahun : berat badan x 75 cc\n 3-5 Tahun : berat badan x 50 cc\n ½ jumlah cairan diberikan dalam 8 jam pertama.\n ½ diberikan 16 jam berikutnya.\n b. Hari kedua\n Dewasa: ½ hari I; Anak: diberi sesuai kebutuhan faali\nFormula cairan resusitasi ini hanyalah perkiraan kebutuhan cairan,\nberdasarkan perhitungan pada waktu terjadinya luka bakar, bukan pada\nwaktu dimulainya resusitasi. Pada kenyataannya, perhitungan cairan harus\ntetap disesuaikan dengan respon penderita. Untuk itu selalu perlu dilakukan\npengawasan kondisi penderita seperti keadaan umum, tanda vital, dan\nproduksi urine dan lebih lanjut bisa dilakukan pemasangan monitor EKG\nunutk memantau irama jantung sebagai tanda awal terjadinya hipoksia,\ngangguan elektrolit dan keseimbangan asam basa.\nPemberian antibiotik spektrum luas pada luka bakar sedan dan berat.\nPemeriksaan Penunjang Lanjutan\nAGD, elektrolit bila diperlukan\nKomplikasi\nJaringan parut",
    "rujukan": "Rujukan dilakukan pada luka bakar sedang dan berat",
-   "terapi_teks": {},
+   "terapi_teks": {
+    "ppk_idi_2017 (bab Luka Bakar Derajat I dan II, hlm. 352; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)": "Penatalaksanaan (Plan) Penatalaksanaan 1. Luka bakar derajat 1 penyembuhan terjadi secara spontan tanpa pengobatan khusus. 2. Penatalaksanaan luka bakar derajat II tergantung luas luka bakar. Pada penanganan perbaikan sirkulasi pada luka bakar dikenal beberapa formula, salah satunya yaitu Formula Baxter sebagai berikut: 1. Hari Pertama: Dewasa : Ringer Laktat 4 cc x berat badan x % luas bakar per 24 jam Anak: Ringer Laktat : Dextran = 17 : 3 2 cc x berat badan x % luas luka ditambah kebutuhan faali. Kebutuhan faali : < 1 Tahun : berat badan x 100 cc 1-3 Tahun : berat badan x 75 cc 3-5 Tahun : berat badan x 50 cc ½ jumlah cairan diberikan dalam 8 jam pertama. ½ diberikan 16 jam berikutnya. 2. Hari kedua Dewasa : ½ hari I; Anak : diberi sesuai kebutuhan faali Formula cairan resusitasi ini hanyalah perkiraan kebutuhan cairan, berdasarkan perhitungan pada waktu terjadinya luka bakar, bukan pada waktu dimulainya resusitasi. Pada kenyataannya, penghitungan cairan harus tetap disesuaikan dengan respon penderita. Untuk itu selalu perlu dilakukan pengawasan kondisi penderita seperti keadaan umum, tanda vital, dan produksi urin dan lebih lanjut bisa dilakukan pemasangan monitor EKG untuk memantau irama jantung sebagai tanda awal terjadinya hipoksia, gangguan elektrolit dan keseimbangan asam basa. Pemberian antibiotik spektrum luas pada luka bakar sedang dan berat. Komplikasi Jaringan parut Konseling dan Edukasi Pasien dan keluarga menjaga higiene dari luka dan untuk mempercepat penyembuhan, jangan sering terkena air. Kriteria Rujukan Rujukan dilakukan pada luka bakar sedang dan berat"
+   },
    "dosis": [
     {
      "obat": "sulfadiazine silver",
@@ -81918,18 +81934,21 @@
    "edukasi": "Pasien dan keluarga menjaga higiene dari luka dan untuk\nmempercepat penyembuhan, jangan sering terkena air.",
    "status": {
     "terapi": "lengkap",
-    "ada_teks_terapi": false,
-    "teks_ada_dosis_numerik": false,
+    "ada_teks_terapi": true,
+    "teks_ada_dosis_numerik": true,
     "n_pernyataan_dosis": 10,
-    "n_obat_berdosis": 7,
+    "n_obat_berdosis": 8,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
-    "sumber_teks": [],
+    "sumber_teks": [
+     "ppk_idi_2017 (bab Luka Bakar Derajat I dan II, hlm. 352; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)"
+    ],
     "review_klinis": {
      "status": "ditinjau",
      "oleh": "Gaffer",
-     "tanggal": "2026-10-23"
+     "tanggal": "2026-10-23",
+     "catatan": "terapi_teks \"ppk_idi_2017 (bab Luka Bakar Derajat I dan II, hlm. 352; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)\" ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer."
     }
    },
    "nama_awam": [
@@ -88133,13 +88152,14 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 62,
-    "n_obat_berdosis": 25,
+    "n_pernyataan_dosis": 68,
+    "n_obat_berdosis": 26,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 323)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 261)"
@@ -90942,12 +90962,13 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 20,
-    "n_obat_berdosis": 16,
+    "n_pernyataan_dosis": 21,
+    "n_obat_berdosis": 17,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 309)",
      "pnpk_Tata_Laksana_Osteoartritis_Pedoman_Nasional_Pelayanan_Klinis_PNPK (hal. 46)",
      "ppk_permenkes_5_2014 (hal. 224)"
@@ -94859,6 +94880,7 @@
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 261)"
     ],
     "review_klinis": {
@@ -95202,6 +95224,7 @@
     "ada_rujukan": true,
     "sumber_teks": [
      "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 183)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 129)"
@@ -100730,12 +100753,13 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 289,
+    "n_pernyataan_dosis": 292,
     "n_obat_berdosis": 181,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
     "sumber_teks": [
+     "katalog_skdi",
      "pnpk_PNPK_2023_Tata_Laksana_Penyakit_Ginjal_Kronik (hal. 27)"
     ],
     "review_klinis": {
@@ -102433,7 +102457,9 @@
    "gejala": [],
    "diagnosis": null,
    "rujukan": null,
-   "terapi_teks": {},
+   "terapi_teks": {
+    "ppk_idi_2017 (bab Perdarahan Post Partum, hlm. 412; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)": "Penatalaksanaan Komprehensif (Plan) Penatalaksanaan Penatalaksanaan Awal • Segera memanggil bantuan tim • Nilai sirkulasi, jalan napas, dan pernapasan pasien. • Bila menemukan tanda-tanda syok, lakukan penatalaksanaan syok. Gambar 14. 3 Tatalaksana awal perdarahan pascasalin dengan Pendekatan Tim 1. Berikan oksigen. 2. Pasang infus intravena dengan kanul berukuran besar (16 atau 18) dan mulai pemberian cairan kristaloid (NaCl 0,9% atau Ringer Laktat atau Ringer Asetat) sesuai dengan kondisi ibu. Tabel 14.12 Jumlah cairan infus pengganti berdasarkan perkiraan volume kehilangan darah 3. Lakukan pengawasan tekanan darah, nadi, dan pernapasan ibu. 4. Periksa kondisi abdomen: kontraksi uterus, nyeri tekan, parut luka, dan tinggi fundus uteri. 5. Periksa jalan lahir dan area perineum untuk melihat perdarahan dan laserasi (jika ada, misal: robekan serviks atau robekan vagina). 6. Periksa kelengkapan plasenta dan selaput ketuban. 7. Pasang kateter Folley untuk memantau volume urin dibandingkan dengan jumlah cairan yang masuk. Catatan: produksi urin normal 0.5-1 ml/kgBB/jam atau sekitar 30 ml/jam) 8. Jika kadar Hb< 8 g/dl rujuk ke layanan sekunder (dokter spesialis obgyn) 9. Jika fasilitas tersedia, ambil sampel darah dan lakukan pemeriksaan: kadar hemoglobin (pemeriksaan hematologi rutin) dan penggolongan ABO. 10. Tentukan penyebab dari perdarahannya (lihat tabel 14.11) dan lakukan tatalaksana spesifik sesuai penyebab Penatalaksanaan Lanjutan : 1. Atonia uteri a. Lakukan pemijatan uterus. b. Pastikan plasenta lahir lengkap. c. Berikan 20-40 unit Oksitosin dalam 1000 ml larutan NaCl 0,9%/ Ringer Laktat dengan kecepatan 60 tetes/menit dan 10 unit IM. d. Lanjutkan infus oksitosin 20 unit dalam 1000 ml larutanNaCl 0,9%/Ringer Laktat dengan kecepatan 40 tetes/menit hingga perdarahan berhenti. e. Bila tidak tersedia Oksitosin atau bila perdarahan tidak berhenti, berikan Ergometrin 0,2 mg IM atau IV (lambat), dapat diikuti pemberian 0,2 mg IM setelah 15 menit, danpemberian 0,2 mg IM/IV (lambat) setiap 4 jam bila diperlukan. Jangan berikan lebih dari 5 dosis (1 mg). f. Jika perdarahan berlanjut, berikan 1 g asam traneksamat IV (bolus selama 1 menit, dapat diulang setelah 30 menit). g. Lakukan pasang kondom kateter atau kompresi bimanual internal selama 5 menit. h. Siapkan rujukanke fasilitas pelayanan kesehatan sekunder sebagai antisipasi bila perdarahan tidak berhenti. Perlu Diingat : Jangan berikan lebih dari 3 liter larutan intravena yang mengandung oksitosin. Jangan berikan ergometrin kepada ibu dengan hipertensi berat/tidak terkontrol, penderita sakit jantung dan penyakit pembuluh darah tepi. Gambar 14.4 Kompresi Bimanual Internal dan Kompresi Bimanual Eksternal pada atonia uteri 2. Robekan Jalan Lahir Ruptura Perineum dan Robekan Dinding Vagina a. Lakukan eksplorasi untuk mengidentifikasi sumber perdarahan. b. Lakukan irigasi pada tempat luka dan bersihkan dengan antiseptik. c. Hentikan sumber perdarahan dengan klem kemudian ikatdengan benang yang dapat diserap. d. Lakukan penjahitan (lihat Materi Luka Perineum Tingkat 1 dan 2) e. Bila perdarahan masih berlanjut, berikan 1 g asamtraneksamat IV (bolus selama 1 menit, dapat diulang setelah 30 menit). 3. Robekan Serviks a. Paling sering terjadi pada bagian lateral bawah kiri dankanan dari porsio b. Siapkan rujukan ke fasilitas pelayanan kesehatan sekunder 4. Retensio Plasenta a. Berikan 20-40 unit oksitosin dalam 1000 ml larutanNaCl 0,9% atau Ringer Laktat dengan kecepatan 60 tetes/ menit dan 10 unit IM. Lanjutkan infus oksitosin 20 unit dalam 1000 ml larutanNaCl 0,9% atau Ringer Laktat dengan kecepatan 40 tetes/menit hingga perdarahan berhenti. b. Lakukan tarikan tali pusat terkendali. c. Bila tarikan tali pusat terkendali tidak berhasil, lakukan plasenta manual secara hati-hati. d. Berikan antibiotika profilaksis dosis tunggal (Ampisilin 2 g IV DAN Metronidazol 500 mg IV). e. Segera atasi atau rujuk ke fasilitas yang lebih lengkap bila terjadi komplikasi perdarahan hebat atau infeksi 5. Sisa Plasenta a. Berikan 20-40 unit oksitosin dalam 1000 ml larutan NaCl 0,9% atau Ringer Laktat dengan kecepatan 60 tetes/menit dan 10 unit IM. Lanjutkan infus Oksitosin 20 unit dalam 1000 ml larutan NaCl 0,9% atau Ringer Laktat dengan kecepatan 40m tetes/menit hingga pendarahan berhenti. b. Lakukan eksplorasi digital (bila serviks terbuka) dan keluarkan bekuan darah dan jaringan. Bila serviks hanya dapat dilalui oleh instrumen, lakukan evakuasi sisa plasenta dengan aspirasi vakum manual atau dilatasi dan kuretase. c. Berikan antibiotika profilaksis dosis tunggal (ampisillin 2 g IV dan Metronidazol 500 mg). d. Jika perdarahan berlanjut, tata laksana seperti kasus atonia uteri. Inversio Uteri Siapkan rujukan ke fasilitas pelayanan kesehatan sekunder Gangguan Pembekuan Darah 1. Pada banyak kasus kehilangan darah yang akut, koagulopati dapat dicegah jika volume darah dipulihkan segera. 2. Tangani kemungkinan penyebab (solusio plasenta,eklampsia). 3. Siapkan rujukan ke fasilitas pelayanan kesehatan sekunder Konseling dan Edukasi 1. Memberikan informasi akan keadaan ibu yang mengalami perdarahan pascasalin. 2. Memberikan informasi yang tepat kepada suami dan keluarga ibu terhadap tindakan yang akan di lakukan dalam menangani perdarahan pascasalin. 3. Memastikan dan membantu keluarga jika rujukan akan dilakukan. Kriteria Rujukan 1. Pada kasus perdarahan pervaginam > 500 ml setelah persalinan berpotensi mengakibatkan syok dan merupakan indikasi rujukan. 2. 2. Penanganan kegawatdaruratan sebelum merujuk dan mempertahankan ibu dalam keadaan stabil selama proses rujukan merupakan hal penting diperhatikan."
+   },
    "dosis": [
     {
      "obat": "Oksitosin",
@@ -102648,18 +102674,21 @@
    "terkait": [],
    "status": {
     "terapi": "lengkap",
-    "ada_teks_terapi": false,
-    "teks_ada_dosis_numerik": false,
+    "ada_teks_terapi": true,
+    "teks_ada_dosis_numerik": true,
     "n_pernyataan_dosis": 16,
     "n_obat_berdosis": 7,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": [],
+    "sumber_teks": [
+     "ppk_idi_2017 (bab Perdarahan Post Partum, hlm. 412; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)"
+    ],
     "review_klinis": {
      "status": "ditinjau",
      "oleh": "Gaffer",
-     "tanggal": "2026-10-23"
+     "tanggal": "2026-10-23",
+     "catatan": "terapi_teks \"ppk_idi_2017 (bab Perdarahan Post Partum, hlm. 412; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)\" ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer."
     }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
@@ -112265,13 +112294,17 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 16,
-    "n_obat_berdosis": 8,
+    "n_pernyataan_dosis": 27,
+    "n_obat_berdosis": 9,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
+     "daftar_kki",
+     "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 123)",
+     "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 85)"
     ],
     "review_klinis": {
@@ -114026,13 +114059,15 @@
     "terapi": "dosis_rujukan_silang",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": false,
-    "n_pernyataan_dosis": 11,
-    "n_obat_berdosis": 7,
+    "n_pernyataan_dosis": 15,
+    "n_obat_berdosis": 9,
     "ada_definisi": true,
     "ada_diagnosis": false,
     "ada_rujukan": false,
     "sumber_teks": [
-     "kmk_1186_2022 (hal. 508)"
+     "daftar_kki (teks gabungan beberapa penyakit)",
+     "kmk_1186_2022 (hal. 508)",
+     "ppk_permenkes_5_2014 (hal. 299)"
     ],
     "review_klinis": {
      "status": "ditinjau",
@@ -114283,14 +114318,16 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 8,
-    "n_obat_berdosis": 3,
+    "n_pernyataan_dosis": 11,
+    "n_obat_berdosis": 5,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "daftar_kki (teks gabungan beberapa penyakit)",
      "index_md",
+     "katalog_skdi",
+     "kmk_1186_2022 (hal. 515)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 303)"
     ],
@@ -114719,8 +114756,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 2,
+    "n_obat_berdosis": 2,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -122824,14 +122861,15 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 6,
-    "n_obat_berdosis": 3,
+    "n_pernyataan_dosis": 7,
+    "n_obat_berdosis": 4,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "daftar_kki",
      "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 550)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 355)"
@@ -129909,7 +129947,9 @@
    "gejala": [],
    "diagnosis": null,
    "rujukan": null,
-   "terapi_teks": {},
+   "terapi_teks": {
+    "kmk_1936_2022 (fktp-kmk-2022.pdf, bab BBLR, hlm. 293; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)": "c. Tata laksana BBLR dibedakan menjadi tata laksana saat lahir dan setelah lahir. Tata laksana saat lahir: a. Asuhan BBLR ≥2000 gram tanpa asfiksia sebagai berikut: Letakkan bayi di dada ibu, kontak kulit ke kulit, selimuti berdua dengan ibu – Inisiasi menyusu Dini (IMD) dengan cara: 1) Bayi diletakkan di atas perut ibu, dikeringkan seluruh tubuh kecuali tangan, bayi diselimuti dengan kain bersih dan hangat dan dipasang penutup kepala 2) Bayi dibiarkan mencari sendiri putting ibu (breast crawling) 3) Pertahankan kontak kulit ke kulit ibu dan bayi minimal 1 jam, baru dilakukan pelayanan neonatal esensial untuk BBLR 4) Memandikan bayi dilakukan setelah 24 jam, atau lebih dari 24 jam jika bayi hipotermi < 36,5 C, suhu lingkungan dingin, ada penyulit yang lain. 5) Profilaksis suntikan Vitamin K1 1 mg dosis tunggal, IM pada paha kiri anterolateral 6) Salep mata antibiotik 7) Perawatan tali pusat: kering, bersih, tidak dibubuhi apapun dan terbuka 8) Bila berat lahir ≥ 2000 gram dan tanpa masalah atau penyulit, dapat diberikan Vaksinasi Hepatitis B pertama pada paha kanan b. Asuhan BBLR yang tidak bernapas spontan dimasukkan ke dalam kategori lahir dengan asfiksia dan harus segera dilakukan langkah awal resusitasi dan tahapan resusitasi berikutnya bila diperlukan. Resusitasi Pemberian resusitasi diputuskan berdasarkan penilaian keadaan Bayi Baru Lahir, yaitu bila: a. Air Ketuban bercampur mekonium ( letak kepala/gawat janin) b. Bayi tidak menangis, atau tidak bernapas spontan, atau bernapas megap-megap Catatan: Untuk memulai tindakan resusitasi BBLR asfiksia tidak perlu menunggu hasil penilaian skor APGAR Langkah awal resusitasi a. Jaga bayi dalam keadaan hangat b. Atur posisi kepala bayi sedikit tengadah (posisi menghidu) c. Isap lendir di mulut, kemudian hidung d. Keringkan sambil dilakukan rangsang taktil e. Reposisi kepala f. Nilai keadaan bayi dengan melihat parameter: usaha napas. Bila setelah dilakukan penilaian, bayi tidak menangis atau tidak bernapas spontan dan teratur g. Lakukan Ventilasi sesuai dengan tatalaksana manajemen Asfiksia Bayi Baru Lahir h. Jika bayi tidak bernapas spontan sesudah 1 menit resusitasi, siapkan rujukan, nilai denyut jantung i. Jika tidak mau dirujuk dan tidak berhasil sesudah 20 menit bayi tidak bernapas dan tidak terdengar denyut jantung pertimbangkan menghentikan resusitasi j. Informed consent kepada keluarga k. Pencatatan dan pelaporan Tata laksana setelah lahir Riwayat a. Tanyakan tanggal perkiraan kelahiran atau umur kehamilan Periksa b. Timbang berat bayi (dalam keadaan telanjang) setelah lahir (0-24 jam) dan bernapas baik. Timbangan dilapisi kain hangat dan ditera. c. Lakukan pemeriksaan fisik Masalah/Kebutuhan Tentukan bayi adalah: d. BBLR yang boleh dirawat oleh bidan, adalah BBLR dengan berat ≥2000 gram, tanpa masalah / komplikasi. e. BBLR < 2000 gram atau > 2000 gram tetapi bermasalah harus dirujuk ke fasilitas kesehatan yang lebih lengkap. Rencana Perawatan Untuk semua bayi dengan berat 2000 – 2499 gram: a. Jaga bayi tetap hangat: b. Jaga bayi selalu “kontak kulit dengan kulit” dengan c. ibunya (Perawatan Metode Kanguru kontinu (PMK)) d. Pertahankan posisi ibu dan bayi dengan selembar kain yang hangat dan dilapisi dengan baju berkancing depan di atasnya. e. Tutupi kepala bayi dengan kain atau topi. f. Mandikan bayi setelah berusia 24 jam dan suhu tubuh stabil. g. Mendorong ibu meneteki (atau memerah kolostrum dan memberikan dengan cangkir atau sendok) sesegera mungkin dan selanjutnya setiap 2-3 jam. h. Periksa tanda vital (pernapasan, suhu, warna kulit) setiap 30-60 menit selama 6 jam i. Ajari ibu dan keluarga menjaga bayi tetap hangat dengan selalu melakukan “kontak kulit dengan kulit” j. Jika suhu ketiak turun dibawah 36,50C; anjurkan ibu untuk melakukan perawatan metode Kanguru kontinu. k. Tutupi bayi-ibu dengan selimut atau kain yang lebih HANGAT dan tempatkan keduanya di ruangan yang hangat. l. Sarankan ibu dan keluarga selalu mencuci tangan dengan sabun sebelum memegang BBLR. Jika masalah bertambah: Jika BBLR badan tetap dingin/panas, membiru, atau memiliki gangguan pernapasan, stimulasi dan rujuk ke fasilitas kesehatan yang lebih lengkap. Jika bayi boleh minum tapi tidak dapat menghisap dengan baik, perah dan beri ASI dengan menggunakan cangkir /sendok dan segera rujuk ke fasilitas kesehatan yang lebih lengkap. Pemantauan a. Pemantauan dilakukan dengan bantuan bidan untuk mengunjungi bayi minimal dua kali dalam minggu pertama dan selanjutnya sekali dalam setiap minggu sampai berat bayi 2500 gram dengan mempergunakan format Manajemen Terpadu Bayi Muda (MTBM). b. BBLR dapat turun beratnya hingga 10 -15% dalam 10 hari pertama kemudian sudah harus naik, paling kurang 20 gram sehari atau 120 gram dalam 6 hari."
+   },
    "dosis": [
     {
      "obat": "Vitamin K1",
@@ -129929,18 +129969,21 @@
    "terkait": [],
    "status": {
     "terapi": "lengkap",
-    "ada_teks_terapi": false,
-    "teks_ada_dosis_numerik": false,
+    "ada_teks_terapi": true,
+    "teks_ada_dosis_numerik": true,
     "n_pernyataan_dosis": 1,
     "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": [],
+    "sumber_teks": [
+     "kmk_1936_2022 (fktp-kmk-2022.pdf, bab BBLR, hlm. 293; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)"
+    ],
     "review_klinis": {
      "status": "ditinjau",
      "oleh": "Gaffer",
-     "tanggal": "2026-10-23"
+     "tanggal": "2026-10-23",
+     "catatan": "terapi_teks \"kmk_1936_2022 (fktp-kmk-2022.pdf, bab BBLR, hlm. 293; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)\" ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer."
     }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
@@ -130229,7 +130272,9 @@
    "gejala": [],
    "diagnosis": null,
    "rujukan": null,
-   "terapi_teks": {},
+   "terapi_teks": {
+    "ppk_idi_2017 (bab TB dengan HIV, hlm. 15; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)": "Penatalaksanaan Komprehensif (Plan) Penatalaksanaan 1. Pada dasarnya pengobatannya sama dengan pengobatan TB tanpa HIV/AIDS 2. Prinsip pengobatan adalah menggunakan kombinasi beberapa jenis obat dalam jumlah cukup dan dosis serta jangka waktu yang tepat. 3. Pasien dengan koinfeksi TB-HIV, segera diberikan OAT dan pemberian ARV dalam 8 minggu pemberian OAT tanpa mempertimbangkan kadar CD4. 4. Perlu diperhatikan, pemberian secara bersamaan membuat pasien menelan obat dalam jumlah yang banyak sehingga dapat terjadi ketidakpatuhan, komplikasi, efek samping, interaksi obat dan Immune Reconstitution Inflammatory Syndrome. 6. Setiap penderita TB-HIV harus diberikan profilaksis kotrimoksasol dengan dosis 960 mg/hari (dosis tunggal) selama pemberian OAT. 7. Pemberian tiasetazon pada pasien HIV/ AIDS sangat berbahaya karena akan menyebabkan efek toksik berat pada kulit. 8. Injeksi streptomisin hanya boleh diberikan jika tersedia alat suntik sekali pakai yang steril. 9. Desensitisasi obat (INH/Rifampisin) tidak boleh dilakukan karena mengakibatkan efek toksik yang serius pada hati. 10. Pada pasien TB dengan HIV/AIDS yang tidak memberi respons terhadap pengobatan, selain dipikirkan terdapatnya malabsorbsi obat. Pada pasien HIV/AIDS terdapat korelasi antara imunosupresi yang berat dengan derajat penyerapan, karenanya dosis standar yang diterima suboptimal sehingga konsentrasi obat rendah dalam serum. Konseling dan Edukasi Konseling dilakukan pada pasien yang dicurigai HIV dengan merujuk pasien ke pelayanan VCT (Voluntary Counceling and Testing). Kriteria Rujukan 1. Pasien dengan sputum BTA (-), klinis (+) tapi tidak menunjukkan perbaikan setelah pengobatan dalam jangka waktu tertentu 2. Pasien dengan sputum BTA (-), klinis (-/ meragukan) 3. Pasien dengan sputum BTA tetap (+) setelah jangka waktu tertentu 4. TB dengan komplikasi/keadaan khusus (TB dengan komorbid) 5. Suspek TB–MDR harus dirujuk ke pusat rujukan TB–MDR ."
+   },
    "dosis": [
     {
      "obat": "kotrimoksasol",
@@ -130249,18 +130294,21 @@
    "terkait": [],
    "status": {
     "terapi": "lengkap",
-    "ada_teks_terapi": false,
-    "teks_ada_dosis_numerik": false,
+    "ada_teks_terapi": true,
+    "teks_ada_dosis_numerik": true,
     "n_pernyataan_dosis": 1,
     "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
-    "sumber_teks": [],
+    "sumber_teks": [
+     "ppk_idi_2017 (bab TB dengan HIV, hlm. 15; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)"
+    ],
     "review_klinis": {
      "status": "ditinjau",
      "oleh": "Gaffer",
-     "tanggal": "2026-10-23"
+     "tanggal": "2026-10-23",
+     "catatan": "terapi_teks \"ppk_idi_2017 (bab TB dengan HIV, hlm. 15; ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer)\" ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer."
     }
    },
    "icd10_catatan": "Kode ICD-10 dikoreksi/ditetapkan arsitek 2026-10-22; verifikasi klinisi."
@@ -133941,8 +133989,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -135127,8 +135175,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -135582,14 +135630,15 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 21,
-    "n_obat_berdosis": 5,
+    "n_pernyataan_dosis": 27,
+    "n_obat_berdosis": 9,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "daftar_kki",
      "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 562)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 364)"
@@ -142712,8 +142761,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
@@ -143050,14 +143099,15 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 14,
-    "n_obat_berdosis": 4,
+    "n_pernyataan_dosis": 18,
+    "n_obat_berdosis": 5,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
      "daftar_kki",
      "index_md",
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 38)",
      "oracle_ii",
      "ppk_permenkes_5_2014 (hal. 19)"
@@ -143560,14 +143610,18 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 10,
-    "n_obat_berdosis": 5,
+    "n_pernyataan_dosis": 26,
+    "n_obat_berdosis": 14,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
+     "daftar_kki",
      "index_md",
-     "oracle_ii"
+     "katalog_skdi",
+     "kmk_1186_2022 (hal. 332)",
+     "oracle_ii",
+     "ppk_permenkes_5_2014 (hal. 231)"
     ],
     "review_klinis": {
      "status": "ditinjau",
@@ -143963,8 +144017,8 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 0,
-    "n_obat_berdosis": 0,
+    "n_pernyataan_dosis": 1,
+    "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,
     "ada_rujukan": false,
