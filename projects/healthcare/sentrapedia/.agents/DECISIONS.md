@@ -454,3 +454,11 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - `theoracle/provenance/`, `theoracle/sources/`, `data/dose-inventory/`, the hand-written catalogue and `scripts/add-theoracle-docs.mjs` are retired: archived in `D:\DEV\archive\sentrapedia-knowledge-2026-10-21.zip` and kept in git history.
 - Gaffer accepted the rebuilt index as measured (recall@5 0.818 with gold mapped to SSOT names, against 0.864 before; dose recall 0.77 to 0.852; targeted 0.902 to 0.934). Evidence: `docs/verification/theoracle-eval-2026-10-21/`.
 - The grounding bundle states that the corpus is derived from official guidelines and not yet clinically reviewed; review status lives in the SSOT.
+
+## 2026-10-24 - Clerk closed-beta admission and principal isolation
+
+- Gaffer approved Clerk and ordered implementation of `docs/specs/2026-10-23-clerk-beta-access-design.md`: request access -> explicit Dashboard approval -> personal invitation -> registration/legal acceptance -> synthetic-data beta consent -> login.
+- Clerk owns identity/admission and native delivery, not an application password/approval database. Resource guards fetch current backend metadata; private suspension and versioned consent are independent. Readiness GET remains public, analysis POST is guarded.
+- Browser persistence is namespaced by opaque principal, without automatic legacy-data assignment or claims of encryption. The scoped backup/restore/clear paths ship together. Clinical code and serialized workspace schema stay unchanged.
+- Provisioning, sender/DNS settings, actual delivery proof and production edge cutover remain separate release gates. Preserve the Cloudflare gate until authorized cutover; restore it first when rolling back to an unauthenticated app image. Evidence: `docs/verification/clerk-beta-access-2026-10-24.md`.
+

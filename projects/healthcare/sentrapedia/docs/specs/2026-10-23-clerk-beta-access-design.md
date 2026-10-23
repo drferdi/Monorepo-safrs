@@ -1,6 +1,6 @@
 # Clerk closed-beta access design
 
-Status: workflow approved in conversation; written specification awaiting Gaffer's review. No implementation or production migration has started.
+Status: Gaffer ordered implementation on 2026-10-24. Code implemented on the isolated Clerk branch; see `docs/verification/clerk-beta-access-2026-10-24.md`. External provisioning, native invitation/OTP acceptance and separately authorized production cutover remain open. No production migration has been performed.
 
 Authority: Gaffer, 2026-10-23, approved Clerk and the sequence: request access -> Gaffer approval -> invitation email -> registration and consent -> login.
 

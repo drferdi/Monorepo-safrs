@@ -1,12 +1,12 @@
 # Sentrapedia handoff
 
-## Clerk closed-beta access design - 2026-10-23 Asia/Jakarta
+## Clerk closed-beta implementation - 2026-10-24 Asia/Jakarta
 
-- Status: specification committed in cf016018 on codex/sentrapedia-clerk-access-31bf87f9; written-spec review pending. Scope: docs only, based on 511a66d5. Native worktree: sentrapedia-clerk-access-31bf87f9.
-- Gaffer approved Clerk and request access -> Gaffer approval -> invitation email -> registration and consent -> login. The design uses Clerk Waitlist/OTP, server-side page and analysis authorization, a readiness exception for launcher/deploy probes, server-owned consent/suspension metadata and account-scoped browser persistence.
-- Evidence: docs/specs/2026-10-23-clerk-beta-access-design.md. Source inspection confirmed no existing application auth, the shared workspace key and session-free readiness calls. Registry inspection returned @clerk/nextjs 7.9.20 with peer ranges admitting Next 16.4.2/React 19.3.0. Spec self-review covers scope, consistency, placeholders and acceptance checks; product tests not run because product files are unchanged.
-- No SDK install, Clerk application provisioning, credential/DNS/access-policy change, merge, push or deployment in this design pass. The separate published website remains unchanged.
-- Next: Gaffer reviews the written spec. After approval, write the implementation plan and obtain its execution selection before product changes. Production cutover and each merge require separate authority.
+- Status: code committed through 94ef2de2 on codex/sentrapedia-clerk-access-31bf87f9 (isolated native worktree sentrapedia-clerk-access-31bf87f9). No merge, push, deployment or Cloudflare cutover. Gaffer explicitly ordered implementation of the cf016018 specification.
+- Clerk owns Waitlist approval, invitation/OTP and sessions. Server page/analysis guards enforce current verified identity, private suspension and versioned consent. Readiness GET remains public. Principal-scoped persistence preserves legacy bytes, unreadable input and clinical JSON behavior; session loss/account switch/cache restoration lock or unmount workspace state. CLI suspension writes the flag before paginated session revocation; enable never grants consent. Static-site links are prepared on the reviewed c773e692 foundation, not published.
+- Verification: npm run typecheck/lint/test:all/build/site:verify/site:docs/deploy:dry-run all exit 0 after the fresh review fixes. Counts: 517 Vitest, 53 site, 47 Node; Python 237 passed/1 skipped. Three inherited lint warnings remain. One fresh whole-branch review found two Important timeout issues, reproduced RED and fixed in 94ef2de2; no deferred minors. Built missing-key HTTP/browser smoke denied access and left readiness intact. No paid inference.
+- Tracked evidence and rulings: docs/verification/clerk-beta-access-2026-10-24.md; operator/config/rollback: docs/auth-beta-access.md. Secret-free build/dry-run validates 13 capsule-local traces; Windows native build is not a Linux Docker proof.
+- Next: Clerk Dashboard is at sign-in. Gaffer must authenticate and identify the intended application; configure separate dev/prod instances, Waitlist/OTP/legal settings and sender; prove real invitation/OTP and two-user isolation. Keep the existing Cloudflare gate until separately authorized cutover. Restore the edge gate before any rollback to an unauthenticated image. Never send keys/OTPs in chat.
 
 ## SSOT marked clinically reviewed; therapy and dose gaps referenced (two commits on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
 
