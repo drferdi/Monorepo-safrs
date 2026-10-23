@@ -80,57 +80,9 @@ function enhanceCapabilities(root) {
   let media = null;
   let scrollFrame = 0;
   let signal = null;
-  let sceneMotion = null;
-  let linePulse = null;
-  let livePulse = null;
+  const scene = createCapabilityScene(gsap, items, reduced, () => selected);
   const travel = () => Math.max(viewport.clientWidth, viewport.clientHeight) * (items.length - 1);
-  const offsets = () => items.map(item => item.offsetLeft - items[0].offsetLeft);
-
-  function fitNativeViewport() {
-    const height = capabilityViewportHeight(root.dataset.layout, items[Math.max(0, selected)].getBoundingClientRect().height, viewport.offsetHeight - viewport.clientHeight);
-    const previousHeight = viewport.style.height;
-    if (height === null) viewport.style.removeProperty('height');
-    else viewport.style.height = height + 'px';
-    if (viewport.style.height !== previousHeight) settled.queue();
-  }
-
-  function resetScene(item) {
-    sceneMotion?.kill();
-    linePulse?.kill();
-    livePulse?.kill();
-    sceneMotion = null;
-    linePulse = null;
-    livePulse = null;
-    if (!gsap || !item) return;
-    gsap.set(item.querySelectorAll('.clinical-index-number, h4, .clinical-capability-copy > p, .capability-explainer-label, .capability-explainer-route, .capability-explainer-pulse, .capability-live-card, .capability-live-route-signal, .capability-live-route-pulse'), { clearProps: 'transform,opacity,visibility,strokeDashoffset,strokeDasharray' });
-  }
-
-  function startScene() {
-    if (!gsap || sceneMotion || selected < 0 || reduced.matches) return;
-    const item = items[selected];
-    const route = item.querySelector('.capability-explainer-route');
-    const labels = item.querySelectorAll('.capability-explainer-label');
-    sceneMotion = gsap.timeline();
-    sceneMotion.fromTo(item.querySelectorAll('.clinical-index-number, h4'), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.65, stagger: 0.1, ease: 'power2.out' }, 0);
-    sceneMotion.fromTo(item.querySelector('.clinical-capability-copy > p'), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.65, ease: 'power2.out' }, 0.18);
-    sceneMotion.fromTo(route, { strokeDashoffset: 304 }, { strokeDashoffset: 0, duration: 1.15, ease: 'power2.inOut' }, 0.28);
-    sceneMotion.fromTo(labels, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.48, stagger: 0.14, ease: 'power2.out' }, 0.5);
-    const livePath = item.querySelector('[data-live-path]');
-    const cards = item.querySelectorAll('[data-live-card]');
-    if (livePath) {
-      const length = livePath.getTotalLength();
-      sceneMotion.fromTo(livePath, { strokeDasharray: length, strokeDashoffset: length }, { strokeDashoffset: 0, duration: 1.25, ease: 'power2.inOut' }, 0.26);
-      sceneMotion.fromTo(cards, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.62, stagger: 0.12, ease: 'power2.out' }, 0.45);
-      const pulse = item.querySelector('[data-live-pulse]');
-      const position = { progress: 0 };
-      livePulse = gsap.to(position, { progress: 1, duration: 3.2, repeat: -1, repeatDelay: 0.3, ease: 'none', onUpdate() {
-        const point = livePath.getPointAtLength(position.progress * length);
-        pulse.setAttribute('cx', String(point.x));
-        pulse.setAttribute('cy', String(point.y));
-      } });
-    }
-    linePulse = gsap.fromTo(item.querySelector('.capability-explainer-pulse'), { autoAlpha: 0, x: 0 }, { autoAlpha: 1, x: 304, duration: 2.8, repeat: -1, repeatDelay: 0.45, ease: 'none' });
-  }
+  const { fitNativeViewport, offsets, nearest } = createCapabilityViewport(root, viewport, items, () => selected, settled);
 
   function syncMedia() {
     const slot = items[selected]?.querySelector('.capability-live-panel, .capability-anatomy-stage');
@@ -139,26 +91,14 @@ function enhanceCapabilities(root) {
     const motionAllowed = visible && onScreen && !document.hidden && !paused && !reduced.matches;
     root.dataset.motion = motionAllowed ? 'running' : 'paused';
     for (const controller of anatomy) controller.sync(motionAllowed && items[selected].contains(controller.element), reduced.matches);
-    if (reduced.matches) {
-      resetScene(items[selected]);
-    } else if (motionAllowed) {
-      startScene();
-      sceneMotion?.play();
-      linePulse?.play();
-      livePulse?.play();
-    } else {
-      if (paused) sceneMotion?.progress(1);
-      sceneMotion?.pause();
-      linePulse?.pause();
-      livePulse?.pause();
-    }
+    scene.sync(motionAllowed, paused);
     pause.textContent = paused ? 'Putar motion' : 'Jeda motion';
     pause.setAttribute('aria-pressed', String(paused));
   }
 
   function setActive(index) {
     if (selected === index) { fitNativeViewport(); syncMedia(); return; }
-    resetScene(items[selected]);
+    scene.reset(items[selected]);
     selected = index;
     root.dataset.capability = String(index + 1);
     items.forEach((item, i) => {
@@ -174,16 +114,6 @@ function enhanceCapabilities(root) {
       signal = gsap.fromTo(items[index], { '--capability-signal': 0 }, { '--capability-signal': 1, duration: 0.7, ease: 'power2.out' });
     }
     syncMedia();
-  }
-
-  function nearest(position) {
-    let winner = 0;
-    let distance = Infinity;
-    offsets().forEach((offset, index) => {
-      const delta = Math.abs(position - offset);
-      if (delta < distance) { winner = index; distance = delta; }
-    });
-    return winner;
   }
 
   function navigate(index) {
@@ -292,7 +222,7 @@ function enhanceCapabilities(root) {
   window.addEventListener('pagehide', event => {
     visible = false;
     syncMedia();
-    if (!event.persisted) { resetScene(items[selected]); anatomy.forEach(controller => controller.destroy()); media?.revert(); }
+    if (!event.persisted) { scene.reset(items[selected]); anatomy.forEach(controller => controller.destroy()); media?.revert(); }
     settled.cancel();
   });
   window.addEventListener('pageshow', () => { visible = root.getBoundingClientRect().bottom > 0 && root.getBoundingClientRect().top < window.innerHeight; syncMedia(); });

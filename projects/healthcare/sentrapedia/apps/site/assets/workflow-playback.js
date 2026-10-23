@@ -67,6 +67,5 @@
   for (const card of cards) observer.observe(card);
   const list = document.querySelector('#projectCards');
   if (list) new MutationObserver(update).observe(list, { attributes: true, attributeFilter: ['class'], subtree: true });
-  document.addEventListener('visibilitychange', update);
-  reducedMotion.addEventListener('change', update);
+  listenForPlaybackChanges(reducedMotion, update);
 })();

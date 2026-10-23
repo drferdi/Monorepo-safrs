@@ -5,6 +5,8 @@ import { readFile } from 'node:fs/promises';
 import { createServer } from './serve.mjs';
 import { renderClinicalNote } from './clinical-note.mjs';
 import { clinicalNote } from '../assets/clinical-note.config.mjs';
+import { fileURLToPath } from 'node:url';
+import { browserParts, assembleBrowserScript } from './browser-assets.mjs';
 
 test('clinical narrative preserves video, content and local assets', async () => {
   const server = createServer();
@@ -75,7 +77,7 @@ test('clinical narrative preserves video, content and local assets', async () =>
       const response = await fetch(base + '/media/' + asset);
       assert.equal(response.status, 200, asset);
       const served = new Uint8Array(await response.arrayBuffer());
-      const source = await readFile(new URL('../assets/' + asset, import.meta.url));
+      const source = asset in browserParts ? await assembleBrowserScript(fileURLToPath(new URL('../', import.meta.url)), asset) : await readFile(new URL('../assets/' + asset, import.meta.url));
       assert.equal(createHash('sha256').update(served).digest('hex'), createHash('sha256').update(source).digest('hex'), asset + ' source matches served bytes');
     }
     const video = await fetch(base + '/media/sentrapedia-solusi.mp4', { headers: { Range: 'bytes=0-31' } });

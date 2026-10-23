@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createServer } from './serve.mjs';
+import { browserParts, assembleBrowserScript } from './browser-assets.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const site = path.join(root, 'site');
@@ -15,7 +16,7 @@ for (const entry of manifest.files) {
 const current = await fs.readFile(path.join(site, 'index.html'), 'utf8');
 if (!current.includes('<title>Sentrapedia</title>') || !current.includes('kewenangan dokter yang menangani')) errors.push('Product identity or physician ownership copy missing');
 const ids = new Set([...current.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]));
-const outboundLinks = new Set(['https://melinda.co.id/']); // Gaffer-approved outbound links; every other target stays self-hosted
+const outboundLinks = new Set(['https://melinda.co.id/', 'https://beta.sentrapedia.com/sign-in', 'https://beta.sentrapedia.com/apply']); // Approved auth destinations; publication waits for Clerk cutover.
 let localTargets = 0;
 for (const match of current.matchAll(/\b(?:src|href|poster|srcset)\s*=\s*(["'])(.*?)\1/gis)) {
   const value = match[2].replaceAll('&amp;', '&');
@@ -39,10 +40,14 @@ for (const entry of manifest.files.filter(entry => entry.path.endsWith('.css')))
   }
 }
 for (const filename of ['hero-workspace.css', 'hero-workspace.js', 'hero-film.mp4']) {
-  if (sha(await fs.readFile(path.join(root, 'assets', filename))) !== sha(await fs.readFile(path.join(site, 'media', filename)))) errors.push(`Hero workspace source differs: ${filename}`);
+  const source = filename in browserParts ? await assembleBrowserScript(root, filename) : await fs.readFile(path.join(root, 'assets', filename));
+  if (sha(source) !== sha(await fs.readFile(path.join(site, 'media', filename)))) errors.push(`Hero workspace source differs: ${filename}`);
+}
+for (const filename of Object.keys(browserParts).filter(name => name !== 'hero-workspace.js')) {
+  if (sha(await assembleBrowserScript(root, filename)) !== sha(await fs.readFile(path.join(site, 'media', filename)))) errors.push(`Browser source differs: ${filename}`);
 }
 const workflows = JSON.parse(await fs.readFile(path.join(root, 'assets/workflows.json'), 'utf8'));
-if (sha(await fs.readFile(path.join(root, 'assets/workflow-playback.js'))) !== sha(await fs.readFile(path.join(site, 'media/workflow-playback.js')))) errors.push('Playback controller source differs from served file');
+if (sha(await assembleBrowserScript(root, 'workflow-playback.js')) !== sha(await fs.readFile(path.join(site, 'media/workflow-playback.js')))) errors.push('Playback controller source differs from served file');
 for (const workflow of workflows) {
   for (const suffix of ['-poster.webp', '-web.mp4']) {
     const filename = workflow.id + suffix;
