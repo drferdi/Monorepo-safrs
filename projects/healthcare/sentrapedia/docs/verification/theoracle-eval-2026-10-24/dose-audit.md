@@ -54,6 +54,13 @@ Round 3 also corrects a round 1 error: M6 took SP0314 #28's "2-3x/hari" from pen
 
 The audit of the final SSOT proposes one mechanical change, SP0314 #28 "2-3x/hari", which is the round 1 error above and is not applied.
 
+Clinical decisions (Gaffer, "Ya lakukan", applied by `dose-audit-k.mjs` with old-value checks; the note goes into `konteks`, which the index renders, and `catatan` keeps the old value):
+- K1: SP0193 #78 (PPK IDI 2017 "Artesunat … 3,2mg /kg BB") keeps the guideline text and gains "3,2 mg/kgBB adalah dosis awal artemether; dosis artesunat 2,4 mg/kgBB IV/IM". K1b: SP0194 gets no pre-referral row (its text names no dose).
+- K2: SP0216 #81 cefadroxil "2 x 500-100 mg" keeps the text and gains "kemungkinan salah ketik di pedoman (500-1000 mg)". The KMK row of the same dose is no longer in the SSOT.
+- K3: SP0053 #27 (Permenkes cefixime 1.5-2 mg/kgbb) gains "PPK IDI 2017 dan KMK 1186/2022 menulis 20 mg/kgBB/hari".
+- K4: SP0267 #20 ceftriaxone ISO "Bayi sampai 14 hari: sekali sehari 2050 mg/kg bb" → "20-50 mg/kg bb" (the same text caps it at 50 mg/kgBB).
+- K5 prednison urtikaria and K6 thalassemia folic acid: unchanged. K7: SP0225 `status.terapi` "dosis_tanpa_frekuensi" → "tanpa_dosis".
+
 ## Where each quote is (check c)
 
 | Found in | Match | Rows |

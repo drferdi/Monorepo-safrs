@@ -13,7 +13,7 @@
    "index": "theoracle/index/chunks.jsonl (154 dokumen md + 44 PDF pedoman)",
    "dosis": "PPK FKTP 757, PNPK 1491, ISO 120 pernyataan dengan halaman dan kutipan"
   },
-  "catatan": "Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'kategori' = bab ICD-10 dari kode pertama (2026-10-24; kategori sumber di 'kategori_sumber_lama'). 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur). Audit dosis 2026-10-24 (disetujui Gaffer): 315 perbaikan mekanis pada 301 baris, 1350 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json), 1 baris baru dari teks terapi; nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 2 (disetujui Gaffer): 7 perbaikan mekanis pada 7 baris; nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 3 (disetujui Gaffer): 414 perbaikan mekanis pada 377 baris, 321 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json); nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 3b (disetujui Gaffer): 15 perbaikan mekanis pada 15 baris, 2 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json); nilai lama tercatat di 'catatan' baris.",
+  "catatan": "Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'kategori' = bab ICD-10 dari kode pertama (2026-10-24; kategori sumber di 'kategori_sumber_lama'). 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur). Audit dosis 2026-10-24 (disetujui Gaffer): 315 perbaikan mekanis pada 301 baris, 1350 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json), 1 baris baru dari teks terapi; nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 2 (disetujui Gaffer): 7 perbaikan mekanis pada 7 baris; nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 3 (disetujui Gaffer): 414 perbaikan mekanis pada 377 baris, 321 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json); nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 3b (disetujui Gaffer): 15 perbaikan mekanis pada 15 baris, 2 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json); nilai lama tercatat di 'catatan' baris. Keputusan klinis Gaffer 2026-10-24: K1-K4 dan K7 diterapkan (catatan klinis di 'konteks' SP0193, SP0216, SP0053; ceftriaxone ISO 20-50 mg/kg di SP0267; status SP0225 'tanpa_dosis').",
   "pdf_pedoman": [
    {
     "file": "aha-asa-stroke-primary-prevention-2024.pdf",
@@ -17921,8 +17921,8 @@
      "kutipan": "Cefixime Anak: 1.5-2 mg/kgbb/hari dibagi 2 Aman untuk anak",
      "sumber": "Permenkes 5/2014 PPK (ekstraksi otomatis dari naskah)",
      "halaman": "93",
-     "konteks": "",
-     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
+     "konteks": "catatan klinis: PPK IDI 2017 dan KMK 1186/2022 menulis 20 mg/kgBB/hari",
+     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan.; Keputusan klinis Gaffer 2026-10-24: konteks semula \"\"."
     },
     {
      "obat": "thiamfenikol",
@@ -72003,11 +72003,11 @@
      "frekuensi": "",
      "durasi": "",
      "populasi": "",
-     "konteks": "dosis awal sebelum rujukan malaria berat",
+     "konteks": "dosis awal sebelum rujukan malaria berat; catatan klinis: 3,2 mg/kgBB adalah dosis awal artemether; dosis artesunat 2,4 mg/kgBB IV/IM. Teks pedoman dikutip apa adanya",
      "sumber": "PPK FKTP (IDI2017)",
      "halaman": 42,
      "kutipan": "Artesunat per Intra Muskular atau Intra Vena\ndengan dosis awal 3,2mg /kg BB.",
-     "catatan": ""
+     "catatan": "Keputusan klinis Gaffer 2026-10-24: konteks semula \"dosis awal sebelum rujukan malaria berat\"."
     },
     {
      "obat": "artemether-lumefantrine",
@@ -80961,11 +80961,11 @@
      "frekuensi": "2 x per hari",
      "durasi": "selama 7 hari",
      "populasi": "Dewasa",
-     "konteks": "lini kedua",
+     "konteks": "lini kedua; catatan klinis: \"500-100 mg\" kemungkinan salah ketik di pedoman (500-1000 mg)",
      "sumber": "PPK FKTP (IDI2017)",
      "halaman": 167,
      "kutipan": "atauCefadroxil 2\nx 500-100 mg per hari selama 7 hari.",
-     "catatan": ""
+     "catatan": "Keputusan klinis Gaffer 2026-10-24: konteks semula \"lini kedua\"."
     },
     {
      "obat": "Amoxicillin – Asam clavulanat",
@@ -86222,7 +86222,7 @@
    ],
    "terkait": [],
    "status": {
-    "terapi": "dosis_tanpa_frekuensi",
+    "terapi": "tanpa_dosis",
     "ada_teks_terapi": false,
     "teks_ada_dosis_numerik": false,
     "n_pernyataan_dosis": 0,
@@ -98810,7 +98810,7 @@
     },
     {
      "obat": "ceftriaxone",
-     "dosis": "Dewasa dan anak >12 tahun: 1-2 gram satu kali sehari. dosis dapat dinaikkan sampai 4 gram/1 x sehari; Bayi sampai 14 hari: sekali sehari 2050 mg/kg bb tidak boleh lebih dari 50 mg/kgBB; Bayi 15 hari-12 tahun: sekali sehari 20-80 mg/kgBB.",
+     "dosis": "Dewasa dan anak >12 tahun: 1-2 gram satu kali sehari. dosis dapat dinaikkan sampai 4 gram/1 x sehari; Bayi sampai 14 hari: sekali sehari 20-50 mg/kg bb tidak boleh lebih dari 50 mg/kgBB; Bayi 15 hari-12 tahun: sekali sehari 20-80 mg/kgBB.",
      "rute": "",
      "frekuensi": "",
      "durasi": "",
@@ -98819,7 +98819,7 @@
      "sumber": "ISO Indonesia Vol. 53 (2021)",
      "halaman": 452,
      "kutipan": "Merek ZEFTRIX: Dewasa dan anak >12 tahun: 1-2 gram satu kali sehari. dosis dapat dinaikkan sampai 4 gram/1 x sehari; Bayi sampai 14 hari: sekali sehari 2050 mg/kg bb tidak boleh lebih dari 50 mg/kgBB; Bayi 15 hari-12 tahun: sekali sehari 20-80 mg/kgBB.",
-     "catatan": "indikasi ISO menyebut \"sepsis\""
+     "catatan": "indikasi ISO menyebut \"sepsis\"; Keputusan klinis Gaffer 2026-10-24: dosis semula \"Dewasa dan anak >12 tahun: 1-2 gram satu kali sehari. dosis dapat dinaikkan sampai 4 gram/1 x sehari; Bayi sampai 14 hari: sekali sehari 2050 mg/kg bb tidak boleh lebih dari 50 mg/kgBB; Bayi 15 hari-12 tahun: sekali sehari 20-80 mg/kgBB.\" (tanda hubung hilang pada \"2050\")."
     },
     {
      "obat": "ceftizoxime na",
