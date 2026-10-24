@@ -46,14 +46,14 @@
   },
   "chunks": {
     "count": 17990,
-    "sha256": "803a68db349dbd496805ff2f32b8e5deb2916e8c660396f66e97f7319478c009",
+    "sha256": "5e3a6ed2aa735dd8cd93428c7d8dd06eed1b57c2e12e5c5cc81ed0f80c6b178a",
     "truncated": 0
   },
   "vectors": {
     "format": "float32 little-endian, row-major, one L2-normalised row per chunk in chunks.jsonl order",
-    "sha256": "079c4f5e47b1c495c1e6f9a3c2d349c0c40eb9abf009a3555323f476a447bced"
+    "sha256": "e19f740c474051bd768dafd9d0690e509e13a879b04fad44dde5e5a5823ce184"
   },
-  "indexSha256": "818c1be1bf952f5ab70b01557fc47135ef8bb75bf983bcbbdb6fd35d88f2f8e0",
-  "builtAt": "2026-10-24T05:39:34.904Z",
+  "indexSha256": "c190d5873b03602daf95660cd9d0a4420973b135ba136598c98174a9a791011f",
+  "builtAt": "2026-10-24T06:25:27.179Z",
   "device": "dml"
 }

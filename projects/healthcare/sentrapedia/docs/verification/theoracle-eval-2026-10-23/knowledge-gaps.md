@@ -149,3 +149,7 @@ The replaced code is kept in `icd10_sumber_lama`, so the catalogue `kode` and th
 
 SP0112 Hepatitis B is unchanged: B16 (the PPK code) is already its first code, B18.1 adds the chronic form; the earlier "B18.1 vs B16" line was a misreading. Left for Gaffer: SP0020 and SP0260 "Rheumatoid Arthritis (RA)" (M05) describe the same disease. Index `818c1be1…`; benchmark `../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-codes.json` identical to `benchmark-v06-itraconazole.json`; gate green. Not run through the paid eval.
 
+## Library texts reviewed (Gaffer, 2026-10-24)
+
+Gaffer reviewed the five library therapy texts side by side with their sources (each matches its source word for word once page headers and footers are removed) and approved them. Their keys now read "ditambahkan dari pustaka 2026-10-24, ditinjau Gaffer 2026-10-24", and `status.review_klinis` is {ditinjau, Gaffer, 2026-10-24} with a `catatan` naming the text: SP0298, SP0188, SP0232, SP0296, SP0027. Index `c190d587…`; benchmark `../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-reviewed.json` identical to `benchmark-v06-codes.json`; gate green.
+
