@@ -75,3 +75,11 @@ Follow-up after warm-up: container still up, restart count 0, OOMKilled false, m
 ## Still required after activation
 
 Public `/apply` still reaches the existing Cloudflare gate. Opened its internal-browser verification step and requested a code for the owner-designated mailbox; Gaffer must enter it directly, never in chat. Then prove the actual approved-tester request/pending/invitation/registration/consent/login flow, suspension and isolation. No tester has been created, approved or invited by the agent. Publish the site only within the approved boundaries. Keep the existing end-user Access gate until those checks pass; preserve Tunnel, TLS, host loopback and administrator protection.
+
+## Missing edge OTP investigation
+
+Gaffer reported no code arrived. The connected mail account does not expose the designated mailbox, so no inbox, spam folder or message body was inspected. Read the actual Cloudflare application and its linked policy through the authenticated internal browser: `Sentrapedia BETA`, destination `beta.sentrapedia.com`, policy `Dokter BETA` (`68d966c1-4978-4ab1-94be-c90c686bb4f7`). Its Allow/Include Emails rule contains one existing address; `info@sentrapedia.com` is absent. No other requirement or exclusion was shown. Existing private address is intentionally omitted here.
+
+[Cloudflare's OTP documentation](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/one-time-pin/) requires an email to match an Allow policy before a PIN is sent. Therefore the verification-screen message was not proof of delivery, and the observed missing policy match explains the current block before Clerk is reached. No repeated resend was attempted.
+
+Prepared an unsaved draft adding only `info@sentrapedia.com` to the existing email rule, retaining the original address, Allow action and 24-hour session setting. The final `Save policy` action remains pending Gaffer's explicit action-time confirmation because it grants additional edge access. This is separate from Clerk user approval; no Clerk invitation or demo admission is granted by the draft. No persisted Cloudflare policy change or Access cutover has been performed.
