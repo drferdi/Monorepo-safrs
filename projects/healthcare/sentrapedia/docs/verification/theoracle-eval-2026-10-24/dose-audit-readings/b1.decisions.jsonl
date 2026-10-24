@@ -1,0 +1,353 @@
+{"key": "SP0007#2", "action": "hapus", "alasan": "diet fiber grams per day, not a drug"}
+{"key": "SP0009#0", "action": "hapus", "alasan": "outcome statistic (90% sembuh), not a dose"}
+{"key": "SP0009#1", "action": "obat", "obat": "PEG", "alasan": "PEG 17g in same parenthesis", "lain": "frekuensi '2x/hari' but quote says 'PEG 17g 1-2x/hari'"}
+{"key": "SP0014#45", "action": "hapus", "alasan": "oxygen flow setting L/menit"}
+{"key": "SP0014#47", "action": "biarkan", "alasan": "ml/kg by age; fluid or drug not named"}
+{"key": "SP0014#48", "action": "biarkan", "alasan": "ml/kg by age; fluid or drug not named"}
+{"key": "SP0014#49", "action": "biarkan", "alasan": "ml/kg by age; fluid or drug not named"}
+{"key": "SP0014#56", "action": "obat", "obat": "PRC", "alasan": "transfusi PRC 4 ml/kg in same item"}
+{"key": "SP0014#59", "action": "biarkan", "alasan": "80-90 ml/kgBB term infant; purpose not stated"}
+{"key": "SP0014#60", "action": "hapus", "alasan": "massive transfusion threshold (>40 ml/kg, 40% volume darah)"}
+{"key": "SP0014#61", "action": "hapus", "alasan": "trigger after 80 ml/kg PRC given, not a dose"}
+{"key": "SP0014#62", "action": "hapus", "alasan": "trigger after every 40 ml/kg PRC, not a dose"}
+{"key": "SP0014#71", "action": "hapus", "alasan": "ventilator tidal volume setting"}
+{"key": "SP0014#75", "action": "hapus", "alasan": "FiO2 oxygen setting"}
+{"key": "SP0014#107", "action": "biarkan", "alasan": "continuous 8-10 ml/jam; drug not named"}
+{"key": "SP0014#136", "action": "hapus", "alasan": "ventilator tidal volume setting"}
+{"key": "SP0014#140", "action": "hapus", "alasan": "CSF leak rate, not a dose"}
+{"key": "SP0014#147", "action": "hapus", "alasan": "minute ventilation value, not a dose"}
+{"key": "SP0014#152", "action": "hapus", "alasan": "oxygen flow L/menit and FiO2 values"}
+{"key": "SP0014#153", "action": "hapus", "alasan": "oxygen flow L/menit and FiO2 values"}
+{"key": "SP0014#154", "action": "hapus", "alasan": "oxygen flow L/menit and FiO2 values"}
+{"key": "SP0014#155", "action": "hapus", "alasan": "oxygen flow L/menit and FiO2 values"}
+{"key": "SP0014#156", "action": "hapus", "alasan": "oxygen flow L/menit and FiO2 values"}
+{"key": "SP0014#157", "action": "hapus", "alasan": "oxygen flow L/menit and FiO2 values"}
+{"key": "SP0014#158", "action": "hapus", "alasan": "oxygen flow L/menit and FiO2 values"}
+{"key": "SP0014#159", "action": "hapus", "alasan": "oxygen flow L/menit and FiO2 values"}
+{"key": "SP0014#169", "action": "biarkan", "alasan": "6-8 ml/kg; quantity not named in quote"}
+{"key": "SP0014#211", "action": "hapus", "alasan": "syringe size (spuit 5 ml), device"}
+{"key": "SP0014#213", "action": "hapus", "alasan": "device step: connect syringe with 10 ml NS"}
+{"key": "SP0014#214", "action": "biarkan", "alasan": "10 ml Normal Saline; flush or fluid dose unclear"}
+{"key": "SP0014#215", "action": "hapus", "alasan": "syringe size (spuit 10 ml), device"}
+{"key": "SP0014#216", "action": "hapus", "alasan": "syringe size (spuit 10 ml), device"}
+{"key": "SP0014#226", "action": "hapus", "alasan": "urine output criterion ml/kg/jam"}
+{"key": "SP0014#227", "action": "hapus", "alasan": "urine output criterion ml/kg/jam"}
+{"key": "SP0014#240", "action": "hapus", "alasan": "pump priming volume, device"}
+{"key": "SP0015#6", "action": "biarkan", "alasan": "N-3 supplement; drug vs nutrient unclear"}
+{"key": "SP0015#15", "action": "obat", "obat": "rivaroxaban", "alasan": "rivaroxaban 2.5 mg in same sentence"}
+{"key": "SP0021#15", "action": "biarkan", "alasan": "0,5 mg/kgBB; drug not written in quote"}
+{"key": "SP0021#28", "action": "hapus", "alasan": "birth weight threshold"}
+{"key": "SP0023#13", "action": "biarkan", "alasan": "garbled table; glukokortikosteroid or teofilin could own"}
+{"key": "SP0025#7", "action": "biarkan", "alasan": "bare volume target for infants; purpose not stated"}
+{"key": "SP0025#9", "action": "hapus", "alasan": "diet protein g/kgBB/hari"}
+{"key": "SP0026#14", "action": "obat", "obat": "asiklovir", "alasan": "asiklovir named in same list item 4"}
+{"key": "SP0032#0", "action": "hapus", "alasan": "classification percentage (resorpsi), not a dose"}
+{"key": "SP0038#5", "action": "obat", "obat": "vitamin A", "alasan": "list header: Suplementasi vitamin A diberikan pada"}
+{"key": "SP0038#6", "action": "obat", "obat": "vitamin A", "alasan": "list header: Suplementasi vitamin A diberikan pada"}
+{"key": "SP0038#7", "action": "obat", "obat": "vitamin A", "alasan": "list header: Suplementasi vitamin A diberikan pada"}
+{"key": "SP0038#8", "action": "obat", "obat": "vitamin A", "alasan": "list header: Suplementasi vitamin A diberikan pada"}
+{"key": "SP0038#9", "action": "obat", "obat": "vitamin A", "alasan": "list header: Suplementasi vitamin A diberikan pada"}
+{"key": "SP0038#10", "action": "obat", "obat": "vitamin A", "alasan": "list header: Suplementasi vitamin A diberikan pada"}
+{"key": "SP0040#13", "action": "obat", "obat": "Bromocriptine", "alasan": "Bromocriptine 2 x 2,5 mg in quote"}
+{"key": "SP0040#36", "action": "hapus", "alasan": "protein g/kgBB/hari, nutrition"}
+{"key": "SP0051#5", "action": "hapus", "alasan": "diuresis target"}
+{"key": "SP0062#5", "action": "hapus", "alasan": "dietary fiber need"}
+{"key": "SP0062#6", "action": "hapus", "alasan": "protein intake, nutrition"}
+{"key": "SP0062#9", "action": "hapus", "alasan": "food exchange units / g KH, diet"}
+{"key": "SP0062#10", "action": "hapus", "alasan": "food exchange units / g KH, diet"}
+{"key": "SP0062#11", "action": "hapus", "alasan": "food exchange units / g KH, diet"}
+{"key": "SP0062#12", "action": "hapus", "alasan": "food exchange units / g KH, diet"}
+{"key": "SP0062#13", "action": "hapus", "alasan": "food exchange units / g KH, diet"}
+{"key": "SP0062#14", "action": "hapus", "alasan": "food exchange units / g KH, diet"}
+{"key": "SP0062#15", "action": "hapus", "alasan": "food exchange units / g KH, diet"}
+{"key": "SP0062#16", "action": "hapus", "alasan": "food exchange units / g KH, diet"}
+{"key": "SP0062#19", "action": "hapus", "alasan": "carbohydrate intake g/kg, diet"}
+{"key": "SP0062#30", "action": "biarkan", "alasan": "0,1 IU/kgBB; drug not named"}
+{"key": "SP0062#40", "action": "biarkan", "alasan": "70-85% of daily dose; drug not named"}
+{"key": "SP0062#66", "action": "hapus", "alasan": "HbA1c target, lab value"}
+{"key": "SP0064#8", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0064#20", "action": "hapus", "alasan": "birth weight threshold"}
+{"key": "SP0064#28", "action": "hapus", "alasan": "TTGO 75 gram diagnostic test"}
+{"key": "SP0064#82", "action": "hapus", "alasan": "salt intake, diet"}
+{"key": "SP0064#83", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0075#6", "action": "obat", "obat": "Carbamazepine", "alasan": "titration cell of Carbamazepine row in table", "lain": "dosis '200 mg' but quote says 'Mulai 100/200 mg/hr'"}
+{"key": "SP0075#9", "action": "obat", "obat": "Phenobarbital", "alasan": "titration cell of Phenobarbital row in table"}
+{"key": "SP0075#10", "action": "obat", "obat": "Clobazam", "alasan": "titration cell of Clobazam row (Titrasi Clobazam)"}
+{"key": "SP0075#11", "action": "obat", "obat": "Clobazam", "alasan": "titration cell of Clobazam row (Titrasi Clobazam)"}
+{"key": "SP0075#12", "action": "obat", "obat": "Oxcarbazepine", "alasan": "titration cell of Oxcarbazepine row in table"}
+{"key": "SP0075#13", "action": "obat", "obat": "Levetiracetam", "alasan": "titration cell of Levetiracetam row in table", "lain": "dosis '1000 mg' but quote says 'Mulai 500/1000 mg/hr'"}
+{"key": "SP0075#16", "action": "obat", "obat": "Gabapentin", "alasan": "titration cell of Gabapentin row in table"}
+{"key": "SP0075#17", "action": "obat", "obat": "Lamotrigine", "alasan": "titration cell of Lamotrigine row in table"}
+{"key": "SP0075#18", "action": "obat", "obat": "Lamotrigine", "alasan": "titration cell of Lamotrigine row in table"}
+{"key": "SP0075#19", "action": "obat", "obat": "Lamotrigine", "alasan": "Titrasi Lamotrigine cell continues", "lain": "dosis '50mg' is the titration step: 'ditingkatkan 50mg/ 2 minggu'"}
+{"key": "SP0075#21", "action": "biarkan", "alasan": "taper 25% of OAE dose; no single drug"}
+{"key": "SP0075#22", "action": "obat", "obat": "Carbamazepine", "alasan": "titration cell of Carbamazepine row in table", "lain": "dosis '200 mg' but quote says 'Mulai 100/200 mg/hr'"}
+{"key": "SP0075#23", "action": "obat", "obat": "Phenytoin", "alasan": "Titrasi Phenytoin cell in table"}
+{"key": "SP0075#24", "action": "obat", "obat": "Valproic Acid", "alasan": "Titrasi Valproic Acid cell in table"}
+{"key": "SP0075#25", "action": "obat", "obat": "Phenobarbital", "alasan": "titration cell of Phenobarbital row in table"}
+{"key": "SP0075#30", "action": "obat", "obat": "Clobazam", "alasan": "titration cell of Clobazam row (Titrasi Clobazam)"}
+{"key": "SP0075#31", "action": "obat", "obat": "Clobazam", "alasan": "titration cell of Clobazam row (Titrasi Clobazam)"}
+{"key": "SP0075#32", "action": "obat", "obat": "Oxcarbazepine", "alasan": "titration cell of Oxcarbazepine row in table"}
+{"key": "SP0075#33", "action": "obat", "obat": "Levetiracetam", "alasan": "titration cell of Levetiracetam row in table", "lain": "dosis '1000 mg' but quote says 'Mulai 500/1000 mg/hr'"}
+{"key": "SP0075#36", "action": "obat", "obat": "Gabapentin", "alasan": "titration cell of Gabapentin row in table"}
+{"key": "SP0075#37", "action": "obat", "obat": "Zonisamide", "alasan": "Titrasi Zonisamide cell in table"}
+{"key": "SP0085#3", "action": "obat", "obat": "DEC", "alasan": "DEC 6mg/kg/hari in quote"}
+{"key": "SP0087#11", "action": "biarkan", "alasan": "metronidazol 2 g stated NOT recommended in pregnancy/breastfeeding", "lain": "populasi empty but item says 'Bila sedang hamil atau menyusui ... Tidak direkomendasikan'"}
+{"key": "SP0089#0", "action": "hapus", "alasan": "fracture statistic (70%), not a dose"}
+{"key": "SP0089#6", "action": "hapus", "alasan": "copper nutrient requirement"}
+{"key": "SP0097#15", "action": "biarkan", "alasan": "24 mg/26 mg; drug not named, garbled"}
+{"key": "SP0097#16", "action": "biarkan", "alasan": "97 mg/103 mg; drug not named", "lain": "dosis split in two rows; quote gives one combined dose '97 mg/103 mg'"}
+{"key": "SP0097#17", "action": "biarkan", "alasan": "97 mg/103 mg; drug not named", "lain": "dosis split in two rows; quote gives one combined dose '97 mg/103 mg'"}
+{"key": "SP0097#18", "action": "biarkan", "alasan": "24 mg/26 mg; drug not named", "lain": "dosis split in two rows; quote gives one combined dose '24 mg/26 mg'"}
+{"key": "SP0097#19", "action": "biarkan", "alasan": "24 mg/26 mg; drug not named", "lain": "dosis split in two rows; quote gives one combined dose '24 mg/26 mg'"}
+{"key": "SP0097#30", "action": "hapus", "alasan": "ventilator tidal volume setting"}
+{"key": "SP0097#45", "action": "biarkan", "alasan": "garbled quote; drug not named"}
+{"key": "SP0098#12", "action": "hapus", "alasan": "lab value reduced Hb g/dl"}
+{"key": "SP0098#37", "action": "biarkan", "alasan": "cut quote; drug not named"}
+{"key": "SP0103#18", "action": "biarkan", "alasan": "two candidates: haloperidol or fluphenazine decanoas"}
+{"key": "SP0106#16", "action": "biarkan", "alasan": "ORS oral rehydration; outside listed drug categories", "lain": "dosis '50 mL' lacks /kg: quote says '50 mL/kg untuk ringan'"}
+{"key": "SP0106#30", "action": "hapus", "alasan": "oralit composition per liter, not a dose"}
+{"key": "SP0106#39", "action": "hapus", "alasan": "oralit composition per liter, not a dose"}
+{"key": "SP0109#5", "action": "hapus", "alasan": "vial content (IU per botol), not a dose"}
+{"key": "SP0109#9", "action": "biarkan", "alasan": "5-10 U/kg; product not named"}
+{"key": "SP0109#15", "action": "biarkan", "alasan": "40 U/kg 'demand'; product and meaning unclear"}
+{"key": "SP0109#27", "action": "obat", "obat": "FVIII", "alasan": "Rekomendasi dosis FVIII in quote", "lain": "dosis '50-100 IU' lacks /kg: quote says '50-100 IU/kg'"}
+{"key": "SP0109#42", "action": "obat", "obat": "FVIII", "alasan": "Rekomendasi dosis FVIII in quote", "lain": "dosis '50-100 IU' lacks /kg: quote says '50-100 IU/kg'"}
+{"key": "SP0109#47", "action": "hapus", "alasan": "centrifuge speed, lab procedure"}
+{"key": "SP0109#48", "action": "hapus", "alasan": "centrifuge speed, lab procedure"}
+{"key": "SP0110#0", "action": "hapus", "alasan": "dietary fiber grams per day"}
+{"key": "SP0112#15", "action": "hapus", "alasan": "HBV DNA lab threshold IU/mL"}
+{"key": "SP0112#22", "action": "hapus", "alasan": "HBV DNA lab threshold IU/mL"}
+{"key": "SP0112#77", "action": "hapus", "alasan": "birth weight threshold"}
+{"key": "SP0119#1", "action": "hapus", "alasan": "physiology fact: bilirubin from 1 g hemoglobin"}
+{"key": "SP0119#3", "action": "biarkan", "alasan": "max 1 unit darah; cut quote, purpose unclear"}
+{"key": "SP0119#7", "action": "hapus", "alasan": "birth weight category or value"}
+{"key": "SP0119#8", "action": "hapus", "alasan": "birth weight category or value"}
+{"key": "SP0119#9", "action": "hapus", "alasan": "birth weight category or value"}
+{"key": "SP0119#11", "action": "hapus", "alasan": "birth weight category or value"}
+{"key": "SP0119#13", "action": "hapus", "alasan": "birth weight category or value"}
+{"key": "SP0119#14", "action": "hapus", "alasan": "birth weight category or value"}
+{"key": "SP0119#15", "action": "hapus", "alasan": "birth weight category or value"}
+{"key": "SP0122#1", "action": "hapus", "alasan": "dietary cholesterol limit"}
+{"key": "SP0122#2", "action": "hapus", "alasan": "weight loss target percentage"}
+{"key": "SP0124#11", "action": "hapus", "alasan": "salt intake, diet"}
+{"key": "SP0124#15", "action": "hapus", "alasan": "proteinuria lab threshold"}
+{"key": "SP0125#2", "action": "hapus", "alasan": "salt intake, diet"}
+{"key": "SP0125#4", "action": "biarkan", "alasan": "drug class only (Receptor Blocker); drug not named"}
+{"key": "SP0125#10", "action": "obat", "obat": "Klonidin", "alasan": "Klonidin i.v. dose in quote", "lain": "dosis '3-5 mcg' lacks /kg: quote says '3-5 mcg/kg'"}
+{"key": "SP0127#9", "action": "obat", "obat": "Allupurinol", "alasan": "Allupurinol dimulai dari dosis terendah 100 mg"}
+{"key": "SP0129#3", "action": "biarkan", "alasan": "Levotiroksin named only in previous sentence"}
+{"key": "SP0130#181", "action": "biarkan", "alasan": "garbled HIV table; owner unclear"}
+{"key": "SP0136#2", "action": "hapus", "alasan": "urine output criterion ml/kgbb/jam"}
+{"key": "SP0136#3", "action": "hapus", "alasan": "urine output criterion ml/kgbb/jam"}
+{"key": "SP0136#10", "action": "hapus", "alasan": "diuresis target"}
+{"key": "SP0139#99", "action": "biarkan", "alasan": "1 g/hari for Remaja; drug not written"}
+{"key": "SP0148#4", "action": "obat", "obat": "Leucovorin", "alasan": "Leucovorin 20 mg/m2 IV in quote", "lain": "dosis '20 mg' lacks /m2: quote says '20 mg/m2'"}
+{"key": "SP0148#38", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0148#43", "action": "obat", "obat": "5-FU", "alasan": "5-FU 225 mg/m2 in quote", "lain": "dosis '225 mg' lacks /m2: quote says '225 mg/m2 dalam 24 jam'"}
+{"key": "SP0148#162", "action": "obat", "obat": "5- FU", "alasan": "already the drug name as written; keep", "lain": "frekuensi 'diulang setiap 2 minggu' not in quote"}
+{"key": "SP0148#201", "action": "obat", "obat": "5- FU", "alasan": "already the drug name as written; keep", "lain": "frekuensi 'diulang setiap 2 minggu' not in quote"}
+{"key": "SP0149#0", "action": "hapus", "alasan": "radiotherapy organ dose constraint, not a drug"}
+{"key": "SP0149#4", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0149#5", "action": "biarkan", "alasan": "bare mL/kgBB/hari by age; SP0153#8 sebelum calls it fluid need"}
+{"key": "SP0149#6", "action": "biarkan", "alasan": "bare mL/kgBB/hari by age; SP0153#8 sebelum calls it fluid need"}
+{"key": "SP0151#19", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0151#20", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0152#3", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0152#4", "action": "biarkan", "alasan": "bare mL/kgBB/hari by age; SP0153#8 sebelum calls it fluid need"}
+{"key": "SP0152#5", "action": "biarkan", "alasan": "bare mL/kgBB/hari by age; SP0153#8 sebelum calls it fluid need"}
+{"key": "SP0152#6", "action": "biarkan", "alasan": "bare mL/kgBB/hari by age; SP0153#8 sebelum calls it fluid need"}
+{"key": "SP0153#8", "action": "hapus", "alasan": "Kebutuhan cairan (fluid need by age), nutrition"}
+{"key": "SP0153#9", "action": "hapus", "alasan": "Kebutuhan cairan (fluid need by age), nutrition"}
+{"key": "SP0155#13", "action": "hapus", "alasan": "statistic: dose reduced in 62%"}
+{"key": "SP0160#24", "action": "biarkan", "alasan": "20 mg pagi; drug not written"}
+{"key": "SP0160#66", "action": "biarkan", "alasan": "Long Acting 25 mg; drug not written"}
+{"key": "SP0176#0", "action": "hapus", "alasan": "dietary fiber grams per day"}
+{"key": "SP0177#26", "action": "biarkan", "alasan": "prednison only in earlier separate list; garbled table"}
+{"key": "SP0177#27", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#28", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#29", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#30", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#31", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#32", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#33", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#34", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#35", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#36", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#37", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#38", "action": "biarkan", "alasan": "taper dose; no drug named, no context text"}
+{"key": "SP0177#100", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#101", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#102", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#103", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#104", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#105", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#106", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#100 sebelum"}
+{"key": "SP0177#107", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#100 sebelum"}
+{"key": "SP0177#108", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#100 sebelum"}
+{"key": "SP0177#109", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#100 sebelum"}
+{"key": "SP0177#110", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#100 sebelum"}
+{"key": "SP0177#111", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#100 sebelum"}
+{"key": "SP0177#121", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#122", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#123", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#124", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#125", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#126", "action": "obat", "obat": "prednison", "alasan": "list header: pemberian prednison dengan cara pemberian"}
+{"key": "SP0177#127", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#121 sebelum"}
+{"key": "SP0177#128", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#121 sebelum"}
+{"key": "SP0177#129", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#121 sebelum"}
+{"key": "SP0177#130", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#121 sebelum"}
+{"key": "SP0177#131", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#121 sebelum"}
+{"key": "SP0177#132", "action": "biarkan", "alasan": "likely prednison list; header cut, seen in SP0177#121 sebelum"}
+{"key": "SP0178#8", "action": "hapus", "alasan": "urine protein lab threshold"}
+{"key": "SP0178#41", "action": "hapus", "alasan": "blood loss threshold"}
+{"key": "SP0178#49", "action": "hapus", "alasan": "statistic (36% perempuan)"}
+{"key": "SP0178#51", "action": "biarkan", "alasan": "garbled; 0,2 mg drug not named"}
+{"key": "SP0182#15", "action": "obat", "obat": "6-MP", "alasan": "6-MP 60 mg/m2/hari in quote", "lain": "dosis '60 mg' lacks /m2/hari: quote says '60 mg/m2/hari'"}
+{"key": "SP0182#21", "action": "biarkan", "alasan": "40 mg/m2; drug not written"}
+{"key": "SP0182#34", "action": "biarkan", "alasan": "50% dose reduction; drug not named"}
+{"key": "SP0182#39", "action": "biarkan", "alasan": "heading 'HDMTX (5 gram)'; dose unit unclear"}
+{"key": "SP0187#9", "action": "hapus", "alasan": "burn size threshold TBSA%"}
+{"key": "SP0187#11", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0187#12", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0193#14", "action": "hapus", "alasan": "hemoglobin lab threshold"}
+{"key": "SP0193#19", "action": "hapus", "alasan": "hemoglobin lab threshold"}
+{"key": "SP0193#43", "action": "biarkan", "alasan": "transfusion volume formula; blood product not named"}
+{"key": "SP0193#44", "action": "biarkan", "alasan": "transfusion volume formula; blood product not named"}
+{"key": "SP0193#51", "action": "hapus", "alasan": "bilirubin lab value"}
+{"key": "SP0193#52", "action": "hapus", "alasan": "Hb/Ht transfusion threshold"}
+{"key": "SP0193#53", "action": "hapus", "alasan": "Hb/Ht transfusion threshold"}
+{"key": "SP0193#60", "action": "biarkan", "alasan": "age-based i.m. dose; drug not written"}
+{"key": "SP0193#61", "action": "biarkan", "alasan": "age-based i.m. dose; drug not written"}
+{"key": "SP0193#62", "action": "biarkan", "alasan": "age-based i.m. dose; drug not written"}
+{"key": "SP0193#101", "action": "obat", "obat": "primakuin", "alasan": "dosis primakuin ditingkatkan, same sentence"}
+{"key": "SP0193#108", "action": "obat", "obat": "DHP", "alasan": "4 tablet DHP in quote"}
+{"key": "SP0196#6", "action": "biarkan", "alasan": "garbled table; g/kg product not named"}
+{"key": "SP0196#7", "action": "biarkan", "alasan": "garbled table; g/kg product not named"}
+{"key": "SP0196#16", "action": "hapus", "alasan": "daily fluid requirement, nutrition context"}
+{"key": "SP0196#17", "action": "hapus", "alasan": "water swallowing test volume"}
+{"key": "SP0196#18", "action": "biarkan", "alasan": "1 g/kg BBI/hari; nutrient or drug not named"}
+{"key": "SP0196#22", "action": "biarkan", "alasan": "160 mg/hari; drug not written"}
+{"key": "SP0196#26", "action": "hapus", "alasan": "carbohydrate drink, diet"}
+{"key": "SP0196#28", "action": "hapus", "alasan": "protein intake, nutrition"}
+{"key": "SP0196#29", "action": "hapus", "alasan": "protein intake, nutrition"}
+{"key": "SP0196#41", "action": "hapus", "alasan": "protein intake, nutrition"}
+{"key": "SP0196#42", "action": "hapus", "alasan": "dietary fiber per kcal"}
+{"key": "SP0196#43", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0196#49", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0196#54", "action": "hapus", "alasan": "dietary fiber need"}
+{"key": "SP0196#55", "action": "biarkan", "alasan": "limit 2000 mg/hr; substance not named"}
+{"key": "SP0196#59", "action": "hapus", "alasan": "dietary fiber"}
+{"key": "SP0196#62", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0196#63", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0196#64", "action": "biarkan", "alasan": "g/kg/hari by TBSA; nutrient not named"}
+{"key": "SP0196#65", "action": "biarkan", "alasan": "g/kg/hari by TBSA; nutrient not named"}
+{"key": "SP0196#66", "action": "biarkan", "alasan": "g/kg/hari by TBSA; nutrient not named"}
+{"key": "SP0196#67", "action": "biarkan", "alasan": "g/kg/hari by TBSA; nutrient not named"}
+{"key": "SP0196#78", "action": "biarkan", "alasan": "2 g/kg by IMT; nutrient not named"}
+{"key": "SP0196#79", "action": "biarkan", "alasan": "max 5-7 g/kg; substance not named"}
+{"key": "SP0196#80", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0196#81", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0196#82", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0196#84", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0196#87", "action": "biarkan", "alasan": "garbled table; g/kg product not named"}
+{"key": "SP0196#88", "action": "biarkan", "alasan": "garbled table; g/kg product not named"}
+{"key": "SP0208#4", "action": "biarkan", "alasan": "garbled table; 3 x 60 mg drug not named"}
+{"key": "SP0208#5", "action": "hapus", "alasan": "weight loss >5% criterion, not a dose"}
+{"key": "SP0208#6", "action": "hapus", "alasan": "weight loss >5% criterion, not a dose"}
+{"key": "SP0208#8", "action": "hapus", "alasan": "weight loss >5% criterion, not a dose"}
+{"key": "SP0208#9", "action": "biarkan", "alasan": "garbled table; 2,4mg drug not named"}
+{"key": "SP0208#10", "action": "biarkan", "alasan": "garbled table; 75 mg drug not named"}
+{"key": "SP0208#20", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0211#6", "action": "biarkan", "alasan": "jahe (ginger) 250 mg; herbal vs food unclear"}
+{"key": "SP0212#31", "action": "biarkan", "alasan": "400 IU; vitamin not named"}
+{"key": "SP0212#32", "action": "biarkan", "alasan": "400 IU; vitamin not named"}
+{"key": "SP0213#2", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0221#27", "action": "hapus", "alasan": "protein recommendation, nutrition"}
+{"key": "SP0221#28", "action": "biarkan", "alasan": "bare 'anjuran Pria 60 g'; pairs with SP0221#27 Protein row"}
+{"key": "SP0223#6", "action": "hapus", "alasan": "protein intake, nutrition"}
+{"key": "SP0223#7", "action": "hapus", "alasan": "protein intake, nutrition"}
+{"key": "SP0223#16", "action": "biarkan", "alasan": "75-150 IU/kg/minggu; drug not named"}
+{"key": "SP0223#24", "action": "hapus", "alasan": "dietary cholesterol limit"}
+{"key": "SP0223#26", "action": "hapus", "alasan": "eGFR lab threshold"}
+{"key": "SP0223#35", "action": "hapus", "alasan": "protein need, nutrition"}
+{"key": "SP0223#40", "action": "hapus", "alasan": "dietary fiber"}
+{"key": "SP0223#50", "action": "hapus", "alasan": "dialysis blood flow setting"}
+{"key": "SP0223#74", "action": "biarkan", "alasan": "infusion rate % of Qb; fluid not named"}
+{"key": "SP0223#77", "action": "biarkan", "alasan": "60 ml/kg; purpose not stated"}
+{"key": "SP0223#88", "action": "biarkan", "alasan": "protein g/kg/sesi infusion; nutrition formula"}
+{"key": "SP0223#150", "action": "biarkan", "alasan": "weekly ml/m2 volume; fluid not named"}
+{"key": "SP0223#151", "action": "biarkan", "alasan": "weekly ml/m2 volume; fluid not named"}
+{"key": "SP0223#152", "action": "biarkan", "alasan": "weekly ml/m2 volume; fluid not named"}
+{"key": "SP0223#154", "action": "biarkan", "alasan": "500-1000 U/L; drug not named"}
+{"key": "SP0223#169", "action": "hapus", "alasan": "urine output target"}
+{"key": "SP0223#172", "action": "hapus", "alasan": "protein loss amount"}
+{"key": "SP0223#175", "action": "hapus", "alasan": "protein intake, nutrition"}
+{"key": "SP0224#5", "action": "hapus", "alasan": "dialysis blood flow setting"}
+{"key": "SP0224#11", "action": "biarkan", "alasan": "taper mg/hari; drug not written"}
+{"key": "SP0224#12", "action": "biarkan", "alasan": "taper mg/hari; drug not written"}
+{"key": "SP0224#13", "action": "biarkan", "alasan": "taper mg/hari; drug not written"}
+{"key": "SP0224#14", "action": "biarkan", "alasan": "taper mg/hari; drug not written"}
+{"key": "SP0224#15", "action": "biarkan", "alasan": "taper mg/hari; drug not written"}
+{"key": "SP0231#5", "action": "hapus", "alasan": "blood draw volume, lab procedure"}
+{"key": "SP0245#2", "action": "hapus", "alasan": "PSI class mortality percentage"}
+{"key": "SP0245#89", "action": "hapus", "alasan": "PSI class mortality percentage"}
+{"key": "SP0248#0", "action": "obat", "obat": "Metildopa", "alasan": "Metildopa named in same item"}
+{"key": "SP0253#21", "action": "biarkan", "alasan": "equivalent 10 mg; drug not named"}
+{"key": "SP0254#6", "action": "obat", "obat": "serum homolog", "alasan": "serum homolog 20 IU/kgBB, same sentence"}
+{"key": "SP0254#8", "action": "obat", "obat": "serum homolog", "alasan": "serum homolog 20 IU/kgBB, same sentence"}
+{"key": "SP0254#9", "action": "obat", "obat": "VAR", "alasan": "VAR 0,5 ml in quote"}
+{"key": "SP0255#13", "action": "biarkan", "alasan": "adrenalin named only after dose or prior sentence"}
+{"key": "SP0259#2", "action": "biarkan", "alasan": "study arm: triamcinolone 4 mg intravitreal"}
+{"key": "SP0266#4", "action": "biarkan", "alasan": "g/kgBB/hari for lansia; nutrient not named"}
+{"key": "SP0266#5", "action": "biarkan", "alasan": "g/kgBB/hari for lansia; nutrient not named"}
+{"key": "SP0268#4", "action": "hapus", "alasan": "diuresis target"}
+{"key": "SP0268#30", "action": "hapus", "alasan": "ventilator tidal volume limit"}
+{"key": "SP0276#12", "action": "hapus", "alasan": "statistic (67%)"}
+{"key": "SP0279#14", "action": "biarkan", "alasan": "study: Erdostein 2x300 mg; study context"}
+{"key": "SP0280#25", "action": "biarkan", "alasan": "7.5 mg/8 mcg/jam; drug not named"}
+{"key": "SP0280#26", "action": "biarkan", "alasan": "7.5 mg/8 mcg/jam; drug not named"}
+{"key": "SP0280#28", "action": "hapus", "alasan": "proteinuria threshold"}
+{"key": "SP0280#63", "action": "hapus", "alasan": "echo value LAVI ml/m2"}
+{"key": "SP0280#65", "action": "obat", "obat": "LMWH", "alasan": "LMWH 100 U/kg in quote", "lain": "dosis '100 U' lacks /kg: quote says '100 U/kg'"}
+{"key": "SP0280#73", "action": "hapus", "alasan": "dietary fiber need"}
+{"key": "SP0283#5", "action": "biarkan", "alasan": "40% of dose; drug and meaning unclear"}
+{"key": "SP0283#7", "action": "biarkan", "alasan": "maximum doses in table; drugs not named"}
+{"key": "SP0283#8", "action": "biarkan", "alasan": "maximum doses in table; drugs not named"}
+{"key": "SP0283#9", "action": "biarkan", "alasan": "maximum doses in table; drugs not named"}
+{"key": "SP0283#10", "action": "biarkan", "alasan": "maximum doses in table; drugs not named"}
+{"key": "SP0283#11", "action": "biarkan", "alasan": "maximum doses in table; drugs not named"}
+{"key": "SP0283#12", "action": "biarkan", "alasan": "starting dose; drug not named"}
+{"key": "SP0283#14", "action": "biarkan", "alasan": "starting dose; drug not named"}
+{"key": "SP0283#23", "action": "hapus", "alasan": "pharmacokinetic metabolite %, not a dose"}
+{"key": "SP0283#69", "action": "biarkan", "alasan": "garbled PK table; drug unclear"}
+{"key": "SP0283#84", "action": "biarkan", "alasan": "12,5 mg start; drug not named", "lain": "frekuensi 'dua kali sehari' but quote says 'sekali atau dua kali sehari'"}
+{"key": "SP0283#98", "action": "biarkan", "alasan": "max 50 mg/hari; drug not named"}
+{"key": "SP0288#17", "action": "obat", "obat": "Fresh frozen plasma (FFP)", "alasan": "FFP 2-6 unit; duplicates manual row #91"}
+{"key": "SP0288#34", "action": "obat", "obat": "HCT", "alasan": "HCT 12,5-50 mg on same table line"}
+{"key": "SP0288#64", "action": "obat", "obat": "UFH", "alasan": "UFH 5000 unit in quote"}
+{"key": "SP0288#91", "action": "obat", "obat": "Fresh frozen plasma (FFP)", "alasan": "already the drug name as written; keep"}
+{"key": "SP0292#1", "action": "hapus", "alasan": "weighing precision 10 gram"}
+{"key": "SP0292#3", "action": "hapus", "alasan": "study protein intake"}
+{"key": "SP0292#4", "action": "hapus", "alasan": "birth weight threshold"}
+{"key": "SP0302#0", "action": "hapus", "alasan": "blood bag volume, not a dose"}
+{"key": "SP0302#8", "action": "obat", "obat": "DFX", "alasan": "DFX 25 mg/kg/hari in quote"}
+{"key": "SP0302#15", "action": "hapus", "alasan": "rising transfusion need criterion, not a dose"}
+{"key": "SP0302#16", "action": "hapus", "alasan": "rising transfusion need criterion, not a dose"}
+{"key": "SP0303#1", "action": "hapus", "alasan": "birth weight threshold"}
+{"key": "SP0303#8", "action": "hapus", "alasan": "statistic (10% bayi)"}
+{"key": "SP0303#35", "action": "hapus", "alasan": "birth weight threshold"}
+{"key": "SP0303#36", "action": "hapus", "alasan": "birth weight threshold"}
+{"key": "SP0303#41", "action": "hapus", "alasan": "weight and oxygen flow table lookup"}
+{"key": "SP0303#56", "action": "hapus", "alasan": "FiO2 oxygen setting"}
+{"key": "SP0303#62", "action": "hapus", "alasan": "birth weight threshold"}
+{"key": "SP0314#1", "action": "obat", "obat": "amoksisilin", "alasan": "Penggunaan amoksisilin peroral, same sentence", "lain": "frekuensi '3 kali' but quote says 'dibagi dalam 2-3 kali'"}
+{"key": "SP0317#5", "action": "hapus", "alasan": "hospital counts statistic"}
+{"key": "SP0317#6", "action": "hapus", "alasan": "hospital counts statistic"}
+{"key": "SP0317#7", "action": "hapus", "alasan": "lesion volume threshold"}
+{"key": "SP0317#15", "action": "hapus", "alasan": "ambulance price"}
+{"key": "SP0321#3", "action": "hapus", "alasan": "audiometry correction table, not a dose"}
+{"key": "SP0321#4", "action": "hapus", "alasan": "audiometry correction table, not a dose"}
+{"key": "SP0329#4", "action": "obat", "obat": "Asiklovir", "alasan": "same list item '- Asiklovir: Dewasa...; Anak'", "lain": "dosis '800 mg' is the max; quote says '4 x 20 mg/kgBB/kali (maks 800 mg)'"}
+{"key": "SP0329#13", "action": "obat", "obat": "Asiklovir", "alasan": "same list item '- Asiklovir: Dewasa...; Anak'", "lain": "dosis '800 mg' is the max; quote says '4 x 20 mg/kgBB/kali (maks 800 mg)'"}

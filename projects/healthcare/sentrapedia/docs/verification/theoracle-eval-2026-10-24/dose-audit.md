@@ -32,7 +32,27 @@ Gaffer approved M1-M7, H and N-0001; B and K stay open. `dose-audit-apply.mjs --
 
 Commit `22a8cea5`. Benchmark `../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-dose-audit.json`: every hit identical to `benchmark-v06-ra-merge.json`. Paid eval: `eval-dose-audit.md` (ICD codes identical in all 61 cases, doses shown 62 → 63).
 
-The audit run again on the new SSOT finds no lost dash, no drug-name fragment with a mechanical fix, no cut unit or thousands, and 343 non-drug rows (222 rendered) that the H rule did not cover. It also proposes seven new mechanical changes that the approved ones made visible; they are not applied: SP0219 #1 and #4 frekuensi "4x/hari" → "3-4x/hari" (parasetamol), SP0223 #31 dosis "10-20 unit" → "10-20 unit/kg/jam" (heparin), SP0239 #1, #3, #10, #12 dosis "500 mg"/"250 mg" → "maks 500 mg"/"maks 250 mg" (azitromisin).
+The audit run again on the new SSOT finds no lost dash, no drug-name fragment with a mechanical fix, no cut unit or thousands, and 343 non-drug rows (222 rendered) that the H rule did not cover. It also proposes seven new mechanical changes on rows whose `obat` M3 had just named ("kgbb", "Mulai infus"): SP0219 #1 and #4 frekuensi "4x/hari" → "3-4x/hari" (parasetamol), SP0223 #31 dosis "10-20 unit" → "10-20 unit/kg/jam" (heparin), SP0239 #1, #3, #10, #12 dosis "500 mg"/"250 mg" → "maks 500 mg"/"maks 250 mg" (azitromisin).
+
+Round 2 (Gaffer: "Ya, terapkan 7 kandidat mekanis baru"): the seven are `dose-audit-candidates-2.json` (M4-0045, M5-0015 to M5-0018, M6-0114, M6-0115), applied by `dose-audit-apply.mjs dose-audit-candidates-2.json --write` with the same checks; each new value is in its row's quote, and `_meta.catatan` gets a second sentence. SSOT `e9f7d1bc…`; rows, rendered rows, dose lines and status counts unchanged. The audit run again finds no mechanical change left; flagged rows 4,472 → 4,466. Not changed and open: SP0219 #1 and #4 give 500 mg (the adult dose of the quote) with `populasi` "anak" (fixed in round 3).
+
+Round 3 and 3b (Gaffer: "Sekalian check aja dulu semua"; approved "terapkan paket putaran 3 + 3b (perbaikan dan hapus)"). Every flagged row of the re-audit that could still be wrong was read once: the non-drug, fragment and class `obat` rows (769, three readers), the 83 read-by-hand proposals and the SP0314 amoxicillin rows (by hand), and 312 auto rows whose dosis, frekuensi or rute sit in another drug's part of the quote (`attr-check`: from the drug's name to the next drug a row of the same quote names; one reader). The readings are in `dose-audit-readings/`; `dose-audit-merge.mjs` merged them into `dose-audit-candidates-3.json`, accepting a value only when it is written in the row's quote (a drug name also just before it) and never deleting a manual row. Held back for Gaffer (`review`, 335 rows): renames where two drugs share the dose, combination names for one component's dose, the SP0075 epilepsy titration table, doses from study reports, and every row a reader left. Round 3 was simulated on a copy first; the re-audit of the result gave the follow-ups of round 3b (`dose-audit-candidates-3b.json`: per-kg and "maksimum" on rows just named, two more non-dose rows).
+
+Round 3 also corrects a round 1 error: M6 took SP0314 #28's "2-3x/hari" from penisilin V; amoksisilin's own is "3x/hari" (the frequency rule took the dose's first occurrence in the quote, not the one after the row's drug).
+
+| | After round 2 | After round 3 + 3b |
+|---|---|---|
+| SSOT sha256 | `e9f7d1bc…` | `852c762c…` |
+| Field changes | | 429 (obat 204, frekuensi 104, dosis 68, rute 39, durasi 10, populasi 2, kutipan 2) |
+| Rows removed (auto only; copies in `dose-audit-removed.json`, now 1,673 rows of all rounds) | | 323 (257 rendered) |
+| Dose rows (manual / auto / cross-referenced) | 7,591 (2,384 / 5,101 / 106) | 7,268 (2,384 / 4,778 / 106) |
+| Rows that reach the index / rendered dose lines | 7,244 / 6,854 | 7,045 / 6,645 |
+| Entries with a dose line | 303 | 301 (SP0032 and SP0273 held only "50-75%" and "weight loss 7-10%") |
+| Σ `n_obat_berdosis` | 3,693 | 3,398 |
+| Rows flagged by the audit (rendered) | 4,466 (4,141) | 3,987 (3,807) |
+| Index chunks (SSOT + PDF) | 17,899 (2,313 + 15,586) | 17,871 (2,285 + 15,586) |
+
+The audit of the final SSOT proposes one mechanical change, SP0314 #28 "2-3x/hari", which is the round 1 error above and is not applied.
 
 ## Where each quote is (check c)
 

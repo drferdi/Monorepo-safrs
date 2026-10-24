@@ -1,18 +1,20 @@
 // Applies the dose-audit proposals Gaffer approved on 2026-10-24 (M1-M7, H, N-0001; B and K stay open) to the knowledge SSOT.
-// Run from the capsule root: node docs/verification/theoracle-eval-2026-10-24/dose-audit-apply.mjs [--write]
+// Run from the capsule root: node docs/verification/theoracle-eval-2026-10-24/dose-audit-apply.mjs [candidates.json] [--write]
+// (default dose-audit-candidates.json; round 2, the seven mechanical changes of the re-audit, is dose-audit-candidates-2.json).
 // Without --write it only checks. It stops at the first row that no longer holds the value the audit saw.
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const HERE = "docs/verification/theoracle-eval-2026-10-24";
 const SSOT = "theoracle/ssot/sentrapedia-knowledge-ssot.json";
-const APPROVED = /^(?:M[1-7]|H|N)-/;
 const NOTE = "Audit dosis 2026-10-24";
 const write = process.argv.includes("--write");
 
 const raw = readFileSync(SSOT, "utf8");
 const o = JSON.parse(raw);
-const cand = JSON.parse(readFileSync(`${HERE}/dose-audit-candidates.json`, "utf8"));
+const cand = JSON.parse(readFileSync(process.argv.slice(2).find(a => a.endsWith(".json")) ?? `${HERE}/dose-audit-candidates.json`, "utf8"));
+// Round 3 names its own ids (R3-, R3H-); rounds 1 and 2 use the audit groups.
+const APPROVED = new RegExp(cand.approved ?? "^(?:M[1-7]|H|N)-");
 const stop = msg => { console.error(`STOP: ${msg}`); process.exit(1); };
 if (JSON.stringify(o, null, 1) !== raw) stop("the SSOT does not round-trip before the change");
 if (createHash("sha256").update(raw).digest("hex") !== cand.ssot.sha256) stop("the SSOT is not the file the audit read");
@@ -34,7 +36,7 @@ const READ_AS = { "SP0053#15": "kiprofloksasin" };
 
 const props = cand.proposals.filter(p => APPROVED.test(p.pid));
 const edits = props.filter(p => p.class === "mekanis"), deletions = props.filter(p => p.class === "hapus");
-const additions = cand.newRows.filter(n => APPROVED.test(n.pid));
+const additions = (cand.newRows ?? []).filter(n => APPROVED.test(n.pid));
 
 // 1. Field changes; old values per row go to catatan once all fields of the row are done.
 const changed = new Map();
@@ -53,7 +55,9 @@ for (const [d, { p, olds }] of changed) {
     verified.quoteInSource++;
   }
   for (const q of ps.filter(q => q.field !== "kutipan")) {
-    if (!key(d.kutipan).includes(key(READ_AS[`${q.id}#${q.i}`] ?? q.new))) stop(`${q.pid} ${q.id} #${q.i}: "${q.new}" is not in the row's quote`);
+    const v = key(READ_AS[`${q.id}#${q.i}`] ?? q.new);
+    // A drug name may stand just before the quote in the entry's own text (round 3).
+    if (!key(d.kutipan).includes(v) && !(q.field === "obat" && sourcesOf(e).some(t => key(t).includes(v)))) stop(`${q.pid} ${q.id} #${q.i}: "${q.new}" is not in the row's quote`);
     verified.valueInQuote++;
   }
   const c = String(d.catatan ?? "");
@@ -89,7 +93,11 @@ for (const e of o.penyakit) {
     e.status.n_obat_berdosis = drugs;
   }
 }
-o._meta.catatan += ` ${NOTE} (disetujui Gaffer): ${edits.length} perbaikan mekanis pada ${changed.size} baris, ${removed.length} baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di ${HERE}/dose-audit-removed.json), ${additions.length} baris baru dari teks terapi; nilai lama tercatat di 'catatan' baris.`;
+o._meta.catatan += ` ${NOTE}${cand.round ? `, putaran ${cand.round}` : ""} (disetujui Gaffer): ${[
+  `${edits.length} perbaikan mekanis pada ${changed.size} baris`,
+  removed.length && `${removed.length} baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di ${HERE}/dose-audit-removed.json)`,
+  additions.length && `${additions.length} baris baru dari teks terapi`,
+].filter(Boolean).join(", ")}; nilai lama tercatat di 'catatan' baris.`;
 
 const out = JSON.stringify(o, null, 1);
 if (JSON.stringify(JSON.parse(out), null, 1) !== out) stop("the new SSOT does not round-trip");
@@ -101,6 +109,8 @@ console.log(JSON.stringify({
   sha256: createHash("sha256").update(out).digest("hex"),
 }, null, 1));
 if (write) {
-  writeFileSync(`${HERE}/dose-audit-removed.json`, JSON.stringify({ applied: "2026-10-24", approvedBy: "Gaffer", ssotBefore: cand.ssot.sha256, rows: removed.sort((a, b) => a.pid.localeCompare(b.pid)) }, null, 1));
+  // Each round adds its rows to the file of the rounds before.
+  const file = `${HERE}/dose-audit-removed.json`, before = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : { rows: [] };
+  if (removed.length) writeFileSync(file, JSON.stringify({ applied: "2026-10-24", approvedBy: "Gaffer", rows: [...before.rows, ...removed.sort((a, b) => a.pid.localeCompare(b.pid)).map(r => ({ ...r, ssotBefore: cand.ssot.sha256 }))] }, null, 1));
   writeFileSync(SSOT, out);
 }

@@ -1,0 +1,340 @@
+{
+ "generated": "2026-10-24",
+ "round": "3b",
+ "approved": "^R3BH?-",
+ "note": "follow-ups of the audit re-run on the SSOT after round 3 (indices of that SSOT); SP0314#28 2-3x/hari left out (penisilin V frequency)",
+ "ssot": {
+  "sha256": "d18a0c443aec7fe26b4b73b1fea35279c9dfebdcc36b3d154351b012cafe0f95"
+ },
+ "proposals": [
+  {
+   "pid": "R3B-0001",
+   "id": "SP0022",
+   "i": 7,
+   "field": "dosis",
+   "old": "1 gram",
+   "new": "maksimum 1 gram",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "oracle_ii",
+    "match": "persis",
+    "kutipan": "- Pirantel Pamoat: 10-11 mg/kgBB oral dosis tunggal (maksimum 1 gram).",
+    "baris_dosis_lain": [
+     "10-11 mg/kgBB",
+     "10-11 mg/kgBB",
+     "1 gram"
+    ]
+   }
+  },
+  {
+   "pid": "R3B-0002",
+   "id": "SP0022",
+   "i": 17,
+   "field": "dosis",
+   "old": "1 gram",
+   "new": "maksimum 1 gram",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "index_md",
+    "match": "persis",
+    "kutipan": "- Pirantel Pamoat: 10-11 mg/kgBB oral dosis tunggal (maksimum 1 gram).",
+    "baris_dosis_lain": [
+     "10-11 mg/kgBB",
+     "1 gram",
+     "10-11 mg/kgBB"
+    ]
+   }
+  },
+  {
+   "pid": "R3B-0003",
+   "id": "SP0170",
+   "i": 2,
+   "field": "dosis",
+   "old": "70 mL",
+   "new": "70 mL/kg",
+   "class": "mekanis",
+   "rule": "b_per_kg_hilang",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "oracle_ii",
+    "match": "persis",
+    "kutipan": "- Dehidrasi berat: Cairan kristaloid IV Ringer Laktat 100 mL/kgBB segera (30 mL/kg dalam 30 menit pertama, dilanjutkan 70 mL/kg dalam 2.5 jam berikutnya)."
+   }
+  },
+  {
+   "pid": "R3B-0004",
+   "id": "SP0170",
+   "i": 8,
+   "field": "dosis",
+   "old": "70 mL",
+   "new": "70 mL/kg",
+   "class": "mekanis",
+   "rule": "b_per_kg_hilang",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "index_md",
+    "match": "persis",
+    "kutipan": "- Dehidrasi berat: Cairan kristaloid IV Ringer Laktat 100 mL/kgBB segera (30 mL/kg dalam 30 menit pertama, dilanjutkan 70 mL/kg dalam 2.5 jam berikutnya)."
+   }
+  },
+  {
+   "pid": "R3B-0005",
+   "id": "SP0209",
+   "i": 1,
+   "field": "dosis",
+   "old": "1 gram",
+   "new": "maksimum 1 gram",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "oracle_ii",
+    "match": "persis",
+    "kutipan": "- Pirantel Pamoat: 10-11 mg/kgBB oral dosis tunggal (maksimum 1 gram), diulang setelah 2 minggu.",
+    "baris_dosis_lain": [
+     "10-11 mg/kgBB",
+     "10-11 mg/kgBB",
+     "1 gram"
+    ]
+   }
+  },
+  {
+   "pid": "R3B-0006",
+   "id": "SP0209",
+   "i": 5,
+   "field": "dosis",
+   "old": "1 gram",
+   "new": "maksimum 1 gram",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "index_md",
+    "match": "persis",
+    "kutipan": "- Pirantel Pamoat: 10-11 mg/kgBB oral dosis tunggal (maksimum 1 gram), diulang setelah 2 minggu.",
+    "baris_dosis_lain": [
+     "10-11 mg/kgBB",
+     "1 gram",
+     "10-11 mg/kgBB"
+    ]
+   }
+  },
+  {
+   "pid": "R3B-0007",
+   "id": "SP0254",
+   "i": 6,
+   "field": "dosis",
+   "old": "20 IU",
+   "new": "20 IU/ kgBB",
+   "class": "mekanis",
+   "rule": "b_per_kg_hilang",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "ppk_permenkes_5_2014 (hal. 245)",
+    "match": "persis",
+    "kutipan": "manusia) dengan dosis 20 IU/ kgBB, dengan cara yang sama."
+   }
+  },
+  {
+   "pid": "R3B-0008",
+   "id": "SP0254",
+   "i": 7,
+   "field": "dosis",
+   "old": "40 IU",
+   "new": "40 IU/ kgBB",
+   "class": "mekanis",
+   "rule": "b_per_kg_hilang",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "kmk_1186_2022 (hal. 345)",
+    "match": "persis",
+    "kutipan": "dari serum kuda) Dosis 40 IU/ kgBB disuntikkan infiltrasi pada"
+   }
+  },
+  {
+   "pid": "R3B-0009",
+   "id": "SP0254",
+   "i": 8,
+   "field": "dosis",
+   "old": "20 IU",
+   "new": "20 IU/ kgBB",
+   "class": "mekanis",
+   "rule": "b_per_kg_hilang",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "kmk_1186_2022 (hal. 345)",
+    "match": "persis",
+    "kutipan": "(berasal dari serum manusia) dengan dosis 20 IU/ kgBB,"
+   }
+  },
+  {
+   "pid": "R3B-0010",
+   "id": "SP0314",
+   "i": 1,
+   "field": "frekuensi",
+   "old": "3 kali",
+   "new": "2-3 kali",
+   "class": "mekanis",
+   "rule": "f_frekuensi_rentang_terpotong",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "pnpk_PNPK_2018_Tata_Laksana_Tonsilitis (hal. 28)",
+    "match": "persis",
+    "kutipan": "peroral di Indonesia 50-60 mg/kgbb dibagi dalam 2-3 kali"
+   }
+  },
+  {
+   "pid": "R3B-0011",
+   "id": "SP0329",
+   "i": 4,
+   "field": "dosis",
+   "old": "800 mg",
+   "new": "maks 800 mg",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "oracle_ii",
+    "match": "persis",
+    "kutipan": "Anak 4 x 20 mg/kgBB/kali (maks 800 mg) selama 5 hari.",
+    "baris_dosis_lain": [
+     "800 mg"
+    ]
+   }
+  },
+  {
+   "pid": "R3B-0012",
+   "id": "SP0329",
+   "i": 13,
+   "field": "dosis",
+   "old": "800 mg",
+   "new": "maks 800 mg",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "index_md",
+    "match": "persis",
+    "kutipan": "Anak 4 x 20 mg/kgBB/kali (maks 800 mg) selama 5 hari.",
+    "baris_dosis_lain": [
+     "800 mg"
+    ]
+   }
+  },
+  {
+   "pid": "R3B-0013",
+   "id": "SP0110",
+   "i": 0,
+   "field": "obat",
+   "old": "Venotonik",
+   "new": "diosmin",
+   "class": "mekanis",
+   "rule": "dibaca_hand",
+   "rendered": true,
+   "kind": "auto",
+   "alasan": "quote: diosmin 450mg"
+  },
+  {
+   "pid": "R3B-0014",
+   "id": "SP0110",
+   "i": 1,
+   "field": "obat",
+   "old": "Venotonik",
+   "new": "hesperidin",
+   "class": "mekanis",
+   "rule": "dibaca_hand",
+   "rendered": true,
+   "kind": "auto",
+   "alasan": "quote: hesperidin 50mg"
+  },
+  {
+   "pid": "R3B-0015",
+   "id": "SP0128",
+   "i": 6,
+   "field": "obat",
+   "old": "larutan",
+   "new": "destrosa",
+   "class": "mekanis",
+   "rule": "dibaca_hand",
+   "rendered": true,
+   "kind": "auto",
+   "alasan": "quote: larutan destrosa 40%"
+  },
+  {
+   "pid": "R3BH-0016",
+   "id": "SP0283",
+   "i": 28,
+   "field": "(baris)",
+   "old": {
+    "obat": "Ferfenazin",
+    "dosis": "91%",
+    "frekuensi": "",
+    "durasi": "",
+    "rute": "",
+    "populasi": "",
+    "kutipan": "Ferfenazin 20% - Perphenazin 91% - CYP2D6 7-hidroksi Perphenazin 5% feses, Kontraindik Penggunaan",
+    "halaman": 69,
+    "sumber": "PNPK (009_PEDOMAN_NASIONAL_PELAYANAN_KLINIS_TATA_LAKSANA_SKIZOFRENIA.pdf) (ekstraksi otomatis dari naskah)",
+    "konteks": "",
+    "catatan": "Diekstrak otomatis dari naskah PNPK; cek kutipan."
+   },
+   "class": "hapus",
+   "rule": "dibaca_hand",
+   "rendered": true,
+   "kind": "auto",
+   "alasan": "farmakokinetik persentase, bukan dosis"
+  },
+  {
+   "pid": "R3BH-0017",
+   "id": "SP0223",
+   "i": 39,
+   "field": "(baris)",
+   "old": {
+    "obat": "Kalium",
+    "dosis": "8 mg",
+    "frekuensi": "4 Kali",
+    "durasi": "",
+    "rute": "",
+    "populasi": "",
+    "kutipan": "4 Kalium 8 mg/Liter",
+    "halaman": 143,
+    "sumber": "PNPK (020_PNPK_2023_Tata_Laksana_Penyakit_Ginjal_Kronik.pdf) (ekstraksi otomatis dari naskah)",
+    "konteks": "",
+    "catatan": "Diekstrak otomatis dari naskah PNPK; cek kutipan."
+   },
+   "class": "hapus",
+   "rule": "dibaca_hand",
+   "rendered": true,
+   "kind": "auto",
+   "alasan": "baku mutu air mg/liter, bukan dosis"
+  }
+ ]
+}

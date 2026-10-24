@@ -1,0 +1,223 @@
+{"key": "SP0007#5", "action": "hapus", "alasan": "fasting plasma glucose diagnostic threshold"}
+{"key": "SP0007#6", "action": "hapus", "alasan": "plasma glucose diagnostic threshold"}
+{"key": "SP0007#10", "action": "hapus", "alasan": "percentage statistic of patients, not a dose"}
+{"key": "SP0013#7", "action": "obat", "obat": "elemental iron", "alasan": "120mg is elemental iron daily dose"}
+{"key": "SP0013#10", "action": "obat", "obat": "besi elemental", "alasan": "60 mg is besi elemental in tablet"}
+{"key": "SP0013#14", "action": "obat", "obat": "besi elemental", "alasan": "60 mg is besi elemental in tablet"}
+{"key": "SP0014#2", "action": "hapus", "alasan": "oxygen saturation threshold, not a dose"}
+{"key": "SP0014#10", "action": "biarkan", "alasan": "3 mL mixture; second component cut off after 'dengan'"}
+{"key": "SP0014#19", "action": "biarkan", "alasan": "3 mL mixture; second component cut off after 'dengan'"}
+{"key": "SP0014#138", "action": "biarkan", "alasan": "supply list of kit items; unclear if patient dose"}
+{"key": "SP0014#225", "action": "hapus", "alasan": "serum creatinine rise threshold"}
+{"key": "SP0014#228", "action": "biarkan", "alasan": "only drug class 'steroid' named, no specific drug"}
+{"key": "SP0014#249", "action": "hapus", "alasan": "target plasma heparin concentration, lab value"}
+{"key": "SP0014#278", "action": "hapus", "alasan": "blood albumin level, lab value"}
+{"key": "SP0022#7", "action": "obat", "obat": "Pirantel Pamoat", "alasan": "maximum dose of Pirantel Pamoat"}
+{"key": "SP0022#17", "action": "obat", "obat": "Pirantel Pamoat", "alasan": "maximum dose of Pirantel Pamoat"}
+{"key": "SP0025#8", "action": "hapus", "alasan": "dietary sodium restriction"}
+{"key": "SP0030#6", "action": "obat", "obat": "pantokain", "alasan": "1-2 tetes of pantokain 2% eye drops"}
+{"key": "SP0030#7", "action": "obat", "obat": "Tetrakain", "alasan": "1-2 tetes of Tetrakain 0,5% eye drops"}
+{"key": "SP0035#4", "action": "obat", "obat": "dextromethorphan", "alasan": "10-20mg belongs to dextromethorphan", "lain": "frekuensi '4x/hari' but quote says 'dextromethorphan 10-20mg 3-4x/hari'"}
+{"key": "SP0040#40", "action": "hapus", "alasan": "fasting glucose threshold for hyperglycemia"}
+{"key": "SP0041#0", "action": "obat", "obat": "pseudoephedrine", "alasan": "60mg belongs to pseudoephedrine"}
+{"key": "SP0051#1", "action": "biarkan", "alasan": "fluid dose but fluid not named"}
+{"key": "SP0051#7", "action": "hapus", "alasan": "hematocrit drop threshold"}
+{"key": "SP0057#38", "action": "biarkan", "alasan": "0.1% shared by triamcinolone and mometason"}
+{"key": "SP0060#4", "action": "biarkan", "alasan": "citation title, not guideline dosing text"}
+{"key": "SP0060#6", "action": "biarkan", "alasan": "citation title, not guideline dosing text"}
+{"key": "SP0060#20", "action": "obat", "obat": "hydrocortisone", "alasan": "1% belongs to hydrocortisone cream", "lain": "frekuensi '2x/hari' but quote says 'hydrocortisone 1% cream ... 1-2x/hari'"}
+{"key": "SP0062#0", "action": "hapus", "alasan": "fasting glucose diagnostic threshold"}
+{"key": "SP0062#1", "action": "hapus", "alasan": "plasma glucose diagnostic threshold"}
+{"key": "SP0062#20", "action": "hapus", "alasan": "blood glucose threshold"}
+{"key": "SP0062#21", "action": "hapus", "alasan": "oral fluid intake advice, no drug named"}
+{"key": "SP0062#22", "action": "hapus", "alasan": "target blood glucose range"}
+{"key": "SP0062#36", "action": "obat", "obat": "dekstrosa", "alasan": "10% is strength of dekstrosa bolus"}
+{"key": "SP0062#38", "action": "hapus", "alasan": "blood glucose threshold"}
+{"key": "SP0062#39", "action": "hapus", "alasan": "blood glucose threshold"}
+{"key": "SP0062#41", "action": "biarkan", "alasan": "relative insulin adjustment, not absolute dose"}
+{"key": "SP0062#45", "action": "biarkan", "alasan": "insulin amount for dilution recipe, not patient dose"}
+{"key": "SP0062#54", "action": "hapus", "alasan": "albumin concentration lab value"}
+{"key": "SP0062#55", "action": "hapus", "alasan": "LDL cholesterol threshold"}
+{"key": "SP0062#67", "action": "hapus", "alasan": "HbA1c target threshold"}
+{"key": "SP0064#2", "action": "hapus", "alasan": "fasting glucose diagnostic threshold"}
+{"key": "SP0064#3", "action": "hapus", "alasan": "plasma glucose diagnostic threshold"}
+{"key": "SP0064#4", "action": "biarkan", "alasan": "OGTT diagnostic glucose load, not therapy; clinician decide"}
+{"key": "SP0064#5", "action": "hapus", "alasan": "OGTT result threshold"}
+{"key": "SP0064#9", "action": "hapus", "alasan": "daily fluid requirement, nutrition"}
+{"key": "SP0064#26", "action": "biarkan", "alasan": "OGTT diagnostic glucose load, not therapy; clinician decide"}
+{"key": "SP0064#27", "action": "obat", "obat": "asam folat", "alasan": "1 mg asam folat supplement"}
+{"key": "SP0064#33", "action": "hapus", "alasan": "percentage statistic of neuropathy types"}
+{"key": "SP0064#40", "action": "hapus", "alasan": "target glucose range"}
+{"key": "SP0064#41", "action": "hapus", "alasan": "rate of glucose decrease target"}
+{"key": "SP0064#51", "action": "obat", "obat": "Dextrose", "alasan": "40% is strength of Dextrose bolus"}
+{"key": "SP0064#52", "action": "hapus", "alasan": "target glucose for hypoglycemia treatment"}
+{"key": "SP0064#57", "action": "hapus", "alasan": "glucose value in calculation example"}
+{"key": "SP0064#59", "action": "hapus", "alasan": "glucose value in calculation example"}
+{"key": "SP0064#74", "action": "hapus", "alasan": "hypoglycemia grade glucose threshold"}
+{"key": "SP0064#75", "action": "hapus", "alasan": "hypoglycemia grade glucose threshold"}
+{"key": "SP0064#76", "action": "hapus", "alasan": "fasting glucose diagnostic threshold"}
+{"key": "SP0064#77", "action": "hapus", "alasan": "plasma glucose diagnostic threshold"}
+{"key": "SP0064#78", "action": "biarkan", "alasan": "OGTT diagnostic glucose load, not therapy; clinician decide"}
+{"key": "SP0064#84", "action": "hapus", "alasan": "daily fluid requirement, nutrition"}
+{"key": "SP0064#85", "action": "hapus", "alasan": "fluid requirement per kcal, nutrition"}
+{"key": "SP0075#34", "action": "biarkan", "alasan": "flattened table text; drug column order unreliable"}
+{"key": "SP0075#35", "action": "biarkan", "alasan": "flattened table text; drug column order unreliable"}
+{"key": "SP0089#3", "action": "hapus", "alasan": "serum lactate threshold"}
+{"key": "SP0089#4", "action": "biarkan", "alasan": "zinc requirement vs seng sulfat regimen unclear"}
+{"key": "SP0089#5", "action": "hapus", "alasan": "daily magnesium nutrient requirement"}
+{"key": "SP0097#33", "action": "hapus", "alasan": "serum urea threshold"}
+{"key": "SP0097#34", "action": "hapus", "alasan": "serum creatinine threshold"}
+{"key": "SP0097#41", "action": "biarkan", "alasan": "enalapril equivalence threshold, not a prescription"}
+{"key": "SP0097#48", "action": "hapus", "alasan": "dietary salt restriction"}
+{"key": "SP0099#0", "action": "obat", "obat": "lithium", "alasan": "600-1800mg/hari belongs to lithium", "lain": "dosis '600-1800mg' lacks unit; quote says '600-1800mg/hari'"}
+{"key": "SP0099#1", "action": "obat", "obat": "valproate", "alasan": "750-2000mg belongs to valproate"}
+{"key": "SP0099#2", "action": "hapus", "alasan": "valproate serum level, lab value"}
+{"key": "SP0106#33", "action": "hapus", "alasan": "fluid deficit formula coefficient"}
+{"key": "SP0106#34", "action": "hapus", "alasan": "fluid requirement formula coefficient"}
+{"key": "SP0106#43", "action": "hapus", "alasan": "fluid deficit formula coefficient"}
+{"key": "SP0106#44", "action": "hapus", "alasan": "fluid requirement formula coefficient"}
+{"key": "SP0107#0", "action": "hapus", "alasan": "prevalence percentage statistic"}
+{"key": "SP0107#1", "action": "hapus", "alasan": "epidemiology percentage statistic"}
+{"key": "SP0107#2", "action": "hapus", "alasan": "incidence percentage statistic"}
+{"key": "SP0107#15", "action": "obat", "obat": "mannitol", "alasan": "20% is strength of mannitol IV"}
+{"key": "SP0107#16", "action": "biarkan", "alasan": "drip rate; drug not named in this quote"}
+{"key": "SP0107#17", "action": "hapus", "alasan": "physiology percentage, not a dose"}
+{"key": "SP0107#29", "action": "hapus", "alasan": "percentage statistic of infants"}
+{"key": "SP0110#1", "action": "hapus", "alasan": "dietary fiber amount"}
+{"key": "SP0112#70", "action": "hapus", "alasan": "study result percentage"}
+{"key": "SP0113#0", "action": "hapus", "alasan": "prevalence percentage statistic"}
+{"key": "SP0113#15", "action": "obat", "obat": "sofosbuvir", "alasan": "400 mg belongs to sofosbuvir"}
+{"key": "SP0113#16", "action": "obat", "obat": "simeprevir", "alasan": "150 mg belongs to simeprevir"}
+{"key": "SP0113#18", "action": "obat", "obat": "ledipasvir", "alasan": "90 mg/hari belongs to ledipasvir", "lain": "dosis '90 mg' lacks unit; quote says '90 mg/hari'"}
+{"key": "SP0119#2", "action": "hapus", "alasan": "albumin level threshold"}
+{"key": "SP0121#1", "action": "hapus", "alasan": "target blood glucose level"}
+{"key": "SP0122#10", "action": "hapus", "alasan": "side effect incidence percentage"}
+{"key": "SP0124#22", "action": "hapus", "alasan": "dietary salt restriction"}
+{"key": "SP0124#26", "action": "obat", "obat": "HCT", "alasan": "12.5-50 mg/hari belongs to HCT", "lain": "dosis '12.5-50 mg' lacks unit; quote says '12.5-50 mg/hari'"}
+{"key": "SP0124#35", "action": "biarkan", "alasan": "only class 'tiazid' named, no specific drug", "lain": "populasi empty but sebelum shows '1) Lanjut Usia' for this dose"}
+{"key": "SP0126#7", "action": "obat", "obat": "PTU", "alasan": "300 mg belongs to PTU"}
+{"key": "SP0127#12", "action": "obat", "obat": "indomethacin", "alasan": "50mg belongs to indomethacin"}
+{"key": "SP0127#13", "action": "obat", "obat": "naproxen", "alasan": "500mg belongs to naproxen"}
+{"key": "SP0127#14", "action": "obat", "obat": "kolkhisin", "alasan": "1.2mg stat belongs to kolkhisin"}
+{"key": "SP0127#15", "action": "obat", "obat": "kolkhisin", "alasan": "0.6mg follow-up dose of kolkhisin"}
+{"key": "SP0127#18", "action": "obat", "obat": "allopurinol", "alasan": "100mg belongs to allopurinol"}
+{"key": "SP0127#19", "action": "hapus", "alasan": "target uric acid level"}
+{"key": "SP0128#7", "action": "obat", "obat": "destrosa", "alasan": "50 mL of destrosa 40% bolus"}
+{"key": "SP0129#2", "action": "obat", "obat": "Levotiroksin sodium", "alasan": "25mcg titration step of Levotiroksin sodium"}
+{"key": "SP0130#12", "action": "obat", "obat": "amfoterisin B", "alasan": "1mg/kg/hari belongs to amfoterisin B"}
+{"key": "SP0130#59", "action": "biarkan", "alasan": "citation title, not guideline dosing text"}
+{"key": "SP0131#7", "action": "obat", "obat": "kloramfenikol", "alasan": "1 tetes of kloramfenikol eye drops"}
+{"key": "SP0131#9", "action": "obat", "obat": "kloramfenikol", "alasan": "1 tetes of kloramfenikol eye drops"}
+{"key": "SP0136#1", "action": "hapus", "alasan": "serum creatinine threshold"}
+{"key": "SP0137#1", "action": "biarkan", "alasan": "unnamed fluid volume; purpose unclear"}
+{"key": "SP0152#12", "action": "obat", "obat": "denosumab", "alasan": "60mg belongs to denosumab"}
+{"key": "SP0152#13", "action": "biarkan", "alasan": "citation title, not guideline dosing text"}
+{"key": "SP0160#25", "action": "biarkan", "alasan": "tablet 10 mg, drug not named in quote"}
+{"key": "SP0161#0", "action": "biarkan", "alasan": "manual row; obat 'zat besi' already a drug name", "lain": "frekuensi '1-2 kali/ hari' may belong to 'folat 250 mikogram 1-2 kali/ hari'"}
+{"key": "SP0166#0", "action": "biarkan", "alasan": "relative levothyroxine increase, not absolute dose", "lain": "frekuensi 'tiap 4 minggu' is for 'monitor TSH tiap 4 minggu'"}
+{"key": "SP0168#0", "action": "hapus", "alasan": "percentage of cases statistic"}
+{"key": "SP0170#1", "action": "obat", "obat": "Ringer Laktat", "alasan": "30 mL/kg of Ringer Laktat", "lain": "dosis '30 mL' lacks unit; quote says '30 mL/kg dalam 30 menit'"}
+{"key": "SP0170#2", "action": "obat", "obat": "Ringer Laktat", "alasan": "70 mL/kg of Ringer Laktat", "lain": "dosis '70 mL' lacks unit; quote says '70 mL/kg dalam 2.5 jam'"}
+{"key": "SP0170#7", "action": "obat", "obat": "Ringer Laktat", "alasan": "30 mL/kg of Ringer Laktat", "lain": "dosis '30 mL' lacks unit; quote says '30 mL/kg dalam 30 menit'"}
+{"key": "SP0170#8", "action": "obat", "obat": "Ringer Laktat", "alasan": "70 mL/kg of Ringer Laktat", "lain": "dosis '70 mL' lacks unit; quote says '70 mL/kg dalam 2.5 jam'"}
+{"key": "SP0174#2", "action": "obat", "obat": "Kloramfenikol", "alasan": "1 tetes of Kloramfenikol drops"}
+{"key": "SP0174#3", "action": "obat", "obat": "kloramfenikol", "alasan": "kloramfenikol tetes mata 0,5-1% named in sebelum", "lain": "populasi 'bayi' belongs to 'suntikan pada bayi', not the eye drops"}
+{"key": "SP0174#5", "action": "obat", "obat": "Kloramfenikol", "alasan": "1 tetes of Kloramfenikol drops"}
+{"key": "SP0174#6", "action": "obat", "obat": "kloramfenikol", "alasan": "kloramfenikol tetes mata 0,5-1% named in sebelum", "lain": "populasi 'bayi' belongs to 'suntikan pada bayi', not the eye drops"}
+{"key": "SP0177#86", "action": "obat", "obat": "rifampisin", "alasan": "2 kapsul rifampisin @ 300mg"}
+{"key": "SP0177#112", "action": "obat", "obat": "Rifampisin", "alasan": "2 kapsul Rifampisin"}
+{"key": "SP0178#6", "action": "hapus", "alasan": "serum creatinine threshold"}
+{"key": "SP0178#7", "action": "hapus", "alasan": "serum creatinine threshold"}
+{"key": "SP0178#9", "action": "hapus", "alasan": "serum creatinine threshold"}
+{"key": "SP0187#1", "action": "biarkan", "alasan": "Parkland fluid formula; fluid not named"}
+{"key": "SP0187#4", "action": "biarkan", "alasan": "RL as 50% of calculated total, relative"}
+{"key": "SP0187#22", "action": "hapus", "alasan": "omega-3 nutrient requirement"}
+{"key": "SP0193#0", "action": "biarkan", "alasan": "FDC component not named in quote"}
+{"key": "SP0193#21", "action": "hapus", "alasan": "serum creatinine threshold"}
+{"key": "SP0193#87", "action": "obat", "obat": "artemether-lumefantrine", "alasan": "4 tablet doses of artemether-lumefantrine"}
+{"key": "SP0196#1", "action": "hapus", "alasan": "serum albumin lab threshold"}
+{"key": "SP0196#24", "action": "obat", "obat": "megestrol asetat", "alasan": "160 mg/hari belongs to megestrol asetat", "lain": "dosis '160 mg' lacks unit; quote says '160 mg/hari'"}
+{"key": "SP0196#25", "action": "hapus", "alasan": "macronutrient ratio, diet"}
+{"key": "SP0196#31", "action": "hapus", "alasan": "daily sodium requirement, diet"}
+{"key": "SP0196#44", "action": "hapus", "alasan": "daily fluid requirement, nutrition"}
+{"key": "SP0196#56", "action": "hapus", "alasan": "fluid intake restriction"}
+{"key": "SP0196#86", "action": "hapus", "alasan": "normal serum albumin range"}
+{"key": "SP0207#5", "action": "hapus", "alasan": "codeine metabolism percentage, pharmacokinetics"}
+{"key": "SP0207#6", "action": "hapus", "alasan": "codeine metabolism percentage, pharmacokinetics"}
+{"key": "SP0208#25", "action": "biarkan", "alasan": "zat besi 18 mg: requirement or supplement unclear"}
+{"key": "SP0209#1", "action": "obat", "obat": "Pirantel Pamoat", "alasan": "maximum dose of Pirantel Pamoat"}
+{"key": "SP0209#5", "action": "obat", "obat": "Pirantel Pamoat", "alasan": "maximum dose of Pirantel Pamoat"}
+{"key": "SP0210#2", "action": "obat", "obat": "itrakonazol", "alasan": "200mg 2x/hari pulse therapy of itrakonazol"}
+{"key": "SP0210#3", "action": "obat", "obat": "efinaconazole", "alasan": "10% belongs to efinaconazole solution", "lain": "frekuensi '1x/hari' belongs to 'ciclopirox 8% nail lacquer 1x/hari'"}
+{"key": "SP0211#4", "action": "biarkan", "alasan": "acetaminophen >3 g/hari threshold; context unclear"}
+{"key": "SP0211#5", "action": "biarkan", "alasan": "acetaminophen >3 g/hari threshold; context unclear"}
+{"key": "SP0211#9", "action": "hapus", "alasan": "perioperative glucose target"}
+{"key": "SP0212#2", "action": "hapus", "alasan": "alcohol intake risk factor"}
+{"key": "SP0212#20", "action": "hapus", "alasan": "alcohol intake risk factor"}
+{"key": "SP0212#51", "action": "obat", "obat": "risedronate", "alasan": "35mg/minggu belongs to risedronate", "lain": "dosis '35mg' lacks unit, frek empty; quote says '35mg/minggu'"}
+{"key": "SP0216#34", "action": "obat", "obat": "asam asetat", "alasan": "2 ml irrigation of asam asetat"}
+{"key": "SP0216#36", "action": "hapus", "alasan": "study result percentage"}
+{"key": "SP0216#59", "action": "obat", "obat": "ofloksasin", "alasan": "0,3% belongs to ofloksasin"}
+{"key": "SP0216#67", "action": "hapus", "alasan": "study result percentage"}
+{"key": "SP0217#0", "action": "obat", "obat": "LR", "alasan": "250-500mL/jam belongs to LR", "lain": "dosis '250-500mL' lacks unit; quote says '250-500mL/jam'"}
+{"key": "SP0217#1", "action": "obat", "obat": "LR", "alasan": "5-10mL/kg/jam belongs to LR", "lain": "dosis '5-10mL' lacks unit; quote says '5-10mL/kg/jam'"}
+{"key": "SP0221#11", "action": "hapus", "alasan": "contamination reduction study result"}
+{"key": "SP0221#12", "action": "hapus", "alasan": "contamination reduction study result"}
+{"key": "SP0223#2", "action": "hapus", "alasan": "urine albumin excretion threshold"}
+{"key": "SP0223#4", "action": "hapus", "alasan": "dietary sodium target"}
+{"key": "SP0223#5", "action": "hapus", "alasan": "serum albumin lab threshold"}
+{"key": "SP0223#17", "action": "biarkan", "alasan": "dose increase but drug not named in quote"}
+{"key": "SP0223#18", "action": "biarkan", "alasan": "relative darbepoietin increase, not absolute dose"}
+{"key": "SP0223#27", "action": "hapus", "alasan": "dietary salt restriction"}
+{"key": "SP0223#78", "action": "hapus", "alasan": "fluid removal rate, not a dose"}
+{"key": "SP0223#171", "action": "hapus", "alasan": "serum albumin threshold"}
+{"key": "SP0223#174", "action": "hapus", "alasan": "morphine metabolism percentage, pharmacokinetics"}
+{"key": "SP0223#246", "action": "hapus", "alasan": "dietary protein restriction"}
+{"key": "SP0224#6", "action": "hapus", "alasan": "dialysis water endotoxin limit"}
+{"key": "SP0238#3", "action": "biarkan", "alasan": "drip rate; oksitosin or NaCl could own"}
+{"key": "SP0245#3", "action": "hapus", "alasan": "BUN threshold"}
+{"key": "SP0245#32", "action": "hapus", "alasan": "antibiotic resistance percentage"}
+{"key": "SP0245#90", "action": "hapus", "alasan": "BUN threshold"}
+{"key": "SP0245#115", "action": "hapus", "alasan": "antibiotic resistance percentage"}
+{"key": "SP0245#150", "action": "obat", "obat": "Amoksilin klavulanat", "alasan": "2.2gr belongs to Amoksilin klavulanat"}
+{"key": "SP0245#192", "action": "obat", "obat": "Amoksisilin", "alasan": "1 gram high-dose Amoksisilin"}
+{"key": "SP0248#11", "action": "obat", "obat": "MgSO4", "alasan": "4 g MgSO4 loading dose"}
+{"key": "SP0248#15", "action": "obat", "obat": "MgSO4", "alasan": "6 gr MgSO4 maintenance dose"}
+{"key": "SP0253#29", "action": "obat", "obat": "amoxillin", "alasan": "2.0 g belongs to amoxillin"}
+{"key": "SP0253#30", "action": "obat", "obat": "cephalexin", "alasan": "2 g belongs to cephalexin"}
+{"key": "SP0254#7", "action": "obat", "obat": "Serum Anti Rabies (SAR)", "alasan": "40 IU/kgBB of heterologous Serum Anti Rabies", "lain": "dosis '40 IU' lacks unit; quote says '40 IU/ kgBB'"}
+{"key": "SP0255#8", "action": "obat", "obat": "adrenalin", "alasan": "0,1-0,2 ml belongs to adrenalin"}
+{"key": "SP0255#14", "action": "hapus", "alasan": "syringe size for dilution, not a dose"}
+{"key": "SP0259#0", "action": "hapus", "alasan": "HbA1c reduction risk statistic"}
+{"key": "SP0268#2", "action": "biarkan", "alasan": "antiseptic concentration for skin prep; drug status unclear"}
+{"key": "SP0273#0", "action": "hapus", "alasan": "weight loss target"}
+{"key": "SP0279#9", "action": "obat", "obat": "Klaritromisin", "alasan": "1 x 500 mg belongs to Klaritromisin"}
+{"key": "SP0279#13", "action": "biarkan", "alasan": "additive amount in irrigation solution, formulation"}
+{"key": "SP0280#3", "action": "hapus", "alasan": "ascites incidence statistic"}
+{"key": "SP0280#4", "action": "hapus", "alasan": "ascitic fluid sample volume for culture"}
+{"key": "SP0280#9", "action": "obat", "obat": "albumin", "alasan": "20% is strength of albumin"}
+{"key": "SP0280#15", "action": "hapus", "alasan": "hyponatremia prevalence statistic"}
+{"key": "SP0280#23", "action": "hapus", "alasan": "creatinine rise threshold"}
+{"key": "SP0280#24", "action": "hapus", "alasan": "creatinine rise threshold"}
+{"key": "SP0281#6", "action": "obat", "obat": "benzyl benzoate", "alasan": "25% belongs to benzyl benzoate lotion"}
+{"key": "SP0283#50", "action": "hapus", "alasan": "pharmacokinetic table percentage"}
+{"key": "SP0283#59", "action": "hapus", "alasan": "pharmacokinetic table percentage"}
+{"key": "SP0288#43", "action": "biarkan", "alasan": "insulin split percentage; drug not in sentence"}
+{"key": "SP0288#44", "action": "biarkan", "alasan": "12 U basal; 'insulin' only in previous sentence"}
+{"key": "SP0288#58", "action": "hapus", "alasan": "oral fluid intake amount"}
+{"key": "SP0302#10", "action": "obat", "obat": "vitamin E", "alasan": "10 mg/kg belongs to vitamin E", "lain": "frekuensi '2x' belongs to '2x200 IU/hari', not '10 mg/kg'"}
+{"key": "SP0302#11", "action": "obat", "obat": "vitamin E", "alasan": "200 IU belongs to vitamin E"}
+{"key": "SP0302#19", "action": "hapus", "alasan": "CMV seroprevalence statistic"}
+{"key": "SP0303#34", "action": "obat", "obat": "dekstrosa", "alasan": "10% is strength of dekstrosa fluid"}
+{"key": "SP0303#50", "action": "biarkan", "alasan": "dopamine >5 mcg/kg reported in study; threshold unclear"}
+{"key": "SP0303#67", "action": "hapus", "alasan": "oxygen concentration setting, citation"}
+{"key": "SP0303#68", "action": "hapus", "alasan": "oxygen concentration setting, citation"}
+{"key": "SP0311#1", "action": "biarkan", "alasan": "1% shared by terbinafine and butenafine"}
+{"key": "SP0317#1", "action": "obat", "obat": "saline", "alasan": "3% saline bolus"}
+{"key": "SP0317#2", "action": "obat", "obat": "saline", "alasan": "7.5% saline bolus"}
+{"key": "SP0320#45", "action": "hapus", "alasan": "culture positivity percentage"}
+{"key": "SP0320#47", "action": "hapus", "alasan": "historical incidence percentage"}
+{"key": "SP0320#111", "action": "biarkan", "alasan": "FDC composition of INH and RIF; not clearly dose"}
+{"key": "SP0322#5", "action": "hapus", "alasan": "serum albumin threshold"}
+{"key": "SP0322#16", "action": "hapus", "alasan": "serum albumin threshold"}
+{"key": "SP0331#17", "action": "hapus", "alasan": "dietary salt restriction"}

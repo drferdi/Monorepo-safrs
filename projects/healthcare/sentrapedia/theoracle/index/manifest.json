@@ -45,15 +45,15 @@
     "header": "<document_metadata> sourceDocument/published"
   },
   "chunks": {
-    "count": 17899,
-    "sha256": "dace3dc3d80a5b369d9f9a7df2403cc811fcbeae2ebc9e60b4293926c919012a",
+    "count": 17871,
+    "sha256": "74647f49ef0e90ef7dce873bf2e0fa869f32c8264f4d714507180f909c202601",
     "truncated": 0
   },
   "vectors": {
     "format": "float32 little-endian, row-major, one L2-normalised row per chunk in chunks.jsonl order",
-    "sha256": "2198b9d2c60633a9630d1fbee4ac803b13339028e534a4df7204b310486e59df"
+    "sha256": "1fba6929d39f37537ebf53a9578d007e57f22c88f00379ee8860ec56c2867a14"
   },
-  "indexSha256": "d0fa8c3f30ba81fe78c3da7a8ed577cfafb402eef1c542e244bef66cb1163c7a",
-  "builtAt": "2026-10-24T09:34:21.790Z",
+  "indexSha256": "9b81edc3c1a568e2f38f69f3273ee056f70c53a1aae0c150d11e223c08ce8a47",
+  "builtAt": "2026-10-24T10:41:09.262Z",
   "device": "dml"
 }

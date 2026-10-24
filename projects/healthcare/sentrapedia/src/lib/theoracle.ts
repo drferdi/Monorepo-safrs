@@ -5,7 +5,7 @@ export const theOracleDiseases: readonly Disease[] = data.diseases;
 export const theOracleCategories = [...new Set(theOracleDiseases.map(d => d.kategori))].sort((a, b) => a.localeCompare(b, "id"));
 // The public repository carries a fictional sample catalogue instead of the private one (2026-10-19).
 export const theOracleSample = "sample" in data.metadata && data.metadata.sample === true;
-export const theOracleSource = { file: "oracle/sentrapedia.json", hash: "a85e99a2807bacf47a6c38619d9506912932e3a2a98f0fe00a72b0e964213ee2", version: data.metadata.version, declaredCategories: data.metadata.total_categories };
+export const theOracleSource = { file: "oracle/sentrapedia.json", hash: "8d8443fa6b5714a7330edd90000fc486f2866a83a0a756547bc6161e67dac6e8", version: data.metadata.version, declaredCategories: data.metadata.total_categories };
 export function searchDiseases(query: string, category: string): Disease[] {
   const terms = query.trim().toLocaleLowerCase("id").split(/\s+/).filter(Boolean);
   return theOracleDiseases.filter(d => (category === "all" || d.kategori === category) && terms.every(term => `${d.nama} ${d.kode} ${d.kategori}`.toLocaleLowerCase("id").includes(term)));
