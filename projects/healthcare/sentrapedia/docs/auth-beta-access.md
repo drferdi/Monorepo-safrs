@@ -1,6 +1,6 @@
 # Closed-beta identity operations
 
-Status: implementation branch, not provisioned or deployed. Clinical behavior is unchanged. Synthetic cases only.
+Status: implementation branch; the selected Clerk development instance is provisioned and verified for native admission rendering and anonymous denial. Production is not provisioned or deployed. See [development activation evidence](verification/clerk-development-setup-2026-10-24.md) for exact settings, checks and remaining email acceptance. Clinical behavior is unchanged. Synthetic cases only.
 
 ## Provisioning and admission
 
