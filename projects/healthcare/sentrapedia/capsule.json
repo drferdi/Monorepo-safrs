@@ -11,8 +11,8 @@
     "typecheck": ["npm", "run", "typecheck"],
     "deployDryRun": ["npm", "run", "deploy:dry-run"]
   },
-  "requiredEnvironment": ["GEMINI_API_KEY"],
-  "externalServices": ["Gemini API (OpenAI-compatible endpoint); synthetic cases only; gemini-3.1-flash-lite for both stages"],
+  "requiredEnvironment": ["GEMINI_API_KEY", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY"],
+  "externalServices": ["Gemini API (OpenAI-compatible endpoint); synthetic cases only; gemini-3.1-flash-lite for both stages", "Clerk closed-beta identity and email delivery; required in the clerk auth mode, which production uses; SENTRAPEDIA_AUTH_MODE=local on loopback development only may omit it"],
   "buildOutputs": [".next/standalone", ".next/static"],
   "generatedPaths": [".next", "node_modules", "next-env.d.ts"],
   "sensitiveSurfaces": ["Browser-local patient and encounter data; fictional data only", "Optional microphone speech recognition may contact browser speech provider"],
