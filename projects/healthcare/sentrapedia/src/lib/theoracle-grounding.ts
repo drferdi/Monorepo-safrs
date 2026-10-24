@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import type { CaseState } from "./mira/types";
+import { record } from "./guards";
+import type { CaseState } from "./aadi/types";
 import {
   THEORACLE_GROUNDING_CAPABILITY,
   TheOracleGroundingError,
@@ -19,7 +20,7 @@ const THERAPY_EVIDENCE = 1;
 const THERAPY_QUERY = "\npenatalaksanaan terapi dosis obat";
 // A drug amount such as 500 mg or 1 g, not a laboratory value such as 126 mg/dL.
 const DOSE = /\d+(?:[.,]\d+)?\s?(?:mg|mcg|g|iu)\b(?!\s*\/\s*(?:dl|l)\b)/i;
-const REVIEW_PROVENANCE = "Gaffer stated on 2026-10-11 that Gaffer reviewed and approved the TheOracle corpus; per-chunk review fields are not recorded.";
+const REVIEW_PROVENANCE = "Derived from official guidelines (KMK 1186/2022, Permenkes 5/2014, PNPK); clinically reviewed by Gaffer on 2026-10-23. Review status per entry is recorded in the knowledge SSOT (status.review_klinis).";
 
 export interface TheOracleManifest {
   model: { id: string; revision: string; dtype: string; dims: number; files: Record<string, { size: number; sha256: string }> };
@@ -41,11 +42,21 @@ const fileSha256 = (file: string) => new Promise<string>((done, fail) => {
   createReadStream(file).on("error", fail).on("data", chunk => hash.update(chunk)).on("end", () => done(hash.digest("hex")));
 });
 const unavailable = (message: string) => new TheOracleGroundingError("THEORACLE_UNAVAILABLE", message);
+const isText = (value: unknown): value is string => typeof value === "string";
+const isNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
+// Every manifest field that loading, embedding and the bundle read; extra fields are allowed.
+function validManifest(value: unknown): value is TheOracleManifest {
+  return record(value) && record(value.model) && record(value.model.files) && record(value.prefixes) && record(value.chunks) && record(value.vectors)
+    && isText(value.model.id) && isText(value.model.revision) && isText(value.model.dtype) && isNumber(value.model.dims)
+    && Object.values(value.model.files).every(file => record(file) && isNumber(file.size) && isText(file.sha256))
+    && isText(value.prefixes.query) && isText(value.prefixes.document) && isNumber(value.maxTokens)
+    && isNumber(value.chunks.count) && isText(value.chunks.sha256) && isText(value.vectors.sha256) && isText(value.indexSha256);
+}
 
 // The query is embedded on this machine with the exact model recorded in the manifest; case text never leaves the process.
 async function localEmbedder(manifest: TheOracleManifest, modelDir: string): Promise<Embed> {
   for (const [name, expected] of Object.entries(manifest.model.files)) {
-    if (await fileSha256(path.join(modelDir, manifest.model.id, name)) !== expected.sha256) throw unavailable("Model embedding TheOracle tidak cocok dengan manifest. Analisis tidak dijalankan.");
+    if (await fileSha256(path.join(modelDir, manifest.model.id, name)) !== expected.sha256) throw unavailable("Model embedding Oracle tidak cocok dengan manifest. Analisis tidak dijalankan.");
   }
   const { AutoModel, AutoTokenizer, env } = await import("@huggingface/transformers");
   env.allowRemoteModels = false;
@@ -62,24 +73,47 @@ async function localEmbedder(manifest: TheOracleManifest, modelDir: string): Pro
 
 async function loadIndex(indexDir: string, modelDir: string, embedder: NonNullable<RetrieveOptions["embedder"]>): Promise<LoadedIndex> {
   try {
-    const manifest = JSON.parse(await readFile(path.join(indexDir, "manifest.json"), "utf8")) as TheOracleManifest;
+    // The public code repository ships without the private database (2026-10-19): say so instead of a read error.
+    const manifestText = await readFile(path.join(indexDir, "manifest.json"), "utf8").catch((error: NodeJS.ErrnoException) => { throw error?.code === "ENOENT" ? unavailable("Database Oracle belum terpasang di server ini. Analisis tidak dijalankan.") : error; });
+    const manifest: unknown = JSON.parse(manifestText);
+    if (!validManifest(manifest)) throw unavailable("Oracle tidak dapat dibuka atau dibaca. Analisis tidak dijalankan.");
     const [chunkBytes, vectorBytes] = await Promise.all([readFile(path.join(indexDir, "chunks.jsonl")), readFile(path.join(indexDir, "vectors.f32"))]);
-    if (sha256(chunkBytes) !== manifest.chunks.sha256 || sha256(vectorBytes) !== manifest.vectors.sha256) throw unavailable("Integritas index TheOracle tidak dapat diverifikasi. Analisis tidak dijalankan.");
+    if (sha256(chunkBytes) !== manifest.chunks.sha256 || sha256(vectorBytes) !== manifest.vectors.sha256) throw unavailable("Integritas index Oracle tidak dapat diverifikasi. Analisis tidak dijalankan.");
     const chunks = chunkBytes.toString("utf8").trim().split("\n").map(line => JSON.parse(line) as Chunk);
     const vectors = new Float32Array(vectorBytes.buffer, vectorBytes.byteOffset, vectorBytes.byteLength / 4);
-    if (chunks.length !== manifest.chunks.count || vectors.length !== chunks.length * manifest.model.dims) throw unavailable("Ukuran index TheOracle tidak sesuai manifest. Analisis tidak dijalankan.");
+    if (chunks.length !== manifest.chunks.count || vectors.length !== chunks.length * manifest.model.dims) throw unavailable("Ukuran index Oracle tidak sesuai manifest. Analisis tidak dijalankan.");
     return { manifest, chunks, vectors, embed: await embedder(manifest, modelDir) };
   } catch (error) {
     if (error instanceof TheOracleGroundingError) throw error;
-    throw unavailable("TheOracle tidak dapat dibuka atau dibaca. Analisis tidak dijalankan.");
+    throw unavailable("Oracle tidak dapat dibuka atau dibaca. Analisis tidak dijalankan.");
   }
 }
 
-// Match the local MIRA privacy guard; public-source matches are skipped, not rewritten.
-function sourceTriggersMiraPrivacy(item: Omit<TheOracleGroundingEvidence, "retrievalRank">): boolean {
-  const value = JSON.stringify(item);
+// One load per index directory and process; a failed load is forgotten so the next call retries.
+function indexFor(options: RetrieveOptions): Promise<LoadedIndex> {
+  const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");
+  const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
+  if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
+  return loaded.get(indexDir)!;
+}
+
+// Loads the index and embedding model and runs one embedding before the first case needs them (measured on
+// 2026-10-17: about 3 s with the files in the OS cache, up to 12 s from a cold disk). A failure is not reported
+// here: indexFor forgets the load, so the next case retries it and shows the error to the clinician.
+export function warmTheOracleGrounding(options: RetrieveOptions = {}): Promise<void> {
+  return indexFor(options).then(index => index.embed(index.manifest.prefixes.query + "demam")).then(() => undefined, () => undefined);
+}
+
+// A DOI is a citation, not an identifier: AHA DOIs end in 16 digits, which read as a NIK (Gaffer, 2026-10-19).
+// aadi/service/app.py removes the same pattern before its check.
+const DOI = /\b(?:doi:\s*)?10\.\d{4,9}\/\s?[^\s"<>]+|\bdoi:\s*[^\s"<>]+/gi;
+
+// Match the local AADI privacy guard (aadi/service/privacy.py over the fields app.py scanned_text sends it);
+// public-source matches are skipped, not rewritten. tests/fixtures/pii-parity.json holds both sides.
+function sourceTriggersAadiPrivacy(item: Omit<TheOracleGroundingEvidence, "retrievalRank">): boolean {
+  const value = JSON.stringify({ text: item.text.replace(DOI, " "), title: item.source.title, docSource: item.source.docSource, origin: item.source.origin });
   if ([/\b\d{16}\b/, /\b\d{13}\b/, /\b08\d{8,11}\b/, /\+?62\d{9,12}\b/, /\b(?:\+62|62|0)[\s.-]?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{3,4}\b/, /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/].some(pattern => pattern.test(value))) return true;
-  return [...value.matchAll(/\b(?:tn\.|ny\.|nn\.|an\.|sdr\.|sdri\.|bpk\.|bapak|ibu|dr\.)\s*([a-z]+)/gi)].some(match => /^[A-Z][a-z]+/.test(match[1]));
+  return [...value.matchAll(/\b(?:tn|ny|sdr|sdri|bpk|ibu)\.\s*([a-z]+)/gi)].some(match => /^[A-Z][a-z]/.test(match[1]));
 }
 
 function queryText(caseData: CaseState): string {
@@ -105,7 +139,7 @@ function freezeBundle(bundle: TheOracleGroundingBundle): TheOracleGroundingBundl
 // Embeds the text locally and ranks every chunk by cosine similarity to it.
 async function rankChunks({ manifest, chunks, vectors, embed }: LoadedIndex, text: string): Promise<{ ranked: number[]; scores: Float32Array }> {
   let q: Float32Array;
-  try { q = await embed(manifest.prefixes.query + text); } catch { throw unavailable("Embedding lokal TheOracle gagal. Analisis tidak dijalankan."); }
+  try { q = await embed(manifest.prefixes.query + text); } catch { throw unavailable("Embedding lokal Oracle gagal. Analisis tidak dijalankan."); }
   const dims = manifest.model.dims;
   const scores = new Float32Array(chunks.length);
   for (let i = 0; i < chunks.length; i++) { let s = 0; const offset = i * dims; for (let k = 0; k < dims; k++) s += q[k] * vectors[offset + k]; scores[i] = s; }
@@ -116,12 +150,9 @@ const evidenceItem = (chunk: Chunk, score: number): Omit<TheOracleGroundingEvide
 
 export async function retrieveTheOracleGrounding(caseData: CaseState, options: RetrieveOptions = {}): Promise<TheOracleGroundingBundle> {
   const query = queryText(caseData);
-  if (!/[\p{L}\p{N}]/u.test(query)) throw new TheOracleGroundingError("THEORACLE_QUERY_EMPTY", "Keluhan belum memiliki istilah klinis yang dapat dicari di TheOracle.");
-  const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");
-  const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
+  if (!/[\p{L}\p{N}]/u.test(query)) throw new TheOracleGroundingError("THEORACLE_QUERY_EMPTY", "Keluhan belum memiliki istilah klinis yang dapat dicari di Oracle.");
   const limit = Math.max(1, Math.min(Math.trunc(options.limit ?? MAX_EVIDENCE), MAX_EVIDENCE));
-  if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
-  const index = await loaded.get(indexDir)!;
+  const index = await indexFor(options);
   const { manifest, chunks } = index;
   const dims = manifest.model.dims;
   const { ranked, scores } = await rankChunks(index, query);
@@ -132,11 +163,11 @@ export async function retrieveTheOracleGrounding(caseData: CaseState, options: R
     const chunk = chunks[i];
     if ((perDocument.get(chunk.title) ?? 0) >= MAX_PER_DOCUMENT) continue;
     const item = evidenceItem(chunk, scores[i]);
-    if (!item.text || sourceTriggersMiraPrivacy(item)) continue;
+    if (!item.text || sourceTriggersAadiPrivacy(item)) continue;
     perDocument.set(chunk.title, (perDocument.get(chunk.title) ?? 0) + 1);
     selected.push(item);
   }
-  if (!selected.length) throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "TheOracle tidak menemukan referensi untuk keluhan ini. Analisis tidak dijalankan.");
+  if (!selected.length) throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "Oracle tidak menemukan referensi untuk keluhan ini. Analisis tidak dijalankan.");
   // A complaint matches symptom passages; doses sit in treatment passages, often of another guideline (PPK, Fornas).
   // Search the whole corpus again for treatment and add the best passage that states a dose, in place of the lowest match.
   const therapy: typeof selected = [];
@@ -147,11 +178,22 @@ export async function retrieveTheOracleGrounding(caseData: CaseState, options: R
       const chunk = chunks[i];
       if (!DOSE.test(chunk.text) || selected.some(item => item.evidenceId === chunk.id)) continue;
       const item = evidenceItem(chunk, therapyScores[i]);
-      if (!item.text || sourceTriggersMiraPrivacy(item)) continue;
+      if (!item.text || sourceTriggersAadiPrivacy(item)) continue;
       therapy.push(item);
     }
   }
-  const evidence = [...selected.slice(0, limit - therapy.length), ...therapy];
+  // When the dose passage's document already holds two matches, it takes the place of that document's lower match and the
+  // freed slot goes to the next match, so no document gets a third slot.
+  const matches = selected.slice(0, limit - therapy.length);
+  const spare = selected.slice(limit - therapy.length);
+  for (const item of therapy) {
+    const same = matches.filter(match => match.source.title === item.source.title);
+    if (same.length < MAX_PER_DOCUMENT) continue;
+    matches.splice(matches.indexOf(same[same.length - 1]), 1);
+    const next = spare.shift();
+    if (next) matches.push(next);
+  }
+  const evidence = [...matches, ...therapy];
   return freezeBundle({
     version: THEORACLE_GROUNDING_CAPABILITY,
     corpus: {
@@ -183,10 +225,7 @@ function therapyQuery(caseData: CaseState, diagnosis: { icd10: string; label: st
 // Therapy is retrieved for the diagnosis the diagnosis step chose, so its treatment and dose passages reach the therapy step.
 export async function retrieveTheOracleTherapyGrounding(caseData: CaseState, diagnosis: { icd10: string; label: string }, options: RetrieveOptions = {}): Promise<TheOracleGroundingBundle> {
   const query = therapyQuery(caseData, diagnosis);
-  const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");
-  const modelDir = options.modelDir ?? path.join(process.cwd(), "theoracle", "model");
-  if (!loaded.has(indexDir)) loaded.set(indexDir, loadIndex(indexDir, modelDir, options.embedder ?? localEmbedder).catch(error => { loaded.delete(indexDir); throw error; }));
-  const index = await loaded.get(indexDir)!;
+  const index = await indexFor(options);
   const { manifest, chunks } = index;
   const { ranked, scores } = await rankChunks(index, query);
   const selected: Omit<TheOracleGroundingEvidence, "retrievalRank">[] = [];
@@ -197,12 +236,12 @@ export async function retrieveTheOracleTherapyGrounding(caseData: CaseState, dia
       const chunk = chunks[i];
       if (DOSE.test(chunk.text) !== wantDose || (perDocument.get(chunk.title) ?? 0) >= MAX_PER_DOCUMENT) continue;
       const item = evidenceItem(chunk, scores[i]);
-      if (!item.text || sourceTriggersMiraPrivacy(item)) continue;
+      if (!item.text || sourceTriggersAadiPrivacy(item)) continue;
       perDocument.set(chunk.title, (perDocument.get(chunk.title) ?? 0) + 1);
       selected.push(item);
     }
   }
-  if (!selected.length) throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "TheOracle tidak menemukan referensi terapi untuk diagnosis ini.");
+  if (!selected.length) throw new TheOracleGroundingError("THEORACLE_NO_MATCH", "Oracle tidak menemukan referensi terapi untuk diagnosis ini.");
   return freezeBundle({
     version: THEORACLE_GROUNDING_CAPABILITY,
     corpus: { name: "TheOracle", indexSha256: manifest.indexSha256, embeddingModel: { id: manifest.model.id, revision: manifest.model.revision, dtype: manifest.model.dtype, dims: manifest.model.dims }, retrievedAt: (options.now ?? (() => new Date()))().toISOString(), reviewProvenance: REVIEW_PROVENANCE },

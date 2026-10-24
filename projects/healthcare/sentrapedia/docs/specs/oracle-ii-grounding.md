@@ -2,13 +2,13 @@
 
 **Status:** Approved for local implementation on 2026-10-10  
 **Risk:** R3 - Gaffer-approved clinical-facing prompt grounding; R2 for the backward-compatible data contracts  
-**Scope:** Sentrapedia capsule and the local MIRA service under `D:/DEV/gafferverse/mira-system/assist`
+**Scope:** Sentrapedia capsule and the local AADI service under `<mira-repo>/assist`
 
 ## Outcome
 
-Every Sentrapedia MIRA analysis retrieves a bounded set of Oracle II references before any model call. The service receives those references in a dedicated `grounding` envelope, separate from the de-identified patient `case`, and exposes the capability before the gateway will send a grounded request.
+Every Sentrapedia AADI analysis retrieves a bounded set of Oracle II references before any model call. The service receives those references in a dedicated `grounding` envelope, separate from the de-identified patient `case`, and exposes the capability before the gateway will send a grounded request.
 
-The saved draft contains the exact reference snapshot used for that analysis. Each reference keeps its source file, source SHA-256, PDF page, page-text SHA-256, extraction coordinates/status, retrieval kind, and quoted text. These citations show which source passages were supplied to MIRA; they do not assert that a passage entails a diagnosis or other generated claim.
+The saved draft contains the exact reference snapshot used for that analysis. Each reference keeps its source file, source SHA-256, PDF page, page-text SHA-256, extraction coordinates/status, retrieval kind, and quoted text. These citations show which source passages were supplied to AADI; they do not assert that a passage entails a diagnosis or other generated claim.
 
 ## Retrieval contract
 
@@ -21,12 +21,12 @@ The saved draft contains the exact reference snapshot used for that analysis. Ea
 
 ## Grounding boundary
 
-- The MIRA v1 request remains valid for legacy clients. A grounded request adds the optional strict `grounding` envelope with version `oracle-grounding-v1`.
+- The AADI v1 request remains valid for legacy clients. A grounded request adds the optional strict `grounding` envelope with version `oracle-grounding-v1`.
 - `/healthz` keeps `contractVersion: "1"` and advertises `capabilities: ["oracle-grounding-v1"]`.
 - Sentrapedia requires that capability before forwarding a grounded request and fails with an actionable error before inference when it is absent.
 - Planning, full assessment, fast diagnosis, fast workup, and fast therapy prompts all receive the same bounded reference block.
 - Prompt instructions identify the block as guideline source material, keep it separate from patient facts, require no unsupported extrapolation, and preserve `evidence.supporting/opposing` exclusively for recorded patient findings.
-- MIRA response schema remains unchanged. Source citations live in the immutable Sentrapedia draft provenance rather than being attached to individual generated claims.
+- AADI response schema remains unchanged. Source citations live in the immutable Sentrapedia draft provenance rather than being attached to individual generated claims.
 
 ## Provenance
 
@@ -34,11 +34,11 @@ Gaffer stated in this implementation session that the corpus sources are from Ke
 
 ## UI and persistence
 
-- Main composer and the existing structured MIRA form use the same grounded gateway path.
-- A grounded MIRA message stores `case`, `result`, trace/time, and the exact grounding bundle in `sourceText`.
+- Main composer and the existing structured AADI form use the same grounded gateway path.
+- A grounded AADI message stores `case`, `result`, trace/time, and the exact grounding bundle in `sourceText`.
 - Rendered drafts include a separate "Referensi Oracle II yang diambil" section with immutable source/page citations and an explicit reference-selection label.
-- The Document Studio source pane distinguishes grounded MIRA snapshots from legacy MIRA and local document sources.
-- Existing saved MIRA messages without grounding remain readable and keep their current presentation.
+- The Document Studio source pane distinguishes grounded AADI snapshots from legacy AADI and local document sources.
+- Existing saved AADI messages without grounding remain readable and keep their current presentation.
 
 ## Verification
 

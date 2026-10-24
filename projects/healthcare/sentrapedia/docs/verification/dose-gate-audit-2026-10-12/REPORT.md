@@ -5,7 +5,7 @@ Status: **CORRECTIONS APPLIED; DOSE OWNERSHIP RULE IN PLACE (fail-safe); LIVE ME
 
 ## 1. Data and method
 
-- **Live baseline failed twice** (paid, about $0.29 in total). Run 1: 18/61 cases ok; run 2: 12/61 (`live-attempt-2-targeted.*`). In both, the MIRA API-error breaker opened after consecutive provider errors and paused model calls for 60 s; the rest of the run failed in 1-3 ms (`API_ERRORS` 503, then `SERVICE` 502). The breaker also counts failed parallel copies of a request that succeeded. The provider error type is not logged (`engine.py` keeps only the exception class name in a swallowed `StepFailed`). The same eval ran 61/61 on 2026-10-11. Gaffer chose to continue offline.
+- **Live baseline failed twice** (paid, about $0.29 in total). Run 1: 18/61 cases ok; run 2: 12/61 (`live-attempt-2-targeted.*`). In both, the AADI API-error breaker opened after consecutive provider errors and paused model calls for 60 s; the rest of the run failed in 1-3 ms (`API_ERRORS` 503, then `SERVICE` 502). The breaker also counts failed parallel copies of a request that succeeded. The provider error type is not logged (`engine.py` keeps only the exception class name in a swallowed `StepFailed`). The same eval ran 61/61 on 2026-10-11. Gaffer chose to continue offline.
 - **Offline replay** (`.runtime/audit/`, git-ignored): `extract.py` takes the 122 eval replies from `audit-2026-10-11.jsonl` with the bundle sent to each call; `replay.test.ts` runs the HEAD `gateTherapy` on them. It reproduces the PIPELINE-REPORT counts exactly: **42 verified on both paths** (legacy 42 / 14 dose removed / 9 removed; targeted 42 / 27 / 2).
 - Per drug the replay also runs the gate (a) with every passage forced "about" the diagnosis and (b) with the diagnosis bundle added to the therapy bundle. `corpus_scan.py` then searches all 20,465 TheOracle chunks for passages naming the drug and the diagnosis. Each row was read by hand: `classification-targeted.json`.
 - The plan's baseline (39 verified / 30 without dose) predates later gate commits. On the same replies the targeted path now has 42 verified, 27 drugs with the dose removed, and 2 drugs removed (29 non-verified).
@@ -51,8 +51,8 @@ The other weaknesses are of the design, not of the regex:
 | 2 | Targeted gate reads therapy bundle + diagnosis bundle | gateway, gate call only | +2 verified (tenofovir, amoxicillin-clavulanate) | Low: same passage rules |
 | 3 | A single model strength inside a source range verifies, when the range is one strength occurrence with the same unit and per-kg status (not a "6" and a "mg" found apart). Open: whether a narrower model range ("6-8 mg" vs "6-12 mg") verifies when both ends fall inside | gate | +4 verified (betahistin x2, sertralin, diazepam) | Medium: needs tests that a range in another clause or for another drug does not count |
 | 4 | Diagnosis synonyms (ODHA = HIV; hemoroid = haemorrhoids, I84 = K64) | gate | +1 (efavirenz) | Medium: a word list to maintain |
-| 5 | Therapy prompt: `dose` must hold the amount or concentration | MIRA prompt (pinned in `SOURCE.json`) | Fewer H2 rows on new replies; no replay effect | Medium: engine change, live eval needed |
-| 6 | Breaker counts one failure per request, not per parallel copy; log the provider error type | MIRA engine | Unblocks the live eval | Low-medium: engine change |
+| 5 | Therapy prompt: `dose` must hold the amount or concentration | AADI prompt (pinned in `SOURCE.json`) | Fewer H2 rows on new replies; no replay effect | Medium: engine change, live eval needed |
+| 6 | Breaker counts one failure per request, not per parallel copy; log the provider error type | AADI engine | Unblocks the live eval | Low-medium: engine change |
 | 7 | A strength verifies only from the drug's own clause or table row, not from anywhere in the passage | gate | Lamivudin 300 mg -> dose removed; other effects unknown until replayed | Medium: tables and lists need care |
 
 Projection, not measurement: changes 1-3 would take the targeted replay from 42 to about 48 verified. Only change 2 is measured (+2: these rows verify when the diagnosis bundle is added). Changes 1 and 3 are inferred from the forced-about test and the corpus check, and each will be measured by replaying the same 122 replies before it is committed, as earlier gate changes were. That offline replay is the before/after for the gate changes; a live run waits for change 6. Retrieval for metformin (B) and the design limits in section 3 need a separate decision.
@@ -63,7 +63,7 @@ The harness scripts are copied to `harness/` (`replay.test.ts.txt` is renamed so
 
 - Phase 2 live reproduction and the live after-measurement: blocked by OpenRouter credit (section 6).
 - Phase 4, the 10-disease external benchmark: section 7.
-- Phase 6: no new measurement. The 2026-10-11 report already attributes the latency rise to the second MIRA call (`mira_tx` p50 about 2.0 s); today's partial runs agree (p50 4.7 s).
+- Phase 6: no new measurement. The 2026-10-11 report already attributes the latency rise to the second AADI call (`aadi_tx` p50 about 2.0 s); today's partial runs agree (p50 4.7 s).
 
 ## 6. Corrections applied (2026-10-12)
 
@@ -76,7 +76,7 @@ Each change was written test-first, then replayed on the same 122 replies (`.run
 | 7 | `5e31f714` | A strength verifies only the drug it follows, inside the drug's own item (lettered item, bullet, dash) |
 | 3 | `604e286c` | A single model strength verifies inside a source range of the same unit and per-kg form |
 | 4 | `f3966c0f` | ODHA = HIV; ICD-10 2010 I84 = catalog K64 (hemoroid) |
-| 6 | `12efd483` | MIRA breaker counts a failed part once, not each failed parallel copy; the provider error type and HTTP status are logged |
+| 6 | `12efd483` | AADI breaker counts a failed part once, not each failed parallel copy; the provider error type and HTTP status are logged |
 | 5 | `4d902a4d` | Fast therapy prompt: every dose states its amount or concentration, never a frequency alone; tablet count, not tablet content |
 | review | `d6e0768a` | "0,125" is a decimal, not thousands; a "juta" multiplier covers both ends or none; a range counts only as the drug's own first strength; the window anchors after the full name; "B." cuts, "2 g." does not |
 | review 2 | `ee5bc240` | Window also ends at a ";" / "," / sentence end whose next word is not a population, phase, form, route or timing word; the window opens after the first name word only where the clause holds the other name words (salt-first "natrium diklofenak" doses, "; natrium bikarbonat" does not); a daily total ("mg/hari", "sehari", "/24 jam") does not verify each of several doses unless the source writes its own frequency before it |
@@ -93,7 +93,7 @@ Replay, verified drugs (legacy / targeted), same 122 replies:
 | drug-name lexicon (`2327700f`) | 49 | 48 |
 | per-strength ownership rule (`ea2fe8f8`, `ae480804`, review-7 fixes) | 48 | 48 |
 
-The one drop at `ee5bc240` is a correct block: amoxicillin-clavulanate 3x250-500mg for impetigo had been verified by the impetigo note's "Kloksasilin/Dikloksasilin 4 x 250-500 mg" (another drug's range). PERDOSKI states "Amoksisilin dan asam klavulanat: dewasa 3x250-500 mg/hari", but those chunks do not name impetigo, so they are not "about" the diagnosis. Lamivudin 1 x 300 mg (section 3, item 0) is now dose-removed. Gate tests: 91 (`tests/theoracle-evidence-gate.test.ts`); the 7 test files that use the gate: 181/181; MIRA tests 180 passed, 1 skipped.
+The one drop at `ee5bc240` is a correct block: amoxicillin-clavulanate 3x250-500mg for impetigo had been verified by the impetigo note's "Kloksasilin/Dikloksasilin 4 x 250-500 mg" (another drug's range). PERDOSKI states "Amoksisilin dan asam klavulanat: dewasa 3x250-500 mg/hari", but those chunks do not name impetigo, so they are not "about" the diagnosis. Lamivudin 1 x 300 mg (section 3, item 0) is now dose-removed. Gate tests: 91 (`tests/theoracle-evidence-gate.test.ts`); the 7 test files that use the gate: 181/181; AADI tests 180 passed, 1 skipped.
 
 Fail-safe limits kept on purpose (dose blanked, never wrong): a strength before the drug name; "600.000 - 1,2 juta IU" (multiplier on one end); "omeprazol untuk H. pylori 20 mg" (the capital "H." reads as an item letter); FORNAS rows whose restriction text has a sentence end before the next numbered form (budesonid 0,25 mg/mL keeps its PAPDI citation only); a "+" partner mask that also covers the first drug's own strength ("DHA + Piperakuin (DHP) tiap tablet mengandung 40 mg ...", still verified from another passage). Residual open (the known limit of a word-list window): two drugs with no cut point between them, such as "X 500 mg dan Y 400 mg" or "Karbogliserin / Gliserin 10% ... 3 x 2-3 tetes" (this one shares a dose on purpose), and "1,250-2,500 mg" read as thousands (the exact path shares that ambiguity). Section 3 items 1-4 (concentration as dose, strength list as regimen, frequency and duration unchecked, population unchecked) are unchanged.
 

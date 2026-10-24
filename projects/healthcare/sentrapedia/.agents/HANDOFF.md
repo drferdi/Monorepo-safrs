@@ -1,164 +1,64 @@
 # Sentrapedia handoff
 
+## Clerk login/registration is already built on another branch; integration readiness assessed read-only (one commit on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+
+- Gaffer: "Learn the codebase dan siapkan untuk integration: front end website, login access, using clerk untuk register dan login". All three exist as code already, built by another agent on `codex/sentrapedia-clerk-access-31bf87f9` (head `f30274f1`, worktree `C:\Users\drfer\.codex\worktrees\sentrapedia-clerk-access-31bf87f9\monorepo`), so this session wrote no auth code and re-implemented nothing. Read-only: no merge, no cherry-pick, no install, no Clerk or Cloudflare call, nothing pushed. Report: `docs/plans/active/2026-10-24-clerk-integration-readiness.md`.
+- Baseline: both lines diverge from `511a66d5`, this branch +29, the Clerk branch +28. The Clerk branch adds 94 files (+3,758/-562): `/sign-up`, `/sign-in`, `/apply` and `/onboarding` redirects, `src/proxy.ts` with a public readiness exception for `GET /api/aadi`, fail-closed `src/lib/auth/config.ts` (key-family match, decoded Frontend API host, live key plus exact HTTPS origin in production, loopback-only `SENTRAPEDIA_AUTH_MODE=local`), suspension and consent checks in `policy.ts`/`access.ts`, principal-scoped browser storage that never adopts the legacy unscoped key, the `beta:access` operator command, `@clerk/nextjs` 7.9.20 + `@clerk/backend` 3.26.2 + `server-only` pinned, a `project.contract.json` Clerk entry with the extraction smoke moved from `/` to `/api/aadi`, and the site navigation saying "Daftar".
+- Merge surface, measured with `git merge-tree --write-tree --name-only HEAD codex/sentrapedia-clerk-access-31bf87f9` (nothing mutated, exit 1): exactly two conflicted paths, `.agents/HANDOFF.md` and `.agents/HANDOFF.archive.md`, which are also the only files both lines touched since the base. No code, test, manifest, SSOT or index overlap; the Clerk branch never touches `theoracle/**`, `oracle/**`, `src/lib/theoracle*` or the evidence gate, so the v0.6 knowledge work and the LFS `vectors.f32` object are uncontested. Resolve the two documents by keeping both sides.
+- The implemented flow is Daftar → Login → Akses, committed in `a0735948`, not the Waitlist flow of `docs/specs/2026-10-23-clerk-beta-access-design.md`. So the production instance is still Waitlist and the pending invitation `inv_3L8LSBY0...` belongs to the superseded flow; applying `auth_access_control.sign_up_mode: public` is the real remaining production step, and part of the design document is now superseded by `docs/verification/user-self-service-access-2026-10-24.md`.
+- The halt recorded in the Clerk branch's own handoff is stale. Its newest committed evidence explains the `EPROTO … wrong version number` smoke failure as a listener bound to `127.0.0.1` while the Clerk rewrite targeted `localhost`, fixed by binding the preview to `localhost` with no code change, after which six built HTTP checks passed (`/sign-up` and `/sign-in` 200, `/apply` → `/sign-up`, `/onboarding` → `/`, anonymous `/` → `/sign-in`, anonymous `POST /api/aadi` → 401). Nothing to retry here.
+- Found by reading, for whoever merges: `capsule.json` was never updated and still declares only `GEMINI_API_KEY` with no Clerk service or identity sensitive surface, while `project.contract.json` does declare it - the one concrete defect. After the merge this worktree's `.env.local` (no Clerk keys) makes `resolveAuthConfig` return `unavailable`, which denies the workspace by design, so it needs `SENTRAPEDIA_AUTH_MODE=local` or development keys. Six UI tests were rewritten behind the auth boundary on the other line while this line changed workspace UI, which is where a post-merge failure is most likely. The merge also brings the whole `apps/site` refactor (32 files, +1,147/-481), not just the login link. The Codex worktree carries uncommitted `.agents/HANDOFF.md` plus ~30 modified verification PNGs that must not be swept into any commit.
+- Verification of this session: documentation only, so no gate was run and none is claimed. The merge-tree result above is the only computed evidence; `capsule.json`, the dependencies and the auth guards were read, never executed.
+- Next, in order: `.env.local` auth mode, then Gaffer's approval for the merge, then the full capsule gate on the merged tree, then the `capsule.json` fix, then the superseded-design note. Production `sign_up_mode`, image staging, the first real registration and the Cloudflare Access cutover stay separately authorised, edge gate removed last and restored first on rollback. Publication still splits from an ancestor of `414afa5d`, and `deploy/beta/update.sh` must not be used unchanged because it pulls `main` and omits the Clerk environment file.
+- Open for Gaffer: merge now, while the conflict surface is two documents, or hold until a real user has registered on a public-mode production instance.
+## Recovery: the malaria commits had landed on the MyPrompt branch (two commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+
+- Gaffer: "prompt-claude-sonnet-5-5 ini kan project Myprompt? jangan di campur campur gini lah". He was right, and the mixing was worse than the wording: all seven commits of the cerebral-malaria work (`51f78194` through `a5562d94`) had been made while HEAD was on `feat/prompt-claude-sonnet-5-5`, the MyPrompt branch, not on `feat/puskesmas-flow`.
+- How it happened, from the reflog: a checkout back to `feat/puskesmas-flow` at 21:05:12 (asked for by Gaffer, verified and reported at the time), then a second checkout at 21:05:37 moving HEAD back to `feat/prompt-claude-sonnet-5-5`. That second checkout was issued by nothing in this session's command log and its reflog identity is the same git user as everything else, so its cause is unexplained - possibly the app, a hook, another worktree or Gaffer's own terminal. What is this session's fault is separate and simpler: seven commits were made over the next two hours without re-checking the branch, and Gaffer was told the checkout was on `feat/puskesmas-flow` when it no longer was.
+- Fix: `git cherry-pick 51f78194^..a5562d94` onto `feat/puskesmas-flow`, which auto-merged the HANDOFF on every pick that touched it, with no manual conflict. The hashes changed, old -> new: `51f78194` -> `ac685cb2`, `6a9c89d7` -> `fb464892`, `5be07d89` -> `9ce51701`, `3dced91f` -> `27eadadc`, `6000af31` -> `f4521042`, `1b92ef05` -> `4c618c28`, `a5562d94` -> `d83522fa`. Commit messages quoting the old hashes (for example the D-obat entry naming `6000af31`) still name the abandoned ones; the mapping here is the way back.
+- Verified after the move: `git diff feat/prompt-claude-sonnet-5-5 feat/puskesmas-flow -- projects/healthcare/sentrapedia/` is one line of HANDOFF (the `.gitignore` bullet of `6b290d0a`, which the MyPrompt branch never had), and the six artefacts that matter are the same blobs on both branches - SSOT, `index/manifest.json`, `index/chunks.jsonl`, `index/vectors.f32`, `oracle/sentrapedia.json`, `src/lib/theoracle.ts`. So nothing of the knowledge work was lost or duplicated in content.
+- `feat/prompt-claude-sonnet-5-5` was then moved from `a5562d94` back to `b38b74e6`, so it holds only its own five MyPrompt commits and no Sentrapedia commit. Local, unpushed, reversible with `git branch -f feat/prompt-claude-sonnet-5-5 a5562d94`.
+- `e376b069` (R1): `.playwright-mcp/` is now ignored - timestamped console logs and throwaway flow scripts from browser-driven checks, the same class as the already-ignored `.claude/` and `.superpowers/`. Nothing deleted. The Sentrapedia working tree is now clean; the two remaining untracked directories (`.agents/skills/gaffer-superpower/`, `docs/antigravity/`) sit at the monorepo root and belong to neither project.
+- Not re-run: the gate and the benchmark. The picks changed no file content outside HANDOFF, and the artefact blobs were checked identical, so the results recorded in the entry below still describe this tree. Nothing pushed.
+
+## Option D-obat applied: SP0193 row 78 names both alternatives (one commit on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+
+- Gaffer: "Ya, ubah obat baris 78 jadi \"Artemisinin atau Artesunat\"". Applied by `docs/verification/theoracle-eval-2026-10-24/dose-audit-d.mjs` with an old-value check on `obat`, `dosis` and `kutipan` and a round-trip assertion before and after. `obat` "Artesunat" -> "Artemisinin atau Artesunat"; `kutipan` restored to the whole guideline sentence, taken from the entry's own `rujukan` field rather than retyped, so it cannot drift from the SSOT's wording. `catatan` keeps both old values on top of yesterday's K1 note. `konteks`, `dosis`, `rute`, `sumber` and `halaman` are untouched, so the clinical note that 3,2 mg/kgBB is artemether's initial dose still renders.
+- Why: PPK IDI 2017 offers two alternatives for the pre-referral dose and the row named only the second while carrying the first one's dose, so the entry contradicted its own rendered Rujukan section. Verified afterwards in the index: two chunks now carry "Artemisinin atau Artesunat" (the dose line and the Rujukan section agree), and no chunk renders the old `obat: Artesunat; dosis: 3,2mg` line.
+- Hashes: SSOT `2b71b56c...` -> `65ea10ca...`; chunks `2c8bd2be...` -> `8ed720c8...`; index `85dfc865...` -> `49b0af29...`; catalogue `43071ca5...` -> `3c9b32e6...` (`src/lib/theoracle.ts` carries the catalogue hash, one generated line). Chunks 17,871 (2,285 SSOT + 15,586 library), 335 entries, 329 diseases, 21 categories. Embedding the index took 4,302 s on CPU.
+- Gate, all exit 0: typecheck, lint, `npm test` (vitest + site), `test:system`, `test:aadi` (237 passed, 1 skipped), `build`, `deploy:dry-run`.
+- Benchmark `benchmark-v06-d-obat.json`: identical to `benchmark-v06-dose-audit-k.json` in every category - recall@5 overall 77/88 (0.875), lay_terms 15/16, abbreviations 14/15, mixed_id_en 15/15, typos 15/15, exact_terms 18/27, dose 51/61, targeted 57/61 - and zero rows changed in either dose-recall list.
+- Process finding worth keeping: `benchmark-theoracle-grounding.mjs` takes the eval-set directory as `argv[2]` and defaults to `docs/verification/theoracle-eval-2026-10-11`, so bare `npm run benchmark:oracle` does **not** measure the v0.6 gold set. A first run of this benchmark was made bare and produced recall@5 31/88 with a targeted row flipping; that was the wrong eval set, not a regression, and the numbers above come from the re-run with `docs/verification/theoracle-eval-2026-10-22/v0.6-gold`. Compare future runs only against baselines built from the same set.
+- Retracted: a first reading of this rebuild called 17,871 chunks a documentation drift against the `edad52f5...` / 17,989 figure in the notes below. It is not. The manifest history shows `79e72de1` (RA merge) really did carry `edad52f5...` with 17,989, and the three dose-audit commits after it removed non-drug dose rows, which shrank the rendered SSOT chunks to 17,871 - exactly what the rounds 2-3 entry already records. Nothing is inconsistent. The only small gap is that the K commit `f3f13eb1` rebuilt the index to `85dfc865...` without recording that hash in its own entry.
+- Consequence of the benchmark `argv[2]` default, for whoever reads this next: the `verify` chain's benchmark step runs bare, so its exit 0 says nothing about the v0.6 gold numbers. No earlier claim in this file is wrong, because previous sessions ran the benchmark separately with the gold path; but do not read a green `npm run benchmark:oracle` as the v0.6 check. Making the npm script pass the gold path would be a change to a verification control, so it was left alone.
+- `theoracle/index/vectors.f32` is Git LFS tracked (`filter: lfs`; `chunks.jsonl` is not), so this commit created a new 52 MB LFS object locally. A future publish needs that object uploaded before the gated push, the same way the e2e baseline did on 2026-10-13.
+- Paid eval deliberately skipped, Gaffer 2026-10-24: "Tidak perlu eval berbayar, benchmark sudah cukup." The benchmark is identical to the `benchmark-v06-dose-audit-k.json` baseline in every category and every dose-recall row, so a one-field rename did not move retrieval. This means the last paid eval on record for the shipped state is `eval-dose-audit-r3.md` plus `eval-codes.md`, taken before this commit; the index hash they describe is no longer HEAD's. Nothing pushed.
+
+## Dose audit of the knowledge SSOT: rows corrected from their quotes, non-drug rows removed (three commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+
+- Gaffer: "Benahi data obat dan dosis di knowledge SSOT Sentrapedia secara end to end"; after the read-only audit (`docs/verification/theoracle-eval-2026-10-24/dose-audit.md`, script `dose-audit.mjs`, candidates `dose-audit-candidates.json`): "Setuju: terapkan M1–M7, H dan N-0001. B dan K biarkan dulu". No K decision was written with the approval, so K1-K7 are untouched.
+- `22a8cea5` (R1), applied by `dose-audit-apply.mjs` with an old-value check per row: 315 changes on 301 rows from each row's own quote (lost dashes such as celecoxib 200-400 mg, drug-name fragments, per-kg units, maxima, cut frequencies; old value in `catatan`), 1,350 auto-extracted statistic/lab/equipment rows removed (copied to `dose-audit-removed.json`), SP0286 gains "Adrenalin 1/1000 0,3ml SK" (KMK 1186/2022 hal. 467). Rows 8,940 → 7,591, dose lines 7,626 → 6,854, entries with a dose line 304 → 303, Σ `n_obat_berdosis` 4,649 → 3,693; SSOT `f5e8f58e…` round-trips.
+- Index `d0fa8c3f…`, 17,899 chunks (2,313 SSOT + 15,586 PDF); counts in docs and `.agents` follow. Benchmark `benchmark-v06-dose-audit.json`: every hit identical to `benchmark-v06-ra-merge.json` (recall@5 77/88, dose 50/61, targeted 57/61). Gate: typecheck 0, lint 0, vitest 471/471, node tests 23/23, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
+- Paid eval (`eval-dose-audit.md`): 61/61 ok, no timeout, 0.32 USD; ICD codes identical in all 61 (top-1 0.934); doses shown 62 → 63, all verified; 13 cases changed in both directions, none from a removed row.
+- Rounds 2-3 (Gaffer: "terapkan 7 kandidat mekanis baru", then "Sekalian check aja dulu semua ... jangan sedikit rubah lalu rebuild", "terapkan paket putaran 3 + 3b"): every remaining flagged row read once (three readers plus by hand, `dose-audit-readings/`, merged by `dose-audit-merge.mjs`); 436 field changes (204 drug names, 104 frequencies, 68 doses, 39 routes, the seven of round 2, ...), 323 more non-dose auto rows removed (`dose-audit-removed.json` holds all 1,673), a round 1 error undone (SP0314 #28 "2-3x/hari" was penisilin V's). SSOT `852c762c…`: rows 7,268, dose lines 6,645, entries with a line 301, Σ n_obat_berdosis 3,398. Index `9b81edc3…`, 17,871 chunks (2,285 SSOT + 15,586 PDF). Benchmark recall@5 77/88, dose 51/61 (was 50), targeted 57/61. Gate green. Paid eval (`eval-dose-audit-r3.md`): 61/61 ok, ICD identical, doses shown 63, 0.32 USD.
+- Open for Gaffer: 335 rows held back (`dose-audit-candidates-3.json` `review`: class-only names, two drugs sharing a dose, study doses, the SP0075 titration table, SP0053 #15 "kiprofloksasin"), 4,480 rows whose source is not in the library, 18 KMK/Permenkes pages outside the chapter, 81 quotes from other PDF editions. `status.terapi` not recomputed except SP0225. Nothing pushed.
+- `ef4cc406` (R1): `.gitignore` now ignores `.husky/_/`. `core.hooksPath` is `.husky/_` and Git LFS regenerates that directory per machine, so it showed as an untracked change in every checkout. No knowledge, index or gate input touched. `.playwright-mcp/` (timestamped console logs and scratch flow scripts) is still untracked and was left alone. Nothing pushed.
+- K1-K7 decided by Gaffer ("Ya lakukan") and applied by `dose-audit-k.mjs`: clinical notes in `konteks` (rendered) for SP0193 #78 artesunat 3,2 mg/kgBB (artemether's dose; artesunat 2,4 mg/kgBB), SP0216 #81 cefadroxil "500-100 mg" (likely 500-1000 mg), SP0053 #27 cefixime Permenkes (IDI/KMK 20 mg/kgBB/hari); SP0267 #20 ceftriaxone ISO 2050 → 20-50 mg/kg; SP0225 `status.terapi` → "tanpa_dosis"; K1b, K5, K6 unchanged.
+
+## Satu per satu: library therapy texts, DM code, non-drug filter, status counts (eight commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+
+- Gaffer: "Kerjakan satu per satu" (items 1-11). Report: `docs/verification/theoracle-eval-2026-10-23/knowledge-gaps.md`, section "Item by item".
+- SSOT: five entries got a therapy text quoted from a library PDF, flagged "ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer" in the key and in `status.review_klinis.catatan` (SP0298 TB-HIV, SP0188 luka bakar, SP0232 PPP from PPK IDI 2017; SP0296 BBLR from KMK 1936/2022; SP0027 benda asing T17 from PPK HBTKVI). SP0063 DM tipe 1 `icd10` → E10. `status` counts recomputed (39 entries changed, ~22 of them stale before A1).
+- Builder: labels for `kmk_1936_2022` and `ppk_bedah_toraks_2018`; `NOT_A_DRUG` drops 29 more non-drug words ("Normal", "Lebih dari", "Studi", lab values); dose lines 7,779 → 7,624; node test covers "Normal".
+- Index `fc028da5…`, 17,990 chunks (2,404 SSOT + 15,586 PDF). Benchmark `benchmark-v06-itemized.json` identical to A1 in every category. Gate: typecheck 0, lint 0, vitest 471/471, node tests 23/23, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0. Paid eval (`docs/verification/theoracle-eval-2026-10-24/eval-itemized.md`): 61/61 ok, ICD top-1 56/61 unchanged, doses shown 64 → 61, all verified, 0.32 USD; the metformin drop for E11.9 follows from the DM tipe 1 code fix, the rest is model output.
+- Correction: the PPK IDI 2017 "SKA" passage cited on 2026-10-23 is the Angina Pektoris Stabil management; SKA got no text.
+- Item 4 (approved by Gaffer): `kategori` = ICD-10 chapter of the first code, 21 categories, source value in `kategori_sumber_lama`; catalogue and tests follow, chunks and index unchanged; gate green (vitest 471/471). SP0020 code fixed below.
+- SP0312 (Gaffer): the KKI itrakonazol row is replaced by the two PPK Perdoski 2017 regimens (hal. 55, denyut 2x200 mg 1 minggu/istirahat 3 minggu; 200 mg/hari 2 bulan kuku tangan, minimal 3 bulan kuku kaki); index `61ac3f80…`, benchmark identical, gate green. Not replayed through the live pipeline.
+- Code fixes (Gaffer): SP0020 RA M53.3 → M06.9, SP0247 polimialgia M53.3 → M35.3, SP0168 keracunan makanan T47 → T62.2, SP0331 BPPV R42 → H81.1 (kategori → Telinga); replaced codes in `icd10_sumber_lama`; Hepatitis B unchanged. Index `818c1be1…`, benchmark identical, gate green. Paid eval (`docs/verification/theoracle-eval-2026-10-24/eval-codes.md`, one 504 re-run alone): 61/61 ok, ICD top-1 56 → 57 (abbreviations-13 now H81.1), doses shown 61 → 62 (betahistin 3x6 mg for BPPV), all verified, 0.32 USD.
+- Library texts (Gaffer reviewed and approved): the five keys and `status.review_klinis` now say "ditinjau Gaffer 2026-10-24"; index `c190d587…`, benchmark identical, gate green.
+- RA merge (Gaffer approved): SP0260 merged into SP0020 and removed (335 entries, 329 diseases); four mis-parsed drug names corrected from their quotes; counts in tests and docs follow; index `edad52f5…` (17,989 chunks), benchmark identical, gate green.
+- Closed by Gaffer 2026-10-24, option A: malaria serebral needs no dose and SP0194 stays as it is, so there is no SSOT change and the index, benchmark and eval all stand. The read-only follow-up found the premise mis-attributed, see `docs/verification/theoracle-eval-2026-10-24/malaria-serebral-dose.md`. PPK IDI 2017 chapter H.6 "Malaria Serebral" (pp. 197-198) names no drug and no dose at all, and SP0194 already carries that text verbatim with `dosis: []`; the 3,2 mg/kg line is in the Malaria chapter's Kriteria Rujukan and is already in SP0193's `rujukan` field. PNPK 2019 via SP0193 holds the correct pre-referral regimen (artesunat 2,4 mg/kgBB IV/IM at hours 0, 12, 24). The report also found that SP0193 dose row 78 quotes its source short: `kutipan` drops "Artemisinin atau", which is what made the row read as a pure artesunat error. Four options were written up; Gaffer chose A. Still open and undecided: option D, restoring the full quote on SP0193 dose row 78 and deciding whether its `obat` stays `Artesunat` or becomes `Artemisinin atau Artesunat`. The entry contradicts itself on screen until then, because the rendered Rujukan section keeps the full sentence while the dose line below it does not. D was verified further on Gaffer's word, see the report's "Option D, verified" section: the index's KMK copy has no malaria chapter at all (6 malaria mentions, all in other chapters), so KMK's phrasing is not checkable here; the sentence is verified in PPK IDI 2017 p. 23 and held in full in SP0193's `rujukan`. `kutipan` turned out to be a windowed fragment, and row 78 is the only member of its curated PPK IDI block whose quote is not a whole sentence, so restoring it is a consistency fix. D therefore reduces to one field: `obat` names the second of two alternatives while carrying the first one's dose. Variants are D-obat (`Artemisinin atau Artesunat`, recommended) and D-keep. `sumber` and `halaman` are left alone, since rows 67-78 all carry the IDI label with KMK pages. Taking D-obat costs a chunk rebuild, a new index hash, the gate, a benchmark and a paid eval (~0.32 USD) for one field, so it is worth bundling with the 335 held-back rows. The SSOT was not touched, the index was not rebuilt, and nothing was pushed.
+
 ## Contract remote - 2026-10-18 Asia/Jakarta
 
 - Claude Code, `TASK-20261018-HEALTHCARE-CONTRACT-REMOTES`: `project.contract.json` declares `repository` `git@github.com:drferdi/Sentrapedia.git` (the `sentrapedia` root remote; the README repository link). Read by the root `check_capsule_remotes.py`; no lifecycle change.
-
-## Public site on Vercel, WIP notice - 2026-10-15 Asia/Jakarta
-
-- GitHub and monorepo are in sync. `drferdi/Sentrapedia` main went `9b8e4746` -> `2b371155` (pushed by the agent on Gaffer's "Samakan GitHub", fast-forward, no force; publish worktree `D:\DEV\monorepo.worktrees\sentrapedia-publish`, split branch `sentrapedia-site-split`). Gates on the pushed tree: typecheck, lint, `test:all` (288 + site 15 + system 8 + MIRA 180/1 skipped), build, deploy dry-run; sanitation clean. GitHub reports 1 high Dependabot alert (not read).
-- The 38 dose-gate commits that lived only on GitHub were brought into the monorepo as a tree import (`9b759c98`): the capsule tree equalled `2b371155` exactly (empty tree diff); typecheck, MIRA packaging 2/2 and evidence gate 91/91 passed. Histories stay unrelated, so the next publish again uses split + merge in the publish worktree.
-- Vercel: project `sentrapedia` (`prj_tJejwcrthTPy78qBtdqbnYoyRvcW`, team Sentraverse), site only (`apps/site`), build `node scripts/transform.mjs`, output `site`. Deploy from `apps/site` with `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` set and `npx vercel@latest deploy [--prod] --yes` (no `.vercel/` folder). `https://sentrapedia.vercel.app` is public with the "Work in progress · Persiapan beta" strip, by Gaffer's decision.
-- Contact form: `api/contact.mjs` (Vercel Function) reuses `scripts/contact.mjs`; rate limit keys on `X-Forwarded-For`. `CONTACT_PUBLIC_ORIGIN` is set on Vercel. Live matrix: GET 405, wrong type 415, foreign origin 403, patient-like 400, valid 503 "Layanan pengiriman belum tersedia". To turn delivery on, Gaffer adds `RESEND_API_KEY` and `RESEND_FROM_EMAIL` himself (Vercel env, production), then redeploys.
-- Site SPDS updated (deployment architecture, acceptance, risk register, snapshot, genome unknowns); `docs:verify` 96 documents, 0 errors.
-- Blocked on Gaffer's Vercel dashboard login (Google loop): Git-connected deploys need a GitHub login connection (then Root Directory `apps/site`, Git LFS on) or a `VERCEL_TOKEN` for GitHub Actions. Not built, since neither can be tested now.
-- Local monorepo `main` now contains branch `codex/sentrapedia-website-docs`: merge commit `67b1c045` (`--no-ff`, 0 conflicts, all 32 branch commits including the non-Sentrapedia ones, by Gaffer's choice). After the merge `check_topology.py` and `check_project_independence.py` passed. Not pushed.
-- Still open: third-party license register for the site; monitoring.
-
-## Standalone extraction after the site move - 2026-10-14 Asia/Jakarta
-
-- The site move landed in `d9dfa44c` (Codex, not pushed). The "still uncommitted" note below is superseded.
-- `node tools/project-standalone/src/cli.mjs verify healthcare/sentrapedia` (run 1) failed at install: `apps/site/site` was in `mutableStatePaths` and `apps/site/site/index.html` in `artifacts`, so extraction left out 68 tracked site files (HTML, theme CSS, fonts) that `install:check` and the site tests read before build.
-- Fix (uncommitted, Gaffer said "go"): `project.contract.json` drops both entries. `artifacts` is now `.next/BUILD_ID` only; `mutableStatePaths` keeps `apps/site/reference/verification.json`. `check_project_independence.py` OK, verifier `status` structural PASS.
-- Run 2: install, lint, typecheck PASS; test FAIL in `test:mira` only (vitest 270/270, site 13/13, system 8/8 passed). build, run, deployDryRun did not run. Cleanup PASS.
-- Cause of the MIRA failure (`test_packaging.py`, `service/menu.py`): the working copy has CRLF while `.gitattributes` says `eol=lf`; the Git blob hashes to the recorded `f9f661f4…`. Not a repo defect, so a fresh clone should pass. `git ls-files --eol` shows 8 such files (6 under `mira/`, `tests/mira-composer.test.ts`, `apps/site/docs/migration-manifest.json`).
-- Contract fix committed in `2506cdee`. With Gaffer's approval the 8 files were then re-checked out with LF (Git diff empty; `menu.py` hashes to `f9f661f4…`; `test_packaging.py` 2/2).
-- Run 3: install, lint, typecheck, test, build, artifacts, deployDryRun and cleanup PASS. Only the HTTP smoke failed: `run-system.mjs start` exits with "OPENROUTER_API_KEY belum tersedia", because the verifier sanitizes the environment and `.env.local` is never copied. This is the declared required secret, not a portability defect.
-- The verifier cannot pass the key: its environment allowlist holds only system variables (PATH, TEMP, COMSPEC and similar). Gaffer chose a manual smoke instead. 901 tracked files were copied to a scratch folder with no `.env.local`; `npm ci` and `build` exited 0 there. Gaffer then copied the key in himself, ran the smoke script (`SMOKE PASS (HTTP 200)` at `127.0.0.1:3101/`) and removed the copy. The agent never handled the key.
-- Result: every lifecycle stage plus the HTTP smoke is proven for the extracted capsule. The smoke is manual evidence, not a verifier PASS. Passing declared secrets to the verifier would be a separate `tools/` change.
-- LFS gap found while preparing the publish: every capsule PNG is an LFS pointer, but the `*.png filter=lfs` rule lived only in the monorepo root `.gitattributes`, which the subtree split does not export. A clone of `drferdi/Sentrapedia` therefore got 130-byte pointer text instead of images (86 PNGs on GitHub main before this publish, including `src/app/icon.png`), and the site test `migration-boundary` failed on the split. The extraction verifier missed it because it copies working-tree files, which the monorepo had already smudged. Fix: the capsule `.gitattributes` now carries the PNG rule itself.
-
-## Public site integrated into the product capsule - 2026-10-14 Asia/Jakarta
-
-- **Gaffer's authoritative topology:** Sentrapedia is one sovereign product capsule and future repository at `projects/healthcare/sentrapedia/`. The clinical system remains at the capsule root; the public website now lives at `apps/site/`. Do not recreate the former sibling capsule `projects/healthcare/sentrapedia-website/`.
-- The move uses Git renames so website history is preserved. Nested capsule metadata (`project.contract.json` and `.agents/`) was removed from the site; site identity is recorded in `apps/site/SITE_GENOME.yaml`. Site SPDS stays under `apps/site/docs/spds/` and applies only to the public non-device marketing surface.
-- A future product demo belongs at `apps/demo/` as configuration and synthetic data around shared product code. It must not become another capsule or a fork of the clinical application.
-- **Approved visual direction:** the hero intro contains only the animated neuron logo followed by the `Sentrapedia` wordmark. Do not restore the generic headline/copy beginning with “Konteks klinis tertata…”. The last local preview at `http://127.0.0.1:3401/` rendered with CSS after the correct site preview server was started.
-- **Website verification observed:** `install:check`, `build`, `docs:verify` (96 documents, 0 errors), `lint` (23 authored JavaScript files), `test` (13/13), `verify` (23 protected presentation files and 48 targets, 0 errors), and `deploy:dry-run` all passed from `apps/site/`. Parent `typecheck` passed; isolated parent `eslint src tests` and site lint both exited 0.
-- **Scope boundary:** MIRA belongs to the clinical system, not the website. A broad `npm run test:all` was mistakenly attempted and reached an unrelated pre-existing hash mismatch in `mira/service/menu.py`. Do not modify MIRA or its provenance for this website/topology task. No tracked MIRA file changed; the locally installed `.runtime/mira` and `theoracle/model` are ignored environment artifacts.
-- **Current Git state:** topology migration and documentation updates are still uncommitted on branch `codex/sentrapedia-website-docs`. Review/stage only `projects/healthcare/sentrapedia`, the deletion of `projects/healthcare/sentrapedia-website`, and the two healthcare domain navigation files. Then create the pending local commit. No push, merge, deployment, paid inference, or live contact submission is authorized.
-## Dose gate audit: corrections applied, three reviews, phase 4 - 2026-10-12 Asia/Jakarta
-
-- Gaffer approved all seven corrections from the audit REPORT section 4, and phase 4 after the gate fixes.
-- Commits (all R2):
-  - `27b7f108` ch->k
-  - `86a8cec7` targeted gate reads the diagnosis passages too (`gateEvidence`)
-  - `5e31f714` a strength verifies only the drug it follows
-  - `604e286c` a single strength inside a source range
-  - `f3966c0f` ODHA = HIV, I84 = K64
-  - `12efd483` MIRA breaker counts one failure per part and logs the provider error and status
-  - `4d902a4d` the fast therapy prompt asks for an amount in every dose
-  - `d6e0768a`, `ee5bc240`, `16e83955` fix the findings of three Opus reviews of the dose window
-- The window rule is now: after a cut point, every word up to the next strength must be on a known-word list or be the drug's own name, otherwise the window ends (fails safe). A "+" partner is masked. A daily total does not verify each of several doses.
-- Offline replay of the same 122 replies: legacy 42 -> 48, targeted 42 -> 48 at `ae480804`, with no wrong-disease or wrong-drug verification left among them. Against the 49/49 peak: the impetigo amoxicillin-clavulanate row was another drug's range (a correct block), and legacy isoniazid 300 mg came from an MDR weight-band table (a fail-safe blank).
-- Tests: gate 91/91, the 7 gate test files 181/181, MIRA 180 passed + 1 skipped. `tsc` 0, `eslint` 0 on the touched files.
-- Live eval: the third run reached 8/61. The new engine log shows the cause of all three failed runs: OpenRouter HTTP 402 (credit exhausted). The earlier rate-limit reading was wrong. The live before/after and the effect of the prompt change wait for Gaffer to top up the credit.
-- Phase 4, REPORT section 7: no wrong dose in the 10 Gaffer-approved tatalaksana documents against PNPK, IDSA/SIS, ADA and AAO-HNS.
-  - Six coverage gaps, among them the asphyxia ETT dose and 1:10.000 concentration, and the Hirschsprung irrigation of 10-20 mL/kgBB.
-  - Three doses are unverified: oxymetazoline, topical TXA, and pip-tazo 4,5 g / meropenem.
-  - Editing the documents is Gaffer's clinical decision.
-- Known limits (REPORT section 6):
-  - Two drugs with no cut point between them share a window.
-  - The FORNAS sentence-end case blanks citations.
-  - Section 3 design items 1-4 are unchanged.
-- Review 4 of `16e83955` returned FIX with three new leak categories: slash-positional combination strengths, a model-written combined name, and a "+" partner with two strengths (REPORT section 6). Gaffer chose a drug-name lexicon: `2327700f` (837 words, `scripts/build-drug-words.mjs`), tests 89, replay 49/48. Review 5 returned FIX with three new categories: lexicon misses fail open (metformin, simvastatin, lamivudin, INH...), salt-only drug names, and slash alternatives with different doses. Gaffer then chose a per-strength fail-safe rule: `ea2fe8f8` (a strength counts only when the last name-like word before it is the drug's own; any unknown word fails safe; lexicon removed) and `ae480804` (review-6 fixes: alias bracket, partner after a separator, 4+ letter own names, vitamin codes, FORNAS form reset only in FORNAS passages, column tables). Review 7 (class A only) was fixed in the following commit, which has not been reviewed itself. Tests 91, gate test files 181/181, replay legacy 48 / targeted 48 (two fail-safe blanks, REPORT section 6).
-- Harness: `.runtime/audit/` (git-ignored), rows-review.json (49/49 baseline), rows-rereview.json, rows-round3.json.
-- Published 2026-10-12 with Gaffer's approval ("commit and push"):
-  - The dose gate audit plan is now tracked: `docs/plans/active/Audit_actions.md` (`c1acef29`).
-  - Split `9a6e2dc0` (from `c1acef29`) was not a fast-forward of `sentrapedia/main` `c0ef8ba6`, because GitHub main holds the README edits. It was merged in the temporary worktree `D:\DEV\monorepo.worktrees\sentrapedia-publish` (only `README.md` differs from the split) and pushed as `cebb6753`, a fast-forward. No force push.
-  - Before the push, the repo was checked as private (the anonymous GitHub API returns 404), so `data/dose-inventory/iso_gap_fill.json` (ISO excerpts) is not public. A leak scan of the split found no key or token; the only env file is `.env.example`.
-  - GitHub reports 1 high Dependabot alert on the default branch (`security/dependabot/1`). It was not read, because `gh` is not authenticated.
-  - Main checkout `D:\DEV\monorepo` (`chore/tools-closeout`): the `tools/retriever` handoff edits were committed as `eefe8982`. The stale sentrapedia copies there (older `SOURCE.json` and `test_packaging.py`, the HANDOFF sections already ported, the `next-env.d.ts` dev touch, and the audit plan, now tracked) were stashed, not deleted: `stash@{0}` "superseded by feat/sentrapedia-dify-theoracle @c1acef29". The `next-env.d.ts` dev touch in this worktree was restored.
-  - Then this note was committed and published again with the same merge step.
-
-## Dose gate audit, phase 2-3 (offline) - 2026-10-12 Asia/Jakarta
-
-- Gaffer approved the audit of `docs/plans/active/Audit_actions.md` (main checkout, untracked), then chose to continue offline after two failed live runs.
-- Live 61-case eval failed twice (18/61, 12/61; about $0.29). The MIRA API-error breaker opened after consecutive provider errors and paused calls for 60 s. It counts failed parallel copies too; the provider error type is not logged. Committed eval files were restored after each run.
-- Offline harness in `.runtime/audit/` (git-ignored): `extract.py`, `replay.test.ts` (run with `REPLAY_IN`/`REPLAY_OUT` and `npx vitest run .runtime/audit/replay.test.ts`), `corpus_scan.py`, `classify.py`. It reproduces the 2026-10-11 replay exactly: 42 verified on both paths.
-- Result in `docs/verification/dose-gate-audit-2026-10-12/` (`REPORT.md`, `classification-targeted.json`): 29 non-verified targeted drugs. 20 are correct blocks (A 5, E 2, F 1, G 1, H1 6, H2 5); 9 are correct doses not shown (B 3, D 6). Confirmed defect: `spell()` maps "ch" to "kh", so chlorpheniramine never matches klorfeniramin.
-- Verified doses (42): one unsupported, lamivudin 300 mg verified by zidovudin 300 mg in the same FORNAS passage. Design limits: a concentration or a FORNAS strength counts as a dose, frequency is not checked, population is not checked.
-- No code changed. Six bounded corrections are proposed in REPORT section 4, awaiting Gaffer.
-- Not done: live reproduction, the 10-disease benchmark (phase 4).
-- Not pushed.
-
-## Dify out of the main composer; dose inventory tracked - 2026-10-12 Asia/Jakarta
-
-- Gaffer: Dify is only a side chatbot, not part of the main system; the main system is MIRA diagnosis and therapy accuracy. Gaffer chose this branch for the work and to track the inventory without the legacy files.
-- `0a708b4e` (R2): `analyzeMain` in `src/components/workspace.tsx` calls MIRA only. The block is restored byte for byte from `0ebd2abf^` (checked with `diff`). Before, with `DIFY_API_KEY` set, every MIRA-mode question was answered by Dify and skipped grounding, postchecks and the evidence gate. The `/dify` page, `api/dify/*` and the sidebar entry are unchanged.
-- Dose inventory: five files copied from the main checkout's `.runtime/dose-inventory/` to `data/dose-inventory/` (SHA-256 identical), plus a README. `penyakit.json` and `drug_mapping.json` stay untracked. `build_inventory.py` cannot rerun on this branch: `oracle-ii/knowledge_base/json/` is not here.
-- Main checkout (`chore/tools-closeout`): its four uncommitted MIRA files are an older copy of this branch (`postchecks.py`, `test_components.py` identical; `test_packaging.py`, `SOURCE.json` older). Left untouched; Gaffer decides whether to discard them.
-- Verified: `tsc` 0, `eslint src/components/workspace.tsx` 0, `vitest tests/workspace.test.ts tests/mira-composer.test.ts` 47/47. Full suite, build and browser check not run.
-- Open: `iso_gap_fill.json` holds verbatim ISO Indonesia excerpts; decide before pushing to a public remote. Next dose-gate work is `docs/plans/active/Audit_actions.md` in the main checkout (untracked there), which needs paid eval calls.
-- Not pushed.
-
-## Eval: ICD-10 label-to-name overlap (M5) - 2026-10-12 Asia/Jakarta
-
-- Gaffer asked for M5 and approved the bounded design with one Opus review.
-- `0663d938` (R1):
-  - New `scripts/icd-name-match.mjs` applies the `postchecks.py` lexical rule: a meaningful label word must occur in the official name of the code or its category.
-  - `scripts/eval-theoracle-pipeline.mjs` adds per-row `icdNameMatch` and summary `icd10.nameMatch`. `valid` still only means "the code exists in the BPJS list".
-- The Opus review returned "with fixes" (wording only). The metric is not a lower bound: a wrong disease that shares a class word ("Typhoid fever" for R50.9, "Type 1 diabetes" for E11.9) still matches. `df5829f8` calls it "approximate lexical overlap", and a test records both directions.
-- Offline re-score of the stored rows (no model calls): 57/61 on both paths. The 4 non-overlapping rows have correct codes (synonyms, Indonesian labels, stunting), as recorded in `PIPELINE-REPORT.md`.
-- Verified: RED first; `tests/icd-name-match.test.ts` 3/3, `npm test` 270/270, `tsc` 0, `eslint` 0, `node --check` on the eval script. The eval script itself was not run, because it makes paid calls.
-- Not pushed.
-
-## MIRA client gates therapy that arrives without a gate report (M1) - 2026-10-12 Asia/Jakarta
-
-- Gaffer asked for M1 and approved the bounded design with one Opus review.
-- `f0341f0f` (R2), `src/lib/mira/client.ts`:
-  - When `result.therapy` arrives without `evidenceGate`, the client runs `gateTherapy` itself, against `therapyGrounding` (or the diagnosis `grounding`) and `likely[0]`, as the gateway does. This can only happen with an older or faulty server.
-  - The diagnosis is kept. Unverified doses are blanked, and the therapy is dropped when no drug is kept.
-  - The report is stored, so `content` and `sourceText` no longer hold unchecked doses.
-  - A reply with a valid report is used as sent.
-- Opus review: "Yes", no Critical or Important.
-  - Every view (message card, document studio, history, export) already renders through `diagnosisContent`, which gates again.
-  - Its test gaps are covered by a follow-up test: fallback to the diagnosis bundle, and therapy written for another diagnosis.
-- Verified: RED first; `tests/mira-client.test.ts` 10/10, `npm test` 266/266 at commit time, `tsc` 0, `eslint` 0.
-- Known limits:
-  - The client trusts any well-formed `evidenceGate`. A forged report marking doses verified is still stored in `content`/`sourceText`, but `diagnosisContent` gates the regimen again before showing it.
-  - A stale "verified" citation line for a drug no longer in the regimen predates this change.
-- Not pushed.
-
-## Evidence gate: Unicode minus and every range separator - 2026-10-12 Asia/Jakarta
-
-- Gaffer asked for the Unicode minus fix and approved the bounded design with one Opus review.
-- `81459977` (R2): FORNAS writes ranges with U+2212 ("4−8 mL", "15−30 gram"). One dash class now serves STRENGTH, the range pattern in `strengths()`, PER_KG, tablet counts, and `unstrength`'s trim. Both ends of a range are still required.
-- The Opus review said "Yes": the classes are correct, and the gate is stricter on the model side. It found an older Important gap.
-  - A model range written with an em dash, a figure dash, U+2010, "~", "s/d", "sampai" or "hingga" was read as its upper end alone.
-  - So "250—500 mg" was verified by a passage with only "500 mg" (a leak, not fail-safe), and `unstrength` left "Amoksisilin 250".
-- Fixed in `2e6a2ecd`: one `RANGE` separator (U+2010-2014, U+2212, "~", "s/d", "s.d.", "sampai", "hingga") used everywhere a range is read.
-- Verified:
-  - RED first (both rounds); gate tests 73/73, `npm test` 263/263, `tsc` 0, `eslint` 0.
-  - Replay of 122 replies against `a7c739c2`: verified 41 -> 42 legacy and 41 -> 42 targeted. Each addition was checked by hand against its passage:
-    - targeted: kalsium polistiren sulfonat 15-30 g/hari for N18.5 (FORNAS 2023 "15−30 gram/hari ... sampai dengan dialisis");
-    - legacy and targeted: furosemid 1x20-40 mg for I50.0 (FKTP 2022 and PPK IDI 2017 "furosemid injeksi 20 s/d 40 mg bolus", acute heart failure);
-    - the budesonid duration is now shown whole.
-- Known limits:
-  - A lab range next to a drug can match a model "dose" with the same numbers and unit ("Hb 10−12 g/dL"). This was already the case before; it is unrealistic, since it needs the model to write that range as a dose.
-  - Frequency is still not checked (furosemid "1x" vs "dapat diulang tiap jam").
-- Not pushed.
-
-## Evidence gate: stripped drug names are clean (#11) - 2026-10-12 Asia/Jakarta
-
-- Gaffer asked for #11 (cosmetic leftovers after a strength is removed) and approved the bounded design with one Opus review.
-- `3c80e08b` (R2), `unstrength` only, so dose verification is untouched:
-  - A frequency glued to a strength goes with it: "3x500 mg", "500mg x 3", "3x1 tablet", "x 3 hari".
-  - "per kg", "kg BB", "kilogram" and "berat badan" are per-unit tails.
-  - A bracket left empty or holding only a limit word (max/maks/maksimal/hingga/sampai/s.d./s/d) is removed.
-  - Punctuation is tidied ("Amoksisilin, 3 kali sehari", "Lidokain-adrenalin").
-- The Opus review returned "with fixes".
-  - Critical: a removal could join a leftover number to a leftover unit and show a new dose. Examples: "Amoksisilin 3 (500 mg) kapsul" became "Amoksisilin 3 kapsul", and "Obat 2 D5% tablet" became "Obat 2 tablet". The review found 19 such names.
-  - Important: "Vitamin E400 IU" became "Vitamin".
-- Fixed in `4685276f`:
-  - `unstrength` repeats until the text stops changing. Its pattern contains STRENGTH, so the fixed point holds no strength.
-  - Only the D of "D5%" is taken with a strength.
-  - The remaining minor leftovers are tidied: "(maks,)", "(s/d)", "[]", "x 3 hari", "x 3.5 mg".
-- Verified:
-  - RED first (both rounds; the review's leaking names are now a test).
-  - Gate tests 67/67, `npm test` 257/257, `tsc` 0, `eslint` 0.
-  - Replay of 122 replies against `9bc97db2`: no output change. Only one real name carried a strength ("Permetrin krim 5%"), and it already stripped cleanly.
-- Known limits:
-  - A bare frequency number can remain ("Parasetamol 1-2 x 500 mg" -> "Parasetamol 1"). It carries no unit, so it is not a dose.
-  - Unicode minus ranges ("4−8 mL") are still not read as ranges; that is a separate small fix.
-- Not pushed.

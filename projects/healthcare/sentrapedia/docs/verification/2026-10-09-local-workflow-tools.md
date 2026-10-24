@@ -4,7 +4,7 @@ Gaffer menyetujui rancangan dengan “Comfirmed, Executive”. Eksekusi dan revi
 
 ## Gate yang diamati
 
-Semua perintah dijalankan dari ekstraksi mandiri yang sudah memiliki dependensi: `C:\Users\drfer\AppData\Local\Temp\sentrapedia-identity-20261008-220319`. Dependensi checkout utama masih belum lengkap; tidak ada instalasi untuk menutup batas tersebut.
+Semua perintah dijalankan dari ekstraksi mandiri yang sudah memiliki dependensi: `<extraction-root>`. Dependensi checkout utama masih belum lengkap; tidak ada instalasi untuk menutup batas tersebut.
 
 | Pemeriksaan | Hasil |
 | --- | --- |

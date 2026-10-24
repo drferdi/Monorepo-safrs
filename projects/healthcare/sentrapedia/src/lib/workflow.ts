@@ -1,5 +1,7 @@
 import { modeIds, type ModeId } from "./drafts";
 import type { Encounter, Message, Workspace } from "./workspace";
+import { missingField } from "./clinical-templates";
+import { record, text } from "./guards";
 
 export interface PersonalTemplate { id: string; name: string; mode: ModeId; sections: string[]; instructions: string }
 export interface ReviewItem { id: string; label: string; required: boolean; checked: boolean; target: string }
@@ -15,13 +17,20 @@ export const defaultReviewItems: ReviewItem[] = [
 ];
 export function reviewComplete(items: ReviewItem[] = []): boolean { return items.some((item) => item.required) && items.every((item) => !item.required || item.checked); }
 export function freshReview(items: ReviewItem[] = defaultReviewItems): ReviewItem[] { return items.map((item) => ({ ...item, checked: false })); }
+/** Revisions kept per document (Gaffer, 2026-10-17: 20, down from 50, to keep browser storage in bounds). */
+export const revisionLimit = 20;
+/** Browsers give an origin about 5 million characters of storage; warn at 80% so a backup can be exported in time. */
+export const storageWarningChars = 4_000_000;
+
 export function saveLocalWorkspace(state: Workspace, write: (raw: string) => void): string | null {
-  try { write(JSON.stringify(state)); return null; }
+  try {
+    const raw = JSON.stringify(state);
+    write(raw);
+    return raw.length < storageWarningChars ? null : `Penyimpanan browser hampir penuh (${(raw.length / 1e6).toFixed(1)} juta karakter). Ekspor backup dari profil workspace, lalu hapus encounter lama.`;
+  }
   catch { return "Perubahan belum tersimpan ke browser. Ekspor backup dari profil workspace untuk menyimpan salinan."; }
 }
 
-function record(value: unknown): value is Record<string, unknown> { return !!value && typeof value === "object" && !Array.isArray(value); }
-function text(value: unknown, max: number): value is string { return typeof value === "string" && value.length <= max; }
 function date(value: unknown): value is string { return typeof value === "string" && Number.isFinite(Date.parse(value)); }
 export function validTemplate(value: unknown): value is PersonalTemplate {
   return record(value) && text(value.id, 100) && !!value.id && text(value.name, 80) && !!value.name.trim() && modeIds.includes(value.mode as ModeId) && text(value.instructions, 2000) && Array.isArray(value.sections) && value.sections.length > 0 && value.sections.length <= 20 && value.sections.every((item) => text(item, 80) && !!item.trim() && !/[\r\n]/.test(item)) && new Set(value.sections.map((item: string) => item.toLowerCase())).size === value.sections.length;
@@ -34,7 +43,7 @@ export function cleanReview(value: unknown): ReviewItem[] | undefined {
 export function cleanWorkflowMessage(message: Message): Message {
   const clean = { ...message };
   if (clean.reviewItems !== undefined) clean.reviewItems = cleanReview(clean.reviewItems) ?? freshReview();
-  if (clean.revisions !== undefined) clean.revisions = Array.isArray(clean.revisions) ? clean.revisions.filter((r): r is Revision => record(r) && text(r.id, 160) && text(r.content, 200000) && date(r.savedAt) && text(r.name, 80) && (r.reason === "edit" || r.reason === "restore")).slice(-50).map((r) => ({ id: r.id, content: r.content, savedAt: r.savedAt, name: r.name, reason: r.reason })) : [];
+  if (clean.revisions !== undefined) clean.revisions = Array.isArray(clean.revisions) ? clean.revisions.filter((r): r is Revision => record(r) && text(r.id, 160) && text(r.content, 200000) && date(r.savedAt) && text(r.name, 80) && (r.reason === "edit" || r.reason === "restore")).slice(-revisionLimit).map((r) => ({ id: r.id, content: r.content, savedAt: r.savedAt, name: r.name, reason: r.reason })) : [];
   if (!Number.isSafeInteger(clean.revisionSequence) || (clean.revisionSequence ?? 0) < 0) delete clean.revisionSequence;
   if (clean.templateSnapshot !== undefined && !validTemplate(clean.templateSnapshot)) delete clean.templateSnapshot;
   if (clean.reviewItems && !reviewComplete(clean.reviewItems) && (clean.reviewStatus === "reviewed" || clean.reviewStatus === "final")) clean.reviewStatus = "draft";
@@ -68,13 +77,13 @@ export function createPersonalDraft(template: PersonalTemplate, prompt: string, 
       if (current && label?.[2]) supplied.get(current)!.push(label[2]);
     } else if (current) supplied.get(current)!.push(line);
   }
-  return [`# ${template.name}`, ...template.sections.map((title) => `## ${title}\n${supplied.get(title.toLowerCase())!.join("\n").trim() || "Belum tersedia - lengkapi dan verifikasi oleh klinisi."}`), `## Input asli\n${prompt}`, context && `## Konteks asli\n${context}`, template.instructions && `## Preferensi penulisan\n${template.instructions}`, "---\nKerangka lokal dari teks yang diberikan. Tinjau sebelum digunakan."].filter(Boolean).join("\n\n");
+  return [`# ${template.name}`, ...template.sections.map((title) => `## ${title}\n${supplied.get(title.toLowerCase())!.join("\n").trim() || `${missingField}.`}`), `## Input asli\n${prompt}`, context && `## Konteks asli\n${context}`, template.instructions && `## Preferensi penulisan\n${template.instructions}`, "---\nKerangka lokal dari teks yang diberikan. Tinjau sebelum digunakan."].filter(Boolean).join("\n\n");
 }
 export function changedMessage(message: Message, content: string, at: string, reason: Revision["reason"] = "edit"): Message {
   if (message.content === content) return message;
   if (message.role !== "assistant") return { ...message, content };
   const sequence = (message.revisionSequence ?? 0) + 1;
-  return { ...message, content, originalContent: message.originalContent ?? message.content, reviewStatus: "draft", reviewItems: freshReview(message.reviewItems), revisionSequence: sequence, revisions: [...(message.revisions ?? []), { id: `${at}-${sequence}`, content: message.content, savedAt: at, name: "", reason }].slice(-50) };
+  return { ...message, content, originalContent: message.originalContent ?? message.content, reviewStatus: "draft", reviewItems: freshReview(message.reviewItems), revisionSequence: sequence, revisions: [...(message.revisions ?? []), { id: `${at}-${sequence}`, content: message.content, savedAt: at, name: "", reason }].slice(-revisionLimit) };
 }
 export function queueItems(state: Workspace, query: string, patientId: string): Encounter[] {
   const search = query.toLowerCase().trim();

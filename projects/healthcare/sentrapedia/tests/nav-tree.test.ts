@@ -11,4 +11,10 @@ describe("keyboard movement through rows", () => {
     expect(focusStep(5, 2, "Enter")).toBeNull();
     expect(focusStep(0, 0, "ArrowDown")).toBeNull();
   });
+
+  it("handles intermediate ArrowUp steps and non-navigational keys", () => {
+    expect(focusStep(5, 3, "ArrowUp")).toBe(2);
+    expect(focusStep(5, 2, "Tab")).toBeNull();
+    expect(focusStep(5, 2, "Escape")).toBeNull();
+  });
 });

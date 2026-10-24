@@ -29,7 +29,7 @@ test('migration closure matches its manifest and excludes private state', async 
     expected.add(entry.path);
     assert.equal(digest(await readFile(path.join(root, entry.path))), entry.sha256, entry.path);
   }
-  const actual = (await Promise.all(['source', 'assets', 'site', 'reference', 'scripts'].map(filesUnder))).flat()
+  const actual = (await Promise.all(['source', 'assets', 'static', 'reference', 'scripts'].map(filesUnder))).flat()
     .filter(file => file !== 'reference/verification.json');
   assert.deepEqual(actual.sort(), [...expected].sort());
   for (const name of ['node_modules', 'cookies.txt', '.env', '.env.local', 'hts-cache']) {

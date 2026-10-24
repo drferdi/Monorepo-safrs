@@ -37,11 +37,12 @@ test('contact fails closed until verified sender and key exist', async () => {
   });
 });
 
-test('contact accepts only a confirmed Resend response to fixed recipient', async () => {
+test('contact accepts only a confirmed Resend response to the configured recipient', async () => {
   let sent;
   await withHandler({
     apiKey: 'test-key',
     from: 'verified@example.test',
+    recipient: 'inbox@example.test',
     fetchEmail: async (url, options) => {
       sent = { url, options };
       return new Response(JSON.stringify({ id: 'mock-id' }), { status: 200 });
@@ -53,7 +54,7 @@ test('contact accepts only a confirmed Resend response to fixed recipient', asyn
   });
   assert.equal(sent.url, 'https://api.resend.com/emails');
   const payload = JSON.parse(sent.options.body);
-  assert.deepEqual(payload.to, ['drferdiiskandar@sentrahai.com']);
+  assert.deepEqual(payload.to, ['inbox@example.test']);
   assert.equal(payload.from, 'Sentrapedia <verified@example.test>');
   assert.match(payload.text, /Pertanyaan umum tentang dokumentasi/);
 });

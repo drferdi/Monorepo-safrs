@@ -2,9 +2,10 @@ import type { ModeId } from "./drafts";
 
 // Sentrapedia — Templat Klinis Indonesia v1 (Chief, 2026-10-09): the 18 modes in clinical-workflow order and six
 // categories, each with a structure the clinician can preview and insert into the composer. Content only: local drafts
-// and MIRA keep their own output. The four modes the pack marked for audit map to workup, icd10, monitoring and refer.
+// and AADI keep their own output. The four modes the pack marked for audit map to workup, icd10, monitoring and refer.
 export const templateCategories = ["Dokumentasi klinis", "Diagnosis dan evaluasi", "Komunikasi dan tindak lanjut", "Koordinasi pelayanan", "Evidence-based practice", "Administrasi klinis"] as const;
 export const missingField = "Belum tersedia — lengkapi dan verifikasi oleh klinisi";
+export const missingFieldEnglish = "Not provided — complete and verify with the clinician";
 export interface ClinicalTemplate { mode: ModeId; category: typeof templateCategories[number]; name: string; sections: [string, string[]][]; rule: string }
 export const clinicalTemplates: ClinicalTemplate[] = [
   { mode: "hpi", category: "Dokumentasi klinis", name: "Anamnesis Terstruktur — HPI Komprehensif", sections: [["Identitas dokumentasi", ["Tanggal dan waktu anamnesis", "Sumber informasi dan reliabilitas anamnesis"]], ["Keluhan dan kronologi", ["Keluhan utama (kata-kata pasien)", "Awitan, durasi, dan perjalanan keluhan", "Lokasi, penjalaran, karakter, dan intensitas", "Frekuensi, pola, serta faktor pencetus/peringan", "Gejala penyerta dan gejala yang disangkal (pertinent negatives)"]], ["Konteks relevan", ["Riwayat penyakit dan tindakan terdahulu", "Obat yang digunakan dan riwayat alergi", "Riwayat keluarga, sosial, dan faktor risiko yang relevan"]], ["Klarifikasi", ["Pertanyaan lanjutan yang belum terjawab", "Ringkasan kronologis berdasarkan keterangan yang tersedia"]]], rule: "Jangan menyimpulkan diagnosis dari anamnesis; pisahkan pernyataan pasien dan interpretasi klinisi." },

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder } from "../src/lib/studio";
+import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder, downloadName } from "../src/lib/studio";
 import { defaultReviewItems } from "../src/lib/workflow";
 import { createDraft, modeIds, modes } from "../src/lib/drafts";
 import { clinicalTemplates, insertTemplate, modeCategories, templateText } from "../src/lib/clinical-templates";
-import { initialWorkspace, restoreWorkspace, workspaceReducer, type Message, type Workspace } from "../src/lib/workspace";
+import { initialWorkspace, workspaceReducer, type Message, type Workspace, loadWorkspace } from "../src/lib/workspace";
 
 const message: Message = { id: "doc", role: "assistant", content: "# Note\n\n## History\nOriginal\n\n## Plan\nKeep\n---\nFooter", mode: "clinic", createdAt: "2026-10-09T01:00:00Z" };
 const state: Workspace = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [message] }] };
@@ -22,9 +22,9 @@ describe("document provenance and review", () => {
     expect(changed.originalContent).toBe(message.content);
   });
   it("preserves legacy documents and discards malformed optional metadata only", () => {
-    expect(restoreWorkspace(JSON.stringify(state))).toEqual(state);
+    expect(loadWorkspace(JSON.stringify(state)).workspace).toEqual(state);
     const malformed = { ...state, encounters: [{ ...state.encounters[0], messages: [{ ...message, sourceText: 42, reviewStatus: "approved", originalContent: null }] }] };
-    expect(restoreWorkspace(JSON.stringify(malformed)).encounters[0].messages[0]).toEqual(message);
+    expect(loadWorkspace(JSON.stringify(malformed)).workspace.encounters[0].messages[0]).toEqual(message);
   });
 });
 
@@ -52,9 +52,9 @@ describe("workspace presentation helpers", () => {
   });
   it("drafts a monitoring plan from the supplied findings", () => {
     const draft = createDraft({ mode: "monitoring", prompt: "Keluhan: sesak napas sintetis\nRencana: cek saturasi tiap 4 jam", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
-    expect(draft).toContain("## Masalah yang dipantau\nsesak napas sintetis");
-    expect(draft).toContain("## Frekuensi dan cara pemantauan\ncek saturasi tiap 4 jam");
-    expect(draft).toContain("## Kriteria eskalasi\nBelum tersedia");
+    expect(draft).toContain("## 1. Masalah yang Dipantau\n\nsesak napas sintetis\n");
+    expect(draft).toContain("## 2. Frekuensi dan Cara Pemantauan\n\ncek saturasi tiap 4 jam\n");
+    expect(draft).toContain("**Belum diisi:**\n- Parameter dan target\n- Kriteria eskalasi\n");
   });
   it("filters timeline by patient and keeps unlinked encounters separate", () => {
     const encounters = [...state.encounters, { ...state.encounters[0], id: "other", patientId: "other" }, { ...state.encounters[0], id: "unlinked", patientId: null }];
@@ -88,7 +88,7 @@ describe("Indonesian patient wording", () => {
     for (const mode of modeIds) {
       const draft = createDraft({ mode, prompt: "Keluhan: sintetis", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
       expect(draft).not.toMatch(/\bpatient\b/i);
-      expect(draft).toContain("Pasien belum dipilih");
+      expect(draft).toMatch(/(?:^|\n)(?:\*\*Pasien:\*\*|Pasien:) —\n/);
     }
   });
 });
@@ -96,7 +96,7 @@ describe("Indonesian patient wording", () => {
 describe("saved seed patient", () => {
   it("renames the untouched demo patient from an older build to Pasien and leaves every other patient as it is", () => {
     const old = { ...initialWorkspace, patients: [{ ...initialWorkspace.patients[0], name: "Patient", notes: "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." }, { id: "own", name: "Patient", age: "", sex: "Female", notes: "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." }, { ...initialWorkspace.patients[0], id: "demo-edited", name: "Bu Ani" }] };
-    const [demo, own, edited] = restoreWorkspace(JSON.stringify(old)).patients;
+    const [demo, own, edited] = loadWorkspace(JSON.stringify(old)).workspace.patients;
     expect(demo).toEqual(initialWorkspace.patients[0]);
     expect(own).toEqual(old.patients[1]);
     expect(edited.name).toBe("Bu Ani");
@@ -127,8 +127,8 @@ describe("two-column document", () => {
   });
   it("shows a local draft's title without the draft and patient line above the first section", () => {
     const draft = createDraft({ mode: "clinic", prompt: "Keluhan: batuk sintetis 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
-    expect(draft).toContain("Draf lokal · Primary Care · Standard");
-    expect(documentTitle(draft)).toBe("# Catatan Klinis");
+    expect(draft).not.toContain("Draf lokal");
+    expect(documentTitle(draft)).toBe("# CATATAN KLINIS");
     expect(documentTitle("Tanpa judul\n\n## Satu\nisi")).toBe("");
   });
 });
@@ -190,8 +190,17 @@ describe("empty document sections", () => {
     expect(emptySection("")).toBe(false);
   });
   it("matches what createDraft writes for a section without input", () => {
-    const sections = documentSections(createDraft({ mode: "clinic", prompt: "Keluhan: batuk 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" }));
+    const sections = documentSections(createDraft({ mode: "refer", prompt: "Keluhan: batuk 3 hari", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" }));
     expect(sections.filter((section) => emptySection(section.body)).length).toBeGreaterThan(0);
     expect(emptySection(sections[0].body)).toBe(false);
+  });
+});
+
+describe("download names", () => {
+  it("names a download by product, Jakarta date and topic", () => {
+    expect(downloadName("Laki-laki 45 tahun, nyeri kepala hebat", "2026-10-19T18:30:00Z")).toBe("sentrapedia-2026-10-20-laki-laki-45-tahun-nyeri-kepala-hebat.md");
+    expect(downloadName("Demam & batuk — anak", "2026-10-20T01:00:00Z")).toBe("sentrapedia-2026-10-20-demam-batuk-anak.md");
+    expect(downloadName("Pemeriksaan sangat panjang dengan banyak kata yang terus berlanjut", "2026-10-20T01:00:00Z")).toBe("sentrapedia-2026-10-20-pemeriksaan-sangat-panjang-dengan-banyak.md");
+    expect(downloadName("", "not a date")).toBe("sentrapedia.md");
   });
 });

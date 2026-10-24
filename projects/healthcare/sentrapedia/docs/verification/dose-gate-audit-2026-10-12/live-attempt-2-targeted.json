@@ -12,7 +12,7 @@
           "p50": 83,
           "p95": 2994
         },
-        "mira_dx": {
+        "aadi_dx": {
           "p50": 2552,
           "p95": 3706
         },
@@ -20,7 +20,7 @@
           "p50": 44,
           "p95": 47
         },
-        "mira_tx": {
+        "aadi_tx": {
           "p50": 2032,
           "p95": 2527
         },
@@ -62,7 +62,7 @@
         },
         {
           "traceId": "2dcba967-3849-42c7-b077-aff64d10e445",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2482,
           "ok": true
         },
@@ -74,7 +74,7 @@
         },
         {
           "traceId": "2dcba967-3849-42c7-b077-aff64d10e445",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 1955,
           "ok": true
         },
@@ -127,7 +127,7 @@
         },
         {
           "traceId": "e099ecac-57ef-4092-bd12-315577963545",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2016,
           "ok": true
         },
@@ -139,7 +139,7 @@
         },
         {
           "traceId": "e099ecac-57ef-4092-bd12-315577963545",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 2172,
           "ok": true
         },
@@ -197,7 +197,7 @@
         },
         {
           "traceId": "8d60a1f2-0e54-4c60-b101-a2fe9a632e1e",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2411,
           "ok": true
         },
@@ -209,7 +209,7 @@
         },
         {
           "traceId": "8d60a1f2-0e54-4c60-b101-a2fe9a632e1e",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 2032,
           "ok": true
         },
@@ -250,7 +250,7 @@
         },
         {
           "traceId": "573f4ddd-070e-4593-a873-d9e9dbc32c99",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2486,
           "ok": true
         },
@@ -262,7 +262,7 @@
         },
         {
           "traceId": "573f4ddd-070e-4593-a873-d9e9dbc32c99",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 2043,
           "ok": true
         },
@@ -326,7 +326,7 @@
         },
         {
           "traceId": "d4805bb7-7d36-4dfa-bd4b-bee38ccdf3de",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2846,
           "ok": true
         },
@@ -338,7 +338,7 @@
         },
         {
           "traceId": "d4805bb7-7d36-4dfa-bd4b-bee38ccdf3de",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 2527,
           "ok": true
         },
@@ -379,7 +379,7 @@
         },
         {
           "traceId": "0c8b3ee8-e360-450e-8417-8b909b112c44",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2709,
           "ok": true
         },
@@ -391,7 +391,7 @@
         },
         {
           "traceId": "0c8b3ee8-e360-450e-8417-8b909b112c44",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 1913,
           "ok": true
         },
@@ -449,7 +449,7 @@
         },
         {
           "traceId": "dfaf4a19-766a-4515-8247-e4daca358f38",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2371,
           "ok": true
         },
@@ -461,7 +461,7 @@
         },
         {
           "traceId": "dfaf4a19-766a-4515-8247-e4daca358f38",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 1921,
           "ok": true
         },
@@ -514,7 +514,7 @@
         },
         {
           "traceId": "f366d847-f61c-46eb-b115-49fd4c9d049b",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2552,
           "ok": true
         },
@@ -526,7 +526,7 @@
         },
         {
           "traceId": "f366d847-f61c-46eb-b115-49fd4c9d049b",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 2365,
           "ok": true
         },
@@ -567,7 +567,7 @@
         },
         {
           "traceId": "c2cf1408-aba2-4d15-a8dd-a5c7696a5810",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2497,
           "ok": true
         },
@@ -579,7 +579,7 @@
         },
         {
           "traceId": "c2cf1408-aba2-4d15-a8dd-a5c7696a5810",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 2366,
           "ok": true
         },
@@ -632,7 +632,7 @@
         },
         {
           "traceId": "c7e81fe4-fff3-4c6b-9812-39642d30a900",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2683,
           "ok": true
         },
@@ -644,7 +644,7 @@
         },
         {
           "traceId": "c7e81fe4-fff3-4c6b-9812-39642d30a900",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 2006,
           "ok": true
         },
@@ -708,7 +708,7 @@
         },
         {
           "traceId": "8416479c-c827-44ee-9ecd-e6c78ce655aa",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 2600,
           "ok": true
         },
@@ -720,7 +720,7 @@
         },
         {
           "traceId": "8416479c-c827-44ee-9ecd-e6c78ce655aa",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 1926,
           "ok": true
         },
@@ -784,7 +784,7 @@
         },
         {
           "traceId": "188e60a8-04ed-4212-85cb-02655e33d510",
-          "stage": "mira_dx",
+          "stage": "aadi_dx",
           "ms": 3706,
           "ok": true
         },
@@ -796,7 +796,7 @@
         },
         {
           "traceId": "188e60a8-04ed-4212-85cb-02655e33d510",
-          "stage": "mira_tx",
+          "stage": "aadi_tx",
           "ms": 6,
           "ok": false,
           "code": "API_ERRORS"

@@ -4,9 +4,9 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { it } from "vitest";
 import { gateTherapy } from "../../src/lib/theoracle-evidence-gate";
 import type { TheOracleGroundingBundle } from "../../src/lib/theoracle-grounding-types";
-import type { MiraTherapy } from "../../src/lib/mira/contract";
+import type { AadiTherapy } from "../../src/lib/aadi/contract";
 
-interface Item { id: string; path: string; traceId: string; query: string; diagnosis: { icd10: string; label: string } | null; therapy: MiraTherapy | null; bundle: TheOracleGroundingBundle; dxBundle: TheOracleGroundingBundle | null }
+interface Item { id: string; path: string; traceId: string; query: string; diagnosis: { icd10: string; label: string } | null; therapy: AadiTherapy | null; bundle: TheOracleGroundingBundle; dxBundle: TheOracleGroundingBundle | null }
 
 const MARK = "zzqdiag";
 // Every passage made "about" the diagnosis: a drug that verifies now was blocked only by the diagnosis-word filter.

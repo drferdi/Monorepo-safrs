@@ -1,259 +1,217 @@
 # Sentrapedia — Architecture
 
-> Runtime snapshot superseded on 2026-10-10: MIRA is now bundled and installed
-> with Sentrapedia. External MIRA repository, fixed service ports, manual token
-> setup and old launcher descriptions below are historical. Current contract:
-> [MIRA integration](mira-integration.md), `project.contract.json`, and
-> `docs/plans/completed/2026-10-10-integrated-mira.md`. UI observations below are retained.
+Current reference as of 2026-10-18 and the only architecture document (TD-38). It merges the former `docs/architecture-overview-2026-10-11.md` and the 2026-10-17 maintainer's review (`docs/ARCHITECTURE-2026-10-17.md`); both are in git history. Trust the code over this page when they disagree.
 
-Date: 2026-10-09 · Commit examined: `0fa198eed9eb25a36952140bfb25aeb0f3f21203` (`0fa198ee`, "clinical workspace with MIRA diagnosis, chat flow and per-case therapy")
+## Glossary
 
-## How to read this document
-
-Every section or claim carries a marker:
-
-- **Verified** — I read the code or config file named next to it.
-- **Inferred** — my conclusion from reading, with the reasoning. It may be wrong.
-- **From docs** — taken from the capsule's own README, CONTEXT.md or HANDOFF, not checked against code.
-
-Nothing was built, tested or run while writing this. Commands below are "listed in package.json, not run".
-
-Short glossary:
-
-| Term | Meaning |
+| Term | Plain meaning |
 | --- | --- |
-| Capsule | A self-contained project folder inside the monorepo, with its own dependencies and config. |
-| Next.js | The web framework. It serves the pages and the small server-side API. |
-| API route | A server-side web address the page calls, here `/api/mira`. |
-| MIRA | A separate diagnosis service (Python) that calls an AI model and returns a structured differential diagnosis. |
-| OpenRouter | A paid gateway that MIRA uses to reach the AI model (`google/gemini-2.5-flash`). |
-| Oracle | A local file of 144 disease records (definition, symptoms, diagnosis criteria, therapy, referral). |
-| localStorage | The browser's own storage on the user's computer. No server database is involved. |
-| Encounter | One visit or conversation, which holds messages (questions and drafts). |
-| Draft | An assistant message. It has a review status: Draf, Ditinjau (reviewed), Final. |
+| Capsule | A self-contained project folder in the monorepo with its own dependencies, config, tests and CI. |
+| Next.js | The web framework that serves the workspace page and its one server endpoint, `/api/aadi`. Version 16.4, which has breaking changes from older Next.js. |
+| AADI | The bundled Python (FastAPI) diagnosis engine. It sends a case to an AI model and returns a structured differential. |
+| Gemini | Google's AI model service. AADI calls `gemini-3.1-flash-lite` directly; every call costs money. |
+| TheOracle | The local search index of 17,871 medical reference passages that grounds every AI answer. |
+| Oracle (catalog) | A different file of 329 disease records, derived from the knowledge SSOT, shown in the "Pustaka Klinis" library. The similar names are a trap. |
+| Evidence gate | Code that removes any drug dose it cannot find word for word in the retrieved passages. |
+| Synthetic data | Fictional patient cases. The whole product is for synthetic data only. |
+| SAFRS / R0-R3 | The monorepo's risk tiers: R0 read-only, R1 small reversible, R2 reviewed boundary change, R3 needs the owner's prior approval (includes clinical logic). |
 
----
+## 1. What Sentrapedia is
 
-## 1. What this product is
+Sentrapedia is an Indonesia-first clinical reasoning and documentation workspace for **fictional** clinical encounters. It assists clinicians by producing structured clinical drafts for physician review.
 
-**Verified + From docs.** Sentrapedia is a clinical workspace web app with an Indonesian interface (`app/layout.tsx` sets `lang="id"`). A clinician types a complaint or question. For the two built-in modes "Tanya" (question) and "Diagnosis Banding" (differential diagnosis), the app sends a fictional, identity-free case to a separate local MIRA service and shows the answer in six sections: symptom summary, differential diagnosis, diagnosis, supporting tests, drug therapy and education (`lib/mira/presentation.ts`). Twelve other document modes (clinic note, referral, handoff and so on) are built locally from templates without AI (`lib/drafts.ts`). Patients, encounters and drafts are stored only in the browser (`components/workspace.tsx`, key `sentrapedia-workspace-v1` in `lib/workspace.ts`). The README and `capsule.json` state it is for fictional data only and is not a validated clinical tool.
+- **Interface**: Bahasa Indonesia with standard English medical terms retained (`src/app/layout.tsx` sets `lang="id"`).
+- **Synthetic-only boundary**: Designed strictly for synthetic/fictional patient data. PII sanitizers run in both browser and gateway to reject real personal identifiers, and the engine refuses `AADI_SERVICE_ENV=production` (`aadi/service/settings.py`, `check_startup`).
+- **Review model**: The reviewing clinician has ultimate authority. Drafts are labelled "Draf", "Ditinjau", and "Final" as local workflow status markers, not automated prescriptions.
+- **Not** an electronic health record, a validated clinical device, or integrated with SATUSEHAT or BPJS.
+- **Sovereign capsule**: Resides at `projects/healthcare/sentrapedia` with its own toolchain, dependencies, Python runtime, tests and CI (`.github/workflows/ci.yml`). The monorepo root provides governance only.
 
----
+## 2. Overall architecture and topology
 
-## 2. Overall architecture and entry points
+The system consists of a browser clinical cockpit, a local Next.js server, a bundled Python diagnostic engine (AADI), local CPU vector grounding (TheOracle), and an external LLM provider. All patient-like data stays in the browser, except the case text and evidence passages sent to Gemini for an AI answer.
 
-### 2.1 Building blocks
-
-| Block | What it is | Where | Marker |
-| --- | --- | --- | --- |
-| Web page | One page; the whole app is a single client-side React component | `app/page.tsx` → `components/workspace.tsx` | **Verified** |
-| Layout and loading screen | HTML shell, page title, pixel loader | `app/layout.tsx`, `app/loading.tsx` | **Verified** |
-| API route | `GET /api/mira` = health check; `POST /api/mira` = run one analysis | `app/api/mira/route.ts` (8 lines) → `lib/mira/gateway.ts` | **Verified** |
-| Browser-side libraries | State, drafting, workflow, typing animation, presentation | `lib/*.ts`, `lib/mira/*.ts` | **Verified** |
-| Disease database | `oracle/sentrapedia.json`, loaded at build time | `lib/oracle.ts` | **Verified** |
-| External MIRA service | Python service, separate repo, not part of this capsule | Launched by `scripts/run-mira-deepseek.ps1` from `D:/DEV/gafferverse/mira-system` | **Verified** (script) |
-| AI model | `google/gemini-2.5-flash` via OpenRouter, called by MIRA, never by this app | `lib/mira/model-profile.ts`, launcher | **Verified** |
-
-### 2.2 Entry points
-
-| Entry point | Purpose | Marker |
-| --- | --- | --- |
-| `npm run dev` | Development server on `127.0.0.1:3101` | **Verified** `package.json` |
-| `npm start` | Production server on `127.0.0.1:3101` (after `npm run build`) | **Verified** `package.json` |
-| `Dockerfile` | Container image; standalone server on port 3000, `HOSTNAME=0.0.0.0` | **Verified** |
-| `scripts/run-mira-deepseek.ps1` | PowerShell launcher for the MIRA service on port 8791. Despite the name it configures Gemini Flash. It writes `MIRA_SERVICE_URL` and `MIRA_SERVICE_TOKEN` into this capsule's `.env.local` | **Verified** |
-| `scripts/run-mira-free.ps1` | Older launcher for a free model profile; historical | **Verified** file; "historical" is **From docs** |
-| `scripts/deploy-dry-run.mjs` | Checks build output exists and that no file traced into the build lives outside the capsule. Deploys nothing | **Verified** |
-
-### 2.3 Relation to the monorepo
-
-- **Verified.** No monorepo shared packages are used. `package.json` has only registry dependencies (`next`, `react`, `react-dom`, `lucide-react`), and `.npmrc` sets `workspaces=false`. `capsule.json` lists `rootDependencies: []`.
-- **Verified.** The design tokens are a local copy (`app/sentra-tokens.css`), per README.
-- **Verified.** The MIRA contract files (`lib/mira/request.schema.json`, `response.schema.json`, `types.ts`, `validate-json.ts`) were copied from Med Assist; `lib/mira/SOURCE.md` records the copy and SHA-256 hashes. There is no runtime import from Med Assist.
-- **Verified.** No code references the sibling `projects/healthcare/sentrapedia-site` (a grep of `app`, `components`, `lib`, `tests` found nothing). It is untracked in git per the session's git status.
-- **Inferred.** The capsule is self-contained for the UI and local templates. The diagnosis feature is not: it needs the MIRA service, which lives outside the monorepo, plus an OpenRouter key and credit.
-- **Verified.** The capsule `AGENTS.md` contains only an auto-generated Next.js notice. Real policy is in the monorepo root `AGENTS.md`.
-
----
-
-## 3. How data flows
-
-### 3.1 Diagnosis question (Tanya / Diagnosis Banding)
-
-```mermaid
-flowchart LR
-  U[Clinician types complaint, ticks 'fictional data', presses Enter] --> W[components/workspace.tsx analyzeMain]
-  W --> C[lib/mira/composer.ts composerCase: complaint + age/sex + encounter context + patient notes; no name or ID]
-  C --> CL[lib/mira/client.ts: validate, identity check, POST /api/mira]
-  CL --> G[app/api/mira/route.ts -> lib/mira/gateway.ts: origin check, schema, identity check, health/profile check]
-  G -->|Bearer token, X-MIRA-Case-Origin: synthetic| M[MIRA service 127.0.0.1:8791 /v1/diagnosis/step]
-  M --> OR[OpenRouter -> google/gemini-2.5-flash]
-  OR --> M --> G
-  G -->|validated result, cost <= 0.10 USD| CL --> P[lib/mira/presentation.ts miraDraft: six sections + Oracle narratives]
-  O[(oracle/sentrapedia.json)] --> P
-  P --> R[reducer message.add -> encounter]
-  R --> LS[(browser localStorage)]
-  R --> V[Screen: thinking steps, then sections unfold and type out]
+```text
+ ┌──────────────────────────── Browser (client) ────────────────────────────┐
+ │ src/components/workspace.tsx  (useReducer coordinator, Clinical Cockpit)  │
+ │   ├─ generate() ── 13 local modes ─► src/lib/drafts.ts / workflow.ts     │
+ │   └─ analyzeMain() ── 5 AI modes ──► src/lib/aadi/composer.ts            │
+ │                                       └► src/lib/aadi/client.ts          │
+ │ src/lib/aadi/presentation.ts ◄── oracle/sentrapedia.json (329 catalog)   │
+ │ localStorage "sentrapedia-workspace-v1" (unencrypted browser store)      │
+ └───────────────────────────────┬──────────────────────────────────────────┘
+                                 │ POST /api/aadi (same-origin, localhost)
+ ┌───────────────────────────────▼─ Next.js server 127.0.0.1:3101 ──────────┐
+ │ src/app/api/aadi/route.ts → src/lib/aadi/gateway.ts                      │
+ │   ├─ src/lib/theoracle-grounding.ts ──► theoracle/index/ (ONNX CPU)      │
+ │   ├─ Single-flight gate, payload bounds, and loopback verification       │
+ │   └─ fetch Bearer <per-run token>, X-AADI-Case-Origin: synthetic         │
+ └───────────────────────────────┬──────────────────────────────────────────┘
+                                 │ http://127.0.0.1:<random port>/v1/...
+ ┌───────────────────────────────▼─ Bundled AADI engine (Python 3.11, FastAPI)┐
+ │ aadi/service/app.py → engine.py (StepEngine) → postchecks.py             │
+ │ auth.py (per-run token) · privacy.py (PII checks) · audit.py (hash log)  │
+ └───────────────────────────────┬──────────────────────────────────────────┘
+                                 │ HTTPS (OpenAI-compatible endpoint)
+                       Google Gemini API (gemini-3.1-flash-lite)
+                       [OpenRouter / Claude / OpenAI supported, currently inactive]
 ```
 
-Step by step (all **Verified** unless marked):
+### 2.1 Subsystems and key directories
 
-1. **User action.** The clinician types in the composer, ticks the fictional-data checkbox and presses Enter. Without the tick the app shows an error and sends nothing (`components/workspace.tsx`, `analyzeMain`).
-2. **Routing.** Only built-in "question" and "ddx" modes go to MIRA; personal templates and other modes stay local (`composerUsesMira` in `lib/mira/composer.ts`).
-3. **Case building.** `composerCase` puts the complaint, a numeric age (if valid, ≤130), sex, the encounter context and the patient's notes into a case. Patient name and ID are not copied (`lib/mira/composer.ts`).
-4. **Browser checks.** `requestMiraAnalysis` refuses unconfirmed, schema-invalid or identity-looking input, then POSTs to `/api/mira` (`lib/mira/client.ts`). Identity detection is a regex for long numbers, phone numbers, emails, "nama:", "NIK:", "Tn./Ny." and similar (`containsIdentity` in `lib/mira/contract.ts`).
-5. **While waiting.** The screen shows the question bubble and eight "thinking steps" that change every 340 ms (`lib/typing.ts`, `components/thinking-card.tsx`). **Inferred + From docs:** these are timed animation, not real processing stages (HANDOFF says so).
-6. **Server gateway** (`lib/mira/gateway.ts`):
-   - accepts the request only from a loopback address with a matching `Origin` header (else 403);
-   - limits the body to 32 KB, re-checks the schema and identity patterns;
-   - refuses if URL or token is not configured (503), or another analysis is already running (429);
-   - checks MIRA's `/healthz` version string: it must name OpenRouter, `synthetic-only`, and the pinned model for both stages; else it refuses before sending the case;
-   - POSTs to MIRA with a bearer token and a 135-second timeout (`route.ts`);
-   - rejects the answer if it fails the response schema, has the wrong model, or a missing or over-budget cost (> US$0.10);
-   - maps MIRA error codes (TIMEOUT, BUDGET_EXHAUSTED, PROVIDER_POLICY …) to fixed Indonesian messages. Raw provider messages are never forwarded.
-7. **Presentation.** `miraDraft` builds the six-section text. It looks up Oracle records whose ICD-10 code (or code range) covers the returned diagnoses and adds their definition, symptoms, criteria, therapy and referral text. If MIRA returned a per-case `therapy` block, that is shown first under "Terapi Farmakologi" and the Oracle therapy moves to a reference area (`lib/mira/presentation.ts`).
-8. **Saving.** The question and draft are added to the current encounter. The draft keeps the full case, result, trace ID, time and Oracle hash as JSON in `sourceText`, with review status "draft" and an unchecked checklist (`miraMessage`). The whole workspace is written to localStorage on every change (`components/workspace.tsx`, `saveLocalWorkspace` in `lib/workflow.ts`).
-9. **Failure or cancel.** Nothing is saved; the question goes back into the input box (`cancelAnalysis` in `components/workspace.tsx`).
-10. **Re-display.** Untouched older MIRA drafts are re-rendered in the current six-section format from their saved source; edited drafts are shown as written (`diagnosisContent`).
-
-### 3.2 Other flows
-
-| Flow | Path | Marker |
+| Directory / File | Role & Contents | Status |
 | --- | --- | --- |
-| Local document modes (12 modes + personal templates) | `lib/drafts.ts`, `lib/note-structure.ts`, `lib/workflow.ts`; no network | **Verified** (no fetch calls outside `client.ts` and `mira-case-form.tsx`) |
-| Disease reference search ("Referensi penyakit") | `components/knowledge-dialog.tsx` → `lib/oracle.ts` `searchDiseases`; no network | **Verified** |
-| Structured case form inside Referensi | `components/mira-case-form.tsx` calls `/api/mira` itself (its own `fetch`, not `client.ts`) | **Verified** |
-| Speech dictation | Browser `SpeechRecognition` API in `components/scribe.tsx`; the browser vendor may process audio | **Verified** code; vendor behaviour **From docs** |
-| Backup / clear | Export JSON or clear all from the account dialog | **From docs** |
+| `src/app/` | Next.js 16.4 App Router shell: `layout.tsx`, `page.tsx`, design tokens, and the single server route `src/app/api/aadi/route.ts`. | Live |
+| `src/components/` | React 19 UI components: `workspace.tsx` (cockpit coordinator), `composer.tsx`, `diagnosis-document.tsx`, `document-studio.tsx`, `clinical-panel.tsx`. | Live |
+| `src/lib/` | Core logic: `workspace.ts` & `workspace-session.ts` (storage & restore), `workflow.ts` (review & drafts), `drafts.ts` (18 modes), `theoracle-evidence-gate.ts`. | Live |
+| `src/lib/aadi/` | AADI client & gateway: `gateway.ts` (safety & orchestration), `client.ts` (browser fetch), `composer.ts` (case mapping), `presentation.ts` (formatting). | Live |
+| `aadi/` | Bundled Python 3.11 FastAPI diagnosis engine. `SOURCE.json` records every file's origin; capsule-owned files (most of `service/`, `common/guard.py`) carry no pin, the rest stay byte-identical to upstream. `ruff.toml` lints the capsule-owned files. | Live |
+| `theoracle/` | Knowledge SSOT (`theoracle/ssot/`) and the index derived from it by `npm run knowledge:build`: 17,871 reference chunks (`theoracle/index/`), verified by manifest, embedded via local `EmbeddingGemma-300m-ONNX` (1.2 GB on CPU, downloaded at install into the gitignored `theoracle/model/`). | Live |
+| `oracle/sentrapedia.json` | 329 disease records derived from the knowledge SSOT, feeding the clinical library dialog and drug-name matching. | Live |
+| `apps/site/` | Decoupled static marketing site (section 9). | Live, separate |
+| `scripts/` | System launcher `run-system.mjs`, runtime helpers `aadi-runtime.mjs`, build, install, and test tools. | Live |
+| `tests/` | Unit, pipeline, launcher and UI smoke tests (`tests/ui/workspace-smoke.test.tsx`) in Vitest and `node --test`. | Live |
+| `.agents/` | Working notes for agents: CONTEXT, DECISIONS, HANDOFF. | Process |
+| `.runtime/`, `.next/`, `verify-report/` | Local working files, logs, build output. Not in git. | Generated |
 
-### 3.3 Where data lives
+## 3. Runtime supervisor and startup lifecycle
 
-| Data | Location | Marker |
-| --- | --- | --- |
-| Patients, lists, encounters, drafts, settings, templates | Browser localStorage, key `sentrapedia-workspace-v1`, unencrypted | **Verified** `lib/workspace.ts` |
-| Disease reference | `oracle/sentrapedia.json` (bundled into the app) | **Verified** `lib/oracle.ts` |
-| Server secrets | `.env.local` (git-ignored) — `MIRA_SERVICE_URL`, `MIRA_SERVICE_TOKEN`, `OPENROUTER_API_KEY` | **Verified** key names only |
-| MIRA logs and cost audit | `.runtime/mira-deepseek/` (git-ignored) | **Verified** launcher |
-| Verification evidence | `docs/verification/*` (JSON, screenshots) | **Verified** file list |
+The system is started via `npm run dev` (or `npm start` for production), which executes `scripts/run-system.mjs`. Bare `npx next dev` starts no engine and answers analyses with HTTP 502.
 
----
+1. **Environment check**: Reads `.env.local` and requires `GEMINI_API_KEY`; `preflightProvider` (`scripts/aadi-runtime.mjs`) reads the model's metadata with the key, without a paid completion, and stops on a rejected key.
+2. **Python virtual environment verification**: Ensures `.runtime/aadi/venv` exists and matches `aadi/requirements.lock`.
+3. **Engine initialization**:
+   - Generates a 32-byte cryptographically random per-run bearer token.
+   - Selects a free loopback port dynamically.
+   - Spawns the Uvicorn FastAPI server on `127.0.0.1` (wrapped by `managed_child.py` on Windows to guarantee cleanup on exit).
+4. **Readiness probe**: Polls the engine `/healthz` endpoint for up to 30 seconds until the expected version and capabilities match.
+5. **Next.js server start**: Spawns Next.js on `127.0.0.1:3101` (or `$PORT`), injecting `AADI_SERVICE_URL` and `AADI_SERVICE_TOKEN`.
+6. **Grounding model warm-up**: Asynchronously pings `/api/aadi` to preload the local 1.2 GB ONNX embedding model into memory before user queries arrive.
+7. **Process supervision**: If the AADI engine process halts, the supervisor restarts it with exponential backoff (2 s to 30 s, reset after a minute of running) and probes `/healthz` again; the fifth crash in a row ends the system (`nextRestart` in `scripts/aadi-runtime.mjs`). If Next.js exits, the entire process tree terminates.
 
-## 4. Build, test and run
+## 4. Diagnostic and therapy pipeline
 
-All commands are **listed in package.json / capsule.json, not run** for this document. Run them from the capsule folder in PowerShell.
+### 4.1 Mode routing (18 modes)
+- **AI-assisted modes (5)**: `question`, `ddx`, `workup`, `refer`, and `icd10` invoke `/api/aadi`.
+- **Local template modes (13)**: Clinic note, HPI, SOAP, referral letters, scribe, patient education, etc., format deterministically without AI or network calls (`src/lib/drafts.ts`).
 
-| Command | What it does | Marker |
-| --- | --- | --- |
-| `npm ci --workspaces=false` | Install exact dependencies from `package-lock.json`, ignoring the monorepo | **Verified** `capsule.json` |
-| `npm run dev` | Development server, http://127.0.0.1:3101 | **Verified** |
-| `npm run build` | Production build into `.next/standalone` and `.next/static` | **Verified** (`next.config.ts` `output: "standalone"`) |
-| `npm start` | Serve the production build on 127.0.0.1:3101 | **Verified** |
-| `npm run typecheck` | `tsc --noEmit` | **Verified** |
-| `npm run lint` | ESLint on `app components lib tests` only (not `scripts/`, `oracle/`) | **Verified** |
-| `npm test` | `vitest run` on all tests; no `vitest.config.*` exists, so defaults apply | **Verified** |
-| `npm test -- tests/workspace.test.ts` | One test file | **Verified** (README) |
-| `npm run deploy:dry-run` | Checks build output and dependency traces; needs a prior build | **Verified** `scripts/deploy-dry-run.mjs` |
-| `./scripts/run-mira-deepseek.ps1 -MiraRoot D:/DEV/gafferverse/mira-system -ValidateOnly` | Checks OpenRouter catalogue/price and the installed MIRA runtime; no launch, no writes | **Verified** script |
-| `./scripts/run-mira-deepseek.ps1 -MiraRoot D:/DEV/gafferverse/mira-system` | Starts MIRA on 8791 and rewrites `.env.local` URL/token; restart Sentrapedia afterwards | **Verified** script |
+| Feature | Uses AI (AADI)? |
+| --- | --- |
+| Composer modes: question, ddx, workup, icd10, refer | Yes |
+| The other 13 composer modes and personal templates | No, local templates |
+| Pustaka Klinis, "Penyakit" tab (disease catalog) | No, local file |
+| Pustaka Klinis, "Analisis kasus" tab | Yes |
+| Voice dictation | No, the browser's built-in speech recognition (which may use the browser vendor's service) |
+| Document views, review status, history, search, command palette | No |
 
-**Note — Verified.** `node_modules/.bin` in the main checkout currently has no `next`, `vitest`, `tsc` or `eslint`. CONTEXT.md and HANDOFF say verification was done in a separate copy under `C:/Users/drfer/AppData/Local/Temp/...`.
+### 4.2 Step-by-step AADI request flow
 
-### Environment variables (names only)
+1. **Case assembly (`src/lib/aadi/composer.ts`)**:
+   - Chief complaint is extracted from prompt text.
+   - Patient age and sex are attached.
+   - Patient name and identifiers are stripped.
+2. **Client validation (`src/lib/aadi/client.ts`)**:
+   - Verifies structured case shape (`validCase`).
+   - Asserts synthetic consent flag (`synthetic: true`).
+   - Runs `containsIdentity` regex to block Indonesian identity formats (NIK, BPJS, phone numbers, email, titles with names).
+3. **Gateway safety boundary (`src/lib/aadi/gateway.ts`)**:
+   - Enforces loopback origin/host checks.
+   - Enforces 32 KB body size limit.
+   - Applies single-flight lock (`active` flag; returns `BUSY` on concurrent calls).
+4. **Local TheOracle grounding (`src/lib/theoracle-grounding.ts`)**:
+   - Runs local CPU ONNX embedding (`embeddinggemma-300m`).
+   - Retrieves top 6 relevant diagnosis passages plus 1 therapy dose passage from 17,871 indexed chunks.
+5. **AADI diagnosis step (`aadi/service/app.py`)**:
+   - AADI verifies HMAC token and synthetic headers.
+   - Sends case narrative and evidence passages to Google Gemini API (`gemini-3.1-flash-lite`).
+   - Per-step budget ceiling ($0.10 USD) and 20 s deadline; a failed call is never retried.
+6. **Post-checks (`aadi/service/postchecks.py`)**:
+   - Validates ICD-10 codes against the local ICD dictionary.
+   - Filters sex-incompatible differential diagnoses.
+7. **Targeted therapy step**:
+   - Runs a secondary focused retrieval for the leading diagnosis.
+   - Queries Gemini for drug regimen, drug-drug interactions (DDI), and contraindications. If this step fails, the diagnosis is still shown without therapy.
+8. **Therapy Evidence Gate (`src/lib/theoracle-evidence-gate.ts`)**:
+   - Compares recommended drug doses against retrieved TheOracle evidence passages.
+   - **Any dose not supported verbatim in the local evidence is stripped** and marked `doseRemoved`.
+   - The UI displays `"dosis: cek pedoman"` instead of an unverified dose.
+9. **Presentation & rendering (`src/lib/aadi/presentation.ts`)**:
+   - Formats document into 6 standardized sections with line-by-line reveal animation (`src/components/diagnosis-document.tsx`).
+   - Re-runs the evidence gate on stored drafts upon view to guarantee retrospective safety.
 
-| Name | Read by | Purpose | Marker |
-| --- | --- | --- | --- |
-| `MIRA_SERVICE_URL` | `app/api/mira/route.ts` | MIRA address; default `http://127.0.0.1:8787`; only loopback `http://` accepted | **Verified** |
-| `MIRA_SERVICE_TOKEN` | `app/api/mira/route.ts` | Bearer token for MIRA; server-side only | **Verified** |
-| `OPENROUTER_API_KEY` | Launcher scripts only, never the Next.js app | Passed to the MIRA process | **Verified** |
-| `PORT`, `HOSTNAME`, `NODE_ENV`, `NEXT_TELEMETRY_DISABLED` | Docker image | Container runtime | **Verified** `Dockerfile` |
-| `MIRA_*` (e.g. `MIRA_PLAN_MODEL`, `MIRA_STEP_DEADLINE_S`, `MIRA_DAILY_BUDGET_USD`, `MIRA_OPENROUTER_ZDR`, `MIRA_FAST_THERAPY`, `MIRA_DEV_TOKEN`) | The MIRA service, set by the launcher | Model, budget, speed and privacy settings | **Verified** `config/mira-deepseek.env.example` |
+**Limits and errors.** The overall gateway timeout is 65 s on the targeted path (45 s without the therapy step). Every failure becomes `{error: {code, message}}` with a short Indonesian message and a code such as `TIMEOUT`, `BUSY` or `IDENTITY`; the browser keeps the code on `AadiRequestError`. The "thinking" animation while waiting runs on a timer and does not reflect real progress (`src/lib/typing.ts`).
 
-**Verified.** The two `process.env` reads happen once when the route module loads, so a restart is needed after changing them. `capsule.json` declares `requiredEnvironment: []`: the UI runs without any of them; only analysis fails (503 NOT_CONFIGURED).
+### 4.3 Where knowledge comes from
 
----
+| Source | What it does |
+| --- | --- |
+| `theoracle/index/` | 17,871 passages (2,285 from the SSOT, 15,586 from guideline PDFs) searched for each case and sent to the AI. |
+| `theoracle/ssot/sentrapedia-knowledge-ssot.json` | The single knowledge source (v0.6, 335 entries); the index and the catalog are derived from it. |
+| `aadi/service/data/icd10.json` and `aadi/service/rules/` | Code and sex checks after the AI answers. |
+| `oracle/sentrapedia.json` | Library catalog and drug-name matching in the dose gate. Never sent to the AI. |
 
-## 5. Top 5 files to understand first
+## 5. Model providers and multi-model strategy
 
-| # | File | Why | Marker |
-| --- | --- | --- | --- |
-| 1 | `components/workspace.tsx` | The whole app's coordinator: state, localStorage load/save, dialogs, shortcuts, and the main analyse/cancel flow. | **Verified** |
-| 2 | `lib/mira/gateway.ts` | The only server-side code. All safety gates for the AI path: origin, input limits, identity check, model pinning, cost limit, timeout, single active request, safe error messages. | **Verified** |
-| 3 | `lib/mira/presentation.ts` | Turns the AI result plus the disease database into the six-section answer the clinician reads. Clinical wording and what is shown or hidden live here. | **Verified** |
-| 4 | `lib/workspace.ts` | Data model (Patient, Encounter, Message, Settings), the reducer that changes it, and validation when loading from the browser. | **Verified** |
-| 5 | `lib/mira/contract.ts` | Defines the case and result shape, JSON-schema validation, the identity regex and the optional `therapy` block. | **Verified** |
+- **Active provider**: Google Gemini API direct via its OpenAI-compatible endpoint using model `gemini-3.1-flash-lite`. Tunables are configured in `scripts/aadi-profile.json` (per-step $0.10 USD, 20 s); the launcher sets a $5 USD daily budget. The engine refuses to start when the model has no price in `aadi/common/guard.py`.
+- **Supported providers**: The architecture maintains support for Claude, OpenAI, Gemini, and OpenRouter. OpenRouter infrastructure in `aadi/service` and `aadi/common/providers.py` remains active and supported for future multi-provider routing, though inactive by default under the current Gemini launcher configuration.
 
-Useful next: `lib/mira/model-profile.ts` (pinned model), `lib/oracle.ts`, `lib/workflow.ts` (review checklist, revisions), `components/diagnosis-document.tsx`, `scripts/run-mira-deepseek.ps1`.
+## 6. Data storage and recovery
 
----
+- **Browser-local storage**: Patient profiles, encounters, lists, and drafts persist in `sentrapedia-workspace-v1` via `localStorage`. Storage is unencrypted and not synced. No patient data is sent to a remote database. Each document keeps up to 20 revisions, and a warning appears from 4 million stored characters.
+- **Unreadable workspace backup**: If stored data fails schema validation upon startup, `restoreFromStorage` backs up the raw string to `sentrapedia-workspace-v1-unreadable`, displays a non-destructive user notice, and offers a download of the unreadable data from the settings dialog rather than silently wiping it.
+- **Engine audit ledger**: one JSON line per step in `.runtime/aadi-deepseek/audit/audit-<UTC day>.jsonl` with metadata plus `requestSha256` and `responseSha256`, never the case text; day files older than 14 days are deleted when the engine starts (`aadi/service/app.py`, `prune_audit`). Today's file also restores the daily budget after a restart.
 
-## 6. Conventions observed
+## 7. Build, test and run commands
 
-| Area | Convention | Marker |
-| --- | --- | --- |
-| Folders | `app/` routes, `components/` React UI (kebab-case files), `lib/` pure logic, `lib/mira/` AI adapter, `oracle/` data, `tests/` flat Vitest files, `docs/plans|specs|verification` | **Verified** |
-| Language | Identifiers and comments in English; all user-facing text in Indonesian with English medical terms | **Verified** |
-| Code style | Very dense: many statements per line, long one-line functions | **Verified** |
-| State | One `useReducer` with typed action names like `"message.add"`; logic kept in pure `lib` functions | **Verified** |
-| Error handling | Gateway returns `{ error: { code, message } }` with fixed safe messages; `try/catch` falls back to safe defaults; failed browser writes show a persistent warning | **Verified** |
-| Imports | Relative paths (`../lib/...`) although `@/*` alias exists in `tsconfig.json` | **Verified** |
-| Tests | Vitest, pure functions and the gateway with fake `fetch`; descriptive sentence names; no component/DOM tests in the repo | **Verified** |
-| Contract pinning | Schema SHA-256 hashes recorded in `lib/mira/SOURCE.md` and pinned in `tests/oracle-mira.test.ts` | **Verified** |
-| Commits | `type(sentrapedia): description (R-tier)`, e.g. `feat(...) ... (R3)`; git author "Codex" | **Verified** `git log` |
-| Documentation | Dated plans, specs and verification reports; long running notes in `CONTEXT.md` and `.agents/HANDOFF.md` (mostly Indonesian in later entries) | **Verified** |
+Use the npm scripts in the capsule's `package.json`; they wrap everything, including Python. CI runs the same lifecycle on every pull request.
 
----
+| Command | What it does |
+| --- | --- |
+| `npm ci` | Installs Node packages, then builds the Python environment and downloads the 1.2 GB model. `SENTRAPEDIA_SKIP_AADI=1` and `SENTRAPEDIA_SKIP_MODEL=1` skip those two steps (enough for lint and typecheck). |
+| `npm run dev` / `npm start` | Starts engine and website (section 3); `start` needs `npm run build` first. |
+| `npm run system:check` | Checks the Python environment and the key without starting servers. |
+| `npm run build` | Builds the website, bundles the engine and model into `.next/standalone`, and builds the marketing site. |
+| `npm run lint` / `npm run typecheck` | ESLint for `src`, `tests` and `scripts` plus the site's lint / `tsc --noEmit`. Python: `uvx ruff@0.17.1 check aadi`. |
+| `npm test` | Vitest (logic, pipeline, UI smoke) plus the marketing site's node tests. |
+| `npm run test:system` / `npm run test:aadi` | Launcher tests / the Python engine tests with the AI mocked (no cost). |
+| `npm run test:all` | All of the above test sets. |
+| `npm run deploy:dry-run` | Checks the build output is self-contained and reports which platform its native binaries are for. Does not deploy. |
 
-## 7. Fragile, undocumented or surprising
+`aadi/service/smoke_live.py` and `sim_benchmark.py` call the real AI and cost money; treat them as needing owner approval. `sim_benchmark.py` is a pinned upstream file that runs only from the upstream `assist/` folder: its encounter imports `run_one_case.py` and `aadi_adapter`, which the capsule does not ship. In the capsule only its pure functions run, in `test_components.py`.
 
-### 7.1 Clinical safety
+## 8. The five files to understand first
 
-- **Thinking steps describe work that does not happen. Verified + Inferred.** `lib/typing.ts` shows "Literatur dan pedoman klinis ditelusuri" (literature and guidelines searched) and "Bukti ilmiah sedang disintesis" on a timer. No literature search exists in this code. A clinician may over-trust the answer.
-- **Visible disclaimers were removed. From docs + Verified.** CONTEXT.md (09:20 entry) says review disclaimers were dropped from visible text; the tests "answers directly, without disclaimers" in `tests/diagnosis-presentation.test.ts` enforce this. The "belum ditinjau" marker survives only inside the hidden `sourceText`.
-- **AI drug regimens. Verified.** If MIRA returns `therapy`, the drug, dose, route, DDI and contraindications are shown as the first therapy content (`presentation.ts`). HANDOFF states accuracy is not validated, and that for complaint-only appendicitis the model often returned no regimen.
-- **Supporting tests nearly always "Perlu". From docs.** HANDOFF notes MIRA now always proposes a confirming test, even for headache without red flags.
-- **Privacy setting relaxed. Verified.** The launcher sets `MIRA_OPENROUTER_ZDR=false` (no zero-data-retention filter) by Chief's request, per README. Identity detection is a regex, not certified anonymisation.
-- **Silent data reset. Inferred.** `restoreWorkspace` returns the demo seed if any stored record fails validation; the save effect then writes state back to localStorage. A single malformed record could replace the user's local data with the seed. Not tested by me.
+1. **`src/lib/aadi/gateway.ts`.** The trust boundary: every server-side safety check, timeout, cost check and error message, and the diagnosis-then-therapy-then-dose-gate pipeline.
+2. **`scripts/run-system.mjs` with `scripts/aadi-runtime.mjs`.** How the system starts, which provider and key are used, the budget, ports and restarts.
+3. **`src/components/workspace.tsx`.** The one page component: app state and whether a request goes to AI or a template. Saving, restore, media queries and the toast live in `workspace-hooks.ts`; the header, home, conversation and chat composer in `workspace-views.tsx`; the record dialogs in `workspace-forms.tsx`. Covered by the UI smoke tests.
+4. **`aadi/service/engine.py`.** Deadlines, cost caps, the error circuit breaker, and how every failure becomes a safe "unavailable" answer.
+5. **`src/lib/theoracle-grounding.ts`.** Decides which evidence the AI sees.
 
-### 7.2 Documentation drift
+Runner-up: `src/lib/aadi/presentation.ts`, which turns AI output into the clinical document and re-checks doses every time a saved document is shown.
 
-- **Verified.** README says the adapter "requires the approved pinned DeepSeek Flash model"; the code pins `google/gemini-2.5-flash` (`lib/mira/model-profile.ts`).
-- **Verified.** README says US$1 daily budget, two-call limit and 120-second deadline. The launcher sets `MIRA_DAILY_BUDGET_USD=5` and `MIRA_STEP_DEADLINE_S=20`; HANDOFF mentions `max_calls` 9.
-- **Verified.** File names `run-mira-deepseek.ps1`, `mira-deepseek.env.example`, `.runtime/mira-deepseek` all configure Gemini (README explains this is kept for budget history).
-- **Verified.** `capsule.json` lifecycle `test` lists 8 files; `tests/diagnosis-presentation.test.ts` is missing, so a capsule-contract test run skips the six-section tests.
+## 9. The marketing site (`apps/site/`)
 
-### 7.3 Deployment and environment
+A hand-built static website with no framework and no shared code with the clinical app. `apps/site/scripts/transform.mjs` builds pages from `source/`, `assets/` and `static/` into `site/`, which is untracked build output. A test hashes every tracked site file against `apps/site/docs/migration-manifest.json`; regenerate it with `npm --prefix apps/site run manifest`. Hosting is Vercel (not Git-linked, so a CLI deploy must build first), and the contact form sends email through Resend; without Resend settings it refuses requests.
 
-- **Docker image cannot run analysis. Inferred.** `gateway.ts` rejects any request whose host is not loopback and only accepts a loopback MIRA URL. The Docker image listens on `0.0.0.0:3000`, and `127.0.0.1` inside a container is not the host. So the container would serve the UI but `/api/mira` would fail. This matches README ("must not be published"), but the Docker target is effectively UI-only.
-- **No authentication on `/api/mira`. Verified.** Protection is loopback + origin check only.
-- **Single-request lock is per process. Verified.** `let active` in `createMiraGateway` lives in module memory; it resets on dev hot-reload and is not shared across processes.
-- **Hard-coded values. Verified.** Ports 3101 (`package.json`), 8787 default (`gateway.ts`), 8791 (launcher), 3000 (Docker); 135 s timeout (`route.ts`); US$0.10 budget and model name (`model-profile.ts`, not env-driven); `Asia/Jakarta` in `newEncounter`; MIRA path `D:/DEV/gafferverse/mira-system` in docs; OpenRouter price thresholds in the launcher.
-- **Launcher writes secrets. Verified.** `run-mira-deepseek.ps1` rewrites `.env.local` with the generated token.
-- **Windows-only launcher. Verified.** PowerShell with `Get-NetTCPConnection` and a Windows venv path (`src/.venv/Scripts/python.exe`).
+## 10. Conventions
 
-### 7.4 Coupling to other projects
+- **Folders.** `src/app` for routes only, `src/components` for screens, `src/lib` for logic, `tests/` at the top. File names are lower-case with dashes.
+- **Language.** All user-facing text and error messages are Indonesian; medical terms stay in English. Repository docs are English.
+- **Errors.** The engine never answers with a server error; it returns a contract-valid "unavailable" answer instead.
+- **Validation.** Hand-written checks and JSON schemas guard every boundary, in both directions.
+- **Styling.** Plain CSS with design tokens (teal palette, 2 px corners, no decorative shadows). No Tailwind.
+- **Code density.** Many long single lines and comments citing owner decisions with dates. This is the house style.
+- **Commits.** `type(scope): message (R1|R2)` with a `Co-Authored-By` line.
 
-- **Verified.** The MIRA service is in a separate repo outside the monorepo. The `therapy` block in `lib/mira/response.schema.json` is a Sentrapedia-only extension; HANDOFF says Med Assist has not adopted it, and a MIRA test comparing contracts with Med Assist will report a difference.
-- **Inferred.** Any change to MIRA's version string format (`+plan=…+assess=…`) or schema will make the gateway refuse every analysis, because both are checked strictly.
+## 11. Sharp edges
 
-### 7.5 Dead or legacy code
-
-- **Verified.** `lib/mira/free-profile.ts` is only used when `freeModel` is passed; `route.ts` never passes it. Together with `tests/mira-free.test.ts`, `scripts/run-mira-free.ps1` and `config/mira-free.env.example` it is historical.
-- **Verified.** `oracle/data.ts`, `oracle/diseases-data.ts` (3,369 lines) and `oracle/diseases.json` are not imported by `app`, `components`, `lib` or `tests`. Only `oracle/sentrapedia.json` is used. `oracle/data.ts` is still type-checked (tsconfig includes `**/*.ts`).
-- **Verified.** `components/mira-case-form.tsx` duplicates the request logic of `lib/mira/client.ts`.
-- **Verified.** No `TODO`/`FIXME` markers in `app`, `components`, `lib`, `tests`, `scripts`.
-
-### 7.6 Test gaps
-
-- **Verified.** No tests for React components, `components/workspace.tsx` flows, localStorage persistence in the browser, or the launcher scripts. Browser E2E evidence exists only as JSON/screenshots in `docs/verification/`; the Playwright script is not in this capsule.
-
----
-
-## Open questions
-
-1. Test count: I count 91 `it(...)` blocks across 9 files; CONTEXT.md and HANDOFF report 104 passing tests. Where do the other 13 come from (another copy, or an older/newer tree)?
-2. Which MIRA limits are authoritative today: README (US$1/day, 120 s, two calls) or the launcher (US$5/day, 20 s step deadline, `max_calls` 9 per HANDOFF)?
-3. Is the Docker image meant to be used at all, given the loopback-only gateway?
-4. Should the timed "thinking steps" wording be kept, given they do not reflect real processing?
-5. Are `oracle/data.ts`, `oracle/diseases-data.ts`, `oracle/diseases.json` and the free-profile files meant to be kept or removed?
-6. Where does the Playwright E2E script used for `docs/verification/*-e2e.json` live, and should it move into the capsule?
-7. Who owns MIRA schema changes (the `therapy` extension) between Sentrapedia, MIRA and Med Assist?
+- **The Gemini key reaches the web server process**: the launcher passes its whole environment to Next.js (`scripts/run-system.mjs`, `webEnv`).
+- **Two consent models**: the main composer always declares the case synthetic (`src/components/workspace.tsx`); the library's "Analisis kasus" form requires a checkbox (`src/components/aadi-case-form.tsx`).
+- **Synthetic-only is a policy, not a guarantee**: identity patterns catch common formats only (`src/lib/aadi/contract.ts`, `aadi/service/privacy.py`).
+- **Saved AI documents can change**: doses are re-checked on every display, so a gate change can alter old documents.
+- **Daily budget text mismatch**: the case form says US$1 per day (`src/components/aadi-case-form.tsx`); the launcher sets US$5 (`scripts/aadi-runtime.mjs`).
+- **A bad `AADI_FAST_COPIES` value** raises inside the engine (`aadi/service/engine.py`) rather than at startup.
+- **Docker is single-user and local only**: the image has no login; publish it as `docker run -p 127.0.0.1:3000:3000 ...`, never on a public port. CI builds the image but never runs it.
+- **A standalone build carries the native binaries of the machine that built it**; `deploy:dry-run` warns when they are not linux-x64.
+- **Git LFS is required**: without it the index vectors and media arrive as pointer files.
+- **`next dev` rewrites part of `AGENTS.md`** (the Next.js agent-rules block).
+- **Naming traps**: `src/lib/theoracle.ts` reads the Oracle catalog, not TheOracle; the audit folder is named `aadi-deepseek` but serves Gemini; the default ports in code (8787 in the gateway, 8765 in the engine docstring) are never used because the launcher picks a random port.

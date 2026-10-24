@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { createPersonalDraft, defaultReviewItems, reviewComplete, queueItems, saveLocalWorkspace } from "../src/lib/workflow";
-import { initialWorkspace, restoreWorkspace, workspaceReducer, type Workspace, type Message } from "../src/lib/workspace";
+import { createPersonalDraft, defaultReviewItems, reviewComplete, queueItems, revisionLimit, saveLocalWorkspace, storageWarningChars } from "../src/lib/workflow";
+import { initialWorkspace, workspaceReducer, type Workspace, type Message, loadWorkspace } from "../src/lib/workspace";
+import { documentSections, emptySection } from "../src/lib/studio";
 
 const doc: Message = { id: "doc", role: "assistant", mode: "clinic", content: "Original", originalContent: "Original", sourceText: "Immutable source", createdAt: "2026-10-09T01:00:00Z", reviewItems: defaultReviewItems };
 const state: Workspace = { ...initialWorkspace, encounters: [{ ...initialWorkspace.encounters[0], messages: [doc] }] };
@@ -17,10 +18,14 @@ describe("personal templates", () => {
     expect(output).toContain("Teks tanpa label");
     expect(createPersonalDraft(template, "History: Contoh", "")).toContain("## Plan\nBelum tersedia");
   });
+  it("marks an empty personal-template section with the placeholder the document collapses", () => {
+    const plan = documentSections(createPersonalDraft(template, "History: Contoh", "")).find((section) => section.title === "Plan")!;
+    expect(emptySection(plan.body)).toBe(true);
+  });
   it("persists templates/favorites and cleans favorites when deleted", () => {
     let next = workspaceReducer(state, { type: "template.save", template });
     next = workspaceReducer(next, { type: "favorite.toggle", key: "template:personal" });
-    expect(restoreWorkspace(JSON.stringify(next)).templates).toEqual([template]);
+    expect(loadWorkspace(JSON.stringify(next)).workspace.templates).toEqual([template]);
     next = workspaceReducer(next, { type: "template.delete", id: "personal" });
     expect(next.favorites).toEqual([]);
     expect(message(next).content).toBe("Original");
@@ -57,12 +62,13 @@ describe("versions and review guards", () => {
     expect(message(next).revisions?.[1].content).toBe("Edited");
     expect(message(next).revisions?.[1].reason).toBe("restore");
     next = workspaceReducer(next, { type: "revision.rename", ...ref, id: revision.id, name: "Sebelum edit" });
-    expect(restoreWorkspace(JSON.stringify(next)).encounters[0].messages[0].revisions?.[0].name).toBe("Sebelum edit");
+    expect(loadWorkspace(JSON.stringify(next)).workspace.encounters[0].messages[0].revisions?.[0].name).toBe("Sebelum edit");
   });
-  it("caps history at 50 but retains the baseline", () => {
+  it("caps history at 20 but retains the baseline", () => {
     let next = state;
-    for (let i = 0; i < 55; i++) next = workspaceReducer(next, { type: "message.edit", ...ref, content: `Edit ${i}`, at: new Date(Date.parse(stamp) + i * 1000).toISOString() });
-    expect(message(next).revisions).toHaveLength(50);
+    expect(revisionLimit).toBe(20);
+    for (let i = 0; i < 25; i++) next = workspaceReducer(next, { type: "message.edit", ...ref, content: `Edit ${i}`, at: new Date(Date.parse(stamp) + i * 1000).toISOString() });
+    expect(message(next).revisions).toHaveLength(20);
     expect(message(next).originalContent).toBe("Original");
   });
   it("rejects empty review lists and resets status when the list changes", () => {
@@ -78,11 +84,17 @@ describe("queue and storage compatibility", () => {
     expect(JSON.parse(saved).version).toBe(1);
     expect(saveLocalWorkspace(state, () => { throw new Error("QuotaExceededError"); })).toContain("belum tersimpan");
   });
+  it("warns before the browser quota is reached while still saving", () => {
+    const big = { ...state, settings: { ...state.settings, instructions: "x".repeat(storageWarningChars) } };
+    let saved = "";
+    expect(saveLocalWorkspace(big, (raw) => { saved = raw; })).toContain("hampir penuh");
+    expect(JSON.parse(saved).settings.instructions).toHaveLength(storageWarningChars);
+  });
   it("retains a long snapshot produced from input and context after reload", () => {
     const long = "x".repeat(60000);
     const large = { ...state, encounters: [{ ...state.encounters[0], messages: [{ ...doc, content: long }] }] };
     const next = workspaceReducer(large, { type: "message.edit", ...ref, content: "Edited", at: stamp });
-    expect(message(restoreWorkspace(JSON.stringify(next))).revisions?.[0].content).toBe(long);
+    expect(message(loadWorkspace(JSON.stringify(next)).workspace).revisions?.[0].content).toBe(long);
   });
   it("snapshots review defaults independently and clears workflow data with the workspace", () => {
     const custom = [{ id: "custom", label: "Custom", required: true, checked: false, target: "document" }];
@@ -98,13 +110,13 @@ describe("queue and storage compatibility", () => {
     expect(queueItems(next, "", "all")[0].id).toBe("other");
     expect(queueItems(next, "", "demo-patient").map((item) => item.id)).toEqual(["demo-encounter"]);
     expect(queueItems(next, "Tugas manual", "all")[0].id).toBe("other");
-    expect(restoreWorkspace(JSON.stringify(next)).encounters[1].tasks?.[0].text).toBe("Tugas manual");
+    expect(loadWorkspace(JSON.stringify(next)).workspace.encounters[1].tasks?.[0].text).toBe("Tugas manual");
     next = workspaceReducer(next, { type: "patient.delete", id: "demo-patient" });
     expect(next.encounters.map((item) => item.id)).toEqual(["other"]);
   });
   it("drops malformed new metadata without discarding valid old content", () => {
     const malformed = { ...state, templates: [{ id: "bad" }], favorites: ["template:missing", 42], encounters: [{ ...state.encounters[0], workStatus: "urgent", tasks: [{ id: "t", text: 42 }], messages: [{ ...doc, revisions: [{ id: "bad", content: 42 }], reviewItems: [{ id: "bad", checked: true }] }] }] };
-    const restored = restoreWorkspace(JSON.stringify(malformed));
+    const restored = loadWorkspace(JSON.stringify(malformed)).workspace;
     expect(message(restored).content).toBe("Original");
     expect(restored.templates).toEqual([]);
     expect(restored.favorites).toEqual([]);
@@ -113,7 +125,7 @@ describe("queue and storage compatibility", () => {
   });
   it("keeps legacy final documents but cannot newly finalize unchecked legacy drafts", () => {
     const legacy = { ...state, encounters: [{ ...state.encounters[0], messages: [{ ...doc, reviewItems: undefined, reviewStatus: "final" as const }] }] };
-    expect(message(restoreWorkspace(JSON.stringify(legacy))).reviewStatus).toBe("final");
-    expect(message(restoreWorkspace(JSON.stringify(legacy))).revisions).toBeUndefined();
+    expect(message(loadWorkspace(JSON.stringify(legacy)).workspace).reviewStatus).toBe("final");
+    expect(message(loadWorkspace(JSON.stringify(legacy)).workspace).revisions).toBeUndefined();
   });
 });

@@ -6,7 +6,7 @@ const manifest = JSON.parse(await readFile(new URL('../package.json', import.met
 if (Object.keys(manifest.dependencies ?? {}).length || Object.keys(manifest.devDependencies ?? {}).length) {
   throw new Error('Website lifecycle must remain dependency-free');
 }
-for (const relative of ['source/index.html', 'site/index.html', 'reference/design-integrity.json']) {
+for (const relative of ['source/index.html', 'static', 'reference/design-integrity.json']) {
   await stat(new URL(`../${relative}`, import.meta.url));
 }
 console.log('Local website sources available; no package install required.');

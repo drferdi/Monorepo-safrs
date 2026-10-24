@@ -10,14 +10,15 @@ import ts from "typescript";
 const cache = path.resolve("node_modules/.cache"); mkdirSync(cache, { recursive: true });
 const scratch = mkdtempSync(path.join(cache, "theoracle-grounding-benchmark-"));
 const indexDir = path.resolve("theoracle/index");
-const evalSet = path.resolve("docs/verification/theoracle-eval-2026-10-11/eval-set.json");
+// Usage: node scripts/benchmark-theoracle-grounding.mjs [eval-set folder] (default: the 2026-10-11 set).
+const evalSet = path.resolve(process.argv[2] ?? "docs/verification/theoracle-eval-2026-10-11", "eval-set.json");
 const hash = () => createHash("sha256").update(readFileSync(path.join(indexDir, "vectors.f32"))).update(readFileSync(path.join(indexDir, "chunks.jsonl"))).digest("hex");
 const pct = (values, p) => { const sorted = [...values].sort((a, b) => a - b); return Math.round(sorted[Math.min(sorted.length - 1, Math.floor(p * sorted.length))] * 10) / 10; };
 try {
-  for (const name of ["theoracle-grounding-types", "theoracle-grounding"]) {
+  for (const name of ["guards", "theoracle-grounding-types", "theoracle-grounding"]) {
     const source = readFileSync(path.resolve(`src/lib/${name}.ts`), "utf8");
     const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
-    writeFileSync(path.join(scratch, `${name}.mjs`), compiled.replaceAll('"./theoracle-grounding-types"', '"./theoracle-grounding-types.mjs"'));
+    writeFileSync(path.join(scratch, `${name}.mjs`), compiled.replace(/from "\.\/([\w-]+)"/g, 'from "./$1.mjs"'));
   }
   const { retrieveTheOracleGrounding, retrieveTheOracleTherapyGrounding } = await import(pathToFileURL(path.join(scratch, "theoracle-grounding.mjs")).href);
   const caseFor = complaint => ({ demographics: { ageYears: null, sex: "unknown" }, chiefComplaint: complaint, anamnesis: {}, physicalExam: [], results: [], currentMedications: [], knownConditions: [] });
@@ -60,7 +61,7 @@ try {
   if (after !== before) throw new Error("Index changed during benchmark");
   console.log(JSON.stringify({
     measuredAt: new Date().toISOString(), node: process.version,
-    scope: "Actual TheOracle retrieval (local CPU query embedding + cosine search + caps); excludes MIRA model inference and HTTP latency",
+    scope: "Actual TheOracle retrieval (local CPU query embedding + cosine search + caps); excludes AADI model inference and HTTP latency",
     indexSha256: first.corpus.indexSha256, embeddingModel: first.corpus.embeddingModel, indexUnchanged: true,
     coldStartMs, rssGrowthMb: Math.round((process.memoryUsage().rss - rssBefore) / 1048576),
     warmLatencyMs: { median: pct(latency, 0.5), p95: pct(latency, 0.95), max: pct(latency, 1) },

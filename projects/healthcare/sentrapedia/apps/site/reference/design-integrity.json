@@ -30,10 +30,6 @@
       "sha256": "3aab7a579cd28b743d6ee92f1e9548c9a6b876994f69c18b5b55fee05895da21"
     },
     {
-      "path": "assets/theme/img/sentrapedia-hero.webm",
-      "sha256": "5f8295df5d536578442ab0ebe0f8954230fd1348fe83025fcceec95d90fbc30e"
-    },
-    {
       "path": "assets/theme/img/sentrapedia-wordmark-compact.svg",
       "sha256": "e333f84fe525ee5f6b17d4cb31b886c1dde2fba2feaa301f65c2dd776cd8609f"
     },

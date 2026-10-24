@@ -1,0 +1,204 @@
+{
+  "summary": {
+    "label": "targeted-optBE-gate-timeouts",
+    "measuredAt": "2026-10-23T07:51:49.439Z",
+    "cases": 2,
+    "ok": 2,
+    "latencyMs": {
+      "p50": 4514,
+      "p95": 4514,
+      "stages": {
+        "retrieve_dx": {
+          "p50": 84,
+          "p95": 84
+        },
+        "aadi_dx": {
+          "p50": 2802,
+          "p95": 2802
+        },
+        "retrieve_tx": {
+          "p50": 50,
+          "p95": 50
+        },
+        "aadi_tx": {
+          "p50": 1971,
+          "p95": 1971
+        },
+        "gate": {
+          "p50": 7,
+          "p95": 7
+        }
+      }
+    },
+    "icd10": {
+      "valid": 1,
+      "nameMatch": 1,
+      "correctTop1VsDraftGold": 1
+    },
+    "dose": {
+      "written": 3,
+      "supportedByPassages": 3,
+      "supportedRate": 1,
+      "displayed": 3,
+      "verified": 3,
+      "doseRemoved": 0,
+      "removed": 0
+    },
+    "retrievalSuccess": null,
+    "costUsd": 0.0103,
+    "rateLimitRetries": 0
+  },
+  "rows": [
+    {
+      "id": "abbreviations-04",
+      "ok": true,
+      "ms": 4232,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "80e1017b-7e57-4d68-af6b-5c3c3382014a",
+          "stage": "retrieve_dx",
+          "ms": 84,
+          "ok": true
+        },
+        {
+          "traceId": "80e1017b-7e57-4d68-af6b-5c3c3382014a",
+          "stage": "aadi_dx",
+          "ms": 2802,
+          "ok": true
+        },
+        {
+          "traceId": "80e1017b-7e57-4d68-af6b-5c3c3382014a",
+          "stage": "retrieve_tx",
+          "ms": 50,
+          "ok": true
+        },
+        {
+          "traceId": "80e1017b-7e57-4d68-af6b-5c3c3382014a",
+          "stage": "aadi_tx",
+          "ms": 1252,
+          "ok": true
+        },
+        {
+          "traceId": "80e1017b-7e57-4d68-af6b-5c3c3382014a",
+          "stage": "gate",
+          "ms": 7,
+          "ok": true
+        }
+      ],
+      "icd10": "H66.0",
+      "diagnosis": "Acute suppurative otitis media",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 2,
+      "dosesWritten": 2,
+      "dosesSupported": 2,
+      "verified": 2,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 2,
+      "costUsd": 0.00528,
+      "verifiedEvidence": [
+        {
+          "drug": "Amoxicillin",
+          "dose": "3x10mg/kg",
+          "passages": [
+            {
+              "id": "4360f9fd-5164-8d84-eb0a-28c0b3bba0f3",
+              "title": "Otitis Media Akut (OMA)",
+              "text": "# Otitis Media Akut (OMA) [Permenkes 5/2014 (hal. 176)] Penatalaksanaan a. Asupan gizi yang baik untuk meningkatkan daya tahan tubuh b. Pemberian farmakoterapi dengani: 1. Topikal • Pada stadium oklusi, tujuan terapi dikhususkan untuk membuka kembali tuba eustachius. Obat tetes hidung HCl efedrin 0,5% (atau oksimetazolin 0,025%) diberikan dalam larutan fisiologik untuk anak kurang dari 12 tahun dan HCl efedrin 1% (atau oksimetazolin 0,05%) dalam larutan fisiologik untuk anak yang berumur lebih dari 12 tahun atau dewasa. • Pada stadium perforasi, diberikan obat cuci telinga H2O2 3% selama 3-5 h"
+            }
+          ]
+        },
+        {
+          "drug": "Paracetamol",
+          "dose": "3x15mg/kg",
+          "passages": [
+            {
+              "id": "33fb1a92-a1ee-406c-4f9d-a54ea4983ce9",
+              "title": "Otitis Media Akut (OMA)",
+              "text": "# Otitis Media Akut (OMA) ## Dosis - obat: tetes mata Tetrakain-HCl; dosis: 2%; rute: topikal; konteks: stadium oklusi tuba (teks sumber tampak salah tempel); sumber: PPK FKTP (IDI2017); halaman: 165; kutipan: Berikan tetes mata Tetrakain-HCl 2% sebanyak 1-2 tetes pada mata yang terkena benda asing. - obat: H2O2; dosis: 3%; frekuensi: 3 kali sehari, 4 tetes; rute: topikal; konteks: stadium perforasi, obat cuci telinga; sumber: PPK FKTP (IDI2017); halaman: 165; kutipan: cuci telinga: H2O2 3%, 3 kali sehari, 4 tetes di telinga yang sakit, didiamkan selama 2-5 menit. - obat: Asam asetat; dosis: 2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "typos-02",
+      "ok": true,
+      "ms": 4514,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "88becf3c-b27e-4fdb-a755-45a9f86f4023",
+          "stage": "retrieve_dx",
+          "ms": 79,
+          "ok": true
+        },
+        {
+          "traceId": "88becf3c-b27e-4fdb-a755-45a9f86f4023",
+          "stage": "aadi_dx",
+          "ms": 2400,
+          "ok": true
+        },
+        {
+          "traceId": "88becf3c-b27e-4fdb-a755-45a9f86f4023",
+          "stage": "retrieve_tx",
+          "ms": 46,
+          "ok": true
+        },
+        {
+          "traceId": "88becf3c-b27e-4fdb-a755-45a9f86f4023",
+          "stage": "aadi_tx",
+          "ms": 1971,
+          "ok": true
+        },
+        {
+          "traceId": "88becf3c-b27e-4fdb-a755-45a9f86f4023",
+          "stage": "gate",
+          "ms": 5,
+          "ok": true
+        }
+      ],
+      "icd10": "I10",
+      "diagnosis": "Essential (primary) hypertension",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 1,
+      "dosesWritten": 1,
+      "dosesSupported": 1,
+      "verified": 1,
+      "doseRemoved": 0,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.005043,
+      "verifiedEvidence": [
+        {
+          "drug": "Amlodipine",
+          "dose": "1x5mg",
+          "passages": [
+            {
+              "id": "909baf44-0365-e28e-09d2-62c0b4aba086",
+              "title": "Hipertensi Esensial",
+              "text": "# Hipertensi Esensial Alias: Hipertensi Dewasa; darah tinggi; tensi tinggi; hipertensi ICD-10: I10 Kompetensi: SKDI 4A (KMK 1186/2022) ## Definisi Hipertensi esensial merupakan hipertensi yang tidak diketahui penyababnya. Hipertensi menjadi masalah karena meningkatnya prevalensi, masih banyak pasien yang belum mendapat pengobatan, maupun yang telah mendapat terapi tetapi target tekanan darah belum tercapai serta adanya penyakit penyerta dan komplikasi yang dapat meningkatkan morbiditas dan mortalitas. ## Gejala - Umumnya ASIMPTOMATIK (silent killer) - Sakit kepala (terutama pagi hari) - Pusing"
+            },
+            {
+              "id": "7197a012-6eb6-ffb4-5aed-e1c99caa6889",
+              "title": "Hipertensi Esensial",
+              "text": "# Hipertensi Esensial penghambat kalsium (diltiazem extended release 1x180-420 mg/hari, amlodipin 1x2,5-10 mg/hari, atau nifedipin long acting 30-60 mg/hari) atau kombinasi. 2. Hipertensi stage-2. 3. Bila target terapi tidak tercapai setelah observasi selama 2 minggu, dapat diberikan kombinasi 2 obat, biasanya golongan diuretik, tiazid dan penghambat ACE atau antagonis reseptor AII (losartan 1-2 x 25- 100 mg/hari) atau penyekat reseptor beta atau penghambat kalsium. 4. Pemilihan anti hipertensi didasarkan ada tidaknya kontraindikasi dari masing-masing antihipertensi diatas.Sebaiknya pilih obat"
+            },
+            {
+              "id": "f00c735e-cfae-f97a-9a5f-7ecfcd934c99",
+              "title": "Hipertensi Esensial",
+              "text": "# Hipertensi Esensial - obat: natrium; dosis: 5 g; sumber: Permenkes 5/2014 PPK (ekstraksi otomatis dari naskah); halaman: 203; kutipan: intake natrium (2.0 g natrium atau 6 5 g natrium - obat: hipertensi; dosis: 12.5-50 mg; sumber: Permenkes 5/2014 PPK (ekstraksi otomatis dari naskah); halaman: 203; kutipan: Hipertensi stage-1 dapat diberikan diuretik (HCT 12.5-50 mg/hari, - obat: furosemid; dosis: 20-80 mg; frekuensi: 2x; sumber: Permenkes 5/2014 PPK (ekstraksi otomatis dari naskah); halaman: 203; kutipan: furosemid 2x20-80 mg/hari), atau pemberian penghambat ACE - obat: captopril; dosis: 25"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

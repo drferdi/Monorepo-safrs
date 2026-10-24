@@ -1,4 +1,5 @@
-const RECIPIENT = 'drferdiiskandar@sentrahai.com';
+// Inbox for contact messages; CONTACT_RECIPIENT overrides the public address in the deployment's environment.
+const DEFAULT_RECIPIENT = 'info@sentrapedia.com';
 const MAX_BODY_BYTES = 4096;
 const WINDOW_MS = 15 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
@@ -31,7 +32,7 @@ export function validateContact(body) {
   return { name, email, company, phone, message };
 }
 
-export async function sendContactViaResend(contact, { apiKey, from, fetchEmail = fetch } = {}) {
+export async function sendContactViaResend(contact, { apiKey, from, recipient = DEFAULT_RECIPIENT, fetchEmail = fetch } = {}) {
   if (!apiKey || !from || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(from)) return null;
   const body = [
     `Nama: ${contact.name}`,
@@ -49,7 +50,7 @@ export async function sendContactViaResend(contact, { apiKey, from, fetchEmail =
     },
     body: JSON.stringify({
       from: `Sentrapedia <${from}>`,
-      to: [RECIPIENT],
+      to: [recipient],
       subject: 'Pertanyaan umum Sentrapedia',
       text: body
     }),
@@ -64,6 +65,7 @@ export function createContactHandler({
   apiKey = process.env.RESEND_API_KEY,
   from = process.env.RESEND_FROM_EMAIL,
   publicOrigin = process.env.CONTACT_PUBLIC_ORIGIN,
+  recipient = process.env.CONTACT_RECIPIENT || DEFAULT_RECIPIENT,
   fetchEmail = fetch,
   now = Date.now
 } = {}) {
@@ -78,7 +80,9 @@ export function createContactHandler({
       json(res, 415, { status: 'invalid', message: 'Format formulir tidak didukung.' });
       return;
     }
-    // Behind a proxy (Vercel) the socket is the proxy; the first forwarded address is the visitor.
+    // Behind a proxy (Vercel) the socket is the proxy; the first forwarded address is the visitor. Vercel overwrites
+    // x-forwarded-for, so a visitor cannot set it (vercel.com/docs/headers/request-headers, checked 2026-10-19); the
+    // local server listens on loopback only and takes the header as sent.
     const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
     const recent = (attempts.get(ip) || []).filter(time => now() - time < WINDOW_MS);
     if (recent.length >= MAX_ATTEMPTS) {
@@ -114,7 +118,7 @@ export function createContactHandler({
       return;
     }
     try {
-      const id = await sendContactViaResend(contact, { apiKey, from, fetchEmail });
+      const id = await sendContactViaResend(contact, { apiKey, from, recipient, fetchEmail });
       if (!id) throw new Error('resend-rejected');
       json(res, 202, { status: 'accepted' });
     } catch {

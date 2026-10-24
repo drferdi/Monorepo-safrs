@@ -19,22 +19,22 @@ Status: draft for Gaffer's review · 2026-10-11 · branch `feat/sentrapedia-dify
   evaluation set.
 
 Assumptions (not stated by Gaffer): the gate is deterministic code, not a second model; "streaming"
-means the existing single-JSON response of `/api/mira` (it does not stream today; only the Vera/Dify
+means the existing single-JSON response of `/api/aadi` (it does not stream today; only the Vera/Dify
 widget streams, and it is untouched).
 
 ## Flow
 
 Today: gateway → one `/v1/diagnosis/step` call; diagnosis, workup and therapy run in parallel in
-MIRA on one complaint-based grounding bundle.
+AADI on one complaint-based grounding bundle.
 
-Option A (flag `MIRA_TARGETED_THERAPY=true`, default on once evaluation passes):
+Option A (flag `AADI_TARGETED_THERAPY=true`, default on once evaluation passes):
 
 | # | Stage | Where | Timeout | On failure |
 |---|---|---|---|---|
 | 1 | `retrieve_dx`: complaint grounding (current retriever) | Next.js | 5 s | current behaviour (analysis refused, error shown) |
-| 2 | `mira_dx`: `/v1/diagnosis/step` with `omitTherapy: true` | MIRA | engine step deadline (20 s) | current behaviour |
+| 2 | `aadi_dx`: `/v1/diagnosis/step` with `omitTherapy: true` | AADI | engine step deadline (20 s) | current behaviour |
 | 3 | `retrieve_tx`: targeted retrieval for `differential.likely[0]` + patient context | Next.js | 5 s | no therapy call; diagnosis returned; therapy absent with reason |
-| 4 | `mira_tx`: new `/v1/therapy/step` for that diagnosis with the targeted bundle | MIRA | engine step deadline (20 s) | diagnosis returned; therapy absent with reason |
+| 4 | `aadi_tx`: new `/v1/therapy/step` for that diagnosis with the targeted bundle | AADI | engine step deadline (20 s) | diagnosis returned; therapy absent with reason |
 | 5 | `gate`: clinical evidence gate | Next.js | — (pure function) | therapy absent with reason |
 
 The gateway's overall timeout becomes `2 × stepDeadlineS + gatewayMarginS` when the flag is on
@@ -42,7 +42,7 @@ The gateway's overall timeout becomes `2 × stepDeadlineS + gatewayMarginS` when
 (same prompt, same parallel race, same postchecks); only therapy moves behind them.
 
 Flag off: the current path, unchanged, except that the gate (stage 5) also runs on its therapy,
-so no path shows an unverified dose. If the flag is on but MIRA does not advertise the capability
+so no path shows an unverified dose. If the flag is on but AADI does not advertise the capability
 `theoracle-targeted-therapy-v1`, the gateway uses the current path and logs it.
 
 ## Components
@@ -53,7 +53,7 @@ so no path shows an unverified dose. If the flag is on but MIRA does not adverti
    current medications`. Selection over the whole corpus: up to 4 best passages that state a drug
    amount (same `DOSE` regex as `8e1d5604`), then up to 2 best other passages, at most 2 per
    document, same privacy filter. Same bundle type and validator (max 6), so no new contract shape.
-2. **MIRA therapy step** (`mira/service`): request schema gains optional `omitTherapy` (step) and a
+2. **AADI therapy step** (`aadi/service`): request schema gains optional `omitTherapy` (step) and a
    new `/v1/therapy/step` request `{contractVersion, traceId, case, diagnosis: {icd10, label},
    grounding}` → response `{contractVersion, status, therapy, meta}` using the existing therapy
    schema, prompt rules (`FAST_THERAPY_RULES`, targeted at the given diagnosis) and race. Grounding is
@@ -73,12 +73,12 @@ so no path shows an unverified dose. If the flag is on but MIRA does not adverti
    - References: each verified dose records the `evidenceId` of the passage that verified it.
    - Retrieval failed or bundle empty → no therapy call (stage 4 skipped), so no dose can come from
      memory.
-4. **Gateway** (`src/lib/mira/gateway.ts`): orchestrates stages 1–5, per-stage timeout through the
+4. **Gateway** (`src/lib/aadi/gateway.ts`): orchestrates stages 1–5, per-stage timeout through the
    existing `AbortController`, one log line per stage: `{traceId, stage, ms, ok, code}` (no case
    text). Response keeps `{result, traceId, createdAt, grounding}` and adds optional
    `therapyGrounding` and `evidenceGate` (per drug: `verified | doseRemoved | removed`, evidenceIds,
-   reason). Cost check per MIRA call against `stepBudgetUsd`; a case costs at most 2 × budget.
-5. **Client and UI** (`src/lib/mira/client.ts`, `presentation.ts`): accept the optional fields,
+   reason). Cost check per AADI call against `stepBudgetUsd`; a case costs at most 2 × budget.
+5. **Client and UI** (`src/lib/aadi/client.ts`, `presentation.ts`): accept the optional fields,
    render "dosis: cek pedoman" for an empty dose, mark unverified contraindications, list therapy
    references under "Referensi TheOracle". Saved drafts without the new fields render as today.
 
@@ -94,7 +94,7 @@ documents; gold labels draft).
     gold document title.
   - Retrieval latency p50/p95.
   - Gate unit tests with fixture passages.
-- **Paid (live MIRA via OpenRouter, needs Gaffer's approval)**: the 61 gold queries as chief
+- **Paid (live AADI via OpenRouter, needs Gaffer's approval)**: the 61 gold queries as chief
   complaints, flag off vs on.
   - Latency p50/p95, end to end and per stage.
   - ICD-10: share of codes that are valid WHO codes whose official name matches the label; plus

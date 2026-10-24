@@ -1,7 +1,7 @@
 {
   "measuredAt": "2026-10-11T14:44:22.999Z",
   "node": "v24.21.0",
-  "scope": "Actual TheOracle retrieval (local CPU query embedding + cosine search + caps); excludes MIRA model inference and HTTP latency",
+  "scope": "Actual TheOracle retrieval (local CPU query embedding + cosine search + caps); excludes AADI model inference and HTTP latency",
   "indexSha256": "05a4f38ba100a0c589c4ff44249e6e4db3c4e2d26ea4f20f77a67d95b4b492c0",
   "embeddingModel": {
     "id": "onnx-community/embeddinggemma-300m-ONNX",

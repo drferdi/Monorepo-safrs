@@ -6,7 +6,7 @@ const aliases: Record<string, NoteField> = {
   "hpi": "history", "history of present illness": "history", "history": "history", "riwayat penyakit sekarang": "history", "anamnesis": "history", "interval history": "history",
   "background": "background", "pmh": "background", "past medical history": "background", "riwayat": "background", "riwayat penyakit dahulu": "background", "latar belakang": "background",
   "medications": "medications", "medicines": "medications", "obat": "medications", "allergies": "allergies", "allergy": "allergies", "alergi": "allergies",
-  "examination": "examination", "exam": "examination", "pe": "examination", "objective": "examination", "pemeriksaan": "examination", "pemeriksaan fisik": "examination",
+  "examination": "examination", "exam": "examination", "pe": "examination", "objective": "examination", "pemeriksaan": "examination", "pemeriksaan fisik": "examination", "tanda vital": "examination",
   "assessment": "assessment", "assesment": "assessment", "asesmen": "assessment", "diagnosis": "assessment", "active conditions": "assessment", "problem list": "assessment",
   "plan": "plan", "management": "plan", "rencana": "plan", "tatalaksana": "plan", "recommendation": "plan", "rekomendasi": "plan", "advice": "plan", "education": "plan", "edukasi": "plan",
   "follow-up": "followup", "follow up": "followup", "followup": "followup", "tindak lanjut": "followup", "kontrol": "followup",

@@ -1,0 +1,114 @@
+#home-text .human-anatomy-column {
+    position: relative;
+    min-height: clamp(560px, 45vw, 700px);
+}
+
+#home-text .human-anatomy-column .section-subtitle {
+    position: relative;
+    z-index: 2;
+}
+
+#home-text .human-anatomy {
+    position: absolute;
+    top: 5rem;
+    left: 0;
+    width: 100%;
+    height: clamp(480px, 37vw, 600px);
+    pointer-events: none;
+}
+
+#home-text .human-anatomy img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center top;
+    opacity: .9;
+    transform-origin: center 55%;
+    animation: human-anatomy-breathe 7s ease-in-out infinite;
+    animation-play-state: paused;
+}
+
+#home-text .human-anatomy-pulse {
+    position: absolute;
+    top: 24%;
+    left: 52%;
+    width: 12px;
+    height: 12px;
+    border: 1px solid rgba(20, 172, 170, .7);
+    border-radius: 50%;
+    box-shadow: 0 0 0 5px rgba(20, 172, 170, .08);
+    opacity: .5;
+    animation: human-anatomy-pulse 3.5s ease-out infinite;
+    animation-play-state: paused;
+}
+
+#home-text .human-anatomy-column[data-motion="playing"] .human-anatomy img,
+#home-text .human-anatomy-column[data-motion="playing"] .human-anatomy-pulse {
+    animation-play-state: running;
+}
+
+#home-text .human-anatomy-toggle {
+    position: absolute;
+    z-index: 2;
+    top: 3.5rem;
+    left: 10px;
+    border: 0;
+    border-bottom: 1px solid #5bb9b2;
+    padding: 3px 0;
+    background: transparent;
+    color: #35615e;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+#home-text .human-anatomy-toggle:focus-visible {
+    outline: 2px solid #169c9a;
+    outline-offset: 4px;
+}
+
+@keyframes human-anatomy-breathe {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-5px) scale(1.012); }
+}
+
+@keyframes human-anatomy-pulse {
+    0%, 100% { opacity: .2; transform: scale(.7); }
+    45% { opacity: .75; transform: scale(1.2); }
+}
+
+@media (max-width: 991px) {
+    #home-text .human-anatomy-column {
+        min-height: 340px;
+    }
+
+    #home-text .human-anatomy {
+        top: 0;
+        left: 48%;
+        width: 52%;
+        height: 320px;
+    }
+}
+
+@media (max-width: 767px) {
+    #home-text .human-anatomy-column {
+        min-height: 285px;
+    }
+
+    #home-text .human-anatomy {
+        left: 50%;
+        width: 50%;
+        height: 270px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #home-text .human-anatomy img {
+        animation: none;
+    }
+
+    #home-text .human-anatomy-pulse {
+        animation: none;
+        opacity: .35;
+    }
+}

@@ -3,15 +3,18 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { emptyCase } from "../src/lib/mira/contract";
+import { emptyCase } from "../src/lib/aadi/contract";
 import { validTheOracleGrounding } from "../src/lib/theoracle-grounding-types";
 import {
   THEORACLE_GROUNDING_CAPABILITY,
   TheOracleGroundingError,
   retrieveTheOracleGrounding,
   retrieveTheOracleTherapyGrounding,
+  warmTheOracleGrounding,
   type TheOracleManifest,
 } from "../src/lib/theoracle-grounding";
+import parity from "./fixtures/pii-parity.json";
+import { withIndex } from "./private-data";
 
 const scratch: string[] = [];
 const sha256 = (data: string | Uint8Array) => createHash("sha256").update(data).digest("hex");
@@ -71,10 +74,17 @@ describe("TheOracle vector grounding", () => {
     expect(Object.isFrozen(bundle) && Object.isFrozen(bundle.evidence) && Object.isFrozen(bundle.evidence[0].source) && Object.isFrozen(bundle.corpus.embeddingModel)).toBe(true);
   });
 
-  it("keeps at most two passages per document and skips sources that trip the MIRA privacy guard", async () => {
+  it("keeps at most two passages per document and skips sources that trip the AADI privacy guard", async () => {
     const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: fakeEmbedder([]) });
     expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1", "D1"]);
     expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("keeps exactly the parity passages the engine accepts: DOIs are not identifiers", async () => {
+    // aadi/service/tests/test_step_api.py posts the same rows to the engine.
+    const rows = parity.evidence.map((row, index) => chunk(`E${index}`, `Doc${index}.md`, row.text, [1, index / 100, 0]));
+    const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(false, rows), embedder: fakeEmbedder([]) });
+    expect(bundle.evidence.map(item => item.text)).toEqual(parity.evidence.filter(row => row.kept).map(row => row.text));
   });
 
   it("adds the best treatment passage that states a dose, from any guideline, in place of the lowest-ranked match", async () => {
@@ -85,6 +95,20 @@ describe("TheOracle vector grounding", () => {
     expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "B1", "D1"]);
     expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3, 4]);
     expect((await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: therapyEmbedder, limit: 3 })).evidence.map(item => item.evidenceId)).toEqual(["A1", "A2", "D1"]);
+  });
+
+  it("keeps the two-per-document cap: the dose passage takes its document's lower match and the next match moves up", async () => {
+    const rows = [
+      chunk("A1", "Doc A.md", "Batuk pada pneumonia.", [1, 0, 0]),
+      chunk("A2", "Doc A.md", "Demam pada pneumonia.", [0.95, 0.05, 0]),
+      chunk("B1", "Doc B.md", "Batuk lama.", [0.9, 0.1, 0]),
+      chunk("A3", "Doc A.md", "Amoksisilin 3 x 500 mg.", [0, 0, 1]),
+      chunk("D1", "Doc D.md", "Penatalaksanaan: amoksisilin 500 mg.", [0, 0.3, 1]),
+    ];
+    const therapyEmbedder = async () => async (text: string) => Float32Array.from(text.endsWith("dosis obat") ? [0, 0, 1] : [1, 0, 0]);
+    const bundle = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(false, rows), embedder: therapyEmbedder, limit: 3 });
+    expect(bundle.evidence.map(item => item.evidenceId)).toEqual(["A1", "B1", "A3"]);
+    expect(bundle.evidence.map(item => item.retrievalRank)).toEqual([1, 2, 3]);
   });
 
   it("retrieves therapy for a diagnosis: dose passages first, then others, with patient context in the query", async () => {
@@ -127,6 +151,16 @@ describe("TheOracle vector grounding", () => {
     await expect(retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(true), embedder: fakeEmbedder([]) })).rejects.toMatchObject({ code: "THEORACLE_UNAVAILABLE" });
   });
 
+  it("refuses a manifest without the fields retrieval reads, before embedding", async () => {
+    const calls: string[] = [];
+    const indexDir = fixtureIndex();
+    const manifest = JSON.parse(readFileSync(path.join(indexDir, "manifest.json"), "utf8"));
+    delete manifest.prefixes.query;
+    writeFileSync(path.join(indexDir, "manifest.json"), JSON.stringify(manifest));
+    await expect(retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder: fakeEmbedder(calls) })).rejects.toMatchObject({ code: "THEORACLE_UNAVAILABLE" });
+    expect(calls).toEqual([]);
+  });
+
   it("reports a local embedding failure as unavailable", async () => {
     const failing = async () => async (): Promise<Float32Array> => { throw new Error("onnx failure"); };
     const error: unknown = await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir: fixtureIndex(), embedder: failing }).catch((caught: unknown) => caught);
@@ -134,7 +168,29 @@ describe("TheOracle vector grounding", () => {
     expect(error).toMatchObject({ code: "THEORACLE_UNAVAILABLE" });
   });
 
-  it("answers from the real TheOracle index with the pinned local model without modifying it", async () => {
+  it("warms the index and model once, so the first case and its therapy step reuse them", async () => {
+    let loads = 0;
+    const calls: string[] = [];
+    const embedder = async () => { loads++; return async (text: string) => { calls.push(text); return Float32Array.from([1, 0, 0]); }; };
+    const indexDir = fixtureIndex();
+    await warmTheOracleGrounding({ indexDir, embedder });
+    expect(loads).toBe(1);
+    expect(calls).toEqual(["task: search result | query: demam"]);
+    await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder });
+    await retrieveTheOracleTherapyGrounding(caseFor("batuk"), { icd10: "J18.9", label: "Pneumonia" }, { indexDir, embedder });
+    expect(loads).toBe(1);
+  });
+
+  it("keeps a failed warm-up quiet and lets the first case load again", async () => {
+    let attempts = 0;
+    const embedder = async () => { if (attempts++ === 0) throw new Error("model load failure"); return async () => Float32Array.from([1, 0, 0]); };
+    const indexDir = fixtureIndex();
+    await expect(warmTheOracleGrounding({ indexDir, embedder })).resolves.toBeUndefined();
+    expect((await retrieveTheOracleGrounding(caseFor("batuk"), { indexDir, embedder })).evidence.length).toBeGreaterThan(0);
+    expect(attempts).toBe(2);
+  });
+
+  it.skipIf(!withIndex)("answers from the real TheOracle index with the pinned local model without modifying it", async () => {
     const indexDir = path.join(process.cwd(), "theoracle", "index");
     const before = sha256(readFileSync(path.join(indexDir, "vectors.f32")));
     const manifest = JSON.parse(readFileSync(path.join(indexDir, "manifest.json"), "utf8")) as TheOracleManifest;

@@ -124,6 +124,17 @@ footer .second-row a:hover,
     color: #c6d5d1;
 }
 
+/* Footer: the three legal pages sit between the copyright and the company line. */
+footer .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+}
+
+footer .footer-legal a {
+    text-decoration: none;
+}
+
 footer input:not([type=checkbox]) {
     border-bottom-color: var(--sp-border);
 }
@@ -281,4 +292,83 @@ footer .sentrapedia-contact-form input[type=submit]:disabled {
     footer .sentrapedia-contact-form input[type=submit],
     footer .contact-status { transition: none; }
     footer .sentrapedia-contact-form input[type=submit]:hover { transform: none; }
+}
+
+/* Logo middle: the meaning under the big wordmark. The SVG (1380x650) carries 229px of whitespace above and
+   below its artwork, which kept the sticky block low and let the next section cover the lines at once. The
+   art box crops the SVG to its artwork band (y 195-455 of 650), so the pinned block starts at the artwork;
+   the lines sit on the artwork's own axis (centred at 47.5%). Block flow on purpose. */
+#logo-middle .logo-middle-lockup {
+    width: fit-content;
+    max-width: 100%;
+    text-align: center;
+}
+
+#logo-middle .logo-middle-art {
+    overflow: hidden;
+    aspect-ratio: 1380 / 260;
+}
+
+#logo-middle .logo-middle-art img {
+    display: block;
+    width: 100%;
+    margin-top: -14.13%;
+}
+
+#logo-middle .logo-middle-claim,
+#logo-middle .logo-middle-origin {
+    position: relative;
+    left: -2.5%;
+    max-width: 36ch;
+    margin: 0 auto;
+    letter-spacing: -.01em;
+    line-height: 1.45;
+}
+
+#logo-middle .logo-middle-claim {
+    margin-top: calc(5% + .25rem);
+    color: var(--sp-ink);
+    font-size: clamp(1.05rem, 1.7vw, 1.5rem);
+    font-weight: 500;
+}
+
+#logo-middle .logo-middle-origin {
+    margin-top: .9em;
+    color: var(--sp-muted);
+    font-size: clamp(.95rem, 1.3vw, 1.125rem);
+}
+
+#logo-middle .logo-middle-origin a {
+    color: var(--sp-action);
+    text-decoration: underline;
+    text-underline-offset: .18em;
+}
+
+#logo-middle .logo-middle-origin a:hover {
+    color: var(--sp-ink);
+}
+
+#logo-middle .logo-middle-origin a:focus-visible {
+    outline: 3px solid var(--sp-focus);
+    outline-offset: 3px;
+}
+
+/* Keep the relocated promo unframed beneath the wordmark, including at its film anchor. */
+.home-page #logo-middle #product-film {
+    width: min(100%, 780px);
+    margin: clamp(1.25rem, 3vh, 2.5rem) auto 0;
+    padding: 0;
+    scroll-margin-top: 110px;
+    border: 0;
+    background: transparent;
+}
+
+#logo-middle #product-film::before { content: none; }
+
+#logo-middle .product-film-video {
+    background: transparent;
+}
+
+#logo-middle #product-film + .logo-middle-claim {
+    margin-top: clamp(1.25rem, 3vh, 2rem);
 }

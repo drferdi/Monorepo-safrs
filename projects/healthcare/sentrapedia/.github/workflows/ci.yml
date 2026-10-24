@@ -1,0 +1,114 @@
+# Capsule CI (tech-debt row 16). It runs in the standalone drferdi/Sentrapedia repository;
+# the monorepo CI does not touch projects/ by design. No step calls a paid model or needs a secret.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # A push to main is never cancelled, so every merged commit gets its image (the beta server pulls it by SHA).
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      # LFS holds the TheOracle vectors that the grounding tests read, the site PNGs and the video and WebP media.
+      # Objects come from a cache keyed on the LFS file list; on a miss the nearest older cache is restored,
+      # so a run downloads only what changed. A file still a pointer after the pull fails the run.
+      - uses: actions/checkout@v7
+        with:
+          lfs: false
+      - run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+      - uses: actions/cache@v6
+        with:
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-assets-id') }}
+          restore-keys: lfs-
+      - run: git lfs pull
+      - run: '! git lfs ls-files | grep -q " - "'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      # Matches python3 in the Dockerfile's bookworm image; postinstall builds the AADI venv with it.
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      # postinstall downloads the pinned 1.2 GB embedding model and skips files whose hash already matches.
+      - uses: actions/cache@v6
+        with:
+          path: theoracle/model
+          key: theoracle-model-${{ hashFiles('scripts/theoracle-model.mjs') }}
+      - run: npm ci
+      # Runtime dependencies only; .npmrc keeps audit=false so local installs stay quiet.
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run lint
+      # The ruff version is pinned because its default rules change between releases (aadi/ruff.toml).
+      - run: pipx run ruff==0.17.1 check aadi
+      - run: npm run typecheck
+      - run: npm run test:all
+      - run: npm run site:verify
+      - run: npm run site:docs
+      - run: npm run build
+      - run: npm run deploy:dry-run
+  # Builds the image; the launcher's provider preflight needs a real GEMINI_API_KEY, which CI never holds, so it is not
+  # run. A push to main of this private repository also publishes the image to private GHCR for the beta server
+  # (deploy/beta/update.sh pulls it by SHA). The public code mirror never publishes.
+  docker:
+    needs: check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ghcr.io/${{ github.repository_owner }}/sentrapedia-beta
+      PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.repository.private }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          lfs: false
+      - run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
+      - uses: actions/cache@v6
+        with:
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-assets-id') }}
+          restore-keys: lfs-
+      - run: git lfs pull
+      - run: '! git lfs ls-files | grep -q " - "'
+      - uses: docker/setup-buildx-action@v4
+      - if: env.PUBLISH == 'true'
+        run: echo "$GITHUB_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: ${{ env.PUBLISH == 'true' }}
+          tags: |
+            ${{ env.IMAGE }}:sha-${{ github.sha }}
+            ${{ env.IMAGE }}:main
+          labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+          # One manifest per push, so the retention step below counts images, not attestations.
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      # Retention: keep the five newest images (rollback range), so private storage stays small.
+      - if: env.PUBLISH == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          versions="/users/${{ github.repository_owner }}/packages/container/sentrapedia-beta/versions"
+          gh api --paginate "$versions" --jq '.[] | "\(.created_at) \(.id)"' | sort -r | tail -n +6 | cut -d' ' -f2 \
+            | xargs -r -I{} gh api -X DELETE "$versions/{}"

@@ -9,7 +9,7 @@ const config: NextConfig = {
   // libvips libraries, neither of which tracing follows; ship both for the platform that builds
   // (Linux x64 in Docker).
   outputFileTracingIncludes: {
-    "/api/mira": [
+    "/api/aadi": [
       "./node_modules/onnxruntime-node/package.json",
       "./node_modules/onnxruntime-node/dist/**",
       `./node_modules/onnxruntime-node/bin/napi-v6/${process.platform}/${process.arch}/**`,

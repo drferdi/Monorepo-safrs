@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { initialWorkspace, newEncounter, workspaceReducer, restoreWorkspace } from "../src/lib/workspace";
-import { createDraft, modes } from "../src/lib/drafts";
+import { initialWorkspace, loadWorkspace, newEncounter, parseWorkspace, workspaceReducer } from "../src/lib/workspace";
+import { createDraft, draftLanguages, draftModels, modes } from "../src/lib/drafts";
 import { greeting } from "../src/lib/ui-labels";
 
 describe("workspace relationships", () => {
@@ -38,7 +38,7 @@ describe("local drafts", () => {
     expect(() => createDraft({ mode: "ddx", prompt: "  ", context: "", specialty: "Primary Care", model: "Standard", language: "English", instructions: "" })).toThrow("Tambahkan pertanyaan atau konteks Clinical terlebih dahulu.");
   });
   it("respects language and detailed model preferences", () => {
-    const result = createDraft({ mode: "hpi", prompt: "Keluhan contoh", context: "", specialty: "Internal Medicine", model: "Extended", language: "Bahasa Indonesia", instructions: "Ringkas" });
+    const result = createDraft({ mode: "question", prompt: "Keluhan contoh", context: "", specialty: "Internal Medicine", model: "Extended", language: "Bahasa Indonesia", instructions: "Ringkas" });
     expect(result).toContain("Belum tersedia");
     expect(result).toContain("Internal Medicine");
     expect(result).toContain("Ringkas");
@@ -65,13 +65,11 @@ describe("local drafts", () => {
   });
   it("names the clinic note's headings in Indonesian as Chief chose and keeps unfamiliar free text", () => {
     const result = createDraft({ mode: "clinic", prompt: "Keluhan: Keluhan contoh.\nAsesmen: Asesmen yang diberikan.\nRencana: Kontrol sesuai pembahasan.\nInformasi lain yang tidak berlabel.", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
-    expect(result).toContain("# Catatan Klinis\n");
-    expect(result).toContain("## Keluhan Utama\nKeluhan contoh.");
-    expect(result).toContain("## Riwayat Penyakit\n");
-    expect(result).toContain("## Riwayat Pengobatan / Alergi\n");
-    expect(result).toContain("## Pemeriksaan Fisik\n");
-    expect(result).toContain("## Assessment\nAsesmen yang diberikan.");
-    expect(result).toContain("## Tata Laksana\nKontrol sesuai pembahasan.");
+    expect(result).toContain("# CATATAN KLINIS\n");
+    expect(result).toContain("## 1. Keluhan Utama\n\nKeluhan contoh.\n");
+    expect(result).toMatch(/## \d\. Assessment\n\nAsesmen yang diberikan\.\n/);
+    expect(result).toMatch(/## \d\. Tata Laksana\n\nKontrol sesuai pembahasan\.\n/);
+    expect(result).toContain("**Belum diisi:**\n- Riwayat penyakit\n- Riwayat pengobatan dan alergi\n- Pemeriksaan fisik\n");
     expect(result).toContain("Informasi lain yang tidak berlabel.");
   });
 });
@@ -80,21 +78,39 @@ describe("storage validation", () => {
   it("defaults new workspaces to Indonesian without changing saved language choices", () => {
     expect(initialWorkspace.settings.language).toBe("Bahasa Indonesia");
     const saved = { ...initialWorkspace, settings: { ...initialWorkspace.settings, language: "English" } };
-    expect(restoreWorkspace(JSON.stringify(saved)).settings.language).toBe("English");
+    expect(loadWorkspace(JSON.stringify(saved)).workspace.settings.language).toBe("English");
   });
   it("recovers from malformed JSON and rejects malformed nested records", () => {
-    expect(restoreWorkspace("{broken")).toEqual(initialWorkspace);
-    expect(restoreWorkspace(JSON.stringify({ ...initialWorkspace, encounters: [{ id: "x", messages: null }] }))).toEqual(initialWorkspace);
-    expect(restoreWorkspace(JSON.stringify({ ...initialWorkspace, settings: { model: "unknown" } }))).toEqual(initialWorkspace);
+    expect(loadWorkspace("{broken").workspace).toEqual(initialWorkspace);
+    expect(loadWorkspace(JSON.stringify({ ...initialWorkspace, encounters: [{ id: "x", messages: null }] })).workspace).toEqual(initialWorkspace);
+    expect(loadWorkspace(JSON.stringify({ ...initialWorkspace, settings: { model: "unknown" } })).workspace).toEqual(initialWorkspace);
+  });
+  it("keeps saved text it cannot read so the caller can back it up instead of losing it", () => {
+    expect(loadWorkspace(null)).toEqual({ workspace: initialWorkspace, unreadable: null });
+    const saved = JSON.stringify({ ...initialWorkspace, settings: { ...initialWorkspace.settings, language: "English" } });
+    expect(loadWorkspace(saved)).toEqual({ workspace: parseWorkspace(saved), unreadable: null });
+    const future = JSON.stringify({ ...initialWorkspace, version: 2 });
+    for (const raw of ["{broken", future]) expect(loadWorkspace(raw)).toEqual({ workspace: initialWorkspace, unreadable: raw });
   });
   it("round-trips a complete workspace", () => {
-    expect(restoreWorkspace(JSON.stringify(initialWorkspace))).toEqual(initialWorkspace);
+    expect(loadWorkspace(JSON.stringify(initialWorkspace)).workspace).toEqual(initialWorkspace);
+  });
+  it("accepts an exported backup for import and reports anything else as invalid", () => {
+    const backup = workspaceReducer(initialWorkspace, { type: "patient.add", patient: { id: "p-import", name: "Pasien Fiktif Impor", age: "40", sex: "Male", notes: "" } });
+    expect(parseWorkspace(JSON.stringify(backup, null, 2))).toEqual(loadWorkspace(JSON.stringify(backup)).workspace);
+    for (const raw of ["{broken", "[]", JSON.stringify({ ...backup, version: 2 }), JSON.stringify({ ...backup, patients: [{ id: 1 }] })]) expect(parseWorkspace(raw)).toBeNull();
+  });
+  it("accepts only the shared draft model and language values in saved settings", () => {
+    expect(draftModels).toEqual(["Standard", "Extended"]);
+    expect(draftLanguages).toEqual(["English", "Bahasa Indonesia"]);
+    for (const model of draftModels) for (const language of draftLanguages) expect(parseWorkspace(JSON.stringify({ ...initialWorkspace, settings: { ...initialWorkspace.settings, model, language } }))).not.toBeNull();
+    for (const settings of [{ model: "Detailed" }, { language: "Indonesian" }, { model: 1 }]) expect(parseWorkspace(JSON.stringify({ ...initialWorkspace, settings: { ...initialWorkspace.settings, ...settings } }))).toBeNull();
   });
   it("keeps a saved greeting name and drops one that is not text", () => {
     const named = { ...initialWorkspace, settings: { ...initialWorkspace.settings, name: "dr. Rani" } };
-    expect(restoreWorkspace(JSON.stringify(named)).settings.name).toBe("dr. Rani");
+    expect(loadWorkspace(JSON.stringify(named)).workspace.settings.name).toBe("dr. Rani");
     const wrong = { ...initialWorkspace, settings: { ...initialWorkspace.settings, name: 42 } };
-    expect(restoreWorkspace(JSON.stringify(wrong)).settings).toEqual(initialWorkspace.settings);
+    expect(loadWorkspace(JSON.stringify(wrong)).workspace.settings).toEqual(initialWorkspace.settings);
   });
 });
 

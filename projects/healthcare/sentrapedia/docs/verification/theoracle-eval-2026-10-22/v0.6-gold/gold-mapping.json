@@ -1,0 +1,10 @@
+{
+  "method": "Mechanical: each non-PDF gold name of ../eval-set.json (v0.5 names) is kept when it is a SSOT v0.6 entry name, otherwise replaced by the v0.6 entry whose nama or alias list contains it (case-insensitive).",
+  "ssotV06Sha256": "338316f510943a3cd71a7ff8feae8958f027851e77ca902acf5065afc793bdf4",
+  "kept": 53,
+  "mapped": {
+    "Hemoroid Eksterna dan Interna Derajat 1-2": "Hemoroid grade 1/2",
+    "Asma Bronkiale": "Asma Bronkial"
+  },
+  "unmapped": []
+}

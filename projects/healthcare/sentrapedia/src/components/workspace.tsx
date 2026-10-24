@@ -1,47 +1,51 @@
 "use client";
 
-import { ArrowDownToLine, ArrowRight, Check, ChevronDown, CircleAlert, CircleHelp, Menu, Maximize2, Minimize2, PanelRight, Command, ShieldCheck, Sparkles, Trash2, X } from "lucide-react";
-import { useCallback, useEffect, useReducer, useRef, useState, useSyncExternalStore } from "react";
-import { createDraft, type ModeId } from "../lib/drafts";
-import { initialWorkspace, newEncounter, newId, restoreWorkspace, storageKey, workspaceReducer, type Encounter, type Message, type Patient } from "../lib/workspace";
-import { intentGroups } from "../lib/studio";
+import { Check, CircleAlert, X } from "lucide-react";
+import { useCallback, useEffect, useReducer, useRef, useState, type ComponentProps } from "react";
+import { createDraft, modes, type ModeId } from "../lib/drafts";
+import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Patient } from "../lib/workspace";
+import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
+import { downloadName, intentGroups } from "../lib/studio";
 import { insertTemplate } from "../lib/clinical-templates";
+import { reviewedText } from "../lib/normal-exam";
+import { compactQuery, mobileQuery } from "../lib/layout";
 import { Composer } from "./composer";
 import { Dialog } from "./dialog";
-import { ContextForm, EncounterForm, ListForm, PatientForm, SearchDialog, SettingsForm } from "./forms";
-import { downloadText, MessageCard } from "./message-card";
+import { downloadText } from "./message-card";
 import { Sidebar, type DialogName } from "./sidebar";
 import { PixelLoader } from "./pixel-loader";
-import { Scribe } from "./scribe";
 import { ClinicalPanel } from "./clinical-panel";
 import { CommandPalette } from "./command-palette";
 import { TemplateLibrary } from "./template-library";
 import { WorkQueue } from "./work-queue";
-import { createPersonalDraft, freshReview, saveLocalWorkspace } from "../lib/workflow";
+import { createPersonalDraft } from "../lib/workflow";
 import { KnowledgeDialog } from "./knowledge-dialog";
-import { diagnosisContent, miraMessage } from "../lib/mira/presentation";
-import type { MiraAnalysis } from "../lib/mira/contract";
-import { composerCase, composerUsesMira, composerMiraMessages } from "../lib/mira/composer";
-import { requestMiraAnalysis } from "../lib/mira/client";
-import { ThinkingCard } from "./thinking-card";
+import { diagnosisContent, aadiMessage } from "../lib/aadi/presentation";
+import type { AadiAnalysis } from "../lib/aadi/contract";
+import { caseFieldKeys, composerCase, patientHints, composerUsesAadi, composerAadiMessages, emptyCaseFields, readCaseFields, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
+import { requestAadiAnalysis } from "../lib/aadi/client";
+import { missingMinimum } from "../lib/soap";
 import { smooth } from "./smooth";
-import { WorkspaceGreeting } from "./workspace-greeting";
+import { useMediaQuery, useToast, useWorkspacePersistence } from "./workspace-hooks";
+import { ChatComposer, Conversation, HomeFooter, HomeView, WorkspaceHeader } from "./workspace-views";
+import { WorkspaceDialogs } from "./workspace-forms";
 
-const subscribeMobile = (callback: () => void) => { const media = window.matchMedia("(max-width: 760px)"); media.addEventListener("change", callback); return () => media.removeEventListener("change", callback); };
-const getMobile = () => window.matchMedia("(max-width: 760px)").matches;
-const getServerMobile = () => false;
-const subscribeCompact = (callback: () => void) => { const media = window.matchMedia("(max-width: 1200px)"); media.addEventListener("change", callback); return () => media.removeEventListener("change", callback); };
-const getCompact = () => window.matchMedia("(max-width: 1200px)").matches;
+// What Enter will do after a next step: a local draft, or an AADI analysis of the prefilled text.
+function stepToast(mode: ModeId): string {
+  const label = modes.find((m) => m.id === mode)?.label;
+  if (mode === "referral") return "Draf surat rujukan siap di kolom. Lengkapi penerima dan permintaan, lalu tekan Enter.";
+  return composerUsesAadi(mode, false) ? `Mode ${label} siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.` : `Mode ${label} siap dengan data kasus. Lengkapi, lalu tekan Enter.`;
+}
 
 export function WorkspaceApp() {
   const [state, dispatch] = useReducer(workspaceReducer, initialWorkspace);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const mobile = useSyncExternalStore(subscribeMobile, getMobile, getServerMobile);
+  const mobile = useMediaQuery(mobileQuery);
   const [focusMode, setFocusMode] = useState(false);
   // The Clinical Cockpit starts closed; the header button opens it (Chief, 2026-10-09).
   const [panelOpen, setPanelOpen] = useState(false);
-  const compact = useSyncExternalStore(subscribeCompact, getCompact, getServerMobile);
+  const compact = useMediaQuery(compactQuery);
   const navigationOpen = !focusMode && (mobile ? mobileNavOpen : sidebarOpen);
   const toggleNavigation = useCallback(() => { if (mobile) setMobileNavOpen((v) => !v); else smooth(() => setSidebarOpen((v) => !v)); }, [mobile]);
   const [dialog, setDialog] = useState<DialogName>(null);
@@ -50,28 +54,24 @@ export function WorkspaceApp() {
   const [mode, setMode] = useState<ModeId>("question");
   const [templateKey, setTemplateKey] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // The analysis case strip: values read from the text refill as the text changes, until the doctor edits that field.
+  const [caseFields, setCaseFields] = useState<CaseFields>(emptyCaseFields);
+  const [manualFields, setManualFields] = useState<CaseFieldKey[]>([]);
+  const resetCaseFields = useCallback(() => { setCaseFields(emptyCaseFields()); setManualFields([]); }, []);
   const [analysisError, setAnalysisError] = useState("");
+  // Set when an analysis was held back for missing minimum data; the composer then names what is missing.
+  const [minimumBlocked, setMinimumBlocked] = useState(false);
   // The question being analysed: shown at once as the user's message, saved only with its answer.
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
   const pendingText = useRef<string | null>(null);
   const analysisController = useRef<AbortController | null>(null);
-  const [storageError, setStorageError] = useState("");
-  const [restoring, setRestoring] = useState(true);
-  const [toast, setToast] = useState("");
-  const [toastError, setToastError] = useState(false);
-  const [confirmClear, setConfirmClear] = useState(false);
-  const hydrated = useRef(false);
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const end = useRef<HTMLDivElement>(null);
-  const conversation = useRef<HTMLDivElement>(null);
-  const conversationInner = useRef<HTMLDivElement>(null);
-  const stickToBottom = useRef(true);
+  const { toast, toastError, notify, dismiss: dismissToast } = useToast();
+  const { storageError, unreadable, setUnreadable, restoring } = useWorkspacePersistence(state, dispatch, notify);
   const encounter = state.encounters.find((e) => e.id === state.activeEncounterId);
   const patient = state.patients.find((p) => p.id === encounter?.patientId);
   const hasMessages = Boolean(encounter?.messages.length) || pendingQuestion !== null;
   const context = encounter?.context ?? "";
   const intent = intentGroups.find((item) => item.modes.includes(mode))!;
-  const editedEncounter = state.encounters.find((e) => e.id === dialogId);
   const selectedTemplate = state.templates?.find((item) => `template:${item.id}` === templateKey);
   const cancelAnalysis = useCallback(() => {
     analysisController.current?.abort();
@@ -84,44 +84,54 @@ export function WorkspaceApp() {
   const changeMode = useCallback((next: ModeId) => { cancelAnalysis(); setMode(next); setTemplateKey(null); }, [cancelAnalysis]);
   function chooseTemplate(key: string) { cancelAnalysis(); if (key.startsWith("mode:")) changeMode(key.slice(5) as ModeId); else { const item = state.templates?.find((t) => `template:${t.id}` === key); if (!item) return; setMode(item.mode); setTemplateKey(key); } closeDialog(); }
 
-  const notify = useCallback((text: string, tone?: "error") => { if (toastTimer.current) clearTimeout(toastTimer.current); setToast(text); setToastError(tone === "error"); toastTimer.current = setTimeout(() => smooth(() => setToast("")), 4500); }, []);
-  useEffect(() => { try { dispatch({ type: "restore", state: restoreWorkspace(localStorage.getItem(storageKey)) }); } catch { queueMicrotask(() => notify("Penyimpanan browser tidak tersedia. Perubahan hanya bertahan selama sesi ini.", "error")); } finally { queueMicrotask(() => setRestoring(false)); } }, [notify]);
-  useEffect(() => { if (!hydrated.current) { hydrated.current = true; return; } const error = saveLocalWorkspace(state, (raw) => localStorage.setItem(storageKey, raw)); queueMicrotask(() => setStorageError(error ?? "")); }, [state]);
-  useEffect(() => () => { if (toastTimer.current) clearTimeout(toastTimer.current); }, []);
   useEffect(() => () => analysisController.current?.abort(), []);
-  useEffect(() => { stickToBottom.current = true; end.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" }); }, [encounter?.messages.length, pendingQuestion]);
-  // Like a chat: a growing answer keeps the view at the bottom unless the reader has scrolled up.
-  useEffect(() => {
-    const inner = conversationInner.current, box = conversation.current;
-    if (!inner || !box) return;
-    const observer = new ResizeObserver(() => { if (stickToBottom.current) box.scrollTop = box.scrollHeight; });
-    observer.observe(inner);
-    return () => observer.disconnect();
-  }, [hasMessages]);
-  useEffect(() => { const handler = (e: KeyboardEvent) => { if (dialog || (mobile && mobileNavOpen)) return; if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "j") { e.preventDefault(); setDialog("commands"); } if ((e.metaKey || e.ctrlKey) && e.key === "/") { e.preventDefault(); setDialog("search"); } if ((e.metaKey || e.ctrlKey) && e.key === "k") { e.preventDefault(); dispatch({ type: "encounter.select", id: null }); setPrompt(""); changeMode("question"); } }; window.addEventListener("keydown", handler); return () => window.removeEventListener("keydown", handler); }, [dialog, mobile, mobileNavOpen, changeMode]);
+  useEffect(() => { const handler = (e: KeyboardEvent) => { const shortcut = shortcutFor(e, Boolean(dialog) || (mobile && mobileNavOpen)); if (!shortcut) return; e.preventDefault(); if (shortcut === "new") { dispatch({ type: "encounter.select", id: null }); setPrompt(""); changeMode("question"); } else setDialog(shortcut); }; window.addEventListener("keydown", handler); return () => window.removeEventListener("keydown", handler); }, [dialog, mobile, mobileNavOpen, changeMode]);
 
   // One dialog replacing another cross-fades; a first dialog fades in through CSS.
   function openDialog(name: DialogName, id?: string) { if (analysisController.current) cancelAnalysis(); const open = () => { setDialog(name); setDialogId(id); }; if (dialog) smooth(open); else open(); }
-  function hideDialog() { setDialog(null); setDialogId(undefined); setConfirmClear(false); }
+  function hideDialog() { setDialog(null); setDialogId(undefined); }
   function closeDialog() { if (dialog) smooth(hideDialog); else hideDialog(); }
-  function selectEncounter(id: string) { dispatch({ type: "encounter.select", id }); setPrompt(""); changeMode("question"); if (mobile) setMobileNavOpen(false); closeDialog(); }
+  function selectEncounter(id: string) { dispatch({ type: "encounter.select", id }); setPrompt(""); resetCaseFields(); changeMode("question"); if (mobile) setMobileNavOpen(false); closeDialog(); }
   function startNew(patientId?: string) {
     if (patientId) dispatch({ type: "encounter.add", encounter: newEncounter(patientId) }); else dispatch({ type: "encounter.select", id: null });
-    setPrompt(""); changeMode("question"); if (mobile) setMobileNavOpen(false);
+    setPrompt(""); resetCaseFields(); changeMode("question"); if (mobile) setMobileNavOpen(false);
   }
   function savePatient(p: Patient) { const exists = state.patients.some((item) => item.id === p.id); dispatch({ type: exists ? "patient.edit" : "patient.add", patient: p }); if (!exists) { dispatch({ type: "encounter.add", encounter: newEncounter(p.id) }); setPrompt(""); } closeDialog(); notify(exists ? "Detail Pasien tersimpan." : "Pasien dibuat. Encounter pertama siap digunakan."); }
-  function updatePrompt(value: string) { setPrompt(value); setAnalysisError(""); }
+  function updatePrompt(value: string) {
+    setPrompt(value); setAnalysisError("");
+    const found = readCaseFields(value);
+    setCaseFields((fields) => { const next = { ...fields }; for (const key of caseFieldKeys) if (!manualFields.includes(key)) next[key] = found[key] ?? ""; return next; });
+  }
+  // A next step from a draft (design D4's referral letter, generalised by the Puskesmas flow): the composer in that mode
+  // with the case filled in; nothing is sent until the doctor presses Enter.
+  function startStep(next: ModeId, text: string) {
+    changeMode(next); updatePrompt(text);
+    requestAnimationFrame(() => { const box = document.querySelector<HTMLTextAreaElement>(".chat-composer textarea"); box?.focus(); box?.setSelectionRange(text.length, text.length); });
+    notify(stepToast(next));
+  }
+  // A failed analysis can still become the local SOAP note (Puskesmas flow, decision 3): offered next to "Coba lagi",
+  // never automatic; the draft's source records why AADI did not answer.
+  function fallbackDraft() {
+    if (!prompt.trim() || busy) return;
+    const reason = analysisError; setAnalysisError("");
+    generate(prompt, "clinic", false, true, reason);
+    // Like an answered analysis, the next case starts with an empty strip.
+    resetCaseFields();
+    notify("Draf SOAP lokal disusun tanpa analisis AADI. Lengkapi dan verifikasi oleh klinisi.");
+  }
+  function editCaseField(key: CaseFieldKey, value: string) { setCaseFields((fields) => ({ ...fields, [key]: value })); setManualFields((keys) => keys.includes(key) ? keys : [...keys, key]); }
   async function analyzeMain(text: string, selectedMode: ModeId, current: Encounter) {
     if (analysisController.current) return;
     const controller = new AbortController(); analysisController.current = controller;
-    setBusy(true); setAnalysisError(""); pendingText.current = text.trim(); setPendingQuestion(text.trim()); setPrompt("");
+    setBusy(true); setAnalysisError(""); setMinimumBlocked(false); pendingText.current = text.trim(); setPendingQuestion(text.trim()); setPrompt("");
     // The home composer gives way to the chat composer; keep typing where the reader is.
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".chat-composer textarea")?.focus());
     try {
-      const analysis = await requestMiraAnalysis(composerCase(text, current.context, patient), { synthetic: true, signal: controller.signal });
+      const analysis = await requestAadiAnalysis(composerCase(text, current.context, patient, caseFields), { synthetic: true, signal: controller.signal });
       if (controller.signal.aborted || analysisController.current !== controller) return;
       if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
-      dispatch({ type: "message.add", encounterId: current.id, messages: composerMiraMessages(analysis, text, selectedMode, state.reviewDefaults) });
+      dispatch({ type: "message.add", encounterId: current.id, messages: composerAadiMessages(analysis, text, selectedMode, state.reviewDefaults) });
+      resetCaseFields();
       dispatch({ type: "encounter.select", id: current.id });
     } catch (error) {
       if (!controller.signal.aborted) { setAnalysisError(error instanceof Error ? error.message : "Analisis belum tersedia. Keluhan tetap tersedia."); setPrompt(text); }
@@ -129,59 +139,65 @@ export function WorkspaceApp() {
       if (analysisController.current === controller) { analysisController.current = null; setBusy(false); setPendingQuestion(null); pendingText.current = null; }
     }
   }
-  function generate(text = prompt, selectedMode = mode, useTemplate = true) {
+  function generate(text = prompt, selectedMode = mode, useTemplate = true, local = false, fallback?: string) {
     if (busy || analysisController.current || !text.trim()) return;
     const current: Encounter = encounter ?? newEncounter();
     let content: string;
     const personal = useTemplate && selectedTemplate?.mode === selectedMode ? selectedTemplate : undefined;
-    if (composerUsesMira(selectedMode, !!personal)) { void analyzeMain(text, selectedMode, current); return; }
-    try { content = personal ? createPersonalDraft(personal, text, current.context) : createDraft({ mode: selectedMode, prompt: text, context: current.context, ...state.settings, patient }); } catch (error) { notify(error instanceof Error ? error.message : "Draf tidak dapat diformat.", "error"); return; }
+    if (!local && composerUsesAadi(selectedMode, !!personal)) {
+      if (missingMinimum(text, caseFields, patientHints(patient), selectedMode).length) { setMinimumBlocked(true); return; }
+      void analyzeMain(text, selectedMode, current); return;
+    }
+    try { content = personal ? createPersonalDraft(personal, text, current.context) : createDraft({ mode: selectedMode, prompt: text, context: current.context, ...state.settings, patient, caseFields: readCaseFields(text) }); } catch (error) { notify(error instanceof Error ? error.message : "Draf tidak dapat diformat.", "error"); return; }
     setBusy(true);
     if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
-    const messages: Message[] = [{ id: newId(), role: "user", content: text.trim(), mode: selectedMode, createdAt: new Date().toISOString() }, { id: newId(), role: "assistant", content, originalContent: content, reviewStatus: "draft", reviewItems: freshReview(state.reviewDefaults), ...(personal ? { templateSnapshot: { ...personal, sections: [...personal.sections] } } : {}), sourceText: [`Input\n${text}`, personal && `Templat saat dibuat\n${JSON.stringify(personal, null, 2)}`, current.context && `Konteks Encounter\n${current.context}`, patient && `Pasien\n${patient.name}\n${patient.age}\n${patient.sex}\nCatatan Pasien\n${patient.notes}`, `Preferensi format\n${state.settings.specialty} · ${state.settings.model} · ${state.settings.language}\n${state.settings.instructions}`].filter(Boolean).join("\n\n"), mode: selectedMode, createdAt: new Date().toISOString() }];
+    const messages = localDraftMessages({ text, content, mode: selectedMode, context: current.context, patient, settings: state.settings, reviewDefaults: state.reviewDefaults, personal, fallback });
     dispatch({ type: "message.add", encounterId: current.id, messages });
     setPrompt(""); setBusy(false);
   }
 
-  function saveMiraAnalysis(analysis: MiraAnalysis) {
+  function saveAadiAnalysis(analysis: AadiAnalysis) {
     const current = encounter ?? newEncounter();
     if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: `Analisis kasus · ${analysis.case.chiefComplaint.slice(0, 40)}` } });
-    dispatch({ type: "message.add", encounterId: current.id, messages: [miraMessage(analysis, state.reviewDefaults)] });
+    dispatch({ type: "message.add", encounterId: current.id, messages: [aadiMessage(analysis, state.reviewDefaults)] });
     changeMode("ddx"); closeDialog(); notify("Analisis ditambahkan sebagai draf untuk ditinjau.");
   }
+
+  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
+    minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [],
+    caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };
 
   if (restoring) return <main className="system-loading" aria-busy="true"><PixelLoader label="Sedang membuka workspace…"/><p>Membuka workspace…</p></main>;
 
   return <div className={`app-shell ${sidebarOpen ? "" : "sidebar-collapsed"} ${focusMode ? "focus-mode" : ""}`}>
-    {dialog === "knowledge" && <KnowledgeDialog initialTab={dialogId} onClose={closeDialog} onSave={saveMiraAnalysis}/>}
+    {dialog === "knowledge" && <KnowledgeDialog initialTab={dialogId} onClose={closeDialog} onSave={saveAadiAnalysis}/>}
     {dialog === "templates" && <TemplateLibrary state={state} dispatch={dispatch} onChoose={chooseTemplate} onInsert={(next, text) => { chooseTemplate(`mode:${next}`); updatePrompt(insertTemplate(prompt, text)); }} onClose={closeDialog}/>}
     {dialog === "queue" && <WorkQueue state={state} dispatch={dispatch} onClose={closeDialog} onSelect={(id) => { selectEncounter(id); requestAnimationFrame(() => document.querySelectorAll(".assistant-message").item(document.querySelectorAll(".assistant-message").length - 1)?.scrollIntoView({ block: "nearest" })); }}/ >}
     <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify}/>
     <main className={`main-canvas ${hasMessages ? "chat-view" : "home-view"}`} inert={mobile && navigationOpen} aria-hidden={mobile && navigationOpen}>
       {storageError && <div className="storage-warning" role="alert">{storageError}</div>}
-      <header className="canvas-header"><div className="header-left"><button className="icon-button expand-sidebar" aria-label="Buka navigasi" onClick={() => { const expand = () => { setFocusMode(false); setSidebarOpen(true); setMobileNavOpen(true); }; if (mobile) expand(); else smooth(expand); }}><Menu size={19}/></button>{hasMessages && <><WorkspaceGreeting name={state.settings.name ?? ""}/><span className="header-divider">/</span>{patient && <><span className="header-patient">{patient.name}</span><span className="header-divider">/</span></>}<h1 className="canvas-title"><button className="encounter-title" onClick={() => openDialog("encounter", encounter?.id)}><span>{encounter?.title}</span><ChevronDown size={12}/></button></h1></>}</div><div className="header-right"><button className="icon-button" aria-label="Buka pusat perintah" title="Pusat perintah · Ctrl / ⌘ J" onClick={() => openDialog("commands")}><Command size={16}/></button><button className="icon-button" aria-label={focusMode ? "Keluar Focus Mode" : "Aktifkan Focus Mode"} aria-pressed={focusMode} title="Focus Mode" onClick={() => smooth(() => { setMobileNavOpen(false); setFocusMode((value) => !value); })}>{focusMode ? <Minimize2 size={16}/> : <Maximize2 size={16}/>}</button><button className="icon-button" aria-label="Konteks dan Timeline" title="Konteks dan Timeline" aria-pressed={!focusMode && !compact && panelOpen} onClick={() => { if (compact || focusMode) openDialog("clinical"); else smooth(() => setPanelOpen((value) => !value)); }}><PanelRight size={17}/></button>{hasMessages && <button className="button export-encounter" onClick={() => downloadText(encounter?.messages.map((m) => diagnosisContent(m)).join("\n\n---\n\n") ?? "", "encounter.md")}><ArrowDownToLine size={14}/> Ekspor</button>}<button className="upgrade-button" onClick={() => openDialog("upgrade")}><Sparkles size={15} fill="currentColor"/>Berlangganan</button></div></header>
+      <WorkspaceHeader hasMessages={hasMessages} name={state.settings.name ?? ""} patientName={patient?.name} encounterTitle={encounter?.title} focusMode={focusMode} panelPressed={!focusMode && !compact && panelOpen}
+        onExpand={() => { const expand = () => { setFocusMode(false); setSidebarOpen(true); setMobileNavOpen(true); }; if (mobile) expand(); else smooth(expand); }}
+        onEncounter={() => openDialog("encounter", encounter?.id)}
+        onCommands={() => openDialog("commands")}
+        onFocus={() => smooth(() => { setMobileNavOpen(false); setFocusMode((value) => !value); })}
+        onPanel={() => { if (compact || focusMode) openDialog("clinical"); else smooth(() => setPanelOpen((value) => !value)); }}
+        onExport={() => downloadText(encounter?.messages.map((m) => reviewedText(diagnosisContent(m), m.reviewStatus)).join("\n\n---\n\n") ?? "", downloadName(encounter?.title ?? "encounter"))}
+        onUpgrade={() => openDialog("upgrade")}/>
       <div className="workspace-body">
-        {!hasMessages ? <div className="home-content"><div className="home-heading-row"><WorkspaceGreeting name={state.settings.name ?? ""}/></div><div className="home-headline" aria-live="polite" aria-atomic="true"><div key={intent.id} className="headline-transition"><h1>{intent.headline}</h1><p>{intent.description}</p></div></div><Composer prompt={prompt} onPrompt={updatePrompt} mode={mode} onMode={changeMode} settings={state.settings} onModel={(model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } })} context={context} onContext={() => openDialog("context")} patientName={patient?.name} templates={state.templates ?? []} favorites={state.favorites ?? []} templateKey={templateKey} onTemplate={chooseTemplate} onSubmit={() => generate()} busy={busy} miraEnabled={composerUsesMira(mode, !!selectedTemplate)} analysisError={analysisError} onCancelAnalysis={cancelAnalysis}/></div> : <>
-          <div className="conversation" ref={conversation} onScroll={(event) => { const box = event.currentTarget; stickToBottom.current = box.scrollHeight - box.scrollTop - box.clientHeight < 80; }} aria-label="Percakapan Encounter"><div className="conversation-inner" ref={conversationInner}>{encounter?.messages.map((message) => <MessageCard encounterId={encounter.id} dispatch={dispatch} key={message.id} message={message} onEdit={(content) => dispatch({ type: "message.edit", encounterId: encounter.id, messageId: message.id, content })} onToast={notify} onReuse={updatePrompt} onReview={(status) => dispatch({ type: "message.review", encounterId: encounter.id, messageId: message.id, status })}/>)}{pendingQuestion !== null && <><div className="user-message"><div>{pendingQuestion}</div></div><ThinkingCard onCancel={cancelAnalysis}/></>}<div ref={end}/></div></div>
-          <div className="chat-composer"><Composer inChat prompt={prompt} onPrompt={updatePrompt} mode={mode} onMode={changeMode} settings={state.settings} onModel={(model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } })} context={context} onContext={() => openDialog("context")} patientName={patient?.name} templates={state.templates ?? []} favorites={state.favorites ?? []} templateKey={templateKey} onTemplate={chooseTemplate} onSubmit={() => generate()} busy={busy} miraEnabled={composerUsesMira(mode, !!selectedTemplate)} analysisError={analysisError} onCancelAnalysis={cancelAnalysis}/><p className="composer-hint">{composerUsesMira(mode, !!selectedTemplate) ? "" : "Format lokal, siap untuk ditinjau. "}<button onClick={() => openDialog("account")}>Tentang workspace ini</button></p></div>
+        {!hasMessages ? <HomeView name={state.settings.name ?? ""} intent={intent} composer={composerProps}/> : <>
+          <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onStep={startStep} onCancel={cancelAnalysis}/>
+          <ChatComposer composer={composerProps} onAbout={() => openDialog("account")}/>
         </>}
       </div>
-      {!hasMessages && <div className="home-bottom"><footer className="site-footer"><span className="footer-brand"><strong>Sentrapedia — We empower You.</strong><span>Versi 0.2</span></span><div>{["Ketentuan layanan", "Kebijakan privasi", "Perjanjian kerja sama", "Keselamatan", "Preferensi cookie"].map((label) => <button key={label} onClick={() => { setDialogId(label); setDialog("legal"); }}>{label}</button>)}</div></footer></div>}
+      {!hasMessages && <HomeFooter onLegal={(label) => { setDialogId(label); setDialog("legal"); }}/>}
     </main>
     {!compact && panelOpen && !focusMode && <aside className="clinical-panel"><ClinicalPanel state={state} encounter={encounter} patient={patient} onSelect={selectEncounter} onContext={() => openDialog("context")} onPatient={() => openDialog("patient", patient?.id)} onClose={() => smooth(() => setPanelOpen(false))}/></aside>}
     {dialog === "clinical" && <Dialog title="Kokpit klinis" onClose={closeDialog}><ClinicalPanel state={state} encounter={encounter} patient={patient} onSelect={selectEncounter} onContext={() => openDialog("context")} onPatient={() => openDialog("patient", patient?.id)}/></Dialog>}
     {dialog === "commands" && <CommandPalette onKnowledge={(tab) => openDialog("knowledge", tab)} onQueue={() => openDialog("queue")} onTemplates={() => openDialog("templates")} state={state} onClose={closeDialog} onEncounter={selectEncounter} onPatient={(id) => openDialog("patient", id)} onMode={(next) => { changeMode(next); closeDialog(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus()); }} onNew={() => { startNew(); closeDialog(); }} onFocus={() => smooth(() => { setFocusMode((value) => !value); setMobileNavOpen(false); hideDialog(); })} onContext={() => openDialog("context")}/>}
-    {toast && <div className={`toast ${toastError ? "is-error" : ""}`} role={toastError ? "alert" : "status"}>{toastError ? <CircleAlert size={15}/> : <Check size={15}/>}<span>{toast}</span><button aria-label="Tutup notifikasi" onClick={() => { if (toastTimer.current) clearTimeout(toastTimer.current); smooth(() => setToast("")); }}><X size={14}/></button></div>}
+    {toast && <div className={`toast ${toastError ? "is-error" : ""}`} role={toastError ? "alert" : "status"}>{toastError ? <CircleAlert size={15}/> : <Check size={15}/>}<span>{toast}</span><button aria-label="Tutup notifikasi" onClick={dismissToast}><X size={14}/></button></div>}
 
-    {dialog === "patient" && <PatientForm key={dialogId ?? "new"} patient={state.patients.find((p) => p.id === dialogId)} onSave={savePatient} onDelete={(id) => { dispatch({ type: "patient.delete", id }); closeDialog(); notify("Pasien lokal dan Encounter terkait dihapus."); }} onClose={closeDialog}/>}
-    {dialog === "list" && <ListForm key={dialogId ?? "new"} list={state.lists.find((l) => l.id === dialogId)} state={state} dispatch={dispatch} onClose={closeDialog}/>}
-    {dialog === "settings" && <SettingsForm settings={state.settings} onSave={(settings) => { dispatch({ type: "settings.save", settings }); closeDialog(); notify("Preferensi Agent tersimpan."); }} onClose={closeDialog}/>}
-    {dialog === "search" && <SearchDialog state={state} onSelect={selectEncounter} onPatient={(id) => openDialog("patient", id)} onClose={closeDialog}/>}
-    {dialog === "context" && <ContextForm context={context} onSave={(text) => { if (encounter) dispatch({ type: "encounter.update", id: encounter.id, updates: { context: text } }); else if (text.trim()) dispatch({ type: "encounter.add", encounter: { ...newEncounter(), context: text } }); closeDialog(); notify(text ? "Konteks ditambahkan ke Encounter ini." : "Konteks Encounter dikosongkan."); }} onClose={closeDialog}/>}
-    {dialog === "scribe" && <Scribe language={state.settings.language} onClose={closeDialog} onGenerate={(transcript) => { setMode("scribe"); generate(transcript, "scribe", false); closeDialog(); }}/ >}
-    {dialog === "encounter" && editedEncounter && <EncounterForm key={editedEncounter.id} encounter={editedEncounter} patients={state.patients} onSave={(updates) => { dispatch({ type: "encounter.update", id: editedEncounter.id, updates }); closeDialog(); notify("Detail Encounter tersimpan."); }} onDelete={() => { dispatch({ type: "encounter.delete", id: editedEncounter.id }); closeDialog(); notify("Encounter lokal dihapus."); }} onClose={closeDialog}/>}
-    {dialog === "upgrade" && <Dialog title="Ruang untuk pemikiran Clinical" subtitle="Workspace lokal mencakup seluruh alur pembuatan draf." onClose={closeDialog}><div className="plan-card"><div><span className="plan-label">Workspace Anda</span><h3>Sentrapedia Lite <span>Lokal</span></h3><p>Pasien, Encounter, dan draf dokumen lokal tanpa batas.</p></div><ul>{["14 template Clinical dan administrasi", "Draf yang dapat diedit, checklist, dan ekspor Markdown", "Berkas konteks dan Scribing berbasis transkrip", "Preferensi Specialty dan format"].map((item) => <li key={item}><Check size={15}/>{item}</li>)}</ul></div><div className="notice"><CircleHelp size={17}/><span>Referensi penyakit tersedia secara lokal. Analisis kasus memerlukan koneksi layanan. Sinkronisasi, kutipan PNPK dan langganan belum tersedia. Tidak ada pembayaran di sini.</span></div><div className="dialog-footer"><button className="button primary" onClick={closeDialog}>Lanjutkan dengan workspace lokal <ArrowRight size={15}/></button></div></Dialog>}
-    {dialog === "account" && <Dialog title="Workspace Clinical Anda" subtitle="Sentrapedia · workspace Clinical" onClose={closeDialog}><div className="account-profile"><span className="avatar large">FI</span><div><strong>Workspace Sentrapedia</strong><p>Sesi lokal · Lite</p></div></div><div className="notice"><ShieldCheck size={18}/><span>Browser menyimpan workspace di perangkat ini tanpa enkripsi atau sinkronisasi antarperangkat. Gunakan data fiktif saja.</span></div><dl className="workspace-stats"><div><dt>Pasien</dt><dd>{state.patients.length}</dd></div><div><dt>Encounter</dt><dd>{state.encounters.length}</dd></div><div><dt>Daftar Pasien</dt><dd>{state.lists.length}</dd></div></dl><div className="integration-note"><strong>Koneksi backend</strong><p>Referensi penyakit tersedia; analisis kasus menggunakan layanan lokal yang dikonfigurasi. Kutipan pedoman, penyimpanan Pasien aman, authentication, transkripsi audio cloud, integrasi EHR, dan billing belum terhubung.</p></div>{confirmClear ? <div key="confirm" className="form-warning"><p>Hapus semua Pasien, Encounter, daftar, dan draf lokal? Ekspor draf yang ingin disimpan terlebih dahulu.</p><button className="button danger" onClick={() => { dispatch({ type: "clear" }); setPrompt(""); closeDialog(); notify("Workspace lokal dikosongkan."); }}>Hapus semua data lokal</button></div> : <div key="actions" className="dialog-footer"><button className="button danger-ghost push-left" onClick={() => setConfirmClear(true)}><Trash2 size={14}/> Hapus data lokal</button><button className="button" onClick={() => downloadText(JSON.stringify(state, null, 2), "workspace-backup.json")}><ArrowDownToLine size={14}/> Ekspor backup</button></div>}</Dialog>}
-    {dialog === "legal" && <Dialog title={dialogId ?? "Informasi workspace"} subtitle="Workspace pengembangan lokal" onClose={closeDialog}><div className="legal-content"><ShieldCheck size={28}/><h3>Dibangun untuk menjelajahi alur kerja Anda.</h3><p>Sentrapedia adalah workspace mandiri untuk pengembangan. Layanan Clinical, langganan, dan perjanjian layanan produksi belum tersedia.</p><p>Data Pasien dan Encounter disimpan dalam local storage browser ini. Tidak ada analytics atau cookie iklan. Pengenalan suara dapat memakai layanan speech penyedia browser saat diaktifkan.</p><p>Gunakan informasi fiktif saja. Draf lokal mempertahankan teks yang diberikan; tinjauan Clinician dan integrasi AI/Evidence diperlukan untuk penggunaan Clinical.</p></div><div className="dialog-footer"><button className="button primary" onClick={closeDialog}>Mengerti</button></div></Dialog>}
+    <WorkspaceDialogs dialog={dialog} dialogId={dialogId} state={state} dispatch={dispatch} context={context} encounter={encounter} unreadable={unreadable} onClose={closeDialog} notify={notify} onSavePatient={savePatient} onOpen={openDialog} onSelect={selectEncounter}
+      onScribe={(transcript) => { setMode("scribe"); generate(transcript, "scribe", false); closeDialog(); }} onPromptReset={() => setPrompt("")} onUnreadableCleared={() => setUnreadable(null)}/>
   </div>;
 }

@@ -17,7 +17,7 @@ export function CommandPalette(props: Props) {
     { id: "queue", category: "Aksi", label: "Antrean kerja", run: props.onQueue },
     { id: "templates", category: "Aksi", label: "Templat dan favorit", run: props.onTemplates },
     { id: "theoracle", category: "Pustaka Klinis", label: "Cari penyakit", run: () => props.onKnowledge() },
-    { id: "mira", category: "Analisis", label: "Analisis kasus", run: () => props.onKnowledge("mira") },
+    { id: "aadi", category: "Analisis", label: "Analisis kasus", run: () => props.onKnowledge("aadi") },
     { id: "new", category: "Aksi", label: "Encounter baru", run: props.onNew },
     { id: "focus", category: "Aksi", label: "Ubah Focus Mode", run: props.onFocus },
     { id: "context", category: "Aksi", label: "Edit konteks Encounter", run: props.onContext },

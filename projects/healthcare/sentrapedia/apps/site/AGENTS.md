@@ -9,7 +9,7 @@ This directory owns the public marketing surface within the same Sentrapedia pro
 From this site root with Node.js 22+:
 
 - `node --run install:check`: validate local, dependency-free inputs.
-- `node --run build`: regenerate the served site from local source.
+- `node --run build`: regenerate the served site from local source. `site/` is that build output and is not tracked; theme and vendor files without a source live in `static/`, which the build copies first.
 - `node --run lint`: syntax-check authored JavaScript without rewriting it.
 - `node --run test`: run local site and migration-boundary tests.
 - `node --run verify`: validate presentation integrity, local resources, media, and HTTP range delivery.

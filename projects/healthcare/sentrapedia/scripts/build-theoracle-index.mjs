@@ -15,12 +15,14 @@ const chunksRaw = readFileSync(`${indexDir}chunks.jsonl`);
 const texts = chunksRaw.toString("utf8").trim().split("\n").map(line => profile.prefixes.document + JSON.parse(line).text);
 const tokenizer = await AutoTokenizer.from_pretrained(profile.id);
 const model = await AutoModel.from_pretrained(profile.id, { dtype: profile.dtype, device });
-const previous = process.argv.includes("--append") ? new Float32Array(readFileSync(`${indexDir}vectors.f32`).buffer.slice(0)) : new Float32Array(0);
+// Copy only the file's own bytes: Node reads small files into a shared buffer pool, so .buffer can hold other data.
+const floats = file => { const bytes = readFileSync(file); return new Float32Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)); };
+const previous = process.argv.includes("--append") ? floats(`${indexDir}vectors.f32`) : new Float32Array(0);
 const kept = previous.length / profile.dims;
 const lengths = texts.map((text, i) => i < kept ? 0 : tokenizer.encode(text).length);
 const order = texts.map((_, i) => i).filter(i => i >= kept).sort((a, b) => lengths[a] - lengths[b]);
 const partial = `${indexDir}vectors.partial.f32`, progress = `${indexDir}vectors.partial.json`;
-const vectors = existsSync(progress) ? new Float32Array(readFileSync(partial).buffer.slice(0)) : new Float32Array(texts.length * profile.dims);
+const vectors = existsSync(progress) ? floats(partial) : new Float32Array(texts.length * profile.dims);
 if (!existsSync(progress)) vectors.set(previous);
 let done = existsSync(progress) ? JSON.parse(readFileSync(progress, "utf8")).done : 0;
 const started = performance.now();

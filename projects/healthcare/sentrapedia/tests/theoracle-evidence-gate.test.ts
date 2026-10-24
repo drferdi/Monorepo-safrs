@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { gateEvidence, gateTherapy, unstrength } from "../src/lib/theoracle-evidence-gate";
+import { applyTherapyGate, gateEvidence, gateTherapy, unstrength } from "../src/lib/theoracle-evidence-gate";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
-import type { MiraTherapy } from "../src/lib/mira/contract";
+import type { AadiResult, AadiTherapy } from "../src/lib/aadi/contract";
+import { withCatalog } from "./private-data";
+import { doseLines } from "../scripts/knowledge-ssot.mjs";
 
 // A plain string is a passage from a pneumonia document; { title, text } sets the document title.
 const bundle = (...items: (string | { title: string; text: string })[]): TheOracleGroundingBundle => ({
@@ -10,7 +12,7 @@ const bundle = (...items: (string | { title: string; text: string })[]): TheOrac
   queryDigest: "b".repeat(64),
   evidence: items.map((item, i) => ({ evidenceId: `E${i + 1}`, text: typeof item === "string" ? item : item.text, retrievalRank: i + 1, similarity: 0.5, source: { title: typeof item === "string" ? `pneumonia-${i + 1}.md` : item.title, docSource: "uji", origin: "fixture", textSha256: "c".repeat(64) } })),
 });
-const therapy = (regimen: MiraTherapy["regimen"], extra: Partial<MiraTherapy> = {}): MiraTherapy => ({ forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, regimen, interactions: [], contraindications: [], ...extra });
+const therapy = (regimen: AadiTherapy["regimen"], extra: Partial<AadiTherapy> = {}): AadiTherapy => ({ forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, regimen, interactions: [], contraindications: [], ...extra });
 const drug = (name: string, dose: string) => ({ drug: name, dose, route: "PO", duration: "5 hari", note: "" });
 const pneumonia = { icd10: "J18.9", label: "Pneumonia" };
 
@@ -209,7 +211,7 @@ describe("clinical evidence gate", () => {
     const { report } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), bundle("Pneumonia: berikan 500 mg amoksisilin 3 kali sehari."), pneumonia);
     expect(report.drugs[0].status).toBe("doseRemoved");
   });
-  it("reads ODHA as HIV and the catalog's K64 for haemorrhoids coded I84", () => {
+  it.skipIf(!withCatalog)("reads ODHA as HIV and the catalog's K64 for haemorrhoids coded I84", () => {
     const hiv = { icd10: "Z21", label: "Asymptomatic human immunodeficiency virus [HIV] infection status" };
     const art = bundle({ title: "panduan-praktik-klinis.pdf", text: "Terapi ODHA: Efavirenz (EFV) 600 mg sekali sehari." });
     expect(gateTherapy(therapy([drug("Efavirenz", "1x600mg")], { forDiagnosis: hiv }), art, hiv).report.drugs[0].status).toBe("verified");
@@ -241,7 +243,7 @@ describe("clinical evidence gate", () => {
   it("removes all therapy when there is no evidence bundle", () => {
     const { therapy: out, report } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), undefined, pneumonia);
     expect(out).toBeUndefined();
-    expect(report).toMatchObject({ therapyRemoved: true, reason: "Referensi TheOracle untuk terapi tidak tersedia; dosis tidak ditampilkan." });
+    expect(report).toMatchObject({ therapyRemoved: true, reason: "Referensi Oracle untuk terapi tidak tersedia; dosis tidak ditampilkan." });
   });
   it("accepts a gram strength written as gram", () => {
     const { report } = gateTherapy(therapy([drug("Ceftriaxone", "1x2g")]), bundle("Seftriakson 2 gram IV dosis tunggal."), pneumonia);
@@ -262,7 +264,7 @@ describe("clinical evidence gate fix round 1", () => {
   it("removes all therapy with a reason when no drug is verified or dosed", () => {
     const { therapy: out, report } = gateTherapy(therapy([drug("Levofloxacin", "1x750mg")]), bundle("Amoksisilin 500 mg."), pneumonia);
     expect(out).toBeUndefined();
-    expect(report).toMatchObject({ therapyRemoved: true, reason: "Tidak ada obat yang indikasinya terverifikasi di TheOracle." });
+    expect(report).toMatchObject({ therapyRemoved: true, reason: "Tidak ada obat yang indikasinya terverifikasi di Oracle." });
   });
   it("keeps a drug-less warning with the unverified suffix and drops a warning that names only a removed drug", () => {
     const { therapy: out } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg"), drug("Levofloxacin", "1x750mg")], { interactions: ["Kehamilan trimester pertama", "Hindari NSAID"], contraindications: ["Levofloxacin: anak"] }), bundle("Amoksisilin 500 mg."), pneumonia);
@@ -284,7 +286,7 @@ describe("clinical evidence gate fix round 1", () => {
 });
 
 describe("clinical evidence gate final fix", () => {
-  const item = (name: string, dose: string, fields: Partial<MiraTherapy["regimen"][number]> = {}) => ({ ...drug(name, dose), ...fields });
+  const item = (name: string, dose: string, fields: Partial<AadiTherapy["regimen"][number]> = {}) => ({ ...drug(name, dose), ...fields });
   it("(a) blanks a doseRemoved drug's note that carries an unverified strength", () => {
     const { therapy: out, report } = gateTherapy(therapy([item("Kristaloid", "20ml/kg", { note: "dapat diulang sampai 40ml/kg dalam 1 jam" })]), bundle("Kristaloid untuk syok."), pneumonia);
     expect(report.drugs[0].status).toBe("doseRemoved");
@@ -385,7 +387,7 @@ describe("clinical evidence gate final fix", () => {
 
 describe("clinical evidence gate: the dose passage names the diagnosis", () => {
   const versicolor = { icd10: "B36.0", label: "Pityriasis versicolor" };
-  const forVersicolor = (regimen: MiraTherapy["regimen"]) => therapy(regimen, { forDiagnosis: versicolor });
+  const forVersicolor = (regimen: AadiTherapy["regimen"]) => therapy(regimen, { forDiagnosis: versicolor });
   const azoleList = { title: "dermatovenereologi-perdoski-2021.pdf", text: "Triazol: flukonazol oral 50 mg per hari selama 14-30 hari; itrakonazol 100-200 mg; posakonazol 400 mg/12 jam. Alternatif amfoterisin B." };
 
   it("does not verify a dose from a passage about another disease (lay_terms-03)", () => {
@@ -397,7 +399,7 @@ describe("clinical evidence gate: the dose passage names the diagnosis", () => {
     const { report } = gateTherapy(forVersicolor([drug("Flukonazol", "1x50mg")]), bundle(azoleList, { title: "dermatovenereologi-perdoski-2021.pdf", text: "Pitiriasis versikolor: ketokonazol krim, flukonazol oral." }), versicolor);
     expect(report.drugs[0]).toMatchObject({ status: "doseRemoved" });
   });
-  it("verifies a dose from a passage that names the diagnosis in its text, title or a TheOracle catalog name", () => {
+  it.skipIf(!withCatalog)("verifies a dose from a passage that names the diagnosis in its text, title or a TheOracle catalog name", () => {
     const named = (item: { title: string; text: string }) => gateTherapy(forVersicolor([drug("Flukonazol", "1x50mg")]), bundle(item), versicolor).report.drugs[0].status;
     expect(named({ title: "perdoski.pdf", text: "Pitiriasis versikolor: flukonazol 50 mg/hari." })).toBe("verified");
     expect(named({ title: "pityriasis-versikolor.md", text: "Flukonazol 50 mg/hari selama 14 hari." })).toBe("verified");
@@ -409,12 +411,12 @@ describe("clinical evidence gate: the dose passage names the diagnosis", () => {
     const oma = { icd10: "H66.9", label: "Otitis media akut, unspecified" };
     expect(gateTherapy(therapy([drug("Amoxicillin", "2x250mg")], { forDiagnosis: oma }), bundle({ title: "tonsilitis-2018.pdf", text: "Infeksi akut: amoksisilin 250 mg." }), oma).report.drugs[0].status).toBe("doseRemoved");
   });
-  it("does not count a word shared by many catalog diseases or a function word", () => {
+  it.skipIf(!withCatalog)("does not count a word shared by many catalog diseases or a function word", () => {
     const typhoid = { icd10: "A01.0", label: "Demam tifoid" };
     expect(gateTherapy(therapy([drug("Paracetamol", "3x500mg")], { forDiagnosis: typhoid }), bundle({ title: "kejang-demam.md", text: "Kejang demam pada anak: parasetamol 500 mg." }), typhoid).report.drugs[0].status).toBe("doseRemoved");
     expect(gateTherapy(therapy([drug("Paracetamol", "3x500mg")], { forDiagnosis: typhoid }), bundle({ title: "demam-tifoid.md", text: "Parasetamol 500 mg bila demam." }), typhoid).report.drugs[0].status).toBe("verified");
   });
-  it("ignores Roman numerals, all-capital labels and English ICD qualifiers", () => {
+  it.skipIf(!withCatalog)("ignores Roman numerals, all-capital labels and English ICD qualifiers", () => {
     const status = (dx: { icd10: string; label: string }, name: string, dose: string, item: { title: string; text: string }) => gateTherapy(therapy([drug(name, dose)], { forDiagnosis: dx }), bundle(item), dx).report.drugs[0].status;
     expect(status({ icd10: "I10", label: "Hipertensi stage II" }, "Amlodipine", "1x10mg", { title: "gagal-jantung.md", text: "NYHA kelas II: amlodipin 10 mg." })).toBe("doseRemoved");
     expect(status({ icd10: "A01.0", label: "DEMAM TIFOID" }, "Paracetamol", "3x500mg", { title: "kejang-demam.md", text: "Kejang demam: parasetamol 500 mg." })).toBe("doseRemoved");
@@ -520,7 +522,7 @@ describe("clinical evidence gate: per-kg is decided for each strength", () => {
 });
 
 describe("clinical evidence gate: a field drops only its unsupported clauses", () => {
-  const amox = (fields: Partial<MiraTherapy["regimen"][number]>, text = "Amoksisilin 500 mg 3 kali sehari, 1 g bila berat.") => gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), ...fields }]), bundle(text), pneumonia).therapy?.regimen[0];
+  const amox = (fields: Partial<AadiTherapy["regimen"][number]>, text = "Amoksisilin 500 mg 3 kali sehari, 1 g bila berat.") => gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), ...fields }]), bundle(text), pneumonia).therapy?.regimen[0];
   const PARTIAL = " (sebagian belum terverifikasi)";
   it("keeps the route when only a trailing strength clause is unsupported, and marks the cut", () => {
     expect(amox({ route: "IV, 1 g dalam 100 ml NaCl" })?.route).toBe("IV" + PARTIAL);
@@ -623,5 +625,113 @@ describe("clinical evidence gate: every range separator needs both ends", () => 
   });
   it("strips such a range whole from a drug name", () => {
     expect(["Amoksisilin 250—500 mg", "Amoksisilin 250 s/d 500 mg", "Amoksisilin 250 sampai 500 mg"].map(unstrength)).toEqual(["Amoksisilin", "Amoksisilin", "Amoksisilin"]);
+  });
+});
+
+// Gaffer, 2026-10-21: a tablet-count dose is shown when the guideline gives the count, the same frequency and the strength
+// per tablet. The IDI passage is the one the malaria case retrieved; the FORNAS one is a fixture in its entry style.
+// Each negative case below breaks exactly one rule.
+describe("tablet-count doses", () => {
+  const malaria = { icd10: "B50.9", label: "Plasmodium falciparum malaria" };
+  const idiText = "Pengobatan Malaria falsiparum 1. Lini pertama: dengan Fixed Dose Combination (FDC) yang terdiri dari Dihydroartemisinin (DHA) + Piperakuin (DHP) tiap tablet mengandung 40 mg Dihydroartemisinin dan 320 mg Piperakuin. Untuk dewasa dengan Berat Badan (BB) sampai dengan 59 kg diberikan DHP per oral 3 tablet satu kali per hari selama 3 hari dan Primakuin 2 tablet sekali sehari satu kali pemberian, sedangkan untuk BB > 60 kg diberikan 4 tablet DHP satu kali sehari selama 3 hari dan Primaquin 3 tablet sekali sehari satu kali pemberian. Dosis DHA = 2-4 mg/kgBB (dosis tunggal), Piperakuin = 16-32 mg/kgBB";
+  const idi = { title: "fasyankes-primer-idi-2017.pdf", text: idiText };
+  const fornas = { title: "fornas-2025.pdf", text: "6 kuinin [P] 1. tab 200 mg Untuk terapi lini kedua pada malaria. 7 primakuin [P] Terapi radikal malaria falsiparum dan vivaks. 1. tab 15 mg" };
+  const malariaTherapy = (regimen: AadiTherapy["regimen"]) => therapy(regimen, { forDiagnosis: malaria });
+  const tablets = (name: string, dose: string, note = "dosis untuk berat badan >60kg") => ({ drug: name, dose, route: "PO", duration: "3 hari", note });
+  const status = (regimen: AadiTherapy["regimen"], ...passages: { title: string; text: string }[]) => gateTherapy(malariaTherapy(regimen), bundle(...passages), malaria).report.drugs.map(d => d.status);
+  const dhp = "dihidroartemisinin + piperakuin";
+
+  it("verifies the guideline's count, frequency and weight band, and shows the strength per tablet", () => {
+    const { therapy: out, report } = gateTherapy(malariaTherapy([tablets(dhp, "1x4tablet"), tablets("primakuin", "1x3tablet")]), bundle(idi, fornas), malaria);
+    expect(report.drugs.map(d => d.status)).toEqual(["verified", "verified"]);
+    expect(report.drugs.map(d => d.evidenceIds)).toEqual([["E1"], ["E1", "E2"]]);
+    expect(out?.regimen.map(r => [r.drug, r.dose])).toEqual([["dihidroartemisinin 40 mg + piperakuin 320 mg", "4 tablet sekali sehari"], ["primakuin 15 mg", "3 tablet sekali sehari"]]);
+  });
+
+  it("does not verify the other weight band's count", () => expect(status([tablets(dhp, "1x3tablet")], idi)).toEqual(["doseRemoved"]));
+  it("does not verify another frequency", () => expect(status([tablets(dhp, "2x4tablet")], idi)).toEqual(["doseRemoved"]));
+  it("does not verify a count whose weight band the draft does not state", () => expect(status([tablets(dhp, "1x4tablet", "")], idi)).toEqual(["doseRemoved"]));
+  it("does not verify a count without a dose frequency", () => expect(status([tablets(dhp, "4 tablet")], idi)).toEqual(["doseRemoved"]));
+  it("adds no strength when no passage gives one per tablet, and leaves the count to the count rule", () => {
+    const { therapy: out } = gateTherapy(malariaTherapy([tablets("primakuin", "1x3tablet")]), bundle(idi), malaria);
+    expect(out?.regimen[0]).toMatchObject({ drug: "primakuin", dose: "1x3tablet" });
+  });
+  it("does not take the count of a single component's alias for the combination", () => expect(status([tablets(dhp, "1x4tablet")], { ...idi, text: idiText.replace("4 tablet DHP", "4 tablet DHA") })).toEqual(["doseRemoved"]));
+  it("does not take a count from a clause about another drug", () => {
+    const other = { title: "fasyankes-primer-idi-2017.pdf", text: "Malaria falsiparum: primakuin, tiap tablet mengandung 15 mg primakuin. Klorokuin 3 tablet sekali sehari." };
+    expect(status([tablets("primakuin", "1x3tablet", "")], other)).toEqual(["doseRemoved"]);
+  });
+  it("upgrades a stored doseRemoved that the current gate verifies, so the report matches the dose shown", () => {
+    const regimen = [tablets(dhp, "1x4tablet"), tablets("primakuin", "1x45mg")];
+    // As stored: the regimen gated earlier, its removed doses blank; the raw doses only in the report.
+    const result: AadiResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "B50.9", label: malaria.label, confidenceTier: "high" }], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: [], nextBestActions: [], disposition: null, unfilled: [], meta: { version: "test", model: "test", costUsd: 0 }, therapy: malariaTherapy(regimen.map(r => ({ ...r, dose: "" }))) };
+    const stored = { forDiagnosis: malaria, therapyRemoved: false, reason: "", drugs: regimen.map(r => ({ drug: r.drug, dose: r.dose, status: "doseRemoved" as const, evidenceIds: ["E1"] })) };
+    const { result: gated, gate } = applyTherapyGate(result, bundle(idi), stored);
+    expect(gate?.drugs.map(d => [d.status, d.evidenceIds])).toEqual([["verified", ["E1"]], ["doseRemoved", ["E1"]]]);
+    expect(gated.therapy?.regimen[0]).toMatchObject({ drug: "dihidroartemisinin 40 mg + piperakuin 320 mg", dose: "4 tablet sekali sehari" });
+  });
+  it("keeps a stored tablet dose on render, and downgrades it when the evidence no longer carries it", () => {
+    const fresh = gateTherapy(malariaTherapy([tablets(dhp, "1x4tablet")]), bundle(idi), malaria);
+    const result: AadiResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "B50.9", label: malaria.label, confidenceTier: "high" }], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: [], nextBestActions: [], disposition: null, unfilled: [], meta: { version: "test", model: "test", costUsd: 0 }, therapy: fresh.therapy };
+    const again = applyTherapyGate(result, bundle(idi), fresh.report);
+    expect(again.result.therapy?.regimen).toEqual(fresh.therapy?.regimen);
+    expect(again.gate?.drugs.map(d => d.status)).toEqual(["verified"]);
+    const without = applyTherapyGate(result, bundle({ ...idi, text: idiText.replace("4 tablet DHP", "5 tablet DHP") }), fresh.report);
+    expect(without.gate?.drugs.map(d => d.status)).toEqual(["doseRemoved"]);
+    expect(without.result.therapy?.regimen[0]).toMatchObject({ drug: "dihidroartemisinin + piperakuin", dose: "" });
+  });
+  it("leaves a strength dose to the strength rule", () => expect(status([tablets("primakuin", "1x45mg")], idi, fornas)).toEqual(["doseRemoved"]));
+});
+
+// A cross-referenced dose ("rujukan silang", SSOT v0.6) is another disease's dose: it names the drug but never doses it.
+describe("cross-referenced SSOT doses", () => {
+  const ssot = (text: string): TheOracleGroundingBundle => { const b = bundle({ title: "Pneumonia", text }); return { ...b, evidence: b.evidence.map(e => ({ ...e, source: { ...e.source, origin: "ssot" } })) }; };
+  const cross = (line: string) => `- obat: ${line}; sumber: rujukan silang (dosis obat dari entri Penyakit Fiktif): PPK fiktif; catatan: Dosis umum obat ini dari penyakit lain; bukan regimen khusus Pneumonia. Verifikasi.`;
+  it("keeps the drug without its dose when only a cross-referenced line doses it", () => {
+    const { therapy: out, report } = gateTherapy(therapy([drug("Amoxicillin", "3x500mg"), drug("Azitromisin", "1x500mg")]), ssot(`# Pneumonia ## Dosis ${cross("amoksisilin; dosis: 500 mg")} - obat: azitromisin; dosis: 500 mg; sumber: PPK fiktif ## Rujukan Rujuk bila sesak.`), pneumonia);
+    expect(report.drugs).toEqual([{ drug: "Amoxicillin", dose: "3x500mg", status: "doseRemoved", evidenceIds: ["E1"] }, { drug: "Azitromisin", dose: "1x500mg", status: "verified", evidenceIds: ["E1"] }]);
+    expect(out?.regimen.map(r => [r.drug, r.dose])).toEqual([["Amoxicillin", ""], ["Azitromisin", "1x500mg"]]);
+  });
+  it("does not carry a note's strength or a tablet dose from a cross-referenced line", () => {
+    const text = `# Pneumonia ## Dosis - obat: amoksisilin; dosis: 500 mg; sumber: PPK fiktif ${cross("amoksisilin; dosis: 1 g")} ${cross("parasetamol; dosis: parasetamol 2 tablet 3 kali sehari, tiap tablet mengandung 500 mg parasetamol")}`;
+    const { therapy: out, report } = gateTherapy(therapy([{ ...drug("Amoxicillin", "3x500mg"), note: "atau 1 g" }, drug("Parasetamol", "3x2tablet")]), ssot(text), pneumonia);
+    expect(report.drugs.map(d => d.status)).toEqual(["verified", "doseRemoved"]);
+    expect(out?.regimen[0].note).toBe("");
+  });
+  it("still doses from a passage that is not from the SSOT", () => {
+    const pdf = bundle({ title: "Pneumonia", text: `Pneumonia ${cross("amoksisilin; dosis: 500 mg")}` });
+    expect(gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), pdf, pneumonia).report.drugs[0].status).toBe("verified");
+  });
+  it("reads the builder's own line format (doseLines, whitespace collapsed as in the evidence)", () => {
+    const lines = doseLines({ dosis: [{ obat: "amoksisilin", dosis: "500 mg", sumber: "rujukan silang (dosis obat dari entri Penyakit Fiktif): ", catatan: "Dosis umum obat ini dari penyakit lain; bukan regimen khusus Pneumonia. Verifikasi." }] });
+    const text = `# Pneumonia\n\n## Dosis\n${lines.join("\n")}`.replace(/\s+/g, " ");
+    expect(gateTherapy(therapy([drug("Amoxicillin", "3x500mg")]), ssot(text), pneumonia).report.drugs[0].status).toBe("doseRemoved");
+  });
+});
+
+// The OAT dose tables write INH, RIF, PZA and EMB (Gaffer, 2026-10-23): the abbreviation names the drug like its full name.
+describe("OAT abbreviations", () => {
+  const table = "Pneumonia: Tabel 2. Dosis Obat TB Rekomendasi dosis dalam mg/kgBB Obat Harian 3x seminggu INH* 5(4-6) max 300mg/hr 10(8-12) max 900 mg/dosis RIF 10 (8-12) max 600 mg/hr 10 (8-12) max 600 mg/dosis PZA 25 (20-30) max 1600 mg/hr 35 (30-40) max 2400 mg/dosis EMB 15 (15-20) max 1600 mg/hr";
+  const one = (name: string, dose: string) => gateTherapy(therapy([drug(name, dose)]), bundle(table), pneumonia).report.drugs[0].status;
+  it("reads a table row under the abbreviation as the drug's own", () => {
+    expect([one("Isoniazid", "1x300mg"), one("Rifampicin", "1x600mg"), one("Pyrazinamide", "1x1600mg"), one("Ethambutol", "1x1600mg")]).toEqual(["verified", "verified", "verified", "verified"]);
+  });
+  it("does not take another row's strength", () => {
+    expect([one("Isoniazid", "1x600mg"), one("Rifampicin", "1x300mg")]).toEqual(["doseRemoved", "doseRemoved"]);
+  });
+});
+
+// An SSOT entry is one disease (one document per entry): another disease's entry never doses the diagnosis, whatever its text says.
+// A guideline topic outside the catalog ("Nyeri") and the PDFs are read as before (Gaffer, 2026-10-23).
+describe.skipIf(!withCatalog)("SSOT entries dose only their own disease", () => {
+  const food = { icd10: "L27.2", label: "Food allergy" };
+  const status = (title: string, origin: string) => {
+    const b = bundle({ title, text: `${title}: pada alergi makanan diberikan setirizin 10 mg sekali sehari.` });
+    const evidence = b.evidence.map(e => ({ ...e, source: { ...e.source, origin } }));
+    return gateTherapy(therapy([drug("Cetirizine", "1x10mg")], { forDiagnosis: food }), { ...b, evidence }, food).report.drugs[0].status;
+  };
+  it("does not verify from another disease's entry", () => expect(status("Rinitis Alergika", "ssot")).toBe("doseRemoved"));
+  it("verifies from the diagnosis's own entry, a guideline topic and a PDF", () => {
+    expect([status("Alergi Makanan", "ssot"), status("Nyeri", "ssot"), status("Rinitis Alergika", "theoracle-anythingllm-export")]).toEqual(["verified", "verified", "verified"]);
   });
 });

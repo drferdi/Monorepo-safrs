@@ -41,7 +41,7 @@ for (case_id, drug, dose), r in rows.items():
     category, correct_block, evidence = C[(case_id, drug)]
     out.append({"id": case_id, "traceId": r["traceId"], "diagnosis": r["diagnosis"], "drug": drug, "dose": dose, "route": r["route"], "duration": r["duration"], "note": r["note"],
                 "gateStatus": r["status"], "category": category, "gateWasRight": correct_block, "verifiedIfAboutForced": r["verifiedIfAboutForced"], "verifiedWithDxBundle": r["verifiedWithDxBundle"], "evidence": evidence})
-json.dump({"source": "MIRA audit log 2026-10-11, 61 targeted therapy replies, gate at 0a708b4e", "rows": out}, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+json.dump({"source": "AADI audit log 2026-10-11, 61 targeted therapy replies, gate at 0a708b4e", "rows": out}, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 counts = {}
 for o in out:
     counts[o["category"]] = counts.get(o["category"], 0) + 1
