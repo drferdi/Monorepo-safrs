@@ -1,5 +1,14 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-25 - handoff rotation for the e2e integration audit (newest five kept)
+
+## The last two Indonesian documents translated into English on Gaffer's word - 2026-10-24 Asia/Jakarta
+
+- Gaffer asked why a document was in Bahasa Indonesia. A scan of `docs/**` and `.agents/**` found exactly two written as Indonesian prose, both from 2026-10-09 and both predating the enforcement of `.agents/knowledge/07_DOCUMENTATION.md` line 19 ("Write all repository documentation in English… Agent chat diagnostics remain in Bahasa Indonesia"): `docs/specs/2026-10-09-local-workflow-tools.md` and `docs/verification/2026-10-09-oracle-vs-aadi.md`. Translated on his instruction as `727bf962` on local `main`. Not pushed.
+- Language only. 86 insertions against 86 deletions, so every line has a counterpart and nothing was dropped, added or softened: headings, structure, tables, numbers, file paths, identifiers and API field names are unchanged. Indonesian product strings are kept verbatim and now quoted so they read as labels ("Kelola templat", "Riwayat", "Peninjauan", "Antrean kerja", "Sedang dikerjakan", "Perlu ditinjau", "Selesai", "Tidak terkait Patient"); the Draf/Ditinjau/Final status names stay bare as before, and Gaffer's quoted approval "Comfirmed, Executive" is kept as written.
+- Re-scanned afterwards: no Indonesian prose remains in `docs/**` or `.agents/**`. `.agents/HANDOFF.archive.md` still contains Indonesian, but only inside quotations of Gaffer's own words, which the rule allows; it was left untouched. No test, lint or build applies to a Markdown translation, so the scan and the line-for-line parity are the whole of the evidence.
+- Separately noted for Gaffer, outside this capsule: the monorepo-wide capsule independence gate (`node tools/project-standalone/src/cli.mjs status`) currently fails on `corporate/slave-barbershop`, which has no `project.contract.json`. Sentrapedia itself produces zero findings. Not this capsule's work and not touched.
+
 ## Archived on 2026-10-25 - handoff rotation for the Clerk merge (newest five kept)
 
 ## Merged into main on Gaffer's "merge it" (local only) - 2026-10-24 Asia/Jakarta
