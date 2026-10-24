@@ -1,15 +1,16 @@
 # Sentrapedia handoff
 
-## Satu per satu: library therapy texts, DM code, non-drug filter, status counts (four commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+## Satu per satu: library therapy texts, DM code, non-drug filter, status counts (five commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
 
 - Gaffer: "Kerjakan satu per satu" (items 1-11). Report: `docs/verification/theoracle-eval-2026-10-23/knowledge-gaps.md`, section "Item by item".
 - SSOT: five entries got a therapy text quoted from a library PDF, flagged "ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer" in the key and in `status.review_klinis.catatan` (SP0298 TB-HIV, SP0188 luka bakar, SP0232 PPP from PPK IDI 2017; SP0296 BBLR from KMK 1936/2022; SP0027 benda asing T17 from PPK HBTKVI). SP0063 DM tipe 1 `icd10` → E10. `status` counts recomputed (39 entries changed, ~22 of them stale before A1).
 - Builder: labels for `kmk_1936_2022` and `ppk_bedah_toraks_2018`; `NOT_A_DRUG` drops 29 more non-drug words ("Normal", "Lebih dari", "Studi", lab values); dose lines 7,779 → 7,624; node test covers "Normal".
 - Index `fc028da5…`, 17,990 chunks (2,404 SSOT + 15,586 PDF). Benchmark `benchmark-v06-itemized.json` identical to A1 in every category. Gate: typecheck 0, lint 0, vitest 471/471, node tests 23/23, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0. Paid eval (`docs/verification/theoracle-eval-2026-10-24/eval-itemized.md`): 61/61 ok, ICD top-1 56/61 unchanged, doses shown 64 → 61, all verified, 0.32 USD; the metformin drop for E11.9 follows from the DM tipe 1 code fix, the rest is model output.
 - Correction: the PPK IDI 2017 "SKA" passage cited on 2026-10-23 is the Angina Pektoris Stabil management; SKA got no text.
-- Item 4 (approved by Gaffer): `kategori` = ICD-10 chapter of the first code, 21 categories, source value in `kategori_sumber_lama`; catalogue and tests follow, chunks and index unchanged; gate green (vitest 471/471). Coding question: SP0020 Artritis Reumatoid coded M53.3.
+- Item 4 (approved by Gaffer): `kategori` = ICD-10 chapter of the first code, 21 categories, source value in `kategori_sumber_lama`; catalogue and tests follow, chunks and index unchanged; gate green (vitest 471/471). SP0020 code fixed below.
 - SP0312 (Gaffer): the KKI itrakonazol row is replaced by the two PPK Perdoski 2017 regimens (hal. 55, denyut 2x200 mg 1 minggu/istirahat 3 minggu; 200 mg/hari 2 bulan kuku tangan, minimal 3 bulan kuku kaki); index `61ac3f80…`, benchmark identical, gate green. Not replayed through the live pipeline.
-- Open for Gaffer: malaria serebral pre-referral 3,2 mg/kg (artemether dose); Hepatitis B B18.1 vs PPK B16 and keracunan makanan T47 vs T62.2; BPPV coded R42 vs gold H81.1 (abbreviations-13); review of the five new texts. Nothing pushed.
+- Code fixes (Gaffer): SP0020 RA M53.3 → M06.9, SP0247 polimialgia M53.3 → M35.3, SP0168 keracunan makanan T47 → T62.2, SP0331 BPPV R42 → H81.1 (kategori → Telinga); replaced codes in `icd10_sumber_lama`; Hepatitis B unchanged. Index `818c1be1…`, benchmark identical, gate green; no paid eval after it.
+- Open for Gaffer: malaria serebral pre-referral 3,2 mg/kg (artemether dose); SP0020 and SP0260 are the same disease (RA); review of the five new texts. Nothing pushed.
 
 ## SSOT marked clinically reviewed; therapy and dose gaps referenced (two commits on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
 

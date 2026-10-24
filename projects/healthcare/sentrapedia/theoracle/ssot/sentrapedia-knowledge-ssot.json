@@ -11647,6 +11647,9 @@
    "nama": "Artritis Reumatoid",
    "alias": [],
    "icd10": [
+    "M06.9"
+   ],
+   "icd10_sumber_lama": [
     "M53.3"
    ],
    "asal": [
@@ -11819,7 +11822,6 @@
      "tanggal": "2026-10-23"
     }
    },
-   "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
   },
   {
@@ -71506,6 +71508,9 @@
     "salah makan"
    ],
    "icd10": [
+    "T62.2"
+   ],
+   "icd10_sumber_lama": [
     "T47"
    ],
    "asal": [
@@ -109268,6 +109273,9 @@
    "nama": "Polimialgia Reumatik",
    "alias": [],
    "icd10": [
+    "M35.3"
+   ],
+   "icd10_sumber_lama": [
     "M53.3"
    ],
    "asal": [
@@ -109414,7 +109422,6 @@
      "tanggal": "2026-10-23"
     }
    },
-   "icd10_sumber_lama": [],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
   },
   {
@@ -143429,6 +143436,11 @@
     "pusing tujuh keliling"
    ],
    "icd10": [
+    "H81.1"
+   ],
+   "icd10_sumber_lama": [
+    "H81",
+    "H82",
     "R42"
    ],
    "asal": [
@@ -143442,7 +143454,7 @@
     "katalog SKDI 4A"
    ],
    "kompetensi": "PNPK (pedoman nasional, tingkat kompetensi belum diverifikasi)",
-   "kategori": "Gejala dan Temuan Abnormal",
+   "kategori": "Telinga",
    "kategori_sumber_lama": "Penyakit Saraf",
    "jenis": "penyakit",
    "definisi": "BPPV adalah gangguan sistem vestibular perifer tersering yang ditandai dengan sensasi berputar paroksismal singkat (< 1 menit) yang dipicu oleh perubahan posisi kepala terhadap gravitasi, diakibatkan oleh perpindahan partikel otokonia kalsium karbonat ke dalam kanalis semisirkularis (paling sering kanalis posterior).",
@@ -143868,11 +143880,6 @@
     "vertigo",
     "pusing berputar",
     "pusing tujuh keliling"
-   ],
-   "icd10_sumber_lama": [
-    "H81",
-    "H81.1",
-    "H82"
    ],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
   },

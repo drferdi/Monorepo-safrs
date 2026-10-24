@@ -5,7 +5,7 @@
     "total_diseases": 330,
     "total_categories": 21,
     "description": "Derived from theoracle/ssot/sentrapedia-knowledge-ssot.json by npm run knowledge:build; do not edit by hand. Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'kategori' = bab ICD-10 dari kode pertama (2026-10-24; kategori sumber di 'kategori_sumber_lama'). 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur).",
-    "ssotSha256": "a2fd28a1bb534dd4b43e6d4af3fee4502a99feada8177c3321e82637907a75db",
+    "ssotSha256": "7050028f50b8ea8949a13819faeba2a913c9cc89e2eaa9d384dfd2646d0d945c",
     "stats": [],
     "nationalSources": [],
     "professionalSources": [],
@@ -473,7 +473,7 @@
       "id": 20,
       "nama": "Artritis Reumatoid",
       "kategori": "Muskuloskeletal",
-      "kode": "M53.3",
+      "kode": "M06.9, M53.3",
       "definisi": "Penyakit autoimun yang ditandai dengan terdapatnya sinovitis erosif\nsimetrik yang walaupun terutama mengenai jaringan persendian,\nseringkali juga melibatkan organ tubuh lainnya.",
       "gejala": [
         "Keluhan",
@@ -3156,7 +3156,7 @@
       "id": 168,
       "nama": "Keracunan makanan",
       "kategori": "Cedera dan Keracunan",
-      "kode": "T47",
+      "kode": "T47, T62.2",
       "definisi": "Keracunan makanan merupakan suatu kondisi gangguan\npencernaan yang disebabkan oleh konsumsi makanan atau air yang\nterkontaminasi dengan zat patogen dan atau bahan kimia, misalnya\nNorovirus, Salmonella, Clostridium perfringens, Campylobacter, dan\nStaphylococcus aureus.",
       "gejala": [
         "Keluhan",
@@ -4626,7 +4626,7 @@
       "id": 247,
       "nama": "Polimialgia Reumatik",
       "kategori": "Muskuloskeletal",
-      "kode": "M53.3",
+      "kode": "M35.3, M53.3",
       "definisi": "Poly Myalgia Rheumatica (PMR) adalah suatu sindrom klinis dengan\netiologi yang tidak diketahui yang mempengaruhi individu usia\nlanjut. Hal ini ditandai dengan myalgia proksimal dari pinggul dan\ngelang bahu dengan kekakuan pagi hari yang berlangsung selama\nlebih dari 1 jam.",
       "gejala": [
         "Keluhan",
@@ -6120,7 +6120,7 @@
     {
       "id": 331,
       "nama": "Vertigo Posisi Paroksismal Jinak (BPPV)",
-      "kategori": "Gejala dan Temuan Abnormal",
+      "kategori": "Telinga",
       "kode": "H81, H81.1, H82, R42",
       "definisi": "BPPV adalah gangguan sistem vestibular perifer tersering yang ditandai dengan sensasi berputar paroksismal singkat (< 1 menit) yang dipicu oleh perubahan posisi kepala terhadap gravitasi, diakibatkan oleh perpindahan partikel otokonia kalsium karbonat ke dalam kanalis semisirkularis (paling sering kanalis posterior).",
       "gejala": [

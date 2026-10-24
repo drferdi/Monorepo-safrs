@@ -135,3 +135,17 @@ Rebuild: 17,994 chunks (2,408 SSOT + 15,586 PDF), `indexSha256` `57ca2482…`; t
 
 
 Rebuild (one for items 1, 2, 6, 7): 17,990 chunks (2,404 SSOT + 15,586 PDF; fewer SSOT chunks because the dropped rows shortened some entries), `indexSha256` `fc028da5…`, full re-embed on DirectML in 1,406 s. Benchmark (`../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-itemized.json` vs `benchmark-v06-a1.json`): identical in every category (overall 0.875, drug_dose 0.75, dose 0.82, targeted 0.934), and no query changed hit or miss.
+
+## Code fixes (Gaffer approved, 2026-10-24)
+
+The replaced code is kept in `icd10_sumber_lama`, so the catalogue `kode` and the evidence gate still match it; `kategori` follows the new first code.
+
+| Entry | Before | After | Reason |
+|---|---|---|---|
+| SP0020 Artritis Reumatoid | M53.3 | M06.9 | The PPK chapter repeats the polymyalgia line "M53.3 Polymyalgia rheumatica"; M53.3 is sacrococcygeal disorders. |
+| SP0247 Polimialgia Reumatik | M53.3 | M35.3 | The PPK names polymyalgia rheumatica; its code is M35.3 (digits swapped). |
+| SP0168 Keracunan makanan | T47 | T62.2 | The PPK's "No. ICD" (T47 is poisoning by gastrointestinal drugs). |
+| SP0331 BPPV | R42 | H81.1 | The specific code instead of the symptom code the PPK gives; kategori Gejala dan Temuan Abnormal → Telinga. |
+
+SP0112 Hepatitis B is unchanged: B16 (the PPK code) is already its first code, B18.1 adds the chronic form; the earlier "B18.1 vs B16" line was a misreading. Left for Gaffer: SP0020 and SP0260 "Rheumatoid Arthritis (RA)" (M05) describe the same disease. Index `818c1be1…`; benchmark `../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-codes.json` identical to `benchmark-v06-itraconazole.json`; gate green. Not run through the paid eval.
+
