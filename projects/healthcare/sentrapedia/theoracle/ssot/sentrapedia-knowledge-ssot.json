@@ -135350,17 +135350,30 @@
    },
    "dosis": [
     {
-     "obat": "Itraconazole",
+     "obat": "Itrakonazol",
      "dosis": "200 mg",
-     "rute": "",
-     "frekuensi": "sekali sehari",
-     "durasi": "3 bulan",
+     "rute": "oral",
+     "frekuensi": "2x sehari",
+     "durasi": "1 minggu, istirahat 3 minggu; 2 denyut (kuku tangan), 3-4 denyut (kuku kaki)",
      "populasi": "",
-     "konteks": "pulse therapy (tertulis di sumber)",
-     "kutipan": "Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)",
-     "sumber": "Daftar KKI",
-     "halaman": null,
-     "catatan": "Diambil dari teks terapi entri ini (terapi_teks \"daftar_kki\"), 2026-10-23; ditinjau Gaffer."
+     "konteks": "alternatif (obat pilihan: terbinafin); dosis denyut (pulse therapy)",
+     "kutipan": "itrakonazol dosis denyut (2x200 mg/hari selama 1 minggu, istirahat 3 minggu) sebanyak 2 denyut untuk kuku tangan dan 3-4 denyut untuk kuku kaki atau 200 mg/hari selama 2 bulan untuk kuku tangan dan minimal 3 bulan untuk kuku kaki",
+     "sumber": "PPK Perdoski 2017 (dermatovenereologi-perdoski-2017.pdf), Tinea unguium",
+     "halaman": 55,
+     "catatan": "Diambil dari PPK Perdoski 2017, 2026-10-24, atas permintaan Gaffer; menggantikan baris Daftar KKI \"Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)\" yang mencampur dua regimen."
+    },
+    {
+     "obat": "Itrakonazol",
+     "dosis": "200 mg",
+     "rute": "oral",
+     "frekuensi": "1x sehari",
+     "durasi": "2 bulan (kuku tangan); minimal 3 bulan (kuku kaki)",
+     "populasi": "",
+     "konteks": "alternatif (obat pilihan: terbinafin); regimen kontinu",
+     "kutipan": "itrakonazol dosis denyut (2x200 mg/hari selama 1 minggu, istirahat 3 minggu) sebanyak 2 denyut untuk kuku tangan dan 3-4 denyut untuk kuku kaki atau 200 mg/hari selama 2 bulan untuk kuku tangan dan minimal 3 bulan untuk kuku kaki",
+     "sumber": "PPK Perdoski 2017 (dermatovenereologi-perdoski-2017.pdf), Tinea unguium",
+     "halaman": 55,
+     "catatan": "Diambil dari PPK Perdoski 2017, 2026-10-24, atas permintaan Gaffer; menggantikan baris Daftar KKI \"Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)\" yang mencampur dua regimen."
     }
    ],
    "dokumen": [],
@@ -135381,7 +135394,7 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 1,
+    "n_pernyataan_dosis": 2,
     "n_obat_berdosis": 1,
     "ada_definisi": false,
     "ada_diagnosis": false,

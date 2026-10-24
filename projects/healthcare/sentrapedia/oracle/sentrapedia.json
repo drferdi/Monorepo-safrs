@@ -5,7 +5,7 @@
     "total_diseases": 330,
     "total_categories": 21,
     "description": "Derived from theoracle/ssot/sentrapedia-knowledge-ssot.json by npm run knowledge:build; do not edit by hand. Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'kategori' = bab ICD-10 dari kode pertama (2026-10-24; kategori sumber di 'kategori_sumber_lama'). 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur).",
-    "ssotSha256": "0528b7d59078221bfb3797a59a21d1ee201cfbbca9b385f4e1383cb97fd1f549",
+    "ssotSha256": "a2fd28a1bb534dd4b43e6d4af3fee4502a99feada8177c3321e82637907a75db",
     "stats": [],
     "nationalSources": [],
     "professionalSources": [],
@@ -5798,7 +5798,7 @@
       "definisi": "",
       "gejala": [],
       "diagnosis": "",
-      "terapi": "[Daftar KKI]\nItraconazole 200 mg sekali sehari 3 bulan (pulse therapy)\n\nDosis:\n- obat: Itraconazole; dosis: 200 mg; frekuensi: sekali sehari; durasi: 3 bulan; konteks: pulse therapy (tertulis di sumber); sumber: Daftar KKI; kutipan: Itraconazole 200 mg sekali sehari 3 bulan (pulse therapy)",
+      "terapi": "[Daftar KKI]\nItraconazole 200 mg sekali sehari 3 bulan (pulse therapy)\n\nDosis:\n- obat: Itrakonazol; dosis: 200 mg; frekuensi: 2x sehari; durasi: 1 minggu, istirahat 3 minggu; 2 denyut (kuku tangan), 3-4 denyut (kuku kaki); rute: oral; konteks: alternatif (obat pilihan: terbinafin); dosis denyut (pulse therapy); sumber: PPK Perdoski 2017 (dermatovenereologi-perdoski-2017.pdf), Tinea unguium; halaman: 55; kutipan: itrakonazol dosis denyut (2x200 mg/hari selama 1 minggu, istirahat 3 minggu) sebanyak 2 denyut untuk kuku tangan dan 3-4 denyut untuk kuku kaki atau 200 mg/hari selama 2 bulan untuk kuku tangan dan minimal 3 bulan untuk kuku kaki\n- obat: Itrakonazol; dosis: 200 mg; frekuensi: 1x sehari; durasi: 2 bulan (kuku tangan); minimal 3 bulan (kuku kaki); rute: oral; konteks: alternatif (obat pilihan: terbinafin); regimen kontinu; sumber: PPK Perdoski 2017 (dermatovenereologi-perdoski-2017.pdf), Tinea unguium; halaman: 55; kutipan: itrakonazol dosis denyut (2x200 mg/hari selama 1 minggu, istirahat 3 minggu) sebanyak 2 denyut untuk kuku tangan dan 3-4 denyut untuk kuku kaki atau 200 mg/hari selama 2 bulan untuk kuku tangan dan minimal 3 bulan untuk kuku kaki",
       "rujukan": ""
     },
     {
