@@ -10,7 +10,7 @@
 
 **Spec:** `docs/specs/2026-10-23-clerk-beta-access-design.md`
 
-**Execution status (2026-10-24):** Tasks 1–6 implemented and committed; Task 7 code review/fix pass and local gates verified. The selected Clerk development instance is configured. Public release is pending production identity/DNS/deploy/Access-cutover authority and real tester acceptance. See `docs/verification/clerk-public-release-readiness-2026-10-24.md`; this plan remains active while external acceptance is open.
+**Execution status (2026-10-24):** Tasks 1–6 implemented; Task 7 auth review/fix pass and source gates verified. Gaffer authorized production/DNS/deploy/conditional cutover and selected the latest complete tested baseline. Clerk domain checks are complete; draft private PR26 original Linux check/docker passed. Local Docker failed; reviewed private-artifact CI delivery is prepared (13 release checks, full system suite60), awaiting internal GitHub sign-in to configure the masked publishable setting before publication/runtime rollout. See `docs/verification/clerk-production-activation-2026-10-24.md`; real tester acceptance and public cutover remain open.
 
 ## Global Constraints
 

@@ -29,6 +29,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           lfs: false
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
       - run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - uses: actions/cache@v6
         with:
@@ -63,8 +64,8 @@ jobs:
       - run: npm run build
       - run: npm run deploy:dry-run
   # Builds the image; the launcher's provider preflight needs a real GEMINI_API_KEY, which CI never holds, so it is not
-  # run. A push to main of this private repository also publishes the image to private GHCR for the beta server
-  # (deploy/beta/update.sh pulls it by SHA). The public code mirror never publishes.
+  # run. Main publishes its normal registry tags; the explicitly approved same-repository release PR exports
+  # an immutable private image artifact, without changing main or pruning rollback images. Public mirrors do neither.
   docker:
     needs: check
     runs-on: ubuntu-24.04
@@ -72,13 +73,16 @@ jobs:
     permissions:
       contents: read
       packages: write
-    env:
-      IMAGE: ghcr.io/${{ github.repository_owner }}/sentrapedia-beta
-      PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.repository.private }}
     steps:
       - uses: actions/checkout@v7
         with:
           lfs: false
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - id: publication
+        run: node scripts/release-publication.mjs
       - run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
       - uses: actions/cache@v6
         with:
@@ -88,24 +92,37 @@ jobs:
       - run: git lfs pull
       - run: '! git lfs ls-files | grep -q " - "'
       - uses: docker/setup-buildx-action@v4
-      - if: env.PUBLISH == 'true'
+      - if: steps.publication.outputs.publish == 'true'
+        name: Validate production publishable configuration
+        run: node -e 'if (!/^pk_live_/.test(process.env.CLERK_PUBLISHABLE_KEY || "")) { console.error("Production Clerk publishable configuration is required"); process.exit(1); }'
+        env:
+          CLERK_PUBLISHABLE_KEY: ${{ secrets.SENTRAPEDIA_CLERK_PUBLISHABLE_KEY }}
+      - if: steps.publication.outputs.registry == 'true'
         run: echo "$GITHUB_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - uses: docker/build-push-action@v7
         with:
           context: .
-          push: ${{ env.PUBLISH == 'true' }}
-          tags: |
-            ${{ env.IMAGE }}:sha-${{ github.sha }}
-            ${{ env.IMAGE }}:main
+          push: ${{ steps.publication.outputs.registry == 'true' }}
+          build-args: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.SENTRAPEDIA_CLERK_PUBLISHABLE_KEY }}
+          outputs: ${{ steps.publication.outputs.artifact == 'true' && 'type=docker,dest=/tmp/sentrapedia-candidate.tar' || '' }}
+          tags: ${{ steps.publication.outputs.tags }}
           labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           # One manifest per push, so the retention step below counts images, not attestations.
           provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - if: steps.publication.outputs.artifact == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: sentrapedia-candidate-${{ steps.publication.outputs.revision }}
+          path: /tmp/sentrapedia-candidate.tar
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
       # Retention: keep the five newest images (rollback range), so private storage stays small.
-      - if: env.PUBLISH == 'true'
+      - if: steps.publication.outputs.retain == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

@@ -1,5 +1,7 @@
 # Public Clerk beta release readiness — 2026-10-24
 
+This is the pre-authorization readiness snapshot. Gaffer subsequently authorized production work and selected the latest complete tested release baseline; see [production activation](clerk-production-activation-2026-10-24.md) for performed changes and remaining acceptance.
+
 ## Required visitor journey
 
 Website -> Ajukan akses -> native Clerk Waitlist request -> pending (no demo access) -> Gaffer's explicit Clerk Dashboard approval -> personal invitation -> registration/legal acceptance -> application synthetic-data consent -> login/demo. Gaffer reaffirmed this sequence on 2026-10-24. No shared demo password, automatic approval or public registration is part of this release.

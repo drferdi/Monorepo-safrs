@@ -15,7 +15,7 @@
     "lint": "eslint src tests scripts vitest.config.ts && npm --prefix apps/site run lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && npm --prefix apps/site test",
-    "test:system": "node --test tests/system-runtime.node-test.mjs tests/lfs-media.node-test.mjs tests/scripts.node-test.mjs tests/export-split.node-test.mjs tests/beta-access-operator.node-test.mjs",
+    "test:system": "node --test tests/system-runtime.node-test.mjs tests/lfs-media.node-test.mjs tests/scripts.node-test.mjs tests/export-split.node-test.mjs tests/beta-access-operator.node-test.mjs tests/release-workflow.node-test.mjs",
     "beta:access": "node scripts/beta-access.mjs",
     "test:aadi": "node scripts/test-aadi.mjs",
     "test:all": "npm test && npm run test:system && npm run test:aadi",
