@@ -1,51 +1,51 @@
-# Perbandingan Oracle dan AADI yang dipakai Med Assist
+# Comparison of Oracle and the AADI that Med Assist uses
 
-Tanggal: 2026-10-09. Lingkup: pemeriksaan kode/dokumentasi lokal dan GET health lokal saja. Tidak ada perubahan Med Assist/AADI, pembacaan kredensial, inferensi berbayar, instalasi, atau implementasi wiring Sentrapedia.
+Date: 2026-10-09. Scope: inspection of local code and documentation plus a local GET health check only. No change to Med Assist or AADI, no credential read, no paid inference, no installation, and no Sentrapedia wiring implemented.
 
-## Kesimpulan
+## Conclusion
 
-AADI sudah memiliki integrasi diagnosis yang dapat diadaptasi untuk Sentrapedia. Oracle adalah dataset referensi lokal 144 entri. Keduanya memenuhi fungsi berbeda: reasoning kasus melalui layanan AADI, lookup/detail penyakit dari Oracle. Baik skema Oracle maupun kontrak AADI yang tersedia belum menyediakan kutipan PNPK per dokumen/halaman.
+AADI already has a diagnosis integration that can be adapted for Sentrapedia. Oracle is a local reference dataset of 144 entries. The two serve different functions: case reasoning through the AADI service, disease lookup and detail from Oracle. Neither the Oracle schema nor the available AADI contract yet provides a PNPK citation per document and page.
 
-Layanan yang dipakai Med Assist adalah assist/service step mode di <mira-system>, bukan runner simulasi penuh upstream. engine.py membatasi dua panggilan model per step (planning, structured assessment), memakai post-check deterministik, budget/error breaker dan contract validation. README menjelaskan step mode tidak membutuhkan FHIR/Qdrant. Estimasi 35–50 panggilan pada asesmen upstream lama tidak digunakan untuk menilai jalur layanan ini.
+The service Med Assist uses is the assist/service step mode in <mira-system>, not the full upstream simulation runner. engine.py limits each step to two model calls (planning, structured assessment) and uses deterministic post-checks, a budget/error breaker, and contract validation. The README explains that step mode needs neither FHIR nor Qdrant. The 35–50 call estimate from the older upstream assessment is not used to judge this service path.
 
-## Bukti kesiapan saat diperiksa
+## Readiness evidence at the time of inspection
 
-- GET http://127.0.0.1:8787/healthz mengembalikan HTTP 200, status ok; fields status/version/contractVersion. Ini membuktikan layanan lokal merespons, belum membuktikan inferensi/model/provider saat ini berhasil.
-- SHA-256 aadi-step-request.schema.json dan aadi-step-response.schema.json identik antara Med Assist lib/diagnosis-engine/contract dan AADI assist/service/contract.
-- Med Assist lib/diagnosis-engine/mira-engine.ts memiliki adapter POST /v1/diagnosis/step, contract v1, timeout 15 s, abort, validasi JSON, dan PII guard sebelum kirim. run-diagnosis.ts menampilkan differential, missing information dan next-best actions; failure kembali ke legacy dengan notice.
-- wxt.config.ts menetapkan aadi sebagai default production build bila flag tidak diberikan. Development tanpa flag masih legacy. ADR-005 Accepted 2026-09-28 merekam keputusan Gaffer. Sebagian komentar/doc lama masih menyebut off-by-default/proposed; kode config dan catatan accepted membedakan production/development.
-- aadi-supervisor.ts dan native messaging com.sentra.mira menyediakan autostart untuk extension. Sentrapedia web biasa tidak memiliki API Chrome nativeMessaging; perlu koneksi server ke layanan yang sudah hidup dan strategi lifecycle tersendiri.
-- Service auth.py/app.py baru mendukung development token; startup production ditolak sebelum verifier production tersedia. Local readiness tidak diperlakukan sebagai production readiness.
+- GET http://127.0.0.1:8787/healthz returned HTTP 200, status ok, with status/version/contractVersion fields. This proves the local service responds; it does not yet prove that the current inference, model or provider succeeds.
+- The SHA-256 of aadi-step-request.schema.json and aadi-step-response.schema.json is identical between Med Assist lib/diagnosis-engine/contract and AADI assist/service/contract.
+- Med Assist lib/diagnosis-engine/mira-engine.ts has an adapter for POST /v1/diagnosis/step, contract v1, a 15 s timeout, abort, JSON validation, and a PII guard before sending. run-diagnosis.ts renders the differential, missing information and next-best actions; on failure it falls back to legacy with a notice.
+- wxt.config.ts makes aadi the default production build when no flag is given. Development without a flag is still legacy. ADR-005, Accepted 2026-09-28, records Gaffer's decision. Some older comments and docs still say off-by-default or proposed; the config code and the accepted note distinguish production from development.
+- aadi-supervisor.ts and native messaging com.sentra.mira provide autostart for the extension. An ordinary Sentrapedia web page has no Chrome nativeMessaging API; it needs a server connection to an already running service and a lifecycle strategy of its own.
+- The new service auth.py/app.py supports a development token; production startup is refused until a production verifier exists. Local readiness is not treated as production readiness.
 
-## Perbandingan
+## Comparison
 
-| Aspek | Oracle Sentrapedia | AADI Med Assist |
+| Aspect | Sentrapedia Oracle | Med Assist AADI |
 | --- | --- | --- |
-| Bentuk | File JSON/TS, 144 record | HTTP reasoning service + adapter extension |
-| Masukan | Nama/kode/kategori untuk lookup | CaseState terstruktur: demografi tanpa identitas, keluhan, anamnesis, vital, pemfis, hasil, obat, kondisi/alergi dan fasilitas |
-| Hasil | Definisi, gejala, narasi diagnosis/terapi/rujukan | likely/alternatives/cannotMiss, evidence supporting/opposing, missingInformation, nextBestActions, disposition/unfilled dan metadata |
-| Analisis kasus | Belum ada engine | Jalur reasoning dan rendering sudah ada |
-| Jejak sumber | Identitas file/record dapat dibuat; referensi umum belum membuktikan isi per entri | Engine/version/model/trace/cost/latency; evidence adalah alasan terkait kasus, belum kutipan bibliografi pedoman |
-| Cakupan | 144 record; 15 kategori aktual; label/kode perlu review | Kode output dapat berada di luar KB lokal; ketepatan klinis perlu evaluasi terpisah |
-| Ketergantungan | Lokal, lookup tidak memanggil model | Layanan lokal dan provider model yang dikonfigurasi; langkah inferensi dapat memakai kuota/biaya |
-| Saat layanan gagal | Lookup lokal tetap tersedia | Med Assist memakai legacy fallback; Sentrapedia belum memiliki engine fallback itu |
-| Terapi | Narasi asli belum ditinjau | Kontrak step tidak menyediakan regimen obat; jalur obat Med Assist terpisah memakai KB/safety filter saat prescription API tidak dikonfigurasi |
-| Penerapan Sentrapedia | Adapter data dan UI lookup | Adapter CaseState/response, jalur server, de-identification, review UI, timeout/error handling, konfigurasi server dan lifecycle |
+| Form | JSON/TS files, 144 records | HTTP reasoning service plus an extension adapter |
+| Input | Name/code/category for lookup | A structured CaseState: de-identified demographics, complaint, history, vitals, physical examination, results, drugs, conditions/allergies and facility |
+| Output | Definition, symptoms, diagnosis/therapy/referral narrative | likely/alternatives/cannotMiss, evidence supporting/opposing, missingInformation, nextBestActions, disposition/unfilled and metadata |
+| Case analysis | No engine yet | The reasoning and rendering path already exists |
+| Source trail | A file/record identity can be produced; a general reference does not yet prove the content of each entry | Engine/version/model/trace/cost/latency; evidence is case-related reasoning, not yet a bibliographic guideline citation |
+| Coverage | 144 records; 15 actual categories; labels and codes need review | An output code may fall outside the local KB; clinical accuracy needs a separate evaluation |
+| Dependencies | Local; lookup calls no model | The local service and the configured model provider; an inference step may consume quota and cost |
+| When the service fails | Local lookup stays available | Med Assist uses the legacy fallback; Sentrapedia does not have that fallback engine |
+| Therapy | The original narrative is not reviewed | The step contract provides no drug regimen; Med Assist's separate drug path uses a KB/safety filter when the prescription API is not configured |
+| Sentrapedia implementation | A data adapter and a lookup UI | A CaseState/response adapter, a server path, de-identification, a review UI, timeout/error handling, server configuration and lifecycle |
 
-## Arah wiring yang disarankan
+## Suggested wiring direction
 
-1. Pertahankan Oracle sebagai katalog referensi lokal dengan provenance/status review. Tidak mengubah kode kategori atau menjadikan ICD primary key; tidak menghapus diagnosis AADI karena tidak ada dalam katalog 144 entri.
-2. Adaptasi kontrak AADI v1 sebagai file lokal/versioned contract Sentrapedia. Hubungkan melalui API server Sentrapedia ke layanan yang sudah tersedia; credential tetap server-side. Tidak mengimpor source dari capsule Med Assist, memakai VITE/client token, atau membawa dependency extension/native host ke web.
-3. Bedakan alasan reasoning kasus dari sumber pedoman. Simpan trace/versi/input terde-identifikasi dan status review pada hasil analisis. PNPK resmi dan kutipan halaman memerlukan registri/retrieval terverifikasi terpisah. Tidak menganggap output AADI otomatis tervalidasi oleh Oracle atau PNPK.
-4. Saat AADI tidak tersedia, tampilkan status unavailable dan pertahankan katalog/draf; jangan mengarang legacy diagnosis engine di Sentrapedia. Inference aktif termasuk clinical logic R3; rincian integrasi/review dan izin pemakaian layanan tetap perlu ditetapkan sebelum implementasi.
+1. Keep Oracle as the local reference catalogue, with provenance and review status. Do not change the category codes, do not make ICD the primary key, and do not drop an AADI diagnosis merely because it is absent from the 144-entry catalogue.
+2. Adapt the AADI v1 contract as a local, versioned Sentrapedia contract. Connect through the Sentrapedia server API to the service that already exists; credentials stay server-side. Do not import source from the Med Assist capsule, do not use a VITE or client token, and do not carry the extension or native-host dependency into the web app.
+3. Separate case-reasoning rationale from the guideline source. Store the trace, the version, the de-identified input and the review status on the analysis result. An official PNPK and a page citation require a separate, verified registry and retrieval. Do not treat AADI output as automatically validated by Oracle or PNPK.
+4. When AADI is unavailable, show an unavailable status and keep the catalogue and drafts; do not invent a legacy diagnosis engine in Sentrapedia. Live inference counts as R3 clinical logic; the integration and review details, and permission to use the service, still have to be settled before implementation.
 
-Tidak diperlukan pemilihan penyedia AI baru untuk mengadaptasi layanan yang sudah dipakai. Pemeriksaan ini tidak membaca src/.env atau menjalankan POST diagnosis sehingga provider/model aktif, biaya aktual, dan hasil klinis live hari ini belum diuji. Isi README tentang model/biaya historis tidak dianggap konfigurasi atau tarif terkini.
+No new AI provider has to be chosen in order to adapt the service already in use. This inspection read neither src/.env nor ran a POST diagnosis, so the active provider and model, the actual cost, and today's live clinical results are untested. What the README says about historical models and cost is not treated as the current configuration or the current rate.
 
-## Rujukan kode utama
+## Main code references
 
 - Med Assist: lib/diagnosis-engine/types.ts, aadi-engine.ts, run-diagnosis.ts, aadi-supervisor.ts, contract/aadi-step-{request,response}.schema.json; wxt.config.ts; docs/adr/adr-005-pluggable-diagnosis-engine-aadi-candidate.md.
-- Terapi: Med Assist lib/api/sentra-api.ts, getPrescriptions branch ketika PRESCRIPTION_API_CONFIGURED false (baris 956 dst).
-- AADI service: assist/service/README.md, engine.py, app.py, auth.py, contract/SOURCE.md. Asesmen upstream assist/MIRA_ASSESSMENT.md dibedakan dari step service yang digunakan.
-- Oracle: docs/verification/2026-10-09-oracle-readiness.md dan oracle/sentrapedia.json.
+- Therapy: Med Assist lib/api/sentra-api.ts, the getPrescriptions branch taken when PRESCRIPTION_API_CONFIGURED is false (line 956 onward).
+- AADI service: assist/service/README.md, engine.py, app.py, auth.py, contract/SOURCE.md. The upstream assessment assist/MIRA_ASSESSMENT.md is distinguished from the step service actually used.
+- Oracle: docs/verification/2026-10-09-oracle-readiness.md and oracle/sentrapedia.json.
 
-Hasil: perbandingan/health/kontrak terverifikasi langsung. Tidak menjalankan ulang tes/build atau mengklaim akurasi klinis, kesiapan production, maupun wiring Sentrapedia selesai.
+Result: the comparison, the health check and the contracts were verified directly. No tests or builds were re-run, and no claim is made about clinical accuracy, production readiness, or Sentrapedia wiring being finished.
