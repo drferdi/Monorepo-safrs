@@ -76,10 +76,55 @@ an IDI label, not a truncation.
   changes what a clinician sees.
 - **C — copy the dose row into SP0194.** Not recommended: it breaks the one-entry-one-disease
   rule and would carry the artemisinin/artesunate collapse into a second entry.
-- **D — separate decision on SP0193 row 78:** restore `kutipan` to the full sentence, and
+- **D — separate decision on SP0193 row 78** (verification below): restore `kutipan` to the full sentence, and
   decide whether `obat` stays `Artesunat` or becomes `Artemisinin atau Artesunat`. The
   reason this is worth deciding now is that the entry already contradicts itself on screen:
   the rendered Rujukan section reads "Artemisinin atau Artesunat … 3,2mg /kg BB" while the
   dose line further down reads "Artesunat 3,2mg /kg BB". Caveat from the provenance note:
   the full sentence is verified in PPK IDI 2017, not in KMK, so settle the label before
   rewording `obat`. This touches rendered clinical content, so it needs Gaffer's own word.
+
+## Option D, verified (2026-10-24, after Gaffer asked to take D further)
+
+**The label question is settled: KMK cannot confirm or deny the wording.** `fktp-kmk-2022.pdf`
+is in the index (613 chunks) but its copy does not include the malaria chapter at all — only
+six chunks mention malaria, and they belong to the TB, leprosy and antenatal chapters. So
+KMK's own phrasing of the Kriteria Rujukan sentence is not checkable from this library. The
+sentence is verified in PPK IDI 2017 (p. 23 of the PDF's own numbering; the malaria chapter
+opens at p. 21) and it is held in full in SP0193's `rujukan` field.
+
+**`kutipan` is not a quote of a different source — row 78 was windowed.** Across the
+auto-extracted rows, `kutipan` is plainly a window around the drug-name hit, cut at both
+ends and sometimes mid-word ("Dosis kina = 10 mg/kgBB/kali (3x/hr", "1) Lini 2 menggunakan
+Kina HCl 25 % : Pemberian I loading"), and those rows carry `catatan: "... cek kutipan."` for
+exactly that reason. But the curated `PPK FKTP (IDI2017)` block that row 78 belongs to
+(rows 67, 72, 73, 75, 76) quotes **whole sentences** — e.g. "Kina + Primakuin. Dosis kina =
+10 mg/kgBB/kali (3x/hari selama 7 hari), Primakuin = 0,25 mg/kgBB (selama 14 hari)." Row 78
+is the one member of that block whose quote starts mid-sentence, dropping "Malaria berat,
+namun pasien harus terlebih dahulu diberi dosis awal Artemisinin atau". Restoring it is a
+consistency fix inside its own block, not a deviation from how quotes are stored elsewhere.
+
+**So D reduces to one real defect.** `obat` is `Artesunat`, which names the second of the two
+alternatives the guideline offers while carrying the dose that belongs to the first. What a
+clinician sees today is the contradiction: the rendered `## Rujukan` section says "Artemisinin
+atau Artesunat ... 3,2mg /kg BB" and the dose line below it says "Artesunat 3,2mg /kg BB".
+
+| variant | `obat` | note |
+| --- | --- | --- |
+| **D-obat** (recommended) | `Artemisinin atau Artesunat` | Faithful to the two-alternative sentence; the existing `konteks` already tells the reader 3,2 mg/kgBB is artemether's initial dose and artesunat's is 2,4 mg/kgBB IV/IM. Resolves the on-screen contradiction. |
+| **D-keep** | `Artesunat` | Nothing changes, no rebuild. The contradiction stays on screen. |
+
+Splitting row 78 into an artemether row and an artesunat row is deliberately not offered:
+2,4 mg/kgBB does not appear in this sentence, it comes from the PNPK text, so a split would
+invent structure the source does not have.
+
+`sumber` and `halaman` are left alone under D. Rows 67–78 all carry the `PPK FKTP (IDI2017)`
+label with pages 41–42, which are KMK's page numbers; correcting row 78 alone would make the
+block inconsistent, and the pairing already sits in the recorded "81 quotes from other PDF
+editions" bucket.
+
+**Cost of choosing D-obat.** Row 78 is rendered into the chunk text, so one field change means
+a chunk rebuild, a new index hash, the full gate, and a benchmark — and, by the pattern of the
+other dose changes, a paid eval of about 0.32 USD. For one field. If it is taken, it is worth
+bundling with the 335 rows held back in `dose-audit-candidates-3.json` so the rebuild and the
+eval are paid once.
