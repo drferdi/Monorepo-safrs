@@ -10,6 +10,8 @@
 
 **Spec:** `docs/specs/2026-10-23-clerk-beta-access-design.md`
 
+**Execution status (2026-10-24):** Tasks 1–6 implemented and committed; Task 7 code review/fix pass and local gates verified. The selected Clerk development instance is configured. Public release is pending production identity/DNS/deploy/Access-cutover authority and real tester acceptance. See `docs/verification/clerk-public-release-readiness-2026-10-24.md`; this plan remains active while external acceptance is open.
+
 ## Global Constraints
 
 - Synthetic cases only; no clinical engine, evidence, template or provider behavior changes.
