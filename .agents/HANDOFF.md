@@ -231,6 +231,12 @@ Overwrite this file only for control-plane work. Keep another live session's ope
   repository `drferdi/Myprompt`, publish with `git subtree split --prefix=tools/prompt`) and
   `tools/retriever` are excluded from the root workspace.
 - Root doctor fails while Docker/PostgreSQL is down. Fresh extraction/install is not approved.
+- 2026-10-13 (Cursor): Fallow no longer reports `@ai-sdk/google` as an unlisted root dependency. The import lives in Assistverse, whose `package.json` already depends on it; `.fallowrc.json` `ignorePatterns` skips that standalone capsule so a root run does not attribute the import to the root manifest. Evidence: `npx fallow@3.33.1 dead-code --unlisted-deps` no longer lists `@ai-sdk/google`; the same command with `--root projects/healthcare/assistverse` reports 0 unlisted dependencies.
+
+### Papan (verified)
+- topology OK · ownership OK · sensitive **approved**
+- `pnpm status` → **WARN** (governance PASS; peringatan inventori tool lama)
+- Bukan FAIL — UI Situasi harus **Perlu dilihat**, bukan Rusak
 
 ## Work in flight
 
