@@ -3,9 +3,13 @@
 Read-only. The SSOT was not touched, the index was not rebuilt, no benchmark or eval was run.
 
 > **Decision (Gaffer, 2026-10-24): option A.** SP0194 is left as it is and the open item is
-> closed as a mis-attribution, not as a dose decision. No SSOT change, so the index,
-> benchmark and eval all stand. Option D (SP0193 row 78's short quote) was not decided and
-> stays open.
+> closed as a mis-attribution, not as a dose decision.
+>
+> **Decision (Gaffer, 2026-10-24): option D-obat.** SP0193 row 78 now reads
+> `Artemisinin atau Artesunat` with the full guideline sentence as its `kutipan`, applied by
+> `dose-audit-d.mjs`. Index rebuilt (`85dfc865…` → `49b0af29…`), gate green, and the
+> benchmark is identical to the K baseline in every category. The paid eval was not run.
+> See the sentrapedia HANDOFF entry for the hashes and the eval-set caveat.
 
 ## Finding
 

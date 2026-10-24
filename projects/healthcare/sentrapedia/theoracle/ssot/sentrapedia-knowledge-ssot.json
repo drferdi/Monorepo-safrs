@@ -13,7 +13,7 @@
    "index": "theoracle/index/chunks.jsonl (154 dokumen md + 44 PDF pedoman)",
    "dosis": "PPK FKTP 757, PNPK 1491, ISO 120 pernyataan dengan halaman dan kutipan"
   },
-  "catatan": "Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'kategori' = bab ICD-10 dari kode pertama (2026-10-24; kategori sumber di 'kategori_sumber_lama'). 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur). Audit dosis 2026-10-24 (disetujui Gaffer): 315 perbaikan mekanis pada 301 baris, 1350 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json), 1 baris baru dari teks terapi; nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 2 (disetujui Gaffer): 7 perbaikan mekanis pada 7 baris; nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 3 (disetujui Gaffer): 414 perbaikan mekanis pada 377 baris, 321 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json); nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 3b (disetujui Gaffer): 15 perbaikan mekanis pada 15 baris, 2 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json); nilai lama tercatat di 'catatan' baris. Keputusan klinis Gaffer 2026-10-24: K1-K4 dan K7 diterapkan (catatan klinis di 'konteks' SP0193, SP0216, SP0053; ceftriaxone ISO 20-50 mg/kg di SP0267; status SP0225 'tanpa_dosis').",
+  "catatan": "Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'kategori' = bab ICD-10 dari kode pertama (2026-10-24; kategori sumber di 'kategori_sumber_lama'). 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur). Audit dosis 2026-10-24 (disetujui Gaffer): 315 perbaikan mekanis pada 301 baris, 1350 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json), 1 baris baru dari teks terapi; nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 2 (disetujui Gaffer): 7 perbaikan mekanis pada 7 baris; nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 3 (disetujui Gaffer): 414 perbaikan mekanis pada 377 baris, 321 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json); nilai lama tercatat di 'catatan' baris. Audit dosis 2026-10-24, putaran 3b (disetujui Gaffer): 15 perbaikan mekanis pada 15 baris, 2 baris ekstraksi otomatis yang bukan dosis obat dihapus (salinan di docs/verification/theoracle-eval-2026-10-24/dose-audit-removed.json); nilai lama tercatat di 'catatan' baris. Keputusan klinis Gaffer 2026-10-24: K1-K4 dan K7 diterapkan (catatan klinis di 'konteks' SP0193, SP0216, SP0053; ceftriaxone ISO 20-50 mg/kg di SP0267; status SP0225 'tanpa_dosis'). Keputusan klinis Gaffer 2026-10-24 (D-obat): SP0193 #78 obat menjadi \"Artemisinin atau Artesunat\" dan kutipannya dipulihkan ke kalimat utuh PPK IDI 2017.",
   "pdf_pedoman": [
    {
     "file": "aha-asa-stroke-primary-prevention-2024.pdf",
@@ -71997,7 +71997,7 @@
      "catatan": ""
     },
     {
-     "obat": "Artesunat",
+     "obat": "Artemisinin atau Artesunat",
      "dosis": "3,2mg /kg BB",
      "rute": "Intra Muskular atau Intra Vena",
      "frekuensi": "",
@@ -72006,8 +72006,8 @@
      "konteks": "dosis awal sebelum rujukan malaria berat; catatan klinis: 3,2 mg/kgBB adalah dosis awal artemether; dosis artesunat 2,4 mg/kgBB IV/IM. Teks pedoman dikutip apa adanya",
      "sumber": "PPK FKTP (IDI2017)",
      "halaman": 42,
-     "kutipan": "Artesunat per Intra Muskular atau Intra Vena\ndengan dosis awal 3,2mg /kg BB.",
-     "catatan": "Keputusan klinis Gaffer 2026-10-24: konteks semula \"dosis awal sebelum rujukan malaria berat\"."
+     "kutipan": "Malaria berat, namun pasien harus terlebih dahulu diberi dosis\nawal Artemisinin atau Artesunat per Intra Muskular atau Intra\nVena dengan dosis awal 3,2mg /kg BB.",
+     "catatan": "Keputusan klinis Gaffer 2026-10-24: konteks semula \"dosis awal sebelum rujukan malaria berat\".; Keputusan klinis Gaffer 2026-10-24 (D-obat): obat semula \"Artesunat\", kutipan semula \"Artesunat per Intra Muskular atau Intra Vena dengan dosis awal 3,2mg /kg BB.\" (kalimat pedoman menawarkan dua alternatif dan 3,2 mg/kgBB melekat pada yang pertama)."
     },
     {
      "obat": "artemether-lumefantrine",
