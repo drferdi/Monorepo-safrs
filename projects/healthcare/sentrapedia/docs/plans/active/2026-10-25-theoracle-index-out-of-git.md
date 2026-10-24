@@ -1,7 +1,7 @@
 # Proposal: stop carrying the generated TheOracle vectors in git history
 
 Status: **awaiting Gaffer's decision**. Nothing is implemented. Risk tier **R2** (install and deploy boundary).
-Written 2026-10-25 from the open item left by the 2026-10-25 publish (`.agents/HANDOFF.md`, top entry).
+Written 2026-10-25 from the open item left by the 2026-10-25 publish entry in `.agents/HANDOFF.md`.
 
 ## Recommendation in one line
 
@@ -27,8 +27,8 @@ and deleting objects mid-month does not recalculate that month. This proposal **
 does not recover what is already published, and it must not: no history rewrite, no force-push.
 
 Bandwidth is being spent too, which the handoff entry did not count. Every CI run pulls LFS in **both** jobs
-(`check` and `docker`), so a new index version costs about 106 MB of bandwidth on its first run after the cache
-misses; and `deploy/beta/setup-server.sh` installs `git-lfs` with `git lfs install --system`, so the server's
+(`check` and `docker`), so a new index version costs 53 MB of bandwidth, and up to
+106 MB if the second job misses the cache the first wrote; and `deploy/beta/setup-server.sh` installs `git-lfs` with `git lfs install --system`, so the server's
 routine `git pull --ff-only` in `update.sh` *also* downloads the 53 MB object — even though the running container
 gets its index from the Docker image, not from the checkout.
 
@@ -76,6 +76,8 @@ Where the artefact lives — the one thing I need Gaffer to confirm:
   `drferdi/Sentrapedia` itself stays private and the public code tree is a separate mirror, which is how
   `.github/workflows/ci.yml` already describes it ("The public code mirror never publishes"). If that assumption is
   wrong, A1 is wrong, because a release on a repository that later goes public would expose the private database.
+  One step before the first artefact can exist: the upload after `knowledge:build` needs working `gh` authentication
+  on Gaffer's machine, and the token there is currently invalid.
 - **A2: Cloudflare R2** (Gaffer already runs Cloudflare Tunnel and Access): 10 GB free, no egress fees, and the
   database never touches GitHub. Costs one new service plus credentials in three places (CI, Gaffer's machine, the
   server fallback).
@@ -88,8 +90,9 @@ Where the artefact lives — the one thing I need Gaffer to confirm:
   images), so 53 MB per rebuild would be billed rather than free.
 
 Cost on the beta server: **none on the normal path** — it pulls the image CI built, and the index is already baked
-into its own layer by the Dockerfile. Under `SENTRAPEDIA_BUILD=local` the fallback runs the installer instead of
-`git lfs pull`: the same 53 MB download, no rebuild, no memory pressure. It needs one new read-only credential there
+into its own layer by the Dockerfile. Under `SENTRAPEDIA_BUILD=local` the fallback runs the installer after
+`git lfs pull`, which still runs for the PNG, mp4, webm and WebP media: the same 53 MB download for the index, no
+rebuild, no memory pressure. It needs one new read-only credential there
 (a fine-grained `contents: read` token for A1), because the existing SSH deploy key and the `read:packages` PAT do
 not cover release assets. In exchange, the routine `git pull` stops downloading 53 MB.
 
@@ -107,8 +110,16 @@ Files it touches: `.gitattributes` (remove the vectors LFS line) · `.gitignore`
 `deploy/beta/update.sh` and `deploy/beta/README.md` · `deploy/beta/setup-server.sh` (the token) ·
 `tests/export-split.node-test.mjs` · `tests/scripts.node-test.mjs:262` ("the **committed** index" becomes
 "installed") · `docs/data.md` · `.agents/AGENT-CONTEXT.md` (publish check 3 and the private-data section) ·
-`.agents/DECISIONS.md`. No `Dockerfile` change: the index is fetched into the checkout before `docker build`, and
-`.dockerignore` does not exclude it. `tests/lfs-media.node-test.mjs` is unaffected — it covers mp4, webm and webp.
+`.agents/DECISIONS.md`. `tests/lfs-media.node-test.mjs` is unaffected — it covers mp4, webm and webp, not the index.
+
+One detail to settle when implementing, not before: the `dependencies` stage of the `Dockerfile` copies only the
+named install scripts before `npm ci`, and no `manifest.json`. So either the installer is **not** in `postinstall`
+but a separate `knowledge:install` that CI and the local-build fallback call explicitly (my preference: one less
+moving part in the image, and the public mirror then needs no token at all), or `postinstall` gains it and the
+Dockerfile must copy the new script and set `SENTRAPEDIA_SKIP_INDEX=1` in that stage. Either way the installer must
+skip gracefully where there is no token, the way `SENTRAPEDIA_SKIP_MODEL=1` already does. Otherwise no `Dockerfile`
+change is needed: the index is fetched into the checkout before `docker build`, and `.dockerignore` does not
+exclude it.
 
 Growth after this: **zero**. A knowledge session adds a 1.9 KB manifest and a few hundred KB of `chunks.jsonl` delta.
 
@@ -129,14 +140,26 @@ Gaffer wants no new moving parts at all before the beta opens.
 
 ## Option C — keep LFS, split the vector file by layer (cheap, but it touches the clinical path)
 
-The 15,586 guideline-library vectors are byte-stable across rebuilds (the handoff archive records min cosine
-0.99999994 against the previous index); only the 2,285 SSOT rows actually change. `build-theoracle-chunks.mjs`
+The 15,586 guideline-library vectors come out near-identical across rebuilds — the handoff archive records min
+cosine 0.99999994 against the previous index after a full re-embed, which is near-identical, **not** byte-identical.
+That distinction decides the option: `npm run knowledge:build` re-embeds everything, so the library part stays
+byte-stable only if the build is changed to carry those rows forward instead of re-embedding them, the way
+`--append` already does. Without that change the 45.6 MB file gets a new blob every rebuild and the option saves
+nothing. Only the 2,285 SSOT rows actually change in content. `build-theoracle-chunks.mjs`
 already writes SSOT rows first and library rows second, so the vector file is already partitioned. Split it into a
 `vectors-library.f32` (about 45.6 MB, changes almost never) and a `vectors-ssot.f32` (about 6.7 MB, changes every
 rebuild).
 
 Growth drops to about 6.7 MB per rebuild, roughly 8 times less — about 1,500 rebuilds of runway — with no new
 service, no new credential, and no change to CI, the Dockerfile, `update.sh` or `export:split`.
+
+Files it touches: `scripts/build-theoracle-index.mjs` (writes two files, and must carry the library rows forward) ·
+`theoracle/index/manifest.json` format · `src/lib/theoracle-grounding.ts` (the loader and its size checks) ·
+`.gitattributes` · `scripts/deploy-dry-run.mjs` (its `required` list names `vectors.f32` by path) ·
+`scripts/benchmark-theoracle-grounding.mjs` (hashes `vectors.f32` by name) · `tests/scripts.node-test.mjs` ·
+`tests/theoracle-grounding.test.ts` (builds a synthetic `vectors.f32`) · `docs/data.md`. The two dose-audit scripts
+under `docs/verification/theoracle-eval-2026-10-24/` read `chunks.jsonl` only, so they are unaffected. That list is
+longer than option A's and it reaches into the retrieval path, which is the argument against it.
 
 The reason I do not recommend it: it is the only option that changes the manifest format and
 `src/lib/theoracle-grounding.ts`, that is, the retrieval path that feeds the therapy evidence gate. Options A and B
@@ -148,7 +171,7 @@ need a fresh benchmark run to rule out. Cheaper on quota, dearer in risk.
 
 | | A: artefact outside git | B: commit at publish points | C: split the vector file |
 | --- | --- | --- | --- |
-| Growth per rebuild | 0 | about 53 MB per *release* | about 6.7 MB |
+| Growth per rebuild | 0 | about 53 MB per *release* | about 6.7 MB, only if the build stops re-embedding the library |
 | Beta server, normal path | unchanged | unchanged | unchanged |
 | Beta server, local-build fallback | installer replaces `git lfs pull`; one new read-only token | unchanged | unchanged |
 | Index rebuilt on the server | never | never | never |
