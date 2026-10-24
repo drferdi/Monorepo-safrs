@@ -18,3 +18,5 @@ verify-report/
 .superpowers/
 docs/superpowers/
 .claude/
+# Git LFS hooks generated on each machine (core.hooksPath is .husky/_)
+.husky/_/
