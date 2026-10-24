@@ -4,9 +4,11 @@
 import { existsSync, renameSync, rmSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { fileSha256, indexDir } from "./theoracle-model.mjs";
-import { apiHeaders, assetName, findRelease, indexToken, manifestPath, readManifest, repository, vectorsPath } from "./theoracle-index.mjs";
+import { apiHeaders, assetName, findRelease, indexToken, manifestPath, readManifest, repository, requireCapsuleRoot, vectorsPath } from "./theoracle-index.mjs";
 
 const fail = message => { console.error(`install-theoracle-index: ${message}`); process.exitCode = 1; };
+
+requireCapsuleRoot("knowledge:install");
 
 if (process.env.SENTRAPEDIA_SKIP_INDEX === "1") {
   console.warn("Sentrapedia: unduhan index TheOracle dilewati karena SENTRAPEDIA_SKIP_INDEX=1.");

@@ -4,10 +4,11 @@
 // Idempotent: an asset whose name already exists is left alone, because the name carries indexSha256.
 import { existsSync, readFileSync } from "node:fs";
 import { fileSha256 } from "./theoracle-model.mjs";
-import { apiHeaders, assetName, findRelease, indexToken, manifestPath, readManifest, releaseTag, repository, vectorsPath } from "./theoracle-index.mjs";
+import { apiHeaders, assetName, findRelease, indexToken, manifestPath, readManifest, releaseTag, repository, requireCapsuleRoot, vectorsPath } from "./theoracle-index.mjs";
 
 const fail = message => { console.error(`publish-theoracle-index: ${message}`); process.exit(1); };
 
+requireCapsuleRoot("knowledge:publish -- --yes");
 if (!process.argv.includes("--yes")) fail("this uploads to GitHub; re-run with --yes once Gaffer has approved it.");
 if (!existsSync(manifestPath) || !existsSync(vectorsPath)) fail("theoracle/index/manifest.json and vectors.f32 must both be present.");
 

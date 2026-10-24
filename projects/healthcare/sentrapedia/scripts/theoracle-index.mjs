@@ -6,7 +6,8 @@
 // Release assets are outside the Git LFS quota (2 GiB per file, no bandwidth limit) and the repository stays
 // private, so every call needs a token with read access to its contents.
 import { readFileSync } from "node:fs";
-import { indexDir } from "./theoracle-model.mjs";
+import { resolve } from "node:path";
+import { indexDir, root } from "./theoracle-model.mjs";
 
 export const repository = "drferdi/Sentrapedia";
 // One release holds every index version; the asset name carries indexSha256, so an upload never replaces an older
@@ -14,6 +15,16 @@ export const repository = "drferdi/Sentrapedia";
 export const releaseTag = "theoracle-index";
 export const manifestPath = `${indexDir}manifest.json`;
 export const vectorsPath = `${indexDir}vectors.f32`;
+
+// Run from the capsule root or stop with the folder spelled out (Gaffer, 2026-10-25): from anywhere else npm says
+// "Missing script" and node says "Cannot find module", neither of which says where to stand. The path is computed
+// from this file, so the message is right on any machine.
+export function requireCapsuleRoot(command) {
+  const here = resolve(process.cwd()), capsule = resolve(root);
+  if (here === capsule) return;
+  console.error(`Jalankan perintah ini dari folder capsule Sentrapedia:\n  cd ${capsule}\n  npm run ${command}\nSekarang berjalan di ${here}.`);
+  process.exit(1);
+}
 
 export const readManifest = () => JSON.parse(readFileSync(manifestPath, "utf8"));
 export const assetName = manifest => `vectors-${manifest.indexSha256}.f32`;

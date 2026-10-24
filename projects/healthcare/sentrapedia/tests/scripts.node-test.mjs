@@ -285,7 +285,7 @@ export const fileSha256 = async path => createHash("sha256").update(readFileSync
   if (vectors !== undefined) write(root, "theoracle/index/vectors.f32", vectors);
   if (manifest !== undefined) write(root, "theoracle/index/manifest.json", JSON.stringify(manifest));
 }
-const installer = (root, env = {}) => run(join(root, "scripts/install-theoracle-index.mjs"), [], { env: { ...process.env, SENTRAPEDIA_INDEX_TOKEN: "", GH_TOKEN: "", GITHUB_TOKEN: "", ...env } });
+const installer = (root, env = {}, cwd = root) => run(join(root, "scripts/install-theoracle-index.mjs"), [], { cwd, env: { ...process.env, SENTRAPEDIA_INDEX_TOKEN: "", GH_TOKEN: "", GITHUB_TOKEN: "", ...env } });
 const pinned = vectors => ({ indexSha256: "a".repeat(64), vectors: { sha256: sha(vectors) } });
 
 test("the index installer leaves an index that already matches its manifest alone", withCapsule("install-index", async root => {
@@ -317,10 +317,24 @@ test("the index installer fails with a named token when the vectors are missing 
   assert.match(stale.stderr, /SENTRAPEDIA_INDEX_TOKEN/);
 }));
 
+test("both index commands stop with the capsule folder spelled out when run from elsewhere", withCapsule("install-index-cwd", async root => {
+  installerFixture(root, { vectors: "rows", manifest: pinned("rows") });
+  copyScripts(root, ["publish-theoracle-index.mjs"]);
+  const elsewhere = tmpdir();
+  const install = await installer(root, {}, elsewhere);
+  assert.equal(install.code, 1);
+  assert.match(install.stderr, /Jalankan perintah ini dari folder capsule Sentrapedia/);
+  assert.match(install.stderr, /npm run knowledge:install/);
+  assert.ok(install.stderr.includes(root), "names the capsule folder to cd into");
+  const publish = await run(join(root, "scripts/publish-theoracle-index.mjs"), ["--yes"], { cwd: elsewhere });
+  assert.equal(publish.code, 1);
+  assert.match(publish.stderr, /npm run knowledge:publish -- --yes/);
+}));
+
 test("the index publisher refuses to upload without --yes", withCapsule("publish-index", async root => {
   installerFixture(root, { vectors: "rows", manifest: pinned("rows") });
   copyScripts(root, ["publish-theoracle-index.mjs"]);
-  const { code, stderr } = await run(join(root, "scripts/publish-theoracle-index.mjs"));
+  const { code, stderr } = await run(join(root, "scripts/publish-theoracle-index.mjs"), [], { cwd: root });
   assert.equal(code, 1);
   assert.match(stderr, /re-run with --yes/);
 }));

@@ -38,7 +38,7 @@ Structured clinical facts live only in `theoracle/ssot/sentrapedia-knowledge-sso
 
 `src/lib/theoracle-grounding.ts` verifies the manifest hashes, embeds the query locally with the same model and returns at most six passages (two per document). Rebuild everything with `npm run knowledge:build` after changing the SSOT (`node scripts/build-theoracle-index.mjs --device dml` embeds on the GPU when the chunks are already written).
 
-After a rebuild the new vectors exist only on the machine that built them: publish them with `npm run knowledge:publish -- --yes` (Gaffer's go, a token with write access to the repository contents) before the commit is pushed, or CI and the beta server cannot install the index that the committed manifest pins.
+Both commands must run from the capsule root; from anywhere else they stop and print the folder to `cd` into, because npm and node would otherwise fail with messages that do not say why. After a rebuild the new vectors exist only on the machine that built them: publish them with `npm run knowledge:publish -- --yes` (Gaffer's go, a token with write access to the repository contents) before the commit is pushed, or CI and the beta server cannot install the index that the committed manifest pins.
 
 ## AADI service
 
