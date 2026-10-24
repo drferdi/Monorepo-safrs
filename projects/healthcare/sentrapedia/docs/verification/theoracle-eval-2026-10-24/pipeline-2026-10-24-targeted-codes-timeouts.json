@@ -1,0 +1,123 @@
+{
+  "summary": {
+    "label": "targeted-codes-timeouts",
+    "measuredAt": "2026-10-24T05:49:05.885Z",
+    "cases": 1,
+    "ok": 1,
+    "latencyMs": {
+      "p50": 3801,
+      "p95": 3801,
+      "stages": {
+        "retrieve_dx": {
+          "p50": 82,
+          "p95": 82
+        },
+        "aadi_dx": {
+          "p50": 2224,
+          "p95": 2224
+        },
+        "retrieve_tx": {
+          "p50": 43,
+          "p95": 43
+        },
+        "aadi_tx": {
+          "p50": 1412,
+          "p95": 1412
+        },
+        "gate": {
+          "p50": 5,
+          "p95": 5
+        }
+      }
+    },
+    "icd10": {
+      "valid": 1,
+      "nameMatch": 1,
+      "correctTop1VsDraftGold": 1
+    },
+    "dose": {
+      "written": 3,
+      "supportedByPassages": 3,
+      "supportedRate": 1,
+      "displayed": 1,
+      "verified": 1,
+      "doseRemoved": 2,
+      "removed": 0
+    },
+    "retrievalSuccess": null,
+    "costUsd": 0.0052,
+    "rateLimitRetries": 0
+  },
+  "rows": [
+    {
+      "id": "mixed_id_en-13",
+      "ok": true,
+      "ms": 3801,
+      "path": "targeted",
+      "stages": [
+        {
+          "traceId": "96e1825c-1c1a-4d7f-b90e-656488237a94",
+          "stage": "retrieve_dx",
+          "ms": 82,
+          "ok": true
+        },
+        {
+          "traceId": "96e1825c-1c1a-4d7f-b90e-656488237a94",
+          "stage": "aadi_dx",
+          "ms": 2224,
+          "ok": true
+        },
+        {
+          "traceId": "96e1825c-1c1a-4d7f-b90e-656488237a94",
+          "stage": "retrieve_tx",
+          "ms": 43,
+          "ok": true
+        },
+        {
+          "traceId": "96e1825c-1c1a-4d7f-b90e-656488237a94",
+          "stage": "aadi_tx",
+          "ms": 1412,
+          "ok": true
+        },
+        {
+          "traceId": "96e1825c-1c1a-4d7f-b90e-656488237a94",
+          "stage": "gate",
+          "ms": 5,
+          "ok": true
+        }
+      ],
+      "icd10": "B20",
+      "diagnosis": "HIV infection",
+      "icdValid": true,
+      "icdNameMatch": true,
+      "icdCorrect": true,
+      "therapyRetrieved": true,
+      "drugsWritten": 3,
+      "dosesWritten": 3,
+      "dosesSupported": 3,
+      "verified": 1,
+      "doseRemoved": 2,
+      "removed": 0,
+      "displayedDoses": 1,
+      "costUsd": 0.005245,
+      "verifiedEvidence": [
+        {
+          "drug": "efavirenz",
+          "dose": "1x600mg",
+          "passages": [
+            {
+              "id": "03b39641-d6a1-d893-f4ba-7ede32bb0415",
+              "title": "HIV/AIDS",
+              "text": "# HIV/AIDS Stavudine (d4T) 40 mg setiap 12 jam (30 mg setiap 12 jam bila BB <60 kg) Zidovudine (ZDV atau AZT) 300 mg setiap 12 jam Nucleotide RTI Tenofovir (TDF) 300 mg sekali sehari, (Catatan: interaksi obat dengan ddI perlu mengurangi dosis ddI) Non-nucleoside RTIs Efavirenz (EFV) 600 mg sekali sehari Nevirapine(NVP) (Neviral®) 200 mg sekali sehari selama 14 hari, kemudian 200 mg setiap 12 jam Protease inhibitors Lopinavir/ritonavir (LPV/r) 400 mg/100 mg setiap 12 jam, (533 mg/133 mg setiap 12 jam bila dikombinasi dengan EFV atau NVP) ART kombinasi AZT -3TC (Duviral ®) Diberikan 2x sehari de"
+            },
+            {
+              "id": "8570e22a-c8ba-4f5e-9ad0-48c81bc43fd6",
+              "title": "fasyankes-primer-idi-2017.pdf",
+              "text": "57 PANDUAN PRAKTIK KLINIS BAGI DOKTER DI FASILITAS PELAYANAN KESEHATAN TINGKAT PERTAMA BAB II : DAFTAR PANDUAN PRAKTIK KLINIS BERDASARKAN MASALAH DAN PENYAKIT Tabel. 2.3. Dosis antiretroviral untuk ODHA dewasa Gologan/obatDosis Nucleoside RTI Lamivudine (3TC)150 mg setiap 12 jam atau 300 mg sekali sehari 40 mg setiap 12 jam Stavudine (d4T)(30 mg setiap 12 jam bila BB <60 kg) 300 mg setiap 12 jam Zidovudine (ZDV atau AZT) Nucleotide RTI Tenofovir (TDF)300 mg sekali sehari, (Catatan: interaksi obat dengan ddI perlu mengurangi dosis ddI) Non-nucleoside RTIs Efavirenz (EFV)600 mg sekali sehari Nev"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
