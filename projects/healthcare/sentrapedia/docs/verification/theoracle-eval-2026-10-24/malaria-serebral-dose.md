@@ -2,6 +2,11 @@
 
 Read-only. The SSOT was not touched, the index was not rebuilt, no benchmark or eval was run.
 
+> **Decision (Gaffer, 2026-10-24): option A.** SP0194 is left as it is and the open item is
+> closed as a mis-attribution, not as a dose decision. No SSOT change, so the index,
+> benchmark and eval all stand. Option D (SP0193 row 78's short quote) was not decided and
+> stays open.
+
 ## Finding
 
 The open item recorded in HANDOFF — "PPK IDI 2017 gives a pre-referral dose of 3,2 mg/kg
