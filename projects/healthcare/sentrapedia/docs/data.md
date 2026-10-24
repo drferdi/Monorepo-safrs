@@ -22,7 +22,7 @@ The full plan is `docs/plans/active/2026-10-19-workspace-v2-migration.md`.
 
 ## Bundled reference data
 
-- `oracle/sentrapedia.json`: the disease catalogue (`metadata`, `categories`, `diseases`), read by `src/lib/theoracle.ts`. It is derived from the knowledge SSOT by `scripts/build-oracle-catalog.mjs`, which also writes its SHA-256 into `src/lib/theoracle.ts`; do not edit it by hand.
+- `oracle/sentrapedia.json`: the disease catalogue (`metadata`, `categories`, `diseases`), read by `src/lib/theoracle.ts`. It is derived from the knowledge SSOT by `scripts/build-oracle-catalog.mjs`, which also writes its SHA-256 into `src/lib/theoracle.ts`; do not edit it by hand. Each disease's `kategori` is the ICD-10 (WHO 2010) chapter of its first code, 21 categories (SSOT, 2026-10-24); the source category is kept in `kategori_sumber_lama`.
 - Earlier forms of the same data (`oracle/diseases.json`, `oracle/diseases-data.ts`, `oracle/data.ts`) were removed on 2026-10-17 (tech-debt row 20); git history keeps them.
 
 The reference data ships with the build. The app does not change it at runtime.

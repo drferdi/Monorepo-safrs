@@ -15,6 +15,21 @@ const sourceLabel = base => LABELS[base] ?? (base.startsWith("pnpk_") ? `PNPK ${
 const DOCUMENTS = { katalog_skdi: "katalog", oracle_ii: "PNPK", index_md: "index_md", ppk_idi_2017: "PPK IDI 2017" };
 const clean = text => String(text ?? "").replace(/\r\n?/g, "\n").trim();
 
+// Disease categories are the ICD-10 (WHO 2010) chapter of the entry's first code (Gaffer, 2026-10-24).
+const CHAPTERS = [
+  ["A00", "B99", "Infeksi dan Parasit"], ["C00", "D48", "Neoplasma"], ["D50", "D89", "Darah dan Imunologi"],
+  ["E00", "E90", "Endokrin, Nutrisi, dan Metabolik"], ["F00", "F99", "Jiwa dan Perilaku"], ["G00", "G99", "Saraf"],
+  ["H00", "H59", "Mata"], ["H60", "H95", "Telinga"], ["I00", "I99", "Kardiovaskular"], ["J00", "J99", "Pernapasan"],
+  ["K00", "K93", "Pencernaan"], ["L00", "L99", "Kulit"], ["M00", "M99", "Muskuloskeletal"], ["N00", "N99", "Ginjal dan Saluran Kemih-Kelamin"],
+  ["O00", "O99", "Kehamilan dan Persalinan"], ["P00", "P96", "Perinatal"], ["Q00", "Q99", "Kongenital"],
+  ["R00", "R99", "Gejala dan Temuan Abnormal"], ["S00", "T98", "Cedera dan Keracunan"], ["U00", "U99", "Kode Khusus (COVID-19)"],
+  ["V01", "Y98", "Penyebab Eksternal"], ["Z00", "Z99", "Faktor Status Kesehatan"],
+];
+export const chapter = code => {
+  const block = String(code ?? "").trim().toUpperCase().slice(0, 3);
+  return CHAPTERS.find(([first, last]) => block.length === 3 && block >= first && block <= last)?.[2];
+};
+
 // "[PPK IDI 2017 · fasyankes-primer-idi-2017.pdf, hlm. 341] ..."; sources with identical text share one paragraph.
 export function therapyText(entry) {
   const bySource = new Map();

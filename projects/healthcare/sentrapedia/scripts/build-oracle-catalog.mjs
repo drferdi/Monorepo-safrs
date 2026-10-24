@@ -1,17 +1,16 @@
 // Derives the Pustaka Klinis catalogue (oracle/sentrapedia.json, the shape src/lib/theoracle.ts reads) from the SSOT
 // and writes the catalogue's SHA-256 into theOracleSource in src/lib/theoracle.ts. Usage: node scripts/build-oracle-catalog.mjs
 import { readFileSync, writeFileSync } from "node:fs";
-import { clean, doseLines, list, sha256, ssot, ssotBytes, ssotPath, therapyText } from "./knowledge-ssot.mjs";
+import { chapter, clean, doseLines, list, sha256, ssot, ssotBytes, ssotPath, therapyText } from "./knowledge-ssot.mjs";
 import { root } from "./theoracle-model.mjs";
 
-// An entry without a category takes the chapter of its first ICD-10 code; guideline topics are not diseases.
-const CHAPTERS = { A: "Infeksi", B: "Infeksi", C: "Neoplasma/Darah", D: "Neoplasma/Darah", E: "Endokrin-Metabolik", F: "Jiwa", G: "Saraf", H: "Mata/THT", I: "Kardiovaskular", J: "Respirasi", K: "Pencernaan", L: "Kulit", M: "Muskuloskeletal", N: "Ginjal-Urogenital", O: "Kehamilan", P: "Neonatus/Kongenital", Q: "Neonatus/Kongenital", R: "Gejala", S: "Cedera", T: "Cedera", Z: "Lain" };
+// An entry without a category takes the ICD-10 chapter of its first code; guideline topics are not diseases.
 const UNCATEGORISED = "Belum dikategorikan";
 // Since SSOT v0.6, icd10 holds only the guideline's "No. ICD" code and icd10_sumber_lama the codes it replaced (often the
 // 3-character category). Both go into kode, which the evidence gate and the report match a diagnosis code against.
 const codes = entry => [...new Set([...entry.icd10, ...(entry.icd10_sumber_lama ?? [])])].sort();
 const diseases = ssot.penyakit.filter(entry => entry.jenis !== "topik pedoman").map(entry => ({
-  id: Number(entry.id.replace(/\D/g, "")), nama: entry.nama, kategori: entry.kategori ?? CHAPTERS[entry.icd10[0]?.[0]] ?? UNCATEGORISED, kode: codes(entry).join(", "),
+  id: Number(entry.id.replace(/\D/g, "")), nama: entry.nama, kategori: entry.kategori ?? chapter(entry.icd10[0]) ?? UNCATEGORISED, kode: codes(entry).join(", "),
   definisi: clean(entry.definisi), gejala: list(entry.gejala), diagnosis: clean(entry.diagnosis),
   terapi: [therapyText(entry), entry.dosis.length ? `Dosis:\n${doseLines(entry).join("\n")}` : ""].filter(Boolean).join("\n\n"), rujukan: clean(entry.rujukan),
 }));

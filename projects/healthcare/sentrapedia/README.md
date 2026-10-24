@@ -174,7 +174,7 @@ flowchart TB
 <table width="100%">
 <tr>
 <td width="50%" valign="top"><small><b><code>01 · WORKSPACE</code></b></small><br /><small>Fictional patients, lists, encounters, tasks, templates, draft review and backups.</small><br /><sub>IMPLEMENTED · src/components · src/lib/workspace.ts</sub></td>
-<td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>330 disease records across 42 categories, derived from the knowledge SSOT, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/theoracle.ts</sub></td>
+<td width="50%" valign="top"><small><b><code>02 · ORACLE CATALOG</code></b></small><br /><small>330 disease records across 21 categories (ICD-10 chapters), derived from the knowledge SSOT, searchable by name, code and category.</small><br /><sub>IMPLEMENTED · oracle/sentrapedia.json · src/lib/theoracle.ts</sub></td>
 </tr>
 <tr>
 <td width="50%" valign="top"><small><b><code>03 · THEORACLE</code></b></small><br /><small>Local vector retrieval (EmbeddingGemma-300m on this machine) with index, model and per-passage hashes and bounded passages.</small><br /><sub>IMPLEMENTED · theoracle · src/lib/theoracle-grounding.ts</sub></td>
@@ -277,7 +277,7 @@ The separate **document workspace** contains 18 built-in document modes and loca
 
 ### Three knowledge responsibilities
 
-**Oracle / reference discovery.** A bundled JSON disease catalog supports quick search by name, code and category. Its 144 records across 15 categories are catalog data, not an assertion that the reference is exhaustive or nationally endorsed.
+**Oracle / reference discovery.** A bundled JSON disease catalog supports quick search by name, code and category. Its 330 records across 21 categories (the ICD-10 chapter of each entry's first code) are catalog data, not an assertion that the reference is exhaustive or nationally endorsed.
 
 **TheOracle / evidence provenance.** Local vector retrieval over a manifest-verified index provides bounded passages with index, embedding-model and chunk-hash context; the case text is embedded on this machine and never leaves it for retrieval. Evidence is available only where source ingestion and quality gates support it. A match can be absent, outdated, partial or misleading, and machine-selected excerpts are not automatically clinician-approved.
 

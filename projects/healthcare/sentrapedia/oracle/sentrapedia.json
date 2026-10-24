@@ -3,9 +3,9 @@
     "name": "Sentrapedia Clinical Knowledge Database",
     "version": "0.6-draft",
     "total_diseases": 330,
-    "total_categories": 42,
-    "description": "Derived from theoracle/ssot/sentrapedia-knowledge-ssot.json by npm run knowledge:build; do not edit by hand. Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur).",
-    "ssotSha256": "c9bcfe22c6c187be96b6a54351695a536920e260380b8d0dc0ee176a84bed453",
+    "total_categories": 21,
+    "description": "Derived from theoracle/ssot/sentrapedia-knowledge-ssot.json by npm run knowledge:build; do not edit by hand. Ditinjau klinisi oleh Gaffer (2026-10-23); tanda per entri di status.review_klinis. Status dihitung otomatis dari teks dan pernyataan dosis. 'kategori' = bab ICD-10 dari kode pertama (2026-10-24; kategori sumber di 'kategori_sumber_lama'). 'terkait' = entri lain dengan kategori ICD-10 yang sama (bukan lebur).",
+    "ssotSha256": "0528b7d59078221bfb3797a59a21d1ee201cfbbca9b385f4e1383cb97fd1f549",
     "stats": [],
     "nationalSources": [],
     "professionalSources": [],
@@ -14,62 +14,50 @@
   },
   "categories": [
     {
-      "id": "Cedera",
-      "name": "Cedera",
+      "id": "Cedera dan Keracunan",
+      "name": "Cedera dan Keracunan",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Endokrin-Metabolik",
-      "name": "Endokrin-Metabolik",
+      "id": "Darah dan Imunologi",
+      "name": "Darah dan Imunologi",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Gejala",
-      "name": "Gejala",
+      "id": "Endokrin, Nutrisi, dan Metabolik",
+      "name": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Ginjal & Saluran Kemih",
-      "name": "Ginjal & Saluran Kemih",
+      "id": "Faktor Status Kesehatan",
+      "name": "Faktor Status Kesehatan",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Ginjal-Urogenital",
-      "name": "Ginjal-Urogenital",
+      "id": "Gejala dan Temuan Abnormal",
+      "name": "Gejala dan Temuan Abnormal",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Gizi & Tumbuh Kembang",
-      "name": "Gizi & Tumbuh Kembang",
+      "id": "Ginjal dan Saluran Kemih-Kelamin",
+      "name": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Infeksi",
-      "name": "Infeksi",
+      "id": "Infeksi dan Parasit",
+      "name": "Infeksi dan Parasit",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "ISPA",
-      "name": "ISPA",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Jiwa",
-      "name": "Jiwa",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Jiwa & Perilaku",
-      "name": "Jiwa & Perilaku",
+      "id": "Jiwa dan Perilaku",
+      "name": "Jiwa dan Perilaku",
       "kode": "",
       "desc": ""
     },
@@ -80,20 +68,20 @@
       "desc": ""
     },
     {
-      "id": "Kebidanan dan Kandungan",
-      "name": "Kebidanan dan Kandungan",
+      "id": "Kehamilan dan Persalinan",
+      "name": "Kehamilan dan Persalinan",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Kehamilan",
-      "name": "Kehamilan",
+      "id": "Kode Khusus (COVID-19)",
+      "name": "Kode Khusus (COVID-19)",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Kesehatan Anak",
-      "name": "Kesehatan Anak",
+      "id": "Kongenital",
+      "name": "Kongenital",
       "kode": "",
       "desc": ""
     },
@@ -104,14 +92,8 @@
       "desc": ""
     },
     {
-      "id": "Mata/THT",
-      "name": "Mata/THT",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Musculoskeletal",
-      "name": "Musculoskeletal",
+      "id": "Mata",
+      "name": "Mata",
       "kode": "",
       "desc": ""
     },
@@ -122,20 +104,8 @@
       "desc": ""
     },
     {
-      "id": "Neonatus/Kongenital",
-      "name": "Neonatus/Kongenital",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Neoplasma/Darah",
-      "name": "Neoplasma/Darah",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Neurologi",
-      "name": "Neurologi",
+      "id": "Neoplasma",
+      "name": "Neoplasma",
       "kode": "",
       "desc": ""
     },
@@ -146,104 +116,14 @@
       "desc": ""
     },
     {
-      "id": "Penyakit Anak",
-      "name": "Penyakit Anak",
+      "id": "Perinatal",
+      "name": "Perinatal",
       "kode": "",
       "desc": ""
     },
     {
-      "id": "Penyakit Dalam",
-      "name": "Penyakit Dalam",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit Ginjal dan Saluran Kemih",
-      "name": "Penyakit Ginjal dan Saluran Kemih",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit Infeksi",
-      "name": "Penyakit Infeksi",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit Jiwa",
-      "name": "Penyakit Jiwa",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit Kulit dan Kelamin",
-      "name": "Penyakit Kulit dan Kelamin",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit Mata",
-      "name": "Penyakit Mata",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit Paru",
-      "name": "Penyakit Paru",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit Pencernaan",
-      "name": "Penyakit Pencernaan",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit Saraf",
-      "name": "Penyakit Saraf",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Penyakit THT",
-      "name": "Penyakit THT",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Pernapasan Bawah",
-      "name": "Pernapasan Bawah",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "PTM Kardiovaskular",
-      "name": "PTM Kardiovaskular",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "PTM Metabolik",
-      "name": "PTM Metabolik",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Reproduksi",
-      "name": "Reproduksi",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Respirasi",
-      "name": "Respirasi",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Saluran Cerna",
-      "name": "Saluran Cerna",
+      "id": "Pernapasan",
+      "name": "Pernapasan",
       "kode": "",
       "desc": ""
     },
@@ -254,14 +134,8 @@
       "desc": ""
     },
     {
-      "id": "THT & Mata",
-      "name": "THT & Mata",
-      "kode": "",
-      "desc": ""
-    },
-    {
-      "id": "Tropis & Infeksi",
-      "name": "Tropis & Infeksi",
+      "id": "Telinga",
+      "name": "Telinga",
       "kode": "",
       "desc": ""
     }
@@ -270,7 +144,7 @@
     {
       "id": 1,
       "nama": "Aborsi spontan komplit",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O03",
       "definisi": "",
       "gejala": [],
@@ -281,7 +155,7 @@
     {
       "id": 2,
       "nama": "Abortus",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O03.9",
       "definisi": "Abortus ialah ancaman atau pengeluaran hasil konsepsi sebelum\njanin dapat hidup diluar kandungan,dan sebagai batasan digunakan\nkehamilan kurang dari 20 minggu atau berat anak kurang dari 500\ngram.\nJenis dan derajat abortus :\na. Abortus imminens adalah abortus tingkat permulaan, dimana\nterjadi perdarahan pervaginam ostium uteri masih tertutup dan\nhasil konsepsi ma nijksd vbhunjck sih baik dalam kandungan.\nb. Abortus insipiens adalah abortus yang sedang mengancam dimana\nserviks telah mendatar dan ostium uteri telah membuka, akan\ntetapi hasil konsepsi masih dalam kavum uteri.\nc. Abortus inkomplit adalah sebagian hasil konsepsi telah keluar dari\nkavum uteri masih ada yang tertinggal.\nd. Abortus komplit adalah seluruh hasil konsepsi telah keluar dari\nkavum uteri pada kehamilan kurang dari 20 minggu.",
       "gejala": [
@@ -316,7 +190,7 @@
     {
       "id": 4,
       "nama": "Abses Hepar (Amebiasis Hepar)",
-      "kategori": "Saluran Cerna",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A06.4",
       "definisi": "Abses pada hati yang disebabkan oleh invasi trofozoit Entamoeba histolytica. Abses ameba paling umum di daerah tropis. Indonesia daerah endemis amebiasis.",
       "gejala": [
@@ -337,7 +211,7 @@
     {
       "id": 5,
       "nama": "ADHD (Attention Deficit Hyperactivity Disorder)",
-      "kategori": "Jiwa & Perilaku",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F90",
       "definisi": "Gangguan neurodevelopmental yang ditandai oleh pola persisten inattention dan/atau hyperactivity-impulsivity yang mengganggu fungsi akademik, sosial, atau pekerjaan. Onset sebelum usia 12 tahun. Prevalensi 5-7% anak, persisten ke dewasa 60%. Pria 2-3x lebih sering terdiagnosis.",
       "gejala": [
@@ -357,7 +231,7 @@
     {
       "id": 6,
       "nama": "Akne Vulgaris (Jerawat)",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Kulit",
       "kode": "L70, L70.0",
       "definisi": "Akne vulgaris adalah penyakit peradangan kronis dari folikel\npilosebasea yang diinduksi dengan peningkatan produksi sebum,\nperubahan pola keratinisasi, peradangan, dan kolonisasi dari bakteri\nPropionibacterium acnes. Sinonim untuk penyakit ini adalah jerawat.\nUmumnya insidens terjadi pada wanitausia 14-17 tahun, pria16-19\ntahun lesi yang utama adalah komedo dan papul dan dapat dijumpai\npula lesi beradang. Pada anak wanita,akne vulgaris dapat terjadi\npada premenarke. Setelah masa remaja kelainan ini berangsur\nberkurang, namun kadang-kadang menetap sampai dekade ketiga\nterutama pada wanita. Ras oriental (Jepang, Cina, Korea) lebih\njarang menderita akne vulgaris dibandingkan dengan ras kaukasia\n(Eropa, Amerika).",
       "gejala": [
@@ -374,7 +248,7 @@
     {
       "id": 8,
       "nama": "Alergi Makanan",
-      "kategori": "Jiwa & Perilaku",
+      "kategori": "Kulit",
       "kode": "L27.2, T78, T78.1, Z91.0",
       "definisi": "Makanan dapat menimbulkan beraneka ragam gejala yang\nditimbulkan reaksi imun terhadap alergen asal makanan. Reaksi\ntersebut dapat disebabkan oleh reaksi alergi atau non alergi. Reaksi\nalergi makanan terjadi bila alergen makanan menembus sawar\ngastro intestinal yang memacu reaksi IgE. Gejala dapat timbul dalam\nbeberapa menit sampai beberapa jam, dapat terbatas pada satu atau\nbeberapa organ, kulit, saluran napas dan cerna, lokal dan sistemik.\nAlergen makanan yang sering menimbulkan alergi pada anak adalah\nsusu,telur, kacang tanah, soya, terigu, dan ikan laut. Sedangkan\nyang sering menimbulkan alergi pada orang dewasa adalah kacang\ntanah, ikan laut, udang, kepiting, kerang, dan telur.\nAlergi makanan tidak berlangsung seumur hidup terutama pada\nanak. Gejala dapat hilang, namun dapat kambuh pada keadaan\ntertentu seperti infeksi virus, nutrisi yang tidak seimbang atau\ncedera muskulus gastrointestinal.",
       "gejala": [
@@ -391,7 +265,7 @@
     {
       "id": 9,
       "nama": "Anal Fissure (Pecah Dubur)",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K60",
       "definisi": "Laserasi linear pada mukosa anus, biasanya di midline posterior (90% pada pria, 10% anterior pada wanita). Dapat akut (<6 minggu) atau kronik (>6 minggu dengan sentinel tags, hypertrophied anal papilla). Penyebab utama: trauma feses keras saat defekasi.",
       "gejala": [
@@ -408,7 +282,7 @@
     {
       "id": 10,
       "nama": "Anemia",
-      "kategori": "Neoplasma/Darah",
+      "kategori": "Darah dan Imunologi",
       "kode": "D64.9",
       "definisi": "Penurunan kadar Hemoglobin yang menyebabkan penurunan kadar oksigen\n yang didistribusikan ke seluruh tubuh sehingga menimbulkan berbagai\n keluhan (sindrom anemia).",
       "gejala": [
@@ -432,7 +306,7 @@
     {
       "id": 11,
       "nama": "Anemia Defisiensi Besi",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Darah dan Imunologi",
       "kode": "D50, D50.9",
       "definisi": "Anemia secara fungsional didefinisikan sebagai penurunan jumlah\nmassa eritrosit sehingga tidak dapat memenuhi fungsinya untuk\nmembawa oksigen dalam jumlah cukup ke jaringan perifer. Anemia\nmerupakan masalah medik yang paling sering dijumpai di klinis di\nseluruh dunia. Diperkirakan >30% penduduk dunia menderita\nanemia dan sebagian besar di daerah tropis. Oleh karena itu anemia\nseringkali tidak mendapat perhatian oleh para dokter di klinis.",
       "gejala": [
@@ -455,7 +329,7 @@
     {
       "id": 12,
       "nama": "Anemia Megaloblastik (Defisiensi B12/Folat)",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Darah dan Imunologi",
       "kode": "D51",
       "definisi": "Anemia akibat defisiensi vitamin B12 (kobalamin) dan/atau asam folat yang mengganggu sintesis DNA pada sel-sel yang cepat membelah (eritroid, myeloid, epitel GI). Karakteristik oleh MCV >100 fL (makrositik). Defisiensi B12 juga menyebabkan neurologic complications yang bisa irreversible.",
       "gejala": [
@@ -474,7 +348,7 @@
     {
       "id": 13,
       "nama": "Anemia pada Kehamilan",
-      "kategori": "Reproduksi",
+      "kategori": "Darah dan Imunologi",
       "kode": "D50, D51, D52, O99.0",
       "definisi": "Anemia dalam kehamilan adalah kelainan pada ibu hamil dengan\nkadar hemoglobin < 11g/dl pada trimester I dan III atau <10,5 g/dl\npada trimester II. Penyebab tersering anemia pada kehamilan adalah\ndefisiensi besi, perdarahan akut, dan defisiensi asam folat.",
       "gejala": [
@@ -495,7 +369,7 @@
     {
       "id": 15,
       "nama": "Angina Pectoris Stabil",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Kardiovaskular",
       "kode": "I20.9",
       "definisi": "Angina pektoris stabil merupakan tanda klinis pertama pada sekitar\n50% pasien yang mengalami penyakit jantung koroner. Angina\npektoris dilaporkan terjadi dengan rata-rata kejadian 1,5%\ntergantung pada jenis kelamin, umur, dan faktor risiko. Data dari\nstudi Framingham pada tahun 1970 menunjukkan prevalensi sekitar\n1,5% untuk wanita dan 4,3% untuk pria berusia 50 – 59 tahun.",
       "gejala": [
@@ -519,7 +393,7 @@
     {
       "id": 16,
       "nama": "Ankilostomiasis (Infeksi Cacing Tambang)",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B76.0",
       "definisi": "Penyakit cacing tambang adalah suatu penyakit yang disebabkan\noleh infestasi parasit Necator americanus dan Ancylostoma\nduodenale. Di Indonesia infeksi oleh N. americanus lebih sering\ndijumpai dibandingkan infeksi oleh A.duodenale. Hospes parasit ini\nadalah manusia, cacing ini menyebabkan nekatoriasis dan\nankilostomiasis. Diperkirakan sekitar 576 – 740 juta orang di dunia\nterinfeksi dengan cacing tambang. Di Indonesia insiden tertinggi\nditemukan terutama didaerah pedesaan khususnya perkebunan.\nSeringkali golongan pekerja perkebunan yang langsung berhubungan\ndengan tanah, mendapat infeksi lebih dari 70%. Dari suatu\npenelitian diperoleh bahwa separuh dari anak-anak yang telah\nterinfeksi sebelum usia 5 tahun, 90% terinfeksi pada usia 9 tahun.\nIntensitas infeksi meningkat sampai usia 6-7 tahun dan kemudian\nstabil.",
       "gejala": [
@@ -559,7 +433,7 @@
     {
       "id": 18,
       "nama": "Appendisitis (Usus Buntu)",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K35",
       "definisi": "Inflamasi akut appendix vermiformis yang merupakan emergency bedah paling umum. Dapat disebabkan oleh obstruksi lumen (faecalith, limfoid hiperplasia) -> distensi -> iskemia -> perforasi. Incidensi puncak pada usia 10-30 tahun. Mortalitas <1% bila dioperasi sebelum perforasi.",
       "gejala": [
@@ -578,7 +452,7 @@
     {
       "id": 19,
       "nama": "Aritmia (Gangguan Irama Jantung)",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I47",
       "definisi": "Gangguan irama, kecepatan, atau urutan depolarisasi jantung. Dapat tachyarrhythmia (HR >100) atau bradyarrhythmia (HR <60). Aritmia dapat berasal dari atrium (AF, atrial flutter, SVT) atau ventrikel (VT, VF). Fibrilasi atrium adalah aritmia paling umum dengan prevalensi 1-2% populasi umum.",
       "gejala": [
@@ -622,7 +496,7 @@
     {
       "id": 21,
       "nama": "Asfiksia",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Perinatal",
       "kode": "P21.9",
       "definisi": "",
       "gejala": [
@@ -635,7 +509,7 @@
     {
       "id": 22,
       "nama": "Askariasis",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B77, B77.9",
       "definisi": "Askariasis adalah suatu penyakit yang disebabkan oleh infestasi\nparasit Ascaris lumbricoides.\nDi Indonesia prevalensi askariasis tinggi, terutama pada anak.\nFrekuensinya antara 60-90%. Diperkirakan lebih dari 1 milyar orang\ndi dunia terinfeksi Ascaris lumbricoides.",
       "gejala": [
@@ -652,7 +526,7 @@
     {
       "id": 23,
       "nama": "Asma Bronkial",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Pernapasan",
       "kode": "J45, J45.9",
       "definisi": "Asma adalah penyakit heterogen, selalu dikarakteristikkan\ndengan inflamasi kronis di saluran napas. Terdapat riwayat\ngejala respirasi seperti mengi, sesak, rasa berat di dada dan\nbatuk yang intensitasnya berberda-beda berdasarkan variasi\nketerbatasan aliran udara ekspirasi",
       "gejala": [
@@ -670,7 +544,7 @@
     {
       "id": 24,
       "nama": "Astigmatism ringan",
-      "kategori": "Mata/THT",
+      "kategori": "Mata",
       "kode": "H52, H52.2",
       "definisi": "Astigmatisme adalah keadaan di mana sinar sejajar tidak dibiaskan\npada satu titik fokus yang sama pada semua meridian. Hal ini\ndisebabkan oleh kelengkungan kornea atau lensa yang tidak sama\npada berbagai meridian.",
       "gejala": [
@@ -694,7 +568,7 @@
     {
       "id": 25,
       "nama": "Batu Saluran Kemih",
-      "kategori": "Penyakit Ginjal dan Saluran Kemih",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N20",
       "definisi": "Pembentukan kristal mineral di saluran kemih (ginjal, ureter, kandung kemih). Prevalensi 5-10% populasi global, pria 2-3x lebih sering. Tipe batu: kalsium oksalat (75%), kalsium fosfat (10%), struvit (infection stones - 10%), asam urat (5%), sistin (1%). Recurrence rate 50% dalam 5-10 tahun tanpa preventive measures.",
       "gejala": [
@@ -707,7 +581,7 @@
     {
       "id": 26,
       "nama": "Bell's Palsy",
-      "kategori": "Penyakit Saraf",
+      "kategori": "Saraf",
       "kode": "G51, G51.0",
       "definisi": "Bells’palsy adalah paralisis fasialis perifer idiopatik, yang merupakan\npenyebab tersering dari paralisis fasialis perifer unilateral. Bells’\npalsy muncul mendadak (akut), unilateral, berupa paralisis saraf\nfasialis perifer, yang secara gradual dapat mengalami perbaikan pada\n80-90% kasus. Bells’ palsy merupakan salah satu dari penyakit\nneurologis tersering yang melibatkan saraf kranialis, dan penyebab\ntersering (60-75%) dari kasus paralisis fasialis unilateral akut di\ndunia. Bells’ palsy lebih sering ditemukan pada usia dewasa, orang\ndengan DM, dan wanita hamil. Peningkatan kejadian berimplikasi\npada kemungkinan infeksi HSV type I dan reaktivasi herpes zoster\ndari ganglia nervus fasialis. Penyebab Bells’ palsy tidak diketahui\n(idiopatik), dan diduga penyakit ini merupakan bentuk polineuritis\ndengan kemungkinan penyebabnya virus, inflamasi, auto imun dan\nfaktor iskemik.",
       "gejala": [
@@ -726,7 +600,7 @@
     {
       "id": 27,
       "nama": "Benda asing",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T17",
       "definisi": "",
       "gejala": [],
@@ -737,7 +611,7 @@
     {
       "id": 28,
       "nama": "Benda Asing Di Hidung",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T17.1",
       "definisi": "Kasus benda asing di hidung sering ditemui oleh dokter di fasilitas\npelayanan kesehatan Tingkat Pertama. Kasus ini paling sering\ndialami oleh anak dan balita. Terdapat dua jenis benda asing, yaitu\nbenda hidup (organik) dan benda mati (anorganik). Contoh benda\nasing organik, antara lain lintah, lalat, larva, sedangkan benda asing\nanorganik, misalnya manik-manik, kertas, tisu, logam, baterai kecil,\nkacang-kacangan, dan lain-lain.",
       "gejala": [
@@ -761,7 +635,7 @@
     {
       "id": 29,
       "nama": "Benda Asing Di Telinga",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T16",
       "definisi": "Meatus akustikus eksternus (MAE) merupakan salah satu bagian\ntubuh yang sering dimasuki benda asing, yang dapat berupa:\na. Benda asing reaktif, misal: batere, potongan besi. Benda asing\nreaktif berbahaya karena dapat bereaksi dengan epitel MAE dan\nmenyebabkan edema serta obstruksi hingga menimbulkan\ninfeksi sekunder. Ekstraksi harus segera dilakukan.\nb. Benda asing non-reaktif (inert). Benda asing ini tidak bereaksi\ndengan epitel dan tetap ada di dalam MAE tanpa menimbulkan\ngejala hingga terjadi infeksi.\nc. Benda asing serangga, yang dapat menyebabkan iritasi dan\nnyeri akibat pergerakannya.",
       "gejala": [
@@ -784,7 +658,7 @@
     {
       "id": 30,
       "nama": "Benda Asing Konjungtiva",
-      "kategori": "Penyakit Mata",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T15, T15.1, T15.9",
       "definisi": "Benda asing di konjungtiva adalah benda yang dalam keadaan\nnormal tidak dijumpai di konjungtiva dandapat menyebabkan iritasi\njaringan. Pada umumnya kelainan ini bersifat ringan, namun pada\nbeberapa keadaan dapat berakibat serius terutama pada benda asing\nyang bersifat asam atau basa dan bila timbul infeksi sekunder.",
       "gejala": [
@@ -800,7 +674,7 @@
     {
       "id": 31,
       "nama": "Benign Prostatic Hyperplasia (BPH)",
-      "kategori": "Ginjal & Saluran Kemih",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N40",
       "definisi": "Pembesaran non-malignant kelenjar prostat yang umum terjadi pada pria dengan penuaan (50% pria >50 tahun, 90% >80 tahun). BPH menyebabkan obstructive dan irritative voiding symptoms akibat kompresi uretra prostatik dan bladder outlet obstruction. Dapat menyebabkan komplikasi: retensi urin, infeksi, batu bladder, hydronephrosis, gagal ginjal.",
       "gejala": [
@@ -819,7 +693,7 @@
     {
       "id": 32,
       "nama": "Bibir Sumbing",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Kongenital",
       "kode": "Q36.9",
       "definisi": "",
       "gejala": [
@@ -832,7 +706,7 @@
     {
       "id": 33,
       "nama": "Blefaritis",
-      "kategori": "Penyakit Mata",
+      "kategori": "Mata",
       "kode": "H01, H01.0",
       "definisi": "Blefaritis adalah radang pada tepi kelopak mata (margo palpebra)\nyang dapat disertai terbentuknya ulkus dan dapat melibatkan folikel\nrambut.",
       "gejala": [
@@ -848,7 +722,7 @@
     {
       "id": 34,
       "nama": "Bronkiektasis",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Pernapasan",
       "kode": "J47",
       "definisi": "Dilatasi permanen dan abnormal bronkus akibat destruksi dinding elastik dan muscularis. Disebabkan oleh infeksi berulang, obstruksi, imunodefisiensi, atau kondisi genetik (sistik fibrosis, PCD). Incidensi meningkat pada lansia.",
       "gejala": [
@@ -866,7 +740,7 @@
     {
       "id": 35,
       "nama": "Bronkitis Akut",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Pernapasan",
       "kode": "J20, J20.9",
       "definisi": "Bronkitis adalah suatu peradangan pada bronkus (saluran udara ke\nparu-paru). Radang dapat berupa hipersekresi mukus dan batuk\nproduktif kronis berulang-ulang minimal selama 3 bulan pertahun\natau paling sedikit dalam 2 tahun berturut-turut pada pasien yang\ndiketahui tidak terdapat penyebab lain. Bronkitis akut dapat\ndisebabkan oleh beberapa hal, yaitu: infeksi virus, infeksi bakteri,\nrokok dan asap rokok, paparan terhadap iritasi, bahan-bahan yang\nmengeluarkan polusi, penyakit gastrofaringeal refluk dan pekerja\nyang terekspos dengan debu atau asap. Bronkitis akut dapat\ndijumpai pada semua umur, namun paling sering didiagnosis pada\nanak-anak muda dari 5 tahun, sedangkan bronkitis kronis lebih\numum pada orang tua dari 50 tahun.",
       "gejala": [
@@ -884,7 +758,7 @@
     {
       "id": 36,
       "nama": "Buta senja",
-      "kategori": "Mata/THT",
+      "kategori": "Mata",
       "kode": "E50, H53.5, H53.6",
       "definisi": "Buta senja atau rabun senja, disebut juga nyctalopia atau\nhemarolopia, adalah ketidakmampuan untuk melihat dengan baik\npada malam hari atau pada keadaan gelap. Kondisi ini lebih\nmerupakan tanda dari suatu kelainan yang mendasari. Hal ini\nterjadi akibat kelainan pada sel batang retina yang berperan pada\npenglihatan gelap. Penyebab buta senja adalah defisiensi vitamin A\ndan retinitis pigmentosa.",
       "gejala": [
@@ -908,7 +782,7 @@
     {
       "id": 37,
       "nama": "Cacar Air pada Dewasa (Varicella Adult)",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B01",
       "definisi": "Infeksi primer VZV pada dewasa. Lebih berat dari anak dengan risiko komplikasi lebih tinggi (pneumonia varicella 1:400, mortality 10-30%).",
       "gejala": [
@@ -927,7 +801,7 @@
     {
       "id": 38,
       "nama": "Campak (Morbili / Measles)",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B05, B05.9",
       "definisi": "Morbili adalah suatu penyakit yang disebabkan oleh virus Measles.\nNama lain dari penyakit ini adalah rubeola atau campak. Morbili\nmerupakan penyakit yang sangat infeksius dan menular lewat udara\nmelalui aktivitas bernafas, batuk, atau bersin. Pada bayi dan balita,\nmorbili dapat menimbulkan komplikasi yang fatal, seperti\npneumonia dan ensefalitis.\nSalah satu strategi menekan mortalitas dan morbiditas penyakit\nmorbili adalah dengan vaksinasi. Namun, berdasarkan data Survei\nDemografi dan Kesehatan Indonesia tahun 2007, ternyata cakupan\nimunisasi campak pada anak-anak usia di bawah 6 tahun di\nIndonesia masih relatif lebih rendah(72,8%) dibandingkan negara-\nnegara lain di Asia Tenggara yang sudah mencapai 84%. Pada tahun\n2010, Indonesia merupakan negara dengan tingkat insiden tertinggi\nketiga di Asia Tenggara. World Health Organization melaporkan\nsebanyak 6300 kasus terkonfirmasi Morbili di Indonesia sepanjang\ntahun 2013.\nDengan demikian, hingga kini, morbili masih menjadi masalah\nkesehatan yang krusial di Indonesia. Peran dokter di fasilitas\npelayanan kesehatan tingkat pertama sangat penting dalam\nmencegah, mendiagnosis, menatalaksana, dan menekan mortalitas\nmorbili.",
       "gejala": [
@@ -946,7 +820,7 @@
     {
       "id": 39,
       "nama": "Cardiorespiratory Arrest",
-      "kategori": "Gejala",
+      "kategori": "Gejala dan Temuan Abnormal",
       "kode": "R09.2",
       "definisi": "Cardiorespiratory Arrest (CRA) adalah kondisi kegawatdaruratan\nkarena berhentinya aktivitas jantung paru secara mendadak yang\nmengakibatkan kegagalan sistem sirkulasi. Hal ini disebabkan oleh\nmalfungsi mekanik jantung paru atau elektrik jantung. Kondisi yang\nmendadak dan berat ini mengakibatkan kerusakan organ.\nHenti jantung adalah konsekuensi dari aktivitas otot jantung yang\ntidak terkoordinasi. Dengan EKG, ditunjukkan dalam bentuk\nVentricular Fibrillation (VF). Satu menit dalam keadaan persisten VF,\naliran darah koroner menurun hingga tidak ada sama sekali. Dalam\n4 menit, aliran darah katoris tidak ada sehingga menimbulkan\nkerusakan neurologi secara permanen.\nJenis henti jantung\na. Pulseless Electrical Activity (PEA)\nb. Takikardia Ventrikel\nc. Fibrilasi Ventrikel\nd. Asistole",
       "gejala": [
@@ -970,7 +844,7 @@
     {
       "id": 40,
       "nama": "Cidera Otak Traumatik",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Cedera dan Keracunan",
       "kode": "S06",
       "definisi": "",
       "gejala": [
@@ -983,7 +857,7 @@
     {
       "id": 41,
       "nama": "Common Cold (Pilek Biasa)",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J00",
       "definisi": "Infeksi ringan pada hidung dan tenggorokan yang disebabkan oleh lebih dari 200 jenis virus, dengan rhinovirus sebagai penyebab utama (~30-50%). Merupakan penyakit ISPA paling sering di Puskesmas.",
       "gejala": [
@@ -1001,7 +875,7 @@
     {
       "id": 42,
       "nama": "COPD (Penyakit Paru Obstruktif Kronik)",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Pernapasan",
       "kode": "J44, J44.9",
       "definisi": "PPOK adalah penyakit paru kronik yang dapat dicegah dan diobati,\ndikarakteristikkan dengan hambatan aliran udara yang persisten,\nprogresif dan berhubungan dengan peningkatan respons inflamasi\nkronis di paru terhadap partikel dan gas berbahaya. Eksaserbasi dan\nkomorbid berkontribusi terhadap keseluruhan keparahan tiap\nindividu. Prevalensi PPOK tertinggi terdapat di Nusa Tenggara Timur\n(10,0%), diikuti Sulawesi Tengah (8,0%), Sulawesi Barat, dan\nSulawesi Selatan masing-masing 6,7 persen. PPOK lebih tinggi pada\nlaki-laki dibanding perempuan dan lebih tinggi di perdesaan\ndibanding perkotaan. Prevalensi PPOK cenderung lebih tinggi pada\nmasyarakat dengan pendidikan rendah dan kuintil indeks\nkepemilikan terbawah.",
       "gejala": [
@@ -1018,7 +892,7 @@
     {
       "id": 43,
       "nama": "Corona Virus Disease 2019 (COVID-19)",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B34.2",
       "definisi": "",
       "gejala": [],
@@ -1029,7 +903,7 @@
     {
       "id": 44,
       "nama": "COVID-19",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Kode Khusus (COVID-19)",
       "kode": "U07.1",
       "definisi": "Penyakit infeksius akut yang disebabkan oleh SARS-CoV-2, virus RNA yang menyerang saluran pernapasan dan sistem organ lain. Dideklarasikan sebagai pandemi oleh WHO pada Maret 2020. Indonesia mengalami beberapa gelombang infeksi dengan total >6 juta kasus terkonfirmasi.",
       "gejala": [
@@ -1051,7 +925,7 @@
     {
       "id": 45,
       "nama": "Cracked nipple",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O92",
       "definisi": "Nyeri pada puting merupakan masalah yang sering ditemukan pada\nibu menyusui dan menjadi salah satu penyebab ibu memilih untuk\nberhenti menyusui bayinya. Diperkirakan sekitar 80-90% ibu\nmenyusui mengalami nipple pain dan 26% di antaranya mengalami\nlecet pada puting yang biasa disebut dengan nipple crack. Kerusakan\npada puting mungkin terjadi karena trauma pada puting akibat cara\nmenyusui yang salah.",
       "gejala": [
@@ -1070,7 +944,7 @@
     {
       "id": 46,
       "nama": "Cutaneus larva migran",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B74, B76.9",
       "definisi": "Cutaneus Larva Migrans (Creeping Eruption) merupakan kelainan\nkulit berupa peradangan berbentuk linear atau berkelok-kelok,\nmenimbul dan progresif, yang disebabkan oleh invasi larva cacing\ntambang yang berasal dari anjing dan kucing. Penularan melalui\nkontak langsung dengan larva. Prevalensi Cutaneus Larva Migran di\nIndonesia yang dilaporkan oleh sebuah penelitian pada tahun 2012\ndi Kulon Progo adalah sekitar 15%.",
       "gejala": [
@@ -1094,7 +968,7 @@
     {
       "id": 47,
       "nama": "Deep Vein Thrombosis (DVT)",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I80",
       "definisi": "Pembekuan darah pada vena dalam, umumnya di tungkai bawah (85%), paha (10%), atau vena pelvis. Dapat menyebabkan emboli paru (PE) yang life-threatening. Faktor risiko: Virchow's triad (stasis, hiperkoagulabilitas, endothelial injury).",
       "gejala": [
@@ -1112,7 +986,7 @@
     {
       "id": 48,
       "nama": "Defisiensi mineral",
-      "kategori": "Endokrin-Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E63",
       "definisi": "",
       "gejala": [],
@@ -1123,7 +997,7 @@
     {
       "id": 49,
       "nama": "Defisiensi vitamin",
-      "kategori": "Endokrin-Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E56",
       "definisi": "",
       "gejala": [],
@@ -1134,7 +1008,7 @@
     {
       "id": 50,
       "nama": "Delirium",
-      "kategori": "Jiwa",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F05.9",
       "definisi": "Delirium adalah gangguan kesadaran yang ditandai dengan\nberkurangnya kemampuan memfokuskan, mempertahankan dan\nmengalihkan perhatian.",
       "gejala": [
@@ -1158,7 +1032,7 @@
     {
       "id": 51,
       "nama": "Demam Berdarah Dengue (DBD)",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A90, A91",
       "definisi": "Penyakit demam berdarah dengue (DBD) masih menjadi salah satu\nmasalah kesehatan masyarakat di Indonesia. Tingkat insiden\npenyakit DBD Indonesia merupakan yang tertinggi diantara negara-\nnegara Asia Tenggara. Sepanjang tahun 2013, Kementerian\nKesehatan mencatat terdapat 103.649 penderita dengan angka\nkematian mencapai 754 orang. Keterlibatan dokter di fasilitas\npelayanan kesehatan tingkat pertama sangat dibutuhkan untuk\nmenekan tingkat kejadian maupun mortalitas DBD.",
       "gejala": [
@@ -1179,7 +1053,7 @@
     {
       "id": 52,
       "nama": "Demam Rematik Akut (DRA)",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I01",
       "definisi": "Penyakit inflamasi multisistem akibat respon imun terhadap infeksi faring oleh Streptococcus pyogenes (Grup A). Merupakan komplikasi non-suppurative dari faringitis streptokokal yang tidak tertangani. Utamanya mempengaruhi jantung (karditis), sendi (artritis), otak (korea), dan kulit. Indonesia masih memiliki insidensi DRA yang signifikan.",
       "gejala": [
@@ -1197,7 +1071,7 @@
     {
       "id": 53,
       "nama": "Demam Tifoid",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A01, A01.0",
       "definisi": "Demam tifoid banyak ditemukan di masyarakat perkotaan maupun\ndi pedesaan. Penyakit ini erat kaitannya dengan kualitas higiene\npribadi dan sanitasi lingkungan yang kurang baik. Di Indonesia\nbersifat endemik dan merupakan masalah kesehatan masyarakat.\nDari telaah kasus di rumah sakit besar di Indonesia, tersangka\ndemam tifoid menunjukkan kecenderungan meningkat dari tahun ke\ntahun dengan rata-rata kesakitan 500/100.000 penduduk dan\nangka kematian antara 0.6–5% (KMK, 2006). Selain tingkat insiden\nyang tinggi, demam tifoid terkait dengan berbagai aspek\npermasalahan lain, misalnya: akurasi diagnosis, resistensi antibiotik\ndan masih rendahnya cakupan vaksinasi demam tifoid.",
       "gejala": [
@@ -1218,7 +1092,7 @@
     {
       "id": 54,
       "nama": "Demensia (Alzheimer & Vaskular)",
-      "kategori": "Neurologi",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F00, F03, F03.91, G30",
       "definisi": "Demensia merupakan sindrom akibat penyakit otak yang bersifat\nkronik progresif, ditandai dengan kemunduran fungsi kognitif\nmultiple, termasuk dayaingat (memori), daya pikir, daya tangkap\n(komprehensi), kemampuan belajar, orientasi, kalkulasi,\nvisuospasial, bahasa dan daya nilai. Gangguan kognitif biasanya\ndiikuti dengan deteriorasi dalam kontrolemosi, hubungan sosial dan\nmotivasi.\nPada umumnya terjadi pada usia lanjut, ditemukan pada penyakit\nAlzhaimer, penyakit serebrovaskular, dan kondisi lain yang secara\nprimer dan sekunder mempengaruhi otak.",
       "gejala": [
@@ -1241,7 +1115,7 @@
     {
       "id": 55,
       "nama": "Depresi Mayor",
-      "kategori": "Jiwa & Perilaku",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F32",
       "definisi": "Gangguan mood yang ditandai oleh episode depresi berulang dengan mood yang depresi atau hilangnya minat/pleasure (anhedonia) yang berlangsung minimal 2 minggu, disertai gejala somatik dan kognitif. Prevalensi global 5-6% per tahun, wanita 2x lebih sering. Dapat unipolar (depresi saja) atau bipolar (alternating dengan mania).",
       "gejala": [
@@ -1280,7 +1154,7 @@
     {
       "id": 57,
       "nama": "Dermatitis Kontak Alergika dan Iritan",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Kulit",
       "kode": "L23, L23.9, L24",
       "definisi": "Dermatisis kontak iritan (DKI) adalah reaksi peradangan kulit non-\nimunologik. Kerusakan kulit terjadi secara langsung tanpa didahului\noleh proses sensitisasi. DKI dapat dialami oleh semua orang tanpa\nmemandang usia, jenis kelamin, dan ras. Penyebab munculnya\ndermatitis jenis ini adalah bahan yang bersifat iritan, misalnya\nbahan pelarut, deterjen, minyak pelumas, asam, alkali, dan serbuk\nkayu yang biasanya berhubungan dengan pekerjaan.",
       "gejala": [
@@ -1353,7 +1227,7 @@
     {
       "id": 61,
       "nama": "Dermatofitosis",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35, B35.0, B35.1, B35.2, B35.3, B35.4, B35.5, B35.6, B35.8, S74",
       "definisi": "Dermatofitosis adalah infeksi jamur dermatofita yang memiliki sifat\nmencernakan keratin di jaringan yang mengandung zat tanduk,\nmisalnya stratum korneum pada epidermis, rambut, dan kuku.\nPenularan terjadi melalui kontak langsung dengan agen penyebab.\nSumber penularan dapat berasal dari manusia (jamur antropofilik),\nbinatang (jamur zoofilik) atau dari tanah (jamur geofilik).\nKlasifikasi dermatofitosis yang praktis adalah berdasarkan lokasi,\nyaitu antara lain:\na. Tinea kapitis, dermatofitosis pada kulit dan rambut kepala.\nb. Tinea barbae, dermatofitosis pada dagu dan jenggot.\nc. Tinea kruris, pada daerah genitokrural, sekitar anus, bokong,\ndan perut bagian bawah.\nd. Tinea pedis et manum, pada kaki dan tangan.\ne. Tinea unguium, pada kuku jari tangan dan kaki.\nf. Tinea korporis, pada bagian lain yang tidak termasuk bentuk 5\ntinea di atas. Bila terjadi di seluruh tubuh disebut dengan tinea\nimbrikata.\nTinea pedis banyak didapatkan pada orang yang dalam kehdupan\nsehari-hari banyak memakai sepatu tertutup disertai perawatan kaki\nyang buruk dan para pekerja dengan kaki yang selalu atau sering\nbasah. Tinea kruris merupakan salah satu bentuk klinis yang sering\ndilihat di Indonesia.",
       "gejala": [
@@ -1377,7 +1251,7 @@
     {
       "id": 62,
       "nama": "Diabetes Melitus Pada Anak",
-      "kategori": "Penyakit Anak",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E14",
       "definisi": "Diabetes adalah kelainan metabolik kompleks yang ditandai dengan adanya hiperglikemia kronik yang disebabkan karena adanya defek pada sekresi insulin, kerja insulin atau keduanya.",
       "gejala": [
@@ -1391,7 +1265,7 @@
     {
       "id": 63,
       "nama": "Diabetes melitus tipe 1",
-      "kategori": "Endokrin-Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E10",
       "definisi": "",
       "gejala": [],
@@ -1402,7 +1276,7 @@
     {
       "id": 64,
       "nama": "Diabetes Melitus Tipe 2",
-      "kategori": "PTM Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E10, E11, E14",
       "definisi": "Diabetes Melitus (DM) tipe 2, menurut American Diabetes Association\n(ADA) adalah kumulan gejala yang ditandai oleh hiperglikemia akibat\ndefek pada kerja insulin (resistensi insulin) dan sekresi insulin atau\nkedua-duanya. Berdasarkan Riset Kesehatan Dasar (Riskesdas)\ntahun 2013, terjadi peningkatan dari 1,1% (2007) menjadi 2,1%\n(2013). Proporsi penduduk ≥15 tahun dengan diabetes mellitus (DM)\nadalah 6,9%.WHO memprediksi kenaikan jumlah penyandang DM\ntipe 2 di Indonesia dari 8,4 juta pada tahun 2000 menjadi sekitar\n21,3 juta pada tahun 2030. Senada dengan WHO, International\nDiabetes Federation (IDF) pada tahun 2009, memprediksi kenaikan\njumlah penyandang DM dari 7,0 juta pada tahun 2009 menjadi 12,0\njuta pada tahun 2030. Meskipun terdapat perbedaan angka\nprevalensi, laporan keduanya menunjukkan adanya peningkatan\njumlah penyandang DM sebanyak 2-3 kali lipat pada tahun 2030.",
       "gejala": [
@@ -1424,7 +1298,7 @@
     {
       "id": 65,
       "nama": "Diare Akut pada Anak",
-      "kategori": "Kesehatan Anak",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A09",
       "definisi": "Penurunan konsistensi dan/atau peningkatan frekuensi buang air besar (>=3x dalam 24 jam) pada anak berusia <5 tahun, biasanya berlangsung <14 hari. Penyebab utama: virus (rotavirus - paling umum sebelum vaksinasi, norovirus, adenovirus), bakteri (E. coli, Shigella, Salmonella, Campylobacter), dan parasit (Giardia, Entamoeba, Cryptosporidium). Diare adalah penyebab kematian anak kedua terbesar di dunia setelah pneumonia.",
       "gejala": [
@@ -1443,7 +1317,7 @@
     {
       "id": 66,
       "nama": "Diare Kronik",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K52.9",
       "definisi": "Diare dengan durasi >4 minggu. Dapat disebabkan oleh infeksi kronis (Giardia, Entamoeba, C. difficile), malabsorpsi (laktosa, gluten, pankreatik insufisiensi), inflamasi (IBD), dismotilitas, atau obat-obatan (antibiotik, metformin, PPI, laksatif).",
       "gejala": [
@@ -1463,7 +1337,7 @@
     {
       "id": 67,
       "nama": "Difteri",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A36",
       "definisi": "Infeksi akut saluran napas atas yang disebabkan oleh Corynebacterium diphtheriae yang memproduksi eksotoksin diphtheria (potent inhibitor protein synthesis). Ditandai oleh pseudomembran abu-abu tebal di faring/tonsilar yang dapat menyebabkan obstruksi jalan napas. Toxin dapat menyebabkan myocarditis dan neuropati. Indonesia mengalami outbreak difteri 2017 dengan >600 kasus dan puluhan kematian.",
       "gejala": [
@@ -1482,7 +1356,7 @@
     {
       "id": 68,
       "nama": "Disentri (Diare Berdarah)",
-      "kategori": "Saluran Cerna",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A03",
       "definisi": "Diare dengan adanya darah dalam feses yang disebabkan oleh invasi mukosa usus oleh patogen. Penyebab utama: Shigella (paling umum), Campylobacter jejuni, Salmonella non-typhi, EHEC (E. coli O157:H7), Entamoeba histolytica. Merupakan kondisi yang memerlukan antibiotik.",
       "gejala": [
@@ -1501,7 +1375,7 @@
     {
       "id": 69,
       "nama": "Disentri Amoeba (Amoebiasis)",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A06.0",
       "definisi": "Disentri amuba adalah infeksi usus besar yang disebabkan oleh protozoa parasit Entamoeba histolytica, yang menginvasi mukosa dinding kolon membentuk ulkus khas berbentuk botol (flask-shaped ulcer).",
       "gejala": [
@@ -1518,7 +1392,7 @@
     {
       "id": 70,
       "nama": "Disentri Basiler (Shigellosis)",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A03.9",
       "definisi": "Disentri basiler adalah infeksi invasif usus besar yang disebabkan oleh bakteri genus Shigella (S. dysenteriae, S. flexneri, S. sonnei, S. boydii), ditandai dengan peradangan mukosa kolon, ulserasi, dan eksudat inflamasi.",
       "gejala": [
@@ -1536,7 +1410,7 @@
     {
       "id": 71,
       "nama": "Disentri basiler, disentri amuba",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A03, A03.9, A06.0, A09, K52.9",
       "definisi": "Disentri merupakan tipe diare yang berbahaya dan seringkali\nmenyebabkan kematian dibandingkan dengan tipe diare akut yang\nlain.\nPenyakit ini dapat disebabkan oleh bakteri disentri basiler yang\ndisebabkan oleh shigellosis dan amoeba (disentri amoeba).",
       "gejala": [
@@ -1560,7 +1434,7 @@
     {
       "id": 72,
       "nama": "Dispepsia (Gangguan Pencernaan)",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K30",
       "definisi": "Gangguan atau rasa tidak nyaman di daerah epigastrium yang persisten atau rekuren. Disebut juga indigestion. Diklasifikasikan sebagai dispepsia organik (ada lesi struktural) atau fungsional (tidak ada lesi - 60-70% kasus).",
       "gejala": [
@@ -1579,7 +1453,7 @@
     {
       "id": 73,
       "nama": "Eklampsi",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O15.9",
       "definisi": "Eklampsia merupakan kasus akut pada penderita pre-eklampsia,\nyang disertai dengan kejang menyeluruh dan atau koma. Sama\nhalnya dengan pre-eklampsia, eklampsia dapat timbul pada ante,\nintra, dan post partum. Eklampsia post partum umumnya hanya\nterjadi dalam waktu 24 jam pertama setelah persalinan. 50-60%\nkejadian eklampsia terjadi dalam keadaan hamil. 30-35% kejadian\neklampsia terjadi pada saat inpartu, dan sekitar 10% terjadi setelah\npersalinan.\nPada negara berkembang kejadian ini berkisar 0,3-0,7%. Di\nIndonesia Pre eklampsia dan eklampsia penyebab kematian ibu\nberkisar 15-25%, sedangkan 45-50% menjadi penyebab kematian\nbayi.",
       "gejala": [
@@ -1603,7 +1477,7 @@
     {
       "id": 74,
       "nama": "Eksaserbasi Asma Akut",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Pernapasan",
       "kode": "J46",
       "definisi": "Peningkatan akut gejala asma di atas baseline yang memerlukan perubahan terapi. Eksaserbasi dapat disebabkan oleh infeksi virus, alergen, polusi, atau non-adherensi terapi kontroler.",
       "gejala": [
@@ -1622,7 +1496,7 @@
     {
       "id": 75,
       "nama": "Epilepsi",
-      "kategori": "Neurologi",
+      "kategori": "Saraf",
       "kode": "G40, G40.9",
       "definisi": "Epilepsi didefinisikan sebagai suatu keadaan yang ditandai oleh\nbangkitan epilepsi berulang berselang lebih dari 24 jam yang timbul\ntanpa provokasi. Sedangkan yang dimaksud dengan bangkitan\nepilepsi adalah manifestasi klinis yang disebabkan oleh aktivitas\nlistrik yang abnormal dan berlebihan dari sekelompok neuron di\notak.\nEtiologi epilepsi:\na. Idiopatik: tidak terdapat lesi struktural di otak atau defisit\nneurologis dan diperkirakan tidak mempunyai predisposisi\ngenetik dan umumnya berhubungan dengan usia.\nb. Kriptogenik: dianggap simptomatik tetapi penyebabnya belum\ndiketahui, termasuk disini sindromaWest, sindroma Lennox-\nGastaut, dan epilepsi mioklonik.\nc. Simptomatik: bangkitan epilepsi disebabkan oleh kelainan/lesi\nstruktural pada otak, misalnya cedera kepala, infeksi SSP,\nkelainan kongenital, lesi desak ruang, gangguan peredaran\ndarah otak, toksik (alkohol, obat), metabolik, kelainan\nneurodegeneratif.",
       "gejala": [
@@ -1642,7 +1516,7 @@
     {
       "id": 76,
       "nama": "Epilepsi Pada Anak",
-      "kategori": "Penyakit Anak",
+      "kategori": "Saraf",
       "kode": "G40",
       "definisi": "",
       "gejala": [
@@ -1655,7 +1529,7 @@
     {
       "id": 77,
       "nama": "Episkleritis",
-      "kategori": "Penyakit Mata",
+      "kategori": "Mata",
       "kode": "H15, H15.1",
       "definisi": "Episkleritis merupakan reaksi radang pada episklera, yaitu jaringan\nikat vaskular yang terletak di antara konjungtiva dan permukaan\nsklera. Penyakit ini termasuk dalam kelompok “mata merah dengan\npenglihatan normal”. Tidak ada data yang spesifik mengenai tingkat\ninsiden episkleritis di Indonesia. Episkleritis umumnya terjadi pada\nusia 20-50 tahun dan membaik dalam beberapa hari sampai\nbeberapa minggu. Umumnya, episkleritis bersifat ringan, namun\ndapat pula merupakan tanda adanya penyakit sistemik, seperti\ntuberkulosis, reumatoid artritis, dan systemic lupus erythematosus\n(SLE).",
       "gejala": [
@@ -1671,7 +1545,7 @@
     {
       "id": 78,
       "nama": "Epistaksis",
-      "kategori": "Penyakit THT",
+      "kategori": "Gejala dan Temuan Abnormal",
       "kode": "R04, R04.0",
       "definisi": "Epistaksis adalah perdarahan yang mengalir keluar dari hidung yang\nberasal dari rongga hidung atau nasofaring. Epistaksis bukan suatu\npenyakit, melainkan gejala dari suatu kelainan. Hampir 90%\nepistaksis dapat berhenti sendiri. Perdarahan dari hidung dapat\nmerupakan gejala yang sangat mengganggu. Faktor etiologi dapat\nlokal atau sistemik. Sumber perdarahan harus dicari dan dikoreksi\nuntuk mengobati epistaksis secara efektif.\nPPOK Eksaserbasi\n• Pemberian oksigen\n• Menambahkan dosis bronkodilator atau dengan\nmengubah bentuk bronkodilator yang digunakan\ndari bentuk inhaler, oral dengan bentuk nebulizer\n• Memberikan mukolitik & ekspektoran\n• Memberikan steroid oral\n• Memberikan antibiotik bila ada infeksi\n• Memberikan diuretik bila cairan berlebih\nPPOK Eksaserbasi Sedang-Berat\nPPOK Eksaserbasi Ringan\nRUJUK\nSembuh atau Perbaikan Gejala\nTidak ada\nperbaikan\nLanjutkan tatalaksana,\nkurangi jika mungkin →\nboeh pulang\nKlasifikasi\na. Epistaksis Anterior\nEpistaksis anterior paling sering berasal dari pleksus\nKiesselbach, yang merupakan sumber perdarahan paling sering\ndijumpai pada anak-anak. Selain itu juga dapat berasal dari\narteri etmoidalis anterior. Perdarahan dapat berhenti sendiri\n(spontan) dan dapat dikendalikan dengan tindakan sederhana.\nb. Epistaksis Posterior\nPada epistaksis posterior, perdarahan berasal dari arteri\nsfenopalatina atau arteri etmoidalis posterior. Epistaksis\nposterior sering terjadi pada orang dewasa yang menderita\nhipertensi, arteriosklerosis, atau penyakit kardiovaskuler.\nPerdarahan biasanya hebat dan jarang berhenti spontan.",
       "gejala": [
@@ -1686,7 +1560,7 @@
     {
       "id": 79,
       "nama": "Erisipelas dan Selulitis",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A46, L03, L03.9",
       "definisi": "Erisipelas adalah penyakit infeksi bakteri akut, biasanya disebabkan\noleh Streptococcus, melibatkan dermis atas dengan tanda khas\nmeluas ke limfatik kutaneus superfisial. Erisipelas pada wajah\nkebanyakan disebabkan oleh streptococcus grup A, sedangkan\nerisipelas pada ekstremitas bawah kebanyakan disebabkan oleh\nstreptococcus non grup A. Di perkirakan 85% kasus erisipelas terjadi\npada ekstremitas bawah.\nErisipelas kebanyakan terjadi pada wanita, akan tetapi pada usia\nmuda lebih sering terjadi pada pria. Insidens tertinggi dilaporkan\npada pasien berusia 60 – 80 tahun khususnya pada pasien dengan\ngangguan saluran limfatik.",
       "gejala": [
@@ -1747,7 +1621,7 @@
     {
       "id": 82,
       "nama": "Failure to Thrive (Gagal Tumbuh)",
-      "kategori": "Gejala",
+      "kategori": "Gejala dan Temuan Abnormal",
       "kode": "R62.8",
       "definisi": "Perlambatan pertumbuhan (faltering) adalah kenaikan berat badan\nyang tidak adekuat sesuai dengan umur dan jenis kelamin dan\nmerupakan tanda awal stunting.",
       "gejala": [
@@ -1771,7 +1645,7 @@
     {
       "id": 83,
       "nama": "Faringitis Akut (Radang Tenggorokan)",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J02, J02.9, J31",
       "definisi": "Faringitis merupakan peradangan dinding faring yang disebabkan\noleh virus (40-60%), bakteri (5-40%), alergi, trauma, iritan, dan lain-\nlain. Anak-anak dan orang dewasa umumnya mengalami 3-5 kali\ninfeksi virus pada saluran pernafasan atas termasuk faringitis setiap\ntahunnya.",
       "gejala": [
@@ -1788,7 +1662,7 @@
     {
       "id": 84,
       "nama": "Faringitis Kronik",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J31",
       "definisi": "Inflamasi kronis pada mukosa faring dengan durasi >3 bulan. Biasanya berhubungan dengan iritasi berulang (merokok, polusi, refluks gastroesofageal), infeksi kronis, atau alergi. Sering merupakan sekuel dari ISPA berulang.",
       "gejala": [
@@ -1805,7 +1679,7 @@
     {
       "id": 85,
       "nama": "Filariasis (Penyakit Kaki Gajah)",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B74, B74.0, B74.1, B74.2",
       "definisi": "Filariasis (Penyakit Kaki Gajah) adalah penyakit menular yang\ndisebabkan oleh cacing Filaria yang ditularkan oleh berbagai jenis\nnyamuk. Penyakit ini bersifat menahun (kronis) dan bila tidak\nmendapatkan pengobatan dapat menimbulkan cacat menetap\nberupa pembesaran kaki, lengan dan alat kelamin baik perempuan\nmaupun laki-laki.\nWHO sudah menetapkan Kesepakatan Global untuk mengeliminasi\nfilariasis pada tahun 2020 (The Global Goal of Elimination of\nLymphaticFilariasis as a Public Health problem by The Year 2020).\nProgram eliminasi dilaksanakan melalui pengobatan massal dengan\nDEC dan Albendazol setahun sekali selama 5 tahun di lokasi\nyangendemis serta perawatan kasus klinis baik yang akut maupun\nkronis untuk mencegah kecacatandan mengurangi penderitaannya.\nIndonesia melaksanakan eliminasi penyakit kaki gajah secara\nbertahap yang telah dimulai sejak tahun 2002 di 5 kabupaten.\nPerluasan wilayah akan dilaksanakan setiap tahun.\nPenyakit kaki gajah disebabkan oleh tiga spesies cacing filaria, yaitu:\nWucheria bancrofti, Brugia malayi dan Brugia timori. Vektor penular\ndi Indonesia hingga saat ini telah diketahui ada 23 spesies nyamuk\ndari genus Anopheles, Culex, Mansonia, Aedes, dan Armigeres yang\ndapat berperan sebagai vektor penular penyakit kaki gajah.",
       "gejala": [
@@ -1823,7 +1697,7 @@
     {
       "id": 86,
       "nama": "Fimosis",
-      "kategori": "Ginjal-Urogenital",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N47",
       "definisi": "Fimosis adalah kondisi dimana preputium tidak dapat diretraksi\nmelewati glans penis. Fimosis dapat bersifat fisiologis ataupun\npatalogis. Umumnya fimosis fisiologis terdapat pada bayi dan anak-\nanak. Pada anak usia 3 tahun 90% preputium telah dapat diretraksi\ntetapi pada sebagian anak preputium tetap lengket pada glans penis\nsehingga ujung preputium mengalami penyempitan dan mengganggu\nproses berkemih. Fimosis patologis terjadi akibat peradangan atau\ncedera pada preputium yang menimbulkan parut kaku sehingga\nmenghalangi retraksi.",
       "gejala": [
@@ -1847,7 +1721,7 @@
     {
       "id": 87,
       "nama": "Fluor Albus / Vaginal Discharge Non Gonore",
-      "kategori": "Ginjal-Urogenital",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "A54, N98.9, X14",
       "definisi": "Vaginal discharge atau keluarnya duh tubuh dari vagina secara\nfisiologis yang mengalami perubahan sesuai dengan siklus\nmenstruasi berupa cairan kental dan lengket pada seluruh siklus\nnamun lebih cair dan bening ketika terjadi ovulasi. Masih dalam\nbatas normal bila duh tubuh vagina lebih banyak terjadi pada saat\nstres, kehamilan atau aktivitas seksual. Vaginal discharge bersifat\npatologis bila terjadi perubahan-perubahan pada warna, konsistensi,\nvolume, dan baunya.",
       "gejala": [
@@ -1882,7 +1756,7 @@
     {
       "id": 89,
       "nama": "Fraktur Kraniomaksilofasial",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Cedera dan Keracunan",
       "kode": "S02.8",
       "definisi": "",
       "gejala": [
@@ -1895,7 +1769,7 @@
     {
       "id": 90,
       "nama": "Fraktur Terbuka",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T14",
       "definisi": "Fraktur adalah terputusnya kontinuitas tulang, tulang rawan sendi,\ntulang rawan epifisis baik yang bersifat total maupun parsial.\nFraktur terbuka adalah suatu fraktur yang terdapathubungan\ndengan lingkungan luar melalui kulit sehingga terjadi kontaminasi\nbakteri dan dapat menimbulkan komplikasi infeksi.",
       "gejala": [
@@ -1919,7 +1793,7 @@
     {
       "id": 91,
       "nama": "Fraktur Tertutup",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T14",
       "definisi": "Fraktur adalah terputusnya kontinuitas tulang, tulang rawan sendi,\ntulang rawan epifisis baik yang bersifat total maupun parsial.\nFraktur tertutup adalah suatu fraktur yang tidak berhubungan\ndengan lingkungan luar.",
       "gejala": [
@@ -1943,7 +1817,7 @@
     {
       "id": 92,
       "nama": "Fraktur Tulang",
-      "kategori": "Musculoskeletal",
+      "kategori": "Cedera dan Keracunan",
       "kode": "S02",
       "definisi": "Kerusakan kontinuitas tulang akibat trauma (fraktur traumatik) atau kekuatan tulang yang lemah (fraktur patologis - osteoporosis, metastasis, infeksi). Fraktur closed (kulit utuh) atau open/compound (kulit terbuka - emergency, risk infeksi). Healing phases: inflammatory (1-2 minggu), reparative (2-6 minggu callus formation), remodeling (bulan-tahun).",
       "gejala": [
@@ -1963,7 +1837,7 @@
     {
       "id": 93,
       "nama": "Frambusia (Yaws)",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A66, A66.0",
       "definisi": "Infeksi kronis kulit dan tulang yang disebabkan oleh Treponema pallidum subsp. pertenue (identik dengan T. pallidum tetapi non-venereal). Ditularkan melalui kontak kulit-ke-kulit, terutama pada anak-anak di daerah tropis lembab. Indonesia termasuk dari 14 negara endemis yaws dengan target eliminasi 2030. WHO strategy: Morges strategy (total community treatment).",
       "gejala": [
@@ -1997,7 +1871,7 @@
     {
       "id": 95,
       "nama": "Furunkel pada hidung",
-      "kategori": "Respirasi",
+      "kategori": "Pernapasan",
       "kode": "J34, J34.0",
       "definisi": "Furunkel adalah infeksi dari kelenjar sebasea atau folikel rambut\nhidung yang melibatkan jaringan subkutan. Biasanya disebabkan\noleh Staphylococcus aureus. Penyakit ini memiliki insidensi yang\nrendah. Belum terdapat data spesifik yang menunjukkan prevalensi\nfurunkel. Furunkel umumnya terjadi paling banyak pada anak-anak,\nremaja sampai dewasa muda.",
       "gejala": [
@@ -2021,7 +1895,7 @@
     {
       "id": 96,
       "nama": "Gagal Ginjal Akut (Acute Kidney Injury)",
-      "kategori": "Ginjal & Saluran Kemih",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N17",
       "definisi": "Penurunan fungsi ginjal mendadak (dalam hitungan jam sampai hari) yang ditandai oleh kenaikan kreatinin serum >=0.3 mg/dL dalam 48 jam atau >=1.5x dari baseline, atau penurunan produksi urine <0.5 mL/kg/jam selama 6 jam. Diklasifikasikan berdasarkan etiologi: prerenal (hipoperfusi - 55-60%), renal intrinsik (ATN, glomerulonephritis, AIN - 35-40%), postrenal (obstruksi - 5-10%).",
       "gejala": [
@@ -2043,7 +1917,7 @@
     {
       "id": 97,
       "nama": "Gagal Jantung",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I50, I50.9",
       "definisi": "Gagal jantung (akut dan kronik) merupakan masalah kesehatan yang\nmenyebabkan penurunan kualitas hidup, tingginya rehospitalisasi\nkarena kekambuhan yang tinggi dan peningkatan angka kematian.\nPrevalensi kasus gagal jantung di komunitas meningkat seiring\ndengan meningkatnya usia yaitu berkisar 0,7% (40-45 tahun), 1,3%\n(55-64 tahun), dan 8,4% (75 tahun ke atas). Lebih dari 40% pasien\nkasus gagal jantung memiliki fraksi ejeksi lebih dari 50%. Pada usia\n40 tahun, risiko terjadinya gagal jantung sekitar 21% untuk lelaki\ndan 20,3% pada perempuan.",
       "gejala": [
@@ -2063,7 +1937,7 @@
     {
       "id": 98,
       "nama": "Gagal Jantung Pada Anak",
-      "kategori": "Penyakit Anak",
+      "kategori": "Kardiovaskular",
       "kode": "I50, I50.9",
       "definisi": "Kegagalan jantung memompa darah adekuat untuk kebutuhan metabolik tubuh anak. Penyebab: congenital heart disease (80-90% bayi), cardiomyopathy, arrhythmia, anemia berat, sepsis.",
       "gejala": [
@@ -2076,7 +1950,7 @@
     {
       "id": 99,
       "nama": "Gangguan Bipolar",
-      "kategori": "Jiwa & Perilaku",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F31",
       "definisi": "Gangguan mood yang ditandai oleh episode manik/hypomanik yang beralternasi dengan episode depresi. Tipe I: manic episode (>=7 hari, severe, possible psychosis). Tipe II: hypomanic + major depressive (no full mania). Cyclothymic: numerous periods of hypomanic and depressive symptoms (<2 years). Prevalensi 1-2%, onset usia 18-25. Mortality by suicide 15-20%.",
       "gejala": [
@@ -2094,7 +1968,7 @@
     {
       "id": 100,
       "nama": "Gangguan Campuran Anxietas Dan Depresi",
-      "kategori": "Jiwa",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F41.2",
       "definisi": "Gangguan yang ditandai oleh adanya gejala-gejala anxietas\n(kecemasan) dan depresi bersama-sama, dan masing-masing gejala\ntidak menunjukkan rangkaian gejala yang cukup beratuntuk dapat\nditegakannya suatu diagnosis tersendiri. Untuk gejala anxietas,\nbeberapa gejala autonomik harus ditemukan, walaupun tidak\nterusmenerus, di samping rasa cemas atauk hawatir berlebihan.",
       "gejala": [
@@ -2118,7 +1992,7 @@
     {
       "id": 101,
       "nama": "Gangguan Cemas Menyeluruh (GAD)",
-      "kategori": "Penyakit Jiwa",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F41.1",
       "definisi": "Gangguan Cemas Menyeluruh (Generalized Anxiety Disorder / GAD) adalah gangguan kecemasan yang ditandai oleh kekhawatiran dan ansietas berlebihan yang pervasif dan tidak realistis mengenai berbagai peristiwa kehidupan sehari-hari, berlangsung hampir setiap hari selama minimal 6 bulan, disertai gejala ketegangan motorik dan hiperaktivitas otonom.",
       "gejala": [
@@ -2136,7 +2010,7 @@
     {
       "id": 102,
       "nama": "Gangguan Depresi Ringan-Sedang",
-      "kategori": "Jiwa",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F32.0, F32.1",
       "definisi": "",
       "gejala": [],
@@ -2147,7 +2021,7 @@
     {
       "id": 103,
       "nama": "Gangguan Psikotik",
-      "kategori": "Jiwa",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F20",
       "definisi": "Gangguan yang ditandai dengan ketidakmampuan atau hendaya\nberat dalam menilai realita, berupa sindroma (kumpulan gejala),\nantara lain dimanifestasikan dengan adanya halusinasi dan waham.",
       "gejala": [
@@ -2171,7 +2045,7 @@
     {
       "id": 104,
       "nama": "Gangguan Somatoform",
-      "kategori": "Penyakit Jiwa",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F45, F45.9",
       "definisi": "Gangguan somatoform merupakan suatu kelompok kelainan\npsikiatrik yang manifestasinya dapat berupa berbagai gejala fisik\nyang dirasakan signifikan oleh pasien namun tidak ditemukan\npenyebabnya secara medis. Tidak ada data yang pasti mengenai\nprevalensi gangguan ini di Indonesia. Satu penelitian di Jakarta\nmendapatkan prevalensi gangguan jiwa yang terdeteksi di\nPuskesmas sebesar 31,8%. Pada penelitian ini, jenis gangguan yang\ntersering adalah neurosis, yaitu sebesar 25,8%, dan di dalamnya\ntermasuk psikosomatik. Walaupun tidak ada kondisi medis yang\nserius, gejala-gejala yang dirasakan oleh pasien dengan gangguan\nsomatoform sangat mengganggu dan berpotensi menimbulkan\ndistres emosional. Peran dokter di fasilitas pelayanan kesehatan\ntingkat pertama pada kasus gangguan somatoform sangat penting.\nKeberhasilan dokter dalam mengeksklusi kelainan medis,\nmendiagnosis gangguan somatoform dengan tepat, dan\nmenatalaksana akan sangat membantu meningkatkan kualitas\nhidup pasien, mengurangi rujukan yang tidak perlu, dan\nmenghindarkan pasien dari pemeriksaan medis yang berlebihan atau\nmerugikan.",
       "gejala": [
@@ -2187,7 +2061,7 @@
     {
       "id": 105,
       "nama": "Gastritis",
-      "kategori": "Penyakit Pencernaan",
+      "kategori": "Pencernaan",
       "kode": "K29, K29.7",
       "definisi": "Gastritis adalah proses inflamasi pada lapisan mukosa dan\nsubmukosa lambung sebagai mekanisme proteksi mukosa apabila\nterdapat akumulasi bakteri atau bahan iritan lain. Proses inflamasi\ndapat bersifat akut, kronis, difus, atau lokal.",
       "gejala": [
@@ -2207,7 +2081,7 @@
     {
       "id": 106,
       "nama": "Gastroenteritis Akut",
-      "kategori": "Saluran Cerna",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A03, A03.9, A06.0, A09, K52.9",
       "definisi": "Gastroenteritis (GE) adalah peradangan mukosa lambung dan usus\nhalus yang ditandai dengan diare dengan frekuensi 3 kali atau lebih\ndalam waktu 24 jam. Apabila diare > 30 hari disebut kronis. WHO\n(World Health Organization) mendefinisikan diare akut sebagai diare\nyang biasanya berlangsung selama 3 – 7 hari tetapi dapat pula\nberlangsung sampai 14 hari. Diare persisten adalah episode diare\nyang diperkirakan penyebabnya adalah infeksi dan mulainya sebagai\ndiare akut tetapi berakhir lebih dari 14 hari, serta kondisi ini\nmenyebabkan malnutrisi dan berisiko tinggi menyebabkan kematian\nGastroenteritis lebih sering terjadi pada anak-anak karena daya\ntahan tubuh yang belum optimal. Diare merupakan salah satu\npenyebab angka morbiditas dan mortalitas yang tinggi pada anak di\nbawah umur lima tahun di seluruh dunia, yaitu mencapai 1 milyar\nkesakitan dan 3 juta kematian per tahun. Penyebab gastroenteritis\nantara lain infeksi, malabsorbsi, keracunan atau alergi makanan dan\npsikologis penderita.\nInfeksi yang menyebabkan GE akibat Entamoeba histolytica disebut\ndisentri, bila disebabkan oleh Giardia lamblia disebut giardiasis,\nsedangkan bila disebabkan oleh Vibrio cholera disebut kolera.",
       "gejala": [
@@ -2226,7 +2100,7 @@
     {
       "id": 107,
       "nama": "Glaukoma",
-      "kategori": "THT & Mata",
+      "kategori": "Mata",
       "kode": "H40, H40.2",
       "definisi": "Glaukoma adalah kelompok penyakit mata yang umumnya ditandai\nkerusakan saraf optik dan kehilangan lapang pandang yang bersifat\nprogresif serta berhubungan dengan berbagai faktor risiko terutama\ntekanan intraokular (TIO) yang tinggi. Glaukoma merupakan\npenyebab kebutaan kedua terbesar di dunia setelah katarak.\nKebutaan karena glaukoma tidak bisa disembuhkan, tetapi pada\nkebanyakan kasus glaukoma dapat dikendalikan. Umumnya\npenderita glaukoma telah berusia lanjut, terutama bagi yang\nmemiliki risiko. Hampir separuh penderita glaukoma tidak\nmenyadari bahwa mereka menderita penyakit tersebut.",
       "gejala": [
@@ -2243,7 +2117,7 @@
     {
       "id": 108,
       "nama": "Gonore (Kencing Nanah)",
-      "kategori": "Reproduksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A54, A54.9",
       "definisi": "Gonore adalah semua penyakit yang disebabkan oleh Neisseria\ngonorrhoeae. Penyakit ini termasuk Penyakit Menular Seksual (PMS)\nyang memiliki insidensi tinggi.Cara penularan gonore terutama\nmelalui genitor-genital, orogenital dan ano-genital, namun dapat pula\nmelalui alat mandi, termometer dan sebagainya (gonore genital dan\nekstragenital). Daerah yang paling mudah terinfeksi adalah mukosa\nvagina wanita sebelum pubertas.",
       "gejala": [
@@ -2263,7 +2137,7 @@
     {
       "id": 109,
       "nama": "Hemofilia",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Darah dan Imunologi",
       "kode": "D66",
       "definisi": "",
       "gejala": [
@@ -2276,7 +2150,7 @@
     {
       "id": 110,
       "nama": "Hemoroid grade 1/2",
-      "kategori": "Saluran Cerna",
+      "kategori": "Kardiovaskular",
       "kode": "I84, I84.9, K64",
       "definisi": "Hemoroid adalah pelebaran vena-vena didalam pleksus hemoroidalis.",
       "gejala": [
@@ -2300,7 +2174,7 @@
     {
       "id": 111,
       "nama": "Hepatitis A",
-      "kategori": "Saluran Cerna",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B15, B15.9, B16, B18",
       "definisi": "Hepatitis A adalah infeksi akut di liver yang disebabkan oleh hepatitis\nA virus (HAV), sebuah virus RNA yang disebarkan melalui rute fekal\noral. Lebih dari 75% orang dewasa simtomatik, sedangkan pada anak\n<6 tahun 70% asimtomatik. Kurang dari 1% penderita hepatitis A\ndewasa berkembang menjadi hepatitis A fulminan.",
       "gejala": [
@@ -2320,7 +2194,7 @@
     {
       "id": 112,
       "nama": "Hepatitis B",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B16, B18, B18.1",
       "definisi": "Hepatitis B adalah virus yang menyerang hati, masuk melalui darah\nataupun cairan tubuh dari seseorang yang terinfeksi. Virus ini\ntersebar luas di seluruh dunia dengan angka kejadian yang berbeda-\nbeda. Tingkat prevalensi hepatitis B di Indonesia sangat bervariasi\nberkisar 2,5% di Banjarmasin sampai 25,61% di Kupang, sehingga\ntermasuk dalam kelompok negara dengan endemisitas sedang\nsampai tinggi.\nInfeksi hepatitis B dapat berupa keadaan yang akut dengan gejala\nyang berlangsung kurang dari 6 bulan. Apabila perjalanan penyakit\nberlangsung lebih dari 6 bulan maka kita sebut sebagai hepatitis\nkronik (5%). Hepatitis B kronik dapat berkembang menjadi sirosis\nhepatis, 10% dari penderita sirosis hepatis akan berkembang\nmenjadihepatoma.",
       "gejala": [
@@ -2340,7 +2214,7 @@
     {
       "id": 113,
       "nama": "Hepatitis C",
-      "kategori": "Penyakit Pencernaan",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B17.1, B18.2",
       "definisi": "",
       "gejala": [
@@ -2353,7 +2227,7 @@
     {
       "id": 114,
       "nama": "Hernia",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K40",
       "definisi": "Protrusi organ atau jaringan melalui kelemahan pada dinding otot atau jaringan ikat yang mengelilinginya. Hernia inguinalis paling umum (75% - pria 25x lebih sering), diikuti oleh femoralis, umbilikalis, insisional, dan hiatus. Hernia dapat reducible (bisa dikembalikan), incarcerated (tidak bisa dikembalikan, tidak ada iskemia), atau strangulated (tidak bisa dikembalikan + iskemia - emergency bedah!).",
       "gejala": [
@@ -2371,7 +2245,7 @@
     {
       "id": 115,
       "nama": "Herpes Simplex (Herpes)",
-      "kategori": "Kulit",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B00, B00.9",
       "definisi": "Infeksi akut yang disebabkan oleh Virus Herpes Simpleks tipe 1 atau\ntipe 2, yang ditandai oleh adanya vesikel yang berkelompok di atas\nkulit yang sembab dan eritematosa pada daerah mukokutan.\nPenularan melalui kontak langsung dengan agen penyebab. Infeksi\nprimer oleh Virus Herpes Simpleks (HSV) tipe 1 biasanya dimulai\npada usia anak-anak, sedangkan HSV tipe 2 biasanya terjadi pada\ndekade II atau III, dan berhubungan dengan peningkatan aktivitas\nseksual.\nDiperkiraan ada 536 juta orang yang berusia 15-49 tahun yang\nterinfeksi HSV-2 di seluruh dunia pada tahun 2003 atau sekitar16%\ndari populasi dunia pada rentang usia tersebut. Prevalensi penyakit\nini lebih tinggi pada wanita dibandingkan pada pria dan umumnya\nlebih tinggi di negara berkembang daripada di negara maju.",
       "gejala": [
@@ -2390,7 +2264,7 @@
     {
       "id": 116,
       "nama": "Herpes Zoster (Cacar Ular / Cacar Api)",
-      "kategori": "Kulit",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B00.9, B02, B02.9",
       "definisi": "Herpes Zoster adalah infeksi kulit dan mukosa yang disebabkan oleh\nvirus Varisela-zoster. Infeksi ini merupakan reaktivasi virus yang\nterjadi setelah infeksi primer. Herpes Zoster jarang terjadi pada\nanak-anak dan dewasa muda, kecuali pada pasien muda dengan\nAIDS, limfoma, keganasan, penyakit imunodefisiensi dan pada\npasien yang menerima transplantasi sumsum tulang atau ginjal.\nPenyakit ini terjadi kurang dari 10% pada pasien yang berusia\nkurangdari 20 tahun dan hanya 5% terjadi pada pasien yang berusia\nkurang dari 15 tahun.Insiden herpes zoster meningkat seiring\ndengan pertambahan usia. Prevalensi penyakit ini pada pria dan\nwanita sama.",
       "gejala": [
@@ -2426,7 +2300,7 @@
     {
       "id": 118,
       "nama": "Hifema",
-      "kategori": "Mata/THT",
+      "kategori": "Mata",
       "kode": "H21",
       "definisi": "Hifema adalah terdapatnya akumulasi darah pada bilik mata depan.\nHifema dapat terjadi akibat trauma atau terjadi spontan. Hifema\ndapat disertai dengan abrasi kornea, iritis, midriasis, atau gangguan\nstruktur lain pada mata akibat trauma penyebabnya. Hifema\nspontan jarang ditemui. Hifema spontan dapat menjadi penanda\nterdapatnya rubeosis iridis, gangguan koagulasi, penyakit herpes,\nmasalah pada lensa intraokular (IOL), retinoblastoma, serta\nleukemia.",
       "gejala": [
@@ -2447,7 +2321,7 @@
     {
       "id": 119,
       "nama": "Hiperbilirubinemia",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Perinatal",
       "kode": "P59",
       "definisi": "",
       "gejala": [
@@ -2460,7 +2334,7 @@
     {
       "id": 120,
       "nama": "Hiperemesis Gravidarum",
-      "kategori": "Reproduksi",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O21, O21.0",
       "definisi": "Mual dan muntah yang terjadi pada awal kehamilan sampai umur\nkehamilan 16 minggu. Mual dan muntah yang berlebihan, dapat\nmengakibatkan dehidrasi, gangguan asam-basa dan elektrolit dan\nketosis keadaan ini disebut sebagai keadaan hiperemesis.Mual\nbiasanya terjadi pada pagi hari, tapi dapat pula timbul setiap saat\ndan malam hari. Mual dan muntah ini terjadi pada 60-80%\nprimigravida dan 40-60% multigravida. Mual dan muntah\nmempengaruhi hingga > 50% kehamilan. Keluhan muntah kadang-\nkadang begitu hebat dimana segala apa yang dimakan dan diminum\ndimuntahkan sehingga dapat mempengaruhi keadaan umum dan\nmengganggu pekerjaan sehari-hari, berat badan menurun, dehidrasi\ndan terdapat aseton dalam urin bahkan seperti gejala penyakit\nappendisitis, pielitis, dan sebagainya.",
       "gejala": [
@@ -2479,7 +2353,7 @@
     {
       "id": 121,
       "nama": "Hiperglikemia Hiperosmolar Non Ketotik",
-      "kategori": "Gejala",
+      "kategori": "Gejala dan Temuan Abnormal",
       "kode": "R73.9",
       "definisi": "Hiperglikemik Hiperosmolar Non Ketotik (HHNK) merupakan\nkomplikasi akut pada DM tipe 2 berupa peningkatan kadar gula\ndarah yang sangat tinggi (>600 mg/dl-1200 mg/dl) dan ditemukan\ntanda-tanda dehidrasi tanpa disertai gejala asidosis. HHNK biasanya\nterjadi pada orang tua dengan DM, yang mempunyai penyakit\npenyerta dengan asupan makanan yang kurang. Faktor pencetus\nserangan antara lain: infeksi, ketidakpatuhan dalam pengobatan,\nDM tidak terdiagnosis, dan penyakit penyerta lainnya.",
       "gejala": [
@@ -2503,7 +2377,7 @@
     {
       "id": 122,
       "nama": "Hiperlipidemia / Dislipidemia",
-      "kategori": "PTM Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E78, E78.5, R79",
       "definisi": "Dislipidemia adalah kelainan metabolisme lipid yang ditandai dengan\npeningkatan maupun penurunanfraksi lipid dalam darah. Beberapa\nkelainan fraksi lipid yang utama adalah kenaikan kadar kolesterol\ntotal, kolesterol LDL, dan atau trigliserida, serta penurunan\nkolesterol HDL. Dislipidemia merupakan faktor risiko terjadinya\naterosklerosis sehingga dapat menyebabkan stroke, Penyakit\nJantung Koroner (PJK), Peripheral Arterial Disease (PAD), Sindroma\nKoroner Akut (SKA).",
       "gejala": [
@@ -2520,7 +2394,7 @@
     {
       "id": 123,
       "nama": "Hipermetropia ringan",
-      "kategori": "Mata/THT",
+      "kategori": "Mata",
       "kode": "H52, H52.0",
       "definisi": "Hipermetropia (rabun dekat) merupakan keadaan gangguan\nkekuatan pembiasan mata dimana sinar sejajar jauh tidak cukup\nkuat dibiaskan sehingga titik fokusnya terletak di belakang retina.\nKelainan ini menyebar merata di berbagai geografis, etnis, usia dan\njenis kelamin.",
       "gejala": [
@@ -2544,7 +2418,7 @@
     {
       "id": 124,
       "nama": "Hipertensi Esensial",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I10",
       "definisi": "Hipertensi esensial merupakan hipertensi yang tidak diketahui\npenyababnya. Hipertensi menjadi masalah karena meningkatnya\nprevalensi, masih banyak pasien yang belum mendapat pengobatan,\nmaupun yang telah mendapat terapi tetapi target tekanan darah\nbelum tercapai serta adanya penyakit penyerta dan komplikasi yang\ndapat meningkatkan morbiditas dan mortalitas.",
       "gejala": [
@@ -2563,7 +2437,7 @@
     {
       "id": 125,
       "nama": "Hipertensi Pada Anak",
-      "kategori": "Penyakit Anak",
+      "kategori": "Kardiovaskular",
       "kode": "I10",
       "definisi": "",
       "gejala": [
@@ -2576,7 +2450,7 @@
     {
       "id": 126,
       "nama": "Hipertiroidisme / Tirotoksikosis",
-      "kategori": "PTM Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E05, E05.9",
       "definisi": "Tirotoksikosis adalah manifestasi klinis akibat kelebihan hormon\ntiroid yang beredar disirkulasi. Data Nasional dalam Riskesdas 2013,\nhipertiroid di Indonesia, terdiagnosis dokter sebesar 0,4%. Prevalensi\nhipertiroid tertinggi di DI Yogyakarta dan DKI Jakarta (masing-\nmasing 0,7%), Jawa Timur (0,6%), dan Jawa Barat (0,5%).\nTiroktosikosis di bagi dalam 2 kategori, yaitu yang berhubungan\ndengan hipertiroidisme dan yang tidak berhubungan.\nTirotoksikosis dapat berkembang menjadi krisis tiroid yang dapat\nmenyebabkan kematian. Tirotoksikosis yang fatal biasanya\ndisebabkan oleh autoimun Grave’s disease pada ibu hamil. Janin\nyang dikandungnya dapat mengalami tirotoksikosis pula, dan\nkeadaaan hepertiroid pada janin dapat menyebabkan retardasi\npertumbuhanm kraniosinostosis, bahkan kematian janin.",
       "gejala": [
@@ -2600,7 +2474,7 @@
     {
       "id": 127,
       "nama": "Hiperurisemia",
-      "kategori": "PTM Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E79, E79.0, M10",
       "definisi": "Kondisi kadar asam urat dalam darah lebih dari 7,0 mg/dl pada pria\ndan pada wanita 6 mg/dl. Hiperurisemia dapat terjadi akibat\nmeningkatnya produksi ataupun menurunnya pembuangan asam\nurat, atau kombinasi dari keduanya.\nGout adalah radang sendi yang diakibatkan deposisi kristal\nmonosodium urat pada jaringan sekitar sendi.",
       "gejala": [
@@ -2624,7 +2498,7 @@
     {
       "id": 128,
       "nama": "Hipoglikemia ringan",
-      "kategori": "Endokrin-Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E16.2, R57",
       "definisi": "Hipoglikemia adalah keadaan dimana kadar glukosa darah <60\nmg/dl, atau kadar glukosa darah <80 mg/dl dengan gejala klinis..\nHipoglikemia merupakan komplikasi akut dari penyandang diabetes\nmelitus dan geriatri.\nHipoglikemia dapat terjadi karena:\na. Kelebihan dosis obat, terutama insulin atau obat hipoglikemia\noral yaitu sulfonilurea.\nb. Kebutuhan tubuh akan insulin yang relatif menurun; gagal\nginjal kronik,dan paska persalinan.\nc. Asupan makan tidak adekuat: jumlah kalori atau waktu makan\ntidak tepat.\nd. Kegiatan jasmani berlebihan.",
       "gejala": [
@@ -2648,7 +2522,7 @@
     {
       "id": 129,
       "nama": "Hipotiroidisme",
-      "kategori": "PTM Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E03",
       "definisi": "Defisiensi hormon tiroid (T3/T4) yang menyebabkan metabolisme tubuh menurun. Hipotiroidisme primer (glandular - 95%, akibat thyroiditis autoimun Hashimoto, destruksi iatrogenik, atau defisiensi yodium) lebih umum daripada sekunder (hipofisis) atau tersier (hipotalamus). Wanita 5-10x lebih sering terkena.",
       "gejala": [
@@ -2671,7 +2545,7 @@
     {
       "id": 130,
       "nama": "HIV/AIDS",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Faktor Status Kesehatan",
       "kode": "B20, Z21",
       "definisi": "Masalah HIV/AIDS adalah masalah besar yang mengancam\nIndonesia dan banyak negara di dunia serta menyebabkan krisis\nmultidimensi. Berdasarkan hasil estimasi Departemen Kesehatan\ntahun 2006 diperkirakan terdapat 169.000-216.000 orang dengan\nHIV dan AIDS di Indonesia. Program bersama UNAIDS dan WHO\nmemperkirakan sekitar 4,9 juta orang hidup dengan HIV di Asia.",
       "gejala": [
@@ -2693,7 +2567,7 @@
     {
       "id": 131,
       "nama": "Hordeolum (Bintitan) & Kalazion",
-      "kategori": "THT & Mata",
+      "kategori": "Mata",
       "kode": "H00, H00.0, H00.1",
       "definisi": "Hordeolum adalah peradangan supuratif kelenjar kelopak mata.\nBiasanya merupakan infeksi Staphylococcus pada kelenjar sebasea\nkelopak. Dikenal dua bentuk hordeolum internum dan eksternum.\nHordeolum eksternum merupakan infeksi pada kelenjar Zeiss atau\nMoll. Hordeolum internum merupakan infeksi kelenjar Meibom yang\nterletak di dalam tarsus. Hordeolum mudah timbul pada individu\nyang menderita blefaritis dan konjungtivitis menahun.",
       "gejala": [
@@ -2711,7 +2585,7 @@
     {
       "id": 132,
       "nama": "Impaksi Gigi",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Pencernaan",
       "kode": "K01",
       "definisi": "",
       "gejala": [
@@ -2777,7 +2651,7 @@
     {
       "id": 136,
       "nama": "Infeksi Dengue Anak Dan Remaja",
-      "kategori": "Penyakit Anak",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A91",
       "definisi": "Infeksi dengue adalah penyakit yang disebabkan oleh virus dengue, termasuk dalam famili Flaviviridae dan terdapat 4 serotipe, yaitu DEN-1, DEN-2, DEN-3, serta DEN-4.",
       "gejala": [
@@ -2791,7 +2665,7 @@
     {
       "id": 137,
       "nama": "Infeksi Intraabdominal",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Pencernaan",
       "kode": "K65",
       "definisi": "",
       "gejala": [
@@ -2804,7 +2678,7 @@
     {
       "id": 138,
       "nama": "Infeksi pada umbilikus",
-      "kategori": "Neonatus/Kongenital",
+      "kategori": "Perinatal",
       "kode": "P38",
       "definisi": "Tali pusat biasanya lepas pada hari ke-7 setelah lahir dan luka baru\nsembuh pada hari ke-15. Infeksi pada tali pusat atau jaringan kulit\ndi sekitar perlu dikenali secara dini dalam rangka mencegah sepsis.",
       "gejala": [
@@ -2828,7 +2702,7 @@
     {
       "id": 139,
       "nama": "Infeksi Saluran Kemih (ISK)",
-      "kategori": "Saluran Cerna",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N30, N39, N39.0",
       "definisi": "Infeksi saluran kemih merupakan salah satu masalah kesehatan\nakut yang sering terjadi pada perempuan.Masalah infeksi saluran\nkemih tersering adalah sistitis akut, sistitis kronik, dan uretritis.",
       "gejala": [
@@ -2844,7 +2718,7 @@
     {
       "id": 140,
       "nama": "Influenza",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J10, J11, J11.1",
       "definisi": "Influenza, sering dikenal dengan flu adalah penyakit menular\ndisebabkan oleh virus RNA yaitu virus influenza A, B dan lebih\njarang C. Virus influenza terus mengalami perubahan, sehingga\ndalam beberapa waktu akan mengakibatkan wabah (pandemik) yang\nparah. Virus ini menyerang saluran napas atas dan paru-paru.",
       "gejala": [
@@ -2863,7 +2737,7 @@
     {
       "id": 141,
       "nama": "Insomnia Primer",
-      "kategori": "Penyakit Jiwa",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F51, F51.0, G47, G47.0",
       "definisi": "Insomnia adalah gejala atau gangguan dalam tidur, dapat berupa\nkesulitan berulang untuk mencapai tidur, atau mempertahankan\ntidur yang optimal, atau kualitas tidur yang buruk. Pada\nkebanyakan kasus, gangguan tidur adalah salah satu gejala dari\ngangguan lainnya, baik mental (psikiatrik) atau fisik.\nSecara umum lebih baik membuat diagnosis gangguan tidur yang\nspesifik bersamaan dengan diagnosis lain yang relevan untuk\nmenjelaskan secara kuat psikopatologi dan atau patofisiologinya.",
       "gejala": [
@@ -2904,7 +2778,7 @@
     {
       "id": 143,
       "nama": "Inverted nipple",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O92, O92.02",
       "definisi": "Terdapat beberapa bentuk puting susu. Pada beberapa kasus\nseorang ibu merasa putingnya datar atau terlalu pendek akan\nmenemui kesulitan dalam menyusui bayi. Hal ini bisa berdampak\nbayi tidak bisa menerima ASI dengan baik dan cukup.\nPada beberapa kasus, putting dapat muncul kembali bila di\nstimulasi, namun pada kasus-kasus lainnya, retraksi ini menetap.",
       "gejala": [
@@ -2920,7 +2794,7 @@
     {
       "id": 144,
       "nama": "ISPA pada Anak",
-      "kategori": "Kesehatan Anak",
+      "kategori": "Pernapasan",
       "kode": "J06",
       "definisi": "Infeksi saluran pernapasan akut pada anak yang merupakan penyebab kunjungan ke fasilitas kesehatan paling umum pada balita. ISPA pada anak mencakup spectrum dari common cold ringan sampai pneumonia berat. Penyebab utama: virus (RSV, rhinovirus, adenovirus, influenza, parainfluenza) dan bakteri (S. pneumoniae, H. influenzae, M. catarrhalis). WHO estimates 800.000 kematian anak <5 tahun per tahun akibat pneumonia, sebagian besar di negara berkembang.",
       "gejala": [
@@ -2945,7 +2819,7 @@
     {
       "id": 145,
       "nama": "Kandidiasis Kutis",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B37.2",
       "definisi": "Kandidiasis kutis adalah infeksi jamur pada kulit dan kuku yang disebabkan oleh spesies Candida (terutama Candida albicans), terutama menyerang area lipatan kulit yang hangat dan lembap (intertriginosa: lipat paha, ketiak, inframamaria, sela jari).",
       "gejala": [
@@ -2960,7 +2834,7 @@
     {
       "id": 146,
       "nama": "Kandidiasis Mulut (Oral Thrush)",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B37.0, B37.9",
       "definisi": "Infeksi Candida albicans ini menyerang kulit, mukosa maupun organ\ndalam, sedangkan pada bayi dapat terinfeksi melalui vagina saat\ndilahirkan, atau karena dot yang tidak steril",
       "gejala": [
@@ -2976,7 +2850,7 @@
     {
       "id": 147,
       "nama": "Kandidosis mukokutan ringan",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35",
       "definisi": "",
       "gejala": [],
@@ -2987,7 +2861,7 @@
     {
       "id": 148,
       "nama": "Kanker Kolorektal",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C18",
       "definisi": "",
       "gejala": [
@@ -3000,7 +2874,7 @@
     {
       "id": 149,
       "nama": "Kanker Nasofaring",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C11",
       "definisi": "",
       "gejala": [
@@ -3013,7 +2887,7 @@
     {
       "id": 150,
       "nama": "Kanker Paru",
-      "kategori": "Penyakit Paru",
+      "kategori": "Neoplasma",
       "kode": "C33",
       "definisi": "",
       "gejala": [
@@ -3026,7 +2900,7 @@
     {
       "id": 151,
       "nama": "Kanker Payudara",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C50",
       "definisi": "",
       "gejala": [
@@ -3039,7 +2913,7 @@
     {
       "id": 152,
       "nama": "Kanker Prostat",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C61",
       "definisi": "",
       "gejala": [
@@ -3052,7 +2926,7 @@
     {
       "id": 153,
       "nama": "Kanker Serviks",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C53",
       "definisi": "",
       "gejala": [
@@ -3065,7 +2939,7 @@
     {
       "id": 154,
       "nama": "Karies Gigi",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Pencernaan",
       "kode": "K02",
       "definisi": "",
       "gejala": [
@@ -3078,7 +2952,7 @@
     {
       "id": 155,
       "nama": "Karsinoma Sel Hati",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C22.0",
       "definisi": "",
       "gejala": [
@@ -3091,7 +2965,7 @@
     {
       "id": 156,
       "nama": "Katarak",
-      "kategori": "THT & Mata",
+      "kategori": "Mata",
       "kode": "H25, H26.9",
       "definisi": "Katarak adalah kekeruhan pada lensa yang menyebabkan\npenurunan tajam penglihatan (visus). Katarak paling sering\nberkaitan dengan proses degenerasi lensa pada pasien usia di atas\n40 tahun (katarak senilis). Selain katarak senilis, katarak juga dapat\nterjadi akibat komplikasi glaukoma, uveitis, trauma mata, serta\nkelainan sistemik seperti diabetes mellitus, riwayat pemakaian obat\nsteroid, dan lain-lain. Katarak biasanya terjadi bilateral, namun\ndapat juga pada satu mata (monokular).",
       "gejala": [
@@ -3111,7 +2985,7 @@
     {
       "id": 157,
       "nama": "Katarak Pada Anak",
-      "kategori": "Penyakit Anak",
+      "kategori": "Mata",
       "kode": "H25",
       "definisi": "",
       "gejala": [
@@ -3124,7 +2998,7 @@
     {
       "id": 158,
       "nama": "Kecacingan (Soil-Transmitted Helminthiasis)",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B76",
       "definisi": "Infeksi cacing usus yang ditularkan melalui tanah terkontaminasi telur cacing. Empat spesies utama: Ascaris lumbricoides (ascariasis - paling umum), Trichuris trichiura (trichuriasis - whipworm), Ancylostoma duodenale dan Necator americanus (hookworm). Sangat endemis di daerah tropis dengan poor sanitation. Indonesia masih memiliki prevalence STH yang tinggi di beberapa daerah.",
       "gejala": [
@@ -3146,7 +3020,7 @@
     {
       "id": 159,
       "nama": "Kecelakaan dan Trauma Soft Tissue (KTS)",
-      "kategori": "Musculoskeletal",
+      "kategori": "Cedera dan Keracunan",
       "kode": "S00, T00",
       "definisi": "Cedera pada jaringan lunak (kulit, otot, tendon, ligament, syaraf, pembuluh darah) akibat trauma tumpul (blunt) atau tajam (penetrating). Termasuk: lacerasi, abrasio, contusio, strain (cedera otot/tendon), sprain (cedera ligament), hematoma, avulsi, degloving. Trauma adalah leading cause of death dan disability pada usia muda di Indonesia.",
       "gejala": [
@@ -3166,7 +3040,7 @@
     {
       "id": 161,
       "nama": "Kehamilan normal",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O80.9, Z34",
       "definisi": "Masa kehamilan dimulai dari konsepsi sampai lahir. Lama\nkehamilan normal 40 minggu dihitung dari hari pertama haid terahir\n(HPHT). Untuk menghindari terjadinya komplikasi pada kehamilan\ndan persalinan, maka setiap ibu hamil dianjurkan untuk melakukan\npemeriksaan secara rutin minimal 4 kali kunjungan selama masa\nkehamilan.",
       "gejala": [
@@ -3190,7 +3064,7 @@
     {
       "id": 162,
       "nama": "Kejang Demam Sederhana",
-      "kategori": "Penyakit Anak",
+      "kategori": "Gejala dan Temuan Abnormal",
       "kode": "R56, R56.0",
       "definisi": "Kejang Demam (KD) adalah bangkitan kejang yang terjadi pada\nkenaikan suhu tubuh (suhu rektal > 38o C) akibat dari suatu proses\nekstra kranial. Kejang berhubungan dengan demam, tetapi tidak\ndisebabkan infeksi intrakranial atau penyebab lain seperti trauma\nkepala, gangguan kesimbangan elektrolit, hipoksia atau\nhipoglikemia.",
       "gejala": [
@@ -3207,7 +3081,7 @@
     {
       "id": 163,
       "nama": "Kekerasan tajam",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "S10",
       "definisi": "",
       "gejala": [],
@@ -3218,7 +3092,7 @@
     {
       "id": 164,
       "nama": "Kekerasan tumpul",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "S09",
       "definisi": "",
       "gejala": [],
@@ -3229,7 +3103,7 @@
     {
       "id": 165,
       "nama": "Kelainan Refraksi (Rabun Jauh/Dekat)",
-      "kategori": "THT & Mata",
+      "kategori": "Mata",
       "kode": "H52",
       "definisi": "Gangguan penglihatan akibat fokus cahaya tidak tepat di retina karena bentuk bola mata (panjang/short axial length) atau kelengkungan kornea/lensa. Tipe: myopia (rabun jauh - fokus di depan retina), hipermetropi (rabun dekat - fokus di belakang retina), astigmatisme (kornea tidak spherical), presbiopi (kehilangan kemampuan akomodasi lensa akibat penuaan - onset 40-45 tahun). Myopia epidemik meningkat pesat di Asia (80-90% remaja di East Asia).",
       "gejala": [
@@ -3248,7 +3122,7 @@
     {
       "id": 166,
       "nama": "Kelainan Tiroid pada Kehamilan",
-      "kategori": "Reproduksi",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O99.5",
       "definisi": "Gangguan fungsi tiroid selama kehamilan yang memerlukan manajemen khusus. Hipotiroidisme: risiko abortus, preeklampsia, impaired neurodevelopment fetal. Hipertiroidisme: risiko abortus, preterm delivery, thyroid storm.",
       "gejala": [
@@ -3263,7 +3137,7 @@
     {
       "id": 167,
       "nama": "Kelumpuhan Serebral (Cerebral Palsy)",
-      "kategori": "Kesehatan Anak",
+      "kategori": "Saraf",
       "kode": "G80",
       "definisi": "Kelompok gangguan perkembangan gerak dan posture permanen yang menyebabkan limitation aktivitas. Prevalensi 2-3 per 1000 kelahiran hidup. Penyebab: prenatal (70-80%), perinatal (10-20%), postnatal (10%).",
       "gejala": [
@@ -3281,7 +3155,7 @@
     {
       "id": 168,
       "nama": "Keracunan makanan",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T47",
       "definisi": "Keracunan makanan merupakan suatu kondisi gangguan\npencernaan yang disebabkan oleh konsumsi makanan atau air yang\nterkontaminasi dengan zat patogen dan atau bahan kimia, misalnya\nNorovirus, Salmonella, Clostridium perfringens, Campylobacter, dan\nStaphylococcus aureus.",
       "gejala": [
@@ -3305,7 +3179,7 @@
     {
       "id": 169,
       "nama": "Ketuban Pecah Dini (KPD)",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O42, O42.9",
       "definisi": "Ketuban pecah dini adalah keadaan pecahnya selaput ketuban\nsebelum persalinan atau dimulainya tanda inpartu. Bila ketuban\npecah dini terjadi sebelum usia kehamilan 37 minggu disebut\nketuban pecah dini pada kehamilan prematur.\nDalam keadaan normal 8-10% perempuan hamil aterm akan\nmengalami ketuban pecah dini. Ketuban pecah dini prematur terjadi\npada 1% kehamilan.\nKetuban pecah dini pada kehamilan prematur disebabkan oleh\nadanya faktor-faktor eksternal, misalnya infeksi yang menjalar dari\nvagina. Ketuban pecah dini prematur sering terjadi pada\npolihidramnion, inkompeten serviks, dan solusio plasenta.",
       "gejala": [
@@ -3329,7 +3203,7 @@
     {
       "id": 170,
       "nama": "Kolera",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A00.9",
       "definisi": "Kolera adalah penyakit diare sekretorik akut dan berpotensi fatal yang disebabkan oleh infeksi bakteri Vibrio cholerae serogrup O1 atau O139 yang menghasilkan enterotoksin kolera, memicu sekresi masif air dan elektrolit ke lumen usus.",
       "gejala": [
@@ -3346,7 +3220,7 @@
     {
       "id": 171,
       "nama": "Kolesistitis Akut",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K80",
       "definisi": "Inflamasi akut kantong empedu yang 95% disebabkan oleh obstruksi leher kantong empedu oleh batu empedu (kalkulus). Non-kalkulus kolesistitis terjadi pada kritis/trauma/burn. Perforasi dapat terjadi dalam 48-72 jam tanpa treatment.",
       "gejala": [
@@ -3364,7 +3238,7 @@
     {
       "id": 172,
       "nama": "Kolesistitis Kronik",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K81.1, K81.9",
       "definisi": "Kolesistitis adalah reaksi inflamasi akut atau kronisdinding kandung\nempedu. Faktor yang mempengaruhi timbulnya serangan kolesistitis\nadalah stasis cairan empedu, infeksi kuman dan iskemia dinding\nkandung empedu. Penyebab utama kolesistitis akut adalah batu\nkandung empedu (90%) yang terletak di duktus sistikus yang\nmenyebabkan stasis cairan empedu.",
       "gejala": [
@@ -3380,7 +3254,7 @@
     {
       "id": 173,
       "nama": "Konjungtivitis",
-      "kategori": "THT & Mata",
+      "kategori": "Mata",
       "kode": "H10, H10.1, H10.9",
       "definisi": "Inflamasi konjungtiva (membran mukosa yang melapisi sclera dan bagian dalam kelopak mata). Penyebab: viral (adenovirus - paling umum, 65-90%), bakteri (S. pneumoniae, H. influenzae, S. aureus), alergi, atau iritan. Sangat umum di Puskesmas, terutama saat musim pancaroba.",
       "gejala": [
@@ -3400,7 +3274,7 @@
     {
       "id": 174,
       "nama": "Konjungtivitis Alergi",
-      "kategori": "Penyakit Mata",
+      "kategori": "Mata",
       "kode": "H10.1",
       "definisi": "Konjungtivitis adalah radang konjungtiva yang dapat disebabkan\noleh mikroorganisme (virus, bakteri), iritasi, atau reaksi alergi.\nKonjungtivitis ditularkan melalui kontak langsung dengan sumber\ninfeksi. Penyakit ini dapat menyerang semua umur.",
       "gejala": [
@@ -3417,7 +3291,7 @@
     {
       "id": 175,
       "nama": "Konjungtivitis Bakteri dan Viral",
-      "kategori": "Penyakit Mata",
+      "kategori": "Mata",
       "kode": "H10.9",
       "definisi": "Konjungtivitis adalah peradangan selaput lendir konjungtiva bulbi dan palpebra yang disebabkan oleh infeksi bakteri (Staphylococcus, Streptococcus) atau virus (Adenovirus), ditandai dengan hiperemia konjungtiva dan sekret mata.",
       "gejala": [
@@ -3434,7 +3308,7 @@
     {
       "id": 176,
       "nama": "Konstipasi",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K59.0",
       "definisi": "Defekasi jarang (<3x/minggu), feses keras, straining, sensasi inkomplet evacuation, atau sensasi obstruksi. Dapat primer (idiopatik/slow transit) atau sekunder (obat-obatan, diet, penyakit metabolic, struktural). Prevalensi global 14-16%, lebih tinggi pada wanita dan lansia.",
       "gejala": [
@@ -3454,7 +3328,7 @@
     {
       "id": 177,
       "nama": "Kusta",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A30",
       "definisi": "Lepra adalah penyakit menular, menahun dan disebabkan oleh\nMycobacterium leprae yang bersifat intraselular obligat. Penularan\nkemungkinan terjadi melalui saluran pernapasan atas dan kontak\nkulit pasien lebih dari 1 bulan terus menerus. Masa inkubasi rata-\nrata 2,5 tahun, namun dapat juga bertahun-tahun.",
       "gejala": [
@@ -3478,7 +3352,7 @@
     {
       "id": 178,
       "nama": "Lakasana Komplikasi Kehamilan",
-      "kategori": "Kebidanan dan Kandungan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O00",
       "definisi": "",
       "gejala": [
@@ -3491,7 +3365,7 @@
     {
       "id": 179,
       "nama": "Laringitis Akut",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J04, J04.0",
       "definisi": "Laringitis adalah peradangan pada laring yang dapat disebabkan\noleh virus, bakteri, atau jamur. Laringitis juga merupakan akibat\ndari penggunaan suara yang berlebihan, pajanan terhadap polutan\neksogen, atau infeksi pada pita suara. Refluks gastroesofageal,\nbronkitis, dan pneumonia juga dapat menyebabkan laringitis.\nLaringitis pada anak sering diderita oleh anak usia 3 bulan hingga 3\ntahun, dan biasanya disertai inflamasi pada trakea dan bronkus dan\ndisebut sebagai penyakit croup. Penyakit ini seringkali disebabkan\noleh virus, yaitu virus parainfluenza, adenovirus, virus influenza A\ndan B, RSV, dan virus campak. Selain itu, M. pneumonia juga dapat\nmenyebabkan croup.",
       "gejala": [
@@ -3508,7 +3382,7 @@
     {
       "id": 180,
       "nama": "Laserasi Kelopak Mata",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "S01",
       "definisi": "Laserasi kelopak adalah terpotongnya jaringan pada kelopak mata.\nPenyebab laserasi kelopak dapat berupa sayatan benda tajam,\ntrauma tumpul (kecelakaan lalu lintas atau olahraga), maupun\ngigitan hewan. Laserasi pada kelopak perlu ditangani segera agar\nfungsi dan kosmetik kelopak dapat dipertahankan.",
       "gejala": [
@@ -3528,7 +3402,7 @@
     {
       "id": 181,
       "nama": "Leptospirosis",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A27, A27.9",
       "definisi": "Leptospirosis adalah penyakit infeksi yang menyerang manusia\ndisebabkan oleh mikroorganisme Leptospira interogans dan memiliki\nmanifestasi klinis yang luas. Spektrum klinis mulai dari infeksi yang\ntidak jelas sampai fulminan dan fatal. Pada jenis yang ringan,\nleptospirosis dapat muncul seperti influenza dengan sakit kepala dan\nmyalgia.Tikus adalah reservoir yang utama dan kejadian\nleptospirosis lebih banyak ditemukan pada musim hujan.",
       "gejala": [
@@ -3549,7 +3423,7 @@
     {
       "id": 182,
       "nama": "Leukemia Limfoblastik Akut Pada Anak",
-      "kategori": "Penyakit Anak",
+      "kategori": "Neoplasma",
       "kode": "C91.0",
       "definisi": "",
       "gejala": [
@@ -3586,7 +3460,7 @@
     {
       "id": 184,
       "nama": "Limfadenitis",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B70, I88",
       "definisi": "Limfadenitis adalah peradangan pada satu atau beberapa kelenjar\ngetah bening. Limfadenitis bisa disebabkan oleh infeksi dari berbagai\norganisme, yaitu bakteri, virus, protozoa, riketsia atau jamur. Secara\nkhusus, infeksi menyebar ke kelenjar getah bening dari infeksi kulit,\ntelinga, hidung atau mata.\nBakteri Streptokokus, Stafilokokus, dan Tuberkulosis adalah\npenyebab paling umum dari Limfadenitis, meskipun virus, protozoa,\nriketsia, jamur juga dapat menginfeksi kelenjar getah bening.",
       "gejala": [
@@ -3610,7 +3484,7 @@
     {
       "id": 185,
       "nama": "Lipoma",
-      "kategori": "Neoplasma/Darah",
+      "kategori": "Neoplasma",
       "kode": "D17, D17.9",
       "definisi": "Lipoma adalah suatu tumor (benjolan) jinak yang berada di bawah\nkulit yang terdiri dari lemak. Biasanya lipoma dijumpai pada usia\nlanjut (40-60 tahun), namun juga dapat dijumpai pada anak-anak.\nLipoma kebanyakan berukuran kecil, namun dapat tumbuh hingga\nmencapai lebih dari diameter 6 cm.\nHasil Anamnesis\nKeluhan\nBenjolan di kulit tanpa disertai nyeri.\nBiasanya tanpa gejala apa-apa (asimptomatik). Hanya dikeluhkan\ntimbulnya benjolan yang membesar perlahan dalam waktu yang\nlama. Bisa menimbulkan gejala nyeri jika tumbuh dengan menekan\nsaraf. Untuk tempat predileksi seperti di leher bisa menimbulkan\nkeluhan menelan dan sesak.\nFaktor Risiko\na. Adiposisdolorosis\nb. Riwayat keluarga dengan lipoma\nc. Sindrom Gardner\nd. Usia menengah dan usia lanjut",
       "gejala": [],
@@ -3621,7 +3495,7 @@
     {
       "id": 186,
       "nama": "Low Back Pain (Nyeri Punggung Bawah)",
-      "kategori": "Musculoskeletal",
+      "kategori": "Muskuloskeletal",
       "kode": "M54.5",
       "definisi": "Nyeri di daerah lumbosakral (L1-S1) yang merupakan keluhan muskuloskeletal paling umum di dunia (lifetime prevalence 60-80%). Diklasifikasikan berdasarkan durasi: akut (<6 minggu), subakut (6-12 minggu), kronik (>12 minggu). Etiologi: non-specific mechanical (90%), radicular (sciatica - 5-10%), serious pathology (<1% - fracture, infection, malignancy, cauda equina).",
       "gejala": [
@@ -3640,7 +3514,7 @@
     {
       "id": 187,
       "nama": "Luka Bakar",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T20",
       "definisi": "",
       "gejala": [
@@ -3653,7 +3527,7 @@
     {
       "id": 188,
       "nama": "Luka bakar derajat 1 dan 2",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "R12, T30",
       "definisi": "Luka bakar (burn injury) adalah kerusakan kulit yang disebabkan\nkontak dengan sumber panas seperti api, air panas, bahan kimia,\nlistrik dan radiasi.",
       "gejala": [
@@ -3677,7 +3551,7 @@
     {
       "id": 189,
       "nama": "Luka Diabetik (Diabetic Foot Ulcer)",
-      "kategori": "Kulit",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E11.5, L97",
       "definisi": "Ulkus kulit pada kaki pasien diabetes akibat neuropati perifer, angiopati perifer, dan infeksi. Prevalensi lifetime 15-25%. Leading cause of non-traumatic lower extremity amputation.",
       "gejala": [
@@ -3721,7 +3595,7 @@
     {
       "id": 191,
       "nama": "Mabuk Perjalanan (Motion Sickness)",
-      "kategori": "Penyakit Saraf",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T75, T75.3",
       "definisi": "Mabuk perjalanan (kinetosis) adalah sindrom gangguan fisiologis yang timbul akibat ketidakcocokan sensorik (sensory conflict) antara input visual, vestibular (telinga dalam), dan proprioseptif selama berada di kendaraan bergerak.",
       "gejala": [
@@ -3763,7 +3637,7 @@
     {
       "id": 193,
       "nama": "Malaria",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B50, B54",
       "definisi": "Merupakan suatu penyakit infeksi akut maupun kronik yang\ndisebabkan oleh parasit Plasmodium yang menyerang eritrosit\ndan ditandai dengan ditemukannya bentuk aseksual dalam\ndarah, dengan gejala demam, menggigil, anemia, dan pembesaran\nlimpa.",
       "gejala": [
@@ -3785,7 +3659,7 @@
     {
       "id": 194,
       "nama": "Malaria Serebral",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B50.0",
       "definisi": "Malaria Serebral merupakan salah satu komplikasi infeksi dari\nPlasmodium falciparum dan merupakan komplikasi berat yang\npaling sering ditemukan serta penyebab kematian utama pada\nmalaria. Diperkirakan sekitar 1-3 juta orang meninggal diseluruh\ndunia setiap tahunnya karena malaria serebral, terutama pada anak-\nanak.",
       "gejala": [
@@ -3805,7 +3679,7 @@
     {
       "id": 195,
       "nama": "Malnutrisi energi-protein",
-      "kategori": "Endokrin-Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E40, E44, E46",
       "definisi": "MEP adalah penyakit akibat kekurangan energi dan protein,\numumnya disertai defisiensi vitamin dan mineral.\nKlasifikasi dari MEP adalah:\na. Gizi Kurang\nb. Gizi Buruk, terdiri atas kwashiorkor, marasmus, dan marasmik-\nkwashiorkor",
       "gejala": [
@@ -3829,7 +3703,7 @@
     {
       "id": 196,
       "nama": "Malnutrisi Pada Dewasa",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E40",
       "definisi": "",
       "gejala": [
@@ -3842,7 +3716,7 @@
     {
       "id": 197,
       "nama": "Mastitis",
-      "kategori": "Ginjal-Urogenital",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N61, O91",
       "definisi": "Mastitis adalah peradangan payudara yang terjadi biasanya pada\nmasa nifas atau sampai 3 minggu setelah persalinan.\nKejadian mastitis berkisar 2-33% dari ibu menyusui dan lebih\nkurang 10% kasus mastitis akan berkembang menjadi abses\n(nanah), dengan gejala yang makin berat.",
       "gejala": [
@@ -3866,7 +3740,7 @@
     {
       "id": 198,
       "nama": "Mata Kering (Dry Eye Syndrome)",
-      "kategori": "Penyakit Mata",
+      "kategori": "Mata",
       "kode": "H04, H04.1",
       "definisi": "Mata kering adalah suatu keadaan keringnya permukaan kornea dan\nkonjungtiva yang diakibatkan berkurangnya produksi komponen air\nmata (musin, akueous, dan lipid). Mata kering merupakan salah satu\ngangguan yang sering pada mata dengan insiden sekitar 10-30% dari\npopulasi dan terutama dialami oleh wanita berusia lebih dari 40\ntahun. Penyebab lain adalah meningkatnya evaporasi air mata akibat\nfaktor lingkungan rumah, kantor atau akibat lagoftalmus.",
       "gejala": [
@@ -3883,7 +3757,7 @@
     {
       "id": 199,
       "nama": "Meningitis Bakteri",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Saraf",
       "kode": "G00, G03",
       "definisi": "Infeksi bakteri pada meninges (membran pelindung otak dan sumsum tulang belakang) yang merupakan emergency medis dengan mortality 10-30% walaupun dengan terapi adekuat. Penyebab utama: S. pneumoniae (paling umum dewasa), N. meningitidis (epidemic potential), H. influenzae type b (anak <5 tahun - berkurang dengan vaksinasi), L. monocytogenes (neonatus, elderly, immunocompromised).",
       "gejala": [
@@ -3906,7 +3780,7 @@
     {
       "id": 200,
       "nama": "Migren Tanpa Aura",
-      "kategori": "Penyakit Saraf",
+      "kategori": "Saraf",
       "kode": "G43, G43.0, G43.9",
       "definisi": "Migren adalah suatu istilah yang digunakan untuk nyeri kepala\nprimer dengan kualitas vaskular (berdenyut), diawali unilateral yang\ndiikuti oleh mual, fotofobia, fonofobia, gangguan tidur dan depresi.\nSerangan seringkali berulang dan cenderung tidak akan bertambah\nparah setelah bertahun-tahun. Migren bila tidak diterapi akan\nberlangsung antara 4-72 jam dan yang klasik terdiri atas 4 fase yaitu\nfase prodromal (kurang lebih 25 % kasus), fase aura (kurang lebih\n15% kasus), fase nyeri kepala dan fase postdromal.\nPada wanita migren lebih banyak ditemukan dibanding pria dengan\nskala 2:1. Wanita hamil tidak luput dari serangan migren, pada\numumnya serangan muncul pada kehamilan trimester I.\nSampai saat ini belum diketahui dengan pasti faktor penyebab\nmigren, diduga sebagai gangguan neurobiologis, perubahan\nsensitivitas sistem saraf dan avikasi sistem trigeminal-vaskular,\nsehingga migren termasuk dalam nyeri kepala primer.",
       "gejala": [
@@ -3924,7 +3798,7 @@
     {
       "id": 201,
       "nama": "Miliaria (Biang Keringat)",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Kulit",
       "kode": "L30, L74.3",
       "definisi": "Miliaria adalah kelainan kulit akibat retensi keringat yang ditandai\noleh adanya vesikel milier. Sinonim untuk penyakit ini adalah biang\nkeringat, keringat buntet, liken tropikus, prickle heat. Berdasarkan\nsurvey yang dilakukan di Jepang didapatkan 5000 bayi baru lahir\nmenderita miliaria. Survey tersebut mengungkapkan bahwa miliaria\nkristalina terjadi pada 4,5% nenonatus dengan usia rata-rata 1\nminggu dan miliaria rubra terjadi pada 4% neonatus dengan usia\nrata-rata 11-14 hari. Dari sebuah survey yang dilakukan di Iran\nditemukan insiden miliaria pada 1,3% bayi baru lahir. Miliaria\numumnya terjadi di daerah tropis dan banyak diderita pada mereka\nyang baru saja pindah dari daerah yang beriklim sedang ke daerah\nyang beriklim tropis.",
       "gejala": [
@@ -3940,7 +3814,7 @@
     {
       "id": 202,
       "nama": "Miopia ringan",
-      "kategori": "Mata/THT",
+      "kategori": "Mata",
       "kode": "H52, H52.1",
       "definisi": "Miopia ringan adalah kelainan refraksi dimana sinar sejajar yang\nmasuk ke mata dalam keadaan istirahat (tanpa akomodasi) akan\ndibiaskan ke titik fokus di depan retina.",
       "gejala": [
@@ -3961,7 +3835,7 @@
     {
       "id": 203,
       "nama": "Moluskum kontagiosum",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B08, B08.1",
       "definisi": "Moluskum kontagiosum adalah penyakit yang disebabkan oleh virus\npoks yang menginfeksi sel epidermal. Penyakit ini terutama\nmenyerang anak dan kadang-kadang juga orang dewasa. Pada orang\ndewasa, penyakit ini digolongkan kedalam penyakit akibat hubungan\nseksual. Penularan melalui kontak langsung dengan agen penyebab.",
       "gejala": [
@@ -4009,7 +3883,7 @@
     {
       "id": 205,
       "nama": "Nefropati Diabetik",
-      "kategori": "Ginjal & Saluran Kemih",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E11.2, N08.3",
       "definisi": "Komplikasi mikrovaskular diabetes dengan proteinuria progresif dan penurunan GFR. Leading cause of ESRD di dunia. Prevalensi 20-40% T1DM, 15-25% T2DM.",
       "gejala": [
@@ -4028,7 +3902,7 @@
     {
       "id": 206,
       "nama": "Neuropati Perifer",
-      "kategori": "Neurologi",
+      "kategori": "Saraf",
       "kode": "G60",
       "definisi": "Gangguan fungsi saraf perifer (motorik, sensorik, autonomik) akibat berbagai etiologi. Dapat akut (GBS - Guillian-Barre syndrome) atau kronik (DM, B12 deficiency, alkohol, toksin, hereditary). Polineuropati simetris distals (stocking-glove pattern) adalah manifestasi paling umum. Prevalensi 2-8% populasi umum, meningkat dengan usia.",
       "gejala": [
@@ -4049,7 +3923,7 @@
     {
       "id": 208,
       "nama": "Obesitas",
-      "kategori": "PTM Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E66, E66.9",
       "definisi": "Obesitas merupakan keadaan dimana seseorang memiliki kelebihan\nlemak (body fat) sehingga orang tersebut memiliki risiko kesehatan.\nRiskesdas 2013, prevalensi penduduk laki-laki dewasa obesitas pada\ntahun 2013 sebanyak 19,7% lebih tinggi dari tahun 2007 (13,9%)\ndan tahun 2010 (7,8%). Sedangkan pada perempuan di tahun 2013,\nprevalensi obesitas perempuan dewasa (>18 tahun) 32,9 persen, naik\n18,1 persen dari tahun 2007 (13,9%) dan 17,5 persen dari tahun\n2010 (15,5%). WHO, dalam data terbaru Mei 2014, obesitas\nmerupakan faktor risiko utama untuk penyakit tidak menular seperti\npenyakit kardiovaskular (terutama penyakit jantung dan stroke),\ndiabetes, gangguan muskuloskeletal, beberapa jenis kanker\n(endometrium, payudara, dan usus besar). Dari data tersebut,\npeningkatan penduduk dengan obesitas, secara langsung akan\nmeningkatkan penyakit akibat kegemukan.",
       "gejala": [
@@ -4069,7 +3943,7 @@
     {
       "id": 209,
       "nama": "Oksiuriasis (Enterobiasis / Cacing Kremi)",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B80",
       "definisi": "Oksiuriasis adalah infeksi usus yang disebabkan oleh cacing kremi Enterobius vermicularis, sangat menular antaranggota keluarga melalui autoinfeksi dan kontak feses-oral.",
       "gejala": [
@@ -4085,7 +3959,7 @@
     {
       "id": 210,
       "nama": "Onikomikosis",
-      "kategori": "Kulit",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35.1",
       "definisi": "Infeksi jamur pada kuku yang disebabkan oleh dermatofita (90% - T. rubrum), yeast (Candida), atau mold. Prevalensi meningkat dengan usia (2-14% populasi umum, 20-50% pada usia >60). Lebih sering pada kuku kaki (90%) dibanding tangan.",
       "gejala": [
@@ -4102,7 +3976,7 @@
     {
       "id": 211,
       "nama": "Osteoartritis",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Muskuloskeletal",
       "kode": "M15, M19.9",
       "definisi": "Penyakit sendi degeneratif yang berkaitan dengan kerusakan\nkartilago sendi. Pasien sering datang berobat pada saat sudah ada\ndeformitas sendi yang bersifat permanen.",
       "gejala": [
@@ -4126,7 +4000,7 @@
     {
       "id": 212,
       "nama": "Osteoporosis",
-      "kategori": "PTM Metabolik",
+      "kategori": "Muskuloskeletal",
       "kode": "M80, M81",
       "definisi": "Penyakit sistemik skeletal yang ditandai dengan penurunan kekuatan tulang dan peningkatan risiko fraktur. Didefinisikan sebagai BMD T-score <=-2.5 SD. Osteoporosis mempengaruhi 200 juta wanita di dunia. Wanita pascamenopause paling berisiko (estrogen deficiency accelerates bone loss).",
       "gejala": [
@@ -4144,7 +4018,7 @@
     {
       "id": 213,
       "nama": "Osteosarkoma",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C40",
       "definisi": "",
       "gejala": [
@@ -4157,7 +4031,7 @@
     {
       "id": 214,
       "nama": "Otitis Eksterna",
-      "kategori": "ISPA",
+      "kategori": "Telinga",
       "kode": "H60, H60.9",
       "definisi": "Otitis eksternaadalah radang pada liang telinga luar. Penyakit ini\nbanyak ditemukan di layanan kesehatan tingkat pertama sehingga\ndokter di fasilitas pelayanan kesehatan tingkat pertama harus\nmemiliki kemampuan mendiagnosis dan menatalaksana secara\nkomprehensif.\nKlasifikasi otitis eksterna (OE):\na. OE akut\n1) OE akut difus\n2) OE akut sirkumskripta, yaitu infeksi folikel rambut yang\nmenimbulkan furunkel di liang telinga luar.\nb. OE kronik\nc. OE ekzematoid, yang merupakan manifestasi dari kelainan\ndermatologis, seperti dermatitis atopik, psoriasis, atau SLE.\nd. OE nekrotikans",
       "gejala": [
@@ -4174,7 +4048,7 @@
     {
       "id": 215,
       "nama": "Otitis Media Akut (OMA)",
-      "kategori": "ISPA",
+      "kategori": "Telinga",
       "kode": "H65, H65.0, H66, H66.0, H67, H71",
       "definisi": "Otitis media akut (OMA) adalah peradangan sebagian atau seluruh\nmukosa telinga tengah, tuba eustachius, antrum mastoid, dan sel-sel\nmastoid yang terjadi dalam waktu kurang dari 3 minggu.",
       "gejala": [
@@ -4191,7 +4065,7 @@
     {
       "id": 216,
       "nama": "Otitis Media Supuratif Kronik",
-      "kategori": "Penyakit THT",
+      "kategori": "Telinga",
       "kode": "H65, H66, H66.1, H74",
       "definisi": "Survei Nasional Kesehatan Indra Penglihatan dan Pendengaran\n(1993-1996) di 8 provinsi Indonesia menunjukkan angka\nmorbiditas THT sebesar 38,6%. Otitis media supuratif kronik\nmerupakan penyebab utama gangguan pendengaran yang\ndidapat pada anak-anak terutama pada negara berkembang.\nPada tahun 1990, sekitar 28.000 kematiandi seluruh dunia\ndisebabkan oleh komplikasi otitis media.\nOtitis media supuratif kronik (OMSK) adalah peradangan kronik\ntelinga tengah dengan perforasi membran timpani dan riwayat\nkeluarnya sekret dari telinga lebih dari 2 bulan, baik terus\nmenerus maupun hilang timbul. Terdapat dua tipe OMSK, yaitu\nOMSK tipe aman (tanpa kolesteatoma) dan tipe bahaya (dengan\nkolesteatoma).",
       "gejala": [
@@ -4213,7 +4087,7 @@
     {
       "id": 217,
       "nama": "Pankreatitis Akut",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K85",
       "definisi": "Inflamasi akut pankreas dengan autodigesti oleh enzim pankreatik yang diaktifkan prematur. Penyebab utama: batu empedu (40-70%) dan alkohol (25-35%). Kondisi yang berpotensi life-threatening dengan mortality 5-10%.",
       "gejala": [
@@ -4232,7 +4106,7 @@
     {
       "id": 218,
       "nama": "Parafimosis",
-      "kategori": "Ginjal-Urogenital",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N47, N47.2",
       "definisi": "Parafimosis merupakan kegawatdaruratan karena dapat\nmengakibatkan terjadinya ganggren yang diakibatkan preputium\npenis yang diretraksi sampai di sulkus koronarius tidak dapat\ndikembalikan pada kondisi semula dan timbul jeratan pada penis di\nbelakang sulkus koronarius.",
       "gejala": [
@@ -4250,7 +4124,7 @@
     {
       "id": 219,
       "nama": "Parotitis Epidemika (Gondongan / Mumps)",
-      "kategori": "Penyakit Anak",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B26, B26.9, K11.2",
       "definisi": "Parotitis adalah peradangan pada kelenjar parotis. Parotitis dapat\ndisebabkan oleh infeksi virus, infeksi bakteri, atau kelainan\nautoimun, dengan derajat kelainan yang bervariasi dari ringan\nhingga berat. Salah satu infeksi virus pada kelenjar parotis, yaitu\nparotitis mumps (gondongan) sering ditemui pada layanan tingkat\npertama dan berpotensi menimbulkan epidemi di komunitas. Dokter\ndi fasilitas pelayanan kesehatan tingkat pertama dapat berperan\nmenanggulangi parotitis mumps dengan melakukan diagnosis dan\ntatalaksana yang adekuat serta meningkatkan kesadaran\nmasyarakat terhadap imunisasi, khususnya MMR.",
       "gejala": [
@@ -4266,7 +4140,7 @@
     {
       "id": 220,
       "nama": "Pedikulosis Kapitis dan Pubis",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B85, B85.0, B85.3",
       "definisi": "Pedikulosis pubis adalah penyakit infeksi pada rambut di daerah\npubis dan sekitarnya yang disebabkan oleh Phthirus pubis. Penyakit\nini menyerang orang dewasa dan dapat digolongkan dalam penyakit\nakibat hubungan seksual dan menular secara langsung. Infeksi juga\nbisa terjadi pada anak-anak yang berasal dari orang tua mereka dan\nterjadi di alis, atau bulu mata.",
       "gejala": [
@@ -4283,7 +4157,7 @@
     {
       "id": 222,
       "nama": "Penyakit cacing tambang",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B76, B76.0, B76.1",
       "definisi": "Penyakit cacing tambang adalah suatu penyakit yang disebabkan oleh\n infestasi parasit Necator americanus dan Ancylostoma duodenale. Hospes\n\nparasit ini adalah manusia, cacing ini menyebabkan nekatoriasis dan\nankilostomiasis. Diperkirakan sekitar 576 – 740 juta orang di dunia terinfeksi\ndengan cacing tambang. Di Indonesia insiden tertinggi ditemukan terutama\ndidaerah pedesaan khususnya perkebunan. Seringkali golongan pekerja\nperkebunan yang langsung berhubungan dengan tanah, mendapat infeksi\nlebih dari 70%.",
       "gejala": [
@@ -4307,7 +4181,7 @@
     {
       "id": 223,
       "nama": "Penyakit Ginjal Kronik",
-      "kategori": "Penyakit Ginjal dan Saluran Kemih",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N18",
       "definisi": "Penurunan fungsi ginjal struktural atau fungsional yang abnormal dengan durasi >3 bulan, manifestasi oleh GFR <60 mL/min/1.73m dan/atau marker kerusakan ginjal (albuminuria, hematuria, abnormal imaging). Prevalensi global 9-12%. Penyebab utama: DM (40-50%), hipertensi (25-30%), glomerulonephritis, PKD. CKD dapat progresif ke end-stage renal disease (ESRD) yang memerlukan dialisis/transplantasi.",
       "gejala": [
@@ -4320,7 +4194,7 @@
     {
       "id": 224,
       "nama": "Penyakit Ginjal Tahap Akhir",
-      "kategori": "Penyakit Ginjal dan Saluran Kemih",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N18.6",
       "definisi": "",
       "gejala": [
@@ -4333,7 +4207,7 @@
     {
       "id": 225,
       "nama": "Penyakit Hirschsprung",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Kongenital",
       "kode": "Q43.1",
       "definisi": "",
       "gejala": [
@@ -4346,7 +4220,7 @@
     {
       "id": 226,
       "nama": "Penyakit Jantung Bawaan (PJB)",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kongenital",
       "kode": "Q20",
       "definisi": "Kelainan struktural jantung atau pembuluh darah besar sejak lahir akibat gangguan perkembangan embriologi. Prevalensi 8-10 per 1000 kelahiran hidup.",
       "gejala": [
@@ -4366,7 +4240,7 @@
     {
       "id": 227,
       "nama": "Penyakit Jantung Koroner (PJK)",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I25",
       "definisi": "Penyakit aterosklerosis pada arteri koroner yang menyebabkan iskemia miokard. Spectrum: angina stabil, sindrom koroner akut (ACS: STEMI, NSTEMI, UA). PJK adalah penyebab kematian tertinggi di Indonesia (35% kematian).",
       "gejala": [
@@ -4386,7 +4260,7 @@
     {
       "id": 228,
       "nama": "Penyakit Katup Jantung Reumatik",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I05",
       "definisi": "Kerusakan permanen pada katup jantung akibat DRA berulang. Katup mitral paling sering terkena (65-70%), diikuti oleh aorta (25%), dan tricuspid (10%). Penyebab utama penyakit jantung di negara berkembang pada anak dan dewasa muda. Indonesia masih memiliki beban PBJR yang tinggi.",
       "gejala": [
@@ -4406,7 +4280,7 @@
     {
       "id": 229,
       "nama": "Penyakit Kuning Neonatorum (Ikterus Neonatus)",
-      "kategori": "Kesehatan Anak",
+      "kategori": "Perinatal",
       "kode": "P55",
       "definisi": "Peningkatan bilirubin serum pada bayi baru lahir yang menyebabkan warna kuning pada kulit dan sclera. Ikterus fisiologis: onset hari 2-3, peak hari 4-5, resolve hari 7-10. Ikterus patologis: onset <24 jam, persisten >2 minggu, bilirubin meningkat terlalu cepat.",
       "gejala": [
@@ -4424,7 +4298,7 @@
     {
       "id": 230,
       "nama": "Penyakit Parkinson",
-      "kategori": "Neurologi",
+      "kategori": "Saraf",
       "kode": "G20",
       "definisi": "Neurodegenerative disorder progresif yang ditandai oleh degenerasi neuron dopaminergik di substantia nigra pars compacta. Karakteristik klinis: bradikinesia, tremor saat istirahat, rigiditas, dan postural instability (TRAP). Prevalensi 1% pada usia >60 tahun, 4% pada >80 tahun. Penyebab multifaktorial: genetik, environmental toxin, oxidative stress.",
       "gejala": [
@@ -4448,7 +4322,7 @@
     {
       "id": 231,
       "nama": "Penyakit Periodontal",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Pencernaan",
       "kode": "K05",
       "definisi": "",
       "gejala": [
@@ -4461,7 +4335,7 @@
     {
       "id": 232,
       "nama": "Perdarahan Post Partum / Pendarahan Pascasalin",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O72, O72.1",
       "definisi": "",
       "gejala": [],
@@ -4472,7 +4346,7 @@
     {
       "id": 233,
       "nama": "Perdarahan Saluran Cerna",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Pencernaan",
       "kode": "K92.2",
       "definisi": "Manifestasi perdarahan saluran cerna bervariasi mulai dengan\nperdarahan masif yang mengancam jiwa hingga perdarahan\nsamar yang tidak dirasakan. Hematemesis menunjukkan\nperdarahan dari saluran cerna bagian atas, proksimal dari\nligamentum Treitz. Melena biasanya akibat perdarahan saluran\ncerna bagian atas, meskipun demikian perdarahan dari usus\nhalus atau kolon bagian kanan, juga dapat menimbulkan\nmelena.\nDi Indonesia perdarahan karena ruptur varises gastroesofagus\nmerupakan penyebab tersering yaitu sekitar 50-60%, gastritis\nerosif sekitar 25-30%,tukak peptik sekitar 10-15% dan karena\nsebab lainnya <5%. Mortalitas secara keseluruhan masih tinggi\nyaitu sekitar 25%, kematian pada penderita ruptur varises bisa\nmencapai 60% sedangkan kematian pada perdarahan non\nvarises sekitar 9-12%.",
       "gejala": [
@@ -4531,7 +4405,7 @@
     {
       "id": 236,
       "nama": "Perdarahan Subkonjungtiva",
-      "kategori": "Penyakit Mata",
+      "kategori": "Mata",
       "kode": "H11, H11.3, H57.8",
       "definisi": "Perdarahan subkonjungtiva adalah perdarahan akibat ruptur\npembuluh darah dibawah lapisan konjungtiva yaitu pembuluh darah\nkonjungtivalis atau episklera. Sebagian besar kasus perdarahan\nsubkonjungtiva merupakan kasus spontan atau idiopatik, dan hanya\nsebagian kecil kasus yang terkait dengan trauma atau kelainan\nsistemik. Perdarahan subkonjungtiva dapat terjadi di semua\nkelompok umur. Perdarahan subkonjungtiva sebagian besar terjadi\nunilateral (90%).",
       "gejala": [
@@ -4571,7 +4445,7 @@
     {
       "id": 238,
       "nama": "Persalinan Lama",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O63.9",
       "definisi": "Persalinan lama adalah persalinan yang berlangsung lebih dari 18-24\njam sejak dimulai dari tanda-tanda persalinan.\nEtiologi:\na. Kepala janin yang besar / hidrosefalus\nb. Kembar terkunci\nc. Kembar siam\nd. Disporsi fetopelvik\ne. Malpresentasi dan malposisi\nf. Deformitas panggul karena trauma atau polio\ng. Tumor daerah panggul\nh. Infeksi virus di perut atau uterus\ni. Jaringan arut (dari sirkumsisi wanita)",
       "gejala": [
@@ -4595,7 +4469,7 @@
     {
       "id": 239,
       "nama": "Pertusis (Batuk Rejan)",
-      "kategori": "Penyakit Anak",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A37, A37.8, A37.9",
       "definisi": "Pertusis (whooping cough / batuk seratus hari) adalah infeksi bakteri akut saluran napas yang sangat menular yang disebabkan oleh Bordetella pertussis, ditandai dengan serangan batuk paroksismal hebat diakhiri suara tarikan napas melengking (whoop).",
       "gejala": [
@@ -4610,7 +4484,7 @@
     {
       "id": 240,
       "nama": "Pielonefritis tanpa komplikasi",
-      "kategori": "Ginjal-Urogenital",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N12",
       "definisi": "Pielonefritis akut (PNA) tanpa komplikasi adalah peradangan\nparenkim dan pelvis ginjal yang berlangsung akut. Tidak ditemukan\ndata yang akurat mengenai tingkat insidens PNA nonkomplikata di\nIndonesia. Pielonefritis akut nonkomplikata jauh lebih jarang\ndibandingkan sistitis (diperkirakan 1 kasus pielonefritis berbanding\n28 kasus sistitis).",
       "gejala": [
@@ -4658,7 +4532,7 @@
     {
       "id": 242,
       "nama": "Pitiriasis Rosea",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Kulit",
       "kode": "L42",
       "definisi": "Penyakit ini belum diketahui sebabnya, dimulai dengan sebuah lesi\ninisial berbentuk eritema dan skuama halus (mother patch),\nkemudian disusul oleh lesi-lesi yang lebih kecil di badan, lengan dan\npaha atas, yang tersusun sesuai dengan lipatan kulit. Penyakit ini\nbiasanya sembuh dalam waktu 3-8 minggu. Pitiriasis rosea didapati\npada semua usia, terutama antara 15-40 tahun, dengan rasio pria\ndan wanita sama besar.",
       "gejala": [
@@ -4673,7 +4547,7 @@
     {
       "id": 243,
       "nama": "Pleurisi (Pleuritis)",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Gejala dan Temuan Abnormal",
       "kode": "R09",
       "definisi": "Inflamasi pada pleura (membran yang melapisi paru-paru dan rongga dada). Dapat disebabkan oleh infeksi (TB, pneumonia), autoimun (lupus), trauma, atau neoplasma (mesothelioma, metastasis).",
       "gejala": [
@@ -4690,7 +4564,7 @@
     {
       "id": 244,
       "nama": "Pneumonia Aspirasi",
-      "kategori": "Respirasi",
+      "kategori": "Pernapasan",
       "kode": "J18.0, J69.0",
       "definisi": "Pneumonia aspirasi (Aspiration pneumonia) adalah pneumonia yang\ndisebabkan oleh terbawanya bahan yang ada diorofaring pada saat\nrespirasi ke saluran napas bawah dan dapat menimbulkan\nkerusakan parenkim paru. Secara spesifik, pneumonia aspirasi\ndidefinisikan dengan ditemukannya bukti radiografi berupa\npenambahan infiltrat di paru pada pasien dengan faktor risiko\naspirasi orofaring.",
       "gejala": [
@@ -4714,7 +4588,7 @@
     {
       "id": 245,
       "nama": "Pneumonia Komuniti",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Pernapasan",
       "kode": "J12, J18, J18.0, J18.9",
       "definisi": "Pneumonia adalah peradangan/inflamasi parenkim paru, distal dari\nbronkiolus terminalis yang mencakup bronkiolus respiratorius dan\nalveoli, sertamenimbulkan konsolidasi jaringan paru dan gangguan\npertukaran gas setempat. Sebagian besar disebabkan oleh\nmikroorganisme (virus/bakteri) dan sebagian kecil disebabkan oleh\nhal lain (aspirasi, radiasi dll). Pneumonia yang dimaksud di sini tidak\ntermasuk dengan pneumonia yang disebabkan oleh Mycobacterium\ntuberculosis. Pneumonia merupakan penyebab utama morbiditas dan\nmortalitas anak berusia di bawah lima tahun (balita). Diperkirakan\nhampir seperlima kematian anak diseluruh dunia, lebih kurang 2\njuta anak balita, meninggal setiap tahun akibat pneumonia, sebagian\nbesar terjadi di Afrika dan Asia Tenggara. Menurut survei kesehatan\nnasional (SKN) 2001, 27,6% kematian bayi dan 22,8% kematian\nbalita di Indonesia disebabkan oleh penyakit sistem respiratori,\nterutama pneumonia. Lima provinsi yang mempunyai insiden dan\nprevalensi pneumonia tertinggi untuk semua umur adalah Nusa\nTenggara Timur (4,6% dan 10,3%), Papua (2,6% dan 8,2%), Sulawesi\nTengah (2,3% dan 5,7%), Sulawesi Barat (3,1% dan 6,1%), dan\nSulawesi Selatan (2,4% dan 4,8%) berdasarkan RISKESDAS 2013.\na. Pneumonia pada Pasien Dewasa",
       "gejala": [
@@ -4733,7 +4607,7 @@
     {
       "id": 246,
       "nama": "Pneumotoraks",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Pernapasan",
       "kode": "J93, J93.9",
       "definisi": "Pneumotoraks adalah kondisi dimana terdapat udara bebas dalam\nrongga pleura. Insiden pneumotoraks sulit diketahui karena\nepisodenya banyak yang tidak diketahui. Umumnya pria lebih\nbanyak dari wanita.\nTerdapat 2 jenis pneumotoraks, yaitu:\na. Pneumotoraks spontan primer adalah pneumotoraks yang\nterjadi tanpa riwayat penyakit paru sebelumnya ataupun\ntrauma, dan dapat terjadi pada individu yang sehat. Terutama\nlebih sering pada laki, tinggi dan kurus, dan perokok.\nb. Pneumotoraks spontan sekunder adalah pneumotoraks yang\nterjadi pada penderita yang memiliki riwayat penyakit paru\nsebelumnya seperti PPOK, TB paru dan lain-lain.",
       "gejala": [
@@ -4775,7 +4649,7 @@
     {
       "id": 248,
       "nama": "Pre-Eklampsia",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O14.9",
       "definisi": "Pre-eklampsia merupakan kondisi spesifik pada kehamilan di atas 20\nminggu yang ditandai dengan adanya disfungsi plasenta dan respon\nmaternal terhadap adanya inflamasi spesifik dengan aktivasi endotel\ndan koagulasi.\nTanda utama penyakit ini adanya hipertensi dan proteinuria. Pre-\neklampsia merupakan masalah kedokteran yang serius dan memiliki\ntingkat komplesitas yang tinggi. Besarnya masalah ini bukan hanya\nkarena pre-eklampsia berdampak pada ibu saat hamil dan\nmelahirkan, namun juga menimbulkan masalah pasca-persalinan.",
       "gejala": [
@@ -4799,7 +4673,7 @@
     {
       "id": 249,
       "nama": "Preeklamsia & Eklamsia",
-      "kategori": "Reproduksi",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O14",
       "definisi": "Gangguan hipertensi spesifik kehamilan yang ditandai oleh hipertensi (BP >=140/90 pada >=2 kali dengan interval >=4 jam) setelah 20 minggu kehamilan + proteinuria (>=300mg/24jam atau protein/kreatinin ratio >=0,3) dan/atau organ dysfunction (thrombocytopenia, renal insufficiency, elevated LFT, pulmonary edema, cerebral/visual symptoms). Eklamsia = preeklamsia + kejang (tonik-klonik). Eklamsia adalah emergency obstetric yang life-threatening.",
       "gejala": [
@@ -4822,7 +4696,7 @@
     {
       "id": 250,
       "nama": "Presbiopia",
-      "kategori": "Mata/THT",
+      "kategori": "Mata",
       "kode": "H52, H52.4",
       "definisi": "Presbiopia adalah suatu kondisi yang berhubungan dengan usia\ndimana penglihatan kabur ketika melihat objek berjarak dekat.\nPresbiopia merupakan proses degeneratif mata yang pada umumnya\ndimulai sekitar usia 40 tahun. Kelainan ini terjadi karena lensa mata\nmengalami kehilangan elastisitas dan kemampuan untuk berubah\nbentuk.",
       "gejala": [
@@ -4846,7 +4720,7 @@
     {
       "id": 251,
       "nama": "Pterigium",
-      "kategori": "Penyakit Mata",
+      "kategori": "Mata",
       "kode": "H11.0",
       "definisi": "Pterigium adalah pertumbuhan jaringan fibrovaskular konjungtiva bulbi berbentuk segitiga (triangular) yang menginvasi kornea, sering dipicu oleh paparan kronik sinar radiasi ultraviolet (UV), angin, debu, dan udara kering.",
       "gejala": [
@@ -4861,7 +4735,7 @@
     {
       "id": 252,
       "nama": "PTSD (Post-Traumatic Stress Disorder)",
-      "kategori": "Jiwa & Perilaku",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F43.1",
       "definisi": "Gangguan psikiatrik yang berkembang setelah exposure terhadap traumatic event (serangan fisik/sexual, bencana alam, kecelakaan, konflik bersenjata, kekerasan). Ditandai oleh intrusive memories, avoidance, negative cognition/mood changes, dan hyperarousal. Prevalensi seumur hidup 6-8%, wanita 2x lebih sering. Onset biasanya dalam 3 bulan pasca-trauma.",
       "gejala": [
@@ -4880,7 +4754,7 @@
     {
       "id": 253,
       "nama": "Pulpa Periradikuler",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Pencernaan",
       "kode": "K04",
       "definisi": "",
       "gejala": [
@@ -4893,7 +4767,7 @@
     {
       "id": 254,
       "nama": "Rabies",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A82, A82.9",
       "definisi": "Rabies adalah infeksi virus yang menjalar ke otak melalui saraf\nperifer. Perjalanan virus untuk mencapai sistem saraf pusat,\nbiasanya mengambil masa beberapa bulan. Masa inkubasi dari\npenyakit ini 1-3 bulan, tapi dapat bervariasi antara 1 minggu sampai\nbeberapa tahun, tergantung juga pada seberapa jauh jarak\nmasuknya virus ke otak. Penyakit infeksi akut sistem saraf pusat\n(ensefalitis) ini disebabkan oleh virus rabies yang termasuk genus\nLyssa-virus, family Rhabdoviridae dan menginfeksi manusia,\nterutama melalui gigitan hewan yang terinfeksi (anjing, monyet,\nkucing, serigala, kelelawar). Beberapa kasus dilaporkan infeksi\nmelalui transplantasi organ dan paparan udara (aerosol). Rabies\nhampir selalu berakibat fatal jika post-exposure prophylaxis tidak\ndiberikan sebelum onset gejala berat.",
       "gejala": [
@@ -4914,7 +4788,7 @@
     {
       "id": 255,
       "nama": "Reaksi anafilaktik",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T78, T78.2",
       "definisi": "Anafilaktik adalah reaksi hipersensitifitas generalisata atau sistemik\nyang beronset cepat, serius, dan mengancam. Jika reaksi tersebut\ncukup hebat dapat menimbulkan syok yang disebut sebagai syok\nanafilaktik. Syok anafilaktik membutuhkan pertolongan cepat dan\ntepat. Untuk itu diperlukan pengetahuan serta keterampilan dalam\npengelolaan syok anafilaktik.\nInsidens syok anafilaktik 40–60% adalah akibat gigitan serangga, 20–\n40% akibat zat kontras radiografi, dan 10–20%akibat pemberian obat\npenisilin. Data yang akurat dalam insiden dan prevalensi terjadinya\nsyok anafilaktik masih sangat kurang. Anafilaksis yang fatal hanya\nkira-kira 4 kasus kematian dari 10 juta masyarakat pertahun.\nSebagian besar kasus yang serius anafilaktik adalah akibat\npemberian antibiotik seperti penisilin dan bahan zat radiologis.\nPenisilin merupakan penyebab kematian 100 dari 500 kematian\nakibat reaksi anafilaksis.",
       "gejala": [
@@ -4938,7 +4812,7 @@
     {
       "id": 256,
       "nama": "Reaksi gigitan serangga",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "L25, T63.4",
       "definisi": "Reaksi gigitan serangga (insect bite reaction) adalah reaksi\nhipersensitivitas atau alergi pada kulit akibat gigitan (bukan\nterhadap sengatan/stings) dan kontak dengan serangga. Gigitan\nhewan serangga, misalnya oleh nyamuk, lalat, bugs, dan kutu, yang\ndapat menimbulkan reaksi peradangan yang bersifat lokal sampai\nsistemik.",
       "gejala": [
@@ -4962,7 +4836,7 @@
     {
       "id": 257,
       "nama": "Refluks Gastroesofageal",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K21, K21.9",
       "definisi": "Gastroesophageal Reflux Disease (GERD) adalah mekanisme refluks\nmelalui sfingter esofagus.",
       "gejala": [
@@ -4986,7 +4860,7 @@
     {
       "id": 258,
       "nama": "Retinoblastoma",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C69.2",
       "definisi": "",
       "gejala": [
@@ -4999,7 +4873,7 @@
     {
       "id": 259,
       "nama": "Retinopati Diabetik",
-      "kategori": "THT & Mata",
+      "kategori": "Mata",
       "kode": "E10.3, E11.3, H36.0",
       "definisi": "Retinopati diabetik adalah suatu mikroangiopati yang mengenai\nprekapiler retina, kapiler dan venula, sehingga menyebabkan oklusi\nmikrovaskuler dan kebocoran vaskuler, akibat kadar gula darah\nyang tinggi dan lama. Retinopati diabetik dapat menyebabkan\npenurunan visus dan kebutaan, terutama akibat komplikasi seperti\nedema makula, perdarahan vitreus, ablasio retina traksional dan\nglaukoma neovaskular.\nRetinopati diabetik adalah penyebab kebutaan ke 5 terbesar secara\nglobal (WHO, 2007). Setidaknya terdapat 171 juta penduduk dunia\nyang menyandang diabetes melitus, yang akan meningkat menjadi\ndua kali lipat pada tahun 2030 menjadi 366 million. Setelah 15\ntahun, sekitar 2% penyandang diabetes dapat menjadi buta, dan\nsekitar 10% mengalami gangguan penglihatan berat. Setelah 20\ntahun, retinopati diabetik dapat ditemukan pada 75% lebih\npenyandang diabetes.\nTerdapat dua tahap retinopati diabetik yaitu non-proliferative diabetic\nretinopathy (NPDR) dan proliferative diabetic retinopathy (PDR).",
       "gejala": [
@@ -5017,7 +4891,7 @@
     {
       "id": 260,
       "nama": "Rheumatoid Arthritis (RA)",
-      "kategori": "Musculoskeletal",
+      "kategori": "Muskuloskeletal",
       "kode": "M05",
       "definisi": "Autoimmune inflammatory arthritis kronis yang ditandai oleh symmetric polyarthritis, morning stiffness prolonged, dan potensi joint destruction. Prevalensi 0.5-1% populasi global, wanita 3x lebih sering. Onset umumnya 30-50 tahun. Dapat melibatkan organ ekstra-artikular (lung, heart, eye, blood vessels).",
       "gejala": [
@@ -5040,7 +4914,7 @@
     {
       "id": 261,
       "nama": "Rinitis Akut",
-      "kategori": "Respirasi",
+      "kategori": "Pernapasan",
       "kode": "J00, J30, J30.0, J30.4",
       "definisi": "Rinitis akut adalah peradangan pada mukosa hidung yang\nberlangsung akut (<12 minggu). Hal ini dapat disebabkan oleh\ninfeksi virus, bakteri, ataupun iritan. Radang sering ditemukan\nkarena manifestasi dari rinitis simpleks (common cold), influenza,\npenyakit eksantem (seperti morbili, variola, varisela, pertusis),\npenyakit spesifik, serta sekunder dari iritasi lokal atau trauma.",
       "gejala": [
@@ -5062,7 +4936,7 @@
     {
       "id": 262,
       "nama": "Rinitis Alergika",
-      "kategori": "Penyakit THT",
+      "kategori": "Pernapasan",
       "kode": "J30, J30.0, J30.4",
       "definisi": "Rinitis alergika adalah kelainan inflamasi mukosa hidung yang diperantarai oleh reaksi hipersensitivitas tipe I (IgE-mediated) setelah paparan alergen inhalan (tungau debu rumah, serbuk sari, bulu hewan peliharaan).",
       "gejala": [
@@ -5080,7 +4954,7 @@
     {
       "id": 263,
       "nama": "Rinitis Vasomotor",
-      "kategori": "Penyakit THT",
+      "kategori": "Pernapasan",
       "kode": "J30, J30.0, J30.4",
       "definisi": "Rinitis vasomotor adalah salah satu bentuk rinitis kronik yang tidak\ndiketahui penyebabnya (idiopatik), tanpa adanya infeksi, alergi,\neosinofilia, perubahan hormonal, dan pajanan obat (kontrasepsi oral,\nantihipertensi, B-bloker, aspirin, klorpromazin, dan obat topikal\nhidung dekongestan). Rinitis non alergi dan mixed rhinitis lebih\nsering dijumpai pada orang dewasa dibandingkan anak-anak, lebih\nsering dijumpai pada wanita dan cenderung bersifat menetap.",
       "gejala": [
@@ -5096,7 +4970,7 @@
     {
       "id": 264,
       "nama": "Ruptur perineum tingkat 1/2",
-      "kategori": "Kehamilan",
+      "kategori": "Kehamilan dan Persalinan",
       "kode": "O70, O70.0",
       "definisi": "Ruptur perineum adalah suatu kondisi robeknya perineum yang\nterjadi pada persalinan pervaginam. Diperkirakan lebih dari 85%\nwanita yang melahirkan pervaginam mengalami ruptur perineum\nspontan, yang 60%- 70% di antaranya membutuhkan penjahitan\n(Sleep dkk, 1984; McCandlish dkk,1998). Angka morbiditas\nmeningkat seiring dengan peningkatan derajat ruptur.",
       "gejala": [
@@ -5120,7 +4994,7 @@
     {
       "id": 265,
       "nama": "Salpingitis",
-      "kategori": "Ginjal-Urogenital",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N70",
       "definisi": "",
       "gejala": [],
@@ -5131,7 +5005,7 @@
     {
       "id": 266,
       "nama": "Sarkopenia",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Muskuloskeletal",
       "kode": "M62.84",
       "definisi": "",
       "gejala": [
@@ -5144,7 +5018,7 @@
     {
       "id": 267,
       "nama": "Sepsis",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A41",
       "definisi": "Sepsis merupakan respons sistemik pejamu terhadap infeksi, saat patogen atau toksin dilepaskan ke dalam sirkulasi darah sehingga terjadi aktivasi proses inflamasi.",
       "gejala": [
@@ -5157,7 +5031,7 @@
     {
       "id": 268,
       "nama": "Sepsis Pada Anak",
-      "kategori": "Penyakit Anak",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A41",
       "definisi": "Sepsis adalah disfungsi organ yang mengancam kehidupan (life- threatening organ dysfunction) yang disebabkan oleh disregulasi imun terhadap infeksi.",
       "gejala": [
@@ -5170,7 +5044,7 @@
     {
       "id": 269,
       "nama": "Serumen Prop (Impaksi Serumen)",
-      "kategori": "Penyakit THT",
+      "kategori": "Telinga",
       "kode": "H61, H61.2",
       "definisi": "Serumen adalah sekret kelenjar sebasea, kelenjar seruminosa, epitel\nkulit yang terlepas, dan partikel debu yang terdapat pada bagian\nkartilaginosa liang telinga. Bila serumen ini berlebihan maka dapat\nmembentuk gumpalan yang menumpuk di liang telinga, dikenal\ndengan serumen prop.",
       "gejala": [
@@ -5186,7 +5060,7 @@
     {
       "id": 270,
       "nama": "Sifilis",
-      "kategori": "Reproduksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A50, A51, A51.0, A52, A53.9",
       "definisi": "Sifilis adalah penyakit infeksi kronis yang disebabkan oleh\nTreponema pallidum dan bersifat sistemik. Istilah lain penyakit ini\nadalah lues veneria atau lues. Di Indonesia disebut dengan raja singa\nkarena keganasannya. Sifilis dapat menyerupai banyak penyakit dan\nmemiliki masa laten.",
       "gejala": [
@@ -5202,7 +5076,7 @@
     {
       "id": 271,
       "nama": "Sindrom Iritasi Usus Besar (IBS)",
-      "kategori": "Saluran Cerna",
+      "kategori": "Pencernaan",
       "kode": "K58",
       "definisi": "Gangguan fungsional saluran cerna yang ditandai oleh nyeri perut berulang terkait dengan defekasi dan/atau perubahan frekuensi/bentuk feses, tanpa ada lesi struktural yang abnormal. Prevalensi global 10-15%. Diklasifikasikan berdasarkan tipe feses dominan: IBS-D (diarrhea-predominant), IBS-C (constipation-predominant), IBS-M (mixed), IBS-U (unclassified).",
       "gejala": [
@@ -5223,7 +5097,7 @@
     {
       "id": 272,
       "nama": "Sindrom Kawasaki",
-      "kategori": "Kesehatan Anak",
+      "kategori": "Muskuloskeletal",
       "kode": "M30.3",
       "definisi": "Vasculitis sistemik akut pada anak yang menyebabkan inflamasi pembuluh darah medium terutama koroner. Prevalensi lebih tinggi pada anak Asia. Onset umumnya <5 tahun.",
       "gejala": [
@@ -5241,7 +5115,7 @@
     {
       "id": 273,
       "nama": "Sindrom Metabolik",
-      "kategori": "PTM Metabolik",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E88.9",
       "definisi": "Cluster kondisi metabolik yang meningkatkan risiko penyakit kardiovaskular, stroke, dan diabetes tipe 2. Definisi IDF/NCEP ATP III: >=3 dari 5 kriteria: obesitas sentral, hipertensi, hiperglikemia, hipertrigliseridemia, dan HDL rendah. Prevalensi 20-30% populasi dewasa dunia, meningkat seiring urbanisasi.",
       "gejala": [
@@ -5260,7 +5134,7 @@
     {
       "id": 274,
       "nama": "Sindrom Nefrotik",
-      "kategori": "Ginjal & Saluran Kemih",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N04",
       "definisi": "Sindrom klinis dengan edema masif, proteinuria berat (>3,5g/24jam), hipalbuminemia (<3g/dL), dan hiperlipidemia. Minimal change disease paling umum pada anak (80%). Prevalensi 2-7 per 100.000 anak per tahun.",
       "gejala": [
@@ -5306,7 +5180,7 @@
     {
       "id": 276,
       "nama": "Sindroma Koroner Akut",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Kardiovaskular",
       "kode": "I20",
       "definisi": "",
       "gejala": [
@@ -5319,7 +5193,7 @@
     {
       "id": 277,
       "nama": "Sinusitis (Rinosinusitis)",
-      "kategori": "Respirasi",
+      "kategori": "Pernapasan",
       "kode": "J01, J32",
       "definisi": "Rinosinusitis adalah penyakit akibat peradangan pada mukosa sinus\nparanasal dan rongga hidung. Dokter di fasilitas pelayanan\nkesehatan Tingkat Pertama harus memiliki keterampilan yang\nmemadai untuk mendiagnosis, menatalaksana, dan mencegah\nberulangnya rinosinusitis. Tatalaksana rinosinusitis yang efektif dari\ndokter di fasilitas pelayanan kesehatan Tingkat Pertama dapat\nmeningkatkan kualitas hidup pasien secara signifikan, menurunkan\nbiaya pengobatan, serta mengurangi durasi dan frekuensi absen\nkerja.",
       "gejala": [
@@ -5343,7 +5217,7 @@
     {
       "id": 278,
       "nama": "Sinusitis Akut",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J01",
       "definisi": "Inflamasi akut mukosa sinus paranasal yang umumnya terjadi sebagai komplikasi dari common cold. Virus menyebabkan 90-98% kasus sinusitis akut. Dikategorikan sebagai sinusitis viral (<=10 hari), akut bakteri post-viral (>10 hari), atau fulminan bakteri (>=39degC + purulen sekret >=3-4 hari berturut).",
       "gejala": [
@@ -5361,7 +5235,7 @@
     {
       "id": 279,
       "nama": "Sinusitis Kronik",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J32",
       "definisi": "Inflamasi kronis mukosa sinus paranasal dengan durasi >=12 minggu. Dapat dengan atau tanpa polip nasal. Etiologi multifaktorial: infeksi bakteri, alergi, anatomi abnormal (deviasi septum), imunodefisiensi, atau fungal infection.",
       "gejala": [
@@ -5379,7 +5253,7 @@
     {
       "id": 280,
       "nama": "Sirosis Hati Pada Dewasa",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Pencernaan",
       "kode": "K74.6",
       "definisi": "",
       "gejala": [
@@ -5392,7 +5266,7 @@
     {
       "id": 281,
       "nama": "Skabies (Kudis)",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B86",
       "definisi": "Skabies adalah penyakit yang disebabkan infestasi dan sensitisasi\nkulit oleh tungau Sarcoptes scabiei dan produknya. Penyakit ini\nberhubungan erat dengan higiene yang buruk. Prevalensi skabies\ntinggi pada populasi yang padat. Dari hasil penelitian di Brazil,\nprevalensi skabies dua kali lebih tinggi di daerah kumuh perkotaan\nyang padat penduduk daripada di masyarakat nelayan dimana\nmereka tinggal di tempat yang lebih luas.\nPenularan dapat terjadi karena:\na. Kontak langsung kulit dengan kulit penderita skabies, seperti\nmenjabat tangan, hubungan seksual, atau tidur bersama.\nb. Kontak tidak langsung (melalui benda), seperti penggunaan\nperlengkapan tidur bersama dan saling meminjam pakaian,\nhanduk dan alat-alat pribadi lainnya, tidak memiliki alat-alat\npribadi sendiri sehingga harus berbagi dengan temannya.\nTungau hidup dalam epidermis, tahan terhadap air dan sabun dan\ntetap hidup bahkan setelah mandi dengan air panas setiap.",
       "gejala": [
@@ -5408,7 +5282,7 @@
     {
       "id": 282,
       "nama": "Skistosomiasis",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B65, B65.2, B65.9",
       "definisi": "Skistosoma adalah salah satu penyakit infeksi parasit yang\ndisebabkan oleh cacing trematoda dari genus schistosoma (blood\nfluke). Terdapat tiga spesies cacing trematoda utama yang menjadi\npenyebab skistosomiasis yaitu Schistosoma japonicum, Schistosoma\nhaematobium dan Schistosoma mansoni. Spesies yang kurang dikenal\nyaitu Schistosoma mekongi dan Schistosoma intercalatum. Di\nIndonesia spesies yang paling sering ditemukan adalah Schistosoma\njaponicum khususnya di daerah lembah Napu dan sekitar danau\nLindu di Sulawesi Tengah. Untuk menginfeksi manusia, Schistosoma\nmemerlukan keong sebagai intermediate host. Penularan\nSchistosoma terjadi melalui serkaria yang berkembang dari host dan\nmenembus kulit pasien dalam air. Skistosomiasis terjadi karena\nreaksi imunologis terhadap telur cacing yang terperangkap dalam\njaringan. Prevalensi Schistosomiasis di lembah Napu dan danau\nLindu berkisar 17% hingga 37%.",
       "gejala": [
@@ -5432,7 +5306,7 @@
     {
       "id": 283,
       "nama": "Skizofrenia",
-      "kategori": "Jiwa & Perilaku",
+      "kategori": "Jiwa dan Perilaku",
       "kode": "F20",
       "definisi": "Gangguan psikotik kronis yang ditandai oleh delusi, halusinasi, disorganized speech/behavior, dan negative symptoms (blunted affect, avolition, alogia, asociality). Onset umumnya akhir adolescence/dewasa muda (pria: 15-25, wanita: 25-35). Prevalensi ~1% populasi global. Neurodevelopmental disorder dengan interaksi genetik dan environmental factors.",
       "gejala": [
@@ -5453,7 +5327,7 @@
     {
       "id": 284,
       "nama": "Skoliosis Idiopatik Remaja",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Muskuloskeletal",
       "kode": "M41",
       "definisi": "",
       "gejala": [
@@ -5466,7 +5340,7 @@
     {
       "id": 285,
       "nama": "Skrofuloderma",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A18",
       "definisi": "Skrofuloderma adalah suatu bentuk reaktivasi infeksi tuberkulosis\nakibat penjalaran per kontinuitatum dari organ di bawah kulit\nseperti limfadenitis atau osteomielitis yang membentuk abses dingin\ndan melibatkan kulit di atasnya, kemudian pecah dan membentuk\nsinus di permukaan kulit.",
       "gejala": [
@@ -5487,7 +5361,7 @@
     {
       "id": 286,
       "nama": "Status Asmatikus (Asma Akut Berat)",
-      "kategori": "Respirasi",
+      "kategori": "Pernapasan",
       "kode": "J45.902",
       "definisi": "Asma akut berat (serangan asma atau asma eksaserbasi) adalah\nepisode peruburukan gejala yang progresif dari sesak, batuk, mengi,\natau rasa berat di dada, atau kombinasi gejala-gejala tersebut.",
       "gejala": [
@@ -5535,7 +5409,7 @@
     {
       "id": 288,
       "nama": "Stroke",
-      "kategori": "Penyakit Saraf",
+      "kategori": "Kardiovaskular",
       "kode": "I63.9, I64",
       "definisi": "Stroke adalah defisit neurologis fokal (atau global) yang terjadi\nmendadak, berlangsung lebih dari 24 jam dan disebabkan oleh faktor\nvaskuler. Secara global, saat ini stroke merupakan salah satu\npenyebab kematian utama, dan penyebab utama kecacatan pada\norang dewasa. Dari laporan Riskesdas (Riset Kesehatan Dasar)\nDepartemen Kesehatan Republik Indonesia tahun 2007, stroke\nmerupakan penyebab kematian utama di Indonesia.",
       "gejala": [
@@ -5559,7 +5433,7 @@
     {
       "id": 289,
       "nama": "Stroke Hemoragik",
-      "kategori": "Neurologi",
+      "kategori": "Kardiovaskular",
       "kode": "I60",
       "definisi": "Perdarahan ke dalam otak akibat rupture pembuluh darah. Dua tipe utama: perdarahan intraserebral (ICH - 80-85%, akibat hipertensi, amyloid angiopathy, koagulopati) dan subarachnoid hemorrhage (SAH - 15-20%, akibat ruptur aneurisma). Stroke hemoragik menyebabkan 10-15% stroke keseluruhan tetapi memiliki mortality lebih tinggi (30-50% untuk ICH, 50% untuk SAH grade berat).",
       "gejala": [
@@ -5580,7 +5454,7 @@
     {
       "id": 290,
       "nama": "Stroke Iskemik",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I63",
       "definisi": "Gangguan fungsi neurologis akibat iskemia serebral yang disebabkan oleh oklusi arteri serebral (thrombosis, emboli, atau hipoperfusi). Stroke adalah penyebab kematian kedua terbesar di Indonesia dan penyebab disabilitas tertinggi. Golden hour: 4.5 jam untuk thrombolysis.",
       "gejala": [
@@ -5601,7 +5475,7 @@
     {
       "id": 291,
       "nama": "Strongiloidiasis",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B78, B78.9",
       "definisi": "Strongiloidiasis adalah penyakit kecacingan yang disebabkan oleh\nStrongyloides stercoralis, cacing yang biasanya hidup di kawasan\ntropik dan subtropik. Sekitar 100 juta orang diperkirakan terkena\npenyakit ini di seluruh dunia. Infeksi cacing ini bisa menjadi sangat\nberat dan berbahaya pada mereka yang dengan status imun\nmenurun seperti pada pasien HIV/AIDS, transplantasi organ serta\npada pasien yang mendapatkan pengobatan kortikosteroid jangka\npanjang.",
       "gejala": [
@@ -5625,7 +5499,7 @@
     {
       "id": 292,
       "nama": "Stunting (Pendek)",
-      "kategori": "Gizi & Tumbuh Kembang",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E40, E45",
       "definisi": "Stunting adalah perawakan pendek atau sangat pendek yang\ndisebabkan oleh kekurangan gizi (Weight Faltering/Gizi Kurang/Gizi\nBuruk) kronik. (WHO)",
       "gejala": [
@@ -5641,7 +5515,7 @@
     {
       "id": 293,
       "nama": "Syok",
-      "kategori": "Gejala",
+      "kategori": "Gejala dan Temuan Abnormal",
       "kode": "R57.9",
       "definisi": "Syok merupakan salah satu sindroma kegawatan yang\nmemerlukanpenanganan intensif dan agresif. Syok adalah suatu\nsindroma multifaktorial yang menuju hipoperfusi jaringan lokal atau\nsistemis dan mengakibatkan hipoksia sel dan disfungsimultipel\norgan. Kegagalan perfusi jaringan dan hantaran nutrisi dan oksigen\nsistemik yang tidak adekuat tak mampu memenuhi kebutuhan\nmetabolisme sel. Karakteristik kondisi ini, yaitu: 1) ketergantungan\nsuplai oksigen, 2) kekurangan oksigen, 3) Asidosis jaringan sehingga\nterjadi metabolisme anaerob dan berakhir dengan kegagalan fungsi\norgan vital dan kematian.\nSyok diklasifikasikan berdasarkan etiologi, penyebab dan\nkarakteristik pola hemodinamik yang ditimbulkan, yaitu:\na. Syok Hipovolemik yaitu kegagalan perfusi dan suplai oksigen\ndisebabkan oleh hilangnya sirkulasi volume intravaskuler\nsebesar >20-25% sebagai akibat dari perdarahan akut,\ndehidrasi, kehilangan cairan pada ruang ketiga atau akibat\nsekunder dilatasi arteri dan vena.\nb. Syok Kardiogenik yaitu kegagalan perfusi dan suplai oksigen\ndisebabkan oleh adanya kerusakan primer fungsi atau\nkapasitas pompa jantung untuk mencukupi volume jantung\nsemenit, berkaitan dengan terganggunya preload, afterload,\nkontraktilitas, frekuensi ataupun ritme jantung. Penyebab\nterbanyak adalah infark miokard akut, keracunan obat,\ninfeksi/inflamasi, gangguan mekanik.\nc. Syok Distributif yaitu kegagalan perfusi dan suplai oksigen\ndisebabkan oleh menurunnya tonus vaskuler mengakibatkan\nvasodilatasi arterial, penumpukan vena dan redistribusi aliran\ndarah. Penyebab dari kondisi tersebut terutama komponen\nvasoaktif pada syok anafilaksis; bakteria dan toksinnya pada\nseptik syok sebagai mediator dari SIRS; hilangnya tonus\nvaskuler pada syok neurogenik.\nd. Syok Obstruktif yaitu kegagalan perfusi dan suplai oksigen\nberkaitan dengan terganggunya mekanisme aliran balik darah\noleh karena meningkatnya tekanan intratorakal atau\nterganggunya aliran keluar arterial jantung (emboli pulmoner,\nemboli udara, diseksi aorta, hipertensi pulmoner, tamponade\nperikardial, perikarditis konstriktif) ataupun keduanya oleh\nkarena obstruksi mekanis.\ne. Syok Endokrin, disebabkan oleh hipotiroidisme, hipertiroidisme\ndengan kolaps kardiak dan insufisiensi adrenal. Pengobatannya\ndengan tunjangan kardiovaskular sambil mengobati\npenyebabnya. Insufisiensi adrenal mungkin kontributor\nterjadinya syok pada pasien sakit gawat. Pasien yang tidak\nrespon pada pengobatan harus tes untuk insufisiensi adrenal.",
       "gejala": [
@@ -5665,7 +5539,7 @@
     {
       "id": 294,
       "nama": "Taeniasis",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B68, B68.9",
       "definisi": "Taeniasis adalah penyakit zoonosis parasiter yang disebabkan oleh\ncacing pita yang tergolong dalam genus Taenia (Taenia saginata,\nTaenia solium, dan Taenia asiatica) pada manusia.\nTaenia saginata adalah cacing yang sering ditemukan di negara yang\npenduduknya banyak makan daging sapi/kerbau. Infeksi lebih\nmudah terjadi bila cara memasak daging setengah matang.\nTaenia solium adalah cacing pita yang ditemukan di daging babi.\nPenyakit ini ditemukan pada orang yang biasa memakan daging babi\nkhususnya yang diolah tidak matang. Ternak babi yang tidak\ndipelihara kebersihannya, dapat berperan penting dalam penularan\ncacing Taenia solium. Untuk T. solium terdapat komplikasi\nberbahaya yakni sistiserkosis. Sistiserkosis adalah kista T.solium\nyang bisa ditemukan di seluruh organ, namun yang paling\nberbahaya jika terjadi di otak.",
       "gejala": [
@@ -5704,7 +5578,7 @@
     {
       "id": 296,
       "nama": "Tatalaksana Berat Bayi Lahir Rendah (BBLR)",
-      "kategori": "Neonatus/Kongenital",
+      "kategori": "Perinatal",
       "kode": "P07.1",
       "definisi": "",
       "gejala": [],
@@ -5715,7 +5589,7 @@
     {
       "id": 297,
       "nama": "Tatalaksana Ulkus Kornea Bakteri",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Mata",
       "kode": "H16.0",
       "definisi": "",
       "gejala": [
@@ -5728,7 +5602,7 @@
     {
       "id": 298,
       "nama": "TB dengan HIV",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A15, B20",
       "definisi": "",
       "gejala": [],
@@ -5739,7 +5613,7 @@
     {
       "id": 299,
       "nama": "Tension-Type Headache (TTH)",
-      "kategori": "Penyakit Saraf",
+      "kategori": "Saraf",
       "kode": "G44, G44.2",
       "definisi": "Tension Headache atau Tension Type Headache (TTH) atau nyeri\nkepala tipe tegang adalah bentuk sakit kepala yang paling sering\ndijumpai dan sering dihubungkan dengan jangka waktu dan\npeningkatan stres. Sebagian besar tergolong dalam kelompok yang\nmempunyai perasaan kurang percaya diri, selalu ragu akan\nkemampuan diri sendiri dan mudah menjadi gentar dan tegang. Pada\nakhirnya, terjadi peningkatan tekanan jiwa dan penurunan tenaga.\nPada saat itulah terjadi gangguan dan ketidakpuasan yang\nmembangkitkan reaksi pada otot-otot kepala, leher, bahu, serta\nvaskularisasi kepala sehingga timbul nyeri kepala.\nNyeri kepala ini lebih sering terjadi pada perempuan dibandingkan\nlaki-laki dengan perbandingan 3:1. TTH dapat mengenai semua usia,\nnamun sebagian besar pasien adalah dewasa muda yang\nberusiasekitar antara 20-40 tahun.",
       "gejala": [
@@ -5756,7 +5630,7 @@
     {
       "id": 300,
       "nama": "Tetanus",
-      "kategori": "Tropis & Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A33, A35",
       "definisi": "Tetanus adalah penyakit pada sistem saraf yang disebabkan oleh\ntetanospasmin. Penyakit ini ditandai dengan spasme tonik persisten,\ndisertai serangan yang jelas dan keras. Tetanospasmin adalah\nneurotoksin yang dihasilkan oleh Clostridium tetani. Tetanospasmin\nmenghambat neurotransmiter GABA dan glisin, sehingga tidak\nterjadi hambatan aktivitas refleks otot. Spasme otot dapat terjadi\nlokal (disekitar infeksi), sefalik (mengenai otot-otot cranial), atau\numum atau generalisata (mengenai otot-otot kranial maupun\nanggota gerak dan batang tubuh). Spasme hampir selalu terjadi pada\notot leher dan rahang yang mengakibatkan penutupan rahang\n(trismus atau lockjaw), serta melibatkan otot otot ekstremitas dan\nbatang tubuh.\nDi Amerika Serikat, sekitar 15% kasus tetanus adalah penyalahguna\nobat yang menggunakan suntikan.",
       "gejala": [
@@ -5776,7 +5650,7 @@
     {
       "id": 301,
       "nama": "Tetanus Neonatorum",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A33",
       "definisi": "Secara global hampir 14% penyebab kematian neonatus adalah\ntetanus neonatorum. Tetanus neonatorum bertanggung jawab\nterhadap 50% kematian neonatus yang disebabkan oleh penyakit\nyang dapat dicegah dengan imunisasi. Tetanus neonatorum dapat\ndicegah dengan imunisasi dan atau pelayanan persalinan dan pasca\npersalinan yang bersih. Beberapa penelitian komunitas di awal\ntahun 1970 dan 1980 di Negara Amerika Latin dan beberapa Negara\nberkembang menunjukkan kematian neonatal antara <5 sampai 60\nkasus per 1000 kelahiran hidup. Di beberapa negara berkembang\nkematian tetanus neonatorum merupakan 23-72% dari total\nkematian neonatal.\nHasil Anamnesis ( Subjective )\nKeluhan\nGejala klinis timbul setelah toksin mencapai susunan saraf. Masa\ninkubasi umumnya berkisar antara 3-10 hari. Trismus akibat\nspasme otot masseter ditemukan pada lebih dari separuh penderita,\ndiikuti kekauan otot leher, kesulitan menelan dan mulut mencucu\nseperti mulut ikan. Spasme otot punggung dan otot perut. Spasme\ndapat terjadi spontan atau terhadap rangsangan dengan frekuensi\nyang bervariasi. Kesadaran masih intak.\nAnamnesis, meliputi :\na. Penolong persalinan apakah tenaga medis/paramedis/non\nmedis/dukun bayi\nb. Telah mendapat pelatihan atau belum\nc. Alat yang dipakai memotong tali pusat\nd. Ramuan apa yang dibubuhkan pada perawatan tali pusat\ne. Status imunisasi TT ibu sebelum dan selama kehamilan\nf. Sejak kapan bayi tidak dapat menetek (incubation period)\ng. Berapa lama selang waktu antara gejala-gejala tidak dapat\nmenetek dengan gejala spasme pertama (period of onset)\nFaktor Risiko : -",
       "gejala": [],
@@ -5787,7 +5661,7 @@
     {
       "id": 302,
       "nama": "Thalasemia",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Darah dan Imunologi",
       "kode": "D56",
       "definisi": "Gangguan genetik hemoglobin dengan reduced atau absent synthesis rantai globin. Thalasemia alpha dan beta. Indonesia memiliki prevalence carrier 3-8% di beberapa daerah.",
       "gejala": [
@@ -5807,7 +5681,7 @@
     {
       "id": 304,
       "nama": "Tinea barbe",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35",
       "definisi": "",
       "gejala": [],
@@ -5818,7 +5692,7 @@
     {
       "id": 305,
       "nama": "Tinea fasialis",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35",
       "definisi": "",
       "gejala": [],
@@ -5829,7 +5703,7 @@
     {
       "id": 306,
       "nama": "Tinea kapitis",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35",
       "definisi": "",
       "gejala": [],
@@ -5840,7 +5714,7 @@
     {
       "id": 307,
       "nama": "Tinea Korporis (Kurap)",
-      "kategori": "Kulit",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35, B35.4, B35.6",
       "definisi": "Infeksi dermatofita pada kulit tubuh (tinea corporis) yang ditandai dengan lesi anular dengan batas aktif yang raised, skaly, dan clearing sentral. Penyebab: Trichophyton rubrum (paling umum), T. mentagrophytes, Microsporum canis. Indonesia termasuk daerah tropis dengan prevalensi tinggi.",
       "gejala": [
@@ -5858,7 +5732,7 @@
     {
       "id": 308,
       "nama": "Tinea Korporis dan Tinea Kruris",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35.4",
       "definisi": "Tinea adalah infeksi jamur dermatofit superfisial (Trichophyton, Microsporum, Epidermophyton) pada jaringan berkeratin. Tinea korporis mengenai kulit tubuh berambut halus (badan, leher, ekstremitas); Tinea kruris mengenai lipat paha, perineum, dan gluteus.",
       "gejala": [
@@ -5873,7 +5747,7 @@
     {
       "id": 309,
       "nama": "Tinea Kruris (Jamur Selangkangan)",
-      "kategori": "Kulit",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35, B35.4, B35.6",
       "definisi": "Infeksi dermatofita pada lipatan inguinal, paha dalam, dan nates. Sangat umum di daerah tropis dan pada atlet (jock itch). Hampir selalu disebabkan oleh Trichophyton rubrum. Pria lebih sering terkena (3:1).",
       "gejala": [
@@ -5890,7 +5764,7 @@
     {
       "id": 310,
       "nama": "Tinea manus",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35",
       "definisi": "",
       "gejala": [],
@@ -5901,7 +5775,7 @@
     {
       "id": 311,
       "nama": "Tinea Pedis (Athlete's Foot / Kaki Jamur)",
-      "kategori": "Kulit",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35, B35.3",
       "definisi": "Infeksi dermatofita pada kaki, paling umum di dunia dengan prevalensi 3-15%. Penyebab: Trichophyton rubrum (70%), T. interdigitale, Epidermophyton floccosum. Diklasifikasikan sebagai interdigital (paling umum), moccasin (hyperkeratotic), dan vesikular/inflamatory.",
       "gejala": [
@@ -5919,7 +5793,7 @@
     {
       "id": 312,
       "nama": "Tinea unguium",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B35",
       "definisi": "",
       "gejala": [],
@@ -5930,7 +5804,7 @@
     {
       "id": 313,
       "nama": "Tinea Versikolor (Pitiriasis Versikolor / Panu)",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B36.0, B85",
       "definisi": "Tinea versikolor adalah penyakit infeksi pada superfisial kulit dan\nberlangsung kronis yang disebabkan oleh jamur Malassezia furfur.\nPrevalensi penyakit ini tinggi pada daerah tropis yang bersuhu\nhangat dan lembab.",
       "gejala": [
@@ -5946,7 +5820,7 @@
     {
       "id": 314,
       "nama": "Tonsilitis Akut",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J03, J35",
       "definisi": "Tonsilitis adalah peradangan tonsil palatina yang merupakan bagian\ndari cincin Waldeyer. Cincin Waldeyer terdiri atas susunan jaringan\nlimfoid yang terdapat di dalam rongga mulut yaitu: tonsil faringeal\n(adenoid), tonsil palatina (tonsil faucial), tonsil lingual (tonsil pangkal\nlidah), tonsil tuba Eustachius (lateral band dinding faring/ Gerlach’s\ntonsil).Penyakit ini banyak diderita oleh anak-anak berusia 3 sampai\n10 tahun.",
       "gejala": [
@@ -5964,7 +5838,7 @@
     {
       "id": 315,
       "nama": "Tonsilitis Kronik",
-      "kategori": "ISPA",
+      "kategori": "Pernapasan",
       "kode": "J35",
       "definisi": "Inflamasi tonsil yang berulang atau persisten dengan tonsil kronis bengkak, eksudat pada cryptae, dan gejala yang berlangsung lebih dari 3 bulan. Tonsilitis kronis dapat menyebabkan fokus infeksi untuk glomerulonefritis atau rheumatic fever.",
       "gejala": [
@@ -6006,7 +5880,7 @@
     {
       "id": 317,
       "nama": "Trauma",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T00",
       "definisi": "",
       "gejala": [
@@ -6019,7 +5893,7 @@
     {
       "id": 318,
       "nama": "Trauma Kimia Mata",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T26.4",
       "definisi": "Trauma kimia mata adalah salah satu kasus kedaruratan mata,\numumnya terjadi karena masuknya zat-zat kimia ke jaringan mata\ndan adneksa di sekitarnya. Keadaan ini memerlukan penanganan\ncepat dan segera oleh karena dapat mengakibatkan kerusakan berat\npada jaringan mata dan menyebabkan kebutaan. Zat kimia penyebab\ndapat bersifat asam atau basa. Trauma basa terjadi dua kali lebih\nsering dibandingkan trauma asam dan umumnya menyebabkan\nkerusakan yang lebih berat pada mata. Selain itu, beratnya\nkerusakan akibat trauma kimia juga ditentukan oleh besarnya area\nyang terkena zat kimia serta lamanya pajanan.",
       "gejala": [
@@ -6043,7 +5917,7 @@
     {
       "id": 319,
       "nama": "Trikiasis",
-      "kategori": "Penyakit Mata",
+      "kategori": "Mata",
       "kode": "H02, H02.0",
       "definisi": "Trikiasis adalah kondisi di mana bulu mata tumbuh mengarah ke\ndalam, yaitu ke arah permukaan bola mata, sehingga dapat\nmenggores kornea atau konjungtiva dan menyebabkan berbagai\nkomplikasi, seperti nyeri, erosi, infeksi, dan ulkus kornea. Data\nmengenai tingkat prevalensi penyakit ini di Indonesia tidak ada.\nDokter di fasilitas pelayanan kesehatan tingkat pertama harus\nmemiliki kompetensi menangani kasus trikiasis karena pasien-\npasien yang mengalami tanda maupun komplikasi dari trikiasis\nsangat mungkin mencari pertolongan di layanan tingkat pertama\nterlebih dahulu.",
       "gejala": [
@@ -6059,7 +5933,7 @@
     {
       "id": 320,
       "nama": "Tuberkulosis Paru",
-      "kategori": "Pernapasan Bawah",
+      "kategori": "Infeksi dan Parasit",
       "kode": "A15, A16",
       "definisi": "Tuberkulosis (TB) adalah penyakit menular langsung yang\ndisebabkan oleh kuman TB yaitu Mycobacterium tuberkulosis.\nSebagian besar kuman TB menyerang paru, namun dapat juga\nmengenai organ tubuh lainnya.Indonesia merupakan negara\nyang termasuk sebagai 5 besar dari 22 negara di dunia dengan\nbeban TB. Kontribusi TB di Indonesia sebesar 5,8%. Saat ini\ntimbul kedaruratan baru dalam penanggulangan TB, yaitu TB\nResisten Obat (Multi Drug Resistance/ MDR).",
       "gejala": [
@@ -6078,7 +5952,7 @@
     {
       "id": 321,
       "nama": "Tuli Sensorineural Kongenital",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Telinga",
       "kode": "H90",
       "definisi": "",
       "gejala": [
@@ -6091,7 +5965,7 @@
     {
       "id": 322,
       "nama": "Tumor Otak",
-      "kategori": "Penyakit Dalam",
+      "kategori": "Neoplasma",
       "kode": "C71.9",
       "definisi": "",
       "gejala": [
@@ -6104,7 +5978,7 @@
     {
       "id": 323,
       "nama": "Ulkus Mulut (Stomatitis Aftosa Rekuren)",
-      "kategori": "Penyakit Pencernaan",
+      "kategori": "Pencernaan",
       "kode": "K12, K12.0",
       "definisi": "Aftosa / Stomatitis Aftosa Rekurens (SAR)\nStomatitis aftosa rekurens (SAR) merupakan penyakit mukosa mulut\ntersering dan memiliki prevalensi sekitar 10 – 25% pada populasi.\nSebagianbesar kasus bersifat ringan, self-limiting, dan seringkali\ndiabaikan oleh pasien. Namun, SAR juga dapat merupakan gejala\ndari penyakit-penyakit sistemik, seperti penyakit Crohn, penyakit\nCoeliac, malabsorbsi, anemia defisiensi besi atau asam folat,\ndefisiensi vitamin B12, atau HIV. Oleh karenanya, peran dokter di\nfasilitas pelayanan kesehatan tingkat pertama dalam mendiagnosis\ndan menatalaksana SAR sangat penting.\nStomatitis Herpes\nStomatitis herpes merupakan inflamasi pada mukosa mulut akibat\ninfeksi virus Herpes simpleks tipe 1 (HSV 1). Penyakit ini cukup\nsering ditemukan pada praktik layanan tingkat pertama sehari-hari.\nBeberapa diantaranya merupakan manifestasi dari kelainan\nimunodefisiensi yang berat, misalnya HIV. Amat penting bagi para\ndokter di fasilitas pelayanan kesehatan tingkat pertama untuk dapat\nmendiagnosis dan memberikan tatalaksana yang tepat dalam kasus\nstomatitis herpes.",
       "gejala": [
@@ -6143,7 +6017,7 @@
     {
       "id": 325,
       "nama": "Urtikaria Akut",
-      "kategori": "Penyakit Kulit dan Kelamin",
+      "kategori": "Kulit",
       "kode": "L50, L50.0, L50.9",
       "definisi": "Urtikaria adalah reaksi vaskular pada kulit akibat bermacam-macam\nsebab. Sinonim penyakit ini adalah biduran, kaligata, hives, nettle\nrash. Ditandai oleh edema setempat yang timbul mendadak dan\nmenghilang perlahan-lahan, berwarna pucat dan kemerahan,\nmeninggi di permukaan kulit, sekitarnya dapat dikelilingi halo. Dapat\ndisertai dengan angioedema. Penyakit ini sering dijumpai pada\nsemua usia, orang dewasa lebih banyak terkena dibandingkan\ndengan usia muda. Penderita atopi lebih mudah mengalami urtikaria\ndibandingkan dengan orang normal. Penisilin tercatat sebagai obat\nyang lebih sering menimbulkan urtikaria.",
       "gejala": [
@@ -6159,7 +6033,7 @@
     {
       "id": 326,
       "nama": "Uveitis Anterior (Iritis)",
-      "kategori": "THT & Mata",
+      "kategori": "Mata",
       "kode": "H20",
       "definisi": "Inflamasi pada iris dan/atau badan siliar (anterior uvea). Dapat akut (sudut terbuka - paling umum) atau kronik. Etiologi: idiopatik (50%), autoimmune (HLA-B27 - ankylosing spondylitis, reactive arthritis, psoriatic arthritis, IBD), infeksi (HSV, VZV, syphilis, TB, toxoplasmosis), trauma. Uveitis posterior melibatkan koroid/retina dan rujuk ke spesialis.",
       "gejala": [
@@ -6179,7 +6053,7 @@
     {
       "id": 327,
       "nama": "Vaginitis (Keputihan)",
-      "kategori": "Reproduksi",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N76, N76.0",
       "definisi": "Vaginitis adalah peradangan pada vagina yang ditandai dengan\nadanya pruritus, keputihan, dispareunia, dan disuria. Penyebab\nvaginitis:\na. Vaginosis bakterialis (bakteri Gardnerella Vaginalis adalah\nbakteri anaerob yang bertanggung jawab atas terjadinya infeksi\nvagina yang non-spesifik, insidennya terjadi sekitar 23,6%).\nb. Trikomonas (kasusnya berkisar antara 5,1-20%).\nc. Kandida (vaginal kandidiasis, merupakan penyebab tersering\nperadangan pada vagina yang terjadi pada wanita hamil,\ninsidennya berkisar antara 15-42%).",
       "gejala": [
@@ -6199,7 +6073,7 @@
     {
       "id": 328,
       "nama": "Vaginosis bakterialis",
-      "kategori": "Ginjal-Urogenital",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N76",
       "definisi": "",
       "gejala": [],
@@ -6210,7 +6084,7 @@
     {
       "id": 329,
       "nama": "Varisela (Cacar Air)",
-      "kategori": "Penyakit Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B01, B01.9",
       "definisi": "Infeksi akut primer oleh virus Varicella zoster yang menyerang kulit\ndan mukosa, klinis terdapat gejala konstitusi, kelainan kulit\npolimorf, terutama berlokasi di bagian sentral tubuh. Masa inkubasi\n14-21 hari. Penularan melalui udara (air-borne) dan kontak\nlangsung.",
       "gejala": [
@@ -6226,7 +6100,7 @@
     {
       "id": 330,
       "nama": "Varises dan Insufisiensi Vena Kronik",
-      "kategori": "PTM Kardiovaskular",
+      "kategori": "Kardiovaskular",
       "kode": "I83",
       "definisi": "Dilatasi dan tortuositas vena superfisial akibat incompetensi katup vena, menyebabkan reflux dan peningkatan tekanan vena. Prevalensi 20-30% populasi dewasa, lebih tinggi pada wanita dan usia >50 tahun. Faktor risiko: obesitas, kehamilan, riwayat DVT, prolonged standing.",
       "gejala": [
@@ -6246,7 +6120,7 @@
     {
       "id": 331,
       "nama": "Vertigo Posisi Paroksismal Jinak (BPPV)",
-      "kategori": "Penyakit Saraf",
+      "kategori": "Gejala dan Temuan Abnormal",
       "kode": "H81, H81.1, H82, R42",
       "definisi": "BPPV adalah gangguan sistem vestibular perifer tersering yang ditandai dengan sensasi berputar paroksismal singkat (< 1 menit) yang dipicu oleh perubahan posisi kepala terhadap gravitasi, diakibatkan oleh perpindahan partikel otokonia kalsium karbonat ke dalam kanalis semisirkularis (paling sering kanalis posterior).",
       "gejala": [
@@ -6263,7 +6137,7 @@
     {
       "id": 332,
       "nama": "Veruka vulgaris",
-      "kategori": "Infeksi",
+      "kategori": "Infeksi dan Parasit",
       "kode": "B07",
       "definisi": "Veruka vulgaris merupakan hiperplasia epidermis yang disebabkan\noleh Human Papilloma Virus (HPV) tipe tertentu. Sinonim penyakit ini\nadalah kutil atau common wart. Penularan melalui kontak langsung\ndengan agen penyebab. Veruka ini sering dijumpai pada anak-anak\ndan remaja.",
       "gejala": [
@@ -6287,7 +6161,7 @@
     {
       "id": 333,
       "nama": "Vulnus",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T14.1",
       "definisi": "Kulit merupakan bagian tubuh yang paling luar yang berguna\nmelindungi diri dari trauma luar serta masuknya benda\nasing.Apabila kulit terkena trauma, maka dapat menyebabkan\nluka/vulnus.Luka tersebut dapat merusak jaringan, sehingga\nterganggunya fungsi tubuh serta dapat mengganggu aktifitas sehari-\nhari.\nKeadaan terjadinya diskontinuitas jaringan, dapat ditimbulkan oleh\nberbagai macam akibat yaitu trauma, meliputi luka robek (laserasi),\nluka akibat gesekan (abrasi), luka akibat tarikan (avulsi), luka\ntembus (penetrasi), gigitan, luka bakar, dan pembedahan.\nEtiologi\nBerdasarkan mekanisme trauma, terdiri dari :\nTrauma tajam yang menimbulkan luka terbuka, misalnya :\na. Vulnus Punctum (Luka Tusuk)\nPenyebab adalah benda runcing tajam atau sesuatu yang\nmasuk ke dalam kulit, merupakan luka terbuka dari luar\ntampak kecil tapi didalam mungkin rusak berat, jika yang\nmengenai abdomen/thorax disebut vulnus penetrosum(luka\ntembus).\nb. Vulnus Scissum/Insivum (Luka Sayat)\nPenyebab dari luka jenis ini adalah sayatan benda tajam atau\njarum merupakan luka terbuka akibat dari terapi untuk\ndilakukan tindakan invasif, tepi luka tajam dan licin.\nc. Vulnus Schlopetorum (Luka Tembak)\nPenyebabnya adalah tembakan, granat. Pada pinggiran luka\ntampak kehitam-hitaman, bisa tidak teratur kadang ditemukan\ncorpus alienum.\nd. Vulnus Morsum (Luka Gigitan)\nPenyebab adalah gigitan binatang atau manusia, kemungkinan\ninfeksi besar bentuk luka tergantung dari bentuk gigi\ne. Vulnus Perforatum (Luka Tembus)\nLuka jenis ini merupakan luka tembus atau luka jebol.\nPenyebab oleh karena panah, tombak atau proses infeksi yang\nmeluas hingga melewati selaput serosa/epithel organ jaringan.\nf. Vulnus Amputatum (Luka Terpotong)\nLuka potong, pancung dengan penyebab benda tajam ukuran\nbesar/berat, gergaji. Luka membentuk lingkaran sesuai dengan\norgan yang dipotong. Perdarahan hebat, resiko infeksi tinggi,\nterdapat gejala pathom limb.\nTrauma tumpul yang menyebabkan luka tertutup (vulnus occlusum),\natau luka terbuka (vulnus apertum), misalnya :\na. Vulnus Laceratum (Laserasi/Robek)\nJenis luka ini disebabkan oleh karena benturan dengan benda\ntumpul, dengan ciri luka tepi luka tidak rata dan perdarahan\nsedikit luka dan meningkatkan resiko infeksi.\nb. Vulnus Excoriasi (Luka Lecet)\nPenyebab luka karena kecelakaan atau jatuh yang\nmenyebabkan lecet pada permukaan kulit merupakan luka\nterbuka tetapi yang terkena hanya daerah kulit.\nc. Vulnus Contussum (Luka Kontusio)\nPenyebab: benturan benda yang keras. Luka ini merupakan\nluka tertutup, akibat dari kerusakan pada soft tissue dan\nruptur pada pembuluh darah menyebabkan nyeri dan berdarah\n(hematoma) bila kecil maka akan diserap oleh jaringan di\nsekitarnya jika organ dalam terbentur dapat menyebabkan\nakibat yang serius.\nTrauma termal, (Vulnus Combustion-Luka Bakar), yaitu kerusakan\nkulit karena suhu yang ekstrim, misalnya air panas, api, sengatan\nlistrik, bahan kimia, radiasi atau suhu yang sangat dingin (frostbite).\nJaringan kulit rusak dengan berbagai derajat mulai dari lepuh (bula),\nsampai karbonisasi (hangus). Terdapat sensasi nyeri dan atau\nanesthesia.\nPatofisiologi\nVulnus terjadi apabila ada suatu trauma yang mengenai tubuh yang\nbisa disebabkan oleh trauma mekanis dan perubahan suhu (luka\nbakar). Vulnus yang terjadi dapat menimbulkan beberapa tanda dan\ngejala seperti bengkak, krepitasi, shock, nyeri, dan deformitas atau\nbisa juga menimbulkan kondisi yang lebih serius. Tanda dan gejala\nyang timbul tergantung pada penyebab dan tipe vulnus.\nMacam-macam Luka\nMenurut tipenya luka dibedakan menjadi 4 tipe luka yaitu :\na. Luka bersih (Clean wound)\nLuka bersih adalah luka karena tindakan operasi dengan tehnik\nsteril, misalnya pada daerah dinding perut, dan jaringan lain\nyang letaknya lebih dalam (non contaminated deep tissue),\nmisalnya tiroid, kelenjar, pembuluh darah, otak, tulang.\nb. Luka bersih-kontaminasi (Clean contaminated wound)\nMerupakan luka yang terjadi karena benda tajam, bersih dan\nrapi, lingkungan tidak steril atau operasi yang mengenai daerah\nusus halus dan bronchial.\nc. Luka kontaminasi (Contaminated wound)\nLuka ini tidak rapi, terkontaminasi oleh lingkungan kotor,\noperasi pada saluran terinfeksi (usus besar, rektum, infeksi\nbronkhial, saluran kemih)\nd. Luka infeksi (Infected wound)\nJenis luka ini diikuti oleh adanya infeksi, kerusakan jaringan,\nserta kurangnya vaskularisasi pada jaringan luka.",
       "gejala": [
@@ -6301,7 +6175,7 @@
     {
       "id": 334,
       "nama": "Vulnus laseratum, punctum",
-      "kategori": "Cedera",
+      "kategori": "Cedera dan Keracunan",
       "kode": "T00",
       "definisi": "",
       "gejala": [],
@@ -6312,7 +6186,7 @@
     {
       "id": 335,
       "nama": "Vulvitis",
-      "kategori": "Ginjal-Urogenital",
+      "kategori": "Ginjal dan Saluran Kemih-Kelamin",
       "kode": "N76, N76.0",
       "definisi": "Bagi setiap wanita selain masalah keputihan, adapun masalah sering\ndihadapi adalah vaginitis dan vulvitis. Vulvitis adalah suatu\nperadangan pada vulva (organ kelamin luar wanita),sedangkan\nvulvovaginitis adalah peradangan pada vulva dan vagina. Gejala yang\npaling sering ditemukan adalah keluarnya cairan abnormal dari\nvagina, dikatakan abnormal jika jumlahnya sangat banyak serta\nbaunya menyengat atau disertai gatal-gatal dan nyeri.\nPenyebab :\na. Alergi, khususnya sabun, kertas toilet berwarna, semprotan\nvagina, deterjen, gelembung mandi, atau wewangian\nb. Dermatitis jangka panjang, seborrhea atau eksim\nc. Infeksi seperti infeksi pedikulosis, atau kudis jamur dan bakteri",
       "gejala": [
@@ -6336,7 +6210,7 @@
     {
       "id": 336,
       "nama": "Wasting (Kurus / Gizi Buruk Akut)",
-      "kategori": "Gizi & Tumbuh Kembang",
+      "kategori": "Endokrin, Nutrisi, dan Metabolik",
       "kode": "E40",
       "definisi": "Kekurangan gizi akut yang ditandai oleh berat badan menurut tinggi badan (BB/TB atau BB/PB) <-2 SD dari median WHO. Dapat ringan-moderat (MAM - moderate acute malnutrition) atau berat (SAM - severe acute malnutrition dengan BB/TB <-3 SD atau edema bilateral/kwashiorkor). Wasting adalah indikator malnutrisi akut yang berhubungan dengan mortality tinggi. Prevalensi wasting di Indonesia 7,7% (2022).",
       "gejala": [
