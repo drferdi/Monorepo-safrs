@@ -1,7 +1,9 @@
 # End-to-end integration: server-side persistence for the authenticated beta
 
-Status: PROPOSAL — awaiting Gaffer's go. Nothing in this document has been built, installed or provisioned.
-Written 2026-10-25 after the read-only audit recorded in the same session. Risk tier of this document: R0.
+Status: **APPROVED 2026-10-25** and in progress. Gaffer gave the go, chose Neon, confirmed the scope and
+delegated the patient-identity question; §5 records what he answered and the three items still open. Nothing is
+installed or provisioned, and no database project exists. Written 2026-10-25 after the read-only audit recorded
+in the same session; revised the same day when the decisions landed. Risk tier of this document: R0.
 
 ## 0. Why this plan is smaller than the request that asked for it
 
@@ -193,28 +195,37 @@ moot: there is no waitlist CTA left to keep.
 
 ### 4.3 Database — the only build proposed
 
-**Leading candidate: Supabase Postgres.**
+**Decided 2026-10-25: Neon Postgres.** Gaffer: "Neon pls". Supabase is declined, and with it the question of
+forwarding Clerk session tokens to a database, so that coupling is declined by implication. The comparison that
+produced this choice is kept in `.agents/DECISIONS.md`; what follows is the design as decided.
 
-| | For | Against |
-| --- | --- | --- |
-| **Supabase Postgres** | A connector is already configured in this workspace, so provisioning and inspection need no new tooling. Managed Postgres with migrations, row-level security, and a generated TypeScript type file. RLS can be keyed to the Clerk `userId` so a row is unreadable by another principal even if application code is wrong — defence in depth that matches the per-principal storage already shipped. Free tier is sufficient for a 10-20 doctor closed beta. | A second external service after Clerk, each with its own outage surface. Its own auth system is redundant here and must be deliberately bypassed in favour of Clerk, which is a configuration trap. Free-tier projects pause when idle. Data would sit outside Indonesia unless a region is chosen with that in mind (Q5). **And the RLS benefit is conditional — see the warning below.** |
-| **Neon Postgres** (named alternative) | Plain Postgres, no bundled auth to bypass, generous branching for migration rehearsal, usually the lighter dependency. | No connector configured here, so provisioning is manual. No RLS story out of the box — isolation would rest entirely on application code, which is exactly what B2 makes risky. |
-| **No database yet** (the honest third option) | Clerk `privateMetadata` already stores consent and access flags, so account data has a home today. Deferring costs nothing, adds no service, and keeps `rootDependencies: []` trivially true. It also respects the 2026-10-21 decision that parked storage-format work "until the consult answer is proven and real doctors have used it". | B1 stands: the first tester who clears their browser loses their work, and nothing can bring it back. |
+**Correction to this document's own first draft.** It said Neon had "no RLS story out of the box" and
+recommended Supabase mainly for row-level security. That was wrong, and the error mattered because it was the
+deciding argument. Neon is plain Postgres, so RLS is fully available; what it lacks is a built-in mapping from a
+JWT claim to `auth.jwt()`. The equivalent needs no token at the database at all:
 
-**Recommendation: Supabase, mainly for RLS**, because B2 is the blocker most likely to cause real harm and RLS
-is the only option on this list that does not rest isolation entirely on application code. But note honestly
-that the 2026-10-21 decision points the other way — it parked exactly this kind of work pending real use — and
-that tension is Q1, which is Gaffer's to settle, not this plan's.
+```sql
+-- inside the same transaction as the query, never outside it
+select set_config('app.user_id', $1, true);   -- true = transaction-local
+-- policy on every table
+using (user_id = current_setting('app.user_id', true))
+with check (user_id = current_setting('app.user_id', true))
+```
 
-> **Warning, and it is the condition the whole recommendation rests on.** RLS protects nothing if the server
-> queries with a **service-role key**: that key bypasses every policy and runs as superuser, so isolation would
-> fall back entirely to application code — exactly the argument used against Neon above. For RLS to be real,
-> the runtime path must send the **Clerk session JWT** on each request with the publishable (anon) key, and the
-> Supabase project must be configured to accept Clerk as a third-party JWT issuer, so a policy can compare
-> `auth.jwt()->>'sub'` with the row's `user_id`. The service-role key is then a **migrations-only** credential
-> and must never reach a request path. That coupling — the app's data layer depending on Clerk token forwarding
-> — is a real cost, and it is Q3b below. If Gaffer does not want that coupling, then RLS is off the table, and
-> Supabase versus Neon is close to a wash; the recommendation should be re-read with that in mind.
+So the database-level guard survives Gaffer's choice. `set_config` is used rather than `SET LOCAL` because `SET`
+takes no bind parameter; the principal is validated with the existing `validUserId` regex before it reaches the
+database either way. Transaction-local also survives a transaction-mode connection pooler, which a session-level
+setting would not.
+
+> **Three conditions make that guard real, and all three belong in the migrations.** Without them "database-level
+> isolation" is false again, in a new way:
+>
+> 1. **`force row level security` as well as `enable`**, on every table. A table's owner bypasses its policies
+>    otherwise, and a managed Postgres project's default role owns what it creates.
+> 2. **A separate runtime role**: `login nosuperuser nobypassrls`, not the owner of the tables, holding DML
+>    grants only. Belt and braces with (1) rather than a choice between them.
+> 3. **Both `using` and `with check`** over the missing-ok setting, so an unset principal denies the row rather
+>    than exposing the table. A query that escapes the transaction then reads nothing, which is the safe failure.
 
 **Schema — account data and de-identified sync only.** Per D1, no patient identity field may exist on the
 server. The schema below has no column that can hold a name, a NIK, a BPJS number, a phone number, an email
@@ -256,9 +267,18 @@ Moves (proposed):
 - Document bodies, **only after identity scrubbing**, and only if Q2 answers yes -> `workspace_sync`.
 
 Stays in the browser, unchanged:
-- `Workspace.patients[]` — it has a `name` field. **This is the crux of Q2.** D1 forbids identified records on
-  the server, so either patient records never sync, or they sync with `name` dropped and the local id as the
-  only handle, or the field is removed from the format first (which reopens parked work, B6).
+- `Workspace.patients[]` — **Q2 is resolved: pseudonymisation at the edge.** Gaffer delegated the choice
+  ("chose the best practice untuk usaha sejenis"), so it is this session's and is recorded as such. The server
+  stores the existing **random** local id as `patient_ref` and never a name; the name stays in the browser.
+  `patient_ref` must never become a hash of the name, which a dictionary reverses. This satisfies D1 without
+  touching the serialized format, so the parked migration (B6) stays parked. Dropping the column is not
+  sufficient on its own, because free text can carry a name — which is why the scrubber (S2) is part of the
+  work and not an optional extra.
+  **The consequence Gaffer should know before the pilot, not after:** a doctor who signs in on a new device
+  recovers every document but **no patient names**, because the map lived only in the lost browser and in the
+  manual JSON export. Sync answers "I lost my notes", not "which patient was this". And pseudonymous
+  longitudinal records remain personal data under UU PDP 27/2022 even when the key never leaves the edge; the
+  server data is de-identified at rest only in that narrow sense.
 - `activeEncounterId`, UI state, revision history (up to 20 per document), and the unreadable-backup blob.
 - The whole blob remains authoritative locally. Sync is additive: a server round trip that fails must leave the
   app exactly as it works today.
@@ -270,7 +290,7 @@ model output into a server table beyond the de-identified document body above.
 
 | Invariant | Impact | How it is kept |
 | --- | --- | --- |
-| **Capsule sovereignty** (`rootDependencies: []`) | New npm dependency and two env names. | The client is a capsule-local dependency. Env names are declared in `project.contract.json` `externalServices` **and** `capsule.json` `requiredEnvironment` in the same commit (B4). The Supabase MCP connector is session tooling for the operator, never a build, test or runtime dependency — the same rule `AGENTS.md` already applies to Jev. A lone clone of the product repository must still build with no connector present. |
+| **Capsule sovereignty** (`rootDependencies: []`) | New npm dependency and new env names. | The client is a capsule-local dependency. Env names are declared in `project.contract.json` `externalServices` **and** `capsule.json` `requiredEnvironment` in the same commit (B4). A vendor MCP connector, where one is used, is session tooling for the operator, never a build, test or runtime dependency — the same rule `AGENTS.md` already applies to Jev. A lone clone of the product repository must still build with no connector present. |
 | **PII parity** (`contract.ts` / `privacy.py` / `theoracle-grounding.ts`, `tests/fixtures/pii-parity.json`) | A fourth boundary gains an identity check. | The scrubber reuses the existing patterns rather than writing new ones, and gains parity rows red-first. Direction unchanged: tighten the client, never loosen the engine. |
 | **Loopback-only engine** | **None.** | Sync lives in the Next layer. No engine file, env var or port changes. `AADI_SERVICE_ENV=production` stays refused. The engine never learns that a database exists. |
 | **Docker single-user image** | One new runtime secret, one new rollback step. | The key goes in a root-owned `600` file beside `clerk.env` and `index.env`, never baked into the image, never printed. The image still publishes as `-p 127.0.0.1:3000:3000`. With the sync flag off the image behaves exactly as today, so an unauthenticated rollback needs the edge gate restored first — the existing rule, unchanged. |
@@ -286,11 +306,11 @@ the session that runs it.
 
 | Step | What | Tier |
 | --- | --- | --- |
-| S1 | Schema and migrations as SQL files in the capsule, plus RLS policies, plus configuring Clerk as the project's third-party JWT issuer so `auth.jwt()->>'sub'` carries the Clerk `userId`. No application code. Applied first to a throwaway project or branch, never to anything live. Proved by a negative test before anything else is built: a token for principal A must fail to read principal B's row **at the database**, not in application code. | **R2** |
+| S1 | Schema and migrations as SQL files in the capsule: tables, the `nosuperuser nobypassrls` non-owner runtime role with DML grants only, and `enable` plus `force row level security` with both `using` and `with check` on every table. **Scope held to `profile` and `personal_template` until Q7 is answered**; no `workspace_sync`. No application code, no `package.json` change, no project created. A database-level negative test is written now and skips while no connection string is set, exactly as `withIndex` does in `tests/private-data.ts`; alongside it a sentinel that does run here asserts every `create table` in the SQL has a matching `enable`, a `force` and a policy. | **R2** |
 | S2 | Identity scrubber at the sync boundary, red-first, with new `pii-parity.json` rows. Pure function, no network. | **R2** |
-| S3 | Server-only data access module (`src/lib/sync/`), behind `server-only`, forwarding the verified Clerk session JWT with the publishable key. Never a client-supplied user id, and never the service-role key on a request path. | **R2** |
+| S3 | Server-only data access module (`src/lib/sync/`), behind `server-only`, which opens a transaction, sets the principal with `set_config(..., true)` from the verified Clerk session, and queries inside it. Never a client-supplied user id, never the migration credential. **The driver is an open decision for Gaffer** (`pg` or `@neondatabase/serverless`): the requirement is a path where the transaction-local setting holds for the whole unit of work, to be verified against the driver's own documentation at this step rather than assumed here. A new dependency is Gaffer's to approve. | **R2** |
 | S4 | Profile and template sync, additive and flag-gated. localStorage stays authoritative; every failure path degrades to today's behaviour. | **R2** |
-| S5 | Document-body sync, **only if Q2 is answered yes**, with `format_version` written on every row. | **R2** |
+| S5 | Document-body sync, **pending Q7** (and it is what makes the S2 scrubber load-bearing), with `format_version` written on every row. | **R2** |
 | S6 | Smoke tests: signed-out refusal, two-principal isolation, a failed round trip leaving the app usable, and `workspace-backup.json` still importing. | **R1** |
 | S7 | Declarations (`project.contract.json`, `capsule.json`), `.env.example` names, `docs/data.md`, `deploy/beta/README.md`, `.agents/HANDOFF.md` and `.agents/DECISIONS.md`. | **R1** |
 
@@ -300,13 +320,12 @@ to clinical logic or AADI prompts; no paid model calls.
 
 ### 4.6 New environment variables (names only)
 
-- `SUPABASE_URL` — project origin, server-side only.
-- `SUPABASE_ANON_KEY` — the publishable key used on the request path, always together with the forwarded Clerk
-  session JWT. It is safe only because RLS is what restricts it; that is the point of the warning in §4.3.
-- `SUPABASE_SERVICE_ROLE_KEY` — **migrations only, never on a request path.** It bypasses RLS. Server-side only,
-  never `NEXT_PUBLIC_*`, never sent to the browser, never printed or committed. Whether it belongs in the
-  runtime environment at all, rather than only in the operator's hands, is worth deciding at S1; the safer
-  default is to keep it out of the beta server entirely.
+- `SENTRAPEDIA_DATABASE_URL` — the Neon connection string for the **runtime role** (the
+  `nosuperuser nobypassrls` non-owner of condition 2). Server-side only, never `NEXT_PUBLIC_*`, never sent to
+  the browser, never printed or committed.
+- `SENTRAPEDIA_DATABASE_MIGRATION_URL` — the owner connection string, **migrations only, never on a request
+  path.** Whether it belongs in the beta server's environment at all, rather than only in the operator's hands,
+  is a decision at S1; the safer default is to keep it off the server entirely.
 - `SENTRAPEDIA_SYNC_MODE` — `off` | `on`, defaulting to **`off`**, so an image without it behaves exactly as
   today.
 
@@ -335,24 +354,38 @@ No value for any of these is read, written or printed by this document.
 
 ---
 
-## 5. Open decisions for Gaffer
+## 5. Decisions — answered 2026-10-25, and what is still open
 
-Numbered, short, and deliberately unanswered here.
+Answered by Gaffer, recorded verbatim in `.agents/DECISIONS.md`:
 
-1. The 2026-10-21 decision parked storage work "until the consult answer is proven and real doctors have used
-   it", and no tester has registered yet. Build server sync now, or keep it parked until one has?
-2. D1 forbids identified records on the server, but `Workspace.patients[]` has a `name` field. Which: patient
-   records never sync; or they sync with `name` dropped; or the field leaves the format first?
-3. Supabase (RLS, connector already set up) or Neon (plainer, no bundled auth to bypass)?
-   3b. Supabase's RLS advantage exists **only** if the app forwards Clerk session tokens to the database and
-   Clerk is registered there as a JWT issuer (§4.3 warning). Is that coupling acceptable? If not, RLS is off
-   the table and the choice between the two is close to a wash.
-4. Is this plan's reduced scope right — database and sync only, since auth, registration and the site link are
-   already merged?
-5. Which region should the database sit in, given Indonesian clinical content and KMK 951/2026 still open?
-6. The branch `docs/sentrapedia-clerk-hold-decision` (`470504dd`) still records a condition you have
-   withdrawn. Merge it, delete it, or leave it?
-7. Should document bodies sync at all (S5), or only profile and templates (S4)?
+1. **Build now.** "Sekarang sudah harus di updatge kita segera BETGA dan sudah ada pilot test" — the 2026-10-21
+   parking of storage work is lifted for the server side. The format migration stays parked. Noted honestly:
+   this session has no evidence of a registered tester and did not check; the pilot is his report.
+2. **Delegated, not answered** — "chose the best practice untuk usaha sejenis". The choice made, and owned by
+   this session rather than by him, is **pseudonymisation at the edge** (§4.3): `patient_ref` is the existing
+   random local id, the name never leaves the browser, and a scrubber guards free text. Its cost to a doctor on
+   a new device is stated in §4.3 and should be read before the pilot, not after.
+3. **Neon.** "Neon pls". 3b is therefore **declined by implication**: Clerk session tokens are not forwarded to
+   the database. RLS survives anyway, through a transaction-local setting — see the correction in §4.3, which
+   reverses what this document first claimed about Neon.
+4. **Scope confirmed.** "Yes" — database and sync only.
+6. **Merge.** "Merge" — done locally as `008f1126`, a real merge commit; the hold it records carries a `Status:`
+   line marking it withdrawn, so nothing in the tree reads as a live hold.
+
+Still open, and each one blocks something specific:
+
+5. **Region — not settled.** The question asked which region; the answer was "Yes", which does not pick one.
+   Verified since: **Neon has no Jakarta region**, the nearest is AWS Singapore `aws-ap-southeast-1`, and a
+   project's region cannot be changed after it is created. So the residency question under KMK 951/2026 is
+   vendor-independent, and it blocks **provisioning only** — which is Gaffer's action, never an agent's. It
+   does not block the SQL in S1.
+7. **Do document bodies sync at all (S5), or only profile and templates (S4)?** This gates the
+   `workspace_sync` table and makes the S2 scrubber load-bearing, so S1 is deliberately held to `profile` and
+   `personal_template` until it is answered. Worth saying plainly: profile and templates alone do **not** close
+   B1, the data-loss blocker that motivated this whole plan.
+8. **The driver** (new, raised by the design): `pg` or `@neondatabase/serverless`? The requirement is a path
+   where the transaction-local principal holds for the whole unit of work; it will be verified against the
+   driver's own documentation at S3 rather than assumed here. A new dependency needs Gaffer's approval.
 
 ---
 
