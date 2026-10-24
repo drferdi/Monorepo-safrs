@@ -16,9 +16,9 @@ test('desktop and mobile menus provide direct HTTPS access to the beta login', a
       assert.equal(links.length, 1, 'each navigation has exactly one login entry');
       assert.match(links[0][1], /href="https:\/\/beta\.sentrapedia\.com\/sign-in"/);
       assert.doesNotMatch(links[0][1], /target=|onclick=/, 'login uses ordinary same-tab navigation');
-      const requests = [...menu.matchAll(/<a\b([^>]*)>Ajukan akses<\/a>/g)];
-      assert.equal(requests.length, 1, 'each navigation has one request-access entry');
-      assert.match(requests[0][1], /href="https:\/\/beta\.sentrapedia\.com\/apply"/);
+      const requests = [...menu.matchAll(/<a\b([^>]*)>Daftar<\/a>/g)];
+      assert.equal(requests.length, 1, 'each navigation has one user registration entry');
+      assert.match(requests[0][1], /href="https:\/\/beta\.sentrapedia\.com\/sign-up"/);
       assert.doesNotMatch(requests[0][1], /target=|onclick=/);
     }
   } finally { await new Promise(resolve => server.close(resolve)); }

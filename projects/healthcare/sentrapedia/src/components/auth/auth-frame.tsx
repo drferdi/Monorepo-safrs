@@ -65,7 +65,7 @@ export function AuthFrame({ title, children }: { title: string; children: ReactN
 
       <div className="auth-canvas">
         <section className="auth-intro" aria-labelledby="auth-intro-title">
-          <p className="auth-eyebrow"><span className="auth-beta-mark" /> CLINICAL WORKSPACE <span className="auth-edition">/ CLOSED BETA</span></p>
+          <p className="auth-eyebrow"><span className="auth-beta-mark" /> CLINICAL WORKSPACE <span className="auth-edition">/ BETA</span></p>
           <h1 id="auth-intro-title">Ruang untuk<br />pemikiran <span>klinis.</span></h1>
           <p className="auth-intro-copy">Dari konteks yang tersebar menjadi pemikiran yang terarah. Satu ruang untuk menyusun catatan dan meninjau langkah berikutnya.</p>
           <p className="auth-synthetic"><span aria-hidden="true">↳</span> Ruang evaluasi. Data sintetis saja.</p>
@@ -79,10 +79,10 @@ export function AuthFrame({ title, children }: { title: string; children: ReactN
             <h2>{title}</h2>
             <div className="auth-panel-content">{children}</div>
             <nav className="auth-navigation" aria-label="Akses beta">
-              <Link href="/apply">Ajukan akses <Arrow /></Link>
+              <Link href="/sign-up">Daftar <Arrow /></Link>
               <Link href="/sign-in">Masuk <Arrow /></Link>
             </nav>
-            <p className="auth-panel-note">Akses beta melalui undangan.<br />Gunakan email yang terdaftar saat mengajukan akses.</p>
+            <p className="auth-panel-note">Daftar dengan email pribadi, lalu masuk ke workspace.</p>
           </div>
           <div className="auth-panel-foot"><span className="auth-beta-mark" /><span>Hanya untuk evaluasi dengan kasus sintetis.</span></div>
         </section>
@@ -93,9 +93,9 @@ export function AuthFrame({ title, children }: { title: string; children: ReactN
       <footer className="auth-footer">
         <p>Dirancang untuk alur pikir klinisi.<span>Sentra · Sentrapedia</span></p>
         <ol className="auth-journey" aria-label="Tahapan akses beta">
-          <li><span>01</span> Ajukan akses</li>
-          <li><span>02</span> Terima undangan</li>
-          <li><span>03</span> Mulai evaluasi</li>
+          <li><span>01</span> Daftar</li>
+          <li><span>02</span> Login</li>
+          <li><span>03</span> Akses workspace</li>
         </ol>
       </footer>
     </div>

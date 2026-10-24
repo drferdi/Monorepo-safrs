@@ -28,9 +28,10 @@ describe("analysis route authorization", () => {
     expect(await response.json()).toMatchObject({ status: "error", error: { code: "AUTH_REQUIRED" } });
     expect(state.steps).toEqual([]);
   });
-  it("rejects pending consent and disabled accounts, even with a fresh valid session", async () => {
+  it("admits verified users without extra consent but rejects disabled accounts", async () => {
     state.session = "user_a";
-    expect((await POST(incoming())).status).toBe(403);
+    expect((await POST(incoming())).status).toBe(200);
+    state.steps = [];
     state.metadata = { sentrapediaBetaConsent: accepted, sentrapediaBetaAccess: { disabled: true } };
     expect((await POST(incoming())).status).toBe(403);
     expect(state.steps).toEqual([]);

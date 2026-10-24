@@ -16,7 +16,7 @@ for (const entry of manifest.files) {
 const current = await fs.readFile(path.join(site, 'index.html'), 'utf8');
 if (!current.includes('<title>Sentrapedia</title>') || !current.includes('kewenangan dokter yang menangani')) errors.push('Product identity or physician ownership copy missing');
 const ids = new Set([...current.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]));
-const outboundLinks = new Set(['https://melinda.co.id/', 'https://beta.sentrapedia.com/sign-in', 'https://beta.sentrapedia.com/apply']); // Approved auth destinations; publication waits for Clerk cutover.
+const outboundLinks = new Set(['https://melinda.co.id/', 'https://beta.sentrapedia.com/sign-in', 'https://beta.sentrapedia.com/sign-up']); // User registration and login; publication waits for Clerk cutover.
 let localTargets = 0;
 for (const match of current.matchAll(/\b(?:src|href|poster|srcset)\s*=\s*(["'])(.*?)\1/gis)) {
   const value = match[2].replaceAll('&amp;', '&');

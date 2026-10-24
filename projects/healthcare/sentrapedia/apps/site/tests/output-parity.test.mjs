@@ -25,10 +25,10 @@ test('every public path is preserved and only reviewed runtime bundles change by
     .replace('<div class="col-md-7 main-menu-div d-none d-md-block">', '<div class="col-md-6 main-menu-div d-none d-md-block">')
     .replace('<div class="col-md-2 col-6">\n                <div class="lang-menu d-none d-md-block">', '<div class="col-md-3 col-6">\n                <div class="lang-menu d-none d-md-block">')
     .replace('<div class="d-flex align-items-center justify-content-end gap-3" data-login-actions>\n', '')
-    .replace('<a href="https://beta.sentrapedia.com/apply" data-request-access>Ajukan akses</a>\n', '')
+    .replace('<a href="https://beta.sentrapedia.com/sign-up" data-request-access>Daftar</a>\n', '')
     .replace(' </div><!-- login-actions -->\n', '')
     .replace('<li class="menu-item" data-login-mobile><a href="https://beta.sentrapedia.com/sign-in">Masuk</a></li>\n', '')
-    .replace('<li class="menu-item" data-request-mobile><a href="https://beta.sentrapedia.com/apply">Ajukan akses</a></li>\n', '')
+    .replace('<li class="menu-item" data-request-mobile><a href="https://beta.sentrapedia.com/sign-up">Daftar</a></li>\n', '')
     // Gaffer explicitly removed the directional caption on 2026-10-23; preserve the historical baseline.
     .replace('<h3 id="capability-explorer-title">Sepuluh kemampuan.<br>Satu ruang kerja.</h3></div>', '$&<p>3 ke kanan · 3 turun<br>3 ke kanan · 1 turun.</p>');
   actual.find(entry => entry.path === 'index.html').sha256 = createHash('sha256').update(restored).digest('hex');

@@ -50,11 +50,11 @@ describe("server-owned access decisions", () => {
     expect(await setup({ ...user(), emailVerified: false }).access.resolve()).toEqual({ status: "disabled" });
     expect(await setup(user(), "user_b").access.resolve()).toEqual({ status: "unavailable" });
   });
-  it("does not treat missing, malformed or old consent as accepted", async () => {
+  it("keeps explicit legacy consent inspection without blocking normal user access", async () => {
     for (const value of [undefined, null, false, {}, { ...consent, version: "old" }, { ...consent, syntheticOnly: false }, { ...consent, acceptedAt: "invalid" }]) {
       const { access } = setup(user({ sentrapediaBetaConsent: value }));
-      expect(await access.resolve()).toEqual({ status: "consent-required" });
-      expect(await access.resolve(false)).toEqual({ status: "allowed", userId: "user_a" });
+      expect(await access.resolve(true)).toEqual({ status: "consent-required" });
+      expect(await access.resolve()).toEqual({ status: "allowed", userId: "user_a" });
     }
   });
   it("a disabled or malformed suspension flag cannot be bypassed by onboarding", async () => {
@@ -68,7 +68,7 @@ describe("server-owned access decisions", () => {
   });
   it("ignores client-editable metadata as an approval or consent source", async () => {
     const profile = { ...user({}), unsafeMetadata: { approved: true, sentrapediaBetaConsent: consent }, publicMetadata: { sentrapediaBetaConsent: consent } };
-    expect(await setup(profile).access.resolve()).toEqual({ status: "consent-required" });
+    expect(await setup(profile).access.resolve(true)).toEqual({ status: "consent-required" });
   });
   it("fails closed when the provider returns a different user or fails", async () => {
     const config = resolveAuthConfig(environment);
@@ -131,7 +131,7 @@ describe("consent mutation", () => {
   });
   it("records only the authenticated user's server-stamped consent and retains unrelated metadata", async () => {
     const { access, current, writes } = setup(user({ unrelated: { keep: true }, sentrapediaBetaAccess: { disabled: false } }));
-    expect((await access.resolve()).status).toBe("consent-required");
+    expect((await access.resolve(true)).status).toBe("consent-required");
     const response = await access.consent(request());
     expect(response.status).toBe(200);
     expect(response.headers.get("cache-control")).toBe("no-store");

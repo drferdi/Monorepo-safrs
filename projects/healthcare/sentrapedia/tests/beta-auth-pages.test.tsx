@@ -12,9 +12,10 @@ describe("workspace server page", () => {
   it("redirects a signed-out visitor before constructing the workspace", async () => {
     await expect(Home()).rejects.toThrow("redirect:/sign-in");
   });
-  it("redirects incomplete consent to onboarding", async () => {
-    state.access = { status: "consent-required" };
-    await expect(Home()).rejects.toThrow("redirect:/onboarding");
+  it("passes a verified user directly to the workspace without onboarding", async () => {
+    state.access = { status: "allowed", userId: "user_new" };
+    const page = await Home();
+    expect(page.props.userId).toBe("user_new");
   });
   it("shows an access-denied page for a disabled identity, without workspace records", async () => {
     state.access = { status: "disabled" };

@@ -280,7 +280,7 @@
     },
     {
       "path": "scripts/verify.mjs",
-      "sha256": "1d0470f9fe9ce7bcd200a97332eeeb173efb38a9ba56efe1b1967358c317b8ee"
+      "sha256": "1157837a2bebc9ae36430d002561aba49605e029b776b23d519f963de543e3f4"
     },
     {
       "path": "scripts/workflow-playback.test.mjs",
@@ -292,7 +292,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "3a8a321289bb4b8347960f38a01542742c3a8a7e2e3582b4846d52a58327e7be"
+      "sha256": "61c8cda85eabd6f027f7e01e32ec1f80528588a4f805039e89bb0fb4a2e666b9"
     },
     {
       "path": "assets/system-anatomy.css",

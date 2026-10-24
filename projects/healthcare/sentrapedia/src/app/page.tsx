@@ -9,7 +9,6 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const access = await getBetaAccess().resolve();
   if (access.status === "signed-out") redirect("/sign-in");
-  if (access.status === "consent-required") redirect("/onboarding");
   if (access.status !== "allowed") return <AccessNotice unavailable={access.status === "unavailable"}/>;
   return <AuthenticatedWorkspace key={randomUUID()} userId={access.userId} local={getAuthConfig().mode === "local"}/>;
 }

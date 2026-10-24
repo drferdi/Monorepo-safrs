@@ -19,7 +19,7 @@ describe("redesigned access presentation", () => {
     expect(screen.getByRole("heading", { name: "Layanan akses belum tersedia" })).toBeTruthy();
     expect(screen.queryByRole("textbox")).toBeNull();
     const nav = screen.getByRole("navigation", { name: "Akses beta" });
-    expect(within(nav).getByRole("link", { name: "Ajukan akses" }).getAttribute("href")).toBe("/apply");
+    expect(within(nav).getByRole("link", { name: "Daftar" }).getAttribute("href")).toBe("/sign-up");
     expect(within(nav).getByRole("link", { name: "Masuk" }).getAttribute("href")).toBe("/sign-in");
   });
   it("retains an explicit denied state and never renders workspace records", () => {

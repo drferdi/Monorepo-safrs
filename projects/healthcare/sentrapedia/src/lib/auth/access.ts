@@ -55,7 +55,8 @@ async function readConsent(request: Request): Promise<unknown> {
 }
 
 export function createBetaAccess(deps: Dependencies) {
-  async function resolve(requireConsent = true): Promise<AccessResult> {
+  // User access follows verified Clerk sign-in. Explicit legacy callers may still inspect consent.
+  async function resolve(requireConsent = false): Promise<AccessResult> {
     if (deps.config.mode === "unavailable") return { status: "unavailable" };
     if (deps.config.mode === "local") return { status: "allowed", userId: deps.config.userId };
     try {

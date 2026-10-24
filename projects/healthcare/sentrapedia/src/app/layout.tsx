@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="id" className={`${geist.variable} ${jakarta.variable}`}>
       <body>
-        {config.mode === "clerk" ? <ClerkProvider publishableKey={config.publishableKey} signInUrl="/sign-in" signUpUrl="/sign-up" waitlistUrl="/apply" signInForceRedirectUrl="/" signUpForceRedirectUrl="/onboarding">{children}</ClerkProvider> : children}
+        {config.mode === "clerk" ? <ClerkProvider publishableKey={config.publishableKey} signInUrl="/sign-in" signUpUrl="/sign-up" signInForceRedirectUrl="/" signUpForceRedirectUrl="/">{children}</ClerkProvider> : children}
       </body>
     </html>
   );
