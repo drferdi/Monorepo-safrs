@@ -113,11 +113,46 @@ jobs:
           provenance: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - id: artifact
+        if: steps.publication.outputs.artifact == 'true'
+        run: node scripts/split-release-artifact.mjs /tmp/sentrapedia-candidate.tar /tmp/sentrapedia-parts
       - if: steps.publication.outputs.artifact == 'true'
         uses: actions/upload-artifact@v7
         with:
-          name: sentrapedia-candidate-${{ steps.publication.outputs.revision }}
-          path: /tmp/sentrapedia-candidate.tar
+          name: sentrapedia-candidate-${{ steps.publication.outputs.revision }}-manifest
+          path: /tmp/sentrapedia-parts/manifest.json
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
+      - if: steps.publication.outputs.artifact == 'true' && steps.artifact.outputs.parts >= 1
+        uses: actions/upload-artifact@v7
+        with:
+          name: sentrapedia-candidate-${{ steps.publication.outputs.revision }}-part-00
+          path: /tmp/sentrapedia-parts/image.tar.part-00
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
+      - if: steps.publication.outputs.artifact == 'true' && steps.artifact.outputs.parts >= 2
+        uses: actions/upload-artifact@v7
+        with:
+          name: sentrapedia-candidate-${{ steps.publication.outputs.revision }}-part-01
+          path: /tmp/sentrapedia-parts/image.tar.part-01
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
+      - if: steps.publication.outputs.artifact == 'true' && steps.artifact.outputs.parts >= 3
+        uses: actions/upload-artifact@v7
+        with:
+          name: sentrapedia-candidate-${{ steps.publication.outputs.revision }}-part-02
+          path: /tmp/sentrapedia-parts/image.tar.part-02
+          retention-days: 1
+          compression-level: 0
+          if-no-files-found: error
+      - if: steps.publication.outputs.artifact == 'true' && steps.artifact.outputs.parts >= 4
+        uses: actions/upload-artifact@v7
+        with:
+          name: sentrapedia-candidate-${{ steps.publication.outputs.revision }}-part-03
+          path: /tmp/sentrapedia-parts/image.tar.part-03
           retention-days: 1
           compression-level: 0
           if-no-files-found: error

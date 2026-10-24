@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { test } from "node:test";
 import { runInNewContext } from "node:vm";
 import { releasePublication } from "../scripts/release-publication.mjs";
+import { splitReleaseArtifact } from "../scripts/split-release-artifact.mjs";
 
 const fullWorkflow = readFileSync(new URL("../.github/workflows/ci.yml", import.meta.url), "utf8");
 const workflow = fullWorkflow.split("\n  docker:\n")[1];
@@ -14,6 +16,46 @@ const mainSha = "1".repeat(40);
 const headSha = "2".repeat(40);
 const image = "ghcr.io/demo-owner/sentrapedia-beta";
 const releaseBranch = "codex/sentrapedia-clerk-public-release";
+
+test("private delivery parts reconstruct the exact image archive and expose integrity receipts", () => {
+  const root = mkdtempSync(join(tmpdir(), "sentrapedia-release-"));
+  try {
+    const bytes = Buffer.from("exact-image-archive");
+    const input = join(root,"image.tar"); writeFileSync(input,bytes);
+    const output = join(root,"parts");
+    const manifest = splitReleaseArtifact(input,output,5);
+    assert.equal(manifest.parts.length,4);
+    const restored = Buffer.concat(manifest.parts.map(part=>{
+      const payload=readFileSync(join(output,part.file));
+      assert.equal(payload.length,part.bytes);
+      assert.equal(createHash("sha256").update(payload).digest("hex"),part.sha256);
+      return payload;
+    }));
+    assert.deepEqual(restored,bytes);
+    assert.equal(manifest.sha256,createHash("sha256").update(bytes).digest("hex"));
+    assert.deepEqual(JSON.parse(readFileSync(join(output,"manifest.json"),"utf8")),manifest);
+    assert.throws(()=>splitReleaseArtifact(input,output,5),/exist/i);
+    assert.throws(()=>splitReleaseArtifact(input,join(root,"too-small"),4),/four/i);
+    assert.equal(existsSync(join(root,"too-small")),false);
+  } finally {
+    assert.equal(dirname(resolve(root)),resolve(tmpdir()));
+    assert.ok(basename(root).startsWith("sentrapedia-release-"));
+    rmSync(root,{recursive:true,force:true});
+  }
+});
+
+test("candidate manifest and every bounded part retain the same private publication guard", () => {
+  const split=steps.find(step=>step.startsWith("id: artifact"));
+  assert.ok(split,"split only the approved candidate archive");
+  const uploads=steps.filter(step=>step.includes("uses: actions/upload-artifact@"));
+  assert.equal(uploads.length,5);
+  const context={publication:{outputs:{artifact:"false"}},artifact:{outputs:{parts:"4"}}};
+  for(const step of [split,...uploads])assert.equal(Boolean(evaluate(scalar("if",step),event(),context)),false);
+  context.publication.outputs.artifact="true";
+  for(const step of [split,...uploads])assert.equal(Boolean(evaluate(scalar("if",step),event(),context)),true);
+  assert.match(uploads[0],/manifest\.json/);
+  for(let part=0;part<4;part++)assert.ok(uploads.some(step=>step.includes(`image.tar.part-${String(part).padStart(2,"0")}`)));
+});
 
 // Applicant-controlled branch/base comparisons belong to the real Node policy,
 // not this evaluator: GitHub string equality ignores case, unlike JavaScript.
