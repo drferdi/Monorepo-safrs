@@ -4,9 +4,10 @@ import { dirname, isAbsolute, relative, resolve } from "node:path";
 const capsule = process.cwd();
 const inside = (file) => { const path = relative(capsule, file); return !path.startsWith("..") && !isAbsolute(path); };
 const required = ["package-lock.json", "next.config.ts", ".next/BUILD_ID", ".next/standalone/server.js", ".next/standalone/package.json", ".next/static", "Dockerfile", ".next/standalone/aadi/service/app.py", ".next/standalone/aadi/requirements.lock", ".next/standalone/aadi/SOURCE.json", ".next/standalone/scripts/run-system.mjs", ".next/standalone/scripts/install-aadi.mjs", ".next/standalone/theoracle/index/manifest.json", ".next/standalone/theoracle/index/vectors.f32", ".next/standalone/theoracle/index/chunks.jsonl", ".next/standalone/theoracle/model/onnx-community/embeddinggemma-300m-ONNX/onnx/model.onnx_data"];
-// The public code repository has no TheOracle database (2026-10-19); its build is checked without the index files.
-const withoutData = !existsSync(resolve(capsule, "theoracle/index/manifest.json")) && !existsSync(resolve(capsule, ".next/standalone/theoracle/index/manifest.json"));
-if (withoutData) console.warn("Deploy dry-run: TheOracle database not installed; this build cannot run analyses.");
+// The public code repository has no TheOracle database (2026-10-19), and the generated vectors are fetched rather
+// than cloned (2026-10-25), so the vectors are the sentinel: a manifest without them cannot answer a case.
+const withoutData = !existsSync(resolve(capsule, "theoracle/index/vectors.f32")) && !existsSync(resolve(capsule, ".next/standalone/theoracle/index/vectors.f32"));
+if (withoutData) console.warn("Deploy dry-run: TheOracle database not installed; this build cannot run analyses. Run npm run knowledge:install if this checkout should have it.");
 for (const file of required.filter(file => !(withoutData && file.startsWith(".next/standalone/theoracle/index/")))) {
   if (!existsSync(resolve(capsule, file))) throw new Error(`Missing deploy input: ${file}. Run npm ci and npm run build first.`);
 }
