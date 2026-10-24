@@ -53,10 +53,12 @@ comes from.
 Provenance, confirming a known class rather than a new one: `sumber` says PPK IDI 2017 but
 `halaman: 42` falls inside KMK 1186/2022's malaria chapter (pp. 39–44, management p. 41),
 while PPK IDI 2017's malaria chapter starts at p. 21 and carries this sentence on p. 23.
-This is one of the "81 quotes from other PDF editions" already recorded. The text itself is
-identical in both guidelines (KMK reproduces the PPK), so the content is not in doubt, only
-the label/page pairing. KMK's own wording of the sentence could not be verified from this
-index — no KMK chunk contains it.
+This is one of the "81 quotes from other PDF editions" already recorded. What was actually
+checked: the PPK IDI 2017 text and SP0193's `rujukan` field carry the sentence identically,
+including "Artemisinin atau". KMK's own copy of this sentence is not in the index, so
+whether KMK also says "Artemisinin atau" is unverified — and that is the one soft spot under
+option D below. If KMK dropped those words too, row 78 may be a faithful KMK quote carrying
+an IDI label, not a truncation.
 
 ## Options
 
@@ -70,5 +72,9 @@ index — no KMK chunk contains it.
 - **C — copy the dose row into SP0194.** Not recommended: it breaks the one-entry-one-disease
   rule and would carry the artemisinin/artesunate collapse into a second entry.
 - **D — separate decision on SP0193 row 78:** restore `kutipan` to the full sentence, and
-  decide whether `obat` stays `Artesunat` or becomes `Artemisinin atau Artesunat`. This
-  touches rendered clinical content, so it needs Gaffer's own word.
+  decide whether `obat` stays `Artesunat` or becomes `Artemisinin atau Artesunat`. The
+  reason this is worth deciding now is that the entry already contradicts itself on screen:
+  the rendered Rujukan section reads "Artemisinin atau Artesunat … 3,2mg /kg BB" while the
+  dose line further down reads "Artesunat 3,2mg /kg BB". Caveat from the provenance note:
+  the full sentence is verified in PPK IDI 2017, not in KMK, so settle the label before
+  rewording `obat`. This touches rendered clinical content, so it needs Gaffer's own word.
