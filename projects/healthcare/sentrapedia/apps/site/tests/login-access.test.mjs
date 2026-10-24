@@ -9,6 +9,8 @@ test('desktop and mobile menus provide direct HTTPS access to the beta login', a
     const html = await (await fetch(`http://127.0.0.1:${server.address().port}/`)).text();
     const desktop = html.slice(html.indexOf('<header '), html.indexOf('</header>'));
     const mobile = html.slice(html.indexOf('<div id="mobile-menu"'), html.indexOf('<div id="awwwards"'));
+    const desktopNavigation = desktop.match(/<ul id="menu-main-menu-de"[\s\S]*?<\/ul>/)?.[0] ?? '';
+    assert.match(desktopNavigation, /<li\b[^>]*class="menu-item"[^>]*><a href="https:\/\/beta\.sentrapedia\.com\/sign-in">Masuk<\/a><\/li>/, 'login belongs to the same primary menu as the other navigation entries');
     for (const menu of [desktop, mobile]) {
       const links = [...menu.matchAll(/<a\b([^>]*)>Masuk<\/a>/g)];
       assert.equal(links.length, 1, 'each navigation has exactly one login entry');

@@ -21,7 +21,10 @@ test('every public path is preserved and only reviewed runtime bundles change by
   const removed = await readFile(new URL('refactor-evidence/removed-emoji-style.txt', root), 'utf8');
   const restored = html.replace('<style id="wp-block-library-inline-css">', removed + '<style id="wp-block-library-inline-css">')
     // Gaffer approved desktop/mobile beta access; remove only the exact added navigation markup for historical comparison.
-    .replace('<div class="d-flex align-items-center justify-content-end gap-3" data-login-actions><a class="btn btn-outline-dark rounded-pill px-3" href="https://beta.sentrapedia.com/sign-in">Masuk</a>\n', '')
+    .replace('<li class="menu-item" data-login-desktop><a href="https://beta.sentrapedia.com/sign-in">Masuk</a></li>\n', '')
+    .replace('<div class="col-md-7 main-menu-div d-none d-md-block">', '<div class="col-md-6 main-menu-div d-none d-md-block">')
+    .replace('<div class="col-md-2 col-6">\n                <div class="lang-menu d-none d-md-block">', '<div class="col-md-3 col-6">\n                <div class="lang-menu d-none d-md-block">')
+    .replace('<div class="d-flex align-items-center justify-content-end gap-3" data-login-actions>\n', '')
     .replace('<a href="https://beta.sentrapedia.com/apply" data-request-access>Ajukan akses</a>\n', '')
     .replace(' </div><!-- login-actions -->\n', '')
     .replace('<li class="menu-item" data-login-mobile><a href="https://beta.sentrapedia.com/sign-in">Masuk</a></li>\n', '')
