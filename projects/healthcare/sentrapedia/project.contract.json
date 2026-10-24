@@ -30,7 +30,7 @@
     "kind": "http",
     "host": "127.0.0.1",
     "port": 3101,
-    "path": "/",
+    "path": "/api/aadi",
     "expectedStatus": 200,
     "startupTimeoutSeconds": 120
   },
@@ -40,6 +40,7 @@
     { "kind": "registry", "name": "Python package registry", "locator": "https://pypi.org", "required": true },
     { "kind": "registry", "name": "Hugging Face model hub; pinned TheOracle embedding model, install time only", "locator": "https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX", "required": true },
     { "kind": "service", "name": "Gemini API model provider; synthetic cases only", "locator": "GEMINI_API_KEY", "required": true },
+    { "kind": "service", "name": "Clerk closed-beta identity and email delivery; production required, explicit loopback development mode only may omit", "locator": "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, SENTRAPEDIA_PUBLIC_ORIGIN", "required": true },
     { "kind": "service", "name": "Optional public-site contact delivery through Resend", "locator": "RESEND_API_KEY, RESEND_FROM_EMAIL, and CONTACT_PUBLIC_ORIGIN", "required": false }
   ],
   "mutableStatePaths": ["node_modules", ".next", ".runtime", "tsconfig.tsbuildinfo", ".env.local", "theoracle/model", "apps/site/reference/verification.json"]

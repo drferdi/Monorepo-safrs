@@ -29,6 +29,7 @@ import { smooth } from "./smooth";
 import { useMediaQuery, useToast, useWorkspacePersistence } from "./workspace-hooks";
 import { ChatComposer, Conversation, HomeFooter, HomeView, WorkspaceHeader } from "./workspace-views";
 import { WorkspaceDialogs } from "./workspace-forms";
+import { workspaceStorageKeys } from "../lib/workspace-storage";
 
 // What Enter will do after a next step: a local draft, or an AADI analysis of the prefilled text.
 function stepToast(mode: ModeId): string {
@@ -37,7 +38,12 @@ function stepToast(mode: ModeId): string {
   return composerUsesAadi(mode, false) ? `Mode ${label} siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.` : `Mode ${label} siap dengan data kasus. Lengkapi, lalu tekan Enter.`;
 }
 
-export function WorkspaceApp() {
+export function WorkspaceApp({ principalId }: { principalId: string }) {
+  return <WorkspaceState key={principalId} principalId={principalId}/>;
+}
+
+function WorkspaceState({ principalId }: { principalId: string }) {
+  const storageKeys = workspaceStorageKeys(principalId);
   const [state, dispatch] = useReducer(workspaceReducer, initialWorkspace);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -66,7 +72,7 @@ export function WorkspaceApp() {
   const pendingText = useRef<string | null>(null);
   const analysisController = useRef<AbortController | null>(null);
   const { toast, toastError, notify, dismiss: dismissToast } = useToast();
-  const { storageError, unreadable, setUnreadable, restoring } = useWorkspacePersistence(state, dispatch, notify);
+  const { storageError, unreadable, setUnreadable, restoring, allowSave } = useWorkspacePersistence(state, dispatch, notify, storageKeys);
   const encounter = state.encounters.find((e) => e.id === state.activeEncounterId);
   const patient = state.patients.find((p) => p.id === encounter?.patientId);
   const hasMessages = Boolean(encounter?.messages.length) || pendingQuestion !== null;
@@ -197,7 +203,7 @@ export function WorkspaceApp() {
     {dialog === "commands" && <CommandPalette onKnowledge={(tab) => openDialog("knowledge", tab)} onQueue={() => openDialog("queue")} onTemplates={() => openDialog("templates")} state={state} onClose={closeDialog} onEncounter={selectEncounter} onPatient={(id) => openDialog("patient", id)} onMode={(next) => { changeMode(next); closeDialog(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus()); }} onNew={() => { startNew(); closeDialog(); }} onFocus={() => smooth(() => { setFocusMode((value) => !value); setMobileNavOpen(false); hideDialog(); })} onContext={() => openDialog("context")}/>}
     {toast && <div className={`toast ${toastError ? "is-error" : ""}`} role={toastError ? "alert" : "status"}>{toastError ? <CircleAlert size={15}/> : <Check size={15}/>}<span>{toast}</span><button aria-label="Tutup notifikasi" onClick={dismissToast}><X size={14}/></button></div>}
 
-    <WorkspaceDialogs dialog={dialog} dialogId={dialogId} state={state} dispatch={dispatch} context={context} encounter={encounter} unreadable={unreadable} onClose={closeDialog} notify={notify} onSavePatient={savePatient} onOpen={openDialog} onSelect={selectEncounter}
+    <WorkspaceDialogs storageKeys={storageKeys} onStorageReset={allowSave} dialog={dialog} dialogId={dialogId} state={state} dispatch={dispatch} context={context} encounter={encounter} unreadable={unreadable} onClose={closeDialog} notify={notify} onSavePatient={savePatient} onOpen={openDialog} onSelect={selectEncounter}
       onScribe={(transcript) => { setMode("scribe"); generate(transcript, "scribe", false); closeDialog(); }} onPromptReset={() => setPrompt("")} onUnreadableCleared={() => setUnreadable(null)}/>
   </div>;
 }

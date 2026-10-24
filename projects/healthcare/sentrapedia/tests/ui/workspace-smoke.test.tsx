@@ -1,8 +1,11 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
+const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
+void storageKey; void unreadableKey;
 import { WorkspaceApp } from "../../src/components/workspace";
-import { initialWorkspace, storageKey, unreadableKey, type Encounter } from "../../src/lib/workspace";
+import { initialWorkspace, type Encounter } from "../../src/lib/workspace";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
 import { diagnosisSectionTitles } from "../../src/lib/aadi/presentation";
@@ -181,7 +184,7 @@ describe("workspace UI smoke tests", () => {
     };
     localStorage.setItem(storageKey, JSON.stringify(seed));
 
-    const { unmount } = render(<WorkspaceApp />);
+    const { unmount } = render(<WorkspaceApp principalId="user_test"/>);
 
     // Flush initial workspace restoration from localStorage
     await act(async () => {
@@ -250,7 +253,7 @@ describe("workspace UI smoke tests", () => {
     // Unmount and remount to verify persistence & restoration
     unmount();
 
-    render(<WorkspaceApp />);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => {
       await Promise.resolve();
     });
@@ -264,7 +267,7 @@ describe("workspace UI smoke tests", () => {
     const corruptData = "{ corrupt invalid json content";
     localStorage.setItem(storageKey, corruptData);
 
-    render(<WorkspaceApp />);
+    render(<WorkspaceApp principalId="user_test"/>);
 
     await act(async () => {
       await Promise.resolve();
@@ -278,7 +281,7 @@ describe("workspace UI smoke tests", () => {
     expect(localStorage.getItem(unreadableKey)).toBe(corruptData);
   });
   it("toggles focus mode button aria-pressed and label between Aktifkan and Keluar", async () => {
-    render(<WorkspaceApp />);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => {
       await Promise.resolve();
     });
@@ -298,7 +301,7 @@ describe("workspace UI smoke tests", () => {
   });
 
   it("opens the command palette dialog from header button and removes it on close", async () => {
-    render(<WorkspaceApp />);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => {
       await Promise.resolve();
     });
@@ -316,7 +319,7 @@ describe("workspace UI smoke tests", () => {
   });
 
   it("opens command palette on Ctrl+J and ignores Ctrl+J while dialog is open", async () => {
-    render(<WorkspaceApp />);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => {
       await Promise.resolve();
     });
@@ -340,7 +343,7 @@ describe("workspace UI smoke tests", () => {
   });
 
   it("completes a dialog round trip for Settings and keeps the composer intact", async () => {
-    render(<WorkspaceApp />);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => {
       await Promise.resolve();
     });
@@ -365,7 +368,7 @@ describe("workspace UI smoke tests", () => {
   });
 
   it("shows a status toast when an action calls notify", async () => {
-    render(<WorkspaceApp />);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => {
       await Promise.resolve();
     });

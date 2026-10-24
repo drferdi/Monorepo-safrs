@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createServer } from './serve.mjs';
+import { fileURLToPath } from 'node:url';
+import { assembleBrowserScript } from './browser-assets.mjs';
 
 test('ten capability stops follow the requested right down right down route', async () => {
   const { capabilityPath } = await import('../assets/capability-explorer.js');
@@ -79,7 +81,8 @@ test('capability explorer serves readable no-JS content without capability image
     for (const asset of ['capability-explorer.css', 'capability-explorer.js']) {
       const local = await fetch('http://127.0.0.1:' + server.address().port + '/media/' + asset);
       assert.equal(local.status, 200, asset + ' is served locally');
-      assert.deepEqual(new Uint8Array(await local.arrayBuffer()), new Uint8Array(await readFile(new URL('../assets/' + asset, import.meta.url))), asset + ' served bytes match authored input');
+      const source = asset.endsWith('.js') ? Buffer.from(await assembleBrowserScript(fileURLToPath(new URL('../', import.meta.url)), asset)) : await readFile(new URL('../assets/' + asset, import.meta.url));
+      assert.deepEqual(new Uint8Array(await local.arrayBuffer()), new Uint8Array(source), asset + ' served bytes match authored input');
     }
   } finally {
     await new Promise(resolve => server.close(resolve));

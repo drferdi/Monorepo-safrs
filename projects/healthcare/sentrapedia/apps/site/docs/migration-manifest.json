@@ -60,7 +60,7 @@
     },
     {
       "path": "assets/clinical-video.js",
-      "sha256": "21c0c2fcf974fba76ac0ff563020fde9ad0de64d346c7769a5ac994040e2bdef"
+      "sha256": "4bd12f93a4fb966e344bf9e734c8985f02834865e70efe28c4df937baf69894b"
     },
     {
       "path": "assets/design-audit.css",
@@ -68,7 +68,7 @@
     },
     {
       "path": "assets/design-audit.js",
-      "sha256": "4cc044a361b93ad6873b9061053d197ef0a72b4f85ad4ad6ed99c26f71d56d83"
+      "sha256": "0d863dafb885f8c3589bf581520a7a510444691ffd2e9e7cff64d03dc92c3d30"
     },
     {
       "path": "assets/DrawSVGPlugin.min.js",
@@ -108,7 +108,7 @@
     },
     {
       "path": "assets/hero-workspace.js",
-      "sha256": "b5ccfa35bb78bd26c157528f0ed7cd705ffe015ceb8da711b4121c72ad9b6533"
+      "sha256": "35033308f30c0988d4e3551675c138377f13d81dea99c3307841a0c5b0e79c1a"
     },
     {
       "path": "assets/human-anatomy.css",
@@ -164,7 +164,7 @@
     },
     {
       "path": "assets/workflow-playback.js",
-      "sha256": "1234c22dc9ffa703b50f3c22db12f0e43f75dd3156f356ef49fe96830d11f1ac"
+      "sha256": "5a2195fc4d5c5b234a749455f333f0c85bc3b8ac766117a67ea84e7e643c85ed"
     },
     {
       "path": "assets/workflows.json",
@@ -236,7 +236,7 @@
     },
     {
       "path": "scripts/clinical-video.test.mjs",
-      "sha256": "041775d475892fea21061a113852728e50a7be2699c278ceae5e421ab1254648"
+      "sha256": "41b27b2d11fec1744880651c3294037ca2725ca2200f7ebea39dff61cfb6ca6f"
     },
     {
       "path": "scripts/contact.mjs",
@@ -276,11 +276,11 @@
     },
     {
       "path": "scripts/transform.mjs",
-      "sha256": "19cfd097b09b0a85de9465ad9de57c8129ec72525693d691a1c7995a47e751a7"
+      "sha256": "165efdc2edba4f9bb0cef342277b691e5188039bf13361039ba3392726a4fd8e"
     },
     {
       "path": "scripts/verify.mjs",
-      "sha256": "0e8c74668415aa68a2a3b485bb37ecf50003c53e6455eb6a221b2ee1a9e2453e"
+      "sha256": "1157837a2bebc9ae36430d002561aba49605e029b776b23d519f963de543e3f4"
     },
     {
       "path": "scripts/workflow-playback.test.mjs",
@@ -292,7 +292,7 @@
     },
     {
       "path": "source/index.html",
-      "sha256": "3841fc98cd81cb87baa52d418752f1474eb6ce32cff122ef01715f549c4f537c"
+      "sha256": "61c8cda85eabd6f027f7e01e32ec1f80528588a4f805039e89bb0fb4a2e666b9"
     },
     {
       "path": "assets/system-anatomy.css",
@@ -324,7 +324,7 @@
     },
     {
       "path": "assets/capability-explorer.js",
-      "sha256": "40556815777cd107acc9f83a11633b3a386c1b6e6ef33ec19689db59214f0143"
+      "sha256": "c970dcbcf2611fbca3c37a1aeb1b3d4910e6d9e208b97ee68d3e649613130595"
     },
     {
       "path": "assets/capability-flow.mp4",
@@ -332,7 +332,7 @@
     },
     {
       "path": "scripts/capability-explorer.test.mjs",
-      "sha256": "7264912f37b368fe95990305b7cd16553d82ed18353f747aadbf5c2d63f1c930"
+      "sha256": "fa2a578c1e85b61762eca65a3e3485b0e08c06b12730f0d6702ed08e069cbf52"
     },
     {
       "path": "assets/capability-flow-poster.jpg",
@@ -457,6 +457,54 @@
     {
       "path": "static/vendor/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js",
       "sha256": "0c7178cc6ca34fb18e30f070a5e7a1c287b2d7ccfcba2cfdf06e0f46eda55740"
+    },
+    {
+      "path": "scripts/render-homepage.mjs",
+      "sha256": "d0ba37e31a43c897d78bda43897be108e8f015a89b1a9663fe9feb267c51c6bd"
+    },
+    {
+      "path": "scripts/site-assets.mjs",
+      "sha256": "f8259937905b2aefba9d048b8e305a92e6ef2aaf838d88d7326e46f87c81f1a8"
+    },
+    {
+      "path": "scripts/browser-assets.mjs",
+      "sha256": "18a14d55aad697694e73e25d8b547743fc743b5eed8764424b47194d5c793151"
+    },
+    {
+      "path": "scripts/browser/capability-scene.js",
+      "sha256": "a8fcc83f8c6a421f115b536c42608bf3e195258dd4526647e9552b9365bb74e3"
+    },
+    {
+      "path": "scripts/browser/capability-viewport.js",
+      "sha256": "838df6d52fc06e2e88b1953b35a26837bdce8e58de2d9a92840eed2c4de2e77f"
+    },
+    {
+      "path": "scripts/browser/cards.js",
+      "sha256": "d2ba2ad098ca8d1a34b9bc14cbab29ac212ebf5d2756e7cd853dd2987c4f485d"
+    },
+    {
+      "path": "scripts/browser/contact.js",
+      "sha256": "3ab7e6eb2704d80c2d3824bad91ba2b4a44d73d3aed322b757409ef70b0a1020"
+    },
+    {
+      "path": "scripts/browser/hero-bindings.js",
+      "sha256": "18ef13db43c61c40ef16f2045e3efb558a0d9bf7cb6910ec4f45798d7dff3aa1"
+    },
+    {
+      "path": "scripts/browser/hero-timeline.js",
+      "sha256": "b0e1841bf604311001c1249fc070c67f9c6eed1dffab767acf4d25a817e4fb1e"
+    },
+    {
+      "path": "scripts/browser/menu.js",
+      "sha256": "15e7ba1e5e1894c5cb7d7f70fd4a472905225d04c2ecde4bcba5b9b6df56a918"
+    },
+    {
+      "path": "scripts/browser/reveal.js",
+      "sha256": "291b9320f13e6d6205071ede9d33870f7d0539206c441a7f6cbc98b724129298"
+    },
+    {
+      "path": "scripts/browser/playback-listeners.js",
+      "sha256": "5d74d014d75ac3c2faaced91f24e3d2ec4fc1924df5de6e7503b25f5d52ff934"
     }
   ]
 }

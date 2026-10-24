@@ -102,6 +102,8 @@
 
 ## Archived on 2026-10-24 - handoff rotation for the item-by-item fixes (newest five kept)
 
+## Archived on 2026-10-23 - Clerk design handoff rotation (newest five kept)
+
 ## Knowledge rebuild on SSOT v0.6 (one commit on feat/puskesmas-flow, closes the knowledge rebuild) - 2026-10-22 Asia/Jakarta
 
 - SSOT v0.6 copied from Gaffer's Downloads (`sentrapedia-knowledge-ssot_2.json`, sha256 `338316f5…`): 336 entries, new `nama_awam` (all 190 values already in `alias`, so the builder is unchanged). Hemorrhoid entries merged into "Hemoroid grade 1/2" (alias wasir, ambeien).

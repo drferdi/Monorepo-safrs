@@ -1,6 +1,9 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
+const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
+void storageKey; void unreadableKey;
 import { WorkspaceApp } from "../../src/components/workspace";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
 import type { CaseState } from "../../src/lib/aadi/types";
@@ -40,7 +43,7 @@ const field = (name: string) => screen.getByLabelText(name) as HTMLInputElement;
 
 describe("analysis case strip", () => {
   it("fills from the typed text, keeps the doctor's own edit, and sends the values as structured data", async () => {
-    render(<WorkspaceApp/>);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     const textarea = screen.getByLabelText("Pertanyaan atau catatan klinis");
     fireEvent.change(textarea, { target: { value: "Laki-laki 45 tahun, nyeri kepala hebat sejak 2 jam, TD 170/100" } });
@@ -85,7 +88,7 @@ describe("analysis case strip", () => {
   });
 
   it("flags an unreadable value and shows a focused mode as a tag on the analysis", async () => {
-    render(<WorkspaceApp/>);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     fireEvent.click(screen.getByRole("button", { name: "Pengodean Diagnosis (ICD-10)" }));
     fireEvent.change(screen.getByLabelText("Pertanyaan atau catatan klinis"), { target: { value: "Laki-laki 45 tahun, nyeri kepala, N 88" } });
@@ -101,7 +104,7 @@ describe("analysis case strip", () => {
   });
 
   it("shows no strip for a local document mode", async () => {
-    render(<WorkspaceApp/>);
+    render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
     expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();

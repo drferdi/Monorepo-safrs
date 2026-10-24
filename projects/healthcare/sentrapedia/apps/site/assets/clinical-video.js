@@ -37,8 +37,7 @@
   }, { threshold: 0.2 }) : null;
   if (observer) observer.observe(frame);
   else visible = true;
-  document.addEventListener('visibilitychange', sync);
-  reduced.addEventListener('change', sync);
+  listenForPlaybackChanges(reduced, sync);
   sync();
   let completeNote = () => {};
   let skipRequested = false;

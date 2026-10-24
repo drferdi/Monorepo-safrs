@@ -1,6 +1,8 @@
 import { createAadiGateway } from "../../../lib/aadi/gateway";
 import { selectedAadiModel, aadiStepBudgetUsd, aadiGatewayTimeoutMs, aadiTargetedGatewayTimeoutMs } from "../../../lib/aadi/model-profile";
 import { retrieveTheOracleGrounding, retrieveTheOracleTherapyGrounding, warmTheOracleGrounding } from "../../../lib/theoracle-grounding";
+import { getBetaAccess } from "../../../lib/auth/server";
+import { accessFailure } from "../../../lib/auth/access";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,4 +14,8 @@ const gateway = createAadiGateway({ baseUrl: process.env.AADI_SERVICE_URL, token
 // The health check (the launcher's first call and the workspace's on page load) starts loading TheOracle in the
 // background, so the first case does not wait for it; the check itself does not wait either.
 export async function GET() { void warmTheOracleGrounding(); return gateway.health(); }
-export async function POST(request: Request) { return gateway.step(request); }
+export async function POST(request: Request) {
+  const access = await getBetaAccess().resolve();
+  if (access.status !== "allowed") return accessFailure(access);
+  return gateway.step(request);
+}
