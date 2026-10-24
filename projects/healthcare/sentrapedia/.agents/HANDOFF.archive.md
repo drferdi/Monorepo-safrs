@@ -1,5 +1,17 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-25 - handoff rotation for the index-storage proposal (newest five kept)
+
+## Recovery: the malaria commits had landed on the MyPrompt branch (two commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+
+- Gaffer: "prompt-claude-sonnet-5-5 ini kan project Myprompt? jangan di campur campur gini lah". He was right, and the mixing was worse than the wording: all seven commits of the cerebral-malaria work (`51f78194` through `a5562d94`) had been made while HEAD was on `feat/prompt-claude-sonnet-5-5`, the MyPrompt branch, not on `feat/puskesmas-flow`.
+- How it happened, from the reflog: a checkout back to `feat/puskesmas-flow` at 21:05:12 (asked for by Gaffer, verified and reported at the time), then a second checkout at 21:05:37 moving HEAD back to `feat/prompt-claude-sonnet-5-5`. That second checkout was issued by nothing in this session's command log and its reflog identity is the same git user as everything else, so its cause is unexplained - possibly the app, a hook, another worktree or Gaffer's own terminal. What is this session's fault is separate and simpler: seven commits were made over the next two hours without re-checking the branch, and Gaffer was told the checkout was on `feat/puskesmas-flow` when it no longer was.
+- Fix: `git cherry-pick 51f78194^..a5562d94` onto `feat/puskesmas-flow`, which auto-merged the HANDOFF on every pick that touched it, with no manual conflict. The hashes changed, old -> new: `51f78194` -> `ac685cb2`, `6a9c89d7` -> `fb464892`, `5be07d89` -> `9ce51701`, `3dced91f` -> `27eadadc`, `6000af31` -> `f4521042`, `1b92ef05` -> `4c618c28`, `a5562d94` -> `d83522fa`. Commit messages quoting the old hashes (for example the D-obat entry naming `6000af31`) still name the abandoned ones; the mapping here is the way back.
+- Verified after the move: `git diff feat/prompt-claude-sonnet-5-5 feat/puskesmas-flow -- projects/healthcare/sentrapedia/` is one line of HANDOFF (the `.gitignore` bullet of `6b290d0a`, which the MyPrompt branch never had), and the six artefacts that matter are the same blobs on both branches - SSOT, `index/manifest.json`, `index/chunks.jsonl`, `index/vectors.f32`, `oracle/sentrapedia.json`, `src/lib/theoracle.ts`. So nothing of the knowledge work was lost or duplicated in content.
+- `feat/prompt-claude-sonnet-5-5` was then moved from `a5562d94` back to `b38b74e6`, so it holds only its own five MyPrompt commits and no Sentrapedia commit. Local, unpushed, reversible with `git branch -f feat/prompt-claude-sonnet-5-5 a5562d94`.
+- `e376b069` (R1): `.playwright-mcp/` is now ignored - timestamped console logs and throwaway flow scripts from browser-driven checks, the same class as the already-ignored `.claude/` and `.superpowers/`. Nothing deleted. The Sentrapedia working tree is now clean; the two remaining untracked directories (`.agents/skills/gaffer-superpower/`, `docs/antigravity/`) sit at the monorepo root and belong to neither project.
+- Not re-run: the gate and the benchmark. The picks changed no file content outside HANDOFF, and the artefact blobs were checked identical, so the results recorded in the entry below still describe this tree. Nothing pushed.
+
 ## Archived on 2026-10-25 - handoff rotation for the publish note (newest five kept)
 
 ## Option D-obat applied: SP0193 row 78 names both alternatives (one commit on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
