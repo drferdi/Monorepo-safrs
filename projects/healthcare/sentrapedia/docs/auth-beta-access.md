@@ -1,6 +1,6 @@
 # Closed-beta identity operations
 
-Status: implementation branch; the selected Clerk development instance is provisioned and verified for native admission rendering and anonymous denial. Production is not provisioned or deployed. See [development activation evidence](verification/clerk-development-setup-2026-10-24.md) for exact settings, checks and remaining email acceptance. Clinical behavior is unchanged. Synthetic cases only.
+Status: implementation branch; the selected Clerk development instance is provisioned and verified for native admission rendering and anonymous denial. Production identity/DNS/SSL/mail-domain configuration is verified; see the [production activation checkpoint](verification/clerk-production-activation-2026-10-24.md) for current image delivery, runtime and outstanding human acceptance. [Development activation evidence](verification/clerk-development-setup-2026-10-24.md) records the local settings. Clinical behavior is unchanged by this authentication integration. Synthetic cases only.
 
 ## Provisioning and admission
 
