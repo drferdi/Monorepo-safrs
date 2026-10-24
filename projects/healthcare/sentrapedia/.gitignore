@@ -11,6 +11,8 @@ __pycache__/
 *.sqlite-wal
 *.sqlite-shm
 theoracle/model/
+# Generated from chunks.jsonl and fetched by npm run knowledge:install (Gaffer, 2026-10-25).
+theoracle/index/vectors.f32
 theoracle/index/vectors.partial.*
 _to_delete/
 # Local agent and verification output (also ignored by the monorepo root)

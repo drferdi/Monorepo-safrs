@@ -24,6 +24,8 @@
     "site:verify": "npm --prefix apps/site run verify",
     "benchmark:oracle": "node scripts/benchmark-theoracle-grounding.mjs",
     "knowledge:build": "node scripts/build-theoracle-chunks.mjs && node scripts/build-theoracle-index.mjs && node scripts/build-oracle-catalog.mjs",
+    "knowledge:install": "node scripts/install-theoracle-index.mjs",
+    "knowledge:publish": "node scripts/publish-theoracle-index.mjs",
     "export:split": "node scripts/export-split.mjs"
   },
   "dependencies": {

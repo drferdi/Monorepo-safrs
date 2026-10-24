@@ -259,7 +259,7 @@ test("index build refuses a model file that does not match its pinned hash and w
   assert.ok(!existsSync(join(root, "theoracle/index/vectors.f32")) && !existsSync(join(root, "theoracle/index/manifest.json")));
 }));
 
-test("the committed TheOracle index matches its manifest the way the index build computes it", { skip: !existsSync("theoracle/index/manifest.json") && "public code without the private TheOracle index" }, () => {
+test("the installed TheOracle index matches its manifest the way the index build computes it", { skip: !(existsSync("theoracle/index/manifest.json") && existsSync("theoracle/index/vectors.f32")) && "no installed TheOracle index here (public code, or npm run knowledge:install not run)" }, () => {
   const manifest = JSON.parse(readFileSync(resolve("theoracle/index/manifest.json"), "utf8"));
   const chunks = readFileSync(resolve("theoracle/index/chunks.jsonl"));
   const vectors = readFileSync(resolve("theoracle/index/vectors.f32"));
@@ -269,6 +269,61 @@ test("the committed TheOracle index matches its manifest the way the index build
   assert.equal(vectors.byteLength, manifest.chunks.count * manifest.model.dims * 4);
   assert.equal(manifest.indexSha256, indexSha(manifest));
 });
+
+// install-theoracle-index.mjs: the pinned vector artefact replaced the Git LFS object (Gaffer, 2026-10-25). Only
+// the paths that stop before any request are exercised here; nothing in this file reaches the network.
+function installerFixture(root, { manifest, vectors } = {}) {
+  copyScripts(root, ["install-theoracle-index.mjs", "theoracle-index.mjs"]);
+  write(root, "scripts/theoracle-model.mjs", `import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+export const root = fileURLToPath(new URL("../", import.meta.url));
+export const indexDir = root + "theoracle/index/";
+export const modelDir = root + "theoracle/model/";
+export const fileSha256 = async path => createHash("sha256").update(readFileSync(path)).digest("hex");`);
+  mkdirSync(join(root, "theoracle/index"), { recursive: true });
+  if (vectors !== undefined) write(root, "theoracle/index/vectors.f32", vectors);
+  if (manifest !== undefined) write(root, "theoracle/index/manifest.json", JSON.stringify(manifest));
+}
+const installer = (root, env = {}) => run(join(root, "scripts/install-theoracle-index.mjs"), [], { env: { ...process.env, SENTRAPEDIA_INDEX_TOKEN: "", GH_TOKEN: "", GITHUB_TOKEN: "", ...env } });
+const pinned = vectors => ({ indexSha256: "a".repeat(64), vectors: { sha256: sha(vectors) } });
+
+test("the index installer leaves an index that already matches its manifest alone", withCapsule("install-index", async root => {
+  installerFixture(root, { vectors: "rows", manifest: pinned("rows") });
+  const { code, stdout } = await installer(root);
+  assert.equal(code, 0);
+  assert.match(stdout, /sudah sesuai manifest/);
+}));
+
+test("the index installer says so and succeeds where there is no manifest, and skips on SENTRAPEDIA_SKIP_INDEX", withCapsule("install-index-none", async root => {
+  installerFixture(root);
+  const absent = await installer(root);
+  assert.equal(absent.code, 0);
+  assert.match(absent.stderr, /tidak ada theoracle\/index\/manifest\.json/);
+  installerFixture(root, { vectors: "rows", manifest: pinned("other") });
+  const skipped = await installer(root, { SENTRAPEDIA_SKIP_INDEX: "1" });
+  assert.equal(skipped.code, 0);
+  assert.match(skipped.stderr, /SENTRAPEDIA_SKIP_INDEX=1/);
+}));
+
+test("the index installer fails with a named token when the vectors are missing or stale", withCapsule("install-index-token", async root => {
+  installerFixture(root, { manifest: pinned("rows") });
+  const missing = await installer(root);
+  assert.equal(missing.code, 1);
+  assert.match(missing.stderr, /SENTRAPEDIA_INDEX_TOKEN/);
+  installerFixture(root, { vectors: "stale", manifest: pinned("rows") });
+  const stale = await installer(root);
+  assert.equal(stale.code, 1);
+  assert.match(stale.stderr, /SENTRAPEDIA_INDEX_TOKEN/);
+}));
+
+test("the index publisher refuses to upload without --yes", withCapsule("publish-index", async root => {
+  installerFixture(root, { vectors: "rows", manifest: pinned("rows") });
+  copyScripts(root, ["publish-theoracle-index.mjs"]);
+  const { code, stderr } = await run(join(root, "scripts/publish-theoracle-index.mjs"));
+  assert.equal(code, 1);
+  assert.match(stderr, /re-run with --yes/);
+}));
 
 // eval-theoracle-pipeline.mjs: runs in a temporary working directory against a local stub of /api/aadi.
 test("pipeline eval needs a base URL and a label", async () => {

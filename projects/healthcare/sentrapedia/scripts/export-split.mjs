@@ -1,7 +1,10 @@
 // Splits the capsule into two folders (Gaffer, 2026-10-19: public code, private database):
 //   <out>/public  every file git tracks except the private ones; the clinical catalogue is replaced by the sample
 //   <out>/data    the private files (scripts/private-data.mjs) with the same paths, ready for the private data repository
-// Copies tracked files only, never writes inside the capsule, and stops before copying if any file is a Git LFS pointer.
+// Copies tracked files, never writes inside the capsule, and stops before copying if any file is a Git LFS pointer.
+// theoracle/index/vectors.f32 is the one exception: since 2026-10-25 it is not in git at all
+// (scripts/theoracle-index.mjs), so it is copied from the working tree into <out>/data, where the data
+// repository keeps the whole index together.
 // Usage, from the capsule folder: node scripts/export-split.mjs <empty folder outside the capsule>
 import { execFileSync } from "node:child_process";
 import { closeSync, copyFileSync, existsSync, mkdirSync, openSync, readSync, readdirSync, statSync, writeFileSync } from "node:fs";
@@ -33,6 +36,17 @@ for (const file of files) {
 }
 copyFileSync(join(capsule, SAMPLE_CATALOG.from), join(out, "public", SAMPLE_CATALOG.to));
 mkdirSync(join(out, "data"), { recursive: true });
-writeFileSync(join(out, "data", "README.md"), "# Sentrapedia private data\n\nConfidential. Not covered by the public Sentrapedia licence and not for redistribution.\n\nThe folders mirror the paths of the Sentrapedia code repository. To build with the data, copy this folder's contents over a checkout of the code repository before `npm run build` (or `docker build`).\n");
-writeFileSync(join(out, "data", ".gitattributes"), "theoracle/index/vectors.f32 filter=lfs diff=lfs merge=lfs -text\n*.zip filter=lfs diff=lfs merge=lfs -text\n");
+// The generated vectors: untracked since 2026-10-25, so git lists them nowhere, but the data side is
+// incomplete without them.
+const vectors = join(capsule, "theoracle/index/vectors.f32");
+if (existsSync(vectors)) {
+  if (isPointer(vectors)) fail('theoracle/index/vectors.f32 is a Git LFS pointer; run "npm run knowledge:install" first.');
+  mkdirSync(join(out, "data", "theoracle", "index"), { recursive: true });
+  copyFileSync(vectors, join(out, "data", "theoracle", "index", "vectors.f32"));
+  count.data++;
+} else {
+  console.warn('export-split: theoracle/index/vectors.f32 is not installed here, so the data folder has no vectors; run "npm run knowledge:install".');
+}
+writeFileSync(join(out, "data", "README.md"), "# Sentrapedia private data\n\nConfidential. Not covered by the public Sentrapedia licence and not for redistribution.\n\nThe folders mirror the paths of the Sentrapedia code repository. To build with the data, copy this folder's contents over a checkout of the code repository before `npm run build` (or `docker build`).\n\n`theoracle/index/vectors.f32` is generated from `chunks.jsonl` and is not kept in the code repository's git history; `npm run knowledge:install` fetches the same bytes from the pinned release artefact.\n");
+writeFileSync(join(out, "data", ".gitattributes"), "*.zip filter=lfs diff=lfs merge=lfs -text\n");
 console.log(`export-split: ${count.public} file(s) to ${join(out, "public")}, ${count.data} file(s) to ${join(out, "data")}; the public catalogue is the fictional sample.`);

@@ -28,6 +28,13 @@ ENV
   chmod 600 /etc/sentrapedia/beta.env
 fi
 
+# The generated TheOracle vectors are not in git (2026-10-25): a local build fetches the pinned release artefact,
+# which needs a read-only token. Only used by SENTRAPEDIA_BUILD=local; an image pull does not read it.
+if [ ! -f /etc/sentrapedia/index.env ]; then
+  echo "SENTRAPEDIA_INDEX_TOKEN=" > /etc/sentrapedia/index.env
+  chmod 600 /etc/sentrapedia/index.env
+fi
+
 if [ ! -f /root/.ssh/sentrapedia_deploy ]; then
   install -d -m 700 /root/.ssh
   ssh-keygen -t ed25519 -N "" -C "sentrapedia-beta-server" -f /root/.ssh/sentrapedia_deploy
@@ -37,3 +44,4 @@ echo "Next: add this key as a READ-ONLY deploy key at github.com/drferdi/Sentrap
 cat /root/.ssh/sentrapedia_deploy.pub
 echo
 echo "Then put the Gemini key in /etc/sentrapedia/beta.env (GEMINI_API_KEY=...)."
+echo "For a local build (SENTRAPEDIA_BUILD=local), also put a read-only GitHub token in /etc/sentrapedia/index.env (SENTRAPEDIA_INDEX_TOKEN=...)."

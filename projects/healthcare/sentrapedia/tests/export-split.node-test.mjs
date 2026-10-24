@@ -24,11 +24,12 @@ function capsule() {
   write("oracle/sentrapedia.json", REAL);
   write("oracle/sentrapedia.sample.json", SAMPLE);
   write("theoracle/index/chunks.jsonl", '{"id":"1","text":"passage"}\n');
-  write("theoracle/index/vectors.f32", Buffer.from(new Float32Array([1, 0]).buffer));
   write(".agents/HANDOFF.md", "notes\n");
   write("docs/data.md", "data\n");
   execFileSync("git", ["init", "-q"], { cwd: root });
   execFileSync("git", ["add", "-A"], { cwd: root });
+  // Untracked, like the real capsule since 2026-10-25: the script copies the vectors from the working tree.
+  write("theoracle/index/vectors.f32", Buffer.from(new Float32Array([1, 0]).buffer));
   write("untracked.env", "SECRET=1\n");
   return root;
 }
@@ -58,6 +59,12 @@ test("export-split refuses a non-empty output, an output inside the capsule and 
     assert.notEqual(run(root, join(root, "export")).status, 0);
     assert.notEqual(run(root).status, 0);
     rmSync(join(out, "old.txt"));
+    // A tracked file that is still a pointer, and the untracked vectors, are both refused.
+    writeFileSync(join(root, "theoracle/index/chunks.jsonl"), "version https://git-lfs.github.com/spec/v1\noid sha256:abc\nsize 8\n");
+    const tracked = run(root, out);
+    assert.notEqual(tracked.status, 0);
+    assert.match(tracked.stderr, /LFS/);
+    writeFileSync(join(root, "theoracle/index/chunks.jsonl"), '{"id":"1","text":"passage"}\n');
     writeFileSync(join(root, "theoracle/index/vectors.f32"), "version https://git-lfs.github.com/spec/v1\noid sha256:abc\nsize 8\n");
     const pointer = run(root, out);
     assert.notEqual(pointer.status, 0);

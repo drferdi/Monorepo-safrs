@@ -3,7 +3,8 @@
 #   sudo bash /opt/sentrapedia/deploy/beta/update.sh
 # Since 2026-10-20 CI builds the image and pushes it to private GHCR, so the server only pulls (no 12-18 minute build
 # beside medboard). Other modes:
-#   SENTRAPEDIA_BUILD=local            build here as before (CI down, or not logged in to ghcr.io)
+#   SENTRAPEDIA_BUILD=local            build here as before (CI down, or not logged in to ghcr.io); needs
+#                                      /etc/sentrapedia/index.env for the TheOracle index artefact
 #   SENTRAPEDIA_IMAGE_TAG=sha-<commit> roll back to an earlier image; skips git pull (the last five are kept)
 set -euo pipefail
 cd "$(dirname "$0")/../.."
@@ -20,6 +21,11 @@ if [ -n "${SENTRAPEDIA_IMAGE_TAG:-}" ]; then
 elif [ "${SENTRAPEDIA_BUILD:-}" = local ]; then
   git pull --ff-only
   git lfs pull
+  # The generated TheOracle vectors left git on 2026-10-25, and this host has no Node, so the pinned installer
+  # runs in the same base image the build uses. /etc/sentrapedia/index.env holds a read-only GitHub token.
+  [ -r /etc/sentrapedia/index.env ] || { echo "Put SENTRAPEDIA_INDEX_TOKEN (read access to drferdi/Sentrapedia contents) in /etc/sentrapedia/index.env; see deploy/beta/README.md." >&2; exit 1; }
+  docker run --rm -v "$PWD:/app" -w /app --env-file /etc/sentrapedia/index.env node:24-bookworm-slim \
+    node scripts/install-theoracle-index.mjs
   RUN_IMAGE=sentrapedia:beta
   docker build -t "$RUN_IMAGE" .
 else

@@ -454,3 +454,13 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - `theoracle/provenance/`, `theoracle/sources/`, `data/dose-inventory/`, the hand-written catalogue and `scripts/add-theoracle-docs.mjs` are retired: archived in `D:\DEV\archive\sentrapedia-knowledge-2026-10-21.zip` and kept in git history.
 - Gaffer accepted the rebuilt index as measured (recall@5 0.818 with gold mapped to SSOT names, against 0.864 before; dose recall 0.77 to 0.852; targeted 0.902 to 0.934). Evidence: `docs/verification/theoracle-eval-2026-10-21/`.
 - The grounding bundle states that the corpus is derived from official guidelines and not yet clinically reviewed; review status lives in the SSOT.
+
+## 2026-10-25 - The generated TheOracle vectors leave git
+
+- Gaffer chose option A1 of `docs/plans/active/2026-10-25-theoracle-index-out-of-git.md`: "Jalankan opsi A1: vectors.f32 keluar dari git, fetch sebagai release asset di drferdi/Sentrapedia yang tetap private."
+- `theoracle/index/vectors.f32` is no longer tracked and no longer a Git LFS file. Every rebuild used to store a whole new 53 MB LFS object, against an included quota of 10 GiB per account, not per repository; the 18 objects already in history stay where they are, because this repository never rewrites published history.
+- The tracked `theoracle/index/manifest.json` is the pin. `scripts/install-theoracle-index.mjs` accepts a download only if its SHA-256 equals `manifest.vectors.sha256`, the same check `src/lib/theoracle-grounding.ts` runs before it answers a case.
+- The artefact is an asset of the `theoracle-index` release of the private `drferdi/Sentrapedia`, named `vectors-<indexSha256>.f32`, so an upload never replaces an older index and an older commit keeps finding its own. Release assets are outside the Git LFS quota. This rests on that repository staying private, with the public code tree published as a separate mirror; if it is ever made public itself, the artefact must move to object storage first.
+- `chunks.jsonl` stays in git. It is not a generated file: `scripts/build-theoracle-chunks.mjs` reads the 15,586 guideline-library chunks out of the current `chunks.jsonl`, and only the 2,285 SSOT rows come from the SSOT, so git history is that library's only backup. It is also cheap - 18 versions pack to 11.3 MB in total.
+- The index is never rebuilt on the beta server. Its normal update path pulls the CI-built image and is unchanged; only `SENTRAPEDIA_BUILD=local` installs the artefact, in a throwaway `node:24-bookworm-slim` container because that host has no Node, with a read-only token in `/etc/sentrapedia/index.env`.
+

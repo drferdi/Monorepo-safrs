@@ -1,6 +1,9 @@
 # Proposal: stop carrying the generated TheOracle vectors in git history
 
-Status: **awaiting Gaffer's decision**. Nothing is implemented. Risk tier **R2** (install and deploy boundary).
+Status: **decided and implemented on 2026-10-25**. Gaffer chose option A1 and confirmed that `drferdi/Sentrapedia`
+stays private: "Jalankan opsi A1: vectors.f32 keluar dari git, fetch sebagai release asset di drferdi/Sentrapedia yang
+tetap private." The artefact itself still has to be uploaded once, with his go, before the next publish. Risk tier
+**R2** (install and deploy boundary). See `.agents/DECISIONS.md`, 2026-10-25.
 Written 2026-10-25 from the open item left by the 2026-10-25 publish entry in `.agents/HANDOFF.md`.
 
 ## Recommendation in one line

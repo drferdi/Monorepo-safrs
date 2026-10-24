@@ -27,11 +27,16 @@ One Ubuntu 24.04 server (2 vCPU, 4 GB RAM, Jakarta) runs the Docker image on loo
 | `SENTRAPEDIA_PUBLIC_ORIGIN` | `https://beta.sentrapedia.com`, the only origin the gateway accepts besides loopback. |
 | `AADI_MAX_CONCURRENT` | `3`, analyses that may run at once (1-8). The 5 USD daily budget still applies. |
 
+`/etc/sentrapedia/index.env` is separate and holds one line, `SENTRAPEDIA_INDEX_TOKEN=<token>` (chmod 600): a GitHub
+token with read access to the contents of `drferdi/Sentrapedia`. The generated TheOracle vectors left git on
+2026-10-25 and come from the pinned `theoracle-index` release instead, so a **local build** needs this token. An
+image pull does not: CI fetched the index when it built the image.
+
 On a shared server, `update.sh` also reads `SENTRAPEDIA_HOST_PORT` (default `3201`, beside medboard on `3000`; change it only together with the tunnel's service URL) and `SENTRAPEDIA_MEMORY` (default `2500m`) from its own environment, for example `SENTRAPEDIA_HOST_PORT=3202 bash update.sh`.
 
 ## Update and roll back
 
 - Update: after CI on `main` is green, `bash /opt/sentrapedia/deploy/beta/update.sh` (pulls `main`, pulls the image `sha-<commit>` built by CI, restarts, waits until ready). If CI is still running or failed, it stops with a message and the running container stays.
-- Build on the server instead (CI down, or no `docker login`): `SENTRAPEDIA_BUILD=local bash /opt/sentrapedia/deploy/beta/update.sh`. It takes 12-18 minutes and squeezes medboard's memory, so use it only when needed.
+- Build on the server instead (CI down, or no `docker login`): `SENTRAPEDIA_BUILD=local bash /opt/sentrapedia/deploy/beta/update.sh`. It takes 12-18 minutes and squeezes medboard's memory, so use it only when needed. It first downloads the TheOracle index artefact (about 53 MB) in a throwaway `node:24-bookworm-slim` container, because this host has no Node; it never rebuilds the index, which would need the 1.2 GB embedding model and far more memory than this server has.
 - Roll back: `SENTRAPEDIA_IMAGE_TAG=sha-<previous commit> bash /opt/sentrapedia/deploy/beta/update.sh` (no `git pull`). CI keeps the five newest images; earlier tags pulled on this server also stay until removed.
 - Logs: `docker logs -f sentrapedia-beta`.

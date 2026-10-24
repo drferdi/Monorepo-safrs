@@ -23,7 +23,8 @@ jobs:
     env:
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
-      # LFS holds the TheOracle vectors that the grounding tests read, the site PNGs and the video and WebP media.
+      # LFS holds the site PNGs and the video and WebP media. The TheOracle vectors left git on 2026-10-25 and
+      # come from the pinned release artefact below instead.
       # Objects come from a cache keyed on the LFS file list; on a miss the nearest older cache is restored,
       # so a run downloads only what changed. A file still a pointer after the pull fails the run.
       - uses: actions/checkout@v7
@@ -45,6 +46,15 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
+      # The generated TheOracle vectors are not in git (scripts/theoracle-index.mjs). The cache key is the manifest
+      # that pins them by SHA-256, so an unchanged index is never downloaded twice.
+      - uses: actions/cache@v6
+        with:
+          path: theoracle/index/vectors.f32
+          key: theoracle-index-${{ hashFiles('theoracle/index/manifest.json') }}
+      - run: node scripts/install-theoracle-index.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
       # postinstall downloads the pinned 1.2 GB embedding model and skips files whose hash already matches.
       - uses: actions/cache@v6
         with:
@@ -87,6 +97,18 @@ jobs:
           restore-keys: lfs-
       - run: git lfs pull
       - run: '! git lfs ls-files | grep -q " - "'
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      # The generated TheOracle vectors are not in git (scripts/theoracle-index.mjs). The cache key is the manifest
+      # that pins them by SHA-256, so an unchanged index is never downloaded twice.
+      - uses: actions/cache@v6
+        with:
+          path: theoracle/index/vectors.f32
+          key: theoracle-index-${{ hashFiles('theoracle/index/manifest.json') }}
+      - run: node scripts/install-theoracle-index.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
       - uses: docker/setup-buildx-action@v4
       - if: env.PUBLISH == 'true'
         run: echo "$GITHUB_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
