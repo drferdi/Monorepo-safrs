@@ -159,10 +159,15 @@ restriction was not re-checked here.
 Publication stays a `git subtree split` to the dedicated Sentrapedia repository, descending from `414afa5d`; the beta
 runbook's `update.sh` must not be used unchanged, because it pulls `main` and omits the Clerk environment file.
 
-## 8. The decision for Gaffer
+## 8. Gaffer's decision, 2026-10-25: hold
 
-Merge the Clerk line into `feat/puskesmas-flow` now, while the conflict surface is two documentation files and the
-code surface is empty — or hold the merge until the production instance is switched to public sign-up and one real
-user has registered on it. Merging first means this branch carries authentication while the external cutover is still
-pending; holding means both lines keep diverging, and the next SSOT or UI change may create the code overlap that does
-not exist today.
+Gaffer chose to hold: "Tahan merge branch Clerk sampai ada user nyata yang berhasil registrasi di instance production
+mode public." So `codex/sentrapedia-clerk-access-31bf87f9` stays unmerged, and the gate for merging it is one real
+person completing registration and login on a production instance running `sign_up_mode: public` — not a test
+identity, a development instance or the HTTP checks already recorded on that branch. Recorded in
+`.agents/DECISIONS.md` under "The Clerk merge waits for a real registration".
+
+The accepted cost is divergence. `feat/puskesmas-flow` has since been merged into `main` by another session on
+Gaffer's word, so the merge target named in section 7 is now `main`, and the two-documentation-file conflict surface
+measured in section 4 was measured against `2df77c16`. Re-run the `merge-tree` check before any merge instead of
+trusting that number: the next SSOT or workspace-UI change can create the code overlap that does not exist today.
