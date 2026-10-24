@@ -197,7 +197,7 @@ moot: there is no waitlist CTA left to keep.
 
 | | For | Against |
 | --- | --- | --- |
-| **Supabase Postgres** | A connector is already configured in this workspace, so provisioning and inspection need no new tooling. Managed Postgres with migrations, row-level security, and a generated TypeScript type file. RLS can be keyed to the Clerk `userId` so a row is unreadable by another principal even if application code is wrong — defence in depth that matches the per-principal storage already shipped. Free tier is sufficient for a 10-20 doctor closed beta. | A second external service after Clerk, each with its own outage surface. Its own auth system is redundant here and must be deliberately bypassed in favour of Clerk, which is a configuration trap. Free-tier projects pause when idle. Data would sit outside Indonesia unless a region is chosen with that in mind (Q5). |
+| **Supabase Postgres** | A connector is already configured in this workspace, so provisioning and inspection need no new tooling. Managed Postgres with migrations, row-level security, and a generated TypeScript type file. RLS can be keyed to the Clerk `userId` so a row is unreadable by another principal even if application code is wrong — defence in depth that matches the per-principal storage already shipped. Free tier is sufficient for a 10-20 doctor closed beta. | A second external service after Clerk, each with its own outage surface. Its own auth system is redundant here and must be deliberately bypassed in favour of Clerk, which is a configuration trap. Free-tier projects pause when idle. Data would sit outside Indonesia unless a region is chosen with that in mind (Q5). **And the RLS benefit is conditional — see the warning below.** |
 | **Neon Postgres** (named alternative) | Plain Postgres, no bundled auth to bypass, generous branching for migration rehearsal, usually the lighter dependency. | No connector configured here, so provisioning is manual. No RLS story out of the box — isolation would rest entirely on application code, which is exactly what B2 makes risky. |
 | **No database yet** (the honest third option) | Clerk `privateMetadata` already stores consent and access flags, so account data has a home today. Deferring costs nothing, adds no service, and keeps `rootDependencies: []` trivially true. It also respects the 2026-10-21 decision that parked storage-format work "until the consult answer is proven and real doctors have used it". | B1 stands: the first tester who clears their browser loses their work, and nothing can bring it back. |
 
@@ -205,6 +205,16 @@ moot: there is no waitlist CTA left to keep.
 is the only option on this list that does not rest isolation entirely on application code. But note honestly
 that the 2026-10-21 decision points the other way — it parked exactly this kind of work pending real use — and
 that tension is Q1, which is Gaffer's to settle, not this plan's.
+
+> **Warning, and it is the condition the whole recommendation rests on.** RLS protects nothing if the server
+> queries with a **service-role key**: that key bypasses every policy and runs as superuser, so isolation would
+> fall back entirely to application code — exactly the argument used against Neon above. For RLS to be real,
+> the runtime path must send the **Clerk session JWT** on each request with the publishable (anon) key, and the
+> Supabase project must be configured to accept Clerk as a third-party JWT issuer, so a policy can compare
+> `auth.jwt()->>'sub'` with the row's `user_id`. The service-role key is then a **migrations-only** credential
+> and must never reach a request path. That coupling — the app's data layer depending on Clerk token forwarding
+> — is a real cost, and it is Q3b below. If Gaffer does not want that coupling, then RLS is off the table, and
+> Supabase versus Neon is close to a wash; the recommendation should be re-read with that in mind.
 
 **Schema — account data and de-identified sync only.** Per D1, no patient identity field may exist on the
 server. The schema below has no column that can hold a name, a NIK, a BPJS number, a phone number, an email
@@ -235,7 +245,8 @@ personal_template
   primary key (user_id, template_id)
 ```
 
-RLS on every table: `user_id = <the Clerk subject of the verified JWT>`, with no permissive fallback policy.
+RLS on every table: `auth.jwt()->>'sub' = user_id`, with no permissive fallback policy and no path that queries
+these tables with the service-role key at request time.
 
 **What moves to the server, and what stays in the browser.**
 
@@ -275,9 +286,9 @@ the session that runs it.
 
 | Step | What | Tier |
 | --- | --- | --- |
-| S1 | Schema and migrations as SQL files in the capsule, plus RLS policies. No application code. Applied first to a throwaway project or branch, never to anything live. | **R2** |
+| S1 | Schema and migrations as SQL files in the capsule, plus RLS policies, plus configuring Clerk as the project's third-party JWT issuer so `auth.jwt()->>'sub'` carries the Clerk `userId`. No application code. Applied first to a throwaway project or branch, never to anything live. Proved by a negative test before anything else is built: a token for principal A must fail to read principal B's row **at the database**, not in application code. | **R2** |
 | S2 | Identity scrubber at the sync boundary, red-first, with new `pii-parity.json` rows. Pure function, no network. | **R2** |
-| S3 | Server-only data access module (`src/lib/sync/`), behind `server-only`, reading the Clerk subject from the verified session. Never a client-supplied user id. | **R2** |
+| S3 | Server-only data access module (`src/lib/sync/`), behind `server-only`, forwarding the verified Clerk session JWT with the publishable key. Never a client-supplied user id, and never the service-role key on a request path. | **R2** |
 | S4 | Profile and template sync, additive and flag-gated. localStorage stays authoritative; every failure path degrades to today's behaviour. | **R2** |
 | S5 | Document-body sync, **only if Q2 is answered yes**, with `format_version` written on every row. | **R2** |
 | S6 | Smoke tests: signed-out refusal, two-principal isolation, a failed round trip leaving the app usable, and `workspace-backup.json` still importing. | **R1** |
@@ -290,8 +301,12 @@ to clinical logic or AADI prompts; no paid model calls.
 ### 4.6 New environment variables (names only)
 
 - `SUPABASE_URL` — project origin, server-side only.
-- `SUPABASE_SERVICE_ROLE_KEY` — server-side only. **Never** `NEXT_PUBLIC_*`, never sent to the browser, never
-  printed or committed.
+- `SUPABASE_ANON_KEY` — the publishable key used on the request path, always together with the forwarded Clerk
+  session JWT. It is safe only because RLS is what restricts it; that is the point of the warning in §4.3.
+- `SUPABASE_SERVICE_ROLE_KEY` — **migrations only, never on a request path.** It bypasses RLS. Server-side only,
+  never `NEXT_PUBLIC_*`, never sent to the browser, never printed or committed. Whether it belongs in the
+  runtime environment at all, rather than only in the operator's hands, is worth deciding at S1; the safer
+  default is to keep it out of the beta server entirely.
 - `SENTRAPEDIA_SYNC_MODE` — `off` | `on`, defaulting to **`off`**, so an image without it behaves exactly as
   today.
 
@@ -329,6 +344,9 @@ Numbered, short, and deliberately unanswered here.
 2. D1 forbids identified records on the server, but `Workspace.patients[]` has a `name` field. Which: patient
    records never sync; or they sync with `name` dropped; or the field leaves the format first?
 3. Supabase (RLS, connector already set up) or Neon (plainer, no bundled auth to bypass)?
+   3b. Supabase's RLS advantage exists **only** if the app forwards Clerk session tokens to the database and
+   Clerk is registered there as a JWT issuer (§4.3 warning). Is that coupling acceptable? If not, RLS is off
+   the table and the choice between the two is close to a wash.
 4. Is this plan's reduced scope right — database and sync only, since auth, registration and the site link are
    already merged?
 5. Which region should the database sit in, given Indonesian clinical content and KMK 951/2026 still open?
