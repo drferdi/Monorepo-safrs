@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## Dose audit of the knowledge SSOT: rows corrected from their quotes, non-drug rows removed (two commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+
+- Gaffer: "Benahi data obat dan dosis di knowledge SSOT Sentrapedia secara end to end"; after the read-only audit (`docs/verification/theoracle-eval-2026-10-24/dose-audit.md`, script `dose-audit.mjs`, candidates `dose-audit-candidates.json`): "Setuju: terapkan M1–M7, H dan N-0001. B dan K biarkan dulu". No K decision was written with the approval, so K1-K7 are untouched.
+- `22a8cea5` (R1), applied by `dose-audit-apply.mjs` with an old-value check per row: 315 changes on 301 rows from each row's own quote (lost dashes such as celecoxib 200-400 mg, drug-name fragments, per-kg units, maxima, cut frequencies; old value in `catatan`), 1,350 auto-extracted statistic/lab/equipment rows removed (copied to `dose-audit-removed.json`), SP0286 gains "Adrenalin 1/1000 0,3ml SK" (KMK 1186/2022 hal. 467). Rows 8,940 → 7,591, dose lines 7,626 → 6,854, entries with a dose line 304 → 303, Σ `n_obat_berdosis` 4,649 → 3,693; SSOT `f5e8f58e…` round-trips.
+- Index `d0fa8c3f…`, 17,899 chunks (2,313 SSOT + 15,586 PDF); counts in docs and `.agents` follow. Benchmark `benchmark-v06-dose-audit.json`: every hit identical to `benchmark-v06-ra-merge.json` (recall@5 77/88, dose 50/61, targeted 57/61). Gate: typecheck 0, lint 0, vitest 471/471, node tests 23/23, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
+- Paid eval (`eval-dose-audit.md`): 61/61 ok, no timeout, 0.32 USD; ICD codes identical in all 61 (top-1 0.934); doses shown 62 → 63, all verified; 13 cases changed in both directions, none from a removed row.
+- Open for Gaffer: B (84 rows to read by hand), K1-K7 (malaria SP0193 #86 and SP0194, cefadroxil 500-100 mg, cefixime Permenkes, ceftriaxone ISO 2050 mg/kg, prednison urtikaria, thalassemia folic acid, 4,480 rows whose source is not in the library), and seven mechanical candidates the re-audit found (SP0219, SP0223, SP0239). `status.terapi` not recomputed. Nothing pushed.
+
 ## Satu per satu: library therapy texts, DM code, non-drug filter, status counts (eight commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
 
 - Gaffer: "Kerjakan satu per satu" (items 1-11). Report: `docs/verification/theoracle-eval-2026-10-23/knowledge-gaps.md`, section "Item by item".
@@ -41,13 +49,3 @@
 - Gate before commit: typecheck 0, lint 0, vitest 467/467, node tests 22/22, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
 - TB isoniazid diagnosed read-only (`v0.6-gold/tb-isoniazid-diagnosis.md`, no code change): TB's own SSOT chunks with "isoniazid; dosis: 300 mg" (`b40c5b44`, `a3e6681f`, `434ad41c`) each verify the dose alone but were not retrieved (two-per-document cap; the therapy, narrative and referral chunks were taken). The retrieved TB chunks hold the IDI 2017 table "INH* 5(4-6) max 300mg/hr": "INH" is not linked to isoniazid by the gate (deliberate), and the value is a daily maximum. No retrieved `tuberkulosis-2019.pdf` chunk gives a strength.
 - Next: Gaffer's call on the TB isoniazid options (retrieval preference for the entry's own dose chunk, an OAT abbreviation table in the gate, or accept) and the Rinitis-for-food-allergy match; options B-E of the dose audit still open.
-
-## Dose schema audit and option A: cross-referenced doses keep their caveat (one commit on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
-
-- Read-only audit of the SSOT v0.6 dose rows: `docs/verification/theoracle-eval-2026-10-22/v0.6-gold/dose-schema-audit.md` (8,925 rows, 72% auto-extracted; `konteks`, `kutipan`, `catatan` not rendered; ~590 non-drug `obat` rows; 1,550 duplicates; mixed `halaman` types; options A-E).
-- Option A (Gaffer's choice): `doseLines` in `scripts/knowledge-ssot.mjs` adds `catatan` to a row whose `sumber` starts with "rujukan silang" (106 rows, 14 entries: another disease's dose, "bukan regimen khusus … Verifikasi"). Other rows unchanged. Test: `tests/scripts.node-test.mjs` "dose lines keep the catatan of a cross-referenced dose only" (failed first, then passed).
-- `npm run knowledge:build`: 17,570 chunks (1,984 SSOT + 15,586 PDF), all 106 caveats in the chunks, `indexSha256` `0dccb6dc…`. Full re-embed on DirectML stopped once at 8,816 (exit 4, no message) and resumed from `vectors.partial.*`; the 17,541 chunks with unchanged text match the previous vectors (min cosine 0.99999994, before and after the resume). Catalogue 330 diseases / 42 categories.
-- Benchmark vs v0.6 (`v0.6-gold/benchmark-v06-optA.json` vs `benchmark-v06-index.json`): identical in every category (overall 0.864, dose 0.82, targeted 0.934). No paid eval run.
-- Limit: the caveat is now visible to the model and in "Kutipan pedoman", but the evidence gate still matches dose strengths only and does not read it; a gate rule for cross-referenced doses belongs to the gate-logic area.
-- Gate before commit: typecheck 0, lint 0, vitest 463/463, node tests 22/22, test:aadi 237 passed 1 skipped, build 0, deploy:dry-run 0.
-- Next: Gaffer picks among options B-E, gate logic or the eval benchmark; the open items of the entry below still stand.

@@ -30,6 +30,8 @@ Gaffer approved M1-M7, H and N-0001; B and K stay open. `dose-audit-apply.mjs --
 | Index chunks (SSOT + PDF) | 17,989 (2,403 + 15,586), `edad52f5…` | 17,899 (2,313 + 15,586), `d0fa8c3f…` |
 | Rows flagged by the audit (rendered) | 6,044 (5,155) | 4,472 (4,147) |
 
+Commit `22a8cea5`. Benchmark `../theoracle-eval-2026-10-22/v0.6-gold/benchmark-v06-dose-audit.json`: every hit identical to `benchmark-v06-ra-merge.json`. Paid eval: `eval-dose-audit.md` (ICD codes identical in all 61 cases, doses shown 62 → 63).
+
 The audit run again on the new SSOT finds no lost dash, no drug-name fragment with a mechanical fix, no cut unit or thousands, and 343 non-drug rows (222 rendered) that the H rule did not cover. It also proposes seven new mechanical changes that the approved ones made visible; they are not applied: SP0219 #1 and #4 frekuensi "4x/hari" → "3-4x/hari" (parasetamol), SP0223 #31 dosis "10-20 unit" → "10-20 unit/kg/jam" (heparin), SP0239 #1, #3, #10, #12 dosis "500 mg"/"250 mg" → "maks 500 mg"/"maks 250 mg" (azitromisin).
 
 ## Where each quote is (check c)
