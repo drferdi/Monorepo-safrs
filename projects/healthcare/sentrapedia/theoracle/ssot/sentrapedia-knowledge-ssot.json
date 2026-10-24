@@ -11645,18 +11645,23 @@
   {
    "id": "SP0020",
    "nama": "Artritis Reumatoid",
-   "alias": [],
+   "alias": [
+    "Rheumatoid Arthritis (RA)",
+    "RA"
+   ],
    "icd10": [
     "M06.9"
    ],
    "icd10_sumber_lama": [
+    "M05",
     "M53.3"
    ],
    "asal": [
     "KMK 1186/2022 PPK",
     "PPK FKTP",
     "PPK IDI 2017",
-    "Permenkes 5/2014 PPK"
+    "Permenkes 5/2014 PPK",
+    "katalog SKDI 4A"
    ],
    "kompetensi": "SKDI 3A (KMK 1186/2022)",
    "kategori": "Muskuloskeletal",
@@ -11680,7 +11685,8 @@
    "rujukan": "a. Tidak membaik dengan pemberian obat anti inflamasi dan\nsteroid dosis rendah.\nb. RA dengan komplikasi.\nc. Rujukan pembedahan jika terjadi deformitas.",
    "terapi_teks": {
     "ppk_permenkes_5_2014 (hal. 219)": "Penatalaksanaan\n a. Pasien diberikan informasi untuk memproteksi sendi, terutama pada\n stadium akut dengan menggunakan decker.\n b. Pemberian obat anti inflamasi non-steroid, seperti: diklofenak 50-100 mg\n 2x/hari, meloksikam 7,5–15 mg/hari, celecoxib 200-400 mg/sehari.\n c. Pemberian golongan steroid, seperti: prednison atau metil prednisolon\n dosis rendah (sebagai bridging therapy).\n d. Fisioterapi, tatalaksana okupasi, bila perlu dapat diberikan ortosis.",
-    "kmk_1186_2022 (hal. 307)": "Penatalaksanaan\na. Pasien diberikan informasi untuk memproteksi sendi, terutama\npada stadium akut dengan menggunakan decker.\nb. Pemberian obat anti inflamasi non-steroid, seperti: diklofenak\n50-100 mg 2x/hari, meloksikam 7,5–15 mg/hari, celecoxib 200-\n400 mg/sehari.\nc. Pemberian golongan steroid, seperti: prednison atau metil\nprednisolon dosis rendah (sebagai bridging therapy).\nd. Fisioterapi, tatalaksana okupasi, bila perlu dapat diberikan\nortosis."
+    "kmk_1186_2022 (hal. 307)": "Penatalaksanaan\na. Pasien diberikan informasi untuk memproteksi sendi, terutama\npada stadium akut dengan menggunakan decker.\nb. Pemberian obat anti inflamasi non-steroid, seperti: diklofenak\n50-100 mg 2x/hari, meloksikam 7,5–15 mg/hari, celecoxib 200-\n400 mg/sehari.\nc. Pemberian golongan steroid, seperti: prednison atau metil\nprednisolon dosis rendah (sebagai bridging therapy).\nd. Fisioterapi, tatalaksana okupasi, bila perlu dapat diberikan\nortosis.",
+    "katalog_skdi": "Treat-to-target: remission atau low disease activity. DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari. Biologic DMARDs: TNF inhibitors (adalimumab, etanercept, infliximab), abatacept, rituximab, tocilizumab, tofacitinib (JAK inhibitor) - untuk MTX inadequate response. Glucocorticoid: prednisone 5-10mg bridging therapy (taper ASAP, avoid long-term). NSAID untuk symptom control. Fisioterapi, occupational therapy. Screening TB dan hepatitis sebelum biologic. Monitoring: DAS28 score, function (HAQ-DI), toxicity (LFT, CBC, renal - MTX; eye exam - hydroxychloroquine)."
    },
    "dosis": [
     {
@@ -11773,6 +11779,84 @@
      "halaman": "307",
      "konteks": "",
      "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
+    },
+    {
+     "obat": "methotrexate",
+     "dosis": "7.5-25mg",
+     "frekuensi": "",
+     "durasi": "",
+     "rute": "",
+     "populasi": "",
+     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
+     "sumber": "katalog SKDI (ekstraksi otomatis)",
+     "halaman": null,
+     "konteks": "",
+     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
+    },
+    {
+     "obat": "folic acid",
+     "dosis": "5mg",
+     "frekuensi": "",
+     "durasi": "",
+     "rute": "",
+     "populasi": "",
+     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
+     "sumber": "katalog SKDI (ekstraksi otomatis)",
+     "halaman": null,
+     "konteks": "",
+     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan. Nama obat dikoreksi dari kutipannya sendiri (semula \"minggu\"), 2026-10-24, disetujui Gaffer."
+    },
+    {
+     "obat": "sulfasalazine",
+     "dosis": "1-3g",
+     "frekuensi": "",
+     "durasi": "",
+     "rute": "",
+     "populasi": "",
+     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
+     "sumber": "katalog SKDI (ekstraksi otomatis)",
+     "halaman": null,
+     "konteks": "",
+     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan. Nama obat dikoreksi dari kutipannya sendiri (semula \"sulf\"), 2026-10-24, disetujui Gaffer."
+    },
+    {
+     "obat": "hydroxychloroquine",
+     "dosis": "200-400mg",
+     "frekuensi": "",
+     "durasi": "",
+     "rute": "",
+     "populasi": "",
+     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
+     "sumber": "katalog SKDI (ekstraksi otomatis)",
+     "halaman": null,
+     "konteks": "",
+     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan. Nama obat dikoreksi dari kutipannya sendiri (semula \"sulf\"), 2026-10-24, disetujui Gaffer."
+    },
+    {
+     "obat": "leflunomide",
+     "dosis": "10-20mg",
+     "frekuensi": "",
+     "durasi": "",
+     "rute": "",
+     "populasi": "",
+     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
+     "sumber": "katalog SKDI (ekstraksi otomatis)",
+     "halaman": null,
+     "konteks": "",
+     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan. Nama obat dikoreksi dari kutipannya sendiri (semula \"sulf\"), 2026-10-24, disetujui Gaffer."
+    },
+    {
+     "obat": "prednisone",
+     "dosis": "5-10mg",
+     "frekuensi": "",
+     "durasi": "",
+     "rute": "",
+     "populasi": "",
+     "kutipan": "Glucocorticoid: prednisone 5-10mg bridging therapy (taper ASAP, avoid long-term).",
+     "sumber": "katalog SKDI (ekstraksi otomatis)",
+     "halaman": null,
+     "konteks": "",
+     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
     }
    ],
    "dokumen": [
@@ -11797,6 +11881,11 @@
      "halaman_akhir": 308,
      "halaman_penatalaksanaan": 307,
      "icd10_teks": "M53.3 Polymyalgia rheumatica"
+    },
+    {
+     "jenis": "katalog",
+     "file": "oracle/sentrapedia.json",
+     "id": 102
     }
    ],
    "terkait": [
@@ -11807,19 +11896,21 @@
     "terapi": "lengkap",
     "ada_teks_terapi": true,
     "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 7,
-    "n_obat_berdosis": 3,
+    "n_pernyataan_dosis": 13,
+    "n_obat_berdosis": 9,
     "ada_definisi": true,
     "ada_diagnosis": true,
     "ada_rujukan": true,
     "sumber_teks": [
+     "katalog_skdi",
      "kmk_1186_2022 (hal. 307)",
      "ppk_permenkes_5_2014 (hal. 219)"
     ],
     "review_klinis": {
      "status": "ditinjau",
      "oleh": "Gaffer",
-     "tanggal": "2026-10-23"
+     "tanggal": "2026-10-23",
+     "catatan": "Dilebur dengan SP0260 \"Rheumatoid Arthritis (RA)\" (katalog SKDI 4A), 2026-10-24, disetujui Gaffer; kompetensi tetap SKDI 3A (KMK 1186/2022)."
     }
    },
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
@@ -113830,146 +113921,6 @@
     "E11.3"
    ],
    "icd10_catatan": "ICD-10 diambil hanya dari baris 'No. ICD' PPK resmi; kode sumber lama disimpan di icd10_sumber_lama."
-  },
-  {
-   "id": "SP0260",
-   "nama": "Rheumatoid Arthritis (RA)",
-   "alias": [],
-   "icd10": [
-    "M05"
-   ],
-   "asal": [
-    "katalog SKDI 4A"
-   ],
-   "kompetensi": "SKDI 4A",
-   "kategori": "Muskuloskeletal",
-   "kategori_sumber_lama": "Musculoskeletal",
-   "jenis": "penyakit",
-   "definisi": "Autoimmune inflammatory arthritis kronis yang ditandai oleh symmetric polyarthritis, morning stiffness prolonged, dan potensi joint destruction. Prevalensi 0.5-1% populasi global, wanita 3x lebih sering. Onset umumnya 30-50 tahun. Dapat melibatkan organ ekstra-artikular (lung, heart, eye, blood vessels).",
-   "gejala": [
-    "Symmetric polyarthritis (MCP, PIP, wrist, MTP - small joints)",
-    "Morning stiffness >1 jam",
-    "Joint swelling, warmth, tenderness",
-    "Fatigue, malaise",
-    "Weight loss",
-    "Low-grade fever",
-    "Rheumatoid nodules (elbow, extensor surfaces)",
-    "Sicca symptoms (Sjogren syndrome)",
-    "Pleuritis, pericarditis",
-    "Interstitial lung disease",
-    "Vasculitis (digital ulcers, neuropathy)"
-   ],
-   "diagnosis": "ACR/EULAR 2010 criteria: joint involvement (1-10 points), serology (RF and/or anti-CCP - 0-3 points), acute phase reactants (ESR/CRP - 0-1 point), duration >6 weeks (0-1 point). Score >=6 = definite RA. RF: sensitivity 70%, specificity 70%. Anti-CCP: sensitivity 70%, specificity 95% (more specific). ESR/CRP: elevated. X-ray: erosions, joint space narrowing, periarticular osteopenia (late). Ultrasound/MRI: synovitis, tenosynovitis, erosions (early).",
-   "rujukan": "Suspected/confirmed RA (perlu rheumatologist for diagnosis and management plan), failure of conventional DMARDs (indication for biologic), severe extra-articular manifestations, pregnancy, severe side effects (bone marrow suppression, hepatotoxicity), juvenile idiopathic arthritis, atau perlu complex immunosuppressive management.",
-   "terapi_teks": {
-    "katalog_skdi": "Treat-to-target: remission atau low disease activity. DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari. Biologic DMARDs: TNF inhibitors (adalimumab, etanercept, infliximab), abatacept, rituximab, tocilizumab, tofacitinib (JAK inhibitor) - untuk MTX inadequate response. Glucocorticoid: prednisone 5-10mg bridging therapy (taper ASAP, avoid long-term). NSAID untuk symptom control. Fisioterapi, occupational therapy. Screening TB dan hepatitis sebelum biologic. Monitoring: DAS28 score, function (HAQ-DI), toxicity (LFT, CBC, renal - MTX; eye exam - hydroxychloroquine)."
-   },
-   "dosis": [
-    {
-     "obat": "methotrexate",
-     "dosis": "7.5-25mg",
-     "frekuensi": "",
-     "durasi": "",
-     "rute": "",
-     "populasi": "",
-     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
-     "sumber": "katalog SKDI (ekstraksi otomatis)",
-     "halaman": null,
-     "konteks": "",
-     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
-    },
-    {
-     "obat": "minggu",
-     "dosis": "5mg",
-     "frekuensi": "",
-     "durasi": "",
-     "rute": "",
-     "populasi": "",
-     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
-     "sumber": "katalog SKDI (ekstraksi otomatis)",
-     "halaman": null,
-     "konteks": "",
-     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
-    },
-    {
-     "obat": "sulf",
-     "dosis": "1-3g",
-     "frekuensi": "",
-     "durasi": "",
-     "rute": "",
-     "populasi": "",
-     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
-     "sumber": "katalog SKDI (ekstraksi otomatis)",
-     "halaman": null,
-     "konteks": "",
-     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
-    },
-    {
-     "obat": "sulf",
-     "dosis": "200-400mg",
-     "frekuensi": "",
-     "durasi": "",
-     "rute": "",
-     "populasi": "",
-     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
-     "sumber": "katalog SKDI (ekstraksi otomatis)",
-     "halaman": null,
-     "konteks": "",
-     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
-    },
-    {
-     "obat": "sulf",
-     "dosis": "10-20mg",
-     "frekuensi": "",
-     "durasi": "",
-     "rute": "",
-     "populasi": "",
-     "kutipan": "DMARDs (disease-modifying antirheumatic drugs): methotrexate 7.5-25mg/minggu (first-line - folic acid 5mg weekly), sulfasalazine 1-3g/hari, hydroxychloroquine 200-400mg/hari, leflunomide 10-20mg/hari.",
-     "sumber": "katalog SKDI (ekstraksi otomatis)",
-     "halaman": null,
-     "konteks": "",
-     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
-    },
-    {
-     "obat": "prednisone",
-     "dosis": "5-10mg",
-     "frekuensi": "",
-     "durasi": "",
-     "rute": "",
-     "populasi": "",
-     "kutipan": "Glucocorticoid: prednisone 5-10mg bridging therapy (taper ASAP, avoid long-term).",
-     "sumber": "katalog SKDI (ekstraksi otomatis)",
-     "halaman": null,
-     "konteks": "",
-     "catatan": "Diekstrak otomatis dari naskah terapi; cek kutipan."
-    }
-   ],
-   "dokumen": [
-    {
-     "jenis": "katalog",
-     "file": "oracle/sentrapedia.json",
-     "id": 102
-    }
-   ],
-   "terkait": [],
-   "status": {
-    "terapi": "lengkap",
-    "ada_teks_terapi": true,
-    "teks_ada_dosis_numerik": true,
-    "n_pernyataan_dosis": 6,
-    "n_obat_berdosis": 4,
-    "ada_definisi": true,
-    "ada_diagnosis": true,
-    "ada_rujukan": true,
-    "sumber_teks": [
-     "katalog_skdi"
-    ],
-    "review_klinis": {
-     "status": "ditinjau",
-     "oleh": "Gaffer",
-     "tanggal": "2026-10-23"
-    }
-   }
   },
   {
    "id": "SP0261",

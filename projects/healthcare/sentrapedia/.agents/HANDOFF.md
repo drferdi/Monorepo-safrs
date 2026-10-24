@@ -1,6 +1,6 @@
 # Sentrapedia handoff
 
-## Satu per satu: library therapy texts, DM code, non-drug filter, status counts (seven commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
+## Satu per satu: library therapy texts, DM code, non-drug filter, status counts (eight commits on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
 
 - Gaffer: "Kerjakan satu per satu" (items 1-11). Report: `docs/verification/theoracle-eval-2026-10-23/knowledge-gaps.md`, section "Item by item".
 - SSOT: five entries got a therapy text quoted from a library PDF, flagged "ditambahkan dari pustaka 2026-10-24, belum ditinjau Gaffer" in the key and in `status.review_klinis.catatan` (SP0298 TB-HIV, SP0188 luka bakar, SP0232 PPP from PPK IDI 2017; SP0296 BBLR from KMK 1936/2022; SP0027 benda asing T17 from PPK HBTKVI). SP0063 DM tipe 1 `icd10` → E10. `status` counts recomputed (39 entries changed, ~22 of them stale before A1).
@@ -11,7 +11,8 @@
 - SP0312 (Gaffer): the KKI itrakonazol row is replaced by the two PPK Perdoski 2017 regimens (hal. 55, denyut 2x200 mg 1 minggu/istirahat 3 minggu; 200 mg/hari 2 bulan kuku tangan, minimal 3 bulan kuku kaki); index `61ac3f80…`, benchmark identical, gate green. Not replayed through the live pipeline.
 - Code fixes (Gaffer): SP0020 RA M53.3 → M06.9, SP0247 polimialgia M53.3 → M35.3, SP0168 keracunan makanan T47 → T62.2, SP0331 BPPV R42 → H81.1 (kategori → Telinga); replaced codes in `icd10_sumber_lama`; Hepatitis B unchanged. Index `818c1be1…`, benchmark identical, gate green. Paid eval (`docs/verification/theoracle-eval-2026-10-24/eval-codes.md`, one 504 re-run alone): 61/61 ok, ICD top-1 56 → 57 (abbreviations-13 now H81.1), doses shown 61 → 62 (betahistin 3x6 mg for BPPV), all verified, 0.32 USD.
 - Library texts (Gaffer reviewed and approved): the five keys and `status.review_klinis` now say "ditinjau Gaffer 2026-10-24"; index `c190d587…`, benchmark identical, gate green.
-- Open for Gaffer: malaria serebral pre-referral 3,2 mg/kg (artemether dose); SP0020 and SP0260 are the same disease (RA). Nothing pushed.
+- RA merge (Gaffer approved): SP0260 merged into SP0020 and removed (335 entries, 329 diseases); four mis-parsed drug names corrected from their quotes; counts in tests and docs follow; index `edad52f5…` (17,989 chunks), benchmark identical, gate green.
+- Open for Gaffer: malaria serebral pre-referral 3,2 mg/kg (artemether dose). Nothing pushed.
 
 ## SSOT marked clinically reviewed; therapy and dose gaps referenced (two commits on feat/puskesmas-flow) - 2026-10-23 Asia/Jakarta
 
