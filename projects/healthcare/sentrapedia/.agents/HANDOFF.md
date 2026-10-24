@@ -1,5 +1,14 @@
 # Sentrapedia handoff
 
+## Merged into main on Gaffer's "merge it" (local only) - 2026-10-24 Asia/Jakarta
+
+- `feat/puskesmas-flow` (`2df77c16`) merged into local `main` as `93fb1a48`, message per this repo's convention. Not pushed; `origin/main` is untouched and still 1,058 commits apart.
+- One conflict, `projects/healthcare/sentrapedia/.agents/HANDOFF.md`, resolved losslessly rather than by taking a side. The two files were different generations of the same rolling log: this branch had trimmed everything from the 2026-10-15 section down, which the merge base `1f056afc` still carried, so dropping those respects the branch's own housekeeping. But `## Contract remote - 2026-10-18` is absent from the merge base, which means it reached `main` after the divergence and would have been lost; it is kept at the bottom of this file. Everything else auto-merged.
+- Verified after the merge: `main` contains `feat/puskesmas-flow` in full, and the seven artefacts that matter are the same blobs on both - SSOT, `index/manifest.json`, `index/chunks.jsonl`, `index/vectors.f32`, `oracle/sentrapedia.json`, `src/lib/theoracle.ts`, `.gitignore`.
+- The merge also carried in `2df77c16`, the Clerk readiness assessment, which this session did not write. It appeared on the branch after `dc809e91` while this session was working: another agent is committing in this same checkout, `D:/DEV/monorepo`. That is also the explanation for the branch moving under this session earlier today, recorded in the recovery entry below as unexplained.
+- Leftovers: `.playwright-mcp/` deleted (57 files, 3.5 MB of browser console logs, throwaway flow scripts and screenshots) and already ignored. Two untracked directories were deliberately left: `.agents/skills/gaffer-superpower/` is an Antigravity-only skill carrying a "DO NOT LOAD OR EXECUTE IN OPENAI CODEX OR CLAUDE RUNTIMES" directive, and `docs/antigravity/` holds its 25 KB document. They are real uncommitted content, not work leftovers, and deleting untracked files cannot be undone, so they wait on Gaffer's word.
+- `vectors.f32` is LFS, so `main` now points at an LFS object that exists only locally. A push of `main` needs that object uploaded first.
+
 ## Clerk login/registration is already built on another branch; integration readiness assessed read-only (one commit on feat/puskesmas-flow) - 2026-10-24 Asia/Jakarta
 
 - Gaffer: "Learn the codebase dan siapkan untuk integration: front end website, login access, using clerk untuk register dan login". All three exist as code already, built by another agent on `codex/sentrapedia-clerk-access-31bf87f9` (head `f30274f1`, worktree `C:\Users\drfer\.codex\worktrees\sentrapedia-clerk-access-31bf87f9\monorepo`), so this session wrote no auth code and re-implemented nothing. Read-only: no merge, no cherry-pick, no install, no Clerk or Cloudflare call, nothing pushed. Report: `docs/plans/active/2026-10-24-clerk-integration-readiness.md`.
