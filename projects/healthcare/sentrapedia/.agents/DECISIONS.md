@@ -531,3 +531,10 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 - A document whose `formatVersion` this build does not know is skipped and counted, never guessed at - the reader-before-writer rule of `docs/data.md`.
 - Sync failure never disturbs the workspace. The browser copy is authoritative, so an unavailable or failed call produces a message only. The route's 503 is treated as the ordinary state of an instance without a database, not as an error worth alarming anyone about.
 - The Workspace dialog's notice no longer says there is no cross-device synchronisation, because this change would have made that sentence false. It now says sync runs only when the server enables it and never includes patient data.
+
+## 2026-10-25 — The engine's visible name is "AADI", not "AADI RAG"
+
+- Gaffer: "Tetap `AADI` saja, tidak perlu diubah." Asked after PR #5 on the product repository was closed; that PR had proposed "AADI RAG — Augmented AI Diagnosis Integration" as the visible brand.
+- The visible name of the clinical reasoning engine is **AADI**, expanded as **Augmented Artificial Intelligence Diagnosis Integration** - the expansion the README and `src/components/workspace-dialogs.tsx` already carry. "AADI RAG" is not the brand, and the shorter "Augmented AI Diagnosis Integration" is not the expansion.
+- Nothing changes. README on `main` already has 48 occurrences of AADI, none of MIRA and none of "AADI RAG", so this decision is recorded to close the question rather than to direct an edit. Retrieval is still RAG in substance; it is simply not part of the name.
+- This settles the open item left by the closure of PR #5 (see `HANDOFF.md`, 2026-10-25 publish entry).
