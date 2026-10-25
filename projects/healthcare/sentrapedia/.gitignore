@@ -24,3 +24,4 @@ docs/superpowers/
 .husky/_/
 # Playwright MCP scratch output: timestamped console logs and throwaway flow scripts
 .playwright-mcp/
+.neon
