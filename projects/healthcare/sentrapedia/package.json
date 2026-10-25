@@ -35,13 +35,17 @@
     "@huggingface/transformers": "4.3.0",
     "lucide-react": "1.53.0",
     "next": "16.4.2",
+    "pg": "8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "0.0.1"
   },
   "devDependencies": {
+    "@neon/config": "1.9.4",
+    "@neon/env": "1.6.5",
     "@testing-library/react": "16.3.3",
     "@types/node": "^24.0.0",
+    "@types/pg": "8.23.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
