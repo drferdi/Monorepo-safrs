@@ -1,8 +1,13 @@
 FROM node:24-bookworm-slim AS dependencies
 WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv && rm -rf /var/lib/apt/lists/*
+# The pinned 1.2 GB embedding model gets its own layer, above the lockfile, because it used to ride along in
+# npm ci's postinstall: any lockfile change invalidated that layer and downloaded the model again. The installer
+# needs only node: built-ins, so it runs here; postinstall still re-checks every SHA-256 and downloads nothing.
+COPY scripts/theoracle-model.mjs scripts/install-theoracle-model.mjs ./scripts/
+RUN node scripts/install-theoracle-model.mjs
 COPY package.json package-lock.json .npmrc ./
-COPY scripts/install-aadi.mjs scripts/aadi-runtime.mjs scripts/aadi-profile.json scripts/theoracle-model.mjs scripts/install-theoracle-model.mjs ./scripts/
+COPY scripts/install-aadi.mjs scripts/aadi-runtime.mjs scripts/aadi-profile.json ./scripts/
 COPY aadi/requirements.lock aadi/requirements-test.lock ./aadi/
 # postinstall ends with the site's install:check, which reads these files.
 COPY apps/site/package.json ./apps/site/
