@@ -84,7 +84,31 @@
 .auth-page :focus-visible, .session-toolbar :focus-visible { outline: 2px solid var(--workspace-focus); outline-offset: 4px; }
 .auth-panel [role="alert"] { color: var(--workspace-error-text); padding: 12px; background: var(--workspace-error-bg); border-left: 2px solid var(--workspace-error-text); }
 .auth-panel-content form > [role="status"] { padding: 10px 12px; background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); }
-.auth-panel-content .cl-rootBox, .auth-panel-content .cl-cardBox { max-width: 100%; }
+.auth-panel-content .cl-rootBox, .auth-panel-content .cl-cardBox { width: 100%; max-width: 100%; }
+/* Clerk ships its own floating card. Inside .auth-panel it would read as a card within a card, so its
+   chrome is stripped and the widget is dressed in the panel's own language: square edges, hairline
+   rules, the micro-label, and the black primary of .auth-navigation. */
+.auth-panel-content .cl-cardBox { border: 0; border-radius: 0; background: none; box-shadow: none; }
+.auth-panel-content .cl-card { gap: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+/* The panel already carries the eyebrow and the h2, so Clerk's heading would say it a second time. */
+.auth-panel-content .cl-header { display: none; }
+.auth-panel-content .cl-main { gap: 20px; }
+.auth-panel-content .cl-form { gap: 18px; }
+.auth-panel-content .cl-formFieldLabelRow { margin-bottom: 7px; }
+.auth-panel-content .cl-formFieldLabel { color: var(--color-text-secondary); font: 500 9px/1.6 var(--font-body); letter-spacing: 1.1px; text-transform: uppercase; }
+.auth-panel-content .cl-required { color: var(--workspace-accent-ink); }
+.auth-panel-content .cl-formFieldInput { width: 100%; min-height: 46px; padding: 12px 14px; border: 1px solid var(--workspace-control-border); border-radius: 0; background: var(--workspace-white); color: var(--color-text-primary); font: 400 13px/1.5 var(--font-body); box-shadow: none; transition: border-color 180ms ease; }
+.auth-panel-content .cl-formFieldInput:hover { border-color: var(--rule-strong); }
+.auth-panel-content .cl-formFieldCheckboxInput { width: 15px; height: 15px; margin-top: 2px; flex-shrink: 0; border-radius: 0; accent-color: var(--workspace-accent-ink); }
+.auth-panel-content .cl-formFieldCheckboxLabel { color: var(--color-text-secondary); font: 400 11px/1.7 var(--font-body); letter-spacing: 0; text-transform: none; }
+.auth-panel-content .cl-formFieldCheckboxLabel a { color: var(--workspace-accent-ink); text-underline-offset: .2em; }
+.auth-panel-content .cl-formButtonPrimary { width: 100%; min-height: 46px; padding: 12px 15px; border: 1px solid var(--rule-strong); border-radius: 0; background: var(--color-text-primary); color: var(--workspace-white); font: 500 12px/1 var(--font-body); letter-spacing: 0; text-transform: none; box-shadow: none; transition: background 180ms ease, border-color 180ms ease; }
+.auth-panel-content .cl-formButtonPrimary:hover, .auth-panel-content .cl-formButtonPrimary:focus-visible { border-color: var(--workspace-accent-ink); background: var(--workspace-accent-ink); }
+.auth-panel-content .cl-formButtonPrimary:active { background: var(--workspace-on-accent); }
+/* .auth-navigation already offers Daftar and Masuk below the widget; Clerk's switch link repeats it. */
+.auth-panel-content .cl-footerAction { display: none; }
+.auth-panel-content .cl-footer { padding: 0; border: 0; background: none; }
+.auth-panel-content .cl-footer, .auth-panel-content .cl-footerItem { font-size: 9px; letter-spacing: .6px; }
 .authenticated-workspace { display: flex; flex-direction: column; height: 100dvh; }
 .session-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem 1rem; border-bottom: 1px solid var(--color-border-subtle); font-size: .8rem; }
 .session-toolbar button { padding: .35rem .75rem; }
