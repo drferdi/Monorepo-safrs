@@ -17,8 +17,13 @@ describe("sync migrations", () => {
     expect(files.length).toBeGreaterThan(0);
   });
 
-  it("holds only the tables Q7 has settled, so workspace_sync waits", () => {
-    expect(tablesOf(sql).sort()).toEqual(["personal_template", "profile"]);
+  it("holds exactly the tables the decisions have settled", () => {
+    // workspace_sync joined on 2026-10-25, when Gaffer answered that document bodies do sync.
+    expect(tablesOf(sql).sort()).toEqual(["personal_template", "profile", "workspace_sync"]);
+  });
+
+  it("pins the stored format on every synced document, so a reader can predate a writer", () => {
+    expect(sql).toMatch(/create table (?:if not exists )?workspace_sync[\s\S]*?format_version\s+int(?:eger)? not null/);
   });
 
   it("enables and forces row level security on every table it creates", () => {
