@@ -1,16 +1,18 @@
 # Sentrapedia handoff
 
-## Published: the capsule split pushed and PR #32 opened on the product repository (R2, split 3f96cce2) - 2026-10-25 Asia/Jakarta
+## Published: the capsule split pushed and PR #32 merged into the product repository (R2, split 3f96cce2, merge f4c1b7c4) - 2026-10-25 Asia/Jakarta
 
 - Gaffer: "Buka PR untuk feat/e2e-integration." That instruction is the explicit go for the push; it is not a go for the merge, which stays his.
-- **The PR is on the product repository, not the monorepo.** The monorepo is governance and never ships as a unit, so publishing is `git subtree split --prefix=projects/healthcare/sentrapedia` pushed to a new branch on `drferdi/Sentrapedia`. Branch `feat/sentrapedia-e2e-sync-2026-10-25`, split `3f96cce2`, PR <https://github.com/drferdi/Sentrapedia/pull/32>, state OPEN and `mergeable=MERGEABLE`.
+- **The PR is on the product repository, not the monorepo.** The monorepo is governance and never ships as a unit, so publishing is `git subtree split --prefix=projects/healthcare/sentrapedia` pushed to a new branch on `drferdi/Sentrapedia`. Branch `feat/sentrapedia-e2e-sync-2026-10-25`, split `3f96cce2`, PR <https://github.com/drferdi/Sentrapedia/pull/32>.
 - **The three checks were run, not assumed.** (1) `3f96cce2` descends from the last published split `e6ddd6cc` - PASS. (2) Its tree `875ab482` equals `feat/e2e-integration:projects/healthcare/sentrapedia` byte for byte - PASS. (3) `git merge-tree --write-tree sentrapedia/main 3f96cce2` produces no conflict, and no LFS-filtered file changed - PASS. `sentrapedia/main` is `e8cb4037`, the PR #30 merge that carries `e6ddd6cc`.
 - `npm run knowledge:publish` was **not** run and was not needed: no TheOracle vector changed in these ten commits.
 - The split publishes 30 files, 2344 insertions, 125 deletions, over the ten commits `5e163bb7` through `c5d6ea25`. Scanned before pushing: the only env-shaped matches in the diff are **names** in `.env.example`, `capsule.json` and `project.contract.json`; no connection string, Clerk key or Neon token is in the tree.
 - **The PR body asks for a merge commit explicitly**, because a squash or rebase would break the subtree-split chain and the next split's descent check.
-- CI at the time of writing: `check` **pending** (run 40207952609), `Mergeable` pass, `WIP` pass. The result was not waited for. GitHub also reports one pre-existing high Dependabot alert on the default branch, unrelated to this work.
-- **The next split must descend from `3f96cce2`** once PR #32 is merged.
-- Still true: nothing merged, nothing deployed, no paid call. `main` in this worktree is unchanged at `2261af3f` and the ten commits remain only on `feat/e2e-integration` locally.
+- **Gaffer merged it himself the same day, with a merge commit, as the PR body asked:** `f4c1b7c4` on `sentrapedia/main` at 2026-10-25 15:47:53Z. The subtree-split chain is therefore intact, and `3f96cce2` sits on `main` as the split's tip.
+- **The next split must descend from `3f96cce2`.**
+- CI was **not green at merge time and still was not when last read**: the PR run 40207952609 and the post-merge `CI` run 40208639957 on `f4c1b7c4` were both `in_progress`. Nobody waited for either; the local gate is the only passing evidence this work has. GitHub also reports one pre-existing high Dependabot alert on the default branch, unrelated to this work.
+- Still open on the product repository afterwards: **#31** (dependabot, zod 4.6.5 to 4.6.7, `MERGEABLE`/`CLEAN`) and **#5** (AADI RAG branding doc, open since 2026-10-11, now `CONFLICTING`/`DIRTY`). `drferdi/Monorepo-safrs` has **#48** (dependabot, hono). None was touched.
+- Nothing deployed, no paid call, auto-merge never enabled. `main` in this worktree is still `2261af3f`; the eleven commits stay on `feat/e2e-integration` locally, and the local branch was not pushed - only the split was.
 
 ## The workspace can push and pull: sync wired into the account dialog (R2, 518893dc) - 2026-10-25 Asia/Jakarta
 
