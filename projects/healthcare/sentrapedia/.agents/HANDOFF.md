@@ -1,6 +1,6 @@
 # Sentrapedia handoff
 
-## sentrapedia.com is served again: the apex still pointed at the old Hostinger box (R3, no commit - the change is at Cloudflare) - 2026-10-26 Asia/Jakarta
+## sentrapedia.com is served again: the apex still pointed at the old Hostinger box (R3, no code change; recorded in a548571c) - 2026-10-26 Asia/Jakarta
 
 - Gaffer sent the Vercel Domains panel showing `sentrapedia.com` and `www` as "Invalid Configuration" with "Please proceed", then "cloudflare on" once the dashboard session was live again. Both hostnames answered **HTTP 525** before this; `beta` was fine throughout.
 - **Root cause, and it was only visible from inside Cloudflare:** the apex was an **`A` record to `2.57.91.91`** - the old Hostinger server - and still **Proxied**; `www` was a proxied `CNAME` to the apex, so it inherited the fault. Cloudflare was terminating TLS at its edge and then failing the handshake to an origin that no longer serves this domain. **Vercel's API reported the apex as `104.21.48.37` / `172.67.176.114`, which are Cloudflare's own proxy IPs, not the origin** - a proxied record hides the real target from every outside check, so the diagnosis could not have been completed from Vercel or from `curl` alone.
