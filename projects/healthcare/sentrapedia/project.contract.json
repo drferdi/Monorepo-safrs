@@ -14,17 +14,68 @@
     "lockfile": "package-lock.json"
   },
   "commands": {
-    "install": { "program": "node", "args": ["scripts/npm.mjs", "ci", "--workspaces=false"], "timeoutSeconds": 600 },
-    "lint": { "program": "node", "args": ["scripts/npm.mjs", "run", "lint"], "timeoutSeconds": 600 },
-    "typecheck": { "program": "node", "args": ["scripts/npm.mjs", "run", "typecheck"], "timeoutSeconds": 600 },
-    "test": {
+    "install": {
       "program": "node",
-      "args": ["scripts/npm.mjs", "run", "test:all"],
+      "args": [
+        "scripts/npm.mjs",
+        "ci",
+        "--workspaces=false"
+      ],
       "timeoutSeconds": 600
     },
-    "build": { "program": "node", "args": ["scripts/npm.mjs", "run", "build"], "timeoutSeconds": 600 },
-    "run": { "program": "node", "args": ["scripts/npm.mjs", "run", "start"] },
-    "deployDryRun": { "program": "node", "args": ["scripts/npm.mjs", "run", "deploy:dry-run"], "timeoutSeconds": 600 }
+    "lint": {
+      "program": "node",
+      "args": [
+        "scripts/npm.mjs",
+        "run",
+        "lint"
+      ],
+      "timeoutSeconds": 600
+    },
+    "typecheck": {
+      "program": "node",
+      "args": [
+        "scripts/npm.mjs",
+        "run",
+        "typecheck"
+      ],
+      "timeoutSeconds": 600
+    },
+    "test": {
+      "program": "node",
+      "args": [
+        "scripts/npm.mjs",
+        "run",
+        "test:all"
+      ],
+      "timeoutSeconds": 600
+    },
+    "build": {
+      "program": "node",
+      "args": [
+        "scripts/npm.mjs",
+        "run",
+        "build"
+      ],
+      "timeoutSeconds": 600
+    },
+    "run": {
+      "program": "node",
+      "args": [
+        "scripts/npm.mjs",
+        "run",
+        "start"
+      ]
+    },
+    "deployDryRun": {
+      "program": "node",
+      "args": [
+        "scripts/npm.mjs",
+        "run",
+        "deploy:dry-run"
+      ],
+      "timeoutSeconds": 600
+    }
   },
   "smoke": {
     "kind": "http",
@@ -34,14 +85,60 @@
     "expectedStatus": 200,
     "startupTimeoutSeconds": 120
   },
-  "artifacts": [".next/BUILD_ID"],
-  "externalDependencies": [
-    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
-    { "kind": "registry", "name": "Python package registry", "locator": "https://pypi.org", "required": true },
-    { "kind": "registry", "name": "Hugging Face model hub; pinned TheOracle embedding model, install time only", "locator": "https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX", "required": true },
-    { "kind": "service", "name": "Gemini API model provider; synthetic cases only", "locator": "GEMINI_API_KEY", "required": true },
-    { "kind": "service", "name": "Clerk closed-beta identity and email delivery; production required, explicit loopback development mode only may omit", "locator": "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, SENTRAPEDIA_PUBLIC_ORIGIN", "required": true },
-    { "kind": "service", "name": "Optional public-site contact delivery through Resend", "locator": "RESEND_API_KEY, RESEND_FROM_EMAIL, and CONTACT_PUBLIC_ORIGIN", "required": false }
+  "artifacts": [
+    ".next/BUILD_ID"
   ],
-  "mutableStatePaths": ["node_modules", ".next", ".runtime", "tsconfig.tsbuildinfo", ".env.local", "theoracle/model", "apps/site/reference/verification.json"]
+  "externalDependencies": [
+    {
+      "kind": "registry",
+      "name": "npm registry",
+      "locator": "https://registry.npmjs.org",
+      "required": true
+    },
+    {
+      "kind": "registry",
+      "name": "Python package registry",
+      "locator": "https://pypi.org",
+      "required": true
+    },
+    {
+      "kind": "registry",
+      "name": "Hugging Face model hub; pinned TheOracle embedding model, install time only",
+      "locator": "https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX",
+      "required": true
+    },
+    {
+      "kind": "service",
+      "name": "Gemini API model provider; synthetic cases only",
+      "locator": "GEMINI_API_KEY",
+      "required": true
+    },
+    {
+      "kind": "service",
+      "name": "Clerk closed-beta identity and email delivery; production required, explicit loopback development mode only may omit",
+      "locator": "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, SENTRAPEDIA_PUBLIC_ORIGIN",
+      "required": true
+    },
+    {
+      "kind": "service",
+      "name": "Optional public-site contact delivery through Resend",
+      "locator": "RESEND_API_KEY, RESEND_FROM_EMAIL, and CONTACT_PUBLIC_ORIGIN",
+      "required": false
+    },
+    {
+      "kind": "service",
+      "name": "Neon Postgres workspace sync; optional, off without SENTRAPEDIA_DATABASE_URL; the role in it must be the non-owner runtime role because Neon's owner role carries BYPASSRLS",
+      "locator": "SENTRAPEDIA_DATABASE_URL, and DATABASE_URL_UNPOOLED for migrations only",
+      "required": false
+    }
+  ],
+  "mutableStatePaths": [
+    "node_modules",
+    ".next",
+    ".runtime",
+    "tsconfig.tsbuildinfo",
+    ".env.local",
+    "theoracle/model",
+    "apps/site/reference/verification.json"
+  ]
 }

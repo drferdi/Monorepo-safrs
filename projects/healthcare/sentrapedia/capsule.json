@@ -1,20 +1,72 @@
 {
   "id": "sentrapedia",
-  "runtime": { "name": "node", "version": ">=24" },
+  "runtime": {
+    "name": "node",
+    "version": ">=24"
+  },
   "risk": "R2",
   "lifecycle": {
-    "install": ["npm", "ci", "--workspaces=false"],
-    "build": ["npm", "run", "build"],
-    "test": ["npm", "run", "test:all"],
-    "run": ["npm", "run", "start"],
-    "lint": ["npm", "run", "lint"],
-    "typecheck": ["npm", "run", "typecheck"],
-    "deployDryRun": ["npm", "run", "deploy:dry-run"]
+    "install": [
+      "npm",
+      "ci",
+      "--workspaces=false"
+    ],
+    "build": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "test": [
+      "npm",
+      "run",
+      "test:all"
+    ],
+    "run": [
+      "npm",
+      "run",
+      "start"
+    ],
+    "lint": [
+      "npm",
+      "run",
+      "lint"
+    ],
+    "typecheck": [
+      "npm",
+      "run",
+      "typecheck"
+    ],
+    "deployDryRun": [
+      "npm",
+      "run",
+      "deploy:dry-run"
+    ]
   },
-  "requiredEnvironment": ["GEMINI_API_KEY", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY"],
-  "externalServices": ["Gemini API (OpenAI-compatible endpoint); synthetic cases only; gemini-3.1-flash-lite for both stages", "Clerk closed-beta identity and email delivery; required in the clerk auth mode, which production uses; SENTRAPEDIA_AUTH_MODE=local on loopback development only may omit it"],
-  "buildOutputs": [".next/standalone", ".next/static"],
-  "generatedPaths": [".next", "node_modules", "next-env.d.ts"],
-  "sensitiveSurfaces": ["Browser-local patient and encounter data; fictional data only", "Optional microphone speech recognition may contact browser speech provider"],
-  "rootDependencies": []
+  "requiredEnvironment": [
+    "GEMINI_API_KEY",
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+    "CLERK_SECRET_KEY"
+  ],
+  "externalServices": [
+    "Gemini API (OpenAI-compatible endpoint); synthetic cases only; gemini-3.1-flash-lite for both stages",
+    "Clerk closed-beta identity and email delivery; required in the clerk auth mode, which production uses; SENTRAPEDIA_AUTH_MODE=local on loopback development only may omit it",
+    "Neon Postgres workspace sync; optional, absent without SENTRAPEDIA_DATABASE_URL; connect as the non-owner runtime role, never Neon's owner role, which carries BYPASSRLS"
+  ],
+  "buildOutputs": [
+    ".next/standalone",
+    ".next/static"
+  ],
+  "generatedPaths": [
+    ".next",
+    "node_modules",
+    "next-env.d.ts"
+  ],
+  "sensitiveSurfaces": [
+    "Browser-local patient and encounter data; fictional data only",
+    "Optional microphone speech recognition may contact browser speech provider"
+  ],
+  "rootDependencies": [],
+  "optionalEnvironment": [
+    "SENTRAPEDIA_DATABASE_URL"
+  ]
 }
