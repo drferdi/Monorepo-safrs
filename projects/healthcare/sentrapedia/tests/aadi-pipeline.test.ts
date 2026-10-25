@@ -6,7 +6,7 @@ import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, type TheOracle
 
 const version = `aadi-service/test+contract=1+provider=openai+data=synthetic-only+plan=${selectedAadiModel}+assess=${selectedAadiModel}+experimental`;
 const meta = { version, model: `${selectedAadiModel}+${selectedAadiModel}`, costUsd: 0.01 };
-const input = () => new Request("http://127.0.0.1:3104/api/aadi", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Batuk demam fiktif" }, synthetic: true }) });
+const input = () => new Request("http://127.0.0.1:3104/api/aadi", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Batuk demam fiktif" } }) });
 const bundle = (text: string): TheOracleGroundingBundle => ({ version: THEORACLE_GROUNDING_CAPABILITY, corpus: { name: "TheOracle", indexSha256: "a".repeat(64), embeddingModel: { id: "onnx-community/embeddinggemma-300m-ONNX", revision: "e".repeat(40), dtype: "fp32", dims: 768 }, retrievedAt: "2026-10-11T12:00:00.000Z", reviewProvenance: "fixture" }, queryDigest: "b".repeat(64), evidence: [{ evidenceId: "E1", text, retrievalRank: 1, similarity: 0.6, source: { title: "ppk.pdf", docSource: "uji", origin: "fixture", textSha256: "c".repeat(64) } }] });
 const diagnosisResult = (likely: { icd10: string; label: string; confidenceTier: string }[]) => ({ contractVersion: "1", status: "ok", differential: { likely, alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: [], nextBestActions: [], disposition: null, unfilled: [], meta });
 const pneumonia = { icd10: "J18.9", label: "Pneumonia", confidenceTier: "low" };
@@ -179,7 +179,7 @@ describe("targeted therapy pipeline", () => {
     let started: () => void = () => undefined;
     const retrievalStarted = new Promise<void>(resolve => { started = resolve; });
     const { gateway } = gatewayWith(fetchFn, { retrieveTherapyGrounding: () => { started(); return pending; } });
-    const request = new Request("http://127.0.0.1:3104/api/aadi", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Batuk demam fiktif" }, synthetic: true }), signal: abort.signal });
+    const request = new Request("http://127.0.0.1:3104/api/aadi", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Batuk demam fiktif" } }), signal: abort.signal });
     const responsePromise = gateway.step(request);
     await retrievalStarted;
     abort.abort();

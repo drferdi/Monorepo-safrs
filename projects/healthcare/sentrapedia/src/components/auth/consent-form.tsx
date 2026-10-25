@@ -19,16 +19,16 @@ export function ConsentForm() {
     const timeout = setTimeout(() => controller.abort(), 10_000);
     setPending(true); setError(null);
     try {
-      const response = await fetch("/api/onboarding/consent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ version: betaPolicyVersion, accepted: true, syntheticOnly: true }), signal: controller.signal });
+      const response = await fetch("/api/onboarding/consent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ version: betaPolicyVersion, accepted: true }), signal: controller.signal });
       if (!response.ok) { setError(response.status === 401 ? "session" : "retry"); return; }
       router.replace("/"); router.refresh();
     } catch { setError("retry"); }
     finally { clearTimeout(timeout); request.current = null; setPending(false); }
   }
   return <form onSubmit={submit}>
-    <p>Beta ini hanya untuk evaluasi dengan kasus sintetis. Jangan masukkan identitas, rekam medis, atau data pasien nyata. Keluaran tetap memerlukan penilaian klinisi.</p>
+    <p>Jangan masukkan identitas pasien: nama, nomor identitas, kontak, atau alamat. Keluaran tetap memerlukan penilaian klinisi.</p>
     <p><a href="https://sentrapedia.vercel.app/ketentuan/">Ketentuan beta</a> · <a href="https://sentrapedia.vercel.app/privasi/">Kebijakan privasi</a></p>
-    <label className="auth-consent"><input type="checkbox" required checked={accepted} disabled={pending} onChange={event => setAccepted(event.target.checked)}/>Saya memahami batasan beta dan setuju hanya menggunakan data sintetis.</label>
+    <label className="auth-consent"><input type="checkbox" required checked={accepted} disabled={pending} onChange={event => setAccepted(event.target.checked)}/>Saya memahami batasan beta dan tidak akan memasukkan identitas pasien.</label>
     {pending && <p role="status">Menyimpan persetujuan…</p>}
     {error && <p role="alert">{error === "session" ? <>Sesi berakhir. <Link href="/sign-in">Masuk kembali</Link> untuk melanjutkan.</> : "Persetujuan belum tersimpan. Coba kembali."}</p>}
     <button className="auth-primary" type="submit" disabled={!accepted || pending}>Setuju dan buka workspace</button>

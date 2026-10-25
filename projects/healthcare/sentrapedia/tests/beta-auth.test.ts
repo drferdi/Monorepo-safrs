@@ -5,7 +5,7 @@ import type { BetaUser } from "../src/lib/auth/policy";
 
 // Synthetic key-shaped inputs only: these never authenticate against a provider.
 const environment = { NODE_ENV: "test", NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: `pk_test_${Buffer.from("auth.example.test$").toString("base64")}`, CLERK_SECRET_KEY: "sk_test_fixture_not_a_real_key" };
-const consent = { version: "sentrapedia-beta-v1", acceptedAt: "2026-10-24T00:00:00.000Z", syntheticOnly: true };
+const consent = { version: "sentrapedia-beta-v2", acceptedAt: "2026-10-24T00:00:00.000Z" };
 const user = (metadata: Record<string, unknown> = { sentrapediaBetaConsent: consent }): BetaUser => ({ id: "user_a", emailVerified: true, privateMetadata: metadata });
 function setup(initial = user(), sessionId: string | null = "user_a") {
   let current = initial;
@@ -19,7 +19,7 @@ function setup(initial = user(), sessionId: string | null = "user_a") {
   });
   return { access, writes, current: () => current };
 }
-const request = (body: unknown = { version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true }, origin = "http://127.0.0.1:3101") => new Request("http://127.0.0.1:3101/api/onboarding/consent", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+const request = (body: unknown = { version: "sentrapedia-beta-v2", accepted: true }, origin = "http://127.0.0.1:3101") => new Request("http://127.0.0.1:3101/api/onboarding/consent", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
 afterEach(() => vi.useRealTimers());
 
 describe("closed-beta configuration", () => {
@@ -51,7 +51,7 @@ describe("server-owned access decisions", () => {
     expect(await setup(user(), "user_b").access.resolve()).toEqual({ status: "unavailable" });
   });
   it("keeps explicit legacy consent inspection without blocking normal user access", async () => {
-    for (const value of [undefined, null, false, {}, { ...consent, version: "old" }, { ...consent, syntheticOnly: false }, { ...consent, acceptedAt: "invalid" }]) {
+    for (const value of [undefined, null, false, {}, { ...consent, version: "old" }, { ...consent, acceptedAt: "invalid" }]) {
       const { access } = setup(user({ sentrapediaBetaConsent: value }));
       expect(await access.resolve(true)).toEqual({ status: "consent-required" });
       expect(await access.resolve()).toEqual({ status: "allowed", userId: "user_a" });
@@ -98,7 +98,7 @@ describe("server-owned access decisions", () => {
 describe("consent mutation", () => {
   it("rejects delayed trailing bytes and handles rejected cancellation without writing", async () => {
     const { access, writes } = setup(user({}));
-    const prefix = JSON.stringify({ version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true });
+    const prefix = JSON.stringify({ version: "sentrapedia-beta-v2", accepted: true });
     const encoder = new TextEncoder();
     const streams = [
       new ReadableStream({ start(controller) { controller.enqueue(encoder.encode(prefix)); queueMicrotask(() => { controller.enqueue(encoder.encode("trailing-invalid")); controller.close(); }); } }),
@@ -123,7 +123,7 @@ describe("consent mutation", () => {
   it("rejects a timed-out stream even when its unterminated prefix is valid acceptance JSON", async () => {
     vi.useFakeTimers();
     const { access, writes } = setup(user({}));
-    const stream = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode(JSON.stringify({ version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true }))); } });
+    const stream = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode(JSON.stringify({ version: "sentrapedia-beta-v2", accepted: true }))); } });
     const incoming = new Request("http://127.0.0.1:3101/api/onboarding/consent", { method: "POST", headers: { Origin: "http://127.0.0.1:3101", "Content-Type": "application/json" }, body: stream, duplex: "half" } as RequestInit);
     const pending = access.consent(incoming);
     await vi.advanceTimersByTimeAsync(5001);
@@ -136,14 +136,14 @@ describe("consent mutation", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("cache-control")).toBe("no-store");
     expect(await response.json()).toEqual({ status: "ok" });
-    expect(writes).toEqual([{ id: "user_a", record: { version: "sentrapedia-beta-v1", acceptedAt: "2026-10-24T01:02:03.000Z", syntheticOnly: true } }]);
+    expect(writes).toEqual([{ id: "user_a", record: { version: "sentrapedia-beta-v2", acceptedAt: "2026-10-24T01:02:03.000Z" } }]);
     expect(current().privateMetadata.unrelated).toEqual({ keep: true });
     expect(current().privateMetadata.sentrapediaBetaAccess).toEqual({ disabled: false });
     expect((await access.resolve()).status).toBe("allowed");
   });
   it("rejects forged subjects, missing acknowledgement and stale policy without writing", async () => {
     const { access, writes } = setup(user({}));
-    for (const value of [{}, { version: "sentrapedia-beta-v1", accepted: false, syntheticOnly: true }, { version: "old", accepted: true, syntheticOnly: true }, { version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true, userId: "user_b" }, { version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true, acceptedAt: "2026-10-24T01:02:03.000Z" }]) expect((await access.consent(request(value))).status).toBe(400);
+    for (const value of [{}, { version: "sentrapedia-beta-v2", accepted: false }, { version: "old", accepted: true }, { version: "sentrapedia-beta-v2", accepted: true, userId: "user_b" }, { version: "sentrapedia-beta-v2", accepted: true, acceptedAt: "2026-10-24T01:02:03.000Z" }]) expect((await access.consent(request(value))).status).toBe(400);
     expect(writes).toEqual([]);
   });
   it("requires exact trusted origin, not a forwarded-host assertion", async () => {

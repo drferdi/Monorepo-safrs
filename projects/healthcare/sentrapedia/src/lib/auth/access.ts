@@ -76,9 +76,9 @@ export function createBetaAccess(deps: Dependencies) {
     if (!trustedConsentOrigin(request, deps.config.mode === "clerk" ? deps.config.publicOrigin : null)) return inputFailure(403);
     let body: unknown;
     try { body = await readConsent(request); } catch { return inputFailure(); }
-    if (!isRecord(body) || Object.keys(body).length !== 3 || body.version !== betaPolicyVersion || body.accepted !== true || body.syntheticOnly !== true) return inputFailure();
+    if (!isRecord(body) || Object.keys(body).length !== 2 || body.version !== betaPolicyVersion || body.accepted !== true) return inputFailure();
     if (deps.config.mode !== "local") {
-      try { await boundedIdentity(() => deps.writeConsent(result.userId, { version: betaPolicyVersion, acceptedAt: (deps.now?.() ?? new Date()).toISOString(), syntheticOnly: true })); }
+      try { await boundedIdentity(() => deps.writeConsent(result.userId, { version: betaPolicyVersion, acceptedAt: (deps.now?.() ?? new Date()).toISOString() })); }
       catch { return accessFailure({ status: "unavailable" }); }
     }
     return Response.json({ status: "ok" }, { headers: { "Cache-Control": "no-store" } });

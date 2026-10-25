@@ -37,8 +37,8 @@
 .auth-intro h1 > span { position: relative; display: inline-block; z-index: 0; }
 .auth-intro h1 > span::after { content: ""; position: absolute; left: 0; right: -4px; bottom: 1px; height: 13%; background: var(--color-action-primary); z-index: -1; transform-origin: left; animation: auth-stroke 700ms cubic-bezier(.2,.7,.2,1) 300ms both; }
 .auth-intro-copy { max-width: 440px; margin: 27px 0 0; color: var(--color-text-secondary); font-size: 14px; line-height: 1.8; animation: auth-rise 650ms cubic-bezier(.2,.7,.2,1) 100ms both; }
-.auth-synthetic { display: flex; align-items: center; gap: 10px; margin: 20px 0 0; color: var(--workspace-accent-ink); font-size: 11px; }
-.auth-synthetic > span { font-size: 20px; line-height: 1; }
+.auth-note { display: flex; align-items: center; gap: 10px; margin: 20px 0 0; color: var(--workspace-accent-ink); font-size: 11px; }
+.auth-note > span { font-size: 20px; line-height: 1; }
 .auth-panel { align-self: center; grid-column: 2; grid-row: 1 / 3; min-width: 0; background: var(--workspace-white); border: 1px solid var(--rule-strong); box-shadow: 10px 10px 0 var(--workspace-accent-soft); animation: auth-rise 700ms cubic-bezier(.2,.7,.2,1) 170ms both; }
 .auth-panel-index { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 28px; border-bottom: 1px solid var(--rule-strong); background: var(--workspace-accent-soft); color: var(--workspace-on-accent); font-size: 9px; font-weight: 600; letter-spacing: 1.1px; }
 .auth-panel-index > span:last-child { font-variant-numeric: tabular-nums; }
@@ -168,7 +168,7 @@
   .auth-edition { display: inline; }
   .auth-intro h1 { font-size: clamp(38px, 8.5vw, 56px); line-height: 1.08; }
   .auth-intro-copy { max-width: 410px; margin-top: 17px; font-size: 12px; line-height: 1.75; }
-  .auth-synthetic { margin-top: 13px; font-size: 10px; }
+  .auth-note { margin-top: 13px; font-size: 10px; }
   .auth-panel { align-self: stretch; margin-top: 28px; box-shadow: 6px 6px 0 var(--workspace-accent-soft); }
   .auth-panel-index { padding: 13px 22px; }
   .auth-panel-body { padding: 25px 22px; }

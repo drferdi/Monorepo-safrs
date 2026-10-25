@@ -383,7 +383,6 @@ test("pipeline eval scores ICD-10, dose support and the gate, skips term queries
     assert.deepEqual(requests.map(request => request.body.case.chiefComplaint), ["demam tifoid", "demam tifoid", "anggaran habis"]);
     assert.equal(requests[0].url, "/api/aadi");
     assert.equal(requests[0].origin, base);
-    assert.equal(requests[0].body.synthetic, true);
     const summary = JSON.parse(stdout);
     assert.equal(summary.cases, 2);
     assert.equal(summary.ok, 1);

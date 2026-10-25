@@ -72,7 +72,7 @@ export function AuthFrame({ title, children }: { title: string; children: ReactN
           <p className="auth-eyebrow"><span className="auth-beta-mark" /> CLINICAL WORKSPACE <span className="auth-edition">/ BETA</span></p>
           <h1 id="auth-intro-title">Ruang untuk<br />pemikiran <span>klinis.</span></h1>
           <p className="auth-intro-copy">Dari konteks yang tersebar menjadi pemikiran yang terarah. Satu ruang untuk menyusun catatan dan meninjau langkah berikutnya.</p>
-          <p className="auth-synthetic"><span aria-hidden="true">↳</span> Ruang evaluasi. Data sintetis saja.</p>
+          <p className="auth-note"><span aria-hidden="true">↳</span> Masukkan kasus tanpa identitas pasien.</p>
         </section>
 
         <section className="auth-panel" aria-label={title}>
@@ -88,7 +88,7 @@ export function AuthFrame({ title, children }: { title: string; children: ReactN
             </nav>
             <p className="auth-panel-note">Daftar dengan email pribadi, lalu masuk ke workspace.</p>
           </div>
-          <div className="auth-panel-foot"><span className="auth-beta-mark" /><span>Hanya untuk evaluasi dengan kasus sintetis.</span></div>
+          <div className="auth-panel-foot"><span className="auth-beta-mark" /><span>Keputusan klinis akhir tetap pada klinisi.</span></div>
         </section>
 
         <WorkspaceSchematic />

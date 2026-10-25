@@ -9,6 +9,9 @@ const preflightTimeoutMs = 10000;
 const warmRequestTimeoutMs = 30000;
 // The Gemini API's OpenAI-compatible endpoint. The engine reaches it through its openai provider (OPENAI_BASE_URL).
 export const geminiBaseUrl = "https://generativelanguage.googleapis.com/v1beta/openai/";
+// Declared once: the launcher sets it and engineReady expects the engine to report it back. The name is the
+// engine's provider adapter; the endpoint above is Gemini, so retention is Google's, not OpenAI's.
+export const dataPolicy = "openai-standard-retention";
 export async function preflightProvider(fetchFn = fetch, apiKey = process.env.GEMINI_API_KEY) {
   // Reads the model's metadata with the key; no completion is sent, so nothing is billed. The response body is never echoed.
   const response = await fetchFn(`${geminiBaseUrl}models/${model}`, { headers: { Authorization: `Bearer ${apiKey}` }, signal: AbortSignal.timeout(preflightTimeoutMs), redirect: "error" });
@@ -38,7 +41,7 @@ export function engineEnvironment(root, environment, token) {
     OPENAI_API_KEY: environment.GEMINI_API_KEY, OPENAI_BASE_URL: geminiBaseUrl,
     PYTHONPATH: "", PYTHONNOUSERSITE: "1", PYTHON_DOTENV_DISABLED: "1",
     AADI_DEV_TOKEN: token, AADI_LLM_PROVIDER: "openai", AADI_SERVICE_ENV: "development",
-    AADI_DATA_POLICY: "synthetic-only", AADI_PLAN_MODEL: model, AADI_PLAN_MODEL_CHOICES: model,
+    AADI_DATA_POLICY: dataPolicy, AADI_PLAN_MODEL: model, AADI_PLAN_MODEL_CHOICES: model,
     AADI_ASSESS_MODEL: model, AADI_OPENROUTER_PROVIDER_SORT: "", AADI_OPENROUTER_ZDR: "",
     AADI_PROVISIONAL_DIFFERENTIAL: "true", AADI_FAST_ASSESSMENT: "true", AADI_FAST_THERAPY: "true",
     AADI_FAST_COPIES: String(profile.fastCopies), AADI_FAST_COPY_PROVIDERS: "", AADI_STEP_DEADLINE_S: String(profile.stepDeadlineS),
@@ -67,6 +70,6 @@ export function nextRestart(crashes, ranMs, { resetMs = 60000, baseMs = 1000, ma
 export function engineReady(health) {
   return health?.status === "ok" && health.contractVersion === "1" &&
     health.capabilities?.includes("theoracle-grounding-v2") &&
-    health.version?.includes(`+contract=1+provider=openai+data=synthetic-only+plan=${model}+assess=${model}`) &&
+    health.version?.includes(`+contract=1+provider=openai+data=${dataPolicy}+plan=${model}+assess=${model}`) &&
     health.version?.endsWith("+ddx=provisional+assessment=fast+therapy=fast");
 }

@@ -22,7 +22,7 @@ export function SessionBoundary({ userId, children }: { userId: string; children
     catch { setFailed(true); }
   }
   return <div className="authenticated-workspace">
-    <header className="session-toolbar"><span>Sentrapedia beta · data sintetis</span><button type="button" onClick={signOut}>Keluar</button></header>
+    <header className="session-toolbar"><span>Sentrapedia beta</span><button type="button" onClick={signOut}>Keluar</button></header>
     {failed && <p role="alert">Keluar belum berhasil. Workspace tetap terkunci. Coba kembali.</p>}
     {!eligible || locked ? <p role="status">Workspace terkunci. <Link href="/sign-in">Masuk kembali</Link></p> : <div className="session-content" ref={root}>{children}</div>}
   </div>;

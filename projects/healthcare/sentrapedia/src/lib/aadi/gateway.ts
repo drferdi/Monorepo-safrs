@@ -79,7 +79,7 @@ export function createAadiGateway(options: Options = {}) {
       }
       let payload: unknown;
       try { payload = JSON.parse(await boundedBody(request, 32768)); } catch { return failure("INPUT", "Input tidak valid atau terlalu panjang.", 400); }
-      if (!payload || typeof payload !== "object" || !("case" in payload) || !("synthetic" in payload) || payload.synthetic !== true || Object.keys(payload).some(k => !["case", "synthetic"].includes(k)) || !validCase(payload.case)) return failure("INPUT", "Lengkapi kasus terstruktur dan konfirmasi data fiktif.", 400);
+      if (!payload || typeof payload !== "object" || !("case" in payload) || Object.keys(payload).some(k => k !== "case") || !validCase(payload.case)) return failure("INPUT", "Lengkapi kasus terstruktur.", 400);
       const caseData = payload.case;
       if (containsIdentity(JSON.stringify(caseData))) return failure("IDENTITY", "Input mengandung pola identitas. Hapus nama, nomor identitas, kontak dan alamat.", 400);
       if (!base || !token) return failure("NOT_CONFIGURED", "Token koneksi layanan analisis belum dikonfigurasi pada server workspace.", 503);
@@ -109,7 +109,7 @@ export function createAadiGateway(options: Options = {}) {
       const postService = async (path: string, body: unknown, signal = controller.signal): Promise<unknown> => {
         const serviceBody = JSON.stringify(body);
         if (new TextEncoder().encode(serviceBody).length > 65536) throw new ServiceFailure("INPUT");
-        const response = await fetchFn(`${base}${path}`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, "X-AADI-Case-Origin": "synthetic" }, body: serviceBody, signal, cache: "no-store", redirect: "error" });
+        const response = await fetchFn(`${base}${path}`, { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: serviceBody, signal, cache: "no-store", redirect: "error" });
         if (response.status === 429) throw new ServiceFailure("RATE_LIMITED", retryAfterSeconds(response.headers.get("retry-after")));
         if (!response.ok) throw new ServiceFailure("SERVICE");
         const raw = await boundedBody(response, 1048576);
@@ -149,7 +149,7 @@ export function createAadiGateway(options: Options = {}) {
             CONTRACT_MISMATCH: { status: 502, message: "Format hasil analisis tidak sesuai. Tidak ada hasil yang disimpan." },
             // Refusals the engine repeats for the same input: the message says what to change, not to retry.
             PII_DETECTED: { status: 400, message: "Layanan analisis menemukan pola identitas. Hapus nama dengan sapaan (Ibu, Bapak, Tn., Ny.), nomor identitas, kontak dan alamat; tanpa perubahan, kasus ini akan ditolak lagi." },
-            DATA_POLICY: { status: 503, message: "Layanan analisis hanya menerima kasus bertanda data fiktif. Periksa konfigurasi workspace; tidak ada analisis dijalankan." },
+            DATA_POLICY: { status: 503, message: "Kebijakan data layanan analisis belum sesuai untuk kasus klinis. Hubungi pengelola; tidak ada analisis dijalankan." },
             MODEL_NOT_ALLOWED: { status: 503, message: "Model perencanaan yang diminta tidak diizinkan oleh layanan analisis. Tidak ada analisis dijalankan." },
             INTERNAL_ERROR: { status: 502, message: "Terjadi gangguan internal pada layanan analisis. Tidak ada hasil yang disimpan; coba kembali beberapa saat lagi." },
           };

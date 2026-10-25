@@ -17,8 +17,8 @@ vi.mock("../src/lib/aadi/gateway", () => ({ createAadiGateway: () => ({
 }) }));
 vi.mock("../src/lib/theoracle-grounding", () => ({ retrieveTheOracleGrounding: async () => undefined, retrieveTheOracleTherapyGrounding: async () => undefined, warmTheOracleGrounding: async () => undefined }));
 
-const incoming = () => new Request("http://127.0.0.1:3101/api/aadi", { method: "POST", headers: { Origin: "http://127.0.0.1:3101", "Content-Type": "application/json" }, body: JSON.stringify({ synthetic: true, case: "fixture" }) });
-const accepted = { version: "sentrapedia-beta-v1", acceptedAt: "2026-10-24T00:00:00.000Z", syntheticOnly: true };
+const incoming = () => new Request("http://127.0.0.1:3101/api/aadi", { method: "POST", headers: { Origin: "http://127.0.0.1:3101", "Content-Type": "application/json" }, body: JSON.stringify({ case: "fixture" }) });
+const accepted = { version: "sentrapedia-beta-v2", acceptedAt: "2026-10-24T00:00:00.000Z" };
 beforeEach(() => { state.session = null; state.metadata = {}; state.steps = []; state.identityReads = 0; state.unavailable = false; state.failLookup = false; });
 
 describe("analysis route authorization", () => {
@@ -41,7 +41,7 @@ describe("analysis route authorization", () => {
     const request = incoming(); const response = await POST(request);
     expect(response.status).toBe(200);
     expect(state.steps).toEqual([request]);
-    expect(await state.steps[0].json()).toEqual({ synthetic: true, case: "fixture" });
+    expect(await state.steps[0].json()).toEqual({ case: "fixture" });
   });
   it("returns a generic unavailable error, never clinical work, when identity is unavailable", async () => {
     state.unavailable = true;
@@ -63,7 +63,7 @@ describe("analysis route authorization", () => {
   it("the onboarding route retains body/origin validation and cannot accept a forged subject", async () => {
     const { POST: consentPost } = await import("../src/app/api/onboarding/consent/route");
     state.session = "user_a";
-    const body = { version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true, userId: "user_b" };
+    const body = { version: "sentrapedia-beta-v2", accepted: true, userId: "user_b" };
     const request = new Request("http://127.0.0.1:3101/api/onboarding/consent", { method: "POST", headers: { Origin: "http://127.0.0.1:3101", "Content-Type": "application/json" }, body: JSON.stringify(body) });
     expect((await consentPost(request)).status).toBe(400);
     expect(state.metadata).toEqual({});

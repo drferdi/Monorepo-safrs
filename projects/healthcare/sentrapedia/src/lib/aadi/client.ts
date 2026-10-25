@@ -10,16 +10,15 @@ export class AadiRequestError extends Error {
   }
 }
 
-export async function requestAadiAnalysis(caseData: CaseState, options: { synthetic: boolean; signal?: AbortSignal; fetchFn?: typeof fetch }): Promise<AadiAnalysis> {
-  if (!options.synthetic) throw new Error("Konfirmasi bahwa keluhan dan konteks menggunakan data fiktif tanpa identitas pribadi.");
+export async function requestAadiAnalysis(caseData: CaseState, options: { signal?: AbortSignal; fetchFn?: typeof fetch } = {}): Promise<AadiAnalysis> {
   if (!validCase(caseData)) throw new Error("Keluhan atau konteks tidak valid atau terlalu panjang.");
-  if (containsIdentity(JSON.stringify(caseData))) throw new Error("Hapus identitas dari keluhan dan konteks. Gunakan data fiktif tanpa nama, nomor identitas, kontak atau alamat.");
+  if (containsIdentity(JSON.stringify(caseData))) throw new Error("Hapus identitas pasien dari keluhan dan konteks: nama, nomor identitas, kontak atau alamat.");
   options.signal?.throwIfAborted();
   const snapshot = structuredClone(caseData);
   let response: Response;
   let data: unknown;
   try {
-    response = await (options.fetchFn ?? fetch)("/api/aadi", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ case: snapshot, synthetic: true }), signal: options.signal });
+    response = await (options.fetchFn ?? fetch)("/api/aadi", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ case: snapshot }), signal: options.signal });
     data = await response.json();
   } catch (error) {
     // A cancel stays a cancel; a lost connection or unreadable body gets the same wording as the server's 502.

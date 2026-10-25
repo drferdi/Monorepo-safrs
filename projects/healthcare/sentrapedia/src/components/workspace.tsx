@@ -133,7 +133,7 @@ function WorkspaceState({ principalId }: { principalId: string }) {
     // The home composer gives way to the chat composer; keep typing where the reader is.
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".chat-composer textarea")?.focus());
     try {
-      const analysis = await requestAadiAnalysis(composerCase(text, current.context, patient, caseFields), { synthetic: true, signal: controller.signal });
+      const analysis = await requestAadiAnalysis(composerCase(text, current.context, patient, caseFields), { signal: controller.signal });
       if (controller.signal.aborted || analysisController.current !== controller) return;
       if (!encounter) dispatch({ type: "encounter.add", encounter: { ...current, title: text.trim().slice(0, 48) } });
       dispatch({ type: "message.add", encounterId: current.id, messages: composerAadiMessages(analysis, text, selectedMode, state.reviewDefaults) });

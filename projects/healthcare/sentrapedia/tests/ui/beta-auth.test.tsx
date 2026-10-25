@@ -31,7 +31,7 @@ describe("beta acknowledgement", () => {
     const [url, options] = send.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe("/api/onboarding/consent");
     expect(options.method).toBe("POST");
-    expect(JSON.parse(options.body as string)).toEqual({ version: "sentrapedia-beta-v1", accepted: true, syntheticOnly: true });
+    expect(JSON.parse(options.body as string)).toEqual({ version: "sentrapedia-beta-v2", accepted: true });
     expect(external.replace).toHaveBeenCalledTimes(1);
   });
   it("shows pending and generic failure states, keeping the acknowledgement available for retry", async () => {

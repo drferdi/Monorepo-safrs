@@ -7,4 +7,6 @@ response.schema.json SHA-256: e70b16bfba157b07d57afb0ee7489131fd4b8788ac58795395
 
 On 2026-10-17 both top-level descriptions here were rewritten to name the Sentrapedia gateway and files instead of Med Assist (tech-debt row 22); the copies under `aadi/service/contract/` keep the vendored text. On 2026-10-20 MIRA was renamed AADI in titles and descriptions on both sides, and the 2026-10-20 report fields were added; the `$id` values keep the upstream contract identity.
 
-Service protocol: POST /v1/diagnosis/step; GET /healthz. Server-held token, X-AADI-Case-Origin synthetic. No extension/native-host dependency, clinical rule changes, credential copies or new provider choice. Additional input bounds/identity patterns in contract.ts are Sentrapedia guards; they do not guarantee complete anonymization. Only synthetic data is accepted.
+Service protocol: POST /v1/diagnosis/step; GET /healthz. Server-held token. No extension/native-host dependency, clinical rule changes, credential copies or new provider choice. Additional input bounds/identity patterns in contract.ts are Sentrapedia guards; they do not guarantee complete anonymization.
+
+On 2026-10-26 the `X-AADI-Case-Origin: synthetic` marker was removed: the gateway no longer declares cases synthetic and `scripts/aadi-runtime.mjs` launches the engine under `AADI_DATA_POLICY=openai-standard-retention`. What keeps patient identity out is the pair of guards that always did the work, `containsIdentity()` here and `pii_kinds()` in the engine, not a declaration.

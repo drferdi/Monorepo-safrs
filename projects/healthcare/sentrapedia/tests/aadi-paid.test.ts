@@ -6,7 +6,7 @@ import { emptyCase } from "../src/lib/aadi/contract";
 import { THEORACLE_GROUNDING_CAPABILITY, TheOracleGroundingError, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 
 const version = (plan = selectedAadiModel, assess = selectedAadiModel) => `aadi-service/test+contract=1+provider=openai+data=synthetic-only+plan=${plan}+assess=${assess}+experimental`;
-const input = () => new Request("http://127.0.0.1:3104/api/aadi", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Kasus fiktif untuk uji" }, synthetic: true }) });
+const input = () => new Request("http://127.0.0.1:3104/api/aadi", { method: "POST", headers: { Origin: "http://127.0.0.1:3104", "Content-Type": "application/json" }, body: JSON.stringify({ case: { ...emptyCase(), chiefComplaint: "Kasus fiktif untuk uji" } }) });
 const result = { contractVersion: "1", status: "ok", differential: { likely: [], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: ["Input kurang"], nextBestActions: [], disposition: null, unfilled: [], meta: { version: version(), model: `${selectedAadiModel}+${selectedAadiModel}`, costUsd: 0.006 } };
 const grounding: TheOracleGroundingBundle = { version: THEORACLE_GROUNDING_CAPABILITY, corpus: { name: "TheOracle", indexSha256: "a".repeat(64), embeddingModel: { id: "onnx-community/embeddinggemma-300m-ONNX", revision: "e".repeat(40), dtype: "fp32", dims: 768 }, retrievedAt: "2026-10-10T12:00:00.000Z", reviewProvenance: "Gaffer stated session-level review provenance." }, queryDigest: "b".repeat(64), evidence: [{ evidenceId: "P001-001", text: "Kutipan TheOracle", retrievalRank: 1, similarity: 0.71, source: { title: "PNPK uji.md", docSource: "Kemenkes knowledge base", origin: "oracle-ii-knowledge-base", textSha256: "c".repeat(64) } }] };
 
@@ -58,7 +58,7 @@ describe("approved Gemini Flash profile", () => {
     expect((await (await gateway.step(input())).json()).error).toMatchObject({ code: "PROVIDER_AUTH", message: "Kunci API ditolak, periksa GEMINI_API_KEY." });
   });
   it("names the engine's refusals instead of suggesting a retry that would be refused again", async () => {
-    for (const [code, status, wording] of [["PII_DETECTED", 400, "Hapus"], ["DATA_POLICY", 503, "data fiktif"], ["MODEL_NOT_ALLOWED", 503, "tidak diizinkan"], ["INTERNAL_ERROR", 502, "gangguan internal"]] as const) {
+    for (const [code, status, wording] of [["PII_DETECTED", 400, "Hapus"], ["DATA_POLICY", 503, "Kebijakan data"], ["MODEL_NOT_ALLOWED", 503, "tidak diizinkan"], ["INTERNAL_ERROR", 502, "gangguan internal"]] as const) {
       const gateway = createAadiGateway({ log: () => undefined, model: selectedAadiModel, maxCostUsd: 0.1, token: "test-only", fetchFn: async url => Response.json(String(url).endsWith("healthz") ? { status: "ok", contractVersion: "1", version: version() } : { ...result, status: "unavailable", error: { code, message: "private raw engine message" } }) });
       const response = await gateway.step(input());
       const body = await response.json();
@@ -68,10 +68,13 @@ describe("approved Gemini Flash profile", () => {
       expect(JSON.stringify(body)).not.toContain("private raw engine message");
     }
   });
-  it("pins gemini-3.1-flash-lite on the direct Gemini API for both stages, synthetic-only", () => {
+  it("pins gemini-3.1-flash-lite on the direct Gemini API for both stages, any declared data policy", () => {
     expect(selectedAadiModel).toBe("gemini-3.1-flash-lite");
     expect(aadiServiceVersion(version(), selectedAadiModel)).toBe(true);
-    for (const value of [version("other/model"), version(selectedAadiModel, "other/model"), version().replace("synthetic-only", "openrouter-zdr"), version().replace("provider=openai", "provider=openrouter"), version("google/gemini-3.1-flash-lite", "google/gemini-3.1-flash-lite"), `${version()}+assess=${selectedAadiModel}`, "unknown"]) expect(aadiServiceVersion(value, selectedAadiModel)).toBe(false);
+    // The data policy is the owner's server setting, so a different known policy is still this engine.
+    expect(aadiServiceVersion(version().replace("synthetic-only", "openai-zdr-approved"), selectedAadiModel)).toBe(true);
+    expect(aadiServiceVersion(version().replace("synthetic-only", "made-up-policy"), selectedAadiModel)).toBe(false);
+    for (const value of [version("other/model"), version(selectedAadiModel, "other/model"), version().replace("provider=openai", "provider=openrouter"), version("google/gemini-3.1-flash-lite", "google/gemini-3.1-flash-lite"), `${version()}+assess=${selectedAadiModel}`, "unknown"]) expect(aadiServiceVersion(value, selectedAadiModel)).toBe(false);
   });
   it("derives model, budget and gateway timeout from the shared profile", () => {
     expect(selectedAadiModel).toBe(aadiProfile.model);
@@ -99,7 +102,8 @@ describe("approved Gemini Flash profile", () => {
     expect(response.status).toBe(200);
     expect((await response.json()).result.meta.costUsd).toBe(0.006);
     expect(new Headers(posted?.headers).has("X-AADI-Plan-Model")).toBe(false);
-    expect(new Headers(posted?.headers).get("X-AADI-Case-Origin")).toBe("synthetic");
+    // The gateway no longer marks cases as synthetic; the data policy is the engine's own server setting.
+    expect(new Headers(posted?.headers).has("X-AADI-Case-Origin")).toBe(false);
   });
   it("rejects missing, negative or over-limit cost and inconsistent result models", async () => {
     for (const meta of [{ ...result.meta, costUsd: null }, { ...result.meta, costUsd: -0.1 }, { ...result.meta, costUsd: 0.11 }, { ...result.meta, model: "other/model+other/model" }, { ...result.meta, version: version("other/model") }]) {

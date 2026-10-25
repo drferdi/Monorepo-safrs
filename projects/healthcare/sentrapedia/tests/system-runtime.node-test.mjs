@@ -77,7 +77,7 @@ test("engine uses capsule runtime and preserves approved profile despite inherit
   assert.equal(env.OPENROUTER_API_KEY, undefined);
   for (const name of ["AADI_OPENROUTER_PROVIDER_SORT", "AADI_OPENROUTER_ZDR", "AADI_FAST_COPY_PROVIDERS"]) assert.equal(env[name], "");
   assert.equal(env.AADI_DEV_TOKEN, "new-token");
-  assert.equal(env.AADI_DATA_POLICY, "synthetic-only");
+  assert.equal(env.AADI_DATA_POLICY, "openai-standard-retention");
   assert.equal(env.AADI_PLAN_MODEL, model);
   assert.equal(env.AADI_ASSESS_MODEL, model);
   assert.equal(env.AADI_FAST_THERAPY, "true");
@@ -93,7 +93,7 @@ test("startup requires a provider key without exposing values", () => {
 });
 
 test("workspace waits for grounded matching engine rather than old separate services", () => {
-  const health = { status: "ok", contractVersion: "1", capabilities: ["theoracle-grounding-v2"], version: `aadi-service/0.1.0+contract=1+provider=openai+data=synthetic-only+plan=${model}+assess=${model}+experimental+ddx=provisional+assessment=fast+therapy=fast` };
+  const health = { status: "ok", contractVersion: "1", capabilities: ["theoracle-grounding-v2"], version: `aadi-service/0.1.0+contract=1+provider=openai+data=openai-standard-retention+plan=${model}+assess=${model}+experimental+ddx=provisional+assessment=fast+therapy=fast` };
   assert.equal(engineReady(health), true);
   for (const changed of [{ capabilities: [] }, { contractVersion: "2" }, { status: "unavailable" }, { version: health.version.replace(model, "other") }, { version: health.version.replace("provider=openai", "provider=openrouter") }, { version: health.version.replace("+therapy=fast", "") }]) assert.equal(engineReady({ ...health, ...changed }), false);
 });

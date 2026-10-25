@@ -16,7 +16,7 @@ export const storageKey = "sentrapedia-workspace-v1";
 
 export const initialWorkspace: Workspace = {
   version: 1,
-  patients: [{ id: "demo-patient", name: "Pasien", age: "", sex: "Not specified", notes: "Pasien demonstrasi fiktif. Ganti dengan informasi fiktif saja." }],
+  patients: [{ id: "demo-patient", name: "Pasien", age: "", sex: "Not specified", notes: "Pasien contoh. Ganti dengan kasus Anda, tanpa identitas pasien." }],
   lists: [],
   encounters: [
     { id: "demo-encounter", patientId: "demo-patient", title: "Encounter (10/08 09:03 PM)", createdAt: "2026-10-08T14:03:00Z", messages: [], context: "" },
@@ -76,9 +76,14 @@ function strings(value: unknown, keys: string[]): boolean { return record(value)
 function oneOf(values: readonly string[], value: unknown): boolean { return values.some((known) => known === value); }
 
 // Builds before 2026-10-09 seeded the demo patient as "Patient"; only that untouched seed text now reads "Pasien".
+// These are the seed notes earlier builds wrote, kept verbatim: they are saved data to recognise, not copy to edit.
+const previousSeedNotes = [
+  "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja.",
+  "Pasien demonstrasi fiktif. Ganti dengan informasi fiktif saja.",
+];
 function seedWording(patient: Patient): Patient {
   if (patient.id !== "demo-patient") return patient;
-  return { ...patient, name: patient.name === "Patient" ? initialWorkspace.patients[0].name : patient.name, notes: patient.notes === "Patient demonstrasi fiktif. Ganti dengan informasi fiktif saja." ? initialWorkspace.patients[0].notes : patient.notes };
+  return { ...patient, name: patient.name === "Patient" ? initialWorkspace.patients[0].name : patient.name, notes: previousSeedNotes.includes(patient.notes) ? initialWorkspace.patients[0].notes : patient.notes };
 }
 
 /** Where saved text that no longer validates is kept, so a reset never destroys it. */

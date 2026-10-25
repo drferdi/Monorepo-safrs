@@ -13,5 +13,8 @@ export function aadiServiceVersion(version: unknown, model: string): boolean {
   if (!/^(?:[a-z0-9._-]+\/)?[a-z0-9._-]+(?::[a-z0-9._-]+)?$/i.test(model) || typeof version !== "string" || !version.startsWith("aadi-service/")) return false;
   const fields = version.split("+").slice(1);
   const field = (key: string) => { const matches = fields.filter(s => s.startsWith(`${key}=`)); return matches.length === 1 ? matches[0].slice(key.length + 1) : undefined; };
-  return field("contract") === "1" && field("provider") === "openai" && field("data") === "synthetic-only" && field("plan") === model && field("assess") === model;
+  // The data policy is the owner's server-side setting (AADI_DATA_POLICY), so the client accepts any
+  // policy the engine declares and never pins the development default. An unknown value still fails.
+  const dataPolicies = ["synthetic-only", "openai-standard-retention", "openai-zdr-approved", "openrouter-zdr"];
+  return field("contract") === "1" && field("provider") === "openai" && dataPolicies.includes(field("data") ?? "") && field("plan") === model && field("assess") === model;
 }

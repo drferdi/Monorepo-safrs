@@ -7,7 +7,7 @@ import type { AadiResult } from "../src/lib/aadi/contract";
 // one-analysis-at-a-time behaviour.
 const caseData = { demographics: { ageYears: 30, sex: "unknown" }, chiefComplaint: "Keluhan fiktif untuk uji beta", anamnesis: { freeText: "Contoh sintetis" }, vitals: {}, physicalExam: [], results: [], currentMedications: [], knownConditions: [], allergies: [], facilityCapabilities: [] };
 const result: AadiResult = { contractVersion: "1", status: "ok", differential: { likely: [{ icd10: "J00", label: "Nama keluaran uji", confidenceTier: "low" }], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: [], nextBestActions: [], disposition: null, unfilled: [], meta: { version: "test-only", model: "mock", costUsd: 0 } };
-const body = () => JSON.stringify({ case: caseData, synthetic: true });
+const body = () => JSON.stringify({ case: caseData });
 const BETA = "https://beta.sentrapedia.com";
 const post = (url: string, headers: Record<string, string>) => new Request(url, { method: "POST", headers: { "Content-Type": "application/json", ...headers }, body: body() });
 const local = () => post("http://localhost:3104/api/aadi", { Origin: "http://localhost:3104" });

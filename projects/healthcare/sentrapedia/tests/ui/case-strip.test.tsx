@@ -81,7 +81,7 @@ describe("analysis case strip", () => {
     expect(screen.getByRole("group", { name: "Salin ke P-Care" })).toBeTruthy();
     expect(screen.getByRole("button", { name: /^Salin G44\.2 — / })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /Surat rujukan/ }));
-    expect((screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement).value).toMatch(/^Keluhan utama: Laki-laki 45 tahun[^\n]*Diagnosis kerja \(kandidat AADI, belum terkonfirmasi\): Tension-type headache \(G44\.2\)\nRiwayat penyakit sekarang: 45 tahun, laki-laki\. Pasien demonstrasi fiktif[^\n]*\nPemeriksaan fisik: Sistolik \(mmHg\) 160; Diastolik \(mmHg\) 95; Nadi \(\/menit\) 98\nPermintaan: \nPenerima: $/);
+    expect((screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement).value).toMatch(/^Keluhan utama: Laki-laki 45 tahun[^\n]*Diagnosis kerja \(kandidat AADI, belum terkonfirmasi\): Tension-type headache \(G44\.2\)\nRiwayat penyakit sekarang: 45 tahun, laki-laki\. Pasien contoh[^\n]*\nPemeriksaan fisik: Sistolik \(mmHg\) 160; Diastolik \(mmHg\) 95; Nadi \(\/menit\) 98\nPermintaan: \nPenerima: $/);
     expect(screen.getByRole("combobox", { name: "Mode atau templat" }).textContent).toContain("Surat Rujukan");
     expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
     expect(sent).toHaveLength(1);

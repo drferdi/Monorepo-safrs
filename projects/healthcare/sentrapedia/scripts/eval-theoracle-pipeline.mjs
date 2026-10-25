@@ -23,7 +23,7 @@ for (const item of queries.filter(q => q.gold?.length && !q.term)) {
   let started, response, body;
   for (let attempt = 0; ; attempt++) {
     started = performance.now();
-    response = await fetch(`${base}/api/aadi`, { method: "POST", headers: { "Content-Type": "application/json", Origin: base }, body: JSON.stringify({ case: caseData, synthetic: true }) });
+    response = await fetch(`${base}/api/aadi`, { method: "POST", headers: { "Content-Type": "application/json", Origin: base }, body: JSON.stringify({ case: caseData }) });
     body = await response.json().catch(() => null);
     if (response.status !== 429 || body?.error?.code !== "RATE_LIMITED" || attempt === MAX_RATE_RETRIES) break;
     const wait = Number(response.headers.get("retry-after")) || 60;
