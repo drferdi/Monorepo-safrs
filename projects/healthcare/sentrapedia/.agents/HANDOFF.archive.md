@@ -1,5 +1,17 @@
 # Sentrapedia handoff archive
 
+## Archived on 2026-10-25 - handoff rotation for the sync guard and workspace_sync (newest five kept)
+
+## Published to its own repository on Gaffer's word: branch feat/sentrapedia-knowledge-ssot-v06-2026-10-24 - 2026-10-25 Asia/Jakarta
+
+- Gaffer: "Ya, kirim Sentrapedia ke repo sendiri", and after the LFS finding was put to him, "Ya, kirim sekarang. Perbaikan indeksnya nanti saja, terpisah." Jev: `ask_human` (account/irreversible class), satisfied by that explicit go.
+- Split `fad1e41f` of `main` `2e09f3ec` pushed to the new branch `feat/sentrapedia-knowledge-ssot-v06-2026-10-24` on `drferdi/Sentrapedia`: 74 new commits, 662 files. Verified after the push by re-fetching: the remote branch is `fad1e41f`, identical to the local split, and `sentrapedia/main` is untouched at `a056f65b` (PR #25). No force, no PR; Gaffer opens and merges. **The next split must descend from `fad1e41f`.**
+- Three checks first. (1) It descends from the last published split `5c2d8126`, which is in `sentrapedia/main`. (2) Its tree equals the capsule tree, `42874f56` on both sides. (3) It merges with `sentrapedia/main` without conflict (fast-forward; `git merge-tree --write-tree` exit 0, result tree `42874f56`) - **but LFS-filtered files did change**, the first time this part of the check has gone red here. 15 LFS paths changed (14 PNGs, whose objects the remote already had, plus `theoracle/index/vectors.f32`), and the push uploaded 16 objects, 884 MB at 48 MB/s: one 53 MB index blob for each of the 17 rebuilds in this range, less the one already on the remote.
+- Gaffer decided with that in hand. The quota figure first given him was wrong and was corrected from GitHub's own billing document: the included Git LFS quota is 10 GiB storage and 10 GiB bandwidth a month on Free and Pro, not the old 1 GB plus 5 USD 50 GB data packs, which GitHub has replaced with metered billing. This push is therefore about 8% of the quota rather than almost all of it, and a 0 USD budget blocks LFS instead of billing for overage.
+- The 884 MB could not be avoided for this publish: the older index blobs are referenced by the 74 commits being published, and deleting a file in a later commit does not remove it from history. Only a history rewrite would have avoided it, and this repository forbids force-pushing.
+- Open, deliberately left as separate work on Gaffer's instruction: stop carrying the generated index in git history, so a knowledge session no longer adds about 53 MB per rebuild (at this rate 10 GiB is reached after roughly 190 rebuilds). The capsule already holds both halves of the answer - `scripts/install-theoracle-model.mjs` fetches a pinned artefact from outside git and verifies it by SHA-256, and `scripts/private-data.mjs` already classifies `theoracle/index/` as private data belonging to the separate data repository. It touches install and deploy, so it is R2.
+- Open, not from this session and not read: GitHub reports one high Dependabot alert on the Sentrapedia default branch.
+
 ## Archived on 2026-10-25 - handoff rotation for the e2e integration build (newest five kept)
 
 ## Clerk closed-beta implementation - 2026-10-24 Asia/Jakarta
