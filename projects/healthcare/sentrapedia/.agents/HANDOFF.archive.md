@@ -1,3 +1,19 @@
+## Archived on 2026-10-26 - a sixth entry was added (the synthetic declaration removed); HANDOFF keeps the newest five
+
+## The workspace can push and pull: sync wired into the account dialog (R2, 518893dc) - 2026-10-25 Asia/Jakarta
+
+- Gaffer: "Lanjutkan wiring UI ke /api/sync (push dan pull dari workspace)." Decision in `.agents/DECISIONS.md` (2026-10-25, "A pull adds, it never overwrites").
+- Two buttons in the Workspace dialog, in Indonesian: **Kirim ke server** and **Ambil dari server**. New modules `src/lib/sync/{client,contract,merge,messages}.ts`; the handlers live in `workspace-forms.tsx`, which already had `state`, `dispatch` and `notify`, so nothing had to be threaded through `workspace.tsx`.
+- **The load-bearing rule: a pull only ADDS encounters the browser does not have, and never overwrites one.** The server copy is the de-identified projection, so it carries no `revisions`, no `sourceText`, no `originalContent` and no `templateSnapshot`; overwriting a local encounter with it would destroy the doctor's revision history and the evidence behind an AI answer. `mergePulledDocuments` returns the **same** workspace object when nothing was added, so the save effect does not rewrite an identical blob.
+- A `patient_ref` that does not resolve locally becomes null rather than dangling (patients never sync). A `formatVersion` this build does not know is skipped and counted, not guessed at. A malformed document is ignored.
+- Failure never disturbs the workspace: an unavailable or failed call produces a message only, and the route's 503 reads as the ordinary state of an instance without a database rather than an error.
+- The dialog's notice used to say there is no cross-device synchronisation. This change made that false, so it was corrected in the same commit - it now says sync runs only when the server enables it and never includes patient data.
+- **Proved in the browser against the live database, not only by unit tests.** `next dev` in local auth mode on 127.0.0.1:3197, the real Workspace dialog: **Kirim** pushed this browser's four encounters, and the database then held four rows under `user_localdevelopment` with the right titles and `sourceText_leak=0 revisions_leak=0`. A server-only document was then seeded and **Ambil** pulled it back: the encounter count went **4 to 5**, "Catatan dari perangkat lain" appeared in the sidebar, and the four existing encounters were skipped and kept, with the toast naming that.
+- An incidental re-proof of the fail-safe default: the seeding script's final `select count(*)` ran outside the transaction, with no principal set, and returned **0** rather than the row it had just inserted.
+- **Gate: `typecheck` 0, `lint` 0 (3 inherited warnings), `test:all` 0 - Vitest 562 passed over 51 files (545 over 49 before, exactly the seventeen new ones: seven merge and ten message tests), site 53, system 67, AADI pytest 237 passed 1 skipped - `build` 0, `deploy:dry-run` 0.**
+- Cleaned up: every proof row deleted (`profile=0 workspace_sync=0`), `next-env.d.ts` restored after `next dev` rewrote its paths, and this time the dev server was stopped **by PID** rather than by killing every Node process, which is what the previous entry records doing wrong.
+- Still not done: sync is manual only, with no automatic push on change and no conflict handling beyond add-only; `profile` still stores no specialty, language or display name; `personal_template` is still unused; and the Docker image and beta server still carry no `SENTRAPEDIA_DATABASE_URL`. Still on `feat/e2e-integration`, nothing pushed, no paid call.
+
 ## Archived on 2026-10-26 - a sixth entry was added (the sentrapedia.com apex fix); HANDOFF keeps the newest five
 
 ## Neon provisioned and workspace sync proved end to end (R2, 13fe680e and 20bb6cb8) - 2026-10-25 Asia/Jakarta
