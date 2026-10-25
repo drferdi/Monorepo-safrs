@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import logomark from "../../assets/sentraverse-mark.png";
 
 function Arrow({ diagonal = false }: { diagonal?: boolean }) {
   return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
@@ -56,9 +58,11 @@ export function AuthFrame({ title, children }: { title: string; children: ReactN
   return <main className="auth-page">
     <div className="auth-layout">
       <header className="auth-header">
+        {/* The same lockup the website header renders: the neuron mark, then the wordmark in Inter 700.
+            Taken from sentrapedia-wordmark-compact.svg, whose mark is byte-identical to this asset. */}
         <a className="auth-brand" href="https://sentrapedia.vercel.app/">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" focusable="false"><path d="M23 7H10v9h12v9H8M16 2v28" /></svg>
-          <span>Sentrapedia<span className="auth-brand-period">.</span></span>
+          <Image src={logomark} alt="" width={22} height={17} unoptimized aria-hidden="true"/>
+          <span>Sentrapedia</span>
         </a>
         <a className="auth-back" href="https://sentrapedia.vercel.app/">Kembali ke website <Arrow diagonal /></a>
       </header>

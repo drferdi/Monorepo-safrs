@@ -3,12 +3,27 @@
   padding: 0 clamp(1.25rem, 4.4vw, 5rem);
   background: var(--color-background-canvas);
   color: var(--color-text-primary);
+  /* Set here as well as in the tokens below: text that only inherits would otherwise keep body's Geist. */
+  font-family: var(--font-body);
+  /* The doctor arrives here from apps/site, so these pages speak that page's brand rather than the
+     workspace's: Inter throughout, and its ink, muted and action colours, read from the live site.
+     Scoped to .auth-page, so the workspace behind the login keeps Chief's type pair untouched.
+     --workspace-control-border is deliberately NOT taken from the site: the site's #a8bfba sits at
+     about 2:1 on white, under the 3:1 WCAG 2.2 asks of a field edge, so the accessible edge stays. */
+  --font-title: var(--font-inter), "Inter", sans-serif;
+  --font-body: var(--font-inter), "Inter", sans-serif;
+  --color-background-canvas: #fff;
+  --color-text-primary: #191c1c;
+  --color-text-secondary: #4a5956;
+  --workspace-accent-ink: #13786e;
+  /* globals.css gives every h1/h2 an explicit --title-color, so inheriting .auth-page's colour is not enough. */
+  --title-color: #191c1c;
 }
 .auth-layout { max-width: 1320px; margin: 0 auto; }
 .auth-header { min-height: 108px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid var(--rule-strong); }
-.auth-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--color-text-primary); text-decoration: none; font: 700 25px/1 var(--font-title); letter-spacing: -1.1px; }
-.auth-brand > svg { width: 31px; height: 31px; stroke: var(--color-text-primary); stroke-width: 2.5; }
-.auth-brand-period { color: var(--workspace-accent-ink); }
+/* The website header sets the wordmark at Inter 700, 20px, #202020, six pixels after a 22x17 mark. */
+.auth-brand { display: inline-flex; align-items: center; gap: 6px; color: #202020; text-decoration: none; font: 700 20px/1 var(--font-title); letter-spacing: -.01em; }
+.auth-brand > img { width: 22px; height: 17px; object-fit: contain; }
 .auth-back { display: inline-flex; align-items: center; gap: 16px; min-height: 44px; color: var(--color-text-secondary); text-decoration: none; font-size: 12px; }
 .auth-back svg, .auth-navigation svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.5; transition: transform 180ms ease; }
 .auth-back:hover { color: var(--workspace-accent-ink); }
