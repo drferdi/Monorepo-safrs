@@ -1,6 +1,6 @@
 # Sentrapedia handoff
 
-## The Cloudflare Access gate is down: Clerk is now the only door to beta (R3, uncommitted) - 2026-10-26 Asia/Jakarta
+## The Cloudflare Access gate is down: Clerk is now the only door to beta (R3, 31abafad) - 2026-10-26 Asia/Jakarta
 
 - Gaffer's go, verbatim: "Ya, matikan gate Cloudflare Access sekarang." He had already said "Tunnel, TLS dan proteksi admin tetap." Jev returned `ask_human` for the account/irreversible class before anything was touched, and Gaffer answered it. Mid-work he said "TERSERAH" to being asked which method; that is read as stop consulting on method, not as withdrawing the go, because the go was explicit one message earlier.
 - **The diagnosis that matters more than the change: beta had two doors for one job.** Cloudflare Access was installed when the app had no login at all. Clerk then became the real door, and Access was never removed. Its guest list held two addresses, so every invited doctor stopped at the edge and never reached Clerk's sign-up page. The cutover deletes a redundant layer; it does not weaken a designed one.
