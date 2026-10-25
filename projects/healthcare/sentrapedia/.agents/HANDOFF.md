@@ -1,6 +1,6 @@
 # Sentrapedia handoff
 
-## The admission pages stop looking like a different product (R1, 529f2b31 and f90e934f) - 2026-10-26 Asia/Jakarta
+## The admission pages stop looking like a different product (R1, 529f2b31 and f90e934f; recorded in f87a1cb0) - 2026-10-26 Asia/Jakarta
 
 - Gaffer, in order: "desain nya harus senada dengan website Sentrapedia", then "masa logo beda, tulisan beda, warna beda dari halaman utama". Both were measured against the live site before anything was changed, and he was right on every count.
 - **`529f2b31`: the Clerk widget.** It rendered its own floating card (12 px radius, a three-layer shadow) inside `.auth-panel`, so the two read as separate products stacked. Its chrome is stripped, labels become the panel's uppercase micro-label, inputs are square with a hairline edge, and the submit button is the black primary of `.auth-navigation`. Clerk's heading and its "Don't have an account?" link are hidden rather than restyled, because the panel already carries both; "Secured by Clerk" is deliberately kept. The real `cl-*` class names were read off the live page rather than guessed.
