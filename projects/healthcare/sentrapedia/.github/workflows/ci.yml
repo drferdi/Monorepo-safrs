@@ -133,8 +133,10 @@ jobs:
           labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           # One manifest per push, so the retention step below counts images, not attestations.
           provenance: false
+          # No cache-to: exporting the layer cache cost 274s of a 442s job (62%) on run 40248543108 and 417s of
+          # 609s on 40246570312, while pushing the image itself takes under 4s because the registry already holds
+          # the unchanged layers. cache-from stays: it still reads entries earlier runs wrote, until they expire.
           cache-from: type=gha
-          cache-to: type=gha,mode=max
       - id: artifact
         if: steps.publication.outputs.artifact == 'true'
         run: node scripts/split-release-artifact.mjs /tmp/sentrapedia-candidate.tar /tmp/sentrapedia-parts
