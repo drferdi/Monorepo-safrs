@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import logomark from "../../assets/sentraverse-mark.png";
-import { TesseractFigure } from "./tesseract/figure";
+import { CabinetFigure } from "./cabinet/figure";
 
 const site = "https://sentrapedia.vercel.app/";
 
@@ -32,7 +32,7 @@ export function AuthFrame({ title, alternative, children }: {
         <div className="auth-card-body">{children}</div>
         {alternative && <p className="auth-alternative">{alternative.prompt} <Link href={alternative.href}>{alternative.label}</Link></p>}
       </section>
-      <TesseractFigure/>
+      <CabinetFigure/>
     </div>
 
     <footer className="auth-footer">
