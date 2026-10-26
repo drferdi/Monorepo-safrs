@@ -1,5 +1,11 @@
 # Sentrapedia handoff
 
+## The auth footer credits dr. Ferdi Iskandar: split pushed, PR and build pending (R1, branch `feat/auth-tesseract-figure`) - 2026-10-26 Asia/Jakarta
+
+- Gaffer: replace "Keputusan klinis akhir tetap pada klinisi." with "Architected and built by dr. Ferdi Iskandar" (his first wording "Architect and built by dr Ferdi Iskandar" went in as `145143ee`, the spelling he then chose as `c4ac0fd9`). One line in `src/components/auth/auth-frame.tsx`; auth page tests pass, eslint 0.
+- **Split `f3a60a09`** (descends from `75518917` PASS, tree equal PASS, 0 LFS files, no merge conflict, no secret) pushed as `feat/sentrapedia-auth-footer-credit-2026-10-26` on the product repository: 6 commits, 3 files, +28/-2. Prepared PR text in `.agents/PR-auth-footer.md`. Gaffer opens and merges the PR himself (merge commit), then says when to build on the server. **The next split must descend from `f3a60a09`.**
+- Beta still serves `17a98c2ee455` with the old footer; the server build route is the one below (no `update.sh` until the server has a ghcr login or an index token).
+
 ## The sign-in and sign-up pages gain a card-index cabinet beside the card (R1, branch `feat/auth-tesseract-figure`, not merged) - 2026-10-26 Asia/Jakarta
 
 - Gaffer asked, with the `/anatomy` skill, for a redesign of the sign-in, register and login pages as a "tesseract of knowledge made of many elements". The first build, Dali's unfolded tesseract of eight cube cells (commit `0d75dfc9`), he judged ugly ("ini jelek"): it read as stacked boxes, the skill's "too abstract" failure. It was replaced by a thing a reader names at a glance. `/sign-in`, `/sign-up` and `/apply` (which redirects to `/sign-up`) all render through `AuthFrame`, so one change covers them.
