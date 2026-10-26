@@ -49,9 +49,10 @@
   /* auto on all four sides centres the card in the space the header and footer leave. */
   margin: auto;
   padding: clamp(28px, 3.4vw, 40px) clamp(22px, 2.8vw, 34px) clamp(26px, 3vw, 34px);
-  border: 1px solid var(--rule-strong);
-  border-top: 3px solid var(--workspace-accent-ink);
+  border: 0;
+  border-radius: 12px;
   background: var(--workspace-white);
+  box-shadow: 0 0 0 1px rgba(25, 28, 28, .06), 0 5px 15px rgba(25, 28, 28, .08), 0 15px 35px -5px rgba(25, 28, 28, .2);
   animation: auth-rise 420ms cubic-bezier(.2,.7,.2,1) both;
 }
 .auth-kicker { display: flex; align-items: baseline; gap: 8px; margin: 0 0 14px; color: var(--color-text-secondary); font-size: 10px; font-weight: 500; letter-spacing: 1.1px; text-transform: uppercase; }
@@ -80,30 +81,12 @@
 .auth-card-body form > [role="status"] { padding: 10px 12px; background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); }
 
 .auth-card-body .cl-rootBox, .auth-card-body .cl-cardBox { width: 100%; max-width: 100%; }
-/* Clerk ships its own floating card. Inside .auth-card it would read as a card within a card, so its
-   chrome is stripped and the widget is dressed in the page's own language: square edges, hairline
-   rules, the micro-label, and the same black primary button. */
+/* The widget keeps Clerk's own look for its fields, buttons and links. Only its floating card is flattened, because
+   .auth-card is already the card, and the pieces the card says in its own words: the heading and the switch link. */
 .auth-card-body .cl-cardBox { border: 0; border-radius: 0; background: none; box-shadow: none; }
 .auth-card-body .cl-card { gap: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
-/* The card already carries the kicker and the h1, so Clerk's heading would say it a second time. */
 .auth-card-body .cl-header { display: none; }
-.auth-card-body .cl-main { gap: 20px; }
-.auth-card-body .cl-form { gap: 18px; }
-.auth-card-body .cl-formFieldLabelRow { margin-bottom: 7px; }
-.auth-card-body .cl-formFieldLabel { color: var(--color-text-secondary); font: 500 9px/1.6 var(--font-body); letter-spacing: 1.1px; text-transform: uppercase; }
-.auth-card-body .cl-required { color: var(--workspace-accent-ink); }
-.auth-card-body .cl-formFieldInput { width: 100%; min-height: 46px; padding: 12px 14px; border: 1px solid var(--workspace-control-border); border-radius: 0; background: var(--workspace-white); color: var(--color-text-primary); font: 400 13px/1.5 var(--font-body); box-shadow: none; transition: border-color 180ms ease; }
-.auth-card-body .cl-formFieldInput:hover { border-color: var(--rule-strong); }
-.auth-card-body .cl-formFieldCheckboxInput { width: 15px; height: 15px; margin-top: 2px; flex-shrink: 0; border-radius: 0; accent-color: var(--workspace-accent-ink); }
-.auth-card-body .cl-formFieldCheckboxLabel { color: var(--color-text-secondary); font: 400 11px/1.7 var(--font-body); letter-spacing: 0; text-transform: none; }
-.auth-card-body .cl-formFieldCheckboxLabel a { color: var(--workspace-accent-ink); text-underline-offset: .2em; }
-.auth-card-body .cl-formButtonPrimary { width: 100%; min-height: 46px; padding: 12px 15px; border: 1px solid var(--rule-strong); border-radius: 0; background: var(--color-text-primary); color: var(--workspace-white); font: 500 12px/1 var(--font-body); letter-spacing: 0; text-transform: none; box-shadow: none; transition: background 180ms ease, border-color 180ms ease; }
-.auth-card-body .cl-formButtonPrimary:hover, .auth-card-body .cl-formButtonPrimary:focus-visible { border-color: var(--workspace-accent-ink); background: var(--workspace-accent-ink); }
-.auth-card-body .cl-formButtonPrimary:active { background: var(--workspace-on-accent); }
-/* .auth-alternative already offers the other page in words; Clerk's own switch link repeats it. */
 .auth-card-body .cl-footerAction { display: none; }
-.auth-card-body .cl-footer { padding: 0; border: 0; background: none; }
-.auth-card-body .cl-footer, .auth-card-body .cl-footerItem { font-size: 9px; letter-spacing: .6px; }
 
 .authenticated-workspace { display: flex; flex-direction: column; height: 100dvh; }
 .session-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem 1rem; border-bottom: 1px solid var(--color-border-subtle); font-size: .8rem; }
@@ -124,5 +107,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .auth-page .auth-card { animation: none; }
-  .auth-page .auth-primary, .auth-page .cl-formButtonPrimary, .auth-page .cl-formFieldInput { transition: none; }
+  .auth-page .auth-primary { transition: none; }
 }
