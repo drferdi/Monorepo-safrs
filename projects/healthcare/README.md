@@ -14,7 +14,7 @@ Healthcare systems that share compliance context and patient-data handling.
 | [`assistverse`](./assistverse/README.md) | Public Sentra Assist website (Next.js) |
 | [`sentrapedia`](./sentrapedia/README.md) | Sentrapedia clinical workspace with its public marketing site under `apps/site/` |
 | [`referralink`](./referralink/README.md) | MEDLINK sandbox for differential diagnosis, ICD-10 mapping, and referral (Vite) |
-| [`healthsphere`](./healthsphere/README.md) | Public website of UPTD Puskesmas PONED Balowerti Kediri (app in `website/`) |
+| [`balowerti`](./balowerti/) | Public static website of UPTD Puskesmas PONED Balowerti Kediri |
 | [`med-assist`](./med-assist/README.md) | Chrome side-panel extension for FKTP clinicians in ePuskesmas (WXT) |
 | [`medboard`](./medboard/README.md) | Clinical intelligence dashboard: CDSS, trajectory, NEWS2, safety gates (Next.js) |
 | [`sidelab-src`](./sidelab-src/README.md) | SideLab research-prototype clinical decision support (Python engine, API, dashboard) |

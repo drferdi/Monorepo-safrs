@@ -21,7 +21,7 @@ capsule (or its domain) with `!`; "not included" means the `projects/*/*/apps/*`
 | **healthcare** | | | |
 | healthcare/assistverse | Public Sentra Assist website (prototype) | `project.contract.json` | excluded (`!projects/healthcare/**`) |
 | [healthcare/avery](avery.md) | Avery, Sentra's Hermes agent, as versioned configuration | `project.contract.json` | excluded |
-| healthcare/healthsphere | Puskesmas public website plus primary-care master assets | `project.contract.json` | excluded |
+| healthcare/balowerti | Public static website of UPTD Puskesmas PONED Balowerti | none | excluded |
 | healthcare/mantra | Hospital management platform (Frappe) for RSIA Melinda | `project.contract.json` | excluded |
 | healthcare/med-assist | Chrome side-panel extension for FKTP clinicians in ePuskesmas | `project.contract.json` | excluded |
 | healthcare/medboard | Clinical intelligence dashboard for primary healthcare | `project.contract.json` | excluded |
