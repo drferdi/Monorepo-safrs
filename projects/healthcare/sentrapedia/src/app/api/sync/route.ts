@@ -1,5 +1,5 @@
 import { getBetaAccess } from "../../../lib/auth/server";
-import { accessFailure } from "../../../lib/auth/access";
+import { accessFailure, errorResponse } from "../../../lib/auth/access";
 import { syncPrincipal } from "../../../lib/sync/principal";
 import { syncConfigured } from "../../../lib/sync/db";
 import { pullEncounters, pushEncounters } from "../../../lib/sync/store";
@@ -9,12 +9,13 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const maxBodyBytes = 1_000_000;
-const unavailable = () => Response.json({ status: "error", error: { code: "SYNC_UNAVAILABLE", message: "Sinkronisasi server belum aktif di instance ini." } }, { status: 503, headers: { "Cache-Control": "no-store" } });
-const badInput = () => Response.json({ status: "error", error: { code: "INPUT", message: "Data sinkronisasi tidak valid. Muat ulang halaman dan coba kembali." } }, { status: 400, headers: { "Cache-Control": "no-store" } });
+const unavailable = () => errorResponse(503, "SYNC_UNAVAILABLE", "Sinkronisasi server belum aktif di instance ini.");
+const badInput = () => errorResponse(400, "INPUT", "Data sinkronisasi tidak valid. Muat ulang halaman dan coba kembali.");
 
 // The principal always comes from the verified session, never from the request body: a client-supplied id would
-// become the database principal and defeat every policy.
+// become the database principal and defeat every policy. An instance without sync answers before any identity lookup.
 async function principalOf(): Promise<{ ok: true; principal: string } | { ok: false; response: Response }> {
+  if (!syncConfigured()) return { ok: false, response: unavailable() };
   const access = await getBetaAccess().resolve();
   if (access.status !== "allowed") return { ok: false, response: accessFailure(access) };
   const principal = syncPrincipal(access.userId);
@@ -22,7 +23,6 @@ async function principalOf(): Promise<{ ok: true; principal: string } | { ok: fa
 }
 
 export async function GET() {
-  if (!syncConfigured()) return unavailable();
   const resolved = await principalOf();
   if (!resolved.ok) return resolved.response;
   try {
@@ -34,7 +34,6 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  if (!syncConfigured()) return unavailable();
   const resolved = await principalOf();
   if (!resolved.ok) return resolved.response;
   if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") return badInput();
