@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import logomark from "../../assets/sentraverse-mark.png";
+import { TesseractFigure } from "./tesseract/figure";
 
 const site = "https://sentrapedia.vercel.app/";
 
@@ -22,12 +23,17 @@ export function AuthFrame({ title, alternative, children }: {
       <a className="auth-back" href={site}>Kembali ke website</a>
     </header>
 
-    <section className="auth-card" aria-label={title}>
-      <p className="auth-kicker">Workspace klinis <span>Beta</span></p>
-      <h1>{title}</h1>
-      <div className="auth-card-body">{children}</div>
-      {alternative && <p className="auth-alternative">{alternative.prompt} <Link href={alternative.href}>{alternative.label}</Link></p>}
-    </section>
+    {/* The card comes first in the markup, so the form is first for a keyboard and a screen reader; on a wide screen the
+        cabinet is set to its left by the grid, and on a phone it falls below the form. */}
+    <div className="auth-stage">
+      <section className="auth-card" aria-label={title}>
+        <p className="auth-kicker">Workspace klinis <span>Beta</span></p>
+        <h1>{title}</h1>
+        <div className="auth-card-body">{children}</div>
+        {alternative && <p className="auth-alternative">{alternative.prompt} <Link href={alternative.href}>{alternative.label}</Link></p>}
+      </section>
+      <TesseractFigure/>
+    </div>
 
     <footer className="auth-footer">
       <p>Keputusan klinis akhir tetap pada klinisi.</p>

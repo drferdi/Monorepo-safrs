@@ -29,6 +29,19 @@
 .auth-back { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-text-secondary); text-decoration: none; font-size: 12px; }
 .auth-back:hover, .auth-back:focus-visible { color: var(--workspace-accent-ink); }
 
+/* The stage holds the form card and the cabinet. A phone gets the card and then the cabinet; a wide screen sets the
+   cabinet to the card's left. The markup keeps the card first, so the form is first for a keyboard as well. */
+.auth-stage { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: clamp(28px, 5vh, 48px); }
+.auth-figure { justify-self: center; width: min(100%, 340px); }
+.auth-figure figcaption { display: grid; gap: 4px; margin-top: 2px; text-align: center; }
+.auth-figure-readout { color: var(--color-text-secondary); font-size: 10px; font-weight: 500; letter-spacing: 1.1px; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.auth-figure-note { color: var(--color-text-secondary); font-size: 11px; line-height: 1.6; }
+@media (min-width: 1000px) {
+  .auth-stage { width: 100%; max-width: 1120px; margin: 0 auto; grid-template-columns: minmax(0, 1fr) minmax(360px, 420px); column-gap: clamp(48px, 7vw, 112px); }
+  .auth-stage > .auth-card { grid-column: 2; grid-row: 1; }
+  .auth-figure { grid-column: 1; grid-row: 1; width: min(100%, 480px); }
+}
+
 /* The card is the page. It sits where the eye already is, and carries only the form. */
 .auth-card {
   width: 100%;
@@ -106,6 +119,7 @@
   .auth-back { font-size: 11px; }
   /* Top-aligned on a phone: centring it leaves the card floating under a band of empty page. */
   .auth-card { max-width: none; margin: 0 0 auto; padding: 26px 20px 24px; }
+  .auth-figure { width: min(100%, 270px); }
   .auth-footer { flex-direction: column; align-items: flex-start; gap: 6px; }
 }
 @media (prefers-reduced-motion: reduce) {

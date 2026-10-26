@@ -15,6 +15,16 @@ describe("admission presentation", () => {
     expect(container.querySelectorAll("h1, h2, h3")).toHaveLength(1);
     expect(screen.getByRole("link", { name: /Kembali ke website/i }).getAttribute("href")).toBe("https://sentrapedia.vercel.app/");
   });
+  it("sets the decorative cabinet after the form, hidden from assistive technology", () => {
+    const { container } = render(<AuthFrame title="Masuk ke workspace"><p>Isi formulir.</p></AuthFrame>);
+    const card = container.querySelector(".auth-card")!;
+    const figure = container.querySelector("figure.auth-figure")!;
+    expect(figure.getAttribute("aria-hidden")).toBe("true");
+    expect(card.compareDocumentPosition(figure) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(figure.querySelector("a, button, input, [tabindex]")).toBeNull();
+    expect(container.querySelectorAll("[role='region']")).toHaveLength(0);
+    expect(screen.getAllByRole("region")).toHaveLength(1);
+  });
   it("offers no way onward when there is none to offer", () => {
     render(<AuthFrame title="Masuk ke workspace"><p>Gunakan email yang sudah diundang.</p></AuthFrame>);
     expect(screen.queryByRole("link", { name: "Daftar" })).toBeNull();

@@ -1,0 +1,25 @@
+/* The kit's light tokens re-tuned to the site: paper is the page's white, the greys lean toward its ink (#191c1c)
+   and the one lit accent is its teal (#13786e). Scoped to the figure, so nothing else on the page changes. */
+.iso.auth-figure[data-theme="light"] {
+  --anatomy-paper: #fff;
+  --anatomy-card: #fff;
+  --anatomy-face: #fff;
+  --anatomy-top: #fff;
+  --anatomy-shade-0: #d6dedc;
+  --anatomy-shade-1: #e1e8e6;
+  --anatomy-shade-2: #ebf0ee;
+  --anatomy-shade-3: #f4f7f6;
+  --anatomy-lit-top: #e2f3f0;
+  --anatomy-lit-shade: #cbe8e3;
+  --anatomy-hi: #1f2a28;
+  --anatomy-mid: #72847f;
+  --anatomy-lo: #aebdb9;
+  --anatomy-faint: #d3dcda;
+  --anatomy-lit: #13786e;
+  --anatomy-halo: #84948f;
+  --anatomy-halo-opacity: 0.26;
+  --anatomy-dot: #36443f;
+  --anatomy-mono: var(--font-inter), "Inter", sans-serif;
+}
+.auth-figure { margin: 0; }
+.auth-figure .iso-svg { max-width: 100%; }
