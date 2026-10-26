@@ -14,6 +14,12 @@ HOST_PORT="${SENTRAPEDIA_HOST_PORT:-3201}"
 MEMORY="${SENTRAPEDIA_MEMORY:-2500m}"
 
 grep -q '^GEMINI_API_KEY=.\+' /etc/sentrapedia/beta.env || { echo "Set GEMINI_API_KEY in /etc/sentrapedia/beta.env first." >&2; exit 1; }
+# Without these the app resolves to mode "unavailable" and answers 503 everywhere, which is how 2026-10-26 served a
+# shut door instead of failing here. SENTRAPEDIA_AUTH_MODE is required rather than left to its "clerk" default, so
+# the mode this server runs in is written down where the keys are.
+for key in NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY CLERK_SECRET_KEY SENTRAPEDIA_AUTH_MODE; do
+  grep -q "^$key=.\+" /etc/sentrapedia/beta.env || { echo "Set $key in /etc/sentrapedia/beta.env first (see deploy/beta/README.md)." >&2; exit 1; }
+done
 IMAGE="${SENTRAPEDIA_IMAGE:-ghcr.io/drferdi/sentrapedia-beta}"
 if [ -n "${SENTRAPEDIA_IMAGE_TAG:-}" ]; then
   RUN_IMAGE="$IMAGE:$SENTRAPEDIA_IMAGE_TAG"
@@ -27,7 +33,10 @@ elif [ "${SENTRAPEDIA_BUILD:-}" = local ]; then
   docker run --rm -v "$PWD:/app" -w /app --env-file /etc/sentrapedia/index.env node:24-bookworm-slim \
     node scripts/install-theoracle-index.mjs
   RUN_IMAGE=sentrapedia:beta
-  docker build -t "$RUN_IMAGE" .
+  # Next.js inlines NEXT_PUBLIC_* at build time, so the publishable key must be present here or Clerk's middleware
+  # throws on every request however the runtime environment is set. It is published to browsers, not a secret;
+  # CLERK_SECRET_KEY stays a runtime variable and is never a build argument.
+  docker build --build-arg "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$(sed -n 's/^NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=//p' /etc/sentrapedia/beta.env)" -t "$RUN_IMAGE" .
 else
   git pull --ff-only
   RUN_IMAGE="$IMAGE:sha-$(git rev-parse HEAD)"
