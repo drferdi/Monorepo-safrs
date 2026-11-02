@@ -50,11 +50,11 @@ describe("server-owned access decisions", () => {
     expect(await setup({ ...user(), emailVerified: false }).access.resolve()).toEqual({ status: "disabled" });
     expect(await setup(user(), "user_b").access.resolve()).toEqual({ status: "unavailable" });
   });
-  it("keeps explicit legacy consent inspection without blocking normal user access", async () => {
+  it("holds a missing, stale or malformed acknowledgement at consent-required by default; only the consent step looks past it", async () => {
     for (const value of [undefined, null, false, {}, { ...consent, version: "old" }, { ...consent, acceptedAt: "invalid" }]) {
       const { access } = setup(user({ sentrapediaBetaConsent: value }));
-      expect(await access.resolve(true)).toEqual({ status: "consent-required" });
-      expect(await access.resolve()).toEqual({ status: "allowed", userId: "user_a" });
+      expect(await access.resolve()).toEqual({ status: "consent-required" });
+      expect(await access.resolve(false)).toEqual({ status: "allowed", userId: "user_a" });
     }
   });
   it("a disabled or malformed suspension flag cannot be bypassed by onboarding", async () => {

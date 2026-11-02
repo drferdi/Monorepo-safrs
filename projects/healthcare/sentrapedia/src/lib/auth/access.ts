@@ -59,8 +59,9 @@ async function readConsent(request: Request): Promise<unknown> {
 }
 
 export function createBetaAccess(deps: Dependencies) {
-  // User access follows verified Clerk sign-in. Explicit legacy callers may still inspect consent.
-  async function resolve(requireConsent = false): Promise<AccessResult> {
+  // Access follows a verified Clerk sign-in plus the current beta acknowledgement (consent is a gate again since
+  // 2026-11-02). Only the consent endpoint itself asks without it, so a doctor can give it.
+  async function resolve(requireConsent = true): Promise<AccessResult> {
     if (deps.config.mode === "unavailable") return { status: "unavailable" };
     if (deps.config.mode === "local") return { status: "allowed", userId: deps.config.userId };
     try {
