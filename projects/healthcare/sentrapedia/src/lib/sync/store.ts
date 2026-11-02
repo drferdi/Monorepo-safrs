@@ -29,6 +29,13 @@ export async function pushEncounters(principal: string, encounters: Encounter[])
   return { saved, held };
 }
 
+// Erasure (2026-11-02, src/app/api/webhooks/clerk): profile is the parent of every row a principal owns, so deleting it
+// cascades (db/migrations/0001 and 0002). It runs under the same row-level-security principal as every other query: the
+// policy lets an owner delete its own rows, and nothing here needs the owner role. Returns the number of profiles removed.
+export async function purgePrincipal(principal: string): Promise<number> {
+  return withPrincipal(principal, async client => (await client.query("delete from profile where user_id = $1", [principal])).rowCount ?? 0);
+}
+
 export async function pullEncounters(principal: string): Promise<SyncedDocument[]> {
   return withPrincipal(principal, async client => {
     const { rows } = await client.query<{ doc_id: string; format_version: number; patient_ref: string | null; body: SyncEncounterBody; updated_at: Date }>(

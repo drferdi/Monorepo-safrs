@@ -116,7 +116,7 @@
     {
       "kind": "service",
       "name": "Clerk closed-beta identity and email delivery; production required, explicit loopback development mode only may omit",
-      "locator": "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, SENTRAPEDIA_PUBLIC_ORIGIN",
+      "locator": "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, SENTRAPEDIA_PUBLIC_ORIGIN, and CLERK_WEBHOOK_SIGNING_SECRET for the optional user.deleted webhook",
       "required": true
     },
     {
