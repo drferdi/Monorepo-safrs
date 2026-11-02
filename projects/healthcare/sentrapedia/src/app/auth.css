@@ -92,7 +92,17 @@
 .session-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem 1rem; border-bottom: 1px solid var(--color-border-subtle); font-size: .8rem; }
 .session-toolbar button { padding: .35rem .75rem; border: 1px solid var(--workspace-control-border); border-radius: var(--radius); background: var(--color-action-primary); color: var(--workspace-on-accent); cursor: pointer; font: inherit; }
 .session-toolbar button:hover { background: var(--color-action-primary-hover); }
+.session-actions { display: flex; align-items: center; gap: .6rem; }
+/* The passkey bar sits between the title and the actions; on a phone it wraps under them. */
+.passkey-nudge { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 0; color: var(--color-text-secondary); font-size: .78rem; }
+.passkey-nudge button { padding: .3rem .6rem; border: 1px solid var(--workspace-control-border); border-radius: var(--radius); background: var(--workspace-white); color: var(--color-text-primary); cursor: pointer; font: inherit; }
+.passkey-nudge button:disabled { opacity: .55; cursor: default; }
+.passkey-nudge .passkey-later { border-color: transparent; }
+.passkey-nudge [role="alert"] { color: var(--workspace-error-text); }
 .session-content { min-height: 0; flex: 1; }
+/* The account page is the auth page without the card: Clerk's profile widget takes the width the card never needed. */
+.account-page .account-stage { flex: 1; display: grid; justify-items: center; align-content: start; }
+.account-page .cl-rootBox, .account-page .cl-cardBox { width: 100%; max-width: 880px; }
 .authenticated-workspace .app-shell { height: 100%; }
 
 @keyframes auth-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
