@@ -55,7 +55,7 @@ Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on confli
 
 **Is:** a clinical cockpit that drafts structured documents for physician review. The interface is Indonesian (`<html lang="id">`). It is calibrated to Indonesian practice: Puskesmas/FKTP, RSUD referral, PNPK/PPK guidelines, Fornas, SKDI 4A diseases and BPJS-style prior authorization.
 
-**Is not:** an electronic health record; a validated medical device; integrated with SATUSEHAT or BPJS; a production multi-user service. It has no authentication.
+**Is not:** an electronic health record; a validated medical device; integrated with SATUSEHAT or BPJS; a production multi-user service. Authentication is Clerk (closed beta since 2026-10-24; `docs/auth-beta-access.md`).
 
 **Authority:** the clinician decides. "Draf", "Ditinjau" and "Final" are local workflow markers, not clinical sign-off. AI output is a draft, never an automatic prescription.
 
