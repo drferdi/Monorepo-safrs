@@ -15,6 +15,7 @@ import { downloadText } from "./message-card";
 import { Sidebar, type DialogName } from "./sidebar";
 import { PixelLoader } from "./pixel-loader";
 import { DocumentPane, type PaneTools } from "./document-pane";
+import { EncounterOverview } from "./encounter-overview";
 import { CommandPalette } from "./command-palette";
 import { TemplateLibrary } from "./template-library";
 import { WorkQueue } from "./work-queue";
@@ -64,6 +65,8 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   const toggleNavigation = useCallback(() => { if (mobile) setMobileNavOpen((v) => !v); else smooth(() => setSidebarOpen((v) => !v)); }, [mobile]);
   const [dialog, setDialog] = useState<DialogName>(null);
   const [dialogId, setDialogId] = useState<string | undefined>();
+  // The sheet renders only below 1200 px: widening past it must not leave the flag set (shortcuts stay off while a dialog is "open").
+  if (!compact && dialog === "document") { setDialog(null); setDialogId(undefined); }
   const [prompt, setPrompt] = useState("");
   const [mode, setMode] = useState<ModeId>("question");
   const [templateKey, setTemplateKey] = useState<string | null>(null);
@@ -199,7 +202,13 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     onPrint: () => window.print(),
     pcare: (m) => pcareCopies(m, output(m)),
   };
-  const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<p className="panel-empty">Ringkasan encounter menyusul</p>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify} drafts={drafts} onDraft={setDraft}/>;
+  const overviewActions = {
+    onContext: () => openDialog("context"),
+    onPatient: () => patient ? openDialog("patient", patient.id) : openDialog("encounter", encounter?.id),
+    onSelect: (id: string) => { if (id !== encounter?.id) selectEncounter(id); },
+    onMakeTasks: (text: string) => generate(text, "tasks", false),
+  };
+  const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<EncounterOverview state={state} encounter={encounter} patient={patient} {...overviewActions}/>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify} drafts={drafts} onDraft={setDraft}/>;
   const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
     minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [],
     caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };

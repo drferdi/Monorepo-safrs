@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { emptyCase, type AadiResult } from "../src/lib/aadi/contract";
-import { diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, nextSteps, pcareCopies, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
+import { diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, nextSteps, pcareCopies, taskDraftFrom, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
 import { createDraft } from "../src/lib/drafts";
 import { missingField } from "../src/lib/clinical-templates";
@@ -24,6 +24,7 @@ const analysis = {
 };
 const therapyTitle = "7. Rencana tata laksana";
 const section = (content: string, title: string) => documentSections(content).find(s => s.title === title)!.body.trim();
+const resultWith = (nextBestActions: AadiResult["nextBestActions"]): AadiResult => ({ ...analysis.result, nextBestActions });
 const withDifferential = (differential: AadiResult["differential"]) => ({ ...analysis, result: { ...analysis.result, differential } });
 
 describe("TheOracle citation persistence", () => {
@@ -611,5 +612,13 @@ describe("therapy line", () => {
     expect(regimenLine({ drug: "dihidroartemisinin 40 mg + piperakuin 320 mg", dose: "4 tablet sekali sehari", route: "PO", duration: "3 hari", note: "dosis untuk berat badan >60kg" })).toBe("Dihidroartemisinin 40 mg + piperakuin 320 mg, 4 tablet sekali sehari selama 3 hari (dosis untuk berat badan >60kg)");
     expect(regimenLine({ drug: "primakuin", dose: "", route: "PO", duration: "dosis tunggal", note: "" })).toBe("Primakuin, dosis: cek pedoman, dosis tunggal");
     expect(regimenLine({ drug: "ceftriaxone", dose: "2x1g", route: "IV", duration: "5 hari", note: "" }, false)).toBe("Ceftriaxone 1 g, dua kali sehari, IV selama 5 hari");
+  });
+});
+
+describe("taskDraftFrom", () => {
+  it("lists next best actions as verb: item lines", () => {
+    expect(taskDraftFrom(resultWith([{ kind: "exam", item: "Foto toraks", reason: "" }]))).toBe("Periksa: Foto toraks");
+    expect(taskDraftFrom(resultWith([{ kind: "test", item: "Foto toraks", reason: "" }, { kind: "question", item: "Durasi batuk", reason: "" }]))).toBe("Pemeriksaan penunjang: Foto toraks\nTanyakan: Durasi batuk");
+    expect(taskDraftFrom(resultWith([]))).toBe("");
   });
 });

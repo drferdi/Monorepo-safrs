@@ -345,7 +345,7 @@ export function referralPrompt(message: Pick<Message, "sourceText">): string {
 }
 
 // The case and result stored with an AADI answer; a local draft or an unreadable source has none.
-function storedCase(message: Pick<Message, "sourceText">): { data: CaseState; result: AadiResult } | null {
+export function storedCase(message: Pick<Message, "sourceText">): { data: CaseState; result: AadiResult } | null {
   if (!hasAadiSource(message)) return null;
   const source: unknown = JSON.parse(message.sourceText!);
   return source && typeof source === "object" && "case" in source && "result" in source && validCase(source.case) && validResult(source.result) ? { data: source.case, result: source.result } : null;
@@ -396,6 +396,8 @@ export function pcareCopies(message: Pick<Message, "sourceText" | "mode">, conte
 // only prefills the composer in an existing mode; nothing is sent until the doctor presses Enter.
 export interface NextStep { mode: ModeId; label: string; text: string }
 const actionVerb = { question: "Tanyakan", exam: "Periksa", test: "Pemeriksaan penunjang" } as const;
+// The engine's next best actions as "verb: item" lines, the text the tasks document is made from; empty when there are none.
+export const taskDraftFrom = (result: AadiResult): string => result.nextBestActions.map(action => `${actionVerb[action.kind]}: ${action.item}`).join("\n");
 // "Analisis AADI", not "Analisis kasus": that is the send button's name.
 const analysisSteps: Omit<NextStep, "text">[] = [{ mode: "question", label: "Analisis AADI" }, { mode: "workup", label: "Pemeriksaan penunjang" }, { mode: "icd10", label: "Kode ICD-10" }, { mode: "referral", label: "Surat rujukan" }];
 // A local draft's typed input runs to the next block localDraftMessages writes; the input itself may hold blank lines.
@@ -406,7 +408,7 @@ export function nextSteps(message: Pick<Message, "sourceText" | "mode" | "role">
   if (stored) return [
     { mode: "clinic", label: "Catatan SOAP", text: soapPrompt(stored.data, stored.result) },
     { mode: "referral", label: "Surat rujukan", text: referralPrompt(message) },
-    ...(stored.result.nextBestActions.length ? [{ mode: "tasks" as const, label: "Daftar tugas", text: stored.result.nextBestActions.map(action => `${actionVerb[action.kind]}: ${action.item}`).join("\n") }] : []),
+    ...(stored.result.nextBestActions.length ? [{ mode: "tasks" as const, label: "Daftar tugas", text: taskDraftFrom(stored.result) }] : []),
   ];
   const input = localInput.exec(message.sourceText ?? "")?.[1].trim();
   return input ? analysisSteps.filter(step => step.mode !== message.mode).map(step => ({ ...step, text: input })) : [];

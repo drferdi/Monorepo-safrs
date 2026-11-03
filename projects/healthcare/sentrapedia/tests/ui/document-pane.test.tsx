@@ -78,9 +78,9 @@ describe("the document pane", () => {
     expect(chat.getByRole("button", { name: /Buka dokumen/ })).toBeTruthy();
     expect(chat.queryByRole("combobox", { name: "Status dokumen" })).toBeNull();
     expect(screen.getByRole("combobox", { name: "Status dokumen" })).toBeTruthy();
-    // The overview tab holds its placeholder until Ringkasan encounter arrives; the collapse control closes the pane.
+    // The overview tab shows Ringkasan encounter; the collapse control closes the pane.
     fireEvent.click(tabs[0]);
-    expect(screen.getByText("Ringkasan encounter menyusul")).toBeTruthy();
+    expect(screen.getByRole("region", { name: "Daftar tugas" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Tutup panel dokumen" }));
     expect(screen.queryByRole("tablist", { name: "Dokumen encounter" })).toBeNull();
     expect(document.querySelector(".workspace-body")!.hasAttribute("data-split")).toBe(false);
