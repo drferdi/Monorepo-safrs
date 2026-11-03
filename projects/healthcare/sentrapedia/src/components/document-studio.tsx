@@ -15,16 +15,21 @@ const diagnosisLabels = new Set(["Keluhan utama", "Kondisi yang tercatat", "Aler
 // Inline marks: **bold** (one still open at the end of a line, as while an answer types, runs to the line's end), *italic*,
 // and links, only to http(s) pages since the document holds model text.
 const inlineMarks = /\*\*(.+?)(?:\*\*|$)|\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)|(?<![\w*])\*(?!\s)([^*\n]+?)\*(?![\w*])/g;
-function inline(text: string): ReactNode {
+function inline(text: string, citePrefix?: string): ReactNode {
   const nodes: ReactNode[] = [];
   let last = 0;
   for (const match of text.matchAll(inlineMarks)) {
     const [whole, strong, label, href, em] = match;
-    nodes.push(text.slice(last, match.index), strong !== undefined ? <strong key={match.index}>{inline(strong)}</strong> : href ? <a key={match.index} href={href} target="_blank" rel="noopener noreferrer">{label}</a> : <em key={match.index}>{em}</em>);
+    nodes.push(cites(text.slice(last, match.index), citePrefix, last), strong !== undefined ? <strong key={match.index}>{inline(strong, citePrefix)}</strong> : href ? <a key={match.index} href={href} target="_blank" rel="noopener noreferrer">{label}</a> : <em key={match.index}>{em}</em>);
     last = match.index + whole.length;
   }
-  nodes.push(text.slice(last));
+  nodes.push(cites(text.slice(last), citePrefix, last));
   return nodes.filter(node => node !== "");
+}
+// An in-text `[n]` becomes a link to the n-th Kutipan pedoman card when the document renders those cards.
+function cites(text: string, citePrefix: string | undefined, at: number): ReactNode {
+  if (!citePrefix || !/\[\d+\]/.test(text)) return text;
+  return text.split(/(\[\d+\])/).map((part, index) => /^\[\d+\]$/.test(part) ? <a key={`${at}-${index}`} className="cite-link" href={`#${citePrefix}-${part.slice(1, -1)}`}>{part}</a> : part);
 }
 const tableCells = (line: string) => line.trim().replace(/^\||\|$/g, "").split(/(?<!\\)\|/).map(cell => cell.trim().replace(/\\\|/g, "|"));
 const tableSeparator = /^\|(?:\s*:?-{3,}:?\s*\|)+$/;
@@ -42,10 +47,10 @@ function DocumentTable({ lines }: { lines: string[] }) {
 
 // A line the normal template filled ends with the marker; the document shows it without (the stored text keeps it, and
 // one line under the document names those lines until review). Typing cuts at a space, so "[otomatis" alone can show.
-const autoNormal = (line: string): ReactNode => inline(line.replace(/ \[otomatis(?: normal\])?$/, ""));
+const autoNormal = (line: string, citePrefix?: string): ReactNode => inline(line.replace(/ \[otomatis(?: normal\])?$/, ""), citePrefix);
 
 // hideTitle: the pane's document head already shows the "# " title line.
-export function DocumentContent({ content, onEdit, clinical = false, hideTitle = false }: { content: string; onEdit: (content: string) => void; clinical?: boolean; hideTitle?: boolean }) {
+export function DocumentContent({ content, onEdit, clinical = false, hideTitle = false, citePrefix }: { content: string; onEdit: (content: string) => void; clinical?: boolean; hideTitle?: boolean; citePrefix?: string }) {
   const lines = content.split("\n");
   const title = hideTitle ? lines.findIndex((line) => line.startsWith("# ")) : -1;
   return <div className="draft-content">{lines.map((line, index) => {
@@ -62,10 +67,10 @@ export function DocumentContent({ content, onEdit, clinical = false, hideTitle =
     if (line === "---") return <hr key={index}/>;
     if (/^- \[[ x]\]/.test(line)) return <label className="draft-task" key={index}><input type="checkbox" checked={line.startsWith("- [x]")} onChange={(event) => { const lines = content.split("\n"); lines[index] = lines[index].replace(/^- \[[ x]\]/, event.target.checked ? "- [x]" : "- [ ]"); onEdit(lines.join("\n")); }}/><span>{line.slice(6)}</span></label>;
     if (clinical && (diagnosisLabels.has(line) || diagnosisFieldLabels.has(line) || ["Gejala referensi dari database — bukan temuan pasien", "Definisi dan kriteria diagnosis dari database", "Kriteria rujukan dari database — narasi sumber"].includes(line))) return <h4 className="diagnosis-field-label" key={index}>{line}</h4>;
-    if (clinical && line.startsWith("  - ")) return <p className="diagnosis-list-item diagnosis-list-nested" key={index}>{inline(line.slice(4))}</p>;
+    if (clinical && line.startsWith("  - ")) return <p className="diagnosis-list-item diagnosis-list-nested" key={index}>{inline(line.slice(4), citePrefix)}</p>;
     if (clinical && /^  (?:Mendukung|Menyangkal):/.test(line)) return <p className="diagnosis-list-detail" key={index}>{line.trim()}</p>;
     // "- " lines read as bullets in every document (the SOAP note's "Belum diisi" list among them).
-    return line ? <p className={line.startsWith("- ") ? "diagnosis-list-item" : undefined} key={index}>{autoNormal(line.startsWith("- ") ? line.slice(2) : line)}</p> : null;
+    return line ? <p className={line.startsWith("- ") ? "diagnosis-list-item" : undefined} key={index}>{autoNormal(line.startsWith("- ") ? line.slice(2) : line, citePrefix)}</p> : null;
   })}</div>;
 }
 
