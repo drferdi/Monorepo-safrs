@@ -12,6 +12,19 @@ export const intentGroups: { id: string; label: string; headline: string; descri
   { id: "communicate", label: "Komunikasi", headline: "Siapkan komunikasi untuk pasien dan sejawat.", description: "Siapkan informasi medis yang ringkas dan mudah dipahami.", placeholder: "Tuliskan informasi yang ingin disampaikan kepada pasien atau sejawat.", modes: ["education", "avs", "telephone", "authorization"], quick: ["education", "avs", "telephone"] },
 ];
 
+// The chips under the composer: eight modes, one ddx (the spec's "Analisis kasus" and "Diagnosis Banding" share it).
+export const chipShortlist: ModeId[] = ["question", "ddx", "clinic", "ap", "refer", "education", "hpi", "avs"];
+// A chip reads "Perbarui" once the encounter already holds an assistant document of that mode.
+export function chipLabel(mode: ModeId, encounter?: Pick<Encounter, "messages">): string {
+  const label = modes.find((item) => item.id === mode)!.label;
+  return encounter?.messages.some((message) => message.role === "assistant" && message.mode === mode) ? `Perbarui ${label}` : label;
+}
+// The headline rotates through the intent groups, one per visit.
+export function headlineFor(visit: number): string {
+  const headlines = intentGroups.map((group) => group.headline);
+  return headlines[visit % headlines.length];
+}
+
 // A tab's own hint shows on its default mode; the other chips keep their specific hint.
 export function composerPlaceholder(mode: ModeId): string {
   const group = intentGroups.find((item) => item.modes[0] === mode);

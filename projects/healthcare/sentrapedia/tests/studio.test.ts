@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder, downloadName } from "../src/lib/studio";
+import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder, downloadName, chipShortlist, chipLabel, headlineFor } from "../src/lib/studio";
 import { defaultReviewItems } from "../src/lib/workflow";
 import { createDraft, modeIds, modes } from "../src/lib/drafts";
 import { clinicalTemplates, insertTemplate, modeCategories, templateText } from "../src/lib/clinical-templates";
@@ -203,4 +203,14 @@ describe("download names", () => {
     expect(downloadName("Pemeriksaan sangat panjang dengan banyak kata yang terus berlanjut", "2026-10-20T01:00:00Z")).toBe("sentrapedia-2026-10-20-pemeriksaan-sangat-panjang-dengan-banyak.md");
     expect(downloadName("", "not a date")).toBe("sentrapedia.md");
   });
+});
+
+describe("mode openings and the chip shortlist", () => {
+  it("every mode carries an opening sentence ending in a colon", () => { for (const m of modes) expect(m.opening).toMatch(/:$/); });
+  it("the chip shortlist is eight distinct modes and ddx appears once", () => { expect(chipShortlist).toHaveLength(8); expect(new Set(chipShortlist).size).toBe(8); expect(chipShortlist.filter(id => id === "ddx")).toHaveLength(1); });
+  it("a chip reads Perbarui once the encounter holds a document of that mode", () => {
+    expect(chipLabel("ddx")).toBe("Diagnosis Banding (DDx)");
+    expect(chipLabel("ddx", { messages: [{ id: "1", role: "assistant", content: "x", mode: "ddx", createdAt: "" }] })).toBe("Perbarui Diagnosis Banding (DDx)");
+  });
+  it("the headline cycles through the intent headlines by visit", () => { expect(headlineFor(0)).toBe(intentGroups[0].headline); expect(headlineFor(4)).toBe(intentGroups[0].headline); });
 });
