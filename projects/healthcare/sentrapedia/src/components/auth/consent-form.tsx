@@ -26,7 +26,7 @@ export function ConsentForm() {
     finally { clearTimeout(timeout); request.current = null; setPending(false); }
   }
   return <form onSubmit={submit}>
-    <p>Jangan masukkan identitas pasien: nama, nomor identitas, kontak, atau alamat. Keluaran tetap memerlukan penilaian klinisi.</p>
+    <p>Jangan masukkan identitas pasien: nama, nomor identitas, kontak, atau alamat. Keluaran tetap memerlukan penilaian klinisi. Data workspace tersimpan di browser perangkat ini dan tidak terenkripsi.</p>
     <p><a href="https://sentrapedia.vercel.app/ketentuan/">Ketentuan beta</a> · <a href="https://sentrapedia.vercel.app/privasi/">Kebijakan privasi</a></p>
     <label className="auth-consent"><input type="checkbox" required checked={accepted} disabled={pending} onChange={event => setAccepted(event.target.checked)}/>Saya memahami batasan beta dan tidak akan memasukkan identitas pasien.</label>
     {pending && <p role="status">Menyimpan persetujuan…</p>}

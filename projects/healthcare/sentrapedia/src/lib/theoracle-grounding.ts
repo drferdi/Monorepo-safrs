@@ -89,6 +89,17 @@ async function loadIndex(indexDir: string, modelDir: string, embedder: NonNullab
   }
 }
 
+/** What Pengaturan Agent shows about the installed index: the manifest alone, read without loading the vectors or the model.
+ *  `null` when no database is installed on this server. */
+export async function readTheOracleManifest(indexDir = path.join(process.cwd(), "theoracle", "index")): Promise<{ id: string; chunks: number; model: string; hash: string } | null> {
+  try {
+    const manifest: unknown = JSON.parse(await readFile(path.join(indexDir, "manifest.json"), "utf8"));
+    if (!validManifest(manifest)) return null;
+    const name = (manifest as { name?: unknown }).name;
+    return { id: typeof name === "string" ? name : "TheOracle", chunks: manifest.chunks.count, model: manifest.model.id, hash: manifest.indexSha256 };
+  } catch { return null; }
+}
+
 // One load per index directory and process; a failed load is forgotten so the next call retries.
 function indexFor(options: RetrieveOptions): Promise<LoadedIndex> {
   const indexDir = options.indexDir ?? path.join(process.cwd(), "theoracle", "index");

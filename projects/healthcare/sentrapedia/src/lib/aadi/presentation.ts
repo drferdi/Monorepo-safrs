@@ -1,4 +1,4 @@
-import { validCase, validResult, type AadiResult, type AadiAnalysis, type AadiTherapy } from "./contract";
+import { validCase, validPipeline, validResult, type AadiResult, type AadiAnalysis, type AadiTherapy } from "./contract";
 import type { CaseState, DifferentialStatus } from "./types";
 import { referenceIncludes, theOracleSource, theOracleDiseases, type Disease } from "../theoracle";
 import { newId, type Message } from "../workspace";
@@ -89,10 +89,23 @@ export const diagnosisFieldLabels = new Set(["Keluhan utama", "Pasien", "Anamnes
 export const diagnosisReferenceMarker = "Referensi penyakit terkait";
 
 const recorded = (text: string) => text.split(/\r?\n/).map(line => `  ${line}`).join("\n");
-const vitalLabels: Record<string, string> = { systolic: "Sistolik (mmHg)", diastolic: "Diastolik (mmHg)", heartRate: "Nadi (/menit)", respiratoryRate: "Napas (/menit)", temperature: "Suhu (°C)", spo2: "SpO₂ (%)", gcs: "GCS" };
+export const vitalLabels: Record<string, string> = { systolic: "Sistolik (mmHg)", diastolic: "Diastolik (mmHg)", heartRate: "Nadi (/menit)", respiratoryRate: "Napas (/menit)", temperature: "Suhu (°C)", spo2: "SpO₂ (%)", gcs: "GCS" };
 // Plain words, no "belum terkonfirmasi" (Gaffer, 2026-10-21: "kebanyakan jargon").
 const statusLabels: Record<DifferentialStatus, string> = { unconfirmed: "Kandidat", supported: "Didukung data", unlikely: "Kurang mungkin", screenNow: "Perlu disaring segera", screenIfIndicated: "Perlu disaring sesuai temuan" };
 const groupStatus = { likely: "Kandidat utama", alternatives: "Alternatif", cannotMiss: "Perlu disaring segera" } as const;
+/** The status word for a diagnosis: AADI's own status when it gave one, else its tier's. */
+export function differentialStatus(d: { status?: DifferentialStatus }, tier: keyof AadiResult["differential"]): string { return d.status ? statusLabels[d.status] : groupStatus[tier]; }
+/** "Rujuk · segera" / "Tangani di FKTP · rutin", or "" without a disposition. */
+export function dispositionText(result: AadiResult): string {
+  return result.disposition ? `${result.disposition.decision === "refer" ? "Rujuk" : "Tangani di FKTP"} · ${{ routine: "rutin", urgent: "segera", emergency: "gawat darurat" }[result.disposition.urgency]}` : "";
+}
+/** Part 8's advice lines, shared by the nine-part draft and the structured view. */
+export function educationLines(result: AadiResult, caseData?: CaseState): string[] {
+  const complaintText = [caseData?.chiefComplaint ?? "", caseData?.anamnesis.freeText ?? ""].join(" ");
+  const codes = Object.values(result.differential).flat().map(d => d.icd10.toUpperCase());
+  const pack = headacheWords.test(complaintText) || codes.some(code => headacheCodes.test(code)) ? headachePack : generalPack;
+  return [`Jelaskan bahwa penyebab ${pack.complaint} masih dalam evaluasi.`, "Berikan instruksi tanda bahaya dan tempat mencari pertolongan.", pack.diary, "Tentukan jadwal kontrol serta kriteria kembali lebih cepat berdasarkan hasil asesmen."];
+}
 const links = {
   cg150: "[NICE CG150](https://www.nice.org.uk/guidance/cg150/chapter/recommendations)",
   ng228: "[NICE NG228](https://www.nice.org.uk/guidance/ng228/chapter/Recommendations)",
@@ -182,7 +195,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   // Oracle's Indonesian name where a record has exactly this code (a "G44" record never renames G44.2); else AADI's label.
   const named = (d: { icd10: string; label: string }) => `${theOracleDiseases.find(r => r.kode.toUpperCase() === d.icd10.toUpperCase())?.nama ?? d.label} (${d.icd10})`;
   const demographics = [caseData?.demographics.ageYears == null ? "" : `${caseData.demographics.ageYears} tahun`, caseData?.demographics.sex === "M" ? "Laki-laki" : caseData?.demographics.sex === "F" ? "Perempuan" : "", caseData?.demographics.pregnant === undefined ? "" : `Hamil: ${caseData.demographics.pregnant ? "Ya" : "Tidak"}`].filter(Boolean).join(" · ");
-  const disposition = result.disposition ? `${result.disposition.decision === "refer" ? "Rujuk" : "Tangani di FKTP"} · ${{ routine: "rutin", urgent: "segera", emergency: "gawat darurat" }[result.disposition.urgency]}` : "";
+  const disposition = dispositionText(result);
 
   const vitalItems = caseData ? Object.entries(caseData.vitals).map(([key, value]) => `${vitalLabels[key] ?? key}: ${value}`) : [];
   const resultItems = caseData?.results.map(r => `${r.name}: ${r.value}${r.unit ? ` ${r.unit}` : ""}${r.flag ? ` (${r.flag})` : ""}`) ?? [];
@@ -221,7 +234,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   };
   // AADI's discriminators are what to look for, not recorded findings (Gaffer, 2026-10-20: "Ya, awali 'cari:'").
   const toSeek = (text: string) => /^cari:/i.test(text) ? text : `cari: ${text}`;
-  const differentialRows = (["likely", "alternatives", "cannotMiss"] as const).flatMap(key => result.differential[key].map(d => [named(d), d.discriminators?.trim() ? toSeek(d.discriminators.trim()) : discriminators(d.icd10), d.status ? statusLabels[d.status] : groupStatus[key]]));
+  const differentialRows = (["likely", "alternatives", "cannotMiss"] as const).flatMap(key => result.differential[key].map(d => [named(d), d.discriminators?.trim() ? toSeek(d.discriminators.trim()) : discriminators(d.icd10), differentialStatus(d, key)]));
   const extraRows = extra.map(e => [`Temuan terkait (${e.icd10})`, discriminators(e.icd10), "Di luar diagnosis banding"]);
   const verified = gate?.drugs.filter(d => d.status === "verified").length ?? 0;
   const gateStatus = !gate ? "Belum dapat dinilai" : gate.therapyRemoved ? "Terapi tidak ditampilkan" : `${verified} dari ${gate.drugs.length} obat dosisnya terverifikasi`;
@@ -278,7 +291,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
       regimen ? field("Terapi referensi", narrative(primary, [["Terapi", "terapi"]])) : "",
     ])],
     [diagnosisSectionTitles[7], join([
-      bullets([`Jelaskan bahwa penyebab ${pack.complaint} masih dalam evaluasi.`, "Berikan instruksi tanda bahaya dan tempat mencari pertolongan.", pack.diary, "Tentukan jadwal kontrol serta kriteria kembali lebih cepat berdasarkan hasil asesmen."]),
+      bullets(educationLines(result, caseData)),
       narrative(primary, [["Segera kembali atau dirujuk bila", "rujukan"]]),
     ])],
     [diagnosisSectionTitles[8], join([
@@ -315,6 +328,12 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   return [reportTitle, "**Analisis AADI (Augmented Artificial Intelligence Diagnosis Integration)**", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), [summary, ...ordered].map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
 }
 
+/** The five "Ringkasan untuk dokter" lines as written, bold marks removed; `[]` for any other document. */
+export function doctorSummary(content: string): string[] {
+  const body = documentSections(content).find(section => section.title === doctorSummaryTitle)?.body.trim();
+  return body ? body.split(/\n+/).map(line => line.replace(/\*\*/g, "").trim()).filter(Boolean) : [];
+}
+
 // What the answer card offers to copy (design D1, D2), read from the summary as currently written, so an edit is copied as edited.
 export function summaryCopies(content: string): { summary: string; codes: { code: string; text: string }[]; therapy: string } | null {
   const body = documentSections(content).find(section => section.title === doctorSummaryTitle)?.body.trim();
@@ -345,13 +364,23 @@ export function referralPrompt(message: Pick<Message, "sourceText">): string {
 }
 
 // The case and result stored with an AADI answer; a local draft or an unreadable source has none.
-function storedCase(message: Pick<Message, "sourceText">): { data: CaseState; result: AadiResult } | null {
+/** The stages the gateway recorded for a stored answer; `[]` for a legacy answer or one without a trace. */
+export function pipelineTrace(message: Pick<Message, "sourceText">): { stage: string; ms: number; ok: boolean }[] {
+  if (!message.sourceText) return [];
+  try {
+    const source: unknown = JSON.parse(message.sourceText);
+    if (!source || typeof source !== "object" || !("pipeline" in source) || !validPipeline(source.pipeline)) return [];
+    return source.pipeline.stages.map(({ stage, ms, ok }) => ({ stage, ms, ok }));
+  } catch { return []; }
+}
+
+export function storedCase(message: Pick<Message, "sourceText">): { data: CaseState; result: AadiResult } | null {
   if (!hasAadiSource(message)) return null;
   const source: unknown = JSON.parse(message.sourceText!);
   return source && typeof source === "object" && "case" in source && "result" in source && validCase(source.case) && validResult(source.result) ? { data: source.case, result: source.result } : null;
 }
 // The history as typed, without the encounter heading, and the saved patient's notes apart.
-function caseHistory(data: CaseState): { history: string; notes: string } {
+export function caseHistory(data: CaseState): { history: string; notes: string } {
   const [history, notes = ""] = (data.anamnesis.freeText ?? "").split(/(?:^|\n\n)Catatan kasus\n/);
   return { history: history.replace(/^Konteks Encounter\n/, "").trim(), notes: notes.trim() };
 }
@@ -392,44 +421,9 @@ export function pcareCopies(message: Pick<Message, "sourceText" | "mode">, conte
   ];
 }
 
-// What to do next with a draft (Puskesmas flow, feature 6, generalising the referral letter of design D4): each step
-// only prefills the composer in an existing mode; nothing is sent until the doctor presses Enter.
-export interface NextStep { mode: ModeId; label: string; text: string }
 const actionVerb = { question: "Tanyakan", exam: "Periksa", test: "Pemeriksaan penunjang" } as const;
-// "Analisis AADI", not "Analisis kasus": that is the send button's name.
-const analysisSteps: Omit<NextStep, "text">[] = [{ mode: "question", label: "Analisis AADI" }, { mode: "workup", label: "Pemeriksaan penunjang" }, { mode: "icd10", label: "Kode ICD-10" }, { mode: "referral", label: "Surat rujukan" }];
-// A local draft's typed input runs to the next block localDraftMessages writes; the input itself may hold blank lines.
-const localInput = /^Input\n([\s\S]*?)\n\n(?:Templat saat dibuat|Konteks Encounter|Pasien|Preferensi format|Analisis AADI tidak tersedia)\n/;
-export function nextSteps(message: Pick<Message, "sourceText" | "mode" | "role">): NextStep[] {
-  if (message.role !== "assistant") return [];
-  const stored = storedCase(message);
-  if (stored) return [
-    { mode: "clinic", label: "Catatan SOAP", text: soapPrompt(stored.data, stored.result) },
-    { mode: "referral", label: "Surat rujukan", text: referralPrompt(message) },
-    ...(stored.result.nextBestActions.length ? [{ mode: "tasks" as const, label: "Daftar tugas", text: stored.result.nextBestActions.map(action => `${actionVerb[action.kind]}: ${action.item}`).join("\n") }] : []),
-  ];
-  const input = localInput.exec(message.sourceText ?? "")?.[1].trim();
-  return input ? analysisSteps.filter(step => step.mode !== message.mode).map(step => ({ ...step, text: input })) : [];
-}
-
-// The labelled lines the local SOAP draft reads: recorded facts and AADI's candidates, labelled as candidates. The plan is
-// the doctor's, so the line stays empty and the gated regimen is never copied into it.
-function soapPrompt(data: CaseState, result: AadiResult): string {
-  const { history, notes } = caseHistory(data), likely = candidates(result), exam = findings(data).join("; ");
-  const { systolic, diastolic, heartRate, respiratoryRate, temperature, spo2 } = data.vitals;
-  const vitals = [systolic != null && diastolic != null ? `TD ${systolic}/${diastolic}` : "", heartRate != null ? `N ${heartRate}` : "", respiratoryRate != null ? `RR ${respiratoryRate}` : "", temperature != null ? `S ${decimal(temperature)}` : "", spo2 != null ? `SpO2 ${spo2}` : ""].filter(Boolean).join(", ");
-  const story = [history, notes].filter(Boolean).join(". ").replace(/\s*\n\s*/g, " ");
-  return [
-    `Keluhan utama: ${data.chiefComplaint.trim()}`,
-    story && `Anamnesis: ${story}`,
-    vitals && `Tanda vital: ${vitals}`,
-    exam && `Pemeriksaan fisik: ${exam}`,
-    data.currentMedications.length ? `Obat: ${data.currentMedications.join("; ")}` : "",
-    data.allergies.length ? `Alergi: ${data.allergies.join(", ")}` : "",
-    likely && `Asesmen: Diagnosis kerja (kandidat AADI, belum terkonfirmasi): ${likely}`,
-    "Rencana: ",
-  ].filter(Boolean).join("\n");
-}
+// The engine's next best actions as "verb: item" lines, the text the tasks document is made from; empty when there are none.
+export const taskDraftFrom = (result: AadiResult): string => result.nextBestActions.map(action => `${actionVerb[action.kind]}: ${action.item}`).join("\n");
 
 type ContentSource = Pick<Message, "content" | "originalContent" | "sourceText"> & Partial<Pick<Message, "mode">>;
 // Every render asks for each card's view; parsing the source and re-running the gate once per unchanged message is enough.

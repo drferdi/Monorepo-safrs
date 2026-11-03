@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder, downloadName } from "../src/lib/studio";
+import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder, downloadName, chipShortlist, chipLabel, headlineFor, withOpening } from "../src/lib/studio";
 import { defaultReviewItems } from "../src/lib/workflow";
-import { createDraft, modeIds, modes } from "../src/lib/drafts";
+import { createDraft, modeIds, modes, type ModeId } from "../src/lib/drafts";
 import { clinicalTemplates, insertTemplate, modeCategories, templateText } from "../src/lib/clinical-templates";
 import { initialWorkspace, workspaceReducer, type Message, type Workspace, loadWorkspace } from "../src/lib/workspace";
 
@@ -39,16 +39,6 @@ describe("workspace presentation helpers", () => {
     const ids = intentGroups.flatMap((group) => group.modes);
     expect([...ids].sort()).toEqual([...modeIds].sort());
     expect(new Set(ids).size).toBe(modeIds.length);
-  });
-  it("offers each category's quick actions from its own modes, as Chief's table names them", () => {
-    const label = (id: string) => modes.find((mode) => mode.id === id)!.label;
-    expect(intentGroups.map((group) => [group.label, group.quick.map(label)])).toEqual([
-      ["Analisis", ["Pertanyaan Klinis (PICO)", "Diagnosis Banding (DDx)", "Pemeriksaan Penunjang", "Pengodean Diagnosis (ICD-10)"]],
-      ["Dokumentasi", ["Catatan Klinis (SOAP)", "Anamnesis (HPI)", "Catatan Penyakit Kronis", "Serah Terima Klinis (SBAR)"]],
-      ["Rencana", ["Asesmen dan Rencana (A&P)", "Daftar Tugas Klinis", "Surat Rujukan", "Pemantauan Klinis"]],
-      ["Komunikasi", ["Edukasi Pasien", "Ringkasan Kunjungan", "Catatan Konsultasi Telepon"]],
-    ]);
-    for (const group of intentGroups) { expect(group.quick.every((id) => group.modes.includes(id))).toBe(true); expect(group.quick[0]).toBe(group.modes[0]); }
   });
   it("drafts a monitoring plan from the supplied findings", () => {
     const draft = createDraft({ mode: "monitoring", prompt: "Keluhan: sesak napas sintetis\nRencana: cek saturasi tiap 4 jam", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
@@ -103,12 +93,9 @@ describe("saved seed patient", () => {
   });
 });
 
-describe("composer hint per intent tab", () => {
-  it("shows the tab's own hint on its default mode and the chip's hint on the others", () => {
-    expect(composerPlaceholder("question")).toBe("Diskusikan kasus yang sedang Anda tangani.");
-    for (const group of intentGroups) expect(composerPlaceholder(group.modes[0])).toBe(group.placeholder);
-    expect(new Set(intentGroups.map((group) => group.placeholder)).size).toBe(intentGroups.length);
-    expect(composerPlaceholder("refer")).toBe(modes.find((mode) => mode.id === "refer")!.placeholder);
+describe("composer hint", () => {
+  it("is the mode's own placeholder for every mode", () => {
+    for (const mode of modes) expect(composerPlaceholder(mode.id)).toBe(mode.placeholder);
   });
 });
 
@@ -203,4 +190,29 @@ describe("download names", () => {
     expect(downloadName("Pemeriksaan sangat panjang dengan banyak kata yang terus berlanjut", "2026-10-20T01:00:00Z")).toBe("sentrapedia-2026-10-20-pemeriksaan-sangat-panjang-dengan-banyak.md");
     expect(downloadName("", "not a date")).toBe("sentrapedia.md");
   });
+});
+
+describe("mode openings and the chip shortlist", () => {
+  it("every mode carries an opening sentence ending in a colon", () => { for (const m of modes) expect(m.opening).toMatch(/:$/); });
+  it("the chip shortlist is eight distinct modes and ddx appears once", () => { expect(chipShortlist).toHaveLength(8); expect(new Set(chipShortlist).size).toBe(8); expect(chipShortlist.filter(id => id === "ddx")).toHaveLength(1); });
+  it("a chip reads Perbarui once the encounter holds a document of that mode", () => {
+    expect(chipLabel("ddx")).toBe("Diagnosis Banding (DDx)");
+    expect(chipLabel("ddx", { messages: [{ id: "1", role: "assistant", content: "x", mode: "ddx", createdAt: "" }] })).toBe("Perbarui Diagnosis Banding (DDx)");
+    expect(chipLabel("ddx", { messages: [{ id: "1", role: "user", content: "x", mode: "ddx", createdAt: "" }] })).toBe("Diagnosis Banding (DDx)");
+    expect(chipLabel("ddx", { messages: [{ id: "2", role: "assistant", content: "x", mode: "clinic", createdAt: "" }] })).toBe("Diagnosis Banding (DDx)");
+  });
+  it("withOpening puts the mode's opening in front of the text and never loses what is written", () => {
+    const opening = (id: ModeId) => modes.find((item) => item.id === id)!.opening;
+    // An empty or blank box gets the opening alone.
+    expect(withOpening("", "ddx")).toBe(`${opening("ddx")}\n`);
+    expect(withOpening("  \n", "ddx")).toBe(`${opening("ddx")}\n`);
+    // Text that already starts with some mode's opening swaps it, with or without the newline after it.
+    expect(withOpening(`${opening("clinic")}\ndemam 3 hari`, "ddx")).toBe(`${opening("ddx")}\ndemam 3 hari`);
+    expect(withOpening(`${opening("clinic")}\n`, "ddx")).toBe(`${opening("ddx")}\n`);
+    expect(withOpening(opening("clinic"), "ddx")).toBe(`${opening("ddx")}\n`);
+    expect(withOpening(`${opening("ddx")}\ndemam 3 hari`, "ddx")).toBe(`${opening("ddx")}\ndemam 3 hari`);
+    // Any other text follows the opening.
+    expect(withOpening("demam 3 hari", "clinic")).toBe(`${opening("clinic")}\ndemam 3 hari`);
+  });
+  it("the headline cycles through the intent headlines by visit",() => { expect(headlineFor(0)).toBe(intentGroups[0].headline); expect(headlineFor(4)).toBe(intentGroups[0].headline); expect(headlineFor(-1)).toBe(intentGroups[3].headline); });
 });

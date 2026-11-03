@@ -1,4 +1,4 @@
-import { containsIdentity, validCase, validResult, type AadiAnalysis } from "./contract";
+import { containsIdentity, validCase, validPipeline, validResult, type AadiAnalysis } from "./contract";
 import type { CaseState } from "./types";
 import { validTheOracleGrounding } from "../theoracle-grounding-types";
 import { applyTherapyGate, gateEvidence, validGate } from "../theoracle-evidence-gate";
@@ -37,7 +37,9 @@ export async function requestAadiAnalysis(caseData: CaseState, options: { signal
   if (therapyGrounding !== undefined && !validTheOracleGrounding(therapyGrounding)) throw new Error("Respons analisis tidak dapat diverifikasi.");
   const evidenceGate = "evidenceGate" in data ? data.evidenceGate : undefined;
   if (evidenceGate !== undefined && !validGate(evidenceGate)) throw new Error("Respons analisis tidak dapat diverifikasi.");
+  // The pipeline trace is optional and informational: a malformed one is dropped, never an error.
+  const pipeline = "pipeline" in data && validPipeline(data.pipeline) ? data.pipeline : undefined;
   // Therapy is re-checked with the one strict rule, also when the server sent a report, so no unchecked dose reaches a draft.
   const { result, gate } = applyTherapyGate(data.result, gateEvidence(therapyGrounding, data.grounding), evidenceGate);
-  return { case: snapshot, result, traceId: data.traceId, createdAt: data.createdAt, grounding: data.grounding, ...(therapyGrounding ? { therapyGrounding } : {}), ...(gate ? { evidenceGate: gate } : {}) };
+  return { case: snapshot, result, traceId: data.traceId, createdAt: data.createdAt, grounding: data.grounding, ...(therapyGrounding ? { therapyGrounding } : {}), ...(gate ? { evidenceGate: gate } : {}), ...(pipeline ? { pipeline } : {}) };
 }

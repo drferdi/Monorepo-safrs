@@ -1,7 +1,7 @@
 export type AuthConfig =
   | { mode: "unavailable" }
   | { mode: "local"; userId: "local-development" }
-  | { mode: "clerk"; publishableKey: string; secretKey: string; publicOrigin: string | null };
+  | { mode: "clerk"; publishableKey: string; secretKey: string; publicOrigin: string | null; frontendApi: string };
 
 const loopback = (host: string) => ["localhost", "127.0.0.1", "[::1]"].includes(host);
 
@@ -26,14 +26,16 @@ export function resolveAuthConfig(env: Record<string, string | undefined>): Auth
   const key = /^pk_(test|live)_([A-Za-z0-9+/=]+)$/.exec(publishableKey);
   const secret = /^sk_(test|live)_[A-Za-z0-9_-]{8,}$/.exec(secretKey);
   if (!key || !secret || key[1] !== secret[1]) return unavailable;
+  let frontendApi: string;
   try {
-    // Clerk publishable keys encode their Frontend API hostname, terminated with '$'.
+    // Clerk publishable keys encode their Frontend API hostname, terminated with '$'. The proxy's CSP names that host.
     const domain = atob(key[2]);
     if (!/^[a-z0-9]+(?:[.-][a-z0-9]+)*\$$/i.test(domain)) return unavailable;
+    frontendApi = domain.slice(0, -1).toLowerCase();
   } catch { return unavailable; }
   const origin = publicOrigin(env.SENTRAPEDIA_PUBLIC_ORIGIN);
   if ((env.SENTRAPEDIA_PUBLIC_ORIGIN && !origin) || (env.NODE_ENV === "production" && (key[1] !== "live" || !origin))) return unavailable;
-  return { mode: "clerk", publishableKey, secretKey, publicOrigin: origin };
+  return { mode: "clerk", publishableKey, secretKey, publicOrigin: origin, frontendApi };
 }
 
 export function trustedConsentOrigin(request: Request, configuredOrigin: string | null): boolean {

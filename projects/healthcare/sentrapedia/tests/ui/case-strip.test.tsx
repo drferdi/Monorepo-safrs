@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
 const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
 void storageKey; void unreadableKey;
@@ -67,30 +67,28 @@ describe("analysis case strip", () => {
     expect(sent[0].chiefComplaint).toContain("TD 150/90");
 
     // The answer is a case analysis whatever mode sent it, and the next case starts with an empty strip.
-    expect(await screen.findByText("Analisis kasus", { selector: ".message-header strong" })).toBeTruthy();
+    expect(await screen.findByText("Analisis kasus", { selector: ".document-card strong" })).toBeTruthy();
     expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Usia dan tanda vital" }));
     expect(field("TD (mmHg)").value).toBe("");
     expect(field("Nadi").value).toBe("");
-    // The chat composer keeps its own design: intent tabs, quick actions and the mode picker stay.
-    expect(screen.getByText("Tindakan cepat")).toBeTruthy();
-    expect(screen.getByRole("combobox", { name: "Mode atau templat" })).toBeTruthy();
+    // The chat composer keeps the one chip row; the intent tabs and the mode picker are gone.
+    expect(screen.getByRole("group", { name: "Mode" })).toBeTruthy();
+    expect(screen.queryByRole("combobox", { name: "Mode atau templat" })).toBeNull();
 
-    // Quick copies of the summary and the working diagnosis, and a referral letter prefilled in the local referral mode.
-    expect(screen.getByRole("button", { name: /Salin ringkas/ })).toBeTruthy();
-    expect(screen.getByRole("group", { name: "Salin ke P-Care" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: /^Salin G44\.2 — / })).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: /Surat rujukan/ }));
-    expect((screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement).value).toMatch(/^Keluhan utama: Laki-laki 45 tahun[^\n]*Diagnosis kerja \(kandidat AADI, belum terkonfirmasi\): Tension-type headache \(G44\.2\)\nRiwayat penyakit sekarang: 45 tahun, laki-laki\. Pasien contoh[^\n]*\nPemeriksaan fisik: Sistolik \(mmHg\) 160; Diastolik \(mmHg\) 95; Nadi \(\/menit\) 98\nPermintaan: \nPenerima: $/);
-    expect(screen.getByRole("combobox", { name: "Mode atau templat" }).textContent).toContain("Surat Rujukan");
-    expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
+    // The working diagnosis copies from the pane's P-Care menu, and the chat carries no Lanjut row.
+    fireEvent.click(screen.getByRole("button", { name: "Salin ke P-Care" }));
+    expect(within(screen.getByRole("menu", { name: "Salin ke P-Care" })).getByRole("menuitem", { name: /^Salin G44\.2 — / })).toBeTruthy();
+    expect(screen.queryByText("Lanjut:")).toBeNull();
     expect(sent).toHaveLength(1);
   });
 
-  it("flags an unreadable value and shows a focused mode as a tag on the analysis", async () => {
+  it("flags an unreadable value and puts the focused section first in the analysis", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
-    fireEvent.click(screen.getByRole("button", { name: "Pengodean Diagnosis (ICD-10)" }));
+    // ICD-10 is outside the chip shortlist: it comes from the / picker.
+    fireEvent.change(screen.getByLabelText("Pertanyaan atau catatan klinis"), { target: { value: "/icd10" } });
+    fireEvent.keyDown(screen.getByLabelText("Pertanyaan atau catatan klinis"), { key: "Enter" });
     fireEvent.change(screen.getByLabelText("Pertanyaan atau catatan klinis"), { target: { value: "Laki-laki 45 tahun, nyeri kepala, N 88" } });
     // Values read from the text open the strip.
     expect(screen.getByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeTruthy();
@@ -100,13 +98,13 @@ describe("analysis case strip", () => {
     await act(async () => { await Promise.resolve(); });
     // The readable pulse meets the minimum data; the unreadable SpO₂ is still not sent.
     expect(sent[0].vitals).toEqual({ heartRate: 88 });
-    expect(await screen.findByText("fokus: ICD-10")).toBeTruthy();
+    expect((await screen.findAllByRole("heading", { level: 3 }))[0].textContent).toBe("Kode ICD-10");
   });
 
   it("shows no strip for a local document mode", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
-    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
     expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
   });
 });

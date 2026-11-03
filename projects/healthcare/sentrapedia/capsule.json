@@ -67,6 +67,7 @@
   ],
   "rootDependencies": [],
   "optionalEnvironment": [
-    "SENTRAPEDIA_DATABASE_URL"
+    "SENTRAPEDIA_DATABASE_URL",
+    "CLERK_WEBHOOK_SIGNING_SECRET"
   ]
 }

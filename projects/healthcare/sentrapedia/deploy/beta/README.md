@@ -28,6 +28,7 @@ One Ubuntu 24.04 server (2 vCPU, 4 GB RAM, Jakarta) runs the Docker image on loo
 | `GEMINI_API_KEY` | Paid-tier Gemini API key. Never commit it. |
 | `SENTRAPEDIA_PUBLIC_ORIGIN` | `https://beta.sentrapedia.com`, the only origin the gateway accepts besides loopback. |
 | `AADI_MAX_CONCURRENT` | `3`, analyses that may run at once (1-8). The 5 USD daily budget still applies. |
+| `CLERK_WEBHOOK_SIGNING_SECRET` | Optional. The signing secret of a Clerk webhook endpoint `https://beta.sentrapedia.com/api/webhooks/clerk` subscribed to `user.deleted`, so a closed account's Neon rows are deleted with it. Without it the route answers 503. |
 
 `/etc/sentrapedia/index.env` is separate and holds one line, `SENTRAPEDIA_INDEX_TOKEN=<token>` (chmod 600): a GitHub
 token with read access to the contents of `drferdi/Sentrapedia`. The generated TheOracle vectors left git on

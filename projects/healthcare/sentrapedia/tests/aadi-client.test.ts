@@ -97,3 +97,15 @@ describe("therapy that arrives without a gate report", () => {
     expect(analysis.evidenceGate).toEqual({ ...evidenceGate, drugs: [{ ...evidenceGate.drugs[0], status: "doseRemoved" }] });
   });
 });
+
+describe("pipeline trace", () => {
+  it("keeps the gateway's pipeline stages on the analysis when present, and tolerates their absence", async () => {
+    const pipeline = { path: "targeted", stages: [{ stage: "retrieve", ms: 120, ok: true }, { stage: "model", ms: 2400, ok: false, code: "MODEL_TIMEOUT" }] };
+    const kept = await requestAadiAnalysis(caseData, { fetchFn: async () => Response.json({ ...response, pipeline }) });
+    expect(kept.pipeline).toEqual(pipeline);
+    const absent = await requestAadiAnalysis(caseData, { fetchFn: async () => Response.json(response) });
+    expect(absent.pipeline).toBeUndefined();
+    const malformed = await requestAadiAnalysis(caseData, { fetchFn: async () => Response.json({ ...response, pipeline: { path: "x", stages: [{ stage: 1 }] } }) });
+    expect(malformed.pipeline).toBeUndefined();
+  });
+});

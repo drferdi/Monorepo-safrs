@@ -4,6 +4,7 @@ import "./globals.css";
 import "./auth.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { getAuthConfig } from "../lib/auth/server";
+import { clerkProviderOptions } from "../lib/auth/clerk-ui";
 
 // Chief's type pair: Plus Jakarta Sans for titles, Geist for everything else.
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
@@ -19,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="id" className={`${geist.variable} ${jakarta.variable} ${inter.variable}`}>
       <body>
-        {config.mode === "clerk" ? <ClerkProvider publishableKey={config.publishableKey} signInUrl="/sign-in" signUpUrl="/sign-up" signInForceRedirectUrl="/" signUpForceRedirectUrl="/">{children}</ClerkProvider> : children}
+        {config.mode === "clerk" ? <ClerkProvider {...clerkProviderOptions} publishableKey={config.publishableKey} signInUrl="/sign-in" signUpUrl="/sign-up" signInForceRedirectUrl="/" signUpForceRedirectUrl="/" afterSignOutUrl="/sign-in">{children}</ClerkProvider> : children}
       </body>
     </html>
   );

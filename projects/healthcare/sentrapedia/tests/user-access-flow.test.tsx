@@ -16,22 +16,28 @@ vi.mock("@clerk/nextjs", () => ({
 }));
 
 const config = resolveAuthConfig({ NODE_ENV: "test", NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: `pk_test_${Buffer.from("auth.example.test$").toString("base64")}`, CLERK_SECRET_KEY: "sk_test_fixture_not_a_real_key" });
+const consent = { version: "sentrapedia-beta-v2", acceptedAt: "2026-10-24T00:00:00.000Z" };
 function access(metadata: Record<string, unknown> = {}, emailVerified = true, session: string | null = "user_new") {
   const writeConsent = vi.fn();
   return { writeConsent, auth: createBetaAccess({ config, session: async () => session, user: async id => ({ id, emailVerified, privateMetadata: metadata }), writeConsent }) };
 }
 
 describe("self-service user access", () => {
-  it("admits a verified signed-in user without invitation or extra consent metadata", async () => {
-    const { auth, writeConsent } = access();
+  // Since 2026-11-02 the synthetic-data acknowledgement is a gate again: a newcomer is asked for it once, nothing else.
+  it("admits a verified signed-in user without invitation, once the current policy is acknowledged", async () => {
+    const { auth, writeConsent } = access({ sentrapediaBetaConsent: consent });
     expect(await auth.resolve()).toEqual({ status: "allowed", userId: "user_new" });
     expect(writeConsent).not.toHaveBeenCalled();
+    const newcomer = access();
+    expect(await newcomer.auth.resolve()).toEqual({ status: "consent-required" });
+    expect(await newcomer.auth.resolve(false)).toEqual({ status: "allowed", userId: "user_new" });
+    expect(newcomer.writeConsent).not.toHaveBeenCalled();
   });
   it("retains suspension, verified email and session checks without granting an admin role", async () => {
     expect(await access({ sentrapediaBetaAccess: { disabled: true } }).auth.resolve()).toEqual({ status: "disabled" });
     expect(await access({}, false).auth.resolve()).toEqual({ status: "disabled" });
     expect(await access({}, true, null).auth.resolve()).toEqual({ status: "signed-out" });
-    expect(await access({ publicMetadata: { role: "admin" } }).auth.resolve()).toEqual({ status: "allowed", userId: "user_new" });
+    expect(await access({ sentrapediaBetaConsent: consent, publicMetadata: { role: "admin" } }).auth.resolve()).toEqual({ status: "allowed", userId: "user_new" });
   });
   it("renders registration without invitation instructions and sends completed signup to the workspace", () => {
     const html = renderToStaticMarkup(SignUpPage());

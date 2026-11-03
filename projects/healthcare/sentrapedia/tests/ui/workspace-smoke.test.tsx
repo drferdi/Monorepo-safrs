@@ -8,7 +8,7 @@ import { WorkspaceApp } from "../../src/components/workspace";
 import { initialWorkspace, type Encounter } from "../../src/lib/workspace";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
-import { diagnosisSectionTitles } from "../../src/lib/aadi/presentation";
+import { headlineFor } from "../../src/lib/studio";
 
 vi.mock("next/image", () => ({
   default: ({ src, alt, unoptimized, ...rest }: { src: unknown; alt?: string; unoptimized?: boolean; [key: string]: unknown }) => {
@@ -112,6 +112,7 @@ const fixtureAnalysis: AadiAnalysis = {
 describe("workspace UI smoke tests", () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     vi.useFakeTimers();
 
     Object.defineProperty(window, "matchMedia", {
@@ -217,37 +218,23 @@ describe("workspace UI smoke tests", () => {
       vi.advanceTimersByTime(12000);
     });
 
-    // Assert that the draft appears and diagnosis is shown
+    // The answer is the analysis in Glass's shape in the document pane: the diagnosis tiers, next steps, the therapy
+    // through the dose gate, and the guideline passages as numbered cards.
     expect(screen.getAllByText(/Pneumonia/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Amoxicillin/i).length).toBeGreaterThan(0);
-
-    // Assert that the unsupported dose (1x1000mg) is NOT shown
+    const pane = within(screen.getByRole("tabpanel"));
+    expect(screen.getByRole("tab", { name: /Analisis kasus/ }).getAttribute("aria-selected")).toBe("true");
+    expect(screen.queryByRole("navigation", { name: "Bagian analisis kasus" })).toBeNull();
+    expect(pane.getAllByRole("heading", { level: 3 }).map(h => h.textContent)).toEqual(["Pembahasan kasus", "Kemungkinan utama", "Alternatif", "Jangan terlewat", "Langkah diagnostik berikutnya", "Rencana tata laksana", "Edukasi dan tindak lanjut", "Kutipan pedoman"]);
+    // The unsupported dose (1x1000mg) is not shown; its line is marked by the gate and carries the dose check.
     expect(screen.queryByText(/1x1000mg/i)).toBeNull();
-
-    // Assert that unverified dose wording or status appears
-    expect(screen.getAllByText(/dosis: cek pedoman|dosis tidak ditemukan di Oracle/i).length).toBeGreaterThan(0);
-
-    // The answer is the nine-part report: its parts in the section list, real tables, and links that open outside
-    const parts = within(screen.getByRole("navigation", { name: "Bagian analisis kasus" })).getAllByRole("button").map(button => button.textContent);
-    // The case flow lists the report's parts only; the doctor's summary is a section of its own above them (Gaffer, 2026-10-21).
-    expect(parts).toEqual(diagnosisSectionTitles);
-    // The guideline passages and the dose check are sub-parts of part 9's fold, the passages as compact titles
-    const fold = [...document.querySelectorAll<HTMLDetailsElement>("details.diagnosis-provenance")].at(-1)!;
-    expect(within(fold).getByRole("heading", { name: "Kutipan pedoman" })).toBeTruthy();
-    expect(within(fold).getByRole("heading", { name: "Cek dosis obat" })).toBeTruthy();
-    expect(fold.querySelector(".oracle-references details.oracle-reference")).toBeTruthy();
-    expect(fold.textContent).not.toMatch(/kemiripan/);
-    const summary = screen.getByRole("region", { name: "Tabel Komponen, Keterangan" });
-    expect(within(summary).getAllByRole("columnheader").map(cell => cell.textContent)).toEqual(["Komponen", "Keterangan"]);
-    expect(within(summary).getByRole("cell", { name: "Laki-laki 35 tahun, batuk dan demam tinggi sejak 3 hari, S 38,5" })).toBeTruthy();
+    const gated = [...document.querySelectorAll<HTMLElement>(".analysis-regimen li[data-gate]")];
+    expect(gated.length).toBeGreaterThan(0);
+    expect(gated.some(li => li.dataset.gate !== "verified" && li.textContent?.includes("Cek dosis obat"))).toBe(true);
+    expect(pane.getByRole("region", { name: "Kutipan pedoman" })).toBeTruthy();
+    expect(pane.getByText(/Laki-laki 35 tahun, batuk dan demam tinggi sejak 3 hari, S 38,5/)).toBeTruthy();
     // One draft marker only: the Status field; no "Draf analisis" badge or subtitle.
     expect(screen.queryByText(/Draf analisis/)).toBeNull();
-    // The doctor's summary stands as its own section above the report title.
-    const doctor = screen.getByRole("heading", { name: "Ringkasan untuk dokter" });
-    expect(doctor.compareDocumentPosition(screen.getByRole("heading", { name: "LAPORAN ANALISIS KASUS KLINIS" })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    const nice = screen.getAllByRole("link", { name: "NICE CG150" })[0];
-    expect(nice.getAttribute("href")).toBe("https://www.nice.org.uk/guidance/cg150/chapter/recommendations");
-    expect(nice.getAttribute("rel")).toBe("noopener noreferrer");
     expect(screen.queryByText(/\| --- \|/)).toBeNull();
 
     // Unmount and remount to verify persistence & restoration
@@ -258,9 +245,11 @@ describe("workspace UI smoke tests", () => {
       await Promise.resolve();
     });
 
-    // Assert that encounter and draft are restored
+    // Assert that encounter and draft are restored: the chat summary, and the pane on the same tab.
     expect(screen.getAllByText(/Pneumonia/i).length).toBeGreaterThan(0);
     expect(screen.queryByText(/1x1000mg/i)).toBeNull();
+    expect(document.querySelectorAll(".doctor-summary p")).toHaveLength(5);
+    expect(screen.getByRole("tab", { name: /Analisis kasus/ }).getAttribute("aria-selected")).toBe("true");
   });
 
   it("shows 'tidak dapat dibaca' notice for corrupt saved workspace and preserves raw text in backup", async () => {
@@ -334,37 +323,23 @@ describe("workspace UI smoke tests", () => {
 
     // While another dialog is open, Ctrl+J does not switch to the command palette
     fireEvent.click(screen.getByRole("button", { name: "Tutup dialog" }));
-    fireEvent.click(screen.getByRole("button", { name: "Pengaturan Agent" }));
+    fireEvent.click(screen.getByRole("button", { name: "Buat Pasien" }));
     fireEvent.keyDown(window, { key: "j", ctrlKey: true });
 
     expect(screen.getAllByRole("dialog").length).toBe(1);
-    expect(screen.getByRole("heading", { name: "Sesuaikan workspace" })).toBeDefined();
     expect(screen.queryByRole("heading", { name: "Pusat perintah" })).toBeNull();
   });
 
-  it("completes a dialog round trip for Settings and keeps the composer intact", async () => {
+  it("links Pengaturan Agent to the /agent page from the sidebar and the account menu, with no settings dialog", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => {
       await Promise.resolve();
     });
-
-    // Composer textarea is present initially
     expect(screen.getByLabelText("Pertanyaan atau catatan klinis")).toBeDefined();
-
-    // Open settings dialog through the UI
-    const settingsBtn = screen.getByRole("button", { name: "Pengaturan Agent" });
-    fireEvent.click(settingsBtn);
-
-    expect(screen.getByRole("dialog")).toBeDefined();
-    expect(screen.getByRole("heading", { name: "Sesuaikan workspace" })).toBeDefined();
-
-    // Close the dialog
-    const closeBtn = screen.getByRole("button", { name: "Tutup dialog" });
-    fireEvent.click(closeBtn);
-
-    // Assert dialog is gone and composer is still there
+    expect(screen.getByRole("link", { name: "Pengaturan Agent" }).getAttribute("href")).toBe("/agent");
+    fireEvent.click(screen.getByRole("button", { name: /Sentrapedia/ }));
+    expect(screen.getByRole("menuitem", { name: "Pengaturan Agent" }).getAttribute("href")).toBe("/agent");
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(screen.getByLabelText("Pertanyaan atau catatan klinis")).toBeDefined();
   });
 
   it("shows a status toast when an action calls notify", async () => {
@@ -394,5 +369,27 @@ describe("workspace UI smoke tests", () => {
     const toast = statusElements.find((el) => el.textContent?.includes("Pasien dibuat. Encounter pertama siap digunakan."));
     expect(toast).toBeDefined();
     expect(toast?.getAttribute("role")).toBe("status");
+  });
+
+  it("the home shows a rotating headline, the Layanan primer pill, the composer and the chip row, with no tabs", async () => {
+    render(<WorkspaceApp principalId="local-development"/>);
+    await act(async () => { await Promise.resolve(); });
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(headlineFor(0));
+    expect(screen.getByText("Layanan primer")).toBeDefined();
+    expect(screen.getByRole("group", { name: "Mode" })).toBeDefined();
+    expect(screen.queryByRole("group", { name: "Tujuan kerja" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Tentang workspace ini" })).toBeNull();
+  });
+
+  it("counts a visit per tab session and rotates the headline on the next one", async () => {
+    render(<WorkspaceApp principalId="local-development"/>);
+    await act(async () => { await Promise.resolve(); });
+    expect(sessionStorage.getItem("sentrapedia-visit")).toBe("1");
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(headlineFor(0));
+    cleanup();
+    render(<WorkspaceApp principalId="local-development"/>);
+    await act(async () => { await Promise.resolve(); });
+    expect(sessionStorage.getItem("sentrapedia-visit")).toBe("2");
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(headlineFor(1));
   });
 });

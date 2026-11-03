@@ -25,7 +25,7 @@ It therefore holds only two files: `AGENTS.md` (this file) and `README.md`.
 | [`assistverse`](./assistverse/AGENTS.md) | Public Sentra Assist website (Next.js) |
 | [`sentrapedia`](./sentrapedia/AGENTS.md) | Sentrapedia clinical workspace with its public marketing site under `apps/site/` |
 | [`referralink`](./referralink/AGENTS.md) | MEDLINK sandbox for differential diagnosis, ICD-10 mapping, and referral (Vite) |
-| [`healthsphere`](./healthsphere/AGENTS.md) | Public website of UPTD Puskesmas PONED Balowerti Kediri (app in `website/`) |
+| [`balowerti`](./balowerti/) | Public static website of UPTD Puskesmas PONED Balowerti Kediri |
 | [`med-assist`](./med-assist/AGENTS.md) | Chrome side-panel extension for FKTP clinicians in ePuskesmas (WXT) |
 | [`medboard`](./medboard/AGENTS.md) | Clinical intelligence dashboard: CDSS, trajectory, NEWS2, safety gates (Next.js) |
 | [`sidelab-src`](./sidelab-src/AGENTS.md) | SideLab research-prototype clinical decision support (Python engine, API, dashboard) |

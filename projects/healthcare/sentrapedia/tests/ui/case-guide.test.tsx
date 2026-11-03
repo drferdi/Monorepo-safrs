@@ -56,11 +56,12 @@ describe("case guide under the composer", () => {
     expect(guide()).toBeNull();
     fireEvent.change(textarea(), { target: { value: "demam 3 hari" } });
     expect(guide()).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
     expect(guide()).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Komunikasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Edukasi Pasien" }));
     expect(guide()).toBeNull();
-    expect(textarea().value).toBe("demam 3 hari");
+    // A mode chip puts its own sentence in front of the text; the typed words stay.
+    expect(textarea().value).toBe("Susun materi edukasi pasien untuk topik berikut:\ndemam 3 hari");
   });
 
   it("shows missing items as chips, counts the strip's values and the saved patient as filled", async () => {
@@ -104,7 +105,7 @@ describe("guided SOAP view", () => {
 
   it("opens behind a toggle and shows S/O/A/P from the typed text with the placeholder in empty rows", async () => {
     await start();
-    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
     fireEvent.change(textarea(), { target: { value: "Keluhan utama: demam 3 hari\nTanda vital: TD 120/80, N 88" } });
     expect(soapToggle().getAttribute("aria-expanded")).toBe("false");
     expect(screen.queryByRole("region", { name: "Susunan SOAP" })).toBeNull();
@@ -127,8 +128,7 @@ describe("guided SOAP view", () => {
     fireEvent.click(screen.getByRole("button", { name: "Gunakan mode Catatan Klinis (SOAP)" }));
     expect(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }).getAttribute("aria-pressed")).toBe("true");
     await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
-    expect(await screen.findByText("Draf lokal", { selector: ".draft-badge" })).toBeTruthy();
-    expect(screen.getByText("Catatan Klinis (SOAP)", { selector: ".message-header strong" })).toBeTruthy();
+    expect(await screen.findByText("Draf Catatan Klinis (SOAP) disusun.")).toBeTruthy();
     expect(sent).toEqual([]);
     const saved = JSON.parse(localStorage.getItem(storageKey)!) as Workspace;
     const draft = saved.encounters[0].messages.find((message) => message.role === "assistant")!;
@@ -140,7 +140,7 @@ describe("guided SOAP view", () => {
 
   it("never shows a diagnosis, code or drug in the SOAP rows for free text", async () => {
     await start();
-    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
     const narrative = "Perempuan 30 tahun batuk berdahak 5 hari, demam, sesak bila berjalan";
     fireEvent.change(textarea(), { target: { value: narrative } });
     fireEvent.click(soapToggle());
@@ -222,7 +222,7 @@ describe("the checklist and minimum data before a case analysis", () => {
     expect(region("Sebelum analisis: keluhan")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Tanda bahaya dan pertanyaan" }));
     expect(region("Sebelum analisis: keluhan")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Komunikasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Edukasi Pasien" }));
     expect(region("Sebelum analisis: keluhan")).toBeNull();
   });
 });

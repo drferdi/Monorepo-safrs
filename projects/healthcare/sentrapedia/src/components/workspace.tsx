@@ -1,11 +1,11 @@
 "use client";
 
 import { Check, CircleAlert, X } from "lucide-react";
-import { useCallback, useEffect, useReducer, useRef, useState, type ComponentProps } from "react";
-import { createDraft, modes, type ModeId } from "../lib/drafts";
-import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Patient } from "../lib/workspace";
+import { useCallback, useEffect, useReducer, useRef, useState, useSyncExternalStore, type ComponentProps, type ReactNode } from "react";
+import { createDraft, type ModeId } from "../lib/drafts";
+import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Message, type Patient } from "../lib/workspace";
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
-import { downloadName, intentGroups } from "../lib/studio";
+import { downloadName, headlineFor } from "../lib/studio";
 import { insertTemplate } from "../lib/clinical-templates";
 import { reviewedText } from "../lib/normal-exam";
 import { compactQuery, mobileQuery } from "../lib/layout";
@@ -14,13 +14,15 @@ import { Dialog } from "./dialog";
 import { downloadText } from "./message-card";
 import { Sidebar, type DialogName } from "./sidebar";
 import { PixelLoader } from "./pixel-loader";
-import { ClinicalPanel } from "./clinical-panel";
+import { DocumentPane, type PaneTools } from "./document-pane";
+import { EncounterOverview } from "./encounter-overview";
 import { CommandPalette } from "./command-palette";
 import { TemplateLibrary } from "./template-library";
 import { WorkQueue } from "./work-queue";
 import { createPersonalDraft } from "../lib/workflow";
 import { KnowledgeDialog } from "./knowledge-dialog";
-import { diagnosisContent, aadiMessage } from "../lib/aadi/presentation";
+import { diagnosisContent, aadiMessage, pcareCopies } from "../lib/aadi/presentation";
+import { paneDocuments } from "../lib/document-pane";
 import type { AadiAnalysis } from "../lib/aadi/contract";
 import { caseFieldKeys, composerCase, patientHints, composerUsesAadi, composerAadiMessages, emptyCaseFields, readCaseFields, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
 import { requestAadiAnalysis } from "../lib/aadi/client";
@@ -31,31 +33,33 @@ import { ChatComposer, Conversation, HomeFooter, HomeView, WorkspaceHeader } fro
 import { WorkspaceDialogs } from "./workspace-forms";
 import { workspaceStorageKeys } from "../lib/workspace-storage";
 
-// What Enter will do after a next step: a local draft, or an AADI analysis of the prefilled text.
-function stepToast(mode: ModeId): string {
-  const label = modes.find((m) => m.id === mode)?.label;
-  if (mode === "referral") return "Draf surat rujukan siap di kolom. Lengkapi penerima dan permintaan, lalu tekan Enter.";
-  return composerUsesAadi(mode, false) ? `Mode ${label} siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.` : `Mode ${label} siap dengan data kasus. Lengkapi, lalu tekan Enter.`;
+const visitKey = "sentrapedia-visit";
+const noSubscription = () => () => {};
+interface PaneState { open: boolean; activeId: string | "overview"; seen: number }
+function readVisit(): number { try { return Number(sessionStorage.getItem(visitKey)) || 0; } catch { return 0; } }
+
+export function WorkspaceApp({ principalId, onSignOut, userButton }: { principalId: string; onSignOut?: () => void; userButton?: ReactNode }) {
+  return <WorkspaceState key={principalId} principalId={principalId} onSignOut={onSignOut} userButton={userButton}/>;
 }
 
-export function WorkspaceApp({ principalId }: { principalId: string }) {
-  return <WorkspaceState key={principalId} principalId={principalId}/>;
-}
-
-function WorkspaceState({ principalId }: { principalId: string }) {
+function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: string; onSignOut?: () => void; userButton?: ReactNode }) {
   const storageKeys = workspaceStorageKeys(principalId);
   const [state, dispatch] = useReducer(workspaceReducer, initialWorkspace);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const mobile = useMediaQuery(mobileQuery);
   const [focusMode, setFocusMode] = useState(false);
-  // The Clinical Cockpit starts closed; the header button opens it (Chief, 2026-10-09).
-  const [panelOpen, setPanelOpen] = useState(false);
+  // The headline rotates once per tab session: read once on the client, counted in an effect; the server shows the first.
+  const [seen] = useState<{ visit: number | null }>({ visit: null });
+  const visit = useSyncExternalStore(noSubscription, () => seen.visit ??= readVisit(), () => 0);
+  useEffect(() => { try { sessionStorage.setItem(visitKey, String(visit + 1)); } catch { /* storage unavailable: the first headline stays */ } }, [visit]);
   const compact = useMediaQuery(compactQuery);
   const navigationOpen = !focusMode && (mobile ? mobileNavOpen : sidebarOpen);
   const toggleNavigation = useCallback(() => { if (mobile) setMobileNavOpen((v) => !v); else smooth(() => setSidebarOpen((v) => !v)); }, [mobile]);
   const [dialog, setDialog] = useState<DialogName>(null);
   const [dialogId, setDialogId] = useState<string | undefined>();
+  // The sheet renders only below 1200 px: widening past it must not leave the flag set (shortcuts stay off while a dialog is "open").
+  if (!compact && dialog === "document") { setDialog(null); setDialogId(undefined); }
   const [prompt, setPrompt] = useState("");
   const [mode, setMode] = useState<ModeId>("question");
   const [templateKey, setTemplateKey] = useState<string | null>(null);
@@ -77,8 +81,18 @@ function WorkspaceState({ principalId }: { principalId: string }) {
   const patient = state.patients.find((p) => p.id === encounter?.patientId);
   const hasMessages = Boolean(encounter?.messages.length) || pendingQuestion !== null;
   const context = encounter?.context ?? "";
-  const intent = intentGroups.find((item) => item.modes.includes(mode))!;
   const selectedTemplate = state.templates?.find((item) => `template:${item.id}` === templateKey);
+  // The document pane, remembered per encounter: it opens on the newest document whenever one arrives (spec 4).
+  const [panes, setPanes] = useState(() => new Map<string, PaneState>());
+  const documents = paneDocuments(encounter);
+  const storedPane = encounter && panes.get(encounter.id);
+  // Unsaved edits by message id; a document that arrives while the open one has one gets its tab but not the pane.
+  const [drafts, setDrafts] = useState(() => new Map<string, string>());
+  const pane: PaneState = storedPane && (documents.length <= storedPane.seen || drafts.has(storedPane.activeId)) ? storedPane : { open: documents.length > 0, activeId: documents.at(-1)?.id ?? "overview", seen: documents.length };
+  const split = !compact && pane.open && documents.length > 0;
+  const setPane = (change: Partial<Omit<PaneState, "seen">>) => { const id = encounter?.id; if (id) setPanes((map) => new Map(map).set(id, { ...pane, ...change, seen: documents.length })); };
+  // Recording the pane with each draft change pins the open document while it is edited.
+  const setDraft = (id: string, text: string | null) => { setDrafts((map) => { const next = new Map(map); if (text === null) next.delete(id); else next.set(id, text); return next; }); setPane({}); };
   const cancelAnalysis = useCallback(() => {
     analysisController.current?.abort();
     analysisController.current = null;
@@ -87,8 +101,10 @@ function WorkspaceState({ principalId }: { principalId: string }) {
     pendingText.current = null;
     setBusy(false); setAnalysisError(""); setPendingQuestion(null);
   }, []);
-  const changeMode = useCallback((next: ModeId) => { cancelAnalysis(); setMode(next); setTemplateKey(null); }, [cancelAnalysis]);
-  function chooseTemplate(key: string) { cancelAnalysis(); if (key.startsWith("mode:")) changeMode(key.slice(5) as ModeId); else { const item = state.templates?.find((t) => `template:${t.id}` === key); if (!item) return; setMode(item.mode); setTemplateKey(key); } closeDialog(); }
+  // A mode or template picked while an analysis runs leaves it running: the request carries the mode it was sent with,
+  // and the chips are disabled while busy; the / picker and the Command Center must behave the same (review, 2026-11-04).
+  const changeMode = useCallback((next: ModeId) => { setMode(next); setTemplateKey(null); }, []);
+  function chooseTemplate(key: string) { if (key.startsWith("mode:")) changeMode(key.slice(5) as ModeId); else { const item = state.templates?.find((t) => `template:${t.id}` === key); if (!item) return; setMode(item.mode); setTemplateKey(key); } closeDialog(); }
 
   useEffect(() => () => analysisController.current?.abort(), []);
   useEffect(() => { const handler = (e: KeyboardEvent) => { const shortcut = shortcutFor(e, Boolean(dialog) || (mobile && mobileNavOpen)); if (!shortcut) return; e.preventDefault(); if (shortcut === "new") { dispatch({ type: "encounter.select", id: null }); setPrompt(""); changeMode("question"); } else setDialog(shortcut); }; window.addEventListener("keydown", handler); return () => window.removeEventListener("keydown", handler); }, [dialog, mobile, mobileNavOpen, changeMode]);
@@ -97,6 +113,11 @@ function WorkspaceState({ principalId }: { principalId: string }) {
   function openDialog(name: DialogName, id?: string) { if (analysisController.current) cancelAnalysis(); const open = () => { setDialog(name); setDialogId(id); }; if (dialog) smooth(open); else open(); }
   function hideDialog() { setDialog(null); setDialogId(undefined); }
   function closeDialog() { if (dialog) smooth(hideDialog); else hideDialog(); }
+  // Below 1200 px the pane is a sheet; opening it leaves a running analysis alone.
+  function openDocument(id?: string) {
+    setPane({ open: true, ...(id && { activeId: id }) });
+    if (compact) { const open = () => { setDialog("document"); setDialogId(undefined); }; if (dialog) smooth(open); else open(); }
+  }
   function selectEncounter(id: string) { dispatch({ type: "encounter.select", id }); setPrompt(""); resetCaseFields(); changeMode("question"); if (mobile) setMobileNavOpen(false); closeDialog(); }
   function startNew(patientId?: string) {
     if (patientId) dispatch({ type: "encounter.add", encounter: newEncounter(patientId) }); else dispatch({ type: "encounter.select", id: null });
@@ -107,13 +128,6 @@ function WorkspaceState({ principalId }: { principalId: string }) {
     setPrompt(value); setAnalysisError("");
     const found = readCaseFields(value);
     setCaseFields((fields) => { const next = { ...fields }; for (const key of caseFieldKeys) if (!manualFields.includes(key)) next[key] = found[key] ?? ""; return next; });
-  }
-  // A next step from a draft (design D4's referral letter, generalised by the Puskesmas flow): the composer in that mode
-  // with the case filled in; nothing is sent until the doctor presses Enter.
-  function startStep(next: ModeId, text: string) {
-    changeMode(next); updatePrompt(text);
-    requestAnimationFrame(() => { const box = document.querySelector<HTMLTextAreaElement>(".chat-composer textarea"); box?.focus(); box?.setSelectionRange(text.length, text.length); });
-    notify(stepToast(next));
   }
   // A failed analysis can still become the local SOAP note (Puskesmas flow, decision 3): offered next to "Coba lagi",
   // never automatic; the draft's source records why AADI did not answer.
@@ -169,7 +183,22 @@ function WorkspaceState({ principalId }: { principalId: string }) {
     changeMode("ddx"); closeDialog(); notify("Analisis ditambahkan sebagai draf untuk ditinjau.");
   }
 
-  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
+  const output = (m: Message) => reviewedText(diagnosisContent(m), m.reviewStatus);
+  const paneTools: PaneTools = {
+    onCopy: async (m) => { try { await navigator.clipboard.writeText(output(m)); notify("Dokumen disalin."); } catch { notify("Clipboard tidak tersedia. Gunakan Edit untuk memilih dan menyalin teks.", "error"); } },
+    onDownload: (m) => downloadText(output(m), downloadName(encounter?.title ?? "dokumen", m.createdAt)),
+    onPrint: () => window.print(),
+    pcare: (m) => pcareCopies(m, output(m)),
+  };
+  const overviewActions = {
+    onContext: () => openDialog("context"),
+    onPatient: () => patient ? openDialog("patient", patient.id) : openDialog("encounter", encounter?.id),
+    onSelect: (id: string) => { if (id !== encounter?.id) selectEncounter(id); },
+    // generate clears the composer; whatever the doctor was typing is put back.
+    onMakeTasks: (text: string) => { const typed = prompt; generate(text, "tasks", false); setPrompt(typed); },
+  };
+  const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<EncounterOverview state={state} encounter={encounter} patient={patient} {...overviewActions}/>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify} drafts={drafts} onDraft={setDraft}/>;
+  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
     minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [],
     caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };
 
@@ -179,27 +208,29 @@ function WorkspaceState({ principalId }: { principalId: string }) {
     {dialog === "knowledge" && <KnowledgeDialog initialTab={dialogId} onClose={closeDialog} onSave={saveAadiAnalysis}/>}
     {dialog === "templates" && <TemplateLibrary state={state} dispatch={dispatch} onChoose={chooseTemplate} onInsert={(next, text) => { chooseTemplate(`mode:${next}`); updatePrompt(insertTemplate(prompt, text)); }} onClose={closeDialog}/>}
     {dialog === "queue" && <WorkQueue state={state} dispatch={dispatch} onClose={closeDialog} onSelect={(id) => { selectEncounter(id); requestAnimationFrame(() => document.querySelectorAll(".assistant-message").item(document.querySelectorAll(".assistant-message").length - 1)?.scrollIntoView({ block: "nearest" })); }}/ >}
-    <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify}/>
+    <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify} onSignOut={onSignOut} userButton={userButton} beforeLeave={() => (!busy && !prompt.trim() && drafts.size === 0) || window.confirm("Analisis yang sedang berjalan, teks yang belum dikirim, dan suntingan dokumen yang belum disimpan akan hilang. Tetap buka Pengaturan Agent?")}/>
     <main className={`main-canvas ${hasMessages ? "chat-view" : "home-view"}`} inert={mobile && navigationOpen} aria-hidden={mobile && navigationOpen}>
       {storageError && <div className="storage-warning" role="alert">{storageError}</div>}
-      <WorkspaceHeader hasMessages={hasMessages} name={state.settings.name ?? ""} patientName={patient?.name} encounterTitle={encounter?.title} focusMode={focusMode} panelPressed={!focusMode && !compact && panelOpen}
+      <WorkspaceHeader hasMessages={hasMessages} name={state.settings.name ?? ""} patientName={patient?.name} encounterTitle={encounter?.title} focusMode={focusMode}
         onExpand={() => { const expand = () => { setFocusMode(false); setSidebarOpen(true); setMobileNavOpen(true); }; if (mobile) expand(); else smooth(expand); }}
         onEncounter={() => openDialog("encounter", encounter?.id)}
         onCommands={() => openDialog("commands")}
         onFocus={() => smooth(() => { setMobileNavOpen(false); setFocusMode((value) => !value); })}
-        onPanel={() => { if (compact || focusMode) openDialog("clinical"); else smooth(() => setPanelOpen((value) => !value)); }}
         onExport={() => downloadText(encounter?.messages.map((m) => reviewedText(diagnosisContent(m), m.reviewStatus)).join("\n\n---\n\n") ?? "", downloadName(encounter?.title ?? "encounter"))}
+        documentCount={documents.length} paneOpen={compact ? dialog === "document" : split} onPane={() => compact ? openDocument() : smooth(() => setPane({ open: !split }))}
         onUpgrade={() => openDialog("upgrade")}/>
-      <div className="workspace-body">
-        {!hasMessages ? <HomeView name={state.settings.name ?? ""} intent={intent} composer={composerProps}/> : <>
-          <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onStep={startStep} onCancel={cancelAnalysis}/>
-          <ChatComposer composer={composerProps} onAbout={() => openDialog("account")}/>
+      <div className="workspace-body" data-split={split || undefined}>
+        {!hasMessages ? <HomeView name={state.settings.name ?? ""} headline={headlineFor(visit)} pill={state.settings.environment ?? "Layanan primer"} composer={composerProps}/> : <>
+          <div className="chat-column">
+            <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onCancel={cancelAnalysis} onOpenDocument={openDocument}/>
+            <ChatComposer composer={composerProps}/>
+          </div>
+          {split && paneFor(() => smooth(() => setPane({ open: false })))}
         </>}
       </div>
       {!hasMessages && <HomeFooter onLegal={(label) => { setDialogId(label); setDialog("legal"); }}/>}
     </main>
-    {!compact && panelOpen && !focusMode && <aside className="clinical-panel"><ClinicalPanel state={state} encounter={encounter} patient={patient} onSelect={selectEncounter} onContext={() => openDialog("context")} onPatient={() => openDialog("patient", patient?.id)} onClose={() => smooth(() => setPanelOpen(false))}/></aside>}
-    {dialog === "clinical" && <Dialog title="Kokpit klinis" onClose={closeDialog}><ClinicalPanel state={state} encounter={encounter} patient={patient} onSelect={selectEncounter} onContext={() => openDialog("context")} onPatient={() => openDialog("patient", patient?.id)}/></Dialog>}
+    {compact && dialog === "document" && <Dialog title="Dokumen encounter" className="document-sheet" onClose={closeDialog}>{paneFor(closeDialog)}</Dialog>}
     {dialog === "commands" && <CommandPalette onKnowledge={(tab) => openDialog("knowledge", tab)} onQueue={() => openDialog("queue")} onTemplates={() => openDialog("templates")} state={state} onClose={closeDialog} onEncounter={selectEncounter} onPatient={(id) => openDialog("patient", id)} onMode={(next) => { changeMode(next); closeDialog(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus()); }} onNew={() => { startNew(); closeDialog(); }} onFocus={() => smooth(() => { setFocusMode((value) => !value); setMobileNavOpen(false); hideDialog(); })} onContext={() => openDialog("context")}/>}
     {toast && <div className={`toast ${toastError ? "is-error" : ""}`} role={toastError ? "alert" : "status"}>{toastError ? <CircleAlert size={15}/> : <Check size={15}/>}<span>{toast}</span><button aria-label="Tutup notifikasi" onClick={dismissToast}><X size={14}/></button></div>}
 

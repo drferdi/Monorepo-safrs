@@ -40,21 +40,11 @@ describe("contrast of the semantic colour tokens (WCAG 2.2 AA)", () => {
 });
 
 describe("muted text never sits on the surface colour", () => {
-  // The inline Clinical Cockpit and the sidebar use --color-background-surface, where muted text is 4.36:1.
-  it.each([".timeline-encounter small", ".timeline-encounter span", ".nav-group-title", ".empty-text"])("%s uses secondary text", (selector) => {
+  // The sidebar and the encounter timeline use --color-background-surface, where muted text is 4.36:1.
+  it.each([".timeline-encounter small", ".timeline-encounter span", ".account-menu-usage", ".empty-text"])("%s uses secondary text", (selector) => {
     const body = declarations(selector);
     expect(body).toMatch(/color:\s*var\(--color-text-secondary\)/);
     expect(body).not.toMatch(/color:\s*var\(--color-text-muted\)/);
-  });
-});
-
-describe("cockpit dialog", () => {
-  it("hides the side-column label at every width, because the dialog title already names the cockpit", () => {
-    const at = css.indexOf(".dialog .clinical-panel-header {");
-    expect(at).toBeGreaterThan(-1);
-    const before = css.slice(0, at);
-    expect(before.split("{").length - before.split("}").length).toBe(0);
-    expect(declarations(".dialog .clinical-panel-header")).toMatch(/display:\s*none/);
   });
 });
 
@@ -63,5 +53,18 @@ describe("sidebar empty state", () => {
     const empty = { ...initialWorkspace, patients: [], encounters: [], activeEncounterId: null };
     const html = renderToStaticMarkup(createElement(Sidebar, { state: empty, open: true, mobile: false, onToggle() {}, onDialog() {}, onNew() {}, onSelect() {}, onToast() {} }));
     expect(html).toMatch(/<button[^>]*class="empty-text"[^>]*>Mulai Encounter pertama/);
+  });
+});
+
+describe("Glass radius tokens and canvas sheet", () => {
+  const globals = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8");
+  it("overrides the Sentra radii to Glass's rounded shape without touching the snapshot", () => {
+    expect(globals).toMatch(/--radius-control:\s*8px/);
+    expect(globals).toMatch(/--radius-structure:\s*12px/);
+    expect(globals).toMatch(/--workspace-canvas-shadow:\s*0 1px 3px rgba\(0, ?0, ?0, ?\.1\), 0 1px 2px -1px rgba\(0, ?0, ?0, ?\.1\)/);
+    expect(readFileSync(new URL("../src/app/sentra-tokens.css", import.meta.url), "utf8")).toMatch(/--radius-control: 2px/);
+  });
+  it("chat prose sits flush now that the brand header is gone", () => {
+    expect(globals).toMatch(/\.assistant-message > \.draft-content \{[^}]*padding-left: 0/);
   });
 });

@@ -3,19 +3,40 @@ import { modes, type ModeId } from "./drafts";
 import { structureNote, type NoteField } from "./note-structure";
 import type { Encounter } from "./workspace";
 
-// Four needs of a doctor. `quick` are the contextual quick actions under the composer; `modes` also holds the
-// category's other templates, which stay reachable from the Mode picker. Telaah Bukti waits for a real evidence search.
-export const intentGroups: { id: string; label: string; headline: string; description: string; placeholder: string; modes: ModeId[]; quick: ModeId[] }[] = [
-  { id: "ask", label: "Analisis", headline: "Analisis kasus klinis.", description: "Telaah kasus kompleks berdasarkan bukti medis.", placeholder: "Diskusikan kasus yang sedang Anda tangani.", modes: ["question", "ddx", "workup", "icd10", "refer"], quick: ["question", "ddx", "workup", "icd10"] },
-  { id: "document", label: "Dokumentasi", headline: "Susun dokumentasi klinis.", description: "Susun catatan klinis yang jelas dan siap ditinjau.", placeholder: "Tuliskan anamnesis, pemeriksaan, dan temuan untuk disusun menjadi catatan.", modes: ["clinic", "hpi", "chronic", "handoff", "scribe"], quick: ["clinic", "hpi", "chronic", "handoff"] },
-  { id: "plan", label: "Rencana", headline: "Rencanakan asesmen dan tindak lanjut.", description: "Organisasikan masalah klinis dan rencana penanganan.", placeholder: "Tuliskan asesmen dan rencana tata laksana yang ingin Anda susun.", modes: ["ap", "tasks", "referral", "monitoring"], quick: ["ap", "tasks", "referral", "monitoring"] },
-  { id: "communicate", label: "Komunikasi", headline: "Siapkan komunikasi untuk pasien dan sejawat.", description: "Siapkan informasi medis yang ringkas dan mudah dipahami.", placeholder: "Tuliskan informasi yang ingin disampaikan kepada pasien atau sejawat.", modes: ["education", "avs", "telephone", "authorization"], quick: ["education", "avs", "telephone"] },
+// Four needs of a doctor, kept as the groups their headlines rotate through; `modes` holds each group's templates.
+// Telaah Bukti waits for a real evidence search.
+export const intentGroups: { id: string; label: string; headline: string; modes: ModeId[] }[] = [
+  { id: "ask", label: "Analisis", headline: "Analisis kasus klinis.", modes: ["question", "ddx", "workup", "icd10", "refer"] },
+  { id: "document", label: "Dokumentasi", headline: "Susun dokumentasi klinis.", modes: ["clinic", "hpi", "chronic", "handoff", "scribe"] },
+  { id: "plan", label: "Rencana", headline: "Rencanakan asesmen dan tindak lanjut.", modes: ["ap", "tasks", "referral", "monitoring"] },
+  { id: "communicate", label: "Komunikasi", headline: "Siapkan komunikasi untuk pasien dan sejawat.", modes: ["education", "avs", "telephone", "authorization"] },
 ];
 
-// A tab's own hint shows on its default mode; the other chips keep their specific hint.
+// The chips under the composer: eight modes, one ddx (the spec's "Analisis kasus" and "Diagnosis Banding" share it).
+export const chipShortlist: ModeId[] = ["question", "ddx", "clinic", "ap", "refer", "education", "hpi", "avs"];
+// A chip reads "Perbarui" once the encounter already holds an assistant document of that mode.
+export function chipLabel(mode: ModeId, encounter?: Pick<Encounter, "messages">): string {
+  const label = modes.find((item) => item.id === mode)!.label;
+  return encounter?.messages.some((message) => message.role === "assistant" && message.mode === mode) ? `Perbarui ${label}` : label;
+}
+// A mode chip puts the mode's opening sentence in front of the composer text and never drops what is written: an empty
+// box gets the opening alone, text that already starts with some mode's opening swaps it, any other text follows it.
+export function withOpening(prompt: string, mode: ModeId): string {
+  const opening = `${modes.find((item) => item.id === mode)!.opening}\n`;
+  if (!prompt.trim()) return opening;
+  const current = modes.map((item) => item.opening).filter((text) => prompt.startsWith(text)).sort((a, b) => b.length - a.length)[0];
+  return opening + (current ? prompt.slice(current.length).replace(/^\r?\n/, "") : prompt);
+}
+// The headline rotates through the intent groups, one per visit.
+export function headlineFor(visit: number): string {
+  const headlines = intentGroups.map((group) => group.headline);
+  const n = headlines.length;
+  return headlines[((visit % n) + n) % n];
+}
+
+// The composer hint is the mode's own.
 export function composerPlaceholder(mode: ModeId): string {
-  const group = intentGroups.find((item) => item.modes[0] === mode);
-  return group ? group.placeholder : modes.find((item) => item.id === mode)!.placeholder;
+  return modes.find((item) => item.id === mode)!.placeholder;
 }
 
 export interface DocumentSection { title: string; start: number; end: number; body: string }

@@ -131,3 +131,21 @@ describe("new Encounter title", () => {
     try { expect(newEncounter().title).toBe("Encounter (8 Okt, 21.03 WIB)"); } finally { vi.useRealTimers(); }
   });
 });
+
+describe("agent settings fields (2026-11-04)", () => {
+  it("loads a workspace saved without environment or modeInstructions and keeps both undefined", () => {
+    const { workspace } = loadWorkspace(JSON.stringify(initialWorkspace));
+    expect("environment" in workspace.settings).toBe(false);
+    expect("modeInstructions" in workspace.settings).toBe(false);
+  });
+  it("keeps a valid environment and the known modes' instructions, and drops the rest", () => {
+    const saved = { ...initialWorkspace, settings: { ...initialWorkspace.settings, environment: "Rawat jalan", modeInstructions: { clinic: "Singkat.", bogus: "x", ddx: 3 } } };
+    expect(parseWorkspace(JSON.stringify(saved))?.settings).toEqual({ ...initialWorkspace.settings, environment: "Rawat jalan", modeInstructions: { clinic: "Singkat." } });
+    expect(parseWorkspace(JSON.stringify({ ...saved, settings: { ...saved.settings, environment: "Klinik" } }))?.settings.environment).toBeUndefined();
+  });
+  it("createDraft applies the mode's extra instruction after the global one", () => {
+    const text = createDraft({ mode: "clinic", prompt: "Kunjungan fiktif.", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "Kalimat ringkas.", modeInstructions: { clinic: "Sebut rencana kontrol.", ddx: "Lain." } });
+    expect(text).toContain("## Preferensi penulisan\nKalimat ringkas.\nSebut rencana kontrol.");
+    expect(text).not.toContain("Lain.");
+  });
+});

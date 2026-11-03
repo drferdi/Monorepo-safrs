@@ -32,4 +32,12 @@ describe("frozen v1 workspaces", () => {
     Object.assign(data.encounters[0].messages[1], extra);
     expect(parseWorkspace(JSON.stringify(data))).toEqual(data);
   });
+
+  it("round-trips the agent settings fields added on 2026-11-04", () => {
+    const data = JSON.parse(fixture("v1-workflow.json"));
+    data.patients[0].notes = initialWorkspace.patients[0].notes;
+    data.settings.environment = "Layanan primer";
+    data.settings.modeInstructions = { question: "Jawab singkat." };
+    expect(parseWorkspace(JSON.stringify(data))).toEqual(data);
+  });
 });

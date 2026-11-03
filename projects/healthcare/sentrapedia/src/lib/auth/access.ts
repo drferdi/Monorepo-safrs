@@ -16,6 +16,10 @@ export function boundedIdentity<T>(operation: () => Promise<T>): Promise<T> {
   return Promise.race([Promise.resolve().then(operation), new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Identity unavailable")), identityTimeoutMs); })]).finally(() => clearTimeout(timer));
 }
 
+export function errorResponse(status: number, code: string, message: string): Response {
+  return Response.json({ status: "error", error: { code, message } }, { status, headers: { "Cache-Control": "no-store" } });
+}
+
 export function accessFailure(result: Exclude<AccessResult, { status: "allowed" }>): Response {
   const states = {
     "signed-out": [401, "AUTH_REQUIRED", "Silakan masuk untuk membuka workspace."],
@@ -24,11 +28,11 @@ export function accessFailure(result: Exclude<AccessResult, { status: "allowed" 
     unavailable: [503, "AUTH_UNAVAILABLE", "Layanan akses belum tersedia. Coba kembali nanti."],
   } as const;
   const [status, code, message] = states[result.status];
-  return Response.json({ status: "error", error: { code, message } }, { status, headers: { "Cache-Control": "no-store" } });
+  return errorResponse(status, code, message);
 }
 
 function inputFailure(status = 400): Response {
-  return Response.json({ status: "error", error: { code: status === 403 ? "ORIGIN" : "INPUT", message: "Persetujuan tidak valid. Muat ulang halaman dan coba kembali." } }, { status, headers: { "Cache-Control": "no-store" } });
+  return errorResponse(status, status === 403 ? "ORIGIN" : "INPUT", "Persetujuan tidak valid. Muat ulang halaman dan coba kembali.");
 }
 
 async function readConsent(request: Request): Promise<unknown> {
@@ -55,8 +59,9 @@ async function readConsent(request: Request): Promise<unknown> {
 }
 
 export function createBetaAccess(deps: Dependencies) {
-  // User access follows verified Clerk sign-in. Explicit legacy callers may still inspect consent.
-  async function resolve(requireConsent = false): Promise<AccessResult> {
+  // Access follows a verified Clerk sign-in plus the current beta acknowledgement (consent is a gate again since
+  // 2026-11-02). Only the consent endpoint itself asks without it, so a doctor can give it.
+  async function resolve(requireConsent = true): Promise<AccessResult> {
     if (deps.config.mode === "unavailable") return { status: "unavailable" };
     if (deps.config.mode === "local") return { status: "allowed", userId: deps.config.userId };
     try {

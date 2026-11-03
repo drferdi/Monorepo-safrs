@@ -55,7 +55,7 @@ Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on confli
 
 **Is:** a clinical cockpit that drafts structured documents for physician review. The interface is Indonesian (`<html lang="id">`). It is calibrated to Indonesian practice: Puskesmas/FKTP, RSUD referral, PNPK/PPK guidelines, Fornas, SKDI 4A diseases and BPJS-style prior authorization.
 
-**Is not:** an electronic health record; a validated medical device; integrated with SATUSEHAT or BPJS; a production multi-user service. It has no authentication.
+**Is not:** an electronic health record; a validated medical device; integrated with SATUSEHAT or BPJS; a production multi-user service. Authentication is Clerk (closed beta since 2026-10-24; `docs/auth-beta-access.md`).
 
 **Authority:** the clinician decides. "Draf", "Ditinjau" and "Final" are local workflow markers, not clinical sign-off. AI output is a draft, never an automatic prescription.
 
@@ -161,7 +161,7 @@ Personal templates always render locally. `workup`, `icd10` and `refer` are focu
 
 Local drafting (`drafts.ts`, `note-structure.ts`) is deterministic. It reads only explicitly labelled input, separates what the patient reported from what the clinician found, keeps conflicting values labelled separately, and leaves missing facts as visibly unfilled. It never invents a diagnosis, treatment or guideline recommendation. Templates carry rules such as "Jangan mengarang studi, rekomendasi pedoman, nomor DOI, atau tingkat kepastian bukti."
 
-UI shell: a three-column Clinical Cockpit (navigation, document canvas, and above 1200 px a context and Timeline panel). Below 1200 px the panel becomes a dialog; at 760 px and below navigation becomes a drawer. Also: a slash picker, Focus Mode, Command Center (Ctrl/Cmd+J) and voice dictation (browser Web Speech API, optional; no audio stored).
+UI shell (Glass-shaped since 2026-11-04, spec `docs/specs/2026-11-04-glass-workspace-redesign-design.md`): a 256 px sidebar (Baru · Buat Pasien · Buat Daftar Pasien · Mulai Scribe · Pengaturan Agent · Cari, the three list sections, the account menu) and a canvas split between the chat and the document pane above 1200 px. The chat holds prose, the doctor's summary and document cards; the pane holds the Ringkasan encounter tab and one tab per document, with the AADI analysis rendered from the stored result in Glass's differential shape (`analysis-view.ts`, `analysis-document.tsx`) and the guideline passages as Kutipan pedoman cards. Below 1200 px the pane is the "Dokumen encounter" sheet; at 760 px and below navigation is a drawer. The composer keeps one chip row (8 chips) with `/` as the full mode picker; Pengaturan Agent is the page `/agent` (Preferensi, Mode dan templat, Pengetahuan). Also: Focus Mode, Command Center (Ctrl/Cmd+J) and voice dictation (browser Web Speech API, optional; no audio stored).
 
 ---
 
@@ -236,9 +236,9 @@ TheOracle facts:
 
 - **Next.js 16.4 has breaking changes.** Before writing Next code, read the relevant guide in `node_modules/next/dist/docs/`. `next dev` rewrites the Next agent-rules block in `AGENTS.md` and `next-env.d.ts`; restore `next-env.d.ts` if it changes and you did not mean it.
 - Fonts (`src/app/layout.tsx`): **Plus Jakarta Sans** for titles (`--font-jakarta`) and **Geist** for everything else (`--font-geist`), via `next/font/google`. The brand wordmark uses Helvetica Neue/Arial with `text-shadow: var(--workspace-brand-shadow)` and `letter-spacing: -.45px`.
-- Tokens: `src/app/sentra-tokens.css` is the Sentra base snapshot (ink palette, `--radius-control: 2px`, `--radius-structure: 0`). `src/app/globals.css` applies the workspace theme on top: action `#40e0d0` (tosca), hover `#2dccbd`, accent ink `#086b61`. Use tokens, not raw hex values.
+- Tokens: `src/app/sentra-tokens.css` is the Sentra base snapshot (ink palette, `--radius-control: 2px`, `--radius-structure: 0`). `src/app/globals.css` applies the workspace theme on top: action `#40e0d0` (tosca), hover `#2dccbd`, accent ink `#086b61`, and since 2026-11-04 overrides `--radius-control` to 8 px and `--radius-structure` to 12 px (the snapshot file is never edited). Use tokens, not raw hex values.
 - Plain CSS only. **No Tailwind.** No decorative shadows. Swiss/International Typographic Style. Light theme only (dark mode is out of scope).
-- Motion: every click-driven change transitions with an opacity fade of 160 ms ease-out (`fade-in`, `@starting-style`, View Transitions via `src/components/smooth.ts`), with no movement, scale or springs. Approved exceptions: the headline transition; `SidebarSubmenu` (one section open at a time, a 320 ms `grid-template-rows` 0fr to 1fr unfold, inactive panels `inert` and `aria-hidden`); the diagnosis reveal; thinking steps; `PixelLoader` (4x4 matrix, tied only to real async work); the mobile drawer. `prefers-reduced-motion` disables motion everywhere.
+- Motion: every click-driven change transitions with an opacity fade of 160 ms ease-out (`fade-in`, `@starting-style`, View Transitions via `src/components/smooth.ts`), with no movement, scale or springs. Approved exceptions: the headline transition; `SidebarSubmenu` (one section open at a time, a 320 ms `grid-template-rows` 0fr to 1fr unfold, inactive panels `inert` and `aria-hidden`); the pane opening (a 160 ms fade); thinking steps (the thinking card reports only what happened: request received, seconds waited); `PixelLoader` (4x4 matrix, tied only to real async work); the mobile drawer. `prefers-reduced-motion` disables motion everywhere.
 - Copy: Indonesian sentence case, no numbering or claims in task headlines, chrome labels in Indonesian. Local drafts carry no closing disclaimer.
 - Accessibility: keyboard reachable, `inert` for hidden panels, accessible dialogs (`dialog.tsx`).
 

@@ -1,12 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { emptyCase, type AadiResult } from "../src/lib/aadi/contract";
-import { diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, nextSteps, pcareCopies, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
+import { pipelineTrace, doctorSummary, diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, pcareCopies, taskDraftFrom, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
 import { createDraft } from "../src/lib/drafts";
-import { missingField } from "../src/lib/clinical-templates";
-import { localDraftMessages } from "../src/lib/workspace-session";
 import { theOracleDiseases } from "../src/lib/theoracle";
-import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
 import { regimenLine, theOracleSourceLinks } from "../src/lib/aadi/presentation";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import { initialWorkspace, workspaceReducer, loadWorkspace } from "../src/lib/workspace";
@@ -24,6 +21,7 @@ const analysis = {
 };
 const therapyTitle = "7. Rencana tata laksana";
 const section = (content: string, title: string) => documentSections(content).find(s => s.title === title)!.body.trim();
+const resultWith = (nextBestActions: AadiResult["nextBestActions"]): AadiResult => ({ ...analysis.result, nextBestActions });
 const withDifferential = (differential: AadiResult["differential"]) => ({ ...analysis, result: { ...analysis.result, differential } });
 
 describe("TheOracle citation persistence", () => {
@@ -272,40 +270,14 @@ describe("nine-part clinical report", () => {
   });
 });
 
-describe("typing reveal", () => {
-  // 3000 characters type in 2000 ms: segment shares are 200, 1000 and 800 ms.
-  const lengths = [300, 1500, 1200];
-  it("types the title first, then unfolds each section before typing it", () => {
-    expect(revealAt(lengths, 0)).toEqual({ visible: [0, 0, 0], active: 0, unfolding: false, done: false });
-    expect(revealAt(lengths, 100)).toEqual({ visible: [150, 0, 0], active: 0, unfolding: false, done: false });
-    expect(revealAt(lengths, 200 + unfoldMs / 2)).toEqual({ visible: [300, 0, 0], active: 1, unfolding: true, done: false });
-    expect(revealAt(lengths, 200 + unfoldMs + 500)).toEqual({ visible: [300, 750, 0], active: 1, unfolding: false, done: false });
-    expect(revealAt(lengths, 1200 + unfoldMs + 10)).toEqual({ visible: [300, 1500, 0], active: 2, unfolding: true, done: false });
-    expect(revealAt(lengths, 2000 + 2 * unfoldMs)).toEqual({ visible: [300, 1500, 1200], active: 2, unfolding: false, done: true });
-  });
-  it("gives a short section enough time to be seen typing", () => {
-    const short = revealAt([10, 5, 9000], 200 + unfoldMs + 100);
-    expect(short.active).toBe(1);
-    expect(short.visible[1]).toBeGreaterThan(0);
-    expect(short.visible[1]).toBeLessThan(5);
-  });
-  it("finishes any answer within a few seconds", () => {
-    for (const total of [200, 3000, 12000]) {
-      expect(typingDurationMs(total)).toBeGreaterThanOrEqual(1500);
-      expect(typingDurationMs(total)).toBeLessThanOrEqual(4000);
-    }
-    const six = [20, 400, 600, 900, 300, 500, 700];
-    expect(revealAt(six, 4000 + 6 * unfoldMs + 7 * 200).done).toBe(true);
-  });
-});
-
-describe("thinking steps", () => {
-  it("lists the clinical steps in order and stops on the last one until the answer arrives", () => {
-    expect(thinkingSteps).toEqual(["Permintaan klinis diterima", "Intensi klinis teridentifikasi", "Oracle aktif", "Konteks klinis pasien dihimpun", "Dokumen medis ditelaah", "Literatur dan pedoman klinis ditelusuri", "Temuan klinis dikorelasikan", "Bukti ilmiah sedang disintesis"]);
-    expect(thinkingStepAt(0)).toBe(0);
-    expect(thinkingStepAt(thinkingStepMs * 3 + 1)).toBe(3);
-    expect(thinkingStepAt(60000)).toBe(thinkingSteps.length - 1);
-    expect(thinkingStepMs * (thinkingSteps.length - 1)).toBeLessThanOrEqual(2500);
+describe("pipeline trace", () => {
+  it("pipelineTrace reads stored stages and returns [] for a legacy answer", () => {
+    const stages = [{ stage: "retrieve", ms: 120, ok: true }, { stage: "model", ms: 2400, ok: false, code: "MODEL_TIMEOUT" }];
+    const kept = aadiMessage({ ...analysis, pipeline: { path: "targeted", stages } });
+    expect(pipelineTrace(kept)).toEqual([{ stage: "retrieve", ms: 120, ok: true }, { stage: "model", ms: 2400, ok: false }]);
+    expect(pipelineTrace(aadiMessage(analysis))).toEqual([]);
+    expect(pipelineTrace({ sourceText: undefined })).toEqual([]);
+    expect(pipelineTrace({ sourceText: "{ bukan json" })).toEqual([]);
   });
 });
 
@@ -572,36 +544,6 @@ describe("copy and referral from an analysis", () => {
     expect(exam).toMatch(/^Keadaan umum: Baik \[otomatis normal\]\nKesadaran: Compos mentis \[otomatis normal\]\nTekanan darah: 120\/80 mmHg\nNadi: 96 x\/menit\nKepala: /);
     expect(exam).not.toMatch(/\||###|\*\*|Belum|Tidak diperiksa|---/);
   });
-  it("offers local next steps after an analysis, prefilled from recorded facts, with the plan left to the doctor", () => {
-    const message = aadiMessage(pneumonia);
-    const steps = nextSteps(message);
-    expect(steps.map(step => [step.mode, step.label])).toEqual([["clinic", "Catatan SOAP"], ["referral", "Surat rujukan"], ["tasks", "Daftar tugas"]]);
-    const soap = steps[0].text;
-    expect(soap).toContain("Keluhan utama: Batuk berdahak dan demam\n");
-    expect(soap).toContain("Tanda vital: TD 160/95, N 98, RR 22, S 38,5, SpO2 95\n");
-    expect(soap).toContain("\nAsesmen: Diagnosis kerja (kandidat AADI, belum terkonfirmasi): Pneumonia (J18.9)\n");
-    expect(soap.endsWith("\nRencana: ")).toBe(true);
-    expect(soap).not.toContain("Amoxicillin");
-    expect(steps[1].text).toBe(referralPrompt(message));
-    expect(steps[2].text.split("\n")).toEqual(["Tanyakan: Riwayat kontak", "Periksa: Auskultasi ulang", "Pemeriksaan penunjang: Rontgen toraks"]);
-    // The prefill becomes the local SOAP note: AADI's candidate stays labelled as one, and the plan stays empty.
-    const note = createDraft({ mode: "clinic", prompt: soap, ...draftInput });
-    expect(note).toMatch(/\n## \d\. Assessment\n\nDiagnosis kerja \(kandidat AADI, belum terkonfirmasi\): Pneumonia \(J18\.9\)\n/);
-    expect(note).not.toMatch(/## \d\. Tata Laksana/);
-    expect(note).toContain("- Tata laksana\n");
-    expect(nextSteps(aadiMessage(headache)).map(step => step.mode)).toEqual(["clinic", "referral"]);
-  });
-  it("offers analysis steps after a local draft, without the draft's own mode", () => {
-    // Chips insert each section after a blank line, so the whole typed input is carried, not its first paragraph.
-    const text = "Keluhan utama: Batuk 5 hari\n\nTanda vital: TD 120/80";
-    const local = (mode: "clinic" | "referral") => localDraftMessages({ text, content: "Draf", mode, context: "Konteks fiktif", settings: initialWorkspace.settings });
-    const [user, draft] = local("clinic");
-    const steps = nextSteps(draft);
-    expect(steps.map(step => [step.mode, step.label])).toEqual([["question", "Analisis AADI"], ["workup", "Pemeriksaan penunjang"], ["icd10", "Kode ICD-10"], ["referral", "Surat rujukan"]]);
-    expect(steps.every(step => step.text === text)).toBe(true);
-    expect(nextSteps(local("referral")[1]).map(step => step.mode)).toEqual(["question", "workup", "icd10"]);
-    expect(nextSteps(user)).toEqual([]);
-  });
 });
 
 // Gaffer, 2026-10-21: "Amoxicillin 500 mg, diminum tiga kali sehari", and a tablet dose with its strength per tablet.
@@ -611,5 +553,23 @@ describe("therapy line", () => {
     expect(regimenLine({ drug: "dihidroartemisinin 40 mg + piperakuin 320 mg", dose: "4 tablet sekali sehari", route: "PO", duration: "3 hari", note: "dosis untuk berat badan >60kg" })).toBe("Dihidroartemisinin 40 mg + piperakuin 320 mg, 4 tablet sekali sehari selama 3 hari (dosis untuk berat badan >60kg)");
     expect(regimenLine({ drug: "primakuin", dose: "", route: "PO", duration: "dosis tunggal", note: "" })).toBe("Primakuin, dosis: cek pedoman, dosis tunggal");
     expect(regimenLine({ drug: "ceftriaxone", dose: "2x1g", route: "IV", duration: "5 hari", note: "" }, false)).toBe("Ceftriaxone 1 g, dua kali sehari, IV selama 5 hari");
+  });
+});
+
+describe("taskDraftFrom", () => {
+  it("lists next best actions as verb: item lines", () => {
+    expect(taskDraftFrom(resultWith([{ kind: "exam", item: "Foto toraks", reason: "" }]))).toBe("Periksa: Foto toraks");
+    expect(taskDraftFrom(resultWith([{ kind: "test", item: "Foto toraks", reason: "" }, { kind: "question", item: "Durasi batuk", reason: "" }]))).toBe("Pemeriksaan penunjang: Foto toraks\nTanyakan: Durasi batuk");
+    expect(taskDraftFrom(resultWith([]))).toBe("");
+  });
+});
+
+describe("doctorSummary", () => {
+  it("returns the five summary lines without their bold marks, and nothing for other content", () => {
+    const lines = doctorSummary(aadiMessage(analysis).content);
+    expect(lines).toHaveLength(5);
+    expect(lines.map(line => line.split(":")[0])).toEqual(["Perlu disaring segera", "Diagnosis kerja (kandidat)", "Periksa", "Terapi usulan", "Rujuk"]);
+    expect(lines.join("\n")).not.toMatch(/\*\*/);
+    expect(doctorSummary("# Catatan\n\n## S\nx")).toEqual([]);
   });
 });
