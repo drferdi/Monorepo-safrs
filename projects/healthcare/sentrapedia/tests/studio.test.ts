@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder, downloadName, chipShortlist, chipLabel, headlineFor } from "../src/lib/studio";
+import { intentGroups, emptySection, documentSections, documentTitle, supportingSection, replaceSection, encounterTimeline, contextFacts, composerPlaceholder, downloadName, chipShortlist, chipLabel, headlineFor, withOpening } from "../src/lib/studio";
 import { defaultReviewItems } from "../src/lib/workflow";
-import { createDraft, modeIds, modes } from "../src/lib/drafts";
+import { createDraft, modeIds, modes, type ModeId } from "../src/lib/drafts";
 import { clinicalTemplates, insertTemplate, modeCategories, templateText } from "../src/lib/clinical-templates";
 import { initialWorkspace, workspaceReducer, type Message, type Workspace, loadWorkspace } from "../src/lib/workspace";
 
@@ -214,5 +214,18 @@ describe("mode openings and the chip shortlist", () => {
     expect(chipLabel("ddx", { messages: [{ id: "1", role: "user", content: "x", mode: "ddx", createdAt: "" }] })).toBe("Diagnosis Banding (DDx)");
     expect(chipLabel("ddx", { messages: [{ id: "2", role: "assistant", content: "x", mode: "clinic", createdAt: "" }] })).toBe("Diagnosis Banding (DDx)");
   });
-  it("the headline cycles through the intent headlines by visit", () => { expect(headlineFor(0)).toBe(intentGroups[0].headline); expect(headlineFor(4)).toBe(intentGroups[0].headline); expect(headlineFor(-1)).toBe(intentGroups[3].headline); });
+  it("withOpening puts the mode's opening in front of the text and never loses what is written", () => {
+    const opening = (id: ModeId) => modes.find((item) => item.id === id)!.opening;
+    // An empty or blank box gets the opening alone.
+    expect(withOpening("", "ddx")).toBe(`${opening("ddx")}\n`);
+    expect(withOpening("  \n", "ddx")).toBe(`${opening("ddx")}\n`);
+    // Text that already starts with some mode's opening swaps it, with or without the newline after it.
+    expect(withOpening(`${opening("clinic")}\ndemam 3 hari`, "ddx")).toBe(`${opening("ddx")}\ndemam 3 hari`);
+    expect(withOpening(`${opening("clinic")}\n`, "ddx")).toBe(`${opening("ddx")}\n`);
+    expect(withOpening(opening("clinic"), "ddx")).toBe(`${opening("ddx")}\n`);
+    expect(withOpening(`${opening("ddx")}\ndemam 3 hari`, "ddx")).toBe(`${opening("ddx")}\ndemam 3 hari`);
+    // Any other text follows the opening.
+    expect(withOpening("demam 3 hari", "clinic")).toBe(`${opening("clinic")}\ndemam 3 hari`);
+  });
+  it("the headline cycles through the intent headlines by visit",() => { expect(headlineFor(0)).toBe(intentGroups[0].headline); expect(headlineFor(4)).toBe(intentGroups[0].headline); expect(headlineFor(-1)).toBe(intentGroups[3].headline); });
 });

@@ -651,11 +651,12 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 /* Glass's shape: the composer is a rounded card; under it one row of mode chips scrolls sideways instead of wrapping. */
 .composer-area { position: relative; }
 .composer .button, .composer .model-select select, .composer .icon-tool { border-radius: var(--radius-control); }
-.chip-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 10px 0 0; }
+.chip-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 10px 2px 4px; }
 .chip-row::-webkit-scrollbar { display: none; }
 .chip-row .action-chip { height: 32px; padding: 0 12px; border: 1px solid rgba(31, 31, 31, .1); border-radius: var(--radius-control); background: var(--workspace-white); color: var(--color-text-primary); font-size: 12px; font-weight: 500; }
 .chip-row .action-chip:hover:not(:disabled) { background: var(--color-background-surface); border-color: var(--workspace-ink-faint); }
 .chip-row .action-chip[aria-pressed="true"] { border-color: var(--color-text-primary); }
+.chip-row .action-chip:focus-visible { outline-offset: -2px; }
 .chip-row .action-chip:disabled { opacity: .55; cursor: default; }
 .slash-picker { position: absolute; bottom: calc(100% - 5px); left: 0; right: 0; max-height: 270px; overflow-y: auto; z-index: 4; padding: 6px; border: 1px solid var(--floating-line); border-radius: var(--radius); background: var(--workspace-white); }
 .slash-picker [role="option"] { width: 100%; cursor: pointer; display: flex; justify-content: space-between; text-align: left; align-items: center; gap: 10px; padding: 11px; border-radius: var(--radius); font-size: 12px; }

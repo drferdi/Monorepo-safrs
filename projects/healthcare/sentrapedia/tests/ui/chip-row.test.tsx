@@ -43,7 +43,40 @@ describe("chip row", () => {
 
   it("chips are disabled while an analysis runs so a click cannot cancel or resend it", () => {
     render(<Composer {...composerProps({ busy: true, aadiEnabled: true })}/>);
-    for (const chip of screen.getByRole("group", { name: "Mode" }).querySelectorAll("button")) expect((chip as HTMLButtonElement).disabled).toBe(true);
+    const chips = screen.getByRole("group", { name: "Mode" }).querySelectorAll("button");
+    expect(chips).toHaveLength(chipShortlist.length);
+    for (const chip of chips) expect((chip as HTMLButtonElement).disabled).toBe(true);
+    expect((screen.getByRole("button", { name: "Mulai Scribe" }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it("a chip keeps what the doctor typed: the opening goes in front, and a second chip swaps it", () => {
+    const onPrompt = vi.fn();
+    const { rerender } = render(<Composer {...composerProps({ onPrompt, prompt: "demam 3 hari" })}/>);
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
+    const soap = modes.find((m) => m.id === "clinic")!.opening;
+    expect(onPrompt).toHaveBeenLastCalledWith(`${soap}\ndemam 3 hari`);
+    rerender(<Composer {...composerProps({ onPrompt, prompt: `${soap}\ndemam 3 hari` })}/>);
+    fireEvent.click(screen.getByRole("button", { name: "Diagnosis Banding (DDx)" }));
+    expect(onPrompt).toHaveBeenLastCalledWith(`${modes.find((m) => m.id === "ddx")!.opening}\ndemam 3 hari`);
+  });
+
+  it("an active mode outside the shortlist leads the row as a pressed chip", () => {
+    render(<ChipRow mode="icd10" busy={false} onChip={noop}/>);
+    const chips = screen.getAllByRole("button");
+    expect(chips).toHaveLength(chipShortlist.length + 1);
+    expect(chips[0].textContent).toBe("Pengodean Diagnosis (ICD-10)");
+    expect(chips[0].getAttribute("aria-pressed")).toBe("true");
+    expect(chips.slice(1).map((chip) => chip.textContent)).toEqual(chipShortlist.map((id) => chipLabel(id)));
+    expect(chips.slice(1).every((chip) => chip.getAttribute("aria-pressed") === "false")).toBe(true);
+  });
+
+  it("an active personal template leads the row by its name and unpresses its mode's chip", () => {
+    const templates = [{ id: "t1", name: "QA SOAP pribadi", mode: "clinic" as const, sections: [], instructions: "" }];
+    render(<ChipRow mode="clinic" templateKey="template:t1" templates={templates} busy={false} onChip={noop}/>);
+    const chips = screen.getAllByRole("button");
+    expect(chips[0].textContent).toBe("QA SOAP pribadi");
+    expect(chips[0].getAttribute("aria-pressed")).toBe("true");
+    expect(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }).getAttribute("aria-pressed")).toBe("false");
   });
 
   it("the slash picker lists every mode under Mode and personal templates under Templat pribadi", () => {
@@ -100,6 +133,14 @@ describe("chip row", () => {
     fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-pressed")).toBe("true");
     expect(screen.getByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeTruthy();
+  });
+
+  it("the toggle's choice wins over an automatically opened strip", () => {
+    const caseFields = { sex: "", age: "45", bp: "", heartRate: "", temperature: "", respiratoryRate: "", spo2: "" } as const;
+    render(<Composer {...composerProps({ aadiEnabled: true, caseFields, autoFields: ["age"], onCaseField: noop, minimumMissing: ["usia"] })}/>);
+    expect(screen.getByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Usia dan tanda vital" }));
+    expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
   });
 
   it("the strip opens by itself while minimum data is missing", () => {

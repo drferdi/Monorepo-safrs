@@ -5,7 +5,7 @@ import { PixelLoader } from "./pixel-loader";
 import { ChipRow } from "./chip-row";
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { modes, type ModeId } from "../lib/drafts";
-import { composerPlaceholder } from "../lib/studio";
+import { composerPlaceholder, withOpening } from "../lib/studio";
 import { modeCategories } from "../lib/clinical-templates";
 import { modelLabel } from "../lib/ui-labels";
 import { emptyCaseFields, invalidCaseField, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
@@ -65,17 +65,17 @@ export function Composer(props: Props) {
   // Dictation adds each phrase to what is already written; switching mode never clears the text.
   const dictation = useDictation(props.settings.language, (text) => props.onPrompt(`${props.prompt}${props.prompt && !/\s$/.test(props.prompt) ? " " : ""}${text}`));
   function choose(key: string) { if (key.startsWith("mode:")) props.onMode(key.slice(5) as ModeId); else props.onTemplate(key); props.onPrompt(props.prompt.replace(/^\/[^\s]*\s?/, "")); setSlashClosed(true); }
-  // The case strip stays out of the composer until a value is read from the text, the minimum data is missing, or the
-  // doctor opens it (Gaffer, 2026-10-20: "kamu rusakkan desain kolom text user").
-  const [stripOpen, setStripOpen] = useState(false);
+  // The case strip stays out of the composer until a value is read from the text or the minimum data is missing; once the
+  // doctor uses the toggle, that choice wins (Gaffer, 2026-10-20: "kamu rusakkan desain kolom text user").
+  const [stripOpen, setStripOpen] = useState<boolean | null>(null);
   const hasStrip = Boolean(props.aadiEnabled && props.caseFields && props.onCaseField);
-  const showStrip = hasStrip && (stripOpen || !!props.autoFields?.length || !!props.minimumMissing?.length || Object.values(props.caseFields ?? {}).some(Boolean));
+  const showStrip = hasStrip && (stripOpen ?? (!!props.autoFields?.length || !!props.minimumMissing?.length || Object.values(props.caseFields ?? {}).some(Boolean)));
   // A guide chip or a mode chip changes the text and leaves the caret after it.
   const box = useRef<HTMLTextAreaElement>(null);
   const place = (caret: number) => requestAnimationFrame(() => { box.current?.focus(); box.current?.setSelectionRange(caret, caret); });
   const insert = (skeleton: string) => { const next = insertSection(props.prompt, skeleton); props.onPrompt(next); place(next.length); };
-  // A mode chip opens the mode's sentence in the composer and waits; only Enter or the send button ever submits.
-  const chip = (id: ModeId) => { const opening = `${modes.find((item) => item.id === id)!.opening}\n`; props.onMode(id); props.onPrompt(opening); place(opening.length); };
+  // A mode chip puts the mode's sentence in front of the text and waits, keeping what is written; only Enter or the send button ever submits.
+  const chip = (id: ModeId) => { const next = withOpening(props.prompt, id); props.onMode(id); props.onPrompt(next); place(next.length); };
   function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
     if (e.nativeEvent.isComposing) return;
     if (slashOpen) {
@@ -91,7 +91,7 @@ export function Composer(props: Props) {
     {showStrip && props.caseFields && props.onCaseField && <CaseStrip fields={props.caseFields} auto={props.autoFields ?? []} onField={props.onCaseField} patientAge={props.patientAge} patientSex={props.patientSex}/>}
     <CaseGuide prompt={props.prompt} mode={props.mode} fields={props.caseFields ?? emptyCaseFields()} patientAge={props.patientAge} patientSex={props.patientSex} onInsert={insert} onText={(next, caret) => { props.onPrompt(next); if (caret !== undefined) place(caret); }} onMode={props.onMode}/>
     <div className="composer-toolbar"><div className="composer-tools-left">
-      <button type="button" className="button primary" onClick={props.onScribe}><AudioLines size={15}/>Mulai Scribe</button>
+      <button type="button" className="button primary" disabled={props.busy} onClick={props.onScribe}><AudioLines size={15}/>Mulai Scribe</button>
       <button type="button" className={`button ${props.context ? "has-context" : ""}`} onClick={props.onContext}><Paperclip size={15}/>{props.context ? "Ubah Konteks" : "Tambah Konteks"}</button>
       <span className="context-status" role="status">{dictation.recording ? <span key="listening" className="listening">Mendengarkan…</span> : <span key="summary">{props.patientName ?? "Tanpa pasien"} · {props.context ? "konteks terisi" : "belum ada konteks"}</span>}</span>
     </div><div className="composer-tools-right">
@@ -101,7 +101,7 @@ export function Composer(props: Props) {
       {props.busy && props.aadiEnabled ? <button type="button" className="button square send-button" aria-label="Hentikan analisis" title="Hentikan analisis" onClick={props.onCancelAnalysis}><Square size={13} fill="currentColor"/></button> : <button className="button square send-button" aria-label={props.aadiEnabled ? "Analisis kasus" : "Buat draf"} title={props.aadiEnabled ? "Analisis langsung · Enter" : "Buat draf · Enter"} disabled={!props.prompt.trim() || props.busy}>{props.busy ? <PixelLoader label="Sedang menyusun draf…"/> : <ArrowUp size={18}/>}</button>}
     </div></div>
   </form>
-    <ChipRow encounter={props.encounter} mode={props.mode} busy={props.busy} onChip={chip}/>
+    <ChipRow encounter={props.encounter} mode={props.mode} templateKey={props.templateKey} templates={props.templates} busy={props.busy} onChip={chip}/>
     {dictation.error &&<div className="composer-analysis"><p className="form-warning" role="alert">{dictation.error}</p></div>}
     {!!props.minimumMissing?.length && <div className="composer-analysis"><p className="form-warning" role="alert">Analisis belum dijalankan. Lengkapi data minimal: {props.minimumMissing.join(", ")}.</p></div>}
     {props.aadiEnabled && props.analysisError && <div className="composer-analysis"><p className="form-warning" role="alert">{props.analysisError} {props.prompt.trim() && !props.busy && <><button type="button" className="text-button" onClick={props.onSubmit}>Coba lagi</button> {props.onFallback && <button type="button" className="text-button" onClick={props.onFallback}>Susun draf SOAP lokal</button>}</>}</p></div>}

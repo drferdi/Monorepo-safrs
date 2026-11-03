@@ -60,8 +60,8 @@ describe("case guide under the composer", () => {
     expect(guide()).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Edukasi Pasien" }));
     expect(guide()).toBeNull();
-    // A mode chip opens its own sentence in the composer.
-    expect(textarea().value).toBe("Susun materi edukasi pasien untuk topik berikut:\n");
+    // A mode chip puts its own sentence in front of the text; the typed words stay.
+    expect(textarea().value).toBe("Susun materi edukasi pasien untuk topik berikut:\ndemam 3 hari");
   });
 
   it("shows missing items as chips, counts the strip's values and the saved patient as filled", async () => {

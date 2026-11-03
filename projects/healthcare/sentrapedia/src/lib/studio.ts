@@ -19,6 +19,14 @@ export function chipLabel(mode: ModeId, encounter?: Pick<Encounter, "messages">)
   const label = modes.find((item) => item.id === mode)!.label;
   return encounter?.messages.some((message) => message.role === "assistant" && message.mode === mode) ? `Perbarui ${label}` : label;
 }
+// A mode chip puts the mode's opening sentence in front of the composer text and never drops what is written: an empty
+// box gets the opening alone, text that already starts with some mode's opening swaps it, any other text follows it.
+export function withOpening(prompt: string, mode: ModeId): string {
+  const opening = `${modes.find((item) => item.id === mode)!.opening}\n`;
+  if (!prompt.trim()) return opening;
+  const current = modes.map((item) => item.opening).filter((text) => prompt.startsWith(text)).sort((a, b) => b.length - a.length)[0];
+  return opening + (current ? prompt.slice(current.length).replace(/^\r?\n/, "") : prompt);
+}
 // The headline rotates through the intent groups, one per visit.
 export function headlineFor(visit: number): string {
   const headlines = intentGroups.map((group) => group.headline);
