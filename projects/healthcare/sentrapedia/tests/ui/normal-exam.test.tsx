@@ -5,10 +5,9 @@ import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
 const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
 void storageKey; void unreadableKey;
 import { WorkspaceApp } from "../../src/components/workspace";
-import { MessageCard } from "../../src/components/message-card";
 import { createDraft } from "../../src/lib/drafts";
 import { readCaseFields } from "../../src/lib/aadi/composer";
-import { type Message, type ReviewStatus, type Workspace } from "../../src/lib/workspace";
+import { initialWorkspace, type Message, type ReviewStatus, type Workspace } from "../../src/lib/workspace";
 
 // Fictional case. Nothing in this file reaches a server: the only fetch is the readiness check, answered locally.
 beforeEach(() => {
@@ -83,13 +82,15 @@ describe("normal exam template in the composer", () => {
   });
 });
 
-describe("the auto-normal marker on the draft card", () => {
+describe("the auto-normal marker on the pane document", () => {
   const content = createDraft({ mode: "clinic", prompt: "Keluhan utama: batuk, laki-laki 40 tahun", context: "", specialty: "Umum", model: "Standard", language: "Bahasa Indonesia", instructions: "", caseFields: readCaseFields("Keluhan utama: batuk, laki-laki 40 tahun") });
   const message = (reviewStatus: ReviewStatus): Message => ({ id: "m1", role: "assistant", mode: "clinic", content, originalContent: content, createdAt: "2026-10-21T05:00:00.000Z", reviewStatus, reviewItems: [{ id: "r1", label: "Tinjau", required: true, checked: true, target: "document" }] });
   async function card(status: ReviewStatus) {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
-    render(<MessageCard message={message(status)} onEdit={vi.fn()} onToast={vi.fn()} onReuse={vi.fn()} onReview={vi.fn()} encounterId="e1" dispatch={vi.fn()}/>);
+    localStorage.setItem(storageKey, JSON.stringify({ ...initialWorkspace, encounters: [{ id: "e1", title: "Batuk", patientId: "demo-patient", messages: [message(status)], context: "", createdAt: message(status).createdAt }], activeEncounterId: "e1" }));
+    render(<WorkspaceApp principalId="user_test"/>);
+    await act(async () => { await Promise.resolve(); });
     return writeText;
   }
 
@@ -99,7 +100,8 @@ describe("the auto-normal marker on the draft card", () => {
     expect(screen.getByText(/^Catatan: Temuan yang berasal dari templat normal/)).toBeTruthy();
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: /^Salin$/ })); });
     expect(writeText.mock.calls[0][0]).toContain("[otomatis normal]");
-    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Salin Pemeriksaan fisik ke Pemeriksaan fisik P-Care" })); });
+    fireEvent.click(screen.getByRole("button", { name: "Salin ke P-Care" }));
+    await act(async () => { fireEvent.click(screen.getByRole("menuitem", { name: "Salin Pemeriksaan fisik ke Pemeriksaan fisik P-Care" })); });
     expect(writeText.mock.calls[1][0]).toContain("[otomatis normal]");
   });
 
@@ -111,13 +113,14 @@ describe("the auto-normal marker on the draft card", () => {
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: /^Salin$/ })); });
     expect(writeText.mock.calls[0][0]).not.toContain("[otomatis normal]");
     expect(writeText.mock.calls[0][0]).toContain("| **Mata** | Konjungtiva anemis (-/-)");
-    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Salin Pemeriksaan fisik ke Pemeriksaan fisik P-Care" })); });
+    fireEvent.click(screen.getByRole("button", { name: "Salin ke P-Care" }));
+    await act(async () => { fireEvent.click(screen.getByRole("menuitem", { name: "Salin Pemeriksaan fisik ke Pemeriksaan fisik P-Care" })); });
     expect(writeText.mock.calls[1][0]).not.toContain("[otomatis normal]");
   });
 
   it("keeps the marker in the stored text, so Edit shows it again", async () => {
     await card("final");
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
-    expect((screen.getByLabelText("Edit draf Clinical") as HTMLTextAreaElement).value).toContain("[otomatis normal]");
+    expect((screen.getByLabelText("Isi dokumen") as HTMLTextAreaElement).value).toContain("[otomatis normal]");
   });
 });

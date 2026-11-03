@@ -8,7 +8,7 @@ import { SidebarSubmenu } from "./sidebar-submenu";
 import { PatientAvatar } from "./patient-avatar";
 import type { Workspace } from "../lib/workspace";
 
-export type DialogName = "patient" | "list" | "settings" | "search" | "context" | "scribe" | "upgrade" | "account" | "feedback" | "encounter" | "legal" | "clinical" | "commands" | "templates" | "queue" | "knowledge" | null;
+export type DialogName = "patient" | "list" | "settings" | "search" | "context" | "scribe" | "upgrade" | "account" | "feedback" | "encounter" | "legal" | "document" | "commands" | "templates" | "queue" | "knowledge" | null;
 interface Props { state: Workspace; open: boolean; mobile: boolean; onToggle: () => void; onDialog: (name: DialogName, id?: string) => void; onNew: (patientId?: string) => void; onSelect: (id: string) => void; onToast: (text: string) => void; onSignOut?: () => void; userButton?: ReactNode }
 
 export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSelect, onToast, onSignOut, userButton }: Props) {

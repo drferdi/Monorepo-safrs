@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownToLine, ChevronDown, Command, Maximize2, Menu, Minimize2, Sparkles } from "lucide-react";
+import { ArrowDownToLine, ChevronDown, Command, FileText, Maximize2, Menu, Minimize2, Sparkles } from "lucide-react";
 import { useEffect, useRef, type ComponentProps } from "react";
 import type { Encounter, WorkspaceAction } from "../lib/workspace";
 import type { ModeId } from "../lib/drafts";
@@ -11,7 +11,7 @@ import { WorkspaceGreeting } from "./workspace-greeting";
 
 type ComposerProps = ComponentProps<typeof Composer>;
 
-export function WorkspaceHeader({ hasMessages, name, patientName, encounterTitle, focusMode, onExpand, onEncounter, onCommands, onFocus, onExport, onUpgrade }: { hasMessages: boolean; name: string; patientName?: string; encounterTitle?: string; focusMode: boolean; onExpand: () => void; onEncounter: () => void; onCommands: () => void; onFocus: () => void; onExport: () => void; onUpgrade: () => void }) {
+export function WorkspaceHeader({ hasMessages, name, patientName, encounterTitle, focusMode, documentCount, paneOpen, onPane, onExpand, onEncounter, onCommands, onFocus, onExport, onUpgrade }: { hasMessages: boolean; name: string; patientName?: string; encounterTitle?: string; focusMode: boolean; documentCount: number; paneOpen: boolean; onPane: () => void; onExpand: () => void; onEncounter: () => void; onCommands: () => void; onFocus: () => void; onExport: () => void; onUpgrade: () => void }) {
   return <header className="canvas-header">
     <div className="header-left">
       <button className="icon-button expand-sidebar" aria-label="Buka navigasi" onClick={onExpand}><Menu size={19}/></button>
@@ -20,6 +20,7 @@ export function WorkspaceHeader({ hasMessages, name, patientName, encounterTitle
     <div className="header-right">
       <button className="icon-button" aria-label="Buka pusat perintah" title="Pusat perintah · Ctrl / ⌘ J" onClick={onCommands}><Command size={16}/></button>
       <button className="icon-button" aria-label={focusMode ? "Keluar Focus Mode" : "Aktifkan Focus Mode"} aria-pressed={focusMode} title="Focus Mode" onClick={onFocus}>{focusMode ? <Minimize2 size={16}/> : <Maximize2 size={16}/>}</button>
+      {hasMessages && documentCount > 0 && <button className="icon-button document-count" aria-label="Dokumen encounter" title="Dokumen encounter" aria-pressed={paneOpen} onClick={onPane}><FileText size={16}/><span>{documentCount}</span></button>}
       {hasMessages && <button className="button export-encounter" onClick={onExport}><ArrowDownToLine size={14}/> Ekspor</button>}
       <button className="upgrade-button" onClick={onUpgrade}><Sparkles size={15} fill="currentColor"/>Berlangganan</button>
     </div>
@@ -46,7 +47,7 @@ export function HomeFooter({ onLegal }: { onLegal: (label: string) => void }) {
 
 // Like a chat: a growing conversation keeps the view at the bottom unless the reader has scrolled up; an answer that
 // types out is read from its top instead.
-export function Conversation({ encounter, pendingQuestion, dispatch, onToast, onReuse, onStep, onCancel }: { encounter?: Encounter; pendingQuestion: string | null; dispatch: (action: WorkspaceAction) => void; onToast: (text: string, tone?: "error") => void; onReuse: (content: string) => void; onStep?: (mode: ModeId, text: string) => void; onCancel: () => void }) {
+export function Conversation({ encounter, pendingQuestion, dispatch, onToast, onReuse, onStep, onCancel, onOpenDocument }: { encounter?: Encounter; pendingQuestion: string | null; dispatch: (action: WorkspaceAction) => void; onToast: (text: string, tone?: "error") => void; onReuse: (content: string) => void; onStep?: (mode: ModeId, text: string) => void; onCancel: () => void; onOpenDocument: (id: string) => void }) {
   const end = useRef<HTMLDivElement>(null);
   const conversation = useRef<HTMLDivElement>(null);
   const conversationInner = useRef<HTMLDivElement>(null);
@@ -107,7 +108,7 @@ export function Conversation({ encounter, pendingQuestion, dispatch, onToast, on
   }, []);
   return <div className="conversation" ref={conversation} onScroll={(event) => { const box = event.currentTarget; stickToBottom.current = box.scrollHeight - box.scrollTop - box.clientHeight < 80; }} aria-label="Percakapan Encounter">
     <div className="conversation-inner" ref={conversationInner}>
-      {encounter?.messages.map((message) => <MessageCard encounterId={encounter.id} dispatch={dispatch} key={message.id} message={message} onEdit={(content) => dispatch({ type: "message.edit", encounterId: encounter.id, messageId: message.id, content })} onToast={onToast} onReuse={onReuse} onStep={onStep} onReview={(status) => dispatch({ type: "message.review", encounterId: encounter.id, messageId: message.id, status })}/>)}
+      {encounter?.messages.map((message) => <MessageCard key={message.id} message={message} onEdit={(content) => dispatch({ type: "message.edit", encounterId: encounter.id, messageId: message.id, content })} onToast={onToast} onReuse={onReuse} onStep={onStep} onOpenDocument={onOpenDocument}/>)}
       {pendingQuestion !== null && <><div className="user-message"><div>{pendingQuestion}</div></div><ThinkingCard onCancel={onCancel}/></>}
       <div ref={end}/>
     </div>

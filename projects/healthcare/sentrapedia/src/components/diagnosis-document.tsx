@@ -27,7 +27,7 @@ const foldLine = (body: string) => body.split("\n").map(line => line.trim()).fil
   .map(line => line.startsWith("|") ? line.slice(1, -1).split("|").map(cell => cell.trim()).join(" · ") : line.replace(/\*\*/g, "").replace(/^(?:- |#+ )/, "")).join(" ").replace(/\s+/g, " ").trim().slice(0, 300);
 
 // Two columns: the section list beside the document (in the right margin on wide canvases). AADI analyses and local drafts (Chief: "Clinic note redesign menjadi 2 kolom") share it.
-export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderContent, typing = false, label = "Alur kasus", navLabel = "Bagian analisis kasus", showMeta = true, onEditSection, autoFilled = [] }: { content: string; selected: number; onSelect: (index: number) => void; onEdit: (content: string) => void; renderContent: (content: string, onEdit: (content: string) => void) => ReactNode; typing?: boolean; label?: string; navLabel?: string; showMeta?: boolean; onEditSection?: (index: number) => void; autoFilled?: string[] }) {
+export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderContent, typing = false, label = "Alur kasus", navLabel = "Bagian analisis kasus", showMeta = true, onEditSection, autoFilled = [], rail = true }: { content: string; selected: number; onSelect: (index: number) => void; onEdit: (content: string) => void; renderContent: (content: string, onEdit: (content: string) => void) => ReactNode; typing?: boolean; label?: string; navLabel?: string; showMeta?: boolean; onEditSection?: (index: number) => void; autoFilled?: string[]; rail?: boolean }) {
   const id = useId();
   const root = useRef<HTMLDivElement>(null);
   const sections = useMemo(() => documentSections(content), [content]);
@@ -110,14 +110,14 @@ export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderC
   return <div className="diagnosis-document" ref={root} aria-busy={typingNow}>
     {/* The case flow lists the report's parts only; the doctor's summary is a section of its own above it (Gaffer,
         2026-10-21). Rails as RareUI's HookSidebar: the accent one hooks into the current part, a muted one into the hovered. */}
-    <nav className="diagnosis-nav" aria-label={navLabel} data-active={activeRow >= 0 || undefined} data-hover={hover !== null && hover !== activeRow || undefined} style={{ "--active-section": activeRow, "--active-depth": depth(activeRow), "--hover-section": hover ?? 0, "--hover-depth": depth(hover) } as CSSProperties} onMouseLeave={() => setHover(null)}>
+    {rail && <nav className="diagnosis-nav" aria-label={navLabel} data-active={activeRow >= 0 || undefined} data-hover={hover !== null && hover !== activeRow || undefined} style={{ "--active-section": activeRow, "--active-depth": depth(activeRow), "--hover-section": hover ?? 0, "--hover-depth": depth(hover) } as CSSProperties} onMouseLeave={() => setHover(null)}>
       <span className="diagnosis-nav-label">{label}</span>
       <div className="diagnosis-nav-items">
         <span className="diagnosis-nav-hover" aria-hidden="true"/>
         <span className="diagnosis-nav-branch" aria-hidden="true"/>
         {navItems.map((item, row) => <button type="button" key={item.sub ? `${item.label}-${item.index}` : item.label} style={{ "--item-order": row } as CSSProperties} data-depth={item.sub ? 1 : undefined} aria-current={row === activeRow ? "location" : undefined} aria-controls={`${id}-${item.index}`} data-pending={typingNow && item.index > typingSection} onMouseEnter={() => setHover(row)} onFocus={() => setHover(row)} onBlur={() => setHover(null)} onClick={() => navigate(item.index, item.sub)}>{item.label}</button>)}
       </div>
-    </nav>
+    </nav>}
     <div className="diagnosis-sections">
       {/* The doctor's summary stands as its own section above the report (Gaffer, 2026-10-21). */}
       {summaryFirst && renderPart(parts[0], 0)}

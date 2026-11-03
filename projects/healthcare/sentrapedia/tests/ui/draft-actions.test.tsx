@@ -11,10 +11,7 @@ import { type Workspace } from "../../src/lib/workspace";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
 import type { CaseState } from "../../src/lib/aadi/types";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
-import { theOracleDiseases } from "../../src/lib/theoracle";
 
-// Oracle's name when the catalog has G44.2 exactly (the public sample catalog may not).
-const g442 = theOracleDiseases.find(d => d.kode.trim().toUpperCase() === "G44.2")?.nama ?? "Tension-type headache";
 
 const analysis = (data: CaseState): AadiAnalysis => ({
   traceId: "trace-draft-actions", createdAt: "2026-10-21T05:00:00.000Z", case: data,
@@ -99,7 +96,8 @@ describe("local draft when the analysis fails", () => {
   });
 });
 
-describe("next steps and P-Care copies", () => {
+// The P-Care copies moved to the document pane (tests/ui/document-pane.test.tsx).
+describe("next steps", () => {
   it("routes a next step into the composer in its mode, prefilled, and says what Enter will do", async () => {
     await failedAnalysis();
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Susun draf SOAP lokal" })); });
@@ -107,23 +105,6 @@ describe("next steps and P-Care copies", () => {
     expect(textarea().placeholder).toContain("pemeriksaan yang sudah ada");
     expect(textarea().value).toBe(complaint);
     expect(screen.getByText("Mode Pemeriksaan Penunjang siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.", { selector: ".toast span" })).toBeTruthy();
-    expect(sent).toHaveLength(1);
-  });
-
-  it("copies a P-Care field and warns on a candidate code", async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
-    render(<WorkspaceApp principalId="user_test"/>);
-    await act(async () => { await Promise.resolve(); });
-    fireEvent.change(textarea(), { target: { value: complaint } });
-    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Analisis kasus" })); });
-    await act(async () => { await Promise.resolve(); });
-    const row = within(await screen.findByRole("group", { name: "Salin ke P-Care" }));
-    await act(async () => { fireEvent.click(row.getByRole("button", { name: `Salin G44.2 — ${g442} ke Diagnosa P-Care (kandidat, belum terkonfirmasi)` })); });
-    expect(writeText).toHaveBeenLastCalledWith("G44.2");
-    expect(screen.getByText("Kode kandidat G44.2 disalin. Konfirmasi diagnosis sebelum dientri.", { selector: ".toast span" })).toBeTruthy();
-    await act(async () => { fireEvent.click(row.getByRole("button", { name: "Salin Keluhan ke Keluhan P-Care" })); });
-    expect(writeText).toHaveBeenLastCalledWith(complaint);
     expect(sent).toHaveLength(1);
   });
 });

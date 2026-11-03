@@ -3,7 +3,7 @@
 import { Check, CircleAlert, X } from "lucide-react";
 import { useCallback, useEffect, useReducer, useRef, useState, useSyncExternalStore, type ComponentProps, type ReactNode } from "react";
 import { createDraft, modes, type ModeId } from "../lib/drafts";
-import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Patient } from "../lib/workspace";
+import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Message, type Patient } from "../lib/workspace";
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
 import { downloadName, headlineFor } from "../lib/studio";
 import { insertTemplate } from "../lib/clinical-templates";
@@ -14,13 +14,14 @@ import { Dialog } from "./dialog";
 import { downloadText } from "./message-card";
 import { Sidebar, type DialogName } from "./sidebar";
 import { PixelLoader } from "./pixel-loader";
-import { ClinicalPanel } from "./clinical-panel";
+import { DocumentPane, type PaneTools } from "./document-pane";
 import { CommandPalette } from "./command-palette";
 import { TemplateLibrary } from "./template-library";
 import { WorkQueue } from "./work-queue";
 import { createPersonalDraft } from "../lib/workflow";
 import { KnowledgeDialog } from "./knowledge-dialog";
-import { diagnosisContent, aadiMessage } from "../lib/aadi/presentation";
+import { diagnosisContent, aadiMessage, pcareCopies } from "../lib/aadi/presentation";
+import { paneDocuments } from "../lib/document-pane";
 import type { AadiAnalysis } from "../lib/aadi/contract";
 import { caseFieldKeys, composerCase, patientHints, composerUsesAadi, composerAadiMessages, emptyCaseFields, readCaseFields, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
 import { requestAadiAnalysis } from "../lib/aadi/client";
@@ -40,6 +41,7 @@ function stepToast(mode: ModeId): string {
 
 const visitKey = "sentrapedia-visit";
 const noSubscription = () => () => {};
+interface PaneState { open: boolean; activeId: string | "overview"; seen: number }
 function readVisit(): number { try { return Number(sessionStorage.getItem(visitKey)) || 0; } catch { return 0; } }
 
 export function WorkspaceApp({ principalId, onSignOut, userButton }: { principalId: string; onSignOut?: () => void; userButton?: ReactNode }) {
@@ -53,8 +55,6 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const mobile = useMediaQuery(mobileQuery);
   const [focusMode, setFocusMode] = useState(false);
-  // The Clinical Cockpit starts closed; the header button opens it (Chief, 2026-10-09).
-  const [panelOpen, setPanelOpen] = useState(false);
   // The headline rotates once per tab session: read once on the client, counted in an effect; the server shows the first.
   const [seen] = useState<{ visit: number | null }>({ visit: null });
   const visit = useSyncExternalStore(noSubscription, () => seen.visit ??= readVisit(), () => 0);
@@ -86,6 +86,13 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   const hasMessages = Boolean(encounter?.messages.length) || pendingQuestion !== null;
   const context = encounter?.context ?? "";
   const selectedTemplate = state.templates?.find((item) => `template:${item.id}` === templateKey);
+  // The document pane, remembered per encounter: it opens on the newest document whenever one arrives (spec 4).
+  const [panes, setPanes] = useState(() => new Map<string, PaneState>());
+  const documents = paneDocuments(encounter);
+  const storedPane = encounter && panes.get(encounter.id);
+  const pane: PaneState = storedPane && documents.length <= storedPane.seen ? storedPane : { open: documents.length > 0, activeId: documents.at(-1)?.id ?? "overview", seen: documents.length };
+  const split = !compact && pane.open && documents.length > 0;
+  const setPane = (change: Partial<Omit<PaneState, "seen">>) => { const id = encounter?.id; if (id) setPanes((map) => new Map(map).set(id, { ...pane, ...change, seen: documents.length })); };
   const cancelAnalysis = useCallback(() => {
     analysisController.current?.abort();
     analysisController.current = null;
@@ -104,6 +111,11 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   function openDialog(name: DialogName, id?: string) { if (analysisController.current) cancelAnalysis(); const open = () => { setDialog(name); setDialogId(id); }; if (dialog) smooth(open); else open(); }
   function hideDialog() { setDialog(null); setDialogId(undefined); }
   function closeDialog() { if (dialog) smooth(hideDialog); else hideDialog(); }
+  // Below 1200 px the pane is a sheet; opening it leaves a running analysis alone.
+  function openDocument(id?: string) {
+    setPane({ open: true, ...(id && { activeId: id }) });
+    if (compact) { const open = () => { setDialog("document"); setDialogId(undefined); }; if (dialog) smooth(open); else open(); }
+  }
   function selectEncounter(id: string) { dispatch({ type: "encounter.select", id }); setPrompt(""); resetCaseFields(); changeMode("question"); if (mobile) setMobileNavOpen(false); closeDialog(); }
   function startNew(patientId?: string) {
     if (patientId) dispatch({ type: "encounter.add", encounter: newEncounter(patientId) }); else dispatch({ type: "encounter.select", id: null });
@@ -176,6 +188,14 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     changeMode("ddx"); closeDialog(); notify("Analisis ditambahkan sebagai draf untuk ditinjau.");
   }
 
+  const output = (m: Message) => reviewedText(diagnosisContent(m), m.reviewStatus);
+  const paneTools: PaneTools = {
+    onCopy: async (m) => { try { await navigator.clipboard.writeText(output(m)); notify("Dokumen disalin."); } catch { notify("Clipboard tidak tersedia. Gunakan Edit untuk memilih dan menyalin teks.", "error"); } },
+    onDownload: (m) => downloadText(output(m), downloadName(encounter?.title ?? "dokumen", m.createdAt)),
+    onPrint: () => window.print(),
+    pcare: (m) => pcareCopies(m, output(m)),
+  };
+  const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<p className="panel-empty">Ringkasan encounter menyusul</p>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify}/>;
   const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
     minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [],
     caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };
@@ -195,17 +215,20 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
         onCommands={() => openDialog("commands")}
         onFocus={() => smooth(() => { setMobileNavOpen(false); setFocusMode((value) => !value); })}
         onExport={() => downloadText(encounter?.messages.map((m) => reviewedText(diagnosisContent(m), m.reviewStatus)).join("\n\n---\n\n") ?? "", downloadName(encounter?.title ?? "encounter"))}
+        documentCount={documents.length} paneOpen={compact ? dialog === "document" : split} onPane={() => compact ? openDocument() : smooth(() => setPane({ open: !split }))}
         onUpgrade={() => openDialog("upgrade")}/>
-      <div className="workspace-body">
+      <div className="workspace-body" data-split={split || undefined}>
         {!hasMessages ? <HomeView name={state.settings.name ?? ""} headline={headlineFor(visit)} pill="Layanan primer" composer={composerProps}/> : <>
-          <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onStep={startStep} onCancel={cancelAnalysis}/>
-          <ChatComposer composer={composerProps}/>
+          <div className="chat-column">
+            <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onStep={startStep} onCancel={cancelAnalysis} onOpenDocument={openDocument}/>
+            <ChatComposer composer={composerProps}/>
+          </div>
+          {split && paneFor(() => smooth(() => setPane({ open: false })))}
         </>}
       </div>
       {!hasMessages && <HomeFooter onLegal={(label) => { setDialogId(label); setDialog("legal"); }}/>}
     </main>
-    {!compact && panelOpen && !focusMode && <aside className="clinical-panel"><ClinicalPanel state={state} encounter={encounter} patient={patient} onSelect={selectEncounter} onContext={() => openDialog("context")} onPatient={() => openDialog("patient", patient?.id)} onClose={() => smooth(() => setPanelOpen(false))}/></aside>}
-    {dialog === "clinical" && <Dialog title="Kokpit klinis" onClose={closeDialog}><ClinicalPanel state={state} encounter={encounter} patient={patient} onSelect={selectEncounter} onContext={() => openDialog("context")} onPatient={() => openDialog("patient", patient?.id)}/></Dialog>}
+    {dialog === "document" && <Dialog title="Dokumen encounter" className="document-sheet" onClose={closeDialog}>{paneFor(closeDialog)}</Dialog>}
     {dialog === "commands" && <CommandPalette onKnowledge={(tab) => openDialog("knowledge", tab)} onQueue={() => openDialog("queue")} onTemplates={() => openDialog("templates")} state={state} onClose={closeDialog} onEncounter={selectEncounter} onPatient={(id) => openDialog("patient", id)} onMode={(next) => { changeMode(next); closeDialog(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus()); }} onNew={() => { startNew(); closeDialog(); }} onFocus={() => smooth(() => { setFocusMode((value) => !value); setMobileNavOpen(false); hideDialog(); })} onContext={() => openDialog("context")}/>}
     {toast && <div className={`toast ${toastError ? "is-error" : ""}`} role={toastError ? "alert" : "status"}>{toastError ? <CircleAlert size={15}/> : <Check size={15}/>}<span>{toast}</span><button aria-label="Tutup notifikasi" onClick={dismissToast}><X size={14}/></button></div>}
 

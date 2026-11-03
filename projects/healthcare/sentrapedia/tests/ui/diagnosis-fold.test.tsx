@@ -10,7 +10,7 @@ const grounding: TheOracleGroundingBundle = { version: THEORACLE_GROUNDING_CAPAB
 const gate = { forDiagnosis: { icd10: "J18.9", label: "Pneumonia" }, therapyRemoved: false, reason: "", drugs: [{ drug: "Amoksisilin", dose: "3x500mg", status: "verified", evidenceIds: ["E1"] }] };
 // The report's shape: part 9 last, its fold after the marker, the passages and dose check appended to it.
 const report = `# Laporan\n\n## 1. Ringkasan kasus\n\nTeks satu.\n\n## 9. Referensi dan status verifikasi\n\nTeks sembilan.\n\n${diagnosisReferenceMarker}\n\nJejak analisis` + theOracleCitations(grounding, undefined, gate);
-const show = (content: string) => render(<DiagnosisDocument content={content} selected={0} onSelect={() => undefined} onEdit={() => undefined} renderContent={(text, edit) => <DocumentContent content={text} onEdit={edit} clinical/>} typing/>);
+const show = (content: string) => render(<DiagnosisDocument content={content} selected={0} onSelect={() => undefined} onEdit={() => undefined} renderContent={(text, edit) => <DocumentContent content={text} onEdit={edit} clinical/>} typing rail={false}/>);
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -19,9 +19,10 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.useRealTimers(); });
 
 describe("guideline passages inside part 9's fold", () => {
-  it("lists only the report parts, types only the text before the fold, and opens the fold with both sub-parts", async () => {
+  it("has no section rail, types only the text before the fold, and opens the fold with both sub-parts", async () => {
     const { container } = show(report);
-    expect(within(container.querySelector("nav")!).getAllByRole("button").map(button => button.textContent)).toEqual(["1. Ringkasan kasus", "9. Referensi dan status verifikasi"]);
+    // One column in the pane: no section rail.
+    expect(container.querySelector("nav")).toBeNull();
     expect(container.querySelector(".diagnosis-provenance")).toBeNull();
     // About 30 typed characters take under 100 ms; typing the passages too would take over a second.
     await act(async () => { vi.advanceTimersByTime(200); });

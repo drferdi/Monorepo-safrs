@@ -229,10 +229,12 @@ describe("workspace UI smoke tests", () => {
     // Assert that unverified dose wording or status appears
     expect(screen.getAllByText(/dosis: cek pedoman|dosis tidak ditemukan di Oracle/i).length).toBeGreaterThan(0);
 
-    // The answer is the nine-part report: its parts in the section list, real tables, and links that open outside
-    const parts = within(screen.getByRole("navigation", { name: "Bagian analisis kasus" })).getAllByRole("button").map(button => button.textContent);
-    // The case flow lists the report's parts only; the doctor's summary is a section of its own above them (Gaffer, 2026-10-21).
-    expect(parts).toEqual(diagnosisSectionTitles);
+    // The answer is the nine-part report in the document pane, in one column with no section rail: its parts as
+    // headings, real tables, and links that open outside.
+    const pane = within(screen.getByRole("tabpanel"));
+    expect(screen.getByRole("tab", { name: /Analisis kasus/ }).getAttribute("aria-selected")).toBe("true");
+    expect(screen.queryByRole("navigation", { name: "Bagian analisis kasus" })).toBeNull();
+    for (const title of diagnosisSectionTitles) expect(pane.getByRole("heading", { name: title })).toBeTruthy();
     // The guideline passages and the dose check are sub-parts of part 9's fold, the passages as compact titles
     const fold = [...document.querySelectorAll<HTMLDetailsElement>("details.diagnosis-provenance")].at(-1)!;
     expect(within(fold).getByRole("heading", { name: "Kutipan pedoman" })).toBeTruthy();
@@ -244,9 +246,9 @@ describe("workspace UI smoke tests", () => {
     expect(within(summary).getByRole("cell", { name: "Laki-laki 35 tahun, batuk dan demam tinggi sejak 3 hari, S 38,5" })).toBeTruthy();
     // One draft marker only: the Status field; no "Draf analisis" badge or subtitle.
     expect(screen.queryByText(/Draf analisis/)).toBeNull();
-    // The doctor's summary stands as its own section above the report title.
-    const doctor = screen.getByRole("heading", { name: "Ringkasan untuk dokter" });
-    expect(doctor.compareDocumentPosition(screen.getByRole("heading", { name: "LAPORAN ANALISIS KASUS KLINIS" })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // The report title heads the pane document once; the doctor's summary is the first section of its body.
+    expect(screen.getByRole("heading", { name: "LAPORAN ANALISIS KASUS KLINIS" }).closest(".document-head")).toBeTruthy();
+    expect(pane.getAllByRole("heading", { level: 3 })[0].textContent).toBe("Ringkasan untuk dokter");
     const nice = screen.getAllByRole("link", { name: "NICE CG150" })[0];
     expect(nice.getAttribute("href")).toBe("https://www.nice.org.uk/guidance/cg150/chapter/recommendations");
     expect(nice.getAttribute("rel")).toBe("noopener noreferrer");

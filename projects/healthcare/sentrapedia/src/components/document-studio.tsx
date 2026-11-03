@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Columns2, FileText, GitCompareArrows, Pencil, History, ListChecks } from "lucide-react";
-import { documentSections, replaceSection } from "../lib/studio";
-import type { Message, ReviewStatus, WorkspaceAction } from "../lib/workspace";
-import { reviewComplete } from "../lib/workflow";
-import { HistoryPanel, ReviewPanel } from "./document-workflow";
-import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, doctorSummaryTitle, hasAadiSource, icd10SectionTitle, legacyDiagnosisSectionTitles, referralSectionTitle, sourceForDisplay, theOracleSourceLinks } from "../lib/aadi/presentation";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Bold, Heading2, Italic, List, Pencil } from "lucide-react";
+import { documentSections } from "../lib/studio";
+import type { Message } from "../lib/workspace";
+import { applyMark } from "../lib/document-pane";
+import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, doctorSummaryTitle, hasAadiSource, icd10SectionTitle, legacyDiagnosisSectionTitles, referralSectionTitle } from "../lib/aadi/presentation";
 import { DiagnosisDocument } from "./diagnosis-document";
 import { freshAnswer, markRevealed } from "../lib/fresh-answer";
-import { autoNormalLabels, templateNote } from "../lib/normal-exam";
 
 const diagnosisLabels = new Set(["Keluhan utama", "Kondisi yang tercatat", "Alergi tercatat", "Obat yang sedang digunakan (input kasus)", "Anamnesis tercatat", "Tanda vital tercatat", "Pemeriksaan fisik tercatat", "Informasi yang belum tersedia", "Pertanyaan lanjutan dari layanan", "Alternatif", "Jangan terlewat", "Kemungkinan utama — belum ditinjau klinisi", "Pertimbangan layanan", "Bidang belum terisi", "Hasil pemeriksaan tercatat", "Usulan pemeriksaan dari layanan", "Kemampuan fasilitas tercatat", "Jejak analisis"]);
 
@@ -46,8 +44,10 @@ function DocumentTable({ lines }: { lines: string[] }) {
 // one line under the document names those lines until review). Typing cuts at a space, so "[otomatis" alone can show.
 const autoNormal = (line: string): ReactNode => inline(line.replace(/ \[otomatis(?: normal\])?$/, ""));
 
-export function DocumentContent({ content, onEdit, clinical = false }: { content: string; onEdit: (content: string) => void; clinical?: boolean }) {
+// hideTitle: the pane's document head already shows the "# " title line.
+export function DocumentContent({ content, onEdit, clinical = false, hideTitle = false }: { content: string; onEdit: (content: string) => void; clinical?: boolean; hideTitle?: boolean }) {
   const lines = content.split("\n");
+  const title = hideTitle ? lines.findIndex((line) => line.startsWith("# ")) : -1;
   return <div className="draft-content">{lines.map((line, index) => {
     if (line.startsWith("|")) {
       if (lines[index - 1]?.startsWith("|")) return null;
@@ -57,7 +57,7 @@ export function DocumentContent({ content, onEdit, clinical = false }: { content
     // The exam's A/B/C headings: "####" in the AADI report, "###" in the SOAP note (normal-exam.ts examTables).
     if (line.startsWith("#### ")) return <h4 className="diagnosis-field-label" key={index}>{line.slice(5)}</h4>;
     if (line.startsWith("### ")) return <h4 className={clinical ? "diagnosis-reference-heading" : "diagnosis-field-label"} key={index}>{line.slice(4)}</h4>;
-    if (line.startsWith("# ")) return <h2 key={index}>{line.slice(2)}</h2>;
+    if (line.startsWith("# ")) return index === title ? null : <h2 key={index}>{line.slice(2)}</h2>;
     if (line.startsWith("## ")) return <h3 key={index}>{line.slice(3)}</h3>;
     if (line === "---") return <hr key={index}/>;
     if (/^- \[[ x]\]/.test(line)) return <label className="draft-task" key={index}><input type="checkbox" checked={line.startsWith("- [x]")} onChange={(event) => { const lines = content.split("\n"); lines[index] = lines[index].replace(/^- \[[ x]\]/, event.target.checked ? "- [x]" : "- [ ]"); onEdit(lines.join("\n")); }}/><span>{line.slice(6)}</span></label>;
@@ -69,34 +69,41 @@ export function DocumentContent({ content, onEdit, clinical = false }: { content
   })}</div>;
 }
 
-export function DocumentStudio({ message, onEdit, onReview, encounterId, dispatch }: { message: Message; onEdit: (content: string) => void; onReview: (status: ReviewStatus) => void; encounterId: string; dispatch: (action: WorkspaceAction) => void }) {
-  const [view, setView] = useState<"document" | "source" | "compare" | "history" | "review">("document");
+const marks = [{ mark: "heading", label: "Judul", Icon: Heading2 }, { mark: "bold", label: "Tebal", Icon: Bold }, { mark: "italic", label: "Miring", Icon: Italic }, { mark: "list", label: "Daftar", Icon: List }] as const;
+
+// The pane body: the document in one column, editable in place as markdown with a small toolbar.
+export function DocumentStudio({ message, onEdit }: { message: Message; onEdit: (content: string) => void }) {
   const [selected, setSelected] = useState(0);
   const [editing, setEditing] = useState(false);
   const [body, setBody] = useState("");
-  const document = useRef<HTMLDivElement>(null);
+  const box = useRef<HTMLTextAreaElement>(null);
+  // The selection a toolbar mark leaves, set on the textarea once the new text renders.
+  const selection = useRef<{ start: number; end: number } | null>(null);
   const content = diagnosisContent(message);
   const sections = documentSections(content);
   const diagnosis = hasAadiSource(message) && [doctorSummaryTitle, referralSectionTitle, icd10SectionTitle, ...diagnosisSectionTitles, ...legacyDiagnosisSectionTitles].includes(sections[0]?.title);
-  // A fresh SOAP draft arrives with the analysis answer's typing reveal (Gaffer, 2026-10-21: "use exactly that").
+  // A fresh analysis or SOAP draft keeps its typing reveal, in one column (Gaffer, 2026-10-21: "use exactly that"). An
+  // analysis keeps its folded references and dose check; any other document is plain markdown.
   const [typing] = useState(() => (diagnosis || (message.mode === "clinic" && sections.length > 1)) && freshAnswer(message));
   // Any other fresh answer lets its blocks follow one another in (globals.css, data-reveal).
   const [cascade] = useState(() => !typing && freshAnswer(message));
   useEffect(() => { markRevealed(message.id); }, [message.id]);
-  const section = sections[selected];
-  // Two-column documents carry their own section list and per-section Edit, so the Bagian bar above them goes (Chief, 2026-10-09).
-  const twoColumn = diagnosis || sections.length > 1;
-  const editSection = (index: number) => { setSelected(index); setBody(sections[index].body); setEditing(true); };
-  const status = message.reviewStatus ?? "draft";
+  useLayoutEffect(() => { if (selection.current) box.current?.setSelectionRange(selection.current.start, selection.current.end); selection.current = null; }, [body]);
+  function format(mark: typeof marks[number]["mark"]) {
+    const field = box.current;
+    if (!field) return;
+    const next = applyMark(body, field.selectionStart, field.selectionEnd, mark);
+    selection.current = next; setBody(next.text); field.focus();
+  }
   return <div className="document-studio" data-reveal={cascade || undefined}>
-    <div className="studio-toolbar"><div role="group" aria-label="Tampilan dokumen">{[{ id: "document", label: "Dokumen", Icon: FileText }, { id: "source", label: "Sumber", Icon: Columns2 }, { id: "compare", label: "Perubahan", Icon: GitCompareArrows }, { id: "history", label: "Riwayat", Icon: History }, { id: "review", label: "Peninjauan", Icon: ListChecks }].map(({ id, label, Icon }) => <button key={id} className={view === id ? "active" : ""} aria-pressed={view === id} disabled={editing} onClick={() => setView(id as typeof view)}><Icon size={13}/>{label}</button>)}</div><label className="review-control"><span>Status</span><select aria-label="Status dokumen" value={status} disabled={editing} onChange={(event) => onReview(event.target.value as ReviewStatus)}><option value="draft">Draf</option><option value="reviewed" disabled={!reviewComplete(message.reviewItems)}>Ditinjau</option><option value="final" disabled={status === "draft" || !reviewComplete(message.reviewItems)}>Final</option></select></label></div>
-    {view === "history" && <HistoryPanel message={message} encounterId={encounterId} dispatch={dispatch}/>}
-    {view === "review" && <ReviewPanel message={{ ...message, content }} encounterId={encounterId} dispatch={dispatch} onNavigate={(target) => { if (target === "source") setView("source"); else { setView("document"); const index = sections.findIndex((item) => item.title === target); if (index >= 0) { setSelected(index); requestAnimationFrame(() => document.current?.querySelector(`[data-diagnosis-section="${index}"], [data-empty-section="${index}"]`)?.scrollIntoView({ block: "nearest" })); } } }}/ >}
-    {view === "document" && <>
-      {sections.length > 0 && !twoColumn && <div className="section-control"><label>Bagian<select aria-label="Bagian dokumen" value={selected < sections.length ? selected : 0} disabled={editing} onChange={(event) => { const index = Number(event.target.value); setSelected(index); document.current?.querySelectorAll("h3")[index]?.scrollIntoView({ block: "nearest", behavior: "auto" }); }}>{sections.map((item, index) => <option key={`${item.start}-${item.title}`} value={index}>{item.title}</option>)}</select></label><button className="text-button" disabled={!section || editing} onClick={() => { setBody(section.body); setEditing(true); }}><Pencil size={12}/> Edit bagian</button></div>}
-      {editing && section ? <div className="section-editor" key="edit"><label>{section.title}<textarea aria-label={`Edit bagian ${section.title}`} value={body} maxLength={50000} rows={8} onChange={(event) => setBody(event.target.value)}/></label><div><button className="button primary" onClick={() => { const newline = section.body.includes("\r\n") ? "\r\n" : "\n"; onEdit(replaceSection(content, section, body.endsWith("\n") ? body : body + newline)); setEditing(false); }}>Simpan bagian</button><button className="button" onClick={() => setEditing(false)}>Batal</button></div></div> : <div key="view" ref={document}>{diagnosis ? <DiagnosisDocument typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} onEditSection={editSection} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical/>}/> : sections.length > 1 ? <DiagnosisDocument typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} onEditSection={editSection} label="Bagian" navLabel="Bagian dokumen" showMeta={false} autoFilled={status === "draft" && !content.includes(templateNote) ? autoNormalLabels(content) : []} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit}/>}/> : <DocumentContent content={content} onEdit={onEdit}/>}</div>}
+    {editing ? <div className="document-editor">
+      {/* Mouse down keeps the selection in the textarea while a mark is applied. */}
+      <div className="editor-toolbar" role="toolbar" aria-label="Format teks">{marks.map(({ mark, label, Icon }) => <button type="button" key={mark} className="text-button" onMouseDown={(event) => event.preventDefault()} onClick={() => format(mark)}><Icon size={13}/>{label}</button>)}</div>
+      <textarea ref={box} aria-label="Isi dokumen" value={body} maxLength={50000} rows={18} onChange={(event) => setBody(event.target.value)}/>
+      <div className="editor-actions"><button className="button primary" disabled={!body.trim()} onClick={() => { onEdit(body); setEditing(false); }}>Simpan</button><button className="button" onClick={() => setEditing(false)}>Batal</button></div>
+    </div> : <>
+      <button type="button" className="text-button document-edit" onClick={() => { setBody(content); setEditing(true); }}><Pencil size={12}/> Edit</button>
+      {diagnosis || typing ? <DiagnosisDocument rail={false} typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} showMeta={diagnosis} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical={diagnosis} hideTitle/>}/> : <DocumentContent content={content} onEdit={onEdit} clinical={diagnosis} hideTitle/>}
     </>}
-    {view === "source" && <div className="studio-columns"><div><h2>Dokumen saat ini</h2><DocumentContent content={content} onEdit={onEdit}/></div><div className="source-pane"><h2>Sumber saat dibuat</h2><p className="panel-caption">{theOracleSourceLinks(message).length ? "Salinan input dan referensi Oracle yang dipilih sebelum analisis. Tidak berubah saat dokumen diedit." : "Salinan input lokal, bukan kutipan pedoman. Tidak berubah saat dokumen diedit."}</p><ul>{theOracleSourceLinks(message).map(source => <li key={source.id}><strong>{source.label}</strong><p className="source-quote">{source.text}</p></li>)}</ul>{hasAadiSource(message) ? <details className="source-technical"><summary>Data teknis untuk audit</summary><pre>{sourceForDisplay(message)}</pre></details> : <pre>{sourceForDisplay(message) ?? "Sumber asli belum tersedia untuk dokumen lama ini."}</pre>}</div></div>}
-    {view === "compare" && <>{message.originalContent === undefined ? <p className="panel-empty">Draf awal belum tersedia. Perubahan berikutnya akan menyimpan isi sebelum edit sebagai pembanding.</p> : message.originalContent === message.content ? <p className="panel-empty">Belum ada perubahan dari draf awal.</p> : <div className="studio-columns comparison"><div><h2>Sebelum edit</h2><pre>{diagnosisContent({ ...message, content: message.originalContent })}</pre></div><div><h2>Saat ini</h2><pre>{message.content}</pre></div></div>}</>}
   </div>;
 }

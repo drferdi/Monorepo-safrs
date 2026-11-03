@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
 const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
 void storageKey; void unreadableKey;
@@ -76,10 +76,9 @@ describe("analysis case strip", () => {
     expect(screen.getByRole("group", { name: "Mode" })).toBeTruthy();
     expect(screen.queryByRole("combobox", { name: "Mode atau templat" })).toBeNull();
 
-    // Quick copies of the summary and the working diagnosis, and a referral letter prefilled in the local referral mode.
-    expect(screen.getByRole("button", { name: /Salin ringkas/ })).toBeTruthy();
-    expect(screen.getByRole("group", { name: "Salin ke P-Care" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: /^Salin G44\.2 — / })).toBeTruthy();
+    // The working diagnosis copies from the pane's P-Care menu, and a referral letter is prefilled in the local referral mode.
+    fireEvent.click(screen.getByRole("button", { name: "Salin ke P-Care" }));
+    expect(within(screen.getByRole("menu", { name: "Salin ke P-Care" })).getByRole("menuitem", { name: /^Salin G44\.2 — / })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /Surat rujukan/ }));
     expect((screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement).value).toMatch(/^Keluhan utama: Laki-laki 45 tahun[^\n]*Diagnosis kerja \(kandidat AADI, belum terkonfirmasi\): Tension-type headache \(G44\.2\)\nRiwayat penyakit sekarang: 45 tahun, laki-laki\. Pasien contoh[^\n]*\nPemeriksaan fisik: Sistolik \(mmHg\) 160; Diastolik \(mmHg\) 95; Nadi \(\/menit\) 98\nPermintaan: \nPenerima: $/);
     expect((screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement).placeholder).toContain("tujuan rujukan");
