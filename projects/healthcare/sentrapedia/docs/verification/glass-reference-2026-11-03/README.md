@@ -1,0 +1,20 @@
+# Glass for Clinicians, reference captures (2026-11-03)
+
+Captured from Gaffer's own Glass account (glass.health, "Glass 6.0 v2026-08-31") in the Claude browser pane at 1024x768, plus two at 375x812, as the visual reference for the Sentrapedia workspace redesign Gaffer asked for on 2026-11-03 ("samakan UI Sentrapedia dengan Glass Health", scope: the whole workspace). Private material (docs/verification/ is in scripts/private-data.mjs). The capture that showed the account menu with Gaffer's email was not kept.
+
+What the captures establish, in Glass's own labels:
+
+- Shell: 256 px grey sidebar (New, Create Patient, Create Patient List, Start Scribing, Agent Customization, Search; then Patient Lists, All Patients, All Encounters; feedback box; account row at the bottom), one rounded white canvas, an Upgrade button top right.
+- Home: two-line headline that rotates ("Clinical Intelligence to clarify complex diagnostic cases" / "... draft differentials" / "... integrate key patient data from the EHR"), a "Primary Care" pill, one 672 px composer (text box; Start Scribing, Add Context; Standard model select, settings, mic, send), ONE horizontally scrolling row of 13 chips (Ask a Question, Draft Clinic Note, Draft AVS, Draft DDx, Draft A&P, Draft HPI, Draft Patient Handout, Draft Referral, Draft Phone Visit, Draft Chronic Care, Draft Prior Auth, Draft Handoff Note, Draft Task List). No tabs. Ad panel and footer at the bottom.
+- A chip never runs anything: it prefills the composer ("Draft a differential diagnosis") and the doctor sends. After a document exists the chip reads "Update DDx".
+- Encounter: a chat column. Top bar: "Add to Patient / <title>", Outpatient, Connect EHR. User turns right-aligned in a grey bubble; answers as plain prose with [n] citations; a progress list while thinking (Submitted your query, Understood your query, Searched medical literature, Analyzed findings, Reviewed literature, Response generated, Wrote file); per-answer icons (copy, print, download, thumbs up/down); a References block of numbered cards (title, authors, journal/year, tags Guideline / High Impact / Highly Cited) with "Collapse references" / "Show 6 more references".
+- Documents: when a draft is made, the canvas splits. Chat narrows to the left; a document pane opens on the right with tabs "Encounter Overview", the document, "More +n"; pane tools (history, copy, print, download, collapse); a rich-text toolbar (Normal, B, I, sup, sub, lists). The chat shows "I'll draft a differential diagnosis:" plus a document card (title, time) and a follow-up question.
+- DDx document: DIFFERENTIAL DIAGNOSIS; Case Discussion; Most Likely Diagnoses; Expanded Differential; Can't Miss Diagnoses (each item bold name + reasoning); Diagnostic Next Steps; References.
+- A&P document: ASSESSMENT AND PLAN; Clinical Impression; "# <problem>" with a paragraph, then "Dx." bullets and "Tx." bullets per problem; Chronic Problems; References.
+- Encounter Overview tab: Timeline (DDx at 6:44 PM), Summary, Insights (Next Steps in This Encounter, Follow-Up Considerations), Care Gaps, Task List; each with Generate / Refresh.
+- Composer "." opens a skill menu: Built-in skills (After-Visit Summary, Assessment & Plan, Chronic Care Plan, Clinic Note, Differential Diagnosis, ...) and Files and Knowledge.
+- Add Context: upload files or folders, Paste / Dictate text, "Create Text".
+- Agent Customization: Preferences (global AI preferences text, scribing language, default specialty and environment), Skills & Templates (custom skills + 17 built-in skills), Knowledge (reference documents).
+- Patient page: "Patient / Encounter 1", Add to list, New, Outpatient, Connect EHR, New Encounter; empty chat left, Encounter Overview right with Pending blocks.
+- Search: a dialog, "Search patients, encounters, or notes…".
+- Mobile 375 px: sidebar behind a toggle, the headline and composer stack, chips scroll; in an encounter the chat fills the screen and the document pane is reached from icons in the top bar.
