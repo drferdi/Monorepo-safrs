@@ -1,9 +1,8 @@
 "use client";
 
-import { ArrowDownToLine, ChevronDown, Command, Maximize2, Menu, Minimize2, PanelRight, Sparkles } from "lucide-react";
+import { ArrowDownToLine, ChevronDown, Command, Maximize2, Menu, Minimize2, Sparkles } from "lucide-react";
 import { useEffect, useRef, type ComponentProps } from "react";
 import type { Encounter, WorkspaceAction } from "../lib/workspace";
-import type { intentGroups } from "../lib/studio";
 import type { ModeId } from "../lib/drafts";
 import { Composer } from "./composer";
 import { MessageCard } from "./message-card";
@@ -12,7 +11,7 @@ import { WorkspaceGreeting } from "./workspace-greeting";
 
 type ComposerProps = ComponentProps<typeof Composer>;
 
-export function WorkspaceHeader({ hasMessages, name, patientName, encounterTitle, focusMode, panelPressed, onExpand, onEncounter, onCommands, onFocus, onPanel, onExport, onUpgrade }: { hasMessages: boolean; name: string; patientName?: string; encounterTitle?: string; focusMode: boolean; panelPressed: boolean; onExpand: () => void; onEncounter: () => void; onCommands: () => void; onFocus: () => void; onPanel: () => void; onExport: () => void; onUpgrade: () => void }) {
+export function WorkspaceHeader({ hasMessages, name, patientName, encounterTitle, focusMode, onExpand, onEncounter, onCommands, onFocus, onExport, onUpgrade }: { hasMessages: boolean; name: string; patientName?: string; encounterTitle?: string; focusMode: boolean; onExpand: () => void; onEncounter: () => void; onCommands: () => void; onFocus: () => void; onExport: () => void; onUpgrade: () => void }) {
   return <header className="canvas-header">
     <div className="header-left">
       <button className="icon-button expand-sidebar" aria-label="Buka navigasi" onClick={onExpand}><Menu size={19}/></button>
@@ -21,17 +20,17 @@ export function WorkspaceHeader({ hasMessages, name, patientName, encounterTitle
     <div className="header-right">
       <button className="icon-button" aria-label="Buka pusat perintah" title="Pusat perintah · Ctrl / ⌘ J" onClick={onCommands}><Command size={16}/></button>
       <button className="icon-button" aria-label={focusMode ? "Keluar Focus Mode" : "Aktifkan Focus Mode"} aria-pressed={focusMode} title="Focus Mode" onClick={onFocus}>{focusMode ? <Minimize2 size={16}/> : <Maximize2 size={16}/>}</button>
-      <button className="icon-button" aria-label="Konteks dan Timeline" title="Konteks dan Timeline" aria-pressed={panelPressed} onClick={onPanel}><PanelRight size={17}/></button>
       {hasMessages && <button className="button export-encounter" onClick={onExport}><ArrowDownToLine size={14}/> Ekspor</button>}
       <button className="upgrade-button" onClick={onUpgrade}><Sparkles size={15} fill="currentColor"/>Berlangganan</button>
     </div>
   </header>;
 }
 
-export function HomeView({ name, intent, composer }: { name: string; intent: (typeof intentGroups)[number]; composer: ComposerProps }) {
+export function HomeView({ name, headline, pill, composer }: { name: string; headline: string; pill: string; composer: ComposerProps }) {
   return <div className="home-content">
     <div className="home-heading-row"><WorkspaceGreeting name={name}/></div>
-    <div className="home-headline" aria-live="polite" aria-atomic="true"><div key={intent.id} className="headline-transition"><h1>{intent.headline}</h1><p>{intent.description}</p></div></div>
+    <div className="home-headline" aria-live="polite" aria-atomic="true"><div key={headline} className="headline-transition"><h1>{headline}</h1></div></div>
+    <span className="home-pill">{pill}</span>
     <Composer {...composer}/>
   </div>;
 }
@@ -115,9 +114,8 @@ export function Conversation({ encounter, pendingQuestion, dispatch, onToast, on
   </div>;
 }
 
-export function ChatComposer({ composer, onAbout }: { composer: ComposerProps; onAbout: () => void }) {
+export function ChatComposer({ composer }: { composer: ComposerProps }) {
   return <div className="chat-composer">
     <Composer {...composer}/>
-    <p className="composer-hint">{composer.aadiEnabled ? "" : "Format lokal, siap untuk ditinjau. "}<button onClick={onAbout}>Tentang workspace ini</button></p>
   </div>;
 }

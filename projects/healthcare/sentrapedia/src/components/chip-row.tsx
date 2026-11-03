@@ -12,7 +12,7 @@ export function ChipRow({ encounter, mode, templateKey, templates, busy, onChip 
   const lead = template ? template.name : chipShortlist.includes(mode) ? null : modes.find((item) => item.id === mode)!.label;
   return <div className="chip-row" role="group" aria-label="Mode">
     {/* A template chip only names the active template: choosing a mode here would drop it. */}
-    {lead && <button type="button" className="action-chip" aria-pressed="true" disabled={busy} onClick={template ? undefined : () => onChip(mode)}>{lead}</button>}
+    {lead && <button type="button" className="action-chip" aria-pressed="true" aria-disabled={template ? "true" : undefined} disabled={busy} onClick={template ? undefined : () => onChip(mode)}>{lead}</button>}
     {chipShortlist.map((id) => <button key={id} type="button" className="action-chip" aria-pressed={!template && mode === id} disabled={busy} onClick={() => onChip(id)}>{chipLabel(id, encounter)}</button>)}
   </div>;
 }

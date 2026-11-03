@@ -40,16 +40,6 @@ describe("workspace presentation helpers", () => {
     expect([...ids].sort()).toEqual([...modeIds].sort());
     expect(new Set(ids).size).toBe(modeIds.length);
   });
-  it("offers each category's quick actions from its own modes, as Chief's table names them", () => {
-    const label = (id: string) => modes.find((mode) => mode.id === id)!.label;
-    expect(intentGroups.map((group) => [group.label, group.quick.map(label)])).toEqual([
-      ["Analisis", ["Pertanyaan Klinis (PICO)", "Diagnosis Banding (DDx)", "Pemeriksaan Penunjang", "Pengodean Diagnosis (ICD-10)"]],
-      ["Dokumentasi", ["Catatan Klinis (SOAP)", "Anamnesis (HPI)", "Catatan Penyakit Kronis", "Serah Terima Klinis (SBAR)"]],
-      ["Rencana", ["Asesmen dan Rencana (A&P)", "Daftar Tugas Klinis", "Surat Rujukan", "Pemantauan Klinis"]],
-      ["Komunikasi", ["Edukasi Pasien", "Ringkasan Kunjungan", "Catatan Konsultasi Telepon"]],
-    ]);
-    for (const group of intentGroups) { expect(group.quick.every((id) => group.modes.includes(id))).toBe(true); expect(group.quick[0]).toBe(group.modes[0]); }
-  });
   it("drafts a monitoring plan from the supplied findings", () => {
     const draft = createDraft({ mode: "monitoring", prompt: "Keluhan: sesak napas sintetis\nRencana: cek saturasi tiap 4 jam", context: "", specialty: "Primary Care", model: "Standard", language: "Bahasa Indonesia", instructions: "" });
     expect(draft).toContain("## 1. Masalah yang Dipantau\n\nsesak napas sintetis\n");
@@ -103,12 +93,9 @@ describe("saved seed patient", () => {
   });
 });
 
-describe("composer hint per intent tab", () => {
-  it("shows the tab's own hint on its default mode and the chip's hint on the others", () => {
-    expect(composerPlaceholder("question")).toBe("Diskusikan kasus yang sedang Anda tangani.");
-    for (const group of intentGroups) expect(composerPlaceholder(group.modes[0])).toBe(group.placeholder);
-    expect(new Set(intentGroups.map((group) => group.placeholder)).size).toBe(intentGroups.length);
-    expect(composerPlaceholder("refer")).toBe(modes.find((mode) => mode.id === "refer")!.placeholder);
+describe("composer hint", () => {
+  it("is the mode's own placeholder for every mode", () => {
+    for (const mode of modes) expect(composerPlaceholder(mode.id)).toBe(mode.placeholder);
   });
 });
 

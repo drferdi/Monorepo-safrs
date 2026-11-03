@@ -402,8 +402,6 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .evidence-handoff { display: grid; gap: 7px; margin: 20px 0 0 29px; background: var(--workspace-accent-soft); border: 1px solid var(--color-border-subtle); padding: 15px; border-radius: var(--radius); color: var(--workspace-accent-ink); font-size: 12px; line-height: 1.6; }
 .chat-composer { width: min(780px, calc(100% - 48px)); flex-shrink: 0; margin: 8px auto 8px; }
 .chat-composer .action-rail-wrap { margin-top: 12px; }
-.composer-hint { font-size: 10px; text-align: left; color: var(--color-text-muted); margin: 11px 0 0; }
-.composer-hint button { padding: 0; min-height: 24px; color: var(--workspace-accent-ink); font-size: 10px; }
 
 
 .dialog { border: 1px solid var(--floating-line); border-radius: var(--radius); padding: 0; width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 48px); color: var(--color-text-primary); background: var(--workspace-white); box-shadow: var(--workspace-modal-shadow); overflow: auto; }
@@ -579,7 +577,6 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
   .draft-content { padding-left: 0; }
   .message-actions, .evidence-handoff { margin-left: 0; }
   .user-message { max-width: 96%; }
-  .composer-hint, .composer-hint button { font-size: 10px; }
   .chat-composer { margin-top: 8px; }
 }
 @media (max-width: 600px) {
@@ -721,7 +718,7 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .home-headline { min-height: 112px; display: grid; align-content: start; padding-top: 16px; }
 .home-content > .composer-area { margin-top: 0; padding-top: 32px; }
 .home-headline h1 { margin: 0; text-wrap: balance; }
-.home-headline p { margin: 10px 0 0; font-size: 15px; line-height: 23px; color: var(--body-color); }
+.home-pill { align-self: flex-start; margin-top: 4px; padding: 3px 10px; font-size: 12px; line-height: 18px; color: var(--workspace-accent-ink); background: var(--workspace-accent-soft); border: 1px solid var(--color-border-subtle); border-radius: 999px; }
 .headline-transition { animation: headline-enter 180ms ease-out; }
 .workflow-tabs, .workflow-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
 .workflow-tabs button { padding: 8px 12px; border-radius: var(--radius); color: var(--color-text-secondary); }

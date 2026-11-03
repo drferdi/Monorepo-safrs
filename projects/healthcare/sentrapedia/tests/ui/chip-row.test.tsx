@@ -76,6 +76,7 @@ describe("chip row", () => {
     const chips = screen.getAllByRole("button");
     expect(chips[0].textContent).toBe("QA SOAP pribadi");
     expect(chips[0].getAttribute("aria-pressed")).toBe("true");
+    expect(chips[0].getAttribute("aria-disabled")).toBe("true");
     expect(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }).getAttribute("aria-pressed")).toBe("false");
   });
 

@@ -1,11 +1,11 @@
 "use client";
 
 import { Check, CircleAlert, X } from "lucide-react";
-import { useCallback, useEffect, useReducer, useRef, useState, type ComponentProps, type ReactNode } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState, useSyncExternalStore, type ComponentProps, type ReactNode } from "react";
 import { createDraft, modes, type ModeId } from "../lib/drafts";
 import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Patient } from "../lib/workspace";
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
-import { downloadName, intentGroups } from "../lib/studio";
+import { downloadName, headlineFor } from "../lib/studio";
 import { insertTemplate } from "../lib/clinical-templates";
 import { reviewedText } from "../lib/normal-exam";
 import { compactQuery, mobileQuery } from "../lib/layout";
@@ -38,6 +38,10 @@ function stepToast(mode: ModeId): string {
   return composerUsesAadi(mode, false) ? `Mode ${label} siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.` : `Mode ${label} siap dengan data kasus. Lengkapi, lalu tekan Enter.`;
 }
 
+const visitKey = "sentrapedia-visit";
+const noSubscription = () => () => {};
+function readVisit(): number { try { return Number(sessionStorage.getItem(visitKey)) || 0; } catch { return 0; } }
+
 export function WorkspaceApp({ principalId, onSignOut, userButton }: { principalId: string; onSignOut?: () => void; userButton?: ReactNode }) {
   return <WorkspaceState key={principalId} principalId={principalId} onSignOut={onSignOut} userButton={userButton}/>;
 }
@@ -51,6 +55,10 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   const [focusMode, setFocusMode] = useState(false);
   // The Clinical Cockpit starts closed; the header button opens it (Chief, 2026-10-09).
   const [panelOpen, setPanelOpen] = useState(false);
+  // The headline rotates once per tab session: read once on the client, counted in an effect; the server shows the first.
+  const [seen] = useState<{ visit: number | null }>({ visit: null });
+  const visit = useSyncExternalStore(noSubscription, () => seen.visit ??= readVisit(), () => 0);
+  useEffect(() => { try { sessionStorage.setItem(visitKey, String(visit + 1)); } catch { /* storage unavailable: the first headline stays */ } }, [visit]);
   const compact = useMediaQuery(compactQuery);
   const navigationOpen = !focusMode && (mobile ? mobileNavOpen : sidebarOpen);
   const toggleNavigation = useCallback(() => { if (mobile) setMobileNavOpen((v) => !v); else smooth(() => setSidebarOpen((v) => !v)); }, [mobile]);
@@ -77,7 +85,6 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   const patient = state.patients.find((p) => p.id === encounter?.patientId);
   const hasMessages = Boolean(encounter?.messages.length) || pendingQuestion !== null;
   const context = encounter?.context ?? "";
-  const intent = intentGroups.find((item) => item.modes.includes(mode))!;
   const selectedTemplate = state.templates?.find((item) => `template:${item.id}` === templateKey);
   const cancelAnalysis = useCallback(() => {
     analysisController.current?.abort();
@@ -169,7 +176,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     changeMode("ddx"); closeDialog(); notify("Analisis ditambahkan sebagai draf untuk ditinjau.");
   }
 
-  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
+  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
     minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [],
     caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };
 
@@ -182,18 +189,17 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify} onSignOut={onSignOut} userButton={userButton}/>
     <main className={`main-canvas ${hasMessages ? "chat-view" : "home-view"}`} inert={mobile && navigationOpen} aria-hidden={mobile && navigationOpen}>
       {storageError && <div className="storage-warning" role="alert">{storageError}</div>}
-      <WorkspaceHeader hasMessages={hasMessages} name={state.settings.name ?? ""} patientName={patient?.name} encounterTitle={encounter?.title} focusMode={focusMode} panelPressed={!focusMode && !compact && panelOpen}
+      <WorkspaceHeader hasMessages={hasMessages} name={state.settings.name ?? ""} patientName={patient?.name} encounterTitle={encounter?.title} focusMode={focusMode}
         onExpand={() => { const expand = () => { setFocusMode(false); setSidebarOpen(true); setMobileNavOpen(true); }; if (mobile) expand(); else smooth(expand); }}
         onEncounter={() => openDialog("encounter", encounter?.id)}
         onCommands={() => openDialog("commands")}
         onFocus={() => smooth(() => { setMobileNavOpen(false); setFocusMode((value) => !value); })}
-        onPanel={() => { if (compact || focusMode) openDialog("clinical"); else smooth(() => setPanelOpen((value) => !value)); }}
         onExport={() => downloadText(encounter?.messages.map((m) => reviewedText(diagnosisContent(m), m.reviewStatus)).join("\n\n---\n\n") ?? "", downloadName(encounter?.title ?? "encounter"))}
         onUpgrade={() => openDialog("upgrade")}/>
       <div className="workspace-body">
-        {!hasMessages ? <HomeView name={state.settings.name ?? ""} intent={intent} composer={composerProps}/> : <>
+        {!hasMessages ? <HomeView name={state.settings.name ?? ""} headline={headlineFor(visit)} pill="Layanan primer" composer={composerProps}/> : <>
           <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onStep={startStep} onCancel={cancelAnalysis}/>
-          <ChatComposer composer={composerProps} onAbout={() => openDialog("account")}/>
+          <ChatComposer composer={composerProps}/>
         </>}
       </div>
       {!hasMessages && <HomeFooter onLegal={(label) => { setDialogId(label); setDialog("legal"); }}/>}

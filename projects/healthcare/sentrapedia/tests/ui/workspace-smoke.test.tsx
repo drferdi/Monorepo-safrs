@@ -9,6 +9,7 @@ import { initialWorkspace, type Encounter } from "../../src/lib/workspace";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
 import { diagnosisSectionTitles } from "../../src/lib/aadi/presentation";
+import { headlineFor } from "../../src/lib/studio";
 
 vi.mock("next/image", () => ({
   default: ({ src, alt, unoptimized, ...rest }: { src: unknown; alt?: string; unoptimized?: boolean; [key: string]: unknown }) => {
@@ -112,6 +113,7 @@ const fixtureAnalysis: AadiAnalysis = {
 describe("workspace UI smoke tests", () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     vi.useFakeTimers();
 
     Object.defineProperty(window, "matchMedia", {
@@ -394,5 +396,27 @@ describe("workspace UI smoke tests", () => {
     const toast = statusElements.find((el) => el.textContent?.includes("Pasien dibuat. Encounter pertama siap digunakan."));
     expect(toast).toBeDefined();
     expect(toast?.getAttribute("role")).toBe("status");
+  });
+
+  it("the home shows a rotating headline, the Layanan primer pill, the composer and the chip row, with no tabs", async () => {
+    render(<WorkspaceApp principalId="local-development"/>);
+    await act(async () => { await Promise.resolve(); });
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(headlineFor(0));
+    expect(screen.getByText("Layanan primer")).toBeDefined();
+    expect(screen.getByRole("group", { name: "Mode" })).toBeDefined();
+    expect(screen.queryByRole("group", { name: "Tujuan kerja" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Tentang workspace ini" })).toBeNull();
+  });
+
+  it("counts a visit per tab session and rotates the headline on the next one", async () => {
+    render(<WorkspaceApp principalId="local-development"/>);
+    await act(async () => { await Promise.resolve(); });
+    expect(sessionStorage.getItem("sentrapedia-visit")).toBe("1");
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(headlineFor(0));
+    cleanup();
+    render(<WorkspaceApp principalId="local-development"/>);
+    await act(async () => { await Promise.resolve(); });
+    expect(sessionStorage.getItem("sentrapedia-visit")).toBe("2");
+    expect(screen.getByRole("heading", { level: 1 }).textContent).toBe(headlineFor(1));
   });
 });
