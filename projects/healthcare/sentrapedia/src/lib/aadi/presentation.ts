@@ -328,6 +328,12 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   return [reportTitle, "**Analisis AADI (Augmented Artificial Intelligence Diagnosis Integration)**", ...(listedCodes.size ? [] : ["Belum ada kandidat diagnosis dari keluhan ini. Tambahkan anamnesis atau pemeriksaan untuk analisis yang lebih tajam."]), [summary, ...ordered].map(([title, body]) => `## ${title}\n\n${body}`).join("\n\n---\n\n")].join("\n\n");
 }
 
+/** The five "Ringkasan untuk dokter" lines as written, bold marks removed; `[]` for any other document. */
+export function doctorSummary(content: string): string[] {
+  const body = documentSections(content).find(section => section.title === doctorSummaryTitle)?.body.trim();
+  return body ? body.split(/\n+/).map(line => line.replace(/\*\*/g, "").trim()).filter(Boolean) : [];
+}
+
 // What the answer card offers to copy (design D1, D2), read from the summary as currently written, so an edit is copied as edited.
 export function summaryCopies(content: string): { summary: string; codes: { code: string; text: string }[]; therapy: string } | null {
   const body = documentSections(content).find(section => section.title === doctorSummaryTitle)?.body.trim();

@@ -6,7 +6,7 @@ import { modes } from "../lib/drafts";
 import type { Message } from "../lib/workspace";
 import { DocumentContent } from "./document-studio";
 import { freshAnswer } from "../lib/fresh-answer";
-import { diagnosisContent, hasAadiSource, aadiFocus, pipelineTrace } from "../lib/aadi/presentation";
+import { diagnosisContent, doctorSummary, hasAadiSource, pipelineTrace } from "../lib/aadi/presentation";
 import { documentTitle, downloadName, workspaceDate } from "../lib/studio";
 import { paneDocument } from "../lib/document-pane";
 import { reviewedText } from "../lib/normal-exam";
@@ -16,7 +16,6 @@ export function downloadText(content: string, name: string) {
   const link = document.createElement("a"); link.href = url; link.download = name; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-const focusLabel = { workup: "Pemeriksaan Penunjang", icd10: "ICD-10", refer: "Rujukan" } as const;
 
 export function MessageCard({ message, onEdit, onToast, onReuse, onOpenDocument }: { message: Message; onEdit: (content: string) => void; onToast: (text: string, tone?: "error") => void; onReuse: (content: string) => void; onOpenDocument: (id: string) => void }) {
   // A fresh answer rises softly into focus (globals.css, data-reveal); a reopened one appears at once.
@@ -29,15 +28,13 @@ export function MessageCard({ message, onEdit, onToast, onReuse, onOpenDocument 
   const output = reviewedText(content, message.reviewStatus);
   // Every AADI answer is a case analysis (Gaffer, 2026-10-20, "Tetap lima mode").
   const modeName = modes.find((m) => m.id === message.mode)?.label;
-  // An analysis opened in a focus mode names it (spec section 3); the document card stays titled Analisis kasus.
-  const focus = aadi && message.mode ? aadiFocus(message.mode) : undefined;
   async function copy() {
     try { await navigator.clipboard.writeText(output); onToast("Jawaban disalin."); } catch { onToast("Clipboard tidak tersedia. Pilih teks jawaban lalu salin secara manual.", "error"); }
   }
   return <article className="assistant-message" data-reveal={fresh || undefined}>
     {/* A document lives in the pane; the chat keeps one line and a card that opens it. */}
     {paneDocument(message) ? <>
-      <p className="document-line">{aadi ? `Analisis kasus disusun${focus ? ` · fokus: ${focusLabel[focus]}` : ""}.` : `Draf ${modeName} disusun.`}</p>
+      {aadi ? <div className="doctor-summary">{doctorSummary(content).map((line, index) => { const at = line.indexOf(":"); return <p key={index}>{at > 0 ? <><strong>{line.slice(0, at + 1)}</strong>{line.slice(at + 1)}</> : line}</p>; })}</div> : <p className="document-line">{`Draf ${modeName} disusun.`}</p>}
       <button type="button" className="document-card" onClick={() => onOpenDocument(message.id)}><span><strong>{aadi ? "Analisis kasus" : documentTitle(content).replace(/^# /, "") || modeName}</strong><small>{workspaceDate(message.createdAt)}</small></span></button>
       {trace.length > 0 && <details className="pipeline-trace"><summary>Jejak analisis</summary><ol>{trace.map((step, index) => <li key={index}>{step.stage} · {step.ms} ms{step.ok ? "" : " · gagal"}</li>)}</ol></details>}
     </> : <>

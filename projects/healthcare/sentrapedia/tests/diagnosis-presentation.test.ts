@@ -1,11 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { emptyCase, type AadiResult } from "../src/lib/aadi/contract";
-import { pipelineTrace, diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, pcareCopies, taskDraftFrom, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
+import { pipelineTrace, doctorSummary, diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, pcareCopies, taskDraftFrom, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
 import { createDraft } from "../src/lib/drafts";
-import { missingField } from "../src/lib/clinical-templates";
 import { theOracleDiseases } from "../src/lib/theoracle";
-import { revealAt, typingDurationMs, unfoldMs } from "../src/lib/typing";
 import { regimenLine, theOracleSourceLinks } from "../src/lib/aadi/presentation";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import { initialWorkspace, workspaceReducer, loadWorkspace } from "../src/lib/workspace";
@@ -269,33 +267,6 @@ describe("nine-part clinical report", () => {
     const edited = replaceSection(content, documentSections(content).find(s => s.title === therapyTitle)!, "Catatan manual sintetis\n\n");
     expect(edited).toContain("Catatan manual sintetis\n\n---\n\n## 8. Edukasi dan tindak lanjut");
     expect(documentSections(edited)).toHaveLength(10);
-  });
-});
-
-describe("typing reveal", () => {
-  // 3000 characters type in 2000 ms: segment shares are 200, 1000 and 800 ms.
-  const lengths = [300, 1500, 1200];
-  it("types the title first, then unfolds each section before typing it", () => {
-    expect(revealAt(lengths, 0)).toEqual({ visible: [0, 0, 0], active: 0, unfolding: false, done: false });
-    expect(revealAt(lengths, 100)).toEqual({ visible: [150, 0, 0], active: 0, unfolding: false, done: false });
-    expect(revealAt(lengths, 200 + unfoldMs / 2)).toEqual({ visible: [300, 0, 0], active: 1, unfolding: true, done: false });
-    expect(revealAt(lengths, 200 + unfoldMs + 500)).toEqual({ visible: [300, 750, 0], active: 1, unfolding: false, done: false });
-    expect(revealAt(lengths, 1200 + unfoldMs + 10)).toEqual({ visible: [300, 1500, 0], active: 2, unfolding: true, done: false });
-    expect(revealAt(lengths, 2000 + 2 * unfoldMs)).toEqual({ visible: [300, 1500, 1200], active: 2, unfolding: false, done: true });
-  });
-  it("gives a short section enough time to be seen typing", () => {
-    const short = revealAt([10, 5, 9000], 200 + unfoldMs + 100);
-    expect(short.active).toBe(1);
-    expect(short.visible[1]).toBeGreaterThan(0);
-    expect(short.visible[1]).toBeLessThan(5);
-  });
-  it("finishes any answer within a few seconds", () => {
-    for (const total of [200, 3000, 12000]) {
-      expect(typingDurationMs(total)).toBeGreaterThanOrEqual(1500);
-      expect(typingDurationMs(total)).toBeLessThanOrEqual(4000);
-    }
-    const six = [20, 400, 600, 900, 300, 500, 700];
-    expect(revealAt(six, 4000 + 6 * unfoldMs + 7 * 200).done).toBe(true);
   });
 });
 
@@ -590,5 +561,15 @@ describe("taskDraftFrom", () => {
     expect(taskDraftFrom(resultWith([{ kind: "exam", item: "Foto toraks", reason: "" }]))).toBe("Periksa: Foto toraks");
     expect(taskDraftFrom(resultWith([{ kind: "test", item: "Foto toraks", reason: "" }, { kind: "question", item: "Durasi batuk", reason: "" }]))).toBe("Pemeriksaan penunjang: Foto toraks\nTanyakan: Durasi batuk");
     expect(taskDraftFrom(resultWith([]))).toBe("");
+  });
+});
+
+describe("doctorSummary", () => {
+  it("returns the five summary lines without their bold marks, and nothing for other content", () => {
+    const lines = doctorSummary(aadiMessage(analysis).content);
+    expect(lines).toHaveLength(5);
+    expect(lines.map(line => line.split(":")[0])).toEqual(["Perlu disaring segera", "Diagnosis kerja (kandidat)", "Periksa", "Terapi usulan", "Rujuk"]);
+    expect(lines.join("\n")).not.toMatch(/\*\*/);
+    expect(doctorSummary("# Catatan\n\n## S\nx")).toEqual([]);
   });
 });

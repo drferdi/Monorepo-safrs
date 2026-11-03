@@ -83,7 +83,7 @@ describe("analysis case strip", () => {
     expect(sent).toHaveLength(1);
   });
 
-  it("flags an unreadable value and shows a focused mode as a tag on the analysis", async () => {
+  it("flags an unreadable value and puts the focused section first in the analysis", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     // ICD-10 is outside the chip shortlist: it comes from the / picker.
@@ -98,7 +98,7 @@ describe("analysis case strip", () => {
     await act(async () => { await Promise.resolve(); });
     // The readable pulse meets the minimum data; the unreadable SpO₂ is still not sent.
     expect(sent[0].vitals).toEqual({ heartRate: 88 });
-    expect(await screen.findByText(/fokus: ICD-10/)).toBeTruthy();
+    expect((await screen.findAllByRole("heading", { level: 3 }))[0].textContent).toBe("Kode ICD-10");
   });
 
   it("shows no strip for a local document mode", async () => {

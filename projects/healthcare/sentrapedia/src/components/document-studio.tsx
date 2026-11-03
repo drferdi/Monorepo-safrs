@@ -6,7 +6,6 @@ import { documentSections } from "../lib/studio";
 import type { Message } from "../lib/workspace";
 import { applyMark } from "../lib/document-pane";
 import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, doctorSummaryTitle, hasAadiSource, icd10SectionTitle, legacyDiagnosisSectionTitles, referralSectionTitle } from "../lib/aadi/presentation";
-import { DiagnosisDocument } from "./diagnosis-document";
 import { AnalysisDocument } from "./analysis-document";
 import { analysisView } from "../lib/aadi/analysis-view";
 import { freshAnswer, markRevealed } from "../lib/fresh-answer";
@@ -81,7 +80,6 @@ const marks = [{ mark: "heading", label: "Judul", Icon: Heading2 }, { mark: "bol
 // The pane body: the document in one column, editable in place as markdown with a small toolbar. The unsaved text
 // (draft) is held by the caller, so it outlives this component; null ends the edit.
 export function DocumentStudio({ message, onEdit, draft, onDraft }: { message: Message; onEdit: (content: string) => void; draft?: string; onDraft: (text: string | null) => void }) {
-  const [selected, setSelected] = useState(0);
   const body = draft ?? "";
   const box = useRef<HTMLTextAreaElement>(null);
   // The selection a toolbar mark leaves, set on the textarea once the new text renders.
@@ -91,11 +89,8 @@ export function DocumentStudio({ message, onEdit, draft, onDraft }: { message: M
   // An unedited AADI answer renders from its stored result in Glass's shape; an edited one is the markdown it became.
   const structured = analysisView(message) !== null;
   const diagnosis = hasAadiSource(message) && [doctorSummaryTitle, referralSectionTitle, icd10SectionTitle, ...diagnosisSectionTitles, ...legacyDiagnosisSectionTitles].includes(sections[0]?.title);
-  // A fresh analysis or SOAP draft keeps its typing reveal, in one column (Gaffer, 2026-10-21: "use exactly that"). An
-  // analysis keeps its folded references and dose check; any other document is plain markdown.
-  const [typing] = useState(() => !structured && (diagnosis || (message.mode === "clinic" && sections.length > 1)) && freshAnswer(message));
-  // Any other fresh answer lets its blocks follow one another in (globals.css, data-reveal).
-  const [cascade] = useState(() => !typing && freshAnswer(message));
+  // A fresh answer lets its blocks follow one another in (globals.css, data-reveal); a reopened one appears at once.
+  const [cascade] = useState(() => freshAnswer(message));
   useEffect(() => { markRevealed(message.id); }, [message.id]);
   useLayoutEffect(() => { if (selection.current) box.current?.setSelectionRange(selection.current.start, selection.current.end); selection.current = null; }, [draft]);
   function format(mark: typeof marks[number]["mark"]) {
@@ -112,7 +107,7 @@ export function DocumentStudio({ message, onEdit, draft, onDraft }: { message: M
       <div className="editor-actions"><button className="button primary" disabled={!body.trim()} onClick={() => { onEdit(body); onDraft(null); }}>Simpan</button><button className="button" onClick={() => onDraft(null)}>Batal</button></div>
     </div> : <>
       <button type="button" className="text-button document-edit" onClick={() => onDraft(content)}><Pencil size={12}/> Edit</button>
-      {structured ? <AnalysisDocument message={message} citePrefix={`cite-${message.id}`}/> : diagnosis || typing ? <DiagnosisDocument rail={false} typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} showMeta={diagnosis} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical={diagnosis} hideTitle/>}/> : <DocumentContent content={content} onEdit={onEdit} clinical={diagnosis} hideTitle/>}
+      {structured ? <AnalysisDocument message={message} citePrefix={`cite-${message.id}`}/> : <DocumentContent content={content} onEdit={onEdit} clinical={diagnosis} hideTitle/>}
     </>}
   </div>;
 }

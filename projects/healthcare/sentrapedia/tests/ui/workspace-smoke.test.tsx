@@ -245,9 +245,11 @@ describe("workspace UI smoke tests", () => {
       await Promise.resolve();
     });
 
-    // Assert that encounter and draft are restored
+    // Assert that encounter and draft are restored: the chat summary, and the pane on the same tab.
     expect(screen.getAllByText(/Pneumonia/i).length).toBeGreaterThan(0);
     expect(screen.queryByText(/1x1000mg/i)).toBeNull();
+    expect(document.querySelectorAll(".doctor-summary p")).toHaveLength(5);
+    expect(screen.getByRole("tab", { name: /Analisis kasus/ }).getAttribute("aria-selected")).toBe("true");
   });
 
   it("shows 'tidak dapat dibaca' notice for corrupt saved workspace and preserves raw text in backup", async () => {

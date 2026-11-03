@@ -57,6 +57,11 @@ describe("MessageCard", () => {
     fireEvent.click(screen.getByRole("button", { name: /Analisis kasus/ }));
     expect(h.onOpenDocument).toHaveBeenCalledWith(message.id);
     expect(document.querySelector(".message-header, .draft-badge, .focus-tag")).toBeNull();
+    // The chat keeps the doctor's five summary lines, label in bold, above the card and nothing else.
+    const lines = [...document.querySelectorAll(".doctor-summary p")];
+    expect(lines).toHaveLength(5);
+    expect(lines[0].querySelector("strong")?.textContent).toBe("Perlu disaring segera:");
+    expect(screen.queryByText(/Analisis kasus disusun/)).toBeNull();
   });
 
   it("a doctor turn keeps the reuse control", () => {
