@@ -22,7 +22,8 @@ export function chipLabel(mode: ModeId, encounter?: Pick<Encounter, "messages">)
 // The headline rotates through the intent groups, one per visit.
 export function headlineFor(visit: number): string {
   const headlines = intentGroups.map((group) => group.headline);
-  return headlines[visit % headlines.length];
+  const n = headlines.length;
+  return headlines[((visit % n) + n) % n];
 }
 
 // A tab's own hint shows on its default mode; the other chips keep their specific hint.

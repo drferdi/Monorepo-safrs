@@ -211,6 +211,8 @@ describe("mode openings and the chip shortlist", () => {
   it("a chip reads Perbarui once the encounter holds a document of that mode", () => {
     expect(chipLabel("ddx")).toBe("Diagnosis Banding (DDx)");
     expect(chipLabel("ddx", { messages: [{ id: "1", role: "assistant", content: "x", mode: "ddx", createdAt: "" }] })).toBe("Perbarui Diagnosis Banding (DDx)");
+    expect(chipLabel("ddx", { messages: [{ id: "1", role: "user", content: "x", mode: "ddx", createdAt: "" }] })).toBe("Diagnosis Banding (DDx)");
+    expect(chipLabel("ddx", { messages: [{ id: "2", role: "assistant", content: "x", mode: "clinic", createdAt: "" }] })).toBe("Diagnosis Banding (DDx)");
   });
-  it("the headline cycles through the intent headlines by visit", () => { expect(headlineFor(0)).toBe(intentGroups[0].headline); expect(headlineFor(4)).toBe(intentGroups[0].headline); });
+  it("the headline cycles through the intent headlines by visit", () => { expect(headlineFor(0)).toBe(intentGroups[0].headline); expect(headlineFor(4)).toBe(intentGroups[0].headline); expect(headlineFor(-1)).toBe(intentGroups[3].headline); });
 });
