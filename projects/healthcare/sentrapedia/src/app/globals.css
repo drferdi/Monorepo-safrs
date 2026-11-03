@@ -27,6 +27,10 @@
   --workspace-error-text: #8b3a24;
   /* Swiss pass (Chief, 2026-10-09): one sharp corner, flat layers, strong rules; colours unchanged. */
   --radius: 2px;
+  /* Glass shape (R1): rounded controls and structure, with a soft canvas sheet. */
+  --radius-control: 8px;
+  --radius-structure: 12px;
+  --workspace-canvas-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px -1px rgba(0, 0, 0, .1);
   --rule-strong: #131313;
   --floating-line: color-mix(in srgb, #131313, transparent 75%);
   /* Type pair (Chief, 2026-10-09): Plus Jakarta Sans titles, Geist text. His colours came from a dark page; these follow this light one. */
@@ -51,8 +55,8 @@ button:focus-visible { outline: 2px solid var(--workspace-focus); }
 button svg { flex-shrink: 0; stroke-width: 1.65; }
 textarea { resize: vertical; }
 ::selection { color: var(--workspace-accent-ink); background: var(--workspace-accent-soft); }
-.app-shell { display: flex; height: 100dvh; min-height: 0; padding: 0; overflow: hidden; }
-.sidebar { width: 244px; min-height: 0; flex-shrink: 0; display: flex; flex-direction: column; padding: 0 12px 0 10px; }
+.app-shell { display: flex; height: 100dvh; min-height: 0; padding: 0; overflow: hidden; background: var(--color-background-surface); }
+.sidebar { width: 256px; min-height: 0; flex-shrink: 0; display: flex; flex-direction: column; padding: 0 12px 0 10px; }
 .sidebar-brand { min-height: 56px; padding: 0 2px 8px; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: inline-flex; gap: 5px; align-items: center; font-size: 20px; letter-spacing: 1.1px; font-weight: 500; color: var(--color-text-primary); }
 .brand img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
@@ -109,7 +113,7 @@ kbd { font-family: inherit; font-size: 11px; color: var(--color-text-secondary);
 .account > svg { color: var(--workspace-accent-ink); }
 .avatar { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: var(--radius); color: var(--workspace-on-accent); background: var(--color-action-primary); font-size: 10px; flex-shrink: 0; }
 .lite-badge { color: var(--workspace-accent-ink); border: 1px solid color-mix(in srgb, var(--workspace-focus), transparent 70%); background: var(--workspace-accent-soft); border-radius: var(--radius); padding: 2px 4px; font-size: 10px; }
-.main-canvas { container: canvas / inline-size; position: relative; background: var(--color-background-canvas); border: 0; border-left: 1px solid var(--color-border-subtle); border-right: 1px solid var(--color-border-subtle); border-radius: 0; flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: clip; }
+.main-canvas { container: canvas / inline-size; position: relative; background: #fbfbfb; border: 0; border-radius: var(--radius-structure); margin: 8px 8px 8px 4px; box-shadow: var(--workspace-canvas-shadow); flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: clip; }
 .canvas-header { display: flex; justify-content: space-between; align-items: center; min-height: 56px; padding: 10px 16px; gap: 12px; flex-shrink: 0; }
 .header-left, .header-right { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .expand-sidebar { display: none; }
