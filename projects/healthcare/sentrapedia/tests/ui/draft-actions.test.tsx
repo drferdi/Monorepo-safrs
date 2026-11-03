@@ -103,9 +103,8 @@ describe("next steps and P-Care copies", () => {
   it("routes a next step into the composer in its mode, prefilled, and says what Enter will do", async () => {
     await failedAnalysis();
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Susun draf SOAP lokal" })); });
-    // The quick actions under the composer carry a near-identical "Pemeriksaan Penunjang".
     fireEvent.click(within(screen.getByRole("group", { name: "Langkah berikutnya" })).getByRole("button", { name: "Pemeriksaan penunjang" }));
-    expect(screen.getByRole("combobox", { name: "Mode atau templat" }).textContent).toContain("Pemeriksaan Penunjang");
+    expect(textarea().placeholder).toContain("pemeriksaan yang sudah ada");
     expect(textarea().value).toBe(complaint);
     expect(screen.getByText("Mode Pemeriksaan Penunjang siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.", { selector: ".toast span" })).toBeTruthy();
     expect(sent).toHaveLength(1);

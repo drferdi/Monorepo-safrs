@@ -1,95 +1,36 @@
 "use client";
 
-import { Activity, ArrowUp, Check, ChevronDown, Mic, Paperclip, Square } from "lucide-react";
+import { Activity, ArrowUp, AudioLines, Check, ChevronDown, Mic, Paperclip, Square } from "lucide-react";
 import { PixelLoader } from "./pixel-loader";
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { ChipRow } from "./chip-row";
+import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { modes, type ModeId } from "../lib/drafts";
-import { composerPlaceholder, intentGroups } from "../lib/studio";
+import { composerPlaceholder } from "../lib/studio";
 import { modeCategories } from "../lib/clinical-templates";
 import { modelLabel } from "../lib/ui-labels";
-import { focusStep } from "../lib/nav-tree";
 import { emptyCaseFields, invalidCaseField, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
 import { insertSection } from "../lib/soap";
 import type { PersonalTemplate } from "../lib/workflow";
-import type { Settings } from "../lib/workspace";
+import type { Encounter, Settings } from "../lib/workspace";
 import { useDictation } from "./use-dictation";
 import { CaseGuide } from "./case-guide";
 
-interface Props { prompt: string; onPrompt: (value: string) => void; mode: ModeId; onMode: (mode: ModeId) => void; settings: Settings; onModel: (model: Settings["model"]) => void; context: string; onContext: () => void; patientName?: string; templates: PersonalTemplate[]; favorites: string[]; templateKey: string | null; onTemplate: (key: string) => void; onSubmit: () => void; busy: boolean; aadiEnabled?: boolean; analysisError?: string; onCancelAnalysis?: () => void; onFallback?: () => void; inChat?: boolean; caseFields?: CaseFields; autoFields?: CaseFieldKey[]; onCaseField?: (key: CaseFieldKey, value: string) => void; patientAge?: string; patientSex?: "M" | "F"; minimumMissing?: string[] }
-
-export function IntentTabs({ mode, onMode }: { mode: ModeId; onMode: (mode: ModeId) => void }) {
-  const group = intentGroups.find((item) => item.modes.includes(mode))!;
-  return <div className="intent-groups" role="group" aria-label="Tujuan kerja">{intentGroups.map((item) => <button key={item.id} type="button" aria-pressed={group.id === item.id} onClick={() => onMode(item.modes[0])}>{item.label}</button>)}</div>;
-}
+interface Props { prompt: string; onPrompt: (value: string) => void; mode: ModeId; onMode: (mode: ModeId) => void; settings: Settings; onModel: (model: Settings["model"]) => void; context: string; onContext: () => void; onScribe: () => void; encounter?: Pick<Encounter, "messages">; patientName?: string; templates: PersonalTemplate[]; favorites: string[]; templateKey: string | null; onTemplate: (key: string) => void; onSubmit: () => void; busy: boolean; aadiEnabled?: boolean; analysisError?: string; onCancelAnalysis?: () => void; onFallback?: () => void; caseFields?: CaseFields; autoFields?: CaseFieldKey[]; onCaseField?: (key: CaseFieldKey, value: string) => void; patientAge?: string; patientSex?: "M" | "F"; minimumMissing?: string[] }
 
 const modeLabel = (id: ModeId) => modes.find((item) => item.id === id)!.label;
 
-/** One picker for every template: favourites first, then the six clinical categories of Chief's template pack, then personal templates.
- *  A select-only combobox: focus stays on the trigger, arrows/Home/End move, Enter or Space picks, Escape closes.
- *  The menu opens towards the side with room (upward when the composer sits at the bottom of the chat). */
-function ModePicker({ mode, templates, favorites, templateKey, onTemplate, quiet = false }: Pick<Props, "mode" | "templates" | "favorites" | "templateKey" | "onTemplate"> & { quiet?: boolean }) {
-  const [open, setOpen] = useState(false);
-  const [upward, setUpward] = useState(false);
-  const [maxHeight, setMaxHeight] = useState(320);
-  const [active, setActive] = useState(0);
-  // The option the menu scrolls to: set on open and by the keyboard, never by the pointer (a hover must not move the list).
-  const [revealed, setRevealed] = useState(0);
-  const root = useRef<HTMLDivElement>(null);
-  const id = useId();
-  const name = (key: string) => key.startsWith("mode:") ? modes.find((item) => `mode:${item.id}` === key)?.label : templates.find((item) => `template:${item.id}` === key)?.name;
-  const favourites = favorites.filter((key) => name(key));
-  const groups = [
-    ...(favourites.length ? [{ id: "favorite", label: "Favorit", options: favourites.map((key) => ({ key, label: `★ ${name(key)}` })) }] : []),
-    ...modeCategories.map((group, index) => ({ id: `category-${index}`, label: group.label, options: group.modes.map((item) => ({ key: `mode:${item}`, label: modeLabel(item) })) })),
-    ...(templates.length ? [{ id: "personal", label: "Templat pribadi", options: templates.map((item) => ({ key: `template:${item.id}`, label: item.name })) }] : []),
-  ];
-  const options = groups.flatMap((group) => group.options);
-  const value = templateKey ?? `mode:${mode}`;
-  useEffect(() => {
-    if (!open) return;
-    // Scroll the menu only, never the page behind it.
-    const menu = root.current?.querySelector<HTMLElement>(".mode-menu"), option = menu?.querySelector<HTMLElement>(`#${CSS.escape(`${id}-${revealed}`)}`);
-    if (!menu || !option) return;
-    if (option.offsetTop < menu.scrollTop + 6) menu.scrollTop = option.offsetTop - 6;
-    else if (option.offsetTop + option.offsetHeight > menu.scrollTop + menu.clientHeight - 6) menu.scrollTop = option.offsetTop + option.offsetHeight - menu.clientHeight + 6;
-  }, [open, revealed, id]);
-  useEffect(() => {
-    if (!open) return;
-    const away = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
-    // Escape closes the menu wherever focus is, and hands focus back to the trigger.
-    const escape = (event: globalThis.KeyboardEvent) => { if (event.key === "Escape" && !event.defaultPrevented) { event.preventDefault(); setOpen(false); root.current?.querySelector<HTMLButtonElement>(".mode-trigger")?.focus(); } };
-    document.addEventListener("pointerdown", away);
-    document.addEventListener("keydown", escape);
-    return () => { document.removeEventListener("pointerdown", away); document.removeEventListener("keydown", escape); };
-  }, [open]);
-  function show() {
-    const rect = root.current?.getBoundingClientRect();
-    const below = rect ? window.innerHeight - rect.bottom - 16 : 320, above = rect ? rect.top - 16 : 0;
-    const up = below < 320 && above > below;
-    setUpward(up); setMaxHeight(Math.max(160, Math.min(320, up ? above : below)));
-    const selected = Math.max(0, options.findIndex((option) => option.key === value));
-    setActive(selected); setRevealed(selected); setOpen(true);
-  }
-  function pick(key: string) { setOpen(false); if (key !== value) onTemplate(key); }
-  function onKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    if (!open) { if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) { event.preventDefault(); show(); } return; }
-    if (event.key === "Escape") { event.preventDefault(); setOpen(false); return; }
-    if (event.key === "Tab") { setOpen(false); return; }
-    if (event.key === "Enter" || event.key === " ") { event.preventDefault(); pick(options[active].key); return; }
-    const next = focusStep(options.length, active, event.key);
-    if (next !== null) { event.preventDefault(); setActive(next); setRevealed(next); }
-  }
-  let index = -1;
-  return <div ref={root} className="composer-mode" data-open={open} data-quiet={quiet} data-placement={upward ? "up" : "down"}>
-    <button type="button" role="combobox" className="mode-trigger" aria-label="Mode atau templat" aria-haspopup="listbox" aria-expanded={open} aria-controls={`${id}-list`} aria-activedescendant={open ? `${id}-${active}` : undefined} onClick={() => open ? setOpen(false) : show()} onKeyDown={onKeyDown}>
-      {quiet ? <strong>Templat lain</strong> : <><span>{templateKey ? "Templat:" : "Mode:"}</span><strong>{name(value) ?? modeLabel(mode)}</strong></>}<ChevronDown size={14}/>
-    </button>
-    <div id={`${id}-list`} role="listbox" aria-label="Mode atau templat" className="mode-menu" style={{ maxHeight }}>
-      {groups.map((group) => <div key={group.id} role="group" aria-labelledby={`${id}-${group.id}`} className="mode-menu-group"><span id={`${id}-${group.id}`} className="mode-menu-label">{group.label}</span>
-        {group.options.map((option) => { index += 1; const at = index; return <div key={`${group.id}-${option.key}`} id={`${id}-${at}`} role="option" aria-selected={option.key === value} data-active={open && at === active} className="mode-option" onPointerDown={(event) => event.preventDefault()} onPointerMove={() => setActive(at)} onClick={() => pick(option.key)}><span>{option.label}</span>{option.key === value && <Check size={14}/>}</div>; })}
-      </div>)}
-    </div>
-  </div>;
+/** The `/` picker's rows for what follows the slash: favourites first when any exist, then every mode (in the order of Chief's template pack), then personal templates. */
+function slashGroups(query: string, templates: PersonalTemplate[], favorites: string[]) {
+  const needle = query.toLowerCase();
+  const all = [
+    ...[...new Set(modeCategories.flatMap((group) => group.modes))].map((id) => ({ key: `mode:${id}`, label: modeLabel(id), hint: `/${id}`, search: `${id} ${modeLabel(id)}` })),
+    ...templates.map((item) => ({ key: `template:${item.id}`, label: item.name, hint: "", search: item.name })),
+  ].filter((option) => option.search.toLowerCase().includes(needle));
+  return [
+    { label: "Favorit", options: favorites.flatMap((key) => all.filter((option) => option.key === key)) },
+    { label: "Mode", options: all.filter((option) => option.key.startsWith("mode:")) },
+    { label: "Templat pribadi", options: all.filter((option) => option.key.startsWith("template:")) },
+  ].filter((group) => group.options.length);
 }
 
 // Age, sex and vitals for an analysis (Gaffer, 2026-10-20): each field is optional; a value read from the text is
@@ -116,46 +57,55 @@ export function Composer(props: Props) {
   const [slashClosed, setSlashClosed] = useState(false);
   const [slashIndex, setSlashIndex] = useState(0);
   const pickerId = useId();
-  const quickId = useId();
-  const group = intentGroups.find((item) => item.modes.includes(props.mode))!;
   const command = props.prompt.match(/^\/([^\s]*)$/);
-  const matches = command ? modes.filter((item) => `${item.id} ${item.label}`.toLowerCase().includes(command[1].toLowerCase())) : [];
+  const groups = command ? slashGroups(command[1], props.templates, props.favorites) : [];
+  const options = groups.flatMap((group) => group.options);
   const slashOpen = Boolean(command && !slashClosed);
-  // On the home screen the quick actions carry the choice; the full picker waits behind "Templat lain" until a template outside them is chosen.
-  const quietPicker = !props.inChat && !props.templateKey && group.quick.includes(props.mode);
-  const picker = <ModePicker quiet={quietPicker} mode={props.mode} templates={props.templates} favorites={props.favorites} templateKey={props.templateKey} onTemplate={props.onTemplate}/>;
+  const current = props.templateKey ?? `mode:${props.mode}`;
   // Dictation adds each phrase to what is already written; switching mode never clears the text.
   const dictation = useDictation(props.settings.language, (text) => props.onPrompt(`${props.prompt}${props.prompt && !/\s$/.test(props.prompt) ? " " : ""}${text}`));
-  function chooseMode(id: ModeId) { props.onMode(id); props.onPrompt(props.prompt.replace(/^\/[^\s]*\s?/, "")); setSlashClosed(true); }
-  // The case strip stays out of the composer until a value is read from the text or the doctor opens it (Gaffer,
-  // 2026-10-20: "kamu rusakkan desain kolom text user").
+  function choose(key: string) { if (key.startsWith("mode:")) props.onMode(key.slice(5) as ModeId); else props.onTemplate(key); props.onPrompt(props.prompt.replace(/^\/[^\s]*\s?/, "")); setSlashClosed(true); }
+  // The case strip stays out of the composer until a value is read from the text, the minimum data is missing, or the
+  // doctor opens it (Gaffer, 2026-10-20: "kamu rusakkan desain kolom text user").
   const [stripOpen, setStripOpen] = useState(false);
   const hasStrip = Boolean(props.aadiEnabled && props.caseFields && props.onCaseField);
-  const showStrip = hasStrip && (stripOpen || !!props.autoFields?.length || Object.values(props.caseFields ?? {}).some(Boolean));
-  // A guide chip adds its label after the text and leaves the caret after it.
+  const showStrip = hasStrip && (stripOpen || !!props.autoFields?.length || !!props.minimumMissing?.length || Object.values(props.caseFields ?? {}).some(Boolean));
+  // A guide chip or a mode chip changes the text and leaves the caret after it.
   const box = useRef<HTMLTextAreaElement>(null);
-  const insert = (skeleton: string) => { const next = insertSection(props.prompt, skeleton); props.onPrompt(next); requestAnimationFrame(() => { box.current?.focus(); box.current?.setSelectionRange(next.length, next.length); }); };
+  const place = (caret: number) => requestAnimationFrame(() => { box.current?.focus(); box.current?.setSelectionRange(caret, caret); });
+  const insert = (skeleton: string) => { const next = insertSection(props.prompt, skeleton); props.onPrompt(next); place(next.length); };
+  // A mode chip opens the mode's sentence in the composer and waits; only Enter or the send button ever submits.
+  const chip = (id: ModeId) => { const opening = `${modes.find((item) => item.id === id)!.opening}\n`; props.onMode(id); props.onPrompt(opening); place(opening.length); };
+  function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.nativeEvent.isComposing) return;
+    if (slashOpen) {
+      if (e.key === "Escape") { e.preventDefault(); setSlashClosed(true); return; }
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); const next = Math.max(0, Math.min(options.length - 1, slashIndex + (e.key === "ArrowDown" ? 1 : -1))); setSlashIndex(next); document.getElementById(`${pickerId}-${next}`)?.scrollIntoView({ block: "nearest" }); return; }
+      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (options[slashIndex]) choose(options[slashIndex].key); return; }
+    }
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (props.prompt.trim()) props.onSubmit(); }
+  }
 
-  return <div className="composer-area"><IntentTabs mode={props.mode} onMode={props.onMode}/><form className={`composer ${props.busy ? "is-busy" : ""}`} aria-busy={props.busy} onSubmit={(event) => { event.preventDefault(); if (slashOpen) { if (matches[slashIndex]) chooseMode(matches[slashIndex].id); } else props.onSubmit(); }}>
-    {!quietPicker && picker}
-    <textarea ref={box} aria-label="Pertanyaan atau catatan klinis" placeholder={composerPlaceholder(props.mode)} value={props.prompt} onChange={(e) => { props.onPrompt(e.target.value); setSlashClosed(false); setSlashIndex(0); }} aria-controls={slashOpen ? pickerId : undefined} aria-activedescendant={slashOpen && matches[slashIndex] ? `${pickerId}-${matches[slashIndex].id}` : undefined} rows={2} maxLength={30000} onKeyDown={(e) => { if (e.nativeEvent.isComposing) return; if (slashOpen) { if (e.key === "Escape") { e.preventDefault(); setSlashClosed(true); return; } if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); const next = Math.max(0, Math.min(matches.length - 1, slashIndex + (e.key === "ArrowDown" ? 1 : -1))); setSlashIndex(next); document.getElementById(`${pickerId}-${matches[next]?.id}`)?.scrollIntoView({ block: "nearest" }); return; } if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (matches[slashIndex]) chooseMode(matches[slashIndex].id); return; } } if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); if (props.prompt.trim()) props.onSubmit(); } }}/>
+  return <div className="composer-area"><form className={`composer ${props.busy ? "is-busy" : ""}`} aria-busy={props.busy} onSubmit={(event) => { event.preventDefault(); if (slashOpen) { if (options[slashIndex]) choose(options[slashIndex].key); } else props.onSubmit(); }}>
+    <textarea ref={box} aria-label="Pertanyaan atau catatan klinis" placeholder={composerPlaceholder(props.mode)} value={props.prompt} onChange={(e) => { props.onPrompt(e.target.value); setSlashClosed(false); setSlashIndex(0); }} aria-controls={slashOpen ? pickerId : undefined} aria-activedescendant={slashOpen && options[slashIndex] ? `${pickerId}-${slashIndex}` : undefined} rows={2} maxLength={30000} onKeyDown={onKeyDown}/>
     {showStrip && props.caseFields && props.onCaseField && <CaseStrip fields={props.caseFields} auto={props.autoFields ?? []} onField={props.onCaseField} patientAge={props.patientAge} patientSex={props.patientSex}/>}
+    <CaseGuide prompt={props.prompt} mode={props.mode} fields={props.caseFields ?? emptyCaseFields()} patientAge={props.patientAge} patientSex={props.patientSex} onInsert={insert} onText={(next, caret) => { props.onPrompt(next); if (caret !== undefined) place(caret); }} onMode={props.onMode}/>
     <div className="composer-toolbar"><div className="composer-tools-left">
-      <button type="button" className="icon-tool mic-button" data-state={dictation.recording ? "listening" : "idle"} aria-pressed={dictation.recording} disabled={dictation.starting} aria-label={dictation.recording ? "Hentikan dikte" : "Dikte ke kolom teks"} title={dictation.recording ? "Mendengarkan · klik untuk berhenti" : "Dikte ke kolom teks (layanan speech browser)"} onClick={dictation.toggle}><Mic size={16}/></button>
-      <button type="button" className={`icon-tool context-button ${props.context ? "has-context" : ""}`} aria-label={props.context ? "Ubah konteks encounter" : "Tambah konteks"} title={props.context ? "Ubah konteks encounter" : "Tambah konteks"} onClick={props.onContext}><Paperclip size={16}/></button>
-      {hasStrip && <button type="button" className="icon-tool" aria-pressed={showStrip} aria-label="Usia dan tanda vital" title="Usia dan tanda vital" onClick={() => setStripOpen(!showStrip)}><Activity size={16}/></button>}
+      <button type="button" className="button primary" onClick={props.onScribe}><AudioLines size={15}/>Mulai Scribe</button>
+      <button type="button" className={`button ${props.context ? "has-context" : ""}`} onClick={props.onContext}><Paperclip size={15}/>{props.context ? "Ubah Konteks" : "Tambah Konteks"}</button>
       <span className="context-status" role="status">{dictation.recording ? <span key="listening" className="listening">Mendengarkan…</span> : <span key="summary">{props.patientName ?? "Tanpa pasien"} · {props.context ? "konteks terisi" : "belum ada konteks"}</span>}</span>
     </div><div className="composer-tools-right">
       <div className="model-select"><select aria-label="Format keluaran" value={props.settings.model} onChange={(e) => props.onModel(e.target.value as Settings["model"])}><option value="Standard">{modelLabel("Standard")}</option><option value="Extended">{modelLabel("Extended")}</option></select><ChevronDown size={11}/></div>
+      {hasStrip && <button type="button" className="icon-tool" aria-pressed={showStrip} aria-label="Usia dan tanda vital" title="Usia dan tanda vital" onClick={() => setStripOpen(!showStrip)}><Activity size={16}/></button>}
+      <button type="button" className="icon-tool mic-button" data-state={dictation.recording ? "listening" : "idle"} aria-pressed={dictation.recording} disabled={dictation.starting} aria-label={dictation.recording ? "Hentikan dikte" : "Dikte ke kolom teks"} title={dictation.recording ? "Mendengarkan · klik untuk berhenti" : "Dikte ke kolom teks (layanan speech browser)"} onClick={dictation.toggle}><Mic size={16}/></button>
       {props.busy && props.aadiEnabled ? <button type="button" className="button square send-button" aria-label="Hentikan analisis" title="Hentikan analisis" onClick={props.onCancelAnalysis}><Square size={13} fill="currentColor"/></button> : <button className="button square send-button" aria-label={props.aadiEnabled ? "Analisis kasus" : "Buat draf"} title={props.aadiEnabled ? "Analisis langsung · Enter" : "Buat draf · Enter"} disabled={!props.prompt.trim() || props.busy}>{props.busy ? <PixelLoader label="Sedang menyusun draf…"/> : <ArrowUp size={18}/>}</button>}
     </div></div>
   </form>
-    <CaseGuide prompt={props.prompt} mode={props.mode} fields={props.caseFields ?? emptyCaseFields()} patientAge={props.patientAge} patientSex={props.patientSex} onInsert={insert} onText={(next, caret) => { props.onPrompt(next); if (caret !== undefined) requestAnimationFrame(() => { box.current?.focus(); box.current?.setSelectionRange(caret, caret); }); }} onMode={props.onMode}/>
+    <ChipRow encounter={props.encounter} mode={props.mode} busy={props.busy} onChip={chip}/>
     {dictation.error &&<div className="composer-analysis"><p className="form-warning" role="alert">{dictation.error}</p></div>}
     {!!props.minimumMissing?.length && <div className="composer-analysis"><p className="form-warning" role="alert">Analisis belum dijalankan. Lengkapi data minimal: {props.minimumMissing.join(", ")}.</p></div>}
     {props.aadiEnabled && props.analysisError && <div className="composer-analysis"><p className="form-warning" role="alert">{props.analysisError} {props.prompt.trim() && !props.busy && <><button type="button" className="text-button" onClick={props.onSubmit}>Coba lagi</button> {props.onFallback && <button type="button" className="text-button" onClick={props.onFallback}>Susun draf SOAP lokal</button>}</>}</p></div>}
     {/* Options are the rows themselves: focus stays in the textarea, which points at the active row. */}
-    {slashOpen && <div className="slash-picker" id={pickerId} role="listbox" aria-label="Pilih templat">{matches.map((item, index) => <div role="option" aria-selected={slashIndex === index} id={`${pickerId}-${item.id}`} key={item.id} onPointerDown={(event) => event.preventDefault()} onClick={() => chooseMode(item.id)}><strong>{item.label}</strong><span>/{item.id}</span></div>)}{!matches.length && <p>Tidak ada templat yang cocok.</p>}</div>}
-    <div className="quick-actions"><span className="quick-label" id={quickId}>Tindakan cepat</span><div className="intent-modes" role="group" aria-labelledby={quickId}>{group.quick.map((id) => { const item = modes.find((entry) => entry.id === id)!; return <button type="button" className={`action-chip ${props.mode === id ? "active" : ""}`} key={id} onClick={() => props.onMode(id)} title={item.description} aria-pressed={props.mode === id}>{item.label}</button>; })}{quietPicker && picker}</div></div>
+    {slashOpen && <div className="slash-picker" id={pickerId} role="listbox" aria-label="Pilih templat">{groups.map((group, g) => <div key={group.label} role="group" aria-label={group.label}><span className="slash-label" aria-hidden="true">{group.label}</span>{group.options.map((item, i) => { const at = groups.slice(0, g).reduce((n, earlier) => n + earlier.options.length, 0) + i; return <div role="option" aria-selected={slashIndex === at} id={`${pickerId}-${at}`} key={`${group.label}-${item.key}`} onPointerDown={(event) => event.preventDefault()} onClick={() => choose(item.key)}><strong>{item.label}</strong>{item.key === current ? <Check size={14} aria-label="dipakai"/> : item.hint && <span>{item.hint}</span>}</div>; })}</div>)}{!options.length && <p>Tidak ada templat yang cocok.</p>}</div>}
   </div>;
 }

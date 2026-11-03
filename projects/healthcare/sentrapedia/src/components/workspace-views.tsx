@@ -117,7 +117,7 @@ export function Conversation({ encounter, pendingQuestion, dispatch, onToast, on
 
 export function ChatComposer({ composer, onAbout }: { composer: ComposerProps; onAbout: () => void }) {
   return <div className="chat-composer">
-    <Composer inChat {...composer}/>
+    <Composer {...composer}/>
     <p className="composer-hint">{composer.aadiEnabled ? "" : "Format lokal, siap untuk ditinjau. "}<button onClick={onAbout}>Tentang workspace ini</button></p>
   </div>;
 }

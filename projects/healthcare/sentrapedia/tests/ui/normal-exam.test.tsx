@@ -30,7 +30,7 @@ describe("normal exam template in the composer", () => {
   it("names the template, offers Hamil for a P patient, and flags a typed value", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
-    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
     fireEvent.change(textarea(), { target: { value: "Keluhan utama: pusing\nDemam 3 hari" } });
     expect(guide().getByText("Templat normal menunggu usia dan jenis kelamin")).toBeTruthy();
     expect(guide().queryByRole("button", { name: "Sisipkan Hamil" })).toBeNull();
@@ -52,7 +52,7 @@ describe("normal exam template in the composer", () => {
   it("does not offer Hamil or Nifas for a girl under 10, and lists the typed exam lines in row O", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
-    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
     fireEvent.change(textarea(), { target: { value: "Keluhan utama: demam, usia: 8 bulan, perempuan, RR 56\nParu: ronki (+/+)" } });
     expect(guide().getByText("Templat normal: Bayi · P · 8 bulan")).toBeTruthy();
     expect(guide().getByText("Napas 56 /menit: ≥ 50, napas cepat (MTBS)")).toBeTruthy();
@@ -66,7 +66,7 @@ describe("normal exam template in the composer", () => {
   it("makes a local SOAP draft whose exam is filled and marked, with the flag kept out of the record", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
-    fireEvent.click(screen.getByRole("button", { name: "Dokumentasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
     fireEvent.change(textarea(), { target: { value: "Keluhan utama: batuk 3 hari, laki-laki 40 tahun, TD 150/90\nParu: ronki (+/+)" } });
     await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
     expect(await screen.findByText("Draf lokal", { selector: ".draft-badge" })).toBeTruthy();
