@@ -323,37 +323,23 @@ describe("workspace UI smoke tests", () => {
 
     // While another dialog is open, Ctrl+J does not switch to the command palette
     fireEvent.click(screen.getByRole("button", { name: "Tutup dialog" }));
-    fireEvent.click(screen.getByRole("button", { name: "Pengaturan Agent" }));
+    fireEvent.click(screen.getByRole("button", { name: "Buat Pasien" }));
     fireEvent.keyDown(window, { key: "j", ctrlKey: true });
 
     expect(screen.getAllByRole("dialog").length).toBe(1);
-    expect(screen.getByRole("heading", { name: "Sesuaikan workspace" })).toBeDefined();
     expect(screen.queryByRole("heading", { name: "Pusat perintah" })).toBeNull();
   });
 
-  it("completes a dialog round trip for Settings and keeps the composer intact", async () => {
+  it("links Pengaturan Agent to the /agent page from the sidebar and the account menu, with no settings dialog", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => {
       await Promise.resolve();
     });
-
-    // Composer textarea is present initially
     expect(screen.getByLabelText("Pertanyaan atau catatan klinis")).toBeDefined();
-
-    // Open settings dialog through the UI
-    const settingsBtn = screen.getByRole("button", { name: "Pengaturan Agent" });
-    fireEvent.click(settingsBtn);
-
-    expect(screen.getByRole("dialog")).toBeDefined();
-    expect(screen.getByRole("heading", { name: "Sesuaikan workspace" })).toBeDefined();
-
-    // Close the dialog
-    const closeBtn = screen.getByRole("button", { name: "Tutup dialog" });
-    fireEvent.click(closeBtn);
-
-    // Assert dialog is gone and composer is still there
+    expect(screen.getByRole("link", { name: "Pengaturan Agent" }).getAttribute("href")).toBe("/agent");
+    fireEvent.click(screen.getByRole("button", { name: /Sentrapedia/ }));
+    expect(screen.getByRole("menuitem", { name: "Pengaturan Agent" }).getAttribute("href")).toBe("/agent");
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(screen.getByLabelText("Pertanyaan atau catatan klinis")).toBeDefined();
   });
 
   it("shows a status toast when an action calls notify", async () => {

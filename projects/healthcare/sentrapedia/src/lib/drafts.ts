@@ -29,7 +29,7 @@ export const modes: { id: ModeId; label: string; title: string; description: str
   { id: "authorization", label: "Persetujuan Penjaminan (Prior Authorization)", title: "Prior authorization", description: "Susun permintaan penjaminan dengan detail pendukung.", opening: "Susun permintaan persetujuan penjaminan (prior authorization) untuk layanan berikut:", placeholder: "Masukkan layanan, Clinical Indication, dan Previous Treatments..." },
 ];
 
-export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; patient?: Patient; instructions: string; caseFields?: Partial<CaseFields> }
+export interface DraftInput { mode: ModeId; prompt: string; context: string; specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; patient?: Patient; instructions: string; modeInstructions?: Partial<Record<ModeId, string>>; caseFields?: Partial<CaseFields> }
 
 // The labels readCaseFields (aadi/composer.ts) reads: sex words, an age in years, and labelled vital signs.
 const demographicWords = [/\b(?:laki-laki|laki laki|lelaki|pria|perempuan|wanita)\b/gi, /\b(?:usia|umur)\s*:?\s*\d{1,3}(?:\s*(?:tahun|thn|th))?\b/gi, /(?<!\b(?:sejak|selama|sudah|lebih|kurang|hampir)\s+)\b\d{1,3}\s*(?:tahun|thn|th|yo)\b(?!\s+(?:lalu|yang lalu|terakhir))/gi];
@@ -221,7 +221,9 @@ export function createDraft(input: DraftInput): string {
   const patientInfo = id ? `Pasien: ${[input.patient?.name || "—", age && `${age} tahun`, sexText].filter(Boolean).join(" · ")}`
     : input.patient ? `${input.patient.name}${input.patient.age ? ` · ${input.patient.age} years` : ""} · ${input.patient.sex}` : "No patient selected";
   const context = [input.patient?.notes, input.context].filter(Boolean).join("\n");
-  const tail = `${context ? `\n\n## ${id ? "Konteks tambahan" : "Additional context"}\n${context}` : ""}${input.instructions ? `\n\n## ${id ? "Preferensi penulisan" : "Writing preferences"}\n${input.instructions}` : ""}${input.model === "Extended" ? `\n\n## Review checklist\n${id ? "- [ ] Konfirmasi identitas dan detail Encounter\n- [ ] Rekonsiliasi Medications dan Allergies\n- [ ] Lengkapi bagian yang belum tersedia\n- [ ] Verifikasi interpretasi Clinical dan Follow-up" : "- [ ] Confirm identity and encounter details\n- [ ] Reconcile medicines and allergies\n- [ ] Complete missing sections\n- [ ] Verify clinical interpretation and follow-up"}` : ""}`;
+  // The mode's own instruction (Pengaturan Agent) follows the global one; both are recorded, neither is interpreted.
+  const instructions = [input.instructions, input.modeInstructions?.[input.mode]].map((text) => text?.trim() ?? "").filter(Boolean).join("\n");
+  const tail = `${context ? `\n\n## ${id ? "Konteks tambahan" : "Additional context"}\n${context}` : ""}${instructions ? `\n\n## ${id ? "Preferensi penulisan" : "Writing preferences"}\n${instructions}` : ""}${input.model === "Extended" ? `\n\n## Review checklist\n${id ? "- [ ] Konfirmasi identitas dan detail Encounter\n- [ ] Rekonsiliasi Medications dan Allergies\n- [ ] Lengkapi bagian yang belum tersedia\n- [ ] Verifikasi interpretasi Clinical dan Follow-up" : "- [ ] Confirm identity and encounter details\n- [ ] Reconcile medicines and allergies\n- [ ] Complete missing sections\n- [ ] Verify clinical interpretation and follow-up"}` : ""}`;
   const field = (keys: NoteField[]) => keys.map((key) => note.fields[key]).filter(Boolean).join("\n");
   // The demo patient's name is the word "Pasien" itself, which the label already says.
   const patientText = [input.patient?.name !== "Pasien" && input.patient?.name, sexText, age && `${age} tahun`].filter(Boolean).join(", ") || "—";

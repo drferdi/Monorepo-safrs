@@ -218,7 +218,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
         documentCount={documents.length} paneOpen={compact ? dialog === "document" : split} onPane={() => compact ? openDocument() : smooth(() => setPane({ open: !split }))}
         onUpgrade={() => openDialog("upgrade")}/>
       <div className="workspace-body" data-split={split || undefined}>
-        {!hasMessages ? <HomeView name={state.settings.name ?? ""} headline={headlineFor(visit)} pill="Layanan primer" composer={composerProps}/> : <>
+        {!hasMessages ? <HomeView name={state.settings.name ?? ""} headline={headlineFor(visit)} pill={state.settings.environment ?? "Layanan primer"} composer={composerProps}/> : <>
           <div className="chat-column">
             <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onCancel={cancelAnalysis} onOpenDocument={openDocument}/>
             <ChatComposer composer={composerProps}/>

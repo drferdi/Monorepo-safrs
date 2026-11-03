@@ -8,7 +8,9 @@ export interface PatientList { id: string; name: string; patientIds: string[] }
 export type ReviewStatus = "draft" | "reviewed" | "final";
 export interface Message { id: string; role: "user" | "assistant"; content: string; mode: ModeId; createdAt: string; reviewStatus?: ReviewStatus; originalContent?: string; sourceText?: string; reviewItems?: ReviewItem[]; revisions?: Revision[]; revisionSequence?: number; templateSnapshot?: PersonalTemplate }
 export interface Encounter { id: string; patientId: string | null; title: string; createdAt: string; messages: Message[]; context: string; workStatus?: WorkStatus; pinned?: boolean; tasks?: WorkTask[]; updatedAt?: string }
-export interface Settings { specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; instructions: string; name?: string }
+export const environments = ["Layanan primer", "Rawat jalan"] as const;
+// environment and modeInstructions were added on 2026-11-04 (Pengaturan Agent page); both optional, so earlier saves load unchanged.
+export interface Settings { specialty: string; model: typeof draftModels[number]; language: typeof draftLanguages[number]; instructions: string; name?: string; environment?: typeof environments[number]; modeInstructions?: Partial<Record<ModeId, string>> }
 export interface Workspace { version: 1; patients: Patient[]; lists: PatientList[]; encounters: Encounter[]; activeEncounterId: string | null; settings: Settings; templates?: PersonalTemplate[]; favorites?: string[]; reviewDefaults?: ReviewItem[] }
 
 export const specialties = ["Primary Care", "Internal Medicine", "Emergency Medicine", "Pediatrics", "Obstetrics & Gynecology", "Family Medicine", "Cardiology", "Psychiatry"];
@@ -108,6 +110,9 @@ export function parseWorkspace(raw: string): Workspace | null {
     const workspace = data as unknown as Workspace;
     const settings = { ...workspace.settings };
     if (typeof settings.name !== "string") delete settings.name;
+    if (!oneOf(environments, settings.environment)) delete settings.environment;
+    const modeInstructions = record(settings.modeInstructions) ? Object.fromEntries(Object.entries(settings.modeInstructions).filter(([mode, text]) => modeIds.includes(mode as ModeId) && typeof text === "string")) : null;
+    if (modeInstructions && Object.keys(modeInstructions).length) settings.modeInstructions = modeInstructions; else delete settings.modeInstructions;
     return cleanWorkflowState({ ...workspace, settings, patients: workspace.patients.map(seedWording), encounters: workspace.encounters.map((encounter) => ({ ...cleanWorkflowEncounter(encounter), messages: encounter.messages.map((message) => {
       const clean = { ...message };
       if (typeof clean.sourceText !== "string") delete clean.sourceText;

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import type { ComponentProps } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { AccountMenu } from "../../src/components/account-menu";
 import { Sidebar } from "../../src/components/sidebar";
 import { initialWorkspace } from "../../src/lib/workspace";
@@ -12,16 +12,16 @@ const noop = () => undefined;
 describe("sidebar order", () => {
   it("lists Glass's six entries in order and no group titles", () => {
     render(<Sidebar state={initialWorkspace} open mobile={false} onToggle={noop} onDialog={noop} onNew={noop} onSelect={noop} onToast={noop}/>);
-    const labels = within(screen.getByRole("navigation", { name: "Navigasi utama" })).getAllByRole("button").map(b => b.textContent?.replace(/⌘.*$/, "").trim());
+    const labels = Array.from(screen.getByRole("navigation", { name: "Navigasi utama" }).querySelectorAll(":scope > button, :scope > a")).map(b => b.textContent?.replace(/⌘.*$/, "").trim());
     expect(labels).toEqual(["Baru", "Buat Pasien", "Buat Daftar Pasien", "Mulai Scribe", "Pengaturan Agent", "Cari"]);
     expect(screen.queryByText("Alat kerja")).toBeNull();
   });
-  it("opens the scribe and settings dialogs from the nav", () => {
+  it("opens the scribe dialog from the nav, and Pengaturan Agent is a link to the /agent page", () => {
     const onDialog = vi.fn();
     render(<Sidebar state={initialWorkspace} open mobile={false} onToggle={noop} onDialog={onDialog} onNew={noop} onSelect={noop} onToast={noop}/>);
     fireEvent.click(screen.getByRole("button", { name: "Mulai Scribe" }));
-    fireEvent.click(screen.getByRole("button", { name: "Pengaturan Agent" }));
-    expect(onDialog.mock.calls).toEqual([["scribe"], ["settings"]]);
+    expect(onDialog.mock.calls).toEqual([["scribe"]]);
+    expect(screen.getByRole("link", { name: "Pengaturan Agent" }).getAttribute("href")).toBe("/agent");
   });
 });
 
@@ -55,6 +55,7 @@ describe("account menu", () => {
     render(<AccountMenu name="dr. Rani" plan="Lite" onOpen={onOpen} onSignOut={onSignOut}/>);
     fireEvent.click(screen.getByRole("button", { name: /dr\. Rani/ }));
     expect(screen.getAllByRole("menuitem").map(i => i.textContent)).toEqual(["Pengaturan Agent", "Antrean kerja", "Referensi", "Tentang workspace", "Keluar"]);
+    expect(screen.getByRole("menuitem", { name: "Pengaturan Agent" }).getAttribute("href")).toBe("/agent");
     fireEvent.click(screen.getByRole("menuitem", { name: "Antrean kerja" }));
     expect(onOpen).toHaveBeenCalledWith("queue");
     expect(screen.queryByRole("menu")).toBeNull();

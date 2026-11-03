@@ -65,8 +65,8 @@ textarea { resize: vertical; }
 .icon-button { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius); }
 .icon-button:hover, .small-icon:hover { background: var(--color-border-subtle); }
 .main-nav { padding: 4px 0 0; display: grid; gap: 2px; }
-.main-nav > button { display: flex; gap: 10px; align-items: center; text-align: left; padding: 10px 8px; height: 38px; border-radius: var(--radius); }
-.main-nav > button:hover { background: var(--color-border-subtle); }
+.main-nav > button, .main-nav > a { display: flex; gap: 10px; align-items: center; text-align: left; padding: 10px 8px; height: 38px; border-radius: var(--radius); }
+.main-nav > button:hover, .main-nav > a:hover { background: var(--color-border-subtle); text-decoration: none; }
 .main-nav svg { width: 16px; height: 16px; }
 kbd { font-family: inherit; font-size: 11px; color: var(--color-text-secondary); }
 .main-nav kbd { margin-left: auto; opacity: 0; transition: opacity .15s; }
@@ -110,8 +110,8 @@ kbd { font-family: inherit; font-size: 11px; color: var(--color-text-secondary);
 .account-menu-panel { position: absolute; left: 0; right: 0; bottom: 100%; z-index: 20; display: grid; gap: 2px; padding: 4px; margin-bottom: 4px; background: var(--workspace-white); border: 1px solid rgba(31, 31, 31, .1); border-radius: var(--radius-control); box-shadow: var(--workspace-canvas-shadow); animation: account-menu-in 160ms ease-out; }
 @keyframes account-menu-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .account-menu-panel { animation: none; } }
-.account-menu-panel > button { display: flex; align-items: center; min-height: 34px; padding: 6px 8px; border-radius: var(--radius-control); font-size: 13px; text-align: left; }
-.account-menu-panel > button:hover, .account-menu-panel > button:focus-visible { background: var(--color-border-subtle); }
+.account-menu-panel > button, .account-menu-panel > a { display: flex; align-items: center; min-height: 34px; padding: 6px 8px; border-radius: var(--radius-control); font-size: 13px; text-align: left; }
+.account-menu-panel > button:hover, .account-menu-panel > button:focus-visible, .account-menu-panel > a:hover, .account-menu-panel > a:focus-visible { background: var(--color-border-subtle); text-decoration: none; }
 .account-menu-usage { margin: 0; padding: 6px 8px; border-top: 1px solid var(--color-border-subtle); font-size: 12px; color: var(--color-text-secondary); }
 .account-menu-slot { padding: 6px 8px; border-top: 1px solid var(--color-border-subtle); }
 .account { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 58px; border-top: 1px solid var(--color-border-subtle); margin-top: 8px; padding: 13px 7px; text-align: left; }
@@ -853,3 +853,18 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 @media (prefers-reduced-motion: reduce) { .document-pane, .pane-menu [role="menu"] { animation: none; } }
 .doctor-summary { display: grid; gap: 4px; margin: 0 0 10px; font-size: 14px; line-height: 23px; }
 .doctor-summary p { margin: 0; }
+
+/* Pengaturan Agent page (/agent): the settings dialog as a page, same record as the encounter page. */
+.agent-page { max-width: 880px; margin: 0 auto; padding: 24px 16px 64px; }
+.agent-header { display: flex; align-items: center; gap: 16px; min-height: 56px; margin-bottom: 16px; }
+.agent-header h1 { font-size: 20px; margin: 0; }
+.agent-header-account { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.agent-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--color-border-subtle); margin-bottom: 16px; }
+.agent-tabs [role="tab"] { padding: 10px 12px; color: var(--color-text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.agent-tabs [role="tab"][aria-selected="true"] { color: var(--workspace-accent-ink); border-bottom-color: var(--workspace-accent-ink); }
+.agent-panel h3 { margin: 24px 0 8px; }
+.agent-modes .field { margin-bottom: 12px; }
+.agent-knowledge dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0 0 12px; font-size: 13px; }
+.agent-knowledge dt { color: var(--color-text-secondary); }
+.agent-knowledge dd { margin: 0; overflow-wrap: anywhere; }
+

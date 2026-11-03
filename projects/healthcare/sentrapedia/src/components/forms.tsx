@@ -1,13 +1,11 @@
 "use client";
 
-import { Check, FileUp, Search, ShieldCheck, Trash2 } from "lucide-react";
+import { FileUp, Search, ShieldCheck, Trash2 } from "lucide-react";
 import { PatientAvatar } from "./patient-avatar";
 import { useRef, useState, type Dispatch } from "react";
 import { PixelLoader } from "./pixel-loader";
-import { specialtyLabel, modelLabel } from "../lib/ui-labels";
-import { draftModels } from "../lib/drafts";
 import { Dialog } from "./dialog";
-import { newId, specialties, type Encounter, type Patient, type PatientList, type Settings, type Workspace, type WorkspaceAction } from "../lib/workspace";
+import { newId, type Encounter, type Patient, type PatientList, type Workspace, type WorkspaceAction } from "../lib/workspace";
 
 export function PatientForm({ patient, onSave, onDelete, onClose }: { patient?: Patient; onSave: (p: Patient) => void; onDelete: (id: string) => void; onClose: () => void }) {
   const [name, setName] = useState(patient?.name ?? "");
@@ -47,18 +45,6 @@ export function ListForm({ list, state, dispatch, onClose }: { list?: PatientLis
     <label className="field"><span>Nama daftar</span><input autoFocus required placeholder="Contoh: Morning rounds" value={name} onChange={(e) => setName(e.target.value)} maxLength={80}/></label>
     <div className="field"><span>Pasien <small>{ids.length} dipilih</small></span><div className="patient-picker">{state.patients.length === 0 ? <p>Buat Pasien terlebih dahulu, lalu tambahkan ke daftar ini.</p> : state.patients.map((patient) => <label className="patient-pick" key={patient.id}><input type="checkbox" checked={ids.includes(patient.id)} onChange={(e) => setIds(e.target.checked ? [...ids, patient.id] : ids.filter((id) => id !== patient.id))}/><PatientAvatar sex={patient.sex} size={16}/><span>{patient.name}</span><small>{patient.age ? `${patient.age} tahun` : "Usia belum diisi"}</small></label>)}</div></div>
     <div className="dialog-footer">{list && <button type="button" className="button danger-ghost push-left" onClick={() => { dispatch({ type: "list.delete", id: list.id }); onClose(); }}><Trash2 size={14}/> Hapus daftar</button>}<button type="button" className="button" onClick={onClose}>Batal</button><button className="button primary" disabled={!name.trim()}>{list ? "Simpan daftar" : "Buat daftar"}</button></div>
-  </form></Dialog>;
-}
-
-export function SettingsForm({ settings, onSave, onClose }: { settings: Settings; onSave: (s: Settings) => void; onClose: () => void }) {
-  const [draft, setDraft] = useState(settings);
-  return <Dialog title="Sesuaikan workspace" subtitle="Atur Specialty, detail, dan gaya penulisan draf Clinical." onClose={onClose}><form onSubmit={(e) => { e.preventDefault(); onSave(draft); }}>
-    <label className="field"><span>Nama panggilan</span><input aria-label="Nama panggilan" placeholder="Contoh: dr. Rani" value={draft.name ?? ""} onChange={(e) => setDraft({ ...draft, name: e.target.value })} maxLength={60}/><small>Dipakai untuk sapaan di beranda.</small></label>
-    <label className="field"><span>Specialty</span><select aria-label="Specialty" value={draft.specialty} onChange={(e) => setDraft({ ...draft, specialty: e.target.value })}>{specialties.map((s) => <option key={s} value={s}>{specialtyLabel(s)}</option>)}</select></label>
-    <div className="field"><span>Mode draf</span><div className="model-cards">{draftModels.map((model) => <button type="button" className={`model-card ${draft.model === model ? "selected" : ""}`} onClick={() => setDraft({ ...draft, model })} key={model}><strong>{modelLabel(model)}{draft.model === model && <Check size={15}/>}</strong><span>{model === "Standard" ? "Catatan ringkas dengan bagian utama." : "Catatan terperinci dengan checklist peninjauan."}</span></button>)}</div><small>Mode format lokal. Penyedia model AI belum terhubung.</small></div>
-    <label className="field"><span>Bahasa draf</span><select aria-label="Bahasa draf" value={draft.language} onChange={(e) => setDraft({ ...draft, language: e.target.value as Settings["language"] })}><option value="English">Inggris</option><option>Bahasa Indonesia</option></select></label>
-    <label className="field"><span>Preferensi penulisan</span><textarea placeholder="Contoh: Gunakan kalimat ringkas. Pertahankan kata-kata Pasien." value={draft.instructions} onChange={(e) => setDraft({ ...draft, instructions: e.target.value })} rows={3} maxLength={2000}/><small>Disimpan bersama draf untuk ditinjau; interpretasi AI memerlukan integrasi backend.</small></label>
-    <div className="dialog-footer"><button type="button" className="button" onClick={onClose}>Batal</button><button className="button primary">Simpan preferensi</button></div>
   </form></Dialog>;
 }
 

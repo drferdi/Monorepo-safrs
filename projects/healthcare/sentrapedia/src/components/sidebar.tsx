@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight, Ellipsis, ListPlus, PanelLeft, Plus, Search, SlidersHorizontal, SquarePen, UserRoundPlus, AudioLines } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AccountMenu } from "./account-menu";
 import { Brand } from "./brand";
@@ -8,7 +9,7 @@ import { SidebarSubmenu } from "./sidebar-submenu";
 import { PatientAvatar } from "./patient-avatar";
 import type { Workspace } from "../lib/workspace";
 
-export type DialogName = "patient" | "list" | "settings" | "search" | "context" | "scribe" | "upgrade" | "account" | "feedback" | "encounter" | "legal" | "document" | "commands" | "templates" | "queue" | "knowledge" | null;
+export type DialogName = "patient" | "list" | "search" | "context" | "scribe" | "upgrade" | "account" | "feedback" | "encounter" | "legal" | "document" | "commands" | "templates" | "queue" | "knowledge" | null;
 interface Props { state: Workspace; open: boolean; mobile: boolean; onToggle: () => void; onDialog: (name: DialogName, id?: string) => void; onNew: (patientId?: string) => void; onSelect: (id: string) => void; onToast: (text: string) => void; onSignOut?: () => void; userButton?: ReactNode }
 
 export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSelect, onToast, onSignOut, userButton }: Props) {
@@ -41,7 +42,7 @@ export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSele
         <button onClick={() => onDialog("patient")}><UserRoundPlus/><span>Buat Pasien</span></button>
         <button onClick={() => onDialog("list")}><ListPlus/><span>Buat Daftar Pasien</span></button>
         <button onClick={() => onDialog("scribe")}><AudioLines/><span>Mulai Scribe</span></button>
-        <button onClick={() => onDialog("settings")}><SlidersHorizontal/><span>Pengaturan Agent</span></button>
+        <Link href="/agent"><SlidersHorizontal/><span>Pengaturan Agent</span></Link>
         <button onClick={() => onDialog("search")}><Search/><span>Cari</span><kbd>⌘ /</kbd></button>
       </nav>
       <div className="sidebar-content"><SidebarSubmenu initialSection="encounters" sections={[
