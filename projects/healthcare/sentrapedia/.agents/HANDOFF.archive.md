@@ -1,3 +1,15 @@
+## Archived on 2026-11-04 - the Glass workspace entry was added; HANDOFF keeps the newest five, and the 2026-10-26 auth-and-sync refactor entry moves here verbatim
+
+## The auth and sync layer loses its duplicated error shape and types, behaviour unchanged (R1, uncommitted) - 2026-10-26 Asia/Jakarta
+
+- Gaffer asked to refactor the codebase keeping behaviour; the scope was narrowed with him to the auth and sync layer, edited directly on `main` with no commit ("Langsung di main, tanpa commit"). The capsule tree was clean before the change.
+- **Three files, +15/-16 lines, all uncommitted:** `src/lib/auth/access.ts` gains an exported `errorResponse(status, code, message)` (JSON `{status:"error", error:{code,message}}` plus `Cache-Control: no-store`), which `accessFailure` and `inputFailure` now use; `src/app/api/sync/route.ts` builds `unavailable`/`badInput` with it and moves the `syncConfigured()` check from `GET` and `POST` into `principalOf()`, so the order stays configuration first, identity lookup second; `src/lib/sync/store.ts` drops its own `SyncedDocument`, `PushOutcome` and `formatVersion` and uses `SyncedDocument`, `SyncPushResult` and `syncFormatVersion` from `contract.ts`. Nothing else imported the removed types.
+- **Gate:** `tsc --noEmit` 0, eslint on the three files 0 issues, and the 12 auth and sync test files (`beta-auth*`, `aadi-beta-access`, `user-access-flow`, `sync-*`, `ui/beta-auth`) pass 93/93 both before and after. The full suite was not run.
+- **`/api/sync` had no test at all**, so a throwaway test was written to pin it: 503 `SYNC_UNAVAILABLE` with zero identity lookups when sync is not configured, 401 when signed out, 400 `INPUT` for a wrong content type, 200 for a valid push and pull. It passed 2/2 and was then deleted, so nothing in git proves the route; a permanent test would.
+- **Deliberately left alone:** the dead consent code (`consent-form.tsx`, `POST /api/onboarding/consent`), because removing the route changes behaviour (it would answer 404), and the duplicated JSON content-type check in `access.ts` and the sync route, which is too small to justify a helper.
+- **Rollback** is `git checkout -- src/app/api/sync/route.ts src/lib/auth/access.ts src/lib/sync/store.ts`. Nothing pushed, no deployment, no paid call.
+- **Housekeeping not done:** this file holds eleven entries with this one, against the five `AGENTS.md` allows, and its order is mixed: the newest work (`8f3f0462`) sits at the bottom. Which entries count as "oldest" is unclear, so none were archived here.
+
 ## Archived on 2026-11-02 - the tier 2 auth entry was added; HANDOFF keeps the newest five, and the 10 entries beyond them from 2026-10-26 move here verbatim
 
 ## The login redesign is published: PR #33 on the product repository (R2, split ac4c4292) - 2026-10-26 Asia/Jakarta
