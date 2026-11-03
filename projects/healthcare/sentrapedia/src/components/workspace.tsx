@@ -90,9 +90,13 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   const [panes, setPanes] = useState(() => new Map<string, PaneState>());
   const documents = paneDocuments(encounter);
   const storedPane = encounter && panes.get(encounter.id);
-  const pane: PaneState = storedPane && documents.length <= storedPane.seen ? storedPane : { open: documents.length > 0, activeId: documents.at(-1)?.id ?? "overview", seen: documents.length };
+  // Unsaved edits by message id; a document that arrives while the open one has one gets its tab but not the pane.
+  const [drafts, setDrafts] = useState(() => new Map<string, string>());
+  const pane: PaneState = storedPane && (documents.length <= storedPane.seen || drafts.has(storedPane.activeId)) ? storedPane : { open: documents.length > 0, activeId: documents.at(-1)?.id ?? "overview", seen: documents.length };
   const split = !compact && pane.open && documents.length > 0;
   const setPane = (change: Partial<Omit<PaneState, "seen">>) => { const id = encounter?.id; if (id) setPanes((map) => new Map(map).set(id, { ...pane, ...change, seen: documents.length })); };
+  // Recording the pane with each draft change pins the open document while it is edited.
+  const setDraft = (id: string, text: string | null) => { setDrafts((map) => { const next = new Map(map); if (text === null) next.delete(id); else next.set(id, text); return next; }); setPane({}); };
   const cancelAnalysis = useCallback(() => {
     analysisController.current?.abort();
     analysisController.current = null;
@@ -195,7 +199,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     onPrint: () => window.print(),
     pcare: (m) => pcareCopies(m, output(m)),
   };
-  const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<p className="panel-empty">Ringkasan encounter menyusul</p>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify}/>;
+  const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<p className="panel-empty">Ringkasan encounter menyusul</p>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify} drafts={drafts} onDraft={setDraft}/>;
   const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
     minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [],
     caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };
@@ -228,7 +232,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
       </div>
       {!hasMessages && <HomeFooter onLegal={(label) => { setDialogId(label); setDialog("legal"); }}/>}
     </main>
-    {dialog === "document" && <Dialog title="Dokumen encounter" className="document-sheet" onClose={closeDialog}>{paneFor(closeDialog)}</Dialog>}
+    {compact && dialog === "document" && <Dialog title="Dokumen encounter" className="document-sheet" onClose={closeDialog}>{paneFor(closeDialog)}</Dialog>}
     {dialog === "commands" && <CommandPalette onKnowledge={(tab) => openDialog("knowledge", tab)} onQueue={() => openDialog("queue")} onTemplates={() => openDialog("templates")} state={state} onClose={closeDialog} onEncounter={selectEncounter} onPatient={(id) => openDialog("patient", id)} onMode={(next) => { changeMode(next); closeDialog(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>('.composer textarea')?.focus()); }} onNew={() => { startNew(); closeDialog(); }} onFocus={() => smooth(() => { setFocusMode((value) => !value); setMobileNavOpen(false); hideDialog(); })} onContext={() => openDialog("context")}/>}
     {toast && <div className={`toast ${toastError ? "is-error" : ""}`} role={toastError ? "alert" : "status"}>{toastError ? <CircleAlert size={15}/> : <Check size={15}/>}<span>{toast}</span><button aria-label="Tutup notifikasi" onClick={dismissToast}><X size={14}/></button></div>}
 

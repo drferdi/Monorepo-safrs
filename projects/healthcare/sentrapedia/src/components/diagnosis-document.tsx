@@ -27,7 +27,7 @@ const foldLine = (body: string) => body.split("\n").map(line => line.trim()).fil
   .map(line => line.startsWith("|") ? line.slice(1, -1).split("|").map(cell => cell.trim()).join(" · ") : line.replace(/\*\*/g, "").replace(/^(?:- |#+ )/, "")).join(" ").replace(/\s+/g, " ").trim().slice(0, 300);
 
 // Two columns: the section list beside the document (in the right margin on wide canvases). AADI analyses and local drafts (Chief: "Clinic note redesign menjadi 2 kolom") share it.
-export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderContent, typing = false, label = "Alur kasus", navLabel = "Bagian analisis kasus", showMeta = true, onEditSection, autoFilled = [], rail = true }: { content: string; selected: number; onSelect: (index: number) => void; onEdit: (content: string) => void; renderContent: (content: string, onEdit: (content: string) => void) => ReactNode; typing?: boolean; label?: string; navLabel?: string; showMeta?: boolean; onEditSection?: (index: number) => void; autoFilled?: string[]; rail?: boolean }) {
+export function DiagnosisDocument({ content, selected, onSelect, onEdit, renderContent, typing = false, label = "Alur kasus", navLabel = "Bagian analisis kasus", showMeta = true, onEditSection, autoFilled = [], rail = false }: { content: string; selected: number; onSelect: (index: number) => void; onEdit: (content: string) => void; renderContent: (content: string, onEdit: (content: string) => void) => ReactNode; typing?: boolean; label?: string; navLabel?: string; showMeta?: boolean; onEditSection?: (index: number) => void; autoFilled?: string[]; rail?: boolean }) {
   const id = useId();
   const root = useRef<HTMLDivElement>(null);
   const sections = useMemo(() => documentSections(content), [content]);

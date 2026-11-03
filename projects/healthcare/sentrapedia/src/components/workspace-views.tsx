@@ -20,7 +20,7 @@ export function WorkspaceHeader({ hasMessages, name, patientName, encounterTitle
     <div className="header-right">
       <button className="icon-button" aria-label="Buka pusat perintah" title="Pusat perintah · Ctrl / ⌘ J" onClick={onCommands}><Command size={16}/></button>
       <button className="icon-button" aria-label={focusMode ? "Keluar Focus Mode" : "Aktifkan Focus Mode"} aria-pressed={focusMode} title="Focus Mode" onClick={onFocus}>{focusMode ? <Minimize2 size={16}/> : <Maximize2 size={16}/>}</button>
-      {hasMessages && documentCount > 0 && <button className="icon-button document-count" aria-label="Dokumen encounter" title="Dokumen encounter" aria-pressed={paneOpen} onClick={onPane}><FileText size={16}/><span>{documentCount}</span></button>}
+      {hasMessages && documentCount > 0 && <button className="icon-button document-count" aria-label={`Dokumen encounter, ${documentCount} dokumen`} title="Dokumen encounter" aria-pressed={paneOpen} onClick={onPane}><FileText size={16}/><span>{documentCount}</span></button>}
       {hasMessages && <button className="button export-encounter" onClick={onExport}><ArrowDownToLine size={14}/> Ekspor</button>}
       <button className="upgrade-button" onClick={onUpgrade}><Sparkles size={15} fill="currentColor"/>Berlangganan</button>
     </div>

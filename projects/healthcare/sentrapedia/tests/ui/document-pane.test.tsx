@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { useState } from "react";
 import { WorkspaceApp } from "../../src/components/workspace";
 import { DocumentPane } from "../../src/components/document-pane";
 import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
@@ -28,7 +29,9 @@ const analysis = (data: CaseState): AadiAnalysis => ({
 // The viewport: wide by default; a phone matches both the mobile and the compact query. Reduced motion shows answers whole.
 const viewport = (phone: boolean) => Object.defineProperty(window, "matchMedia", { writable: true, value: vi.fn().mockImplementation((query: string) => ({ matches: query.includes("reduce") || (phone && (query === mobileQuery || query === compactQuery)), media: query, onchange: null, addListener: vi.fn(), removeListener: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn() })) });
 
+let sent: CaseState[] = [];
 beforeEach(() => {
+  sent = [];
   localStorage.clear();
   viewport(false);
   global.ResizeObserver = class { observe() {} unobserve() {} disconnect() {} };
@@ -38,6 +41,7 @@ beforeEach(() => {
   global.fetch = vi.fn().mockImplementation(async (_input: RequestInfo | URL, init?: RequestInit) => {
     if (init?.method !== "POST") return new Response(JSON.stringify({ configured: true, modelReady: true, groundingReady: true, ready: true }), { status: 200, headers: { "Content-Type": "application/json" } });
     const body = JSON.parse(String(init.body)) as { case: CaseState };
+    sent.push(body.case);
     return new Response(JSON.stringify(analysis(body.case)), { status: 200, headers: { "Content-Type": "application/json" } });
   });
 });
@@ -47,8 +51,13 @@ const textarea = () => screen.getByLabelText("Pertanyaan atau catatan klinis") a
 const at = "2026-10-21T05:00:00.000Z";
 const doc = (id: string, content: string, mode: Message["mode"] = "clinic"): Message => ({ id, role: "assistant", mode, content, originalContent: content, createdAt: at, reviewStatus: "draft" });
 const encounterWith = (messages: Message[]): Encounter => ({ id: "enc-pane", title: "Encounter pane", patientId: "demo-patient", messages, context: "", createdAt: at, updatedAt: at });
-async function seeded(messages: Message[]) {
-  localStorage.setItem(storageKey, JSON.stringify({ ...initialWorkspace, encounters: [encounterWith(messages)], activeEncounterId: "enc-pane" }));
+// The pane with the unsaved drafts the workspace keeps for it.
+function Pane(props: Omit<Parameters<typeof DocumentPane>[0], "drafts" | "onDraft">) {
+  const [drafts, setDrafts] = useState(() => new Map<string, string>());
+  return <DocumentPane {...props} drafts={drafts} onDraft={(id, text) => setDrafts((map) => { const next = new Map(map); if (text === null) next.delete(id); else next.set(id, text); return next; })}/>;
+}
+async function seeded(messages: Message[], encounters: Encounter[] = []) {
+  localStorage.setItem(storageKey, JSON.stringify({ ...initialWorkspace, encounters: [encounterWith(messages), ...encounters], activeEncounterId: "enc-pane" }));
   render(<WorkspaceApp principalId="user_test"/>);
   await act(async () => { await Promise.resolve(); });
 }
@@ -78,7 +87,7 @@ describe("the document pane", () => {
     // The card in the chat reopens the pane on its document.
     fireEvent.click(chat.getByRole("button", { name: /Buka dokumen/ }));
     expect(screen.getByRole("tab", { name: /Catatan Klinis/ }).getAttribute("aria-selected")).toBe("true");
-    fireEvent.click(screen.getByRole("button", { name: "Dokumen encounter" }));
+    fireEvent.click(screen.getByRole("button", { name: /^Dokumen encounter/ }));
     expect(screen.queryByRole("tablist", { name: "Dokumen encounter" })).toBeNull();
   });
 
@@ -99,6 +108,7 @@ describe("the document pane", () => {
     fireEvent.click(screen.getByRole("button", { name: "Salin ke P-Care" }));
     await act(async () => { fireEvent.click(screen.getByRole("menuitem", { name: "Salin Keluhan ke Keluhan P-Care" })); });
     expect(writeText).toHaveBeenLastCalledWith(complaint);
+    expect(sent).toHaveLength(1);
   });
 
   it("does not open the pane for an encounter holding only question answers, and Ekspor still carries them", async () => {
@@ -109,7 +119,7 @@ describe("the document pane", () => {
     await seeded([{ id: "q1", role: "user", mode: "question", content: "Apa itu ISPA?", createdAt: at }, { id: "q2", role: "assistant", mode: "question", content: "Jawaban tentang ISPA.", createdAt: at }]);
     expect(screen.getByText("Jawaban tentang ISPA.")).toBeTruthy();
     expect(screen.queryByRole("tablist", { name: "Dokumen encounter" })).toBeNull();
-    expect(screen.queryByRole("button", { name: "Dokumen encounter" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Dokumen encounter/ })).toBeNull();
     expect(document.querySelector(".workspace-body")!.hasAttribute("data-split")).toBe(false);
     fireEvent.click(screen.getByRole("button", { name: /Ekspor/ }));
     expect(await blobs[0].text()).toContain("Jawaban tentang ISPA.");
@@ -119,8 +129,8 @@ describe("the document pane", () => {
     viewport(true);
     await seeded([doc("d1", "# Catatan Klinis\n\n## 1. Keluhan Utama\n\nBatuk.")]);
     expect(screen.queryByRole("tablist", { name: "Dokumen encounter" })).toBeNull();
-    const button = screen.getByRole("button", { name: "Dokumen encounter" });
-    expect(button.textContent).toContain("1");
+    const button = screen.getByRole("button", { name: /^Dokumen encounter/ });
+    expect(button.getAttribute("aria-label")).toBe("Dokumen encounter, 1 dokumen");
     button.focus();
     fireEvent.click(button);
     const sheet = screen.getByRole("dialog");
@@ -130,7 +140,7 @@ describe("the document pane", () => {
     expect(within(sheet).getByRole("tablist", { name: "Dokumen encounter" })).toBeTruthy();
     await act(async () => { fireEvent(sheet, new Event("cancel", { cancelable: true })); });
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Dokumen encounter" }));
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: /^Dokumen encounter/ }));
   });
 
   it("Lainnya +n appears from the third document and selects a tab", async () => {
@@ -150,7 +160,7 @@ describe("the document pane", () => {
   it("editing with the toolbar wraps the selection and Simpan dispatches message.edit", () => {
     const dispatch = vi.fn();
     const message = doc("d1", "# Catatan\n\nabc def");
-    render(<DocumentPane encounter={encounterWith([message])} activeId="d1" onActive={vi.fn()} overview={null} tools={{ onCopy: vi.fn(), onDownload: vi.fn(), onPrint: vi.fn(), pcare: (m) => pcareCopies(m, m.content) }} onClose={vi.fn()} dispatch={dispatch} onToast={vi.fn()}/>);
+    render(<Pane encounter={encounterWith([message])} activeId="d1" onActive={vi.fn()} overview={null} tools={{ onCopy: vi.fn(), onDownload: vi.fn(), onPrint: vi.fn(), pcare: (m) => pcareCopies(m, m.content) }} onClose={vi.fn()} dispatch={dispatch} onToast={vi.fn()}/>);
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
     const box = screen.getByLabelText("Isi dokumen") as HTMLTextAreaElement;
     box.setSelectionRange(15, 18);
@@ -159,5 +169,63 @@ describe("the document pane", () => {
     fireEvent.click(screen.getByRole("button", { name: "Simpan" }));
     expect(dispatch).toHaveBeenCalledWith({ type: "message.edit", encounterId: "enc-pane", messageId: "d1", content: "# Catatan\n\nabc **def**" });
     expect(screen.queryByLabelText("Isi dokumen")).toBeNull();
+  });
+
+  it("keeps an unsaved edit across a tab switch and a collapse", async () => {
+    await seeded([doc("d1", "# Dokumen satu\n\nIsi satu."), doc("d2", "# Dokumen dua\n\nIsi dua.", "referral")]);
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.change(screen.getByLabelText("Isi dokumen"), { target: { value: "Teks yang belum disimpan" } });
+    fireEvent.click(screen.getByRole("tab", { name: /Catatan Klinis/ }));
+    expect(screen.queryByLabelText("Isi dokumen")).toBeNull();
+    fireEvent.click(screen.getByRole("tab", { name: /Surat Rujukan/ }));
+    expect((screen.getByLabelText("Isi dokumen") as HTMLTextAreaElement).value).toBe("Teks yang belum disimpan");
+    fireEvent.click(screen.getByRole("button", { name: "Tutup panel dokumen" }));
+    fireEvent.click(screen.getByRole("button", { name: /^Dokumen encounter/ }));
+    expect((screen.getByLabelText("Isi dokumen") as HTMLTextAreaElement).value).toBe("Teks yang belum disimpan");
+    // Batal drops the draft.
+    fireEvent.click(screen.getByRole("button", { name: "Batal" }));
+    fireEvent.click(screen.getByRole("tab", { name: /Catatan Klinis/ }));
+    fireEvent.click(screen.getByRole("tab", { name: /Surat Rujukan/ }));
+    expect(screen.queryByLabelText("Isi dokumen")).toBeNull();
+  });
+
+  it("a document arriving while the open one is edited gets its tab but not the pane", async () => {
+    await seeded([doc("d1", "# Dokumen satu\n\nIsi satu.", "referral")]);
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.change(screen.getByLabelText("Isi dokumen"), { target: { value: "Sedang diedit" } });
+    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
+    fireEvent.change(textarea(), { target: { value: "Keluhan utama: batuk 3 hari, laki-laki 40 tahun, TD 150/90" } });
+    await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
+    expect(await screen.findByRole("tab", { name: /Catatan Klinis/ })).toBeTruthy();
+    expect(screen.getByRole("tab", { name: /Surat Rujukan/ }).getAttribute("aria-selected")).toBe("true");
+    expect((screen.getByLabelText("Isi dokumen") as HTMLTextAreaElement).value).toBe("Sedang diedit");
+  });
+
+  it("Escape closes the Lainnya menu inside the sheet, keeps the sheet open and returns focus to the trigger", async () => {
+    viewport(true);
+    await seeded([doc("d1", "# Dokumen satu\n\nIsi satu."), doc("d2", "# Dokumen dua\n\nIsi dua.", "referral"), doc("d3", "# Dokumen tiga\n\nIsi tiga.", "education")]);
+    fireEvent.click(screen.getByRole("button", { name: /^Dokumen encounter/ }));
+    const trigger = screen.getByRole("button", { name: "Lainnya +1" });
+    fireEvent.click(trigger);
+    const item = within(screen.getByRole("menu", { name: "Dokumen lainnya" })).getByRole("menuitem");
+    expect(document.activeElement).toBe(item);
+    fireEvent.keyDown(item, { key: "ArrowDown" });
+    expect(document.activeElement).toBe(item);
+    const escape = new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true });
+    act(() => { item.dispatchEvent(escape); });
+    expect(escape.defaultPrevented).toBe(true);
+    expect(screen.queryByRole("menu", { name: "Dokumen lainnya" })).toBeNull();
+    expect(screen.getByRole("dialog")).toBeTruthy();
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it("remembers each encounter's open document across a switch to another encounter", async () => {
+    const other: Encounter = { ...encounterWith([doc("b1", "# Lain\n\nIsi lain.", "education")]), id: "enc-other", title: "Encounter lain" };
+    await seeded([doc("d1", "# Dokumen satu\n\nIsi satu."), doc("d2", "# Dokumen dua\n\nIsi dua.", "referral")], [other]);
+    fireEvent.click(screen.getByRole("tab", { name: /Catatan Klinis/ }));
+    fireEvent.click(screen.getByTitle("Encounter lain").closest("button")!);
+    expect(screen.getByRole("tab", { name: /Edukasi Pasien/ }).getAttribute("aria-selected")).toBe("true");
+    fireEvent.click(screen.getByTitle("Encounter pane").closest("button")!);
+    expect(screen.getByRole("tab", { name: /Catatan Klinis/ }).getAttribute("aria-selected")).toBe("true");
   });
 });

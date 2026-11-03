@@ -1,7 +1,7 @@
 "use client";
 
 import { ClipboardCopy, Copy, Download, History, PanelRightClose, Printer } from "lucide-react";
-import { useState, type KeyboardEvent, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { modes } from "../lib/drafts";
 import { documentTitle, workspaceDate } from "../lib/studio";
 import type { Encounter, Message, ReviewStatus, WorkspaceAction } from "../lib/workspace";
@@ -10,6 +10,7 @@ import { diagnosisContent, hasAadiSource, type PcareCopy } from "../lib/aadi/pre
 import { paneDocuments } from "../lib/document-pane";
 import { DocumentStudio } from "./document-studio";
 import { HistoryPanel, ReviewPanel } from "./document-workflow";
+import { useMenu } from "./use-menu";
 
 export interface PaneTools { onCopy: (m: Message) => void; onDownload: (m: Message) => void; onPrint: (m: Message) => void; pcare: (m: Message) => PcareCopy[] }
 
@@ -17,11 +18,19 @@ export interface PaneTools { onCopy: (m: Message) => void; onDownload: (m: Messa
 const label = (m: Message) => hasAadiSource(m) ? "Analisis kasus" : modes.find((mode) => mode.id === m.mode)?.label ?? "Dokumen";
 const title = (m: Message) => documentTitle(diagnosisContent(m)).replace(/^# /, "") || label(m);
 const time = (m: Message) => { const date = new Date(m.createdAt); return Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).format(date); };
-const closeOnEscape = (close: () => void) => (event: KeyboardEvent) => { if (event.key === "Escape") { event.stopPropagation(); close(); } };
+
+interface MenuItem { key: string; label: ReactNode; ariaLabel?: string; title?: string; onChoose: () => void }
+function PaneMenu({ trigger, name, items }: { trigger: ReactNode; name: string; items: MenuItem[] }) {
+  const { open, setOpen, root, trigger: button, move, leave, choose } = useMenu();
+  return <div className="pane-menu" ref={root} onBlur={leave}>
+    <button ref={button} type="button" className="text-button" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((value) => !value)}>{trigger}</button>
+    {open && <div role="menu" aria-label={name} onKeyDown={move}>{items.map((item) => <button type="button" role="menuitem" key={item.key} title={item.title} aria-label={item.ariaLabel} onClick={() => choose(item.onChoose)}>{item.label}</button>)}</div>}
+  </div>;
+}
 
 // The encounter's documents beside the chat: Ringkasan encounter, then one tab per document, two at most before "Lainnya".
-export function DocumentPane({ encounter, activeId, onActive, overview, tools, onClose, dispatch, onToast }: { encounter: Encounter; activeId: string | "overview"; onActive: (id: string | "overview") => void; overview: ReactNode; tools: PaneTools; onClose: () => void; dispatch: (a: WorkspaceAction) => void; onToast: (t: string, tone?: "error") => void }) {
-  const [menu, setMenu] = useState<"more" | "pcare" | null>(null);
+// drafts: unsaved edits by message id, kept by the workspace so a tab switch, collapse or closed sheet loses nothing.
+export function DocumentPane({ encounter, activeId, onActive, overview, tools, onClose, dispatch, onToast, drafts, onDraft }: { encounter: Encounter; activeId: string | "overview"; onActive: (id: string | "overview") => void; overview: ReactNode; tools: PaneTools; onClose: () => void; dispatch: (a: WorkspaceAction) => void; onToast: (t: string, tone?: "error") => void; drafts: ReadonlyMap<string, string>; onDraft: (id: string, text: string | null) => void }) {
   const [panel, setPanel] = useState<"history" | "review" | null>(null);
   const documents = paneDocuments(encounter);
   const active = documents.find((m) => m.id === activeId);
@@ -32,28 +41,21 @@ export function DocumentPane({ encounter, activeId, onActive, overview, tools, o
   const pcare = active ? tools.pcare(active) : [];
   const status = active?.reviewStatus ?? "draft";
   const ref = active && { encounterId: encounter.id, messageId: active.id };
-  function select(id: string | "overview") { setMenu(null); setPanel(null); onActive(id); }
+  function select(id: string | "overview") { setPanel(null); onActive(id); }
   async function copyText(value: string, done: string) {
-    setMenu(null);
     try { await navigator.clipboard.writeText(value); onToast(done); } catch { onToast("Clipboard tidak tersedia. Gunakan Edit untuk memilih dan menyalin teks.", "error"); }
   }
   const tab = (id: string, label: string, at?: string) => <button type="button" role="tab" key={id} id={`pane-tab-${id}`} aria-selected={(active?.id ?? "overview") === id} aria-controls="pane-body" onClick={() => select(id)}><span>{label}</span>{at && <small>{at}</small>}</button>;
   return <section className="document-pane" aria-label="Panel dokumen">
     <div className="pane-tabs">
       <div role="tablist" aria-label="Dokumen encounter">{tab("overview", "Ringkasan encounter")}{shown.map((m) => tab(m.id, label(m), time(m)))}</div>
-      {more.length > 0 && <div className="pane-menu" onKeyDown={closeOnEscape(() => setMenu(null))}>
-        <button type="button" className="text-button" aria-haspopup="menu" aria-expanded={menu === "more"} onClick={() => setMenu(menu === "more" ? null : "more")}>Lainnya +{more.length}</button>
-        {menu === "more" && <div role="menu" aria-label="Dokumen lainnya">{more.map((m) => <button type="button" role="menuitem" key={m.id} onClick={() => select(m.id)}><span>{label(m)}</span> <small>{time(m)}</small></button>)}</div>}
-      </div>}
+      {more.length > 0 && <PaneMenu trigger={`Lainnya +${more.length}`} name="Dokumen lainnya" items={more.map((m) => ({ key: m.id, label: <><span>{label(m)}</span> <small>{time(m)}</small></>, onChoose: () => select(m.id) }))}/>}
     </div>
     <div className="pane-tools" role="toolbar" aria-label="Alat dokumen">
       {active && <>
         <button type="button" className="icon-button" aria-label="Riwayat versi" title="Riwayat versi" aria-pressed={panel === "history"} onClick={() => setPanel(panel === "history" ? null : "history")}><History size={15}/></button>
         <button type="button" className="icon-button" aria-label="Salin" title="Salin" onClick={() => tools.onCopy(active)}><Copy size={15}/></button>
-        {pcare.length > 0 && <div className="pane-menu" onKeyDown={closeOnEscape(() => setMenu(null))}>
-          <button type="button" className="text-button" aria-haspopup="menu" aria-expanded={menu === "pcare"} onClick={() => setMenu(menu === "pcare" ? null : "pcare")}><ClipboardCopy size={14}/>Salin ke P-Care</button>
-          {menu === "pcare" && <div role="menu" aria-label="Salin ke P-Care">{pcare.map((item) => <button type="button" role="menuitem" key={item.field + item.label} title={item.value} aria-label={item.name ? `Salin ${item.value} — ${item.name} ke ${item.field} P-Care (kandidat, belum terkonfirmasi)` : `Salin ${item.label} ke ${item.field} P-Care`} onClick={() => copyText(item.value, item.done)}>{item.label}</button>)}</div>}
-        </div>}
+        {pcare.length > 0 && <PaneMenu trigger={<><ClipboardCopy size={14}/>Salin ke P-Care</>} name="Salin ke P-Care" items={pcare.map((item) => ({ key: item.field + item.label, label: item.label, title: item.value, ariaLabel: item.name ? `Salin ${item.value} — ${item.name} ke ${item.field} P-Care (kandidat, belum terkonfirmasi)` : `Salin ${item.label} ke ${item.field} P-Care`, onChoose: () => void copyText(item.value, item.done) }))}/>}
         <button type="button" className="icon-button" aria-label="Cetak" title="Cetak" onClick={() => tools.onPrint(active)}><Printer size={15}/></button>
         <button type="button" className="icon-button" aria-label="Unduh" title="Unduh" onClick={() => tools.onDownload(active)}><Download size={15}/></button>
       </>}
@@ -69,7 +71,7 @@ export function DocumentPane({ encounter, activeId, onActive, overview, tools, o
         {panel === "history" && <HistoryPanel message={active} encounterId={encounter.id} dispatch={dispatch}/>}
         {/* "Lihat bagian" goes to that section's heading in the body below. */}
         {panel === "review" && <ReviewPanel message={{ ...active, content: diagnosisContent(active) }} encounterId={encounter.id} dispatch={dispatch} onNavigate={(target) => { setPanel(null); requestAnimationFrame(() => [...document.querySelectorAll<HTMLElement>(".pane-body h3")].find((heading) => heading.textContent === target)?.scrollIntoView({ block: "start" })); }}/>}
-        <DocumentStudio key={active.id} message={active} onEdit={(content) => dispatch({ type: "message.edit", ...ref, content })}/>
+        <DocumentStudio key={active.id} message={active} onEdit={(content) => dispatch({ type: "message.edit", ...ref, content })} draft={drafts.get(active.id)} onDraft={(text) => onDraft(active.id, text)}/>
       </> : overview}
     </div>
   </section>;

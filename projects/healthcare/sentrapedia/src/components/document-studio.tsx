@@ -71,11 +71,11 @@ export function DocumentContent({ content, onEdit, clinical = false, hideTitle =
 
 const marks = [{ mark: "heading", label: "Judul", Icon: Heading2 }, { mark: "bold", label: "Tebal", Icon: Bold }, { mark: "italic", label: "Miring", Icon: Italic }, { mark: "list", label: "Daftar", Icon: List }] as const;
 
-// The pane body: the document in one column, editable in place as markdown with a small toolbar.
-export function DocumentStudio({ message, onEdit }: { message: Message; onEdit: (content: string) => void }) {
+// The pane body: the document in one column, editable in place as markdown with a small toolbar. The unsaved text
+// (draft) is held by the caller, so it outlives this component; null ends the edit.
+export function DocumentStudio({ message, onEdit, draft, onDraft }: { message: Message; onEdit: (content: string) => void; draft?: string; onDraft: (text: string | null) => void }) {
   const [selected, setSelected] = useState(0);
-  const [editing, setEditing] = useState(false);
-  const [body, setBody] = useState("");
+  const body = draft ?? "";
   const box = useRef<HTMLTextAreaElement>(null);
   // The selection a toolbar mark leaves, set on the textarea once the new text renders.
   const selection = useRef<{ start: number; end: number } | null>(null);
@@ -88,21 +88,21 @@ export function DocumentStudio({ message, onEdit }: { message: Message; onEdit: 
   // Any other fresh answer lets its blocks follow one another in (globals.css, data-reveal).
   const [cascade] = useState(() => !typing && freshAnswer(message));
   useEffect(() => { markRevealed(message.id); }, [message.id]);
-  useLayoutEffect(() => { if (selection.current) box.current?.setSelectionRange(selection.current.start, selection.current.end); selection.current = null; }, [body]);
+  useLayoutEffect(() => { if (selection.current) box.current?.setSelectionRange(selection.current.start, selection.current.end); selection.current = null; }, [draft]);
   function format(mark: typeof marks[number]["mark"]) {
     const field = box.current;
     if (!field) return;
     const next = applyMark(body, field.selectionStart, field.selectionEnd, mark);
-    selection.current = next; setBody(next.text); field.focus();
+    selection.current = next; onDraft(next.text); field.focus();
   }
   return <div className="document-studio" data-reveal={cascade || undefined}>
-    {editing ? <div className="document-editor">
+    {draft !== undefined ? <div className="document-editor">
       {/* Mouse down keeps the selection in the textarea while a mark is applied. */}
       <div className="editor-toolbar" role="toolbar" aria-label="Format teks">{marks.map(({ mark, label, Icon }) => <button type="button" key={mark} className="text-button" onMouseDown={(event) => event.preventDefault()} onClick={() => format(mark)}><Icon size={13}/>{label}</button>)}</div>
-      <textarea ref={box} aria-label="Isi dokumen" value={body} maxLength={50000} rows={18} onChange={(event) => setBody(event.target.value)}/>
-      <div className="editor-actions"><button className="button primary" disabled={!body.trim()} onClick={() => { onEdit(body); setEditing(false); }}>Simpan</button><button className="button" onClick={() => setEditing(false)}>Batal</button></div>
+      <textarea ref={box} aria-label="Isi dokumen" value={body} maxLength={50000} rows={18} onChange={(event) => onDraft(event.target.value)}/>
+      <div className="editor-actions"><button className="button primary" disabled={!body.trim()} onClick={() => { onEdit(body); onDraft(null); }}>Simpan</button><button className="button" onClick={() => onDraft(null)}>Batal</button></div>
     </div> : <>
-      <button type="button" className="text-button document-edit" onClick={() => { setBody(content); setEditing(true); }}><Pencil size={12}/> Edit</button>
+      <button type="button" className="text-button document-edit" onClick={() => onDraft(content)}><Pencil size={12}/> Edit</button>
       {diagnosis || typing ? <DiagnosisDocument rail={false} typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} showMeta={diagnosis} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical={diagnosis} hideTitle/>}/> : <DocumentContent content={content} onEdit={onEdit} clinical={diagnosis} hideTitle/>}
     </>}
   </div>;

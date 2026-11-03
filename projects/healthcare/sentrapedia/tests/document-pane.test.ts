@@ -16,6 +16,22 @@ describe("the document pane", () => {
     expect(paneOpensFor(e)).toBe(true);
     expect(paneOpensFor(undefined)).toBe(false);
   });
+  it("an AADI analysis is a pane document even when the question mode sent it", () => {
+    const analysis: Message = { ...a("question"), sourceText: JSON.stringify({ kind: "AADI", contractVersion: "1" }) };
+    expect(paneDocuments({ messages: [u("question"), analysis, a("question")] })).toEqual([analysis]);
+  });
+  it("applyMark leaves an empty bold or italic selection between the marks", () => {
+    expect(applyMark("ab", 1, 1, "bold")).toEqual({ text: "a****b", start: 3, end: 3 });
+    expect(applyMark("ab", 1, 1, "italic")).toEqual({ text: "a**b", start: 2, end: 2 });
+  });
+  it("applyMark makes every selected line a list item", () => {
+    expect(applyMark("a\nb\nc", 0, 5, "list")).toEqual({ text: "- a\n- b\n- c", start: 2, end: 11 });
+    expect(applyMark("a\n- b\nc", 2, 7, "list")).toEqual({ text: "a\n- b\n- c", start: 2, end: 9 });
+  });
+  it("applyMark does not double a heading or list prefix the line already has", () => {
+    expect(applyMark("## a", 4, 4, "heading")).toEqual({ text: "## a", start: 4, end: 4 });
+    expect(applyMark("x\n- y", 4, 5, "list")).toEqual({ text: "x\n- y", start: 4, end: 5 });
+  });
   it("applyMark wraps a selection and places the caret after it", () => {
     expect(applyMark("abc def", 4, 7, "bold")).toEqual({ text: "abc **def**", start: 4, end: 11 });
     expect(applyMark("abc", 0, 0, "heading")).toEqual({ text: "## abc", start: 3, end: 3 });
