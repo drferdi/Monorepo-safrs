@@ -101,8 +101,10 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     pendingText.current = null;
     setBusy(false); setAnalysisError(""); setPendingQuestion(null);
   }, []);
-  const changeMode = useCallback((next: ModeId) => { cancelAnalysis(); setMode(next); setTemplateKey(null); }, [cancelAnalysis]);
-  function chooseTemplate(key: string) { cancelAnalysis(); if (key.startsWith("mode:")) changeMode(key.slice(5) as ModeId); else { const item = state.templates?.find((t) => `template:${t.id}` === key); if (!item) return; setMode(item.mode); setTemplateKey(key); } closeDialog(); }
+  // A mode or template picked while an analysis runs leaves it running: the request carries the mode it was sent with,
+  // and the chips are disabled while busy; the / picker and the Command Center must behave the same (review, 2026-11-04).
+  const changeMode = useCallback((next: ModeId) => { setMode(next); setTemplateKey(null); }, []);
+  function chooseTemplate(key: string) { if (key.startsWith("mode:")) changeMode(key.slice(5) as ModeId); else { const item = state.templates?.find((t) => `template:${t.id}` === key); if (!item) return; setMode(item.mode); setTemplateKey(key); } closeDialog(); }
 
   useEffect(() => () => analysisController.current?.abort(), []);
   useEffect(() => { const handler = (e: KeyboardEvent) => { const shortcut = shortcutFor(e, Boolean(dialog) || (mobile && mobileNavOpen)); if (!shortcut) return; e.preventDefault(); if (shortcut === "new") { dispatch({ type: "encounter.select", id: null }); setPrompt(""); changeMode("question"); } else setDialog(shortcut); }; window.addEventListener("keydown", handler); return () => window.removeEventListener("keydown", handler); }, [dialog, mobile, mobileNavOpen, changeMode]);
@@ -206,7 +208,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     {dialog === "knowledge" && <KnowledgeDialog initialTab={dialogId} onClose={closeDialog} onSave={saveAadiAnalysis}/>}
     {dialog === "templates" && <TemplateLibrary state={state} dispatch={dispatch} onChoose={chooseTemplate} onInsert={(next, text) => { chooseTemplate(`mode:${next}`); updatePrompt(insertTemplate(prompt, text)); }} onClose={closeDialog}/>}
     {dialog === "queue" && <WorkQueue state={state} dispatch={dispatch} onClose={closeDialog} onSelect={(id) => { selectEncounter(id); requestAnimationFrame(() => document.querySelectorAll(".assistant-message").item(document.querySelectorAll(".assistant-message").length - 1)?.scrollIntoView({ block: "nearest" })); }}/ >}
-    <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify} onSignOut={onSignOut} userButton={userButton}/>
+    <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify} onSignOut={onSignOut} userButton={userButton} beforeLeave={() => (!busy && !prompt.trim() && drafts.size === 0) || window.confirm("Analisis yang sedang berjalan, teks yang belum dikirim, dan suntingan dokumen yang belum disimpan akan hilang. Tetap buka Pengaturan Agent?")}/>
     <main className={`main-canvas ${hasMessages ? "chat-view" : "home-view"}`} inert={mobile && navigationOpen} aria-hidden={mobile && navigationOpen}>
       {storageError && <div className="storage-warning" role="alert">{storageError}</div>}
       <WorkspaceHeader hasMessages={hasMessages} name={state.settings.name ?? ""} patientName={patient?.name} encounterTitle={encounter?.title} focusMode={focusMode}

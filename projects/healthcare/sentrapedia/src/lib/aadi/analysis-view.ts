@@ -51,9 +51,10 @@ function therapyView(result: AadiResult, gate: EvidenceGateReport | undefined): 
   const key = (drug: string) => unstrength(drug).toLowerCase();
   const regimen = (drug: string) => therapy.regimen.find((r) => key(r.drug) === key(drug));
   // The gate's report is the list: a drug whose dose it removed stays on it, named without the dose and marked for the
-  // dose check. Without a report (a legacy answer) every line is marked unverified rather than trusted.
+  // dose check; a drug it removed outright is not listed at all. Without a report (a legacy answer) every line is
+  // marked unverified rather than trusted.
   const lines = gate
-    ? gate.drugs.map((d) => { const r = regimen(d.drug); return { text: r ? regimenLine(d.status === "verified" ? r : { ...r, dose: "" }) : `${d.drug}, dosis: cek pedoman`, status: d.status }; })
+    ? gate.drugs.filter((d) => d.status !== "removed").map((d) => { const r = regimen(d.drug); return { text: r ? regimenLine(d.status === "verified" ? r : { ...r, dose: "" }) : `${d.drug}, dosis: cek pedoman`, status: d.status }; })
     : therapy.regimen.map((r) => ({ text: regimenLine(r), status: "doseRemoved" as const }));
   return { therapy: {
     forDiagnosis: `${therapy.forDiagnosis.label} (${therapy.forDiagnosis.icd10})`,

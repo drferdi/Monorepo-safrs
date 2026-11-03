@@ -25,6 +25,23 @@ describe("sidebar order", () => {
   });
 });
 
+describe("leaving for the /agent page", () => {
+  it("asks the workspace first and stays when it says no", () => {
+    const beforeLeave = vi.fn(() => false);
+    render(<Sidebar state={initialWorkspace} open mobile={false} onToggle={noop} onDialog={noop} onNew={noop} onSelect={noop} onToast={noop} beforeLeave={beforeLeave}/>);
+    const link = screen.getByRole("link", { name: "Pengaturan Agent" });
+    expect(fireEvent.click(link)).toBe(false);
+    expect(beforeLeave).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: /Sentrapedia/ }));
+    expect(fireEvent.click(screen.getByRole("menuitem", { name: "Pengaturan Agent" }))).toBe(false);
+    expect(beforeLeave).toHaveBeenCalledTimes(2);
+  });
+  it("goes when the workspace has nothing to lose", () => {
+    render(<Sidebar state={initialWorkspace} open mobile={false} onToggle={noop} onDialog={noop} onNew={noop} onSelect={noop} onToast={noop} beforeLeave={() => true}/>);
+    expect(fireEvent.click(screen.getByRole("link", { name: "Pengaturan Agent" }))).toBe(true);
+  });
+});
+
 describe("sidebar account row", () => {
   const sidebar = (props: Partial<ComponentProps<typeof Sidebar>> = {}) => <Sidebar state={initialWorkspace} open mobile={false} onToggle={noop} onDialog={noop} onNew={noop} onSelect={noop} onToast={noop} {...props}/>;
   it("forwards sign-out and the user button into the account menu", () => {

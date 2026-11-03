@@ -10,9 +10,11 @@ import { PatientAvatar } from "./patient-avatar";
 import type { Workspace } from "../lib/workspace";
 
 export type DialogName = "patient" | "list" | "search" | "context" | "scribe" | "upgrade" | "account" | "feedback" | "encounter" | "legal" | "document" | "commands" | "templates" | "queue" | "knowledge" | null;
-interface Props { state: Workspace; open: boolean; mobile: boolean; onToggle: () => void; onDialog: (name: DialogName, id?: string) => void; onNew: (patientId?: string) => void; onSelect: (id: string) => void; onToast: (text: string) => void; onSignOut?: () => void; userButton?: ReactNode }
+interface Props { state: Workspace; open: boolean; mobile: boolean; onToggle: () => void; onDialog: (name: DialogName, id?: string) => void; onNew: (patientId?: string) => void; onSelect: (id: string) => void; onToast: (text: string) => void; onSignOut?: () => void; userButton?: ReactNode; beforeLeave?: () => boolean }
 
-export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSelect, onToast, onSignOut, userButton }: Props) {
+export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSelect, onToast, onSignOut, userButton, beforeLeave }: Props) {
+  // Pengaturan Agent is a page: the workspace may veto the navigation while it holds unsaved text or a running analysis.
+  const leave = (event: { preventDefault: () => void }) => { if (beforeLeave && !beforeLeave()) event.preventDefault(); };
   const [feedback, setFeedback] = useState("");
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -42,7 +44,7 @@ export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSele
         <button onClick={() => onDialog("patient")}><UserRoundPlus/><span>Buat Pasien</span></button>
         <button onClick={() => onDialog("list")}><ListPlus/><span>Buat Daftar Pasien</span></button>
         <button onClick={() => onDialog("scribe")}><AudioLines/><span>Mulai Scribe</span></button>
-        <Link href="/agent"><SlidersHorizontal/><span>Pengaturan Agent</span></Link>
+        <Link href="/agent" onClick={leave}><SlidersHorizontal/><span>Pengaturan Agent</span></Link>
         <button onClick={() => onDialog("search")}><Search/><span>Cari</span><kbd>⌘ /</kbd></button>
       </nav>
       <div className="sidebar-content"><SidebarSubmenu initialSection="encounters" sections={[
@@ -51,7 +53,7 @@ export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSele
         { id: "encounters", title: "Semua Encounter", selectedId: state.activeEncounterId, items: state.encounters.map((encounter) => ({ id: encounter.id, label: <span title={encounter.title}>{encounter.title}</span>, onSelect: () => onSelect(encounter.id), actions: <button className="small-icon" aria-label={`Opsi untuk ${encounter.title}`} onClick={() => onDialog("encounter", encounter.id)}><Ellipsis size={13}/></button> })), empty: <button className="empty-text" onClick={() => { onNew(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".composer textarea")?.focus()); }}>Mulai Encounter pertama <Plus size={12}/></button> },
       ]}/></div>
       <div className="sidebar-bottom"><form className="feedback" onSubmit={(event) => { event.preventDefault(); if (feedback.trim()) { onToast("Masukan tersimpan secara lokal. Terima kasih telah membantu mengembangkan workspace."); sessionStorage.setItem("sentrapedia-feedback", feedback); setFeedback(""); } }}><input aria-label="Masukan" placeholder="Tulis masukan di sini..." value={feedback} onChange={(e) => setFeedback(e.target.value)} maxLength={1000}/><button aria-label="Simpan masukan" disabled={!feedback.trim()}><ArrowRight size={13}/></button></form>
-        <AccountMenu name={state.settings.name || "Sentrapedia"} plan="Lite" onSignOut={onSignOut} onOpen={(name) => { if (mobile) onToggle(); onDialog(name); }}>{userButton}</AccountMenu>
+        <AccountMenu name={state.settings.name || "Sentrapedia"} plan="Lite" onSignOut={onSignOut} onOpen={(name) => { if (mobile) onToggle(); onDialog(name); }} onLeave={leave}>{userButton}</AccountMenu>
       </div>
     </aside>
   </>;

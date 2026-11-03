@@ -59,4 +59,10 @@ describe("analysisView therapy lines follow the gate report", () => {
     expect(lines[1].text).toMatch(/^Amoksisilin/);
     expect(lines[1].text).not.toMatch(/500/);
   });
+  it("drops a drug the gate removed outright instead of listing it for a dose check", () => {
+    const stored = aadiMessage({ ...analysisFixture, therapyGrounding: bundle([["P001-001", "Nama keluaran uji: parasetamol 500 mg tiga kali sehari"]]), evidenceGate: { forDiagnosis: { icd10: "J00", label: "Nama keluaran uji" }, therapyRemoved: false, reason: "", drugs: [{ drug: "Parasetamol", dose: "3x500mg", status: "verified", evidenceIds: ["P001-001"] }, { drug: "Siprofloksasin", dose: "2x500mg", status: "removed", evidenceIds: [] }] } });
+    const lines = analysisView(stored)!.therapy!.lines;
+    expect(lines.map((l) => l.status)).toEqual(["verified"]);
+    expect(lines.map((l) => l.text).join(" ")).not.toMatch(/Siprofloksasin/);
+  });
 });
