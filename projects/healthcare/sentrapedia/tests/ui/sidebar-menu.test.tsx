@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import type { ComponentProps } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { AccountMenu } from "../../src/components/account-menu";
@@ -24,6 +25,30 @@ describe("sidebar order", () => {
   });
 });
 
+describe("sidebar account row", () => {
+  const sidebar = (props: Partial<ComponentProps<typeof Sidebar>> = {}) => <Sidebar state={initialWorkspace} open mobile={false} onToggle={noop} onDialog={noop} onNew={noop} onSelect={noop} onToast={noop} {...props}/>;
+  it("forwards sign-out and the user button into the account menu", () => {
+    const onSignOut = vi.fn();
+    render(sidebar({ onSignOut, userButton: <span data-testid="user-button"/> }));
+    fireEvent.click(screen.getByRole("button", { name: /Sentrapedia/ }));
+    expect(screen.getByTestId("user-button")).toBeTruthy();
+    fireEvent.click(screen.getByRole("menuitem", { name: "Keluar" }));
+    expect(onSignOut).toHaveBeenCalledTimes(1);
+  });
+  it("names the account after the display name in settings", () => {
+    render(sidebar({ state: { ...initialWorkspace, settings: { ...initialWorkspace.settings, name: "dr. Rani Putri" } } }));
+    const trigger = screen.getByRole("button", { name: /dr\. Rani Putri/ });
+    expect(trigger.querySelector(".avatar")?.textContent).toBe("DR");
+  });
+  it("closes the phone sidebar before opening the chosen dialog", () => {
+    const calls: string[] = [];
+    render(sidebar({ mobile: true, onToggle: () => calls.push("toggle"), onDialog: (name) => calls.push(`dialog:${name}`) }));
+    fireEvent.click(screen.getByRole("button", { name: /Sentrapedia/ }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Referensi" }));
+    expect(calls).toEqual(["toggle", "dialog:knowledge"]);
+  });
+});
+
 describe("account menu", () => {
   it("opens with settings, queue, references, about and sign out", () => {
     const onOpen = vi.fn(), onSignOut = vi.fn();
@@ -40,6 +65,27 @@ describe("account menu", () => {
     expect(screen.queryByRole("menuitem", { name: "Keluar" })).toBeNull();
     expect(screen.getByRole("menu").textContent).toContain("3 langkah");
     expect(screen.getByTestId("slot")).toBeTruthy();
+  });
+  it("moves focus into the menu and walks it with the arrow, Home and End keys", () => {
+    render(<AccountMenu name="dr. Rani" plan="Lite" onOpen={noop} onSignOut={noop}/>);
+    fireEvent.click(screen.getByRole("button", { name: /dr\. Rani/ }));
+    const names = () => screen.getAllByRole("menuitem").map(i => i.textContent);
+    const focused = () => document.activeElement?.textContent;
+    expect(focused()).toBe(names()[0]);
+    const press = (key: string) => fireEvent.keyDown(document.activeElement!, { key });
+    press("ArrowDown"); expect(focused()).toBe("Antrean kerja");
+    press("End"); expect(focused()).toBe("Keluar");
+    press("ArrowDown"); expect(focused()).toBe("Pengaturan Agent");
+    press("ArrowUp"); expect(focused()).toBe("Keluar");
+    press("Home"); expect(focused()).toBe("Pengaturan Agent");
+  });
+  it("puts the menu after the trigger and closes when focus leaves it", () => {
+    render(<><AccountMenu name="dr. Rani" plan="Lite" onOpen={noop}/><button>luar</button></>);
+    const trigger = screen.getByRole("button", { name: /dr\. Rani/ });
+    fireEvent.click(trigger);
+    expect(trigger.compareDocumentPosition(screen.getByRole("menu")) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    fireEvent.blur(screen.getAllByRole("menuitem")[0], { relatedTarget: screen.getByRole("button", { name: "luar" }) });
+    expect(screen.queryByRole("menu")).toBeNull();
   });
   it("closes on Escape and outside click, returning focus to the trigger", () => {
     render(<><button>luar</button><AccountMenu name="dr. Rani" plan="Lite" onOpen={noop}/></>);

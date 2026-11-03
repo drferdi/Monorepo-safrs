@@ -50,7 +50,7 @@ export function Sidebar({ state, open, mobile, onToggle, onDialog, onNew, onSele
         { id: "encounters", title: "Semua Encounter", selectedId: state.activeEncounterId, items: state.encounters.map((encounter) => ({ id: encounter.id, label: <span title={encounter.title}>{encounter.title}</span>, onSelect: () => onSelect(encounter.id), actions: <button className="small-icon" aria-label={`Opsi untuk ${encounter.title}`} onClick={() => onDialog("encounter", encounter.id)}><Ellipsis size={13}/></button> })), empty: <button className="empty-text" onClick={() => { onNew(); requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".composer textarea")?.focus()); }}>Mulai Encounter pertama <Plus size={12}/></button> },
       ]}/></div>
       <div className="sidebar-bottom"><form className="feedback" onSubmit={(event) => { event.preventDefault(); if (feedback.trim()) { onToast("Masukan tersimpan secara lokal. Terima kasih telah membantu mengembangkan workspace."); sessionStorage.setItem("sentrapedia-feedback", feedback); setFeedback(""); } }}><input aria-label="Masukan" placeholder="Tulis masukan di sini..." value={feedback} onChange={(e) => setFeedback(e.target.value)} maxLength={1000}/><button aria-label="Simpan masukan" disabled={!feedback.trim()}><ArrowRight size={13}/></button></form>
-        <AccountMenu name="Sentrapedia" plan="Lite" onSignOut={onSignOut} onOpen={(name) => { if (mobile) onToggle(); onDialog(name); }}>{userButton}</AccountMenu>
+        <AccountMenu name={state.settings.name || "Sentrapedia"} plan="Lite" onSignOut={onSignOut} onOpen={(name) => { if (mobile) onToggle(); onDialog(name); }}>{userButton}</AccountMenu>
       </div>
     </aside>
   </>;
