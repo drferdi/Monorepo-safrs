@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { emptyCase, type AadiResult } from "../src/lib/aadi/contract";
-import { diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, nextSteps, pcareCopies, taskDraftFrom, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
+import { diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, pcareCopies, taskDraftFrom, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
 import { createDraft } from "../src/lib/drafts";
 import { missingField } from "../src/lib/clinical-templates";
-import { localDraftMessages } from "../src/lib/workspace-session";
 import { theOracleDiseases } from "../src/lib/theoracle";
 import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
 import { regimenLine, theOracleSourceLinks } from "../src/lib/aadi/presentation";
@@ -572,36 +571,6 @@ describe("copy and referral from an analysis", () => {
     const exam = pcareCopies({ sourceText: `Input\n${examined}`, mode: "clinic" }, createDraft({ mode: "clinic", prompt: examined, ...draftInput, caseFields: { age: "40", sex: "M", bp: "120/80", heartRate: "96", temperature: "", respiratoryRate: "", spo2: "" } })).find(item => item.field === "Pemeriksaan fisik")!.value;
     expect(exam).toMatch(/^Keadaan umum: Baik \[otomatis normal\]\nKesadaran: Compos mentis \[otomatis normal\]\nTekanan darah: 120\/80 mmHg\nNadi: 96 x\/menit\nKepala: /);
     expect(exam).not.toMatch(/\||###|\*\*|Belum|Tidak diperiksa|---/);
-  });
-  it("offers local next steps after an analysis, prefilled from recorded facts, with the plan left to the doctor", () => {
-    const message = aadiMessage(pneumonia);
-    const steps = nextSteps(message);
-    expect(steps.map(step => [step.mode, step.label])).toEqual([["clinic", "Catatan SOAP"], ["referral", "Surat rujukan"], ["tasks", "Daftar tugas"]]);
-    const soap = steps[0].text;
-    expect(soap).toContain("Keluhan utama: Batuk berdahak dan demam\n");
-    expect(soap).toContain("Tanda vital: TD 160/95, N 98, RR 22, S 38,5, SpO2 95\n");
-    expect(soap).toContain("\nAsesmen: Diagnosis kerja (kandidat AADI, belum terkonfirmasi): Pneumonia (J18.9)\n");
-    expect(soap.endsWith("\nRencana: ")).toBe(true);
-    expect(soap).not.toContain("Amoxicillin");
-    expect(steps[1].text).toBe(referralPrompt(message));
-    expect(steps[2].text.split("\n")).toEqual(["Tanyakan: Riwayat kontak", "Periksa: Auskultasi ulang", "Pemeriksaan penunjang: Rontgen toraks"]);
-    // The prefill becomes the local SOAP note: AADI's candidate stays labelled as one, and the plan stays empty.
-    const note = createDraft({ mode: "clinic", prompt: soap, ...draftInput });
-    expect(note).toMatch(/\n## \d\. Assessment\n\nDiagnosis kerja \(kandidat AADI, belum terkonfirmasi\): Pneumonia \(J18\.9\)\n/);
-    expect(note).not.toMatch(/## \d\. Tata Laksana/);
-    expect(note).toContain("- Tata laksana\n");
-    expect(nextSteps(aadiMessage(headache)).map(step => step.mode)).toEqual(["clinic", "referral"]);
-  });
-  it("offers analysis steps after a local draft, without the draft's own mode", () => {
-    // Chips insert each section after a blank line, so the whole typed input is carried, not its first paragraph.
-    const text = "Keluhan utama: Batuk 5 hari\n\nTanda vital: TD 120/80";
-    const local = (mode: "clinic" | "referral") => localDraftMessages({ text, content: "Draf", mode, context: "Konteks fiktif", settings: initialWorkspace.settings });
-    const [user, draft] = local("clinic");
-    const steps = nextSteps(draft);
-    expect(steps.map(step => [step.mode, step.label])).toEqual([["question", "Analisis AADI"], ["workup", "Pemeriksaan penunjang"], ["icd10", "Kode ICD-10"], ["referral", "Surat rujukan"]]);
-    expect(steps.every(step => step.text === text)).toBe(true);
-    expect(nextSteps(local("referral")[1]).map(step => step.mode)).toEqual(["question", "workup", "icd10"]);
-    expect(nextSteps(user)).toEqual([]);
   });
 });
 

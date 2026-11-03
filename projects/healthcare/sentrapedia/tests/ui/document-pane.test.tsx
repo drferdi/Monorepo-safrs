@@ -6,9 +6,9 @@ import { WorkspaceApp } from "../../src/components/workspace";
 import { DocumentPane } from "../../src/components/document-pane";
 import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
 import { initialWorkspace, type Encounter, type Message } from "../../src/lib/workspace";
-import { pcareCopies } from "../../src/lib/aadi/presentation";
+import { aadiMessage, pcareCopies } from "../../src/lib/aadi/presentation";
 import { compactQuery, mobileQuery } from "../../src/lib/layout";
-import type { AadiAnalysis } from "../../src/lib/aadi/contract";
+import { emptyCase, type AadiAnalysis } from "../../src/lib/aadi/contract";
 import type { CaseState } from "../../src/lib/aadi/types";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
 import { theOracleDiseases } from "../../src/lib/theoracle";
@@ -75,7 +75,7 @@ describe("the document pane", () => {
     expect(document.querySelector(".workspace-body")!.getAttribute("data-split")).toBe("true");
     // The chat carries a card that opens the document, not the document itself.
     const chat = within(screen.getByLabelText("Percakapan Encounter"));
-    expect(chat.getByRole("button", { name: /Buka dokumen/ })).toBeTruthy();
+    expect(chat.getByRole("button", { name: /Catatan Klinis/i })).toBeTruthy();
     expect(chat.queryByRole("combobox", { name: "Status dokumen" })).toBeNull();
     expect(screen.getByRole("combobox", { name: "Status dokumen" })).toBeTruthy();
     // The overview tab shows Ringkasan encounter; the collapse control closes the pane.
@@ -85,7 +85,7 @@ describe("the document pane", () => {
     expect(screen.queryByRole("tablist", { name: "Dokumen encounter" })).toBeNull();
     expect(document.querySelector(".workspace-body")!.hasAttribute("data-split")).toBe(false);
     // The card in the chat reopens the pane on its document.
-    fireEvent.click(chat.getByRole("button", { name: /Buka dokumen/ }));
+    fireEvent.click(chat.getByRole("button", { name: /Catatan Klinis/i }));
     expect(screen.getByRole("tab", { name: /Catatan Klinis/ }).getAttribute("aria-selected")).toBe("true");
     fireEvent.click(screen.getByRole("button", { name: /^Dokumen encounter/ }));
     expect(screen.queryByRole("tablist", { name: "Dokumen encounter" })).toBeNull();
@@ -227,5 +227,15 @@ describe("the document pane", () => {
     expect(screen.getByRole("tab", { name: /Edukasi Pasien/ }).getAttribute("aria-selected")).toBe("true");
     fireEvent.click(screen.getByTitle("Encounter pane").closest("button")!);
     expect(screen.getByRole("tab", { name: /Catatan Klinis/ }).getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("Buat in Ringkasan encounter keeps what the doctor was typing in the composer", async () => {
+    const base = analysis({ ...emptyCase(), chiefComplaint: "Batuk" });
+    await seeded([aadiMessage({ ...base, result: { ...base.result, nextBestActions: [{ kind: "exam", item: "Foto toraks", reason: "" }] } })]);
+    fireEvent.click(screen.getByRole("tab", { name: /^Ringkasan encounter/ }));
+    fireEvent.change(textarea(), { target: { value: "Pertanyaan yang sedang diketik" } });
+    fireEvent.click(within(screen.getByRole("region", { name: "Daftar tugas" })).getByRole("button", { name: "Buat" }));
+    expect(await screen.findByRole("tab", { name: /Daftar Tugas/i })).toBeTruthy();
+    expect(textarea().value).toBe("Pertanyaan yang sedang diketik");
   });
 });

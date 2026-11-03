@@ -392,46 +392,9 @@ export function pcareCopies(message: Pick<Message, "sourceText" | "mode">, conte
   ];
 }
 
-// What to do next with a draft (Puskesmas flow, feature 6, generalising the referral letter of design D4): each step
-// only prefills the composer in an existing mode; nothing is sent until the doctor presses Enter.
-export interface NextStep { mode: ModeId; label: string; text: string }
 const actionVerb = { question: "Tanyakan", exam: "Periksa", test: "Pemeriksaan penunjang" } as const;
 // The engine's next best actions as "verb: item" lines, the text the tasks document is made from; empty when there are none.
 export const taskDraftFrom = (result: AadiResult): string => result.nextBestActions.map(action => `${actionVerb[action.kind]}: ${action.item}`).join("\n");
-// "Analisis AADI", not "Analisis kasus": that is the send button's name.
-const analysisSteps: Omit<NextStep, "text">[] = [{ mode: "question", label: "Analisis AADI" }, { mode: "workup", label: "Pemeriksaan penunjang" }, { mode: "icd10", label: "Kode ICD-10" }, { mode: "referral", label: "Surat rujukan" }];
-// A local draft's typed input runs to the next block localDraftMessages writes; the input itself may hold blank lines.
-const localInput = /^Input\n([\s\S]*?)\n\n(?:Templat saat dibuat|Konteks Encounter|Pasien|Preferensi format|Analisis AADI tidak tersedia)\n/;
-export function nextSteps(message: Pick<Message, "sourceText" | "mode" | "role">): NextStep[] {
-  if (message.role !== "assistant") return [];
-  const stored = storedCase(message);
-  if (stored) return [
-    { mode: "clinic", label: "Catatan SOAP", text: soapPrompt(stored.data, stored.result) },
-    { mode: "referral", label: "Surat rujukan", text: referralPrompt(message) },
-    ...(stored.result.nextBestActions.length ? [{ mode: "tasks" as const, label: "Daftar tugas", text: taskDraftFrom(stored.result) }] : []),
-  ];
-  const input = localInput.exec(message.sourceText ?? "")?.[1].trim();
-  return input ? analysisSteps.filter(step => step.mode !== message.mode).map(step => ({ ...step, text: input })) : [];
-}
-
-// The labelled lines the local SOAP draft reads: recorded facts and AADI's candidates, labelled as candidates. The plan is
-// the doctor's, so the line stays empty and the gated regimen is never copied into it.
-function soapPrompt(data: CaseState, result: AadiResult): string {
-  const { history, notes } = caseHistory(data), likely = candidates(result), exam = findings(data).join("; ");
-  const { systolic, diastolic, heartRate, respiratoryRate, temperature, spo2 } = data.vitals;
-  const vitals = [systolic != null && diastolic != null ? `TD ${systolic}/${diastolic}` : "", heartRate != null ? `N ${heartRate}` : "", respiratoryRate != null ? `RR ${respiratoryRate}` : "", temperature != null ? `S ${decimal(temperature)}` : "", spo2 != null ? `SpO2 ${spo2}` : ""].filter(Boolean).join(", ");
-  const story = [history, notes].filter(Boolean).join(". ").replace(/\s*\n\s*/g, " ");
-  return [
-    `Keluhan utama: ${data.chiefComplaint.trim()}`,
-    story && `Anamnesis: ${story}`,
-    vitals && `Tanda vital: ${vitals}`,
-    exam && `Pemeriksaan fisik: ${exam}`,
-    data.currentMedications.length ? `Obat: ${data.currentMedications.join("; ")}` : "",
-    data.allergies.length ? `Alergi: ${data.allergies.join(", ")}` : "",
-    likely && `Asesmen: Diagnosis kerja (kandidat AADI, belum terkonfirmasi): ${likely}`,
-    "Rencana: ",
-  ].filter(Boolean).join("\n");
-}
 
 type ContentSource = Pick<Message, "content" | "originalContent" | "sourceText"> & Partial<Pick<Message, "mode">>;
 // Every render asks for each card's view; parsing the source and re-running the gate once per unchanged message is enough.

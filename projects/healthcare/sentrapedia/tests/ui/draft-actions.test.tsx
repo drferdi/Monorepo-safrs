@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
 const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
 void storageKey; void unreadableKey;
@@ -67,8 +67,7 @@ describe("local draft when the analysis fails", () => {
     expect(screen.getByRole("button", { name: "Coba lagi" })).toBeTruthy();
     expect(textarea().value).toBe(complaint);
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Susun draf SOAP lokal" })); });
-    expect(await screen.findByText("Draf lokal", { selector: ".draft-badge" })).toBeTruthy();
-    expect(screen.getByText("Catatan Klinis (SOAP)", { selector: ".message-header strong" })).toBeTruthy();
+    expect(await screen.findByText("Draf Catatan Klinis (SOAP) disusun.")).toBeTruthy();
     expect(screen.queryByText(failure)).toBeNull();
     expect(textarea().value).toBe("");
     expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
@@ -93,18 +92,5 @@ describe("local draft when the analysis fails", () => {
     fireEvent.change(textarea(), { target: { value: "" } });
     expect(screen.queryByRole("button", { name: "Coba lagi" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Susun draf SOAP lokal" })).toBeNull();
-  });
-});
-
-// The P-Care copies moved to the document pane (tests/ui/document-pane.test.tsx).
-describe("next steps", () => {
-  it("routes a next step into the composer in its mode, prefilled, and says what Enter will do", async () => {
-    await failedAnalysis();
-    await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Susun draf SOAP lokal" })); });
-    fireEvent.click(within(screen.getByRole("group", { name: "Langkah berikutnya" })).getByRole("button", { name: "Pemeriksaan penunjang" }));
-    expect(textarea().placeholder).toContain("pemeriksaan yang sudah ada");
-    expect(textarea().value).toBe(complaint);
-    expect(screen.getByText("Mode Pemeriksaan Penunjang siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.", { selector: ".toast span" })).toBeTruthy();
-    expect(sent).toHaveLength(1);
   });
 });

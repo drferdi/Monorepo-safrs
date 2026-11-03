@@ -67,7 +67,7 @@ describe("analysis case strip", () => {
     expect(sent[0].chiefComplaint).toContain("TD 150/90");
 
     // The answer is a case analysis whatever mode sent it, and the next case starts with an empty strip.
-    expect(await screen.findByText("Analisis kasus", { selector: ".message-header strong" })).toBeTruthy();
+    expect(await screen.findByText("Analisis kasus", { selector: ".document-card strong" })).toBeTruthy();
     expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Usia dan tanda vital" }));
     expect(field("TD (mmHg)").value).toBe("");
@@ -76,13 +76,10 @@ describe("analysis case strip", () => {
     expect(screen.getByRole("group", { name: "Mode" })).toBeTruthy();
     expect(screen.queryByRole("combobox", { name: "Mode atau templat" })).toBeNull();
 
-    // The working diagnosis copies from the pane's P-Care menu, and a referral letter is prefilled in the local referral mode.
+    // The working diagnosis copies from the pane's P-Care menu, and the chat carries no Lanjut row.
     fireEvent.click(screen.getByRole("button", { name: "Salin ke P-Care" }));
     expect(within(screen.getByRole("menu", { name: "Salin ke P-Care" })).getByRole("menuitem", { name: /^Salin G44\.2 — / })).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: /Surat rujukan/ }));
-    expect((screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement).value).toMatch(/^Keluhan utama: Laki-laki 45 tahun[^\n]*Diagnosis kerja \(kandidat AADI, belum terkonfirmasi\): Tension-type headache \(G44\.2\)\nRiwayat penyakit sekarang: 45 tahun, laki-laki\. Pasien contoh[^\n]*\nPemeriksaan fisik: Sistolik \(mmHg\) 160; Diastolik \(mmHg\) 95; Nadi \(\/menit\) 98\nPermintaan: \nPenerima: $/);
-    expect((screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement).placeholder).toContain("tujuan rujukan");
-    expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
+    expect(screen.queryByText("Lanjut:")).toBeNull();
     expect(sent).toHaveLength(1);
   });
 
@@ -101,7 +98,7 @@ describe("analysis case strip", () => {
     await act(async () => { await Promise.resolve(); });
     // The readable pulse meets the minimum data; the unreadable SpO₂ is still not sent.
     expect(sent[0].vitals).toEqual({ heartRate: 88 });
-    expect(await screen.findByText("fokus: ICD-10")).toBeTruthy();
+    expect(await screen.findByText(/fokus: ICD-10/)).toBeTruthy();
   });
 
   it("shows no strip for a local document mode", async () => {

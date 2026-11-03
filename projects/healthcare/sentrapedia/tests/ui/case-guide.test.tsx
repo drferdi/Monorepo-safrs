@@ -128,8 +128,7 @@ describe("guided SOAP view", () => {
     fireEvent.click(screen.getByRole("button", { name: "Gunakan mode Catatan Klinis (SOAP)" }));
     expect(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }).getAttribute("aria-pressed")).toBe("true");
     await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
-    expect(await screen.findByText("Draf lokal", { selector: ".draft-badge" })).toBeTruthy();
-    expect(screen.getByText("Catatan Klinis (SOAP)", { selector: ".message-header strong" })).toBeTruthy();
+    expect(await screen.findByText("Draf Catatan Klinis (SOAP) disusun.")).toBeTruthy();
     expect(sent).toEqual([]);
     const saved = JSON.parse(localStorage.getItem(storageKey)!) as Workspace;
     const draft = saved.encounters[0].messages.find((message) => message.role === "assistant")!;

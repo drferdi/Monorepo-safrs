@@ -68,7 +68,7 @@ describe("normal exam template in the composer", () => {
     fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
     fireEvent.change(textarea(), { target: { value: "Keluhan utama: batuk 3 hari, laki-laki 40 tahun, TD 150/90\nParu: ronki (+/+)" } });
     await act(async () => { fireEvent.keyDown(textarea(), { key: "Enter" }); });
-    expect(await screen.findByText("Draf lokal", { selector: ".draft-badge" })).toBeTruthy();
+    expect(await screen.findByText("Draf Catatan Klinis (SOAP) disusun.")).toBeTruthy();
     const draft = (JSON.parse(localStorage.getItem(storageKey)!) as Workspace).encounters[0].messages.find((message) => message.role === "assistant")!;
     expect(draft.content).toContain("| **Paru** | Ronki (+/+). |\n");
     expect(draft.content).toContain("| **Tekanan darah** | 150/90 mmHg |\n");

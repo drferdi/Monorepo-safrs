@@ -2,7 +2,7 @@
 
 import { Check, CircleAlert, X } from "lucide-react";
 import { useCallback, useEffect, useReducer, useRef, useState, useSyncExternalStore, type ComponentProps, type ReactNode } from "react";
-import { createDraft, modes, type ModeId } from "../lib/drafts";
+import { createDraft, type ModeId } from "../lib/drafts";
 import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Message, type Patient } from "../lib/workspace";
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
 import { downloadName, headlineFor } from "../lib/studio";
@@ -32,13 +32,6 @@ import { useMediaQuery, useToast, useWorkspacePersistence } from "./workspace-ho
 import { ChatComposer, Conversation, HomeFooter, HomeView, WorkspaceHeader } from "./workspace-views";
 import { WorkspaceDialogs } from "./workspace-forms";
 import { workspaceStorageKeys } from "../lib/workspace-storage";
-
-// What Enter will do after a next step: a local draft, or an AADI analysis of the prefilled text.
-function stepToast(mode: ModeId): string {
-  const label = modes.find((m) => m.id === mode)?.label;
-  if (mode === "referral") return "Draf surat rujukan siap di kolom. Lengkapi penerima dan permintaan, lalu tekan Enter.";
-  return composerUsesAadi(mode, false) ? `Mode ${label} siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.` : `Mode ${label} siap dengan data kasus. Lengkapi, lalu tekan Enter.`;
-}
 
 const visitKey = "sentrapedia-visit";
 const noSubscription = () => () => {};
@@ -134,13 +127,6 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     const found = readCaseFields(value);
     setCaseFields((fields) => { const next = { ...fields }; for (const key of caseFieldKeys) if (!manualFields.includes(key)) next[key] = found[key] ?? ""; return next; });
   }
-  // A next step from a draft (design D4's referral letter, generalised by the Puskesmas flow): the composer in that mode
-  // with the case filled in; nothing is sent until the doctor presses Enter.
-  function startStep(next: ModeId, text: string) {
-    changeMode(next); updatePrompt(text);
-    requestAnimationFrame(() => { const box = document.querySelector<HTMLTextAreaElement>(".chat-composer textarea"); box?.focus(); box?.setSelectionRange(text.length, text.length); });
-    notify(stepToast(next));
-  }
   // A failed analysis can still become the local SOAP note (Puskesmas flow, decision 3): offered next to "Coba lagi",
   // never automatic; the draft's source records why AADI did not answer.
   function fallbackDraft() {
@@ -206,7 +192,8 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     onContext: () => openDialog("context"),
     onPatient: () => patient ? openDialog("patient", patient.id) : openDialog("encounter", encounter?.id),
     onSelect: (id: string) => { if (id !== encounter?.id) selectEncounter(id); },
-    onMakeTasks: (text: string) => generate(text, "tasks", false),
+    // generate clears the composer; whatever the doctor was typing is put back.
+    onMakeTasks: (text: string) => { const typed = prompt; generate(text, "tasks", false); setPrompt(typed); },
   };
   const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<EncounterOverview state={state} encounter={encounter} patient={patient} {...overviewActions}/>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify} drafts={drafts} onDraft={setDraft}/>;
   const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
@@ -233,7 +220,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
       <div className="workspace-body" data-split={split || undefined}>
         {!hasMessages ? <HomeView name={state.settings.name ?? ""} headline={headlineFor(visit)} pill="Layanan primer" composer={composerProps}/> : <>
           <div className="chat-column">
-            <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onStep={startStep} onCancel={cancelAnalysis} onOpenDocument={openDocument}/>
+            <Conversation encounter={encounter} pendingQuestion={pendingQuestion} dispatch={dispatch} onToast={notify} onReuse={updatePrompt} onCancel={cancelAnalysis} onOpenDocument={openDocument}/>
             <ChatComposer composer={composerProps}/>
           </div>
           {split && paneFor(() => smooth(() => setPane({ open: false })))}
