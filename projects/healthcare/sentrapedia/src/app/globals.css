@@ -64,11 +64,9 @@ textarea { resize: vertical; }
 .brand-wordmark { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; text-shadow: var(--workspace-brand-shadow); letter-spacing: -.45px; }
 .icon-button { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius); }
 .icon-button:hover, .small-icon:hover { background: var(--color-border-subtle); }
-.main-nav { padding: 4px 0 0; display: grid; gap: 12px; }
-.nav-group { display: grid; gap: 2px; }
-.nav-group-title { padding: 0 8px 4px; font-size: 12px; font-weight: 600; color: var(--color-text-secondary); }
-.nav-group > button { display: flex; gap: 10px; align-items: center; text-align: left; padding: 10px 8px; height: 38px; border-radius: var(--radius); }
-.nav-group > button:hover { background: var(--color-border-subtle); }
+.main-nav { padding: 4px 0 0; display: grid; gap: 2px; }
+.main-nav > button { display: flex; gap: 10px; align-items: center; text-align: left; padding: 10px 8px; height: 38px; border-radius: var(--radius); }
+.main-nav > button:hover { background: var(--color-border-subtle); }
 .main-nav svg { width: 16px; height: 16px; }
 kbd { font-family: inherit; font-size: 11px; color: var(--color-text-secondary); }
 .main-nav kbd { margin-left: auto; opacity: 0; transition: opacity .15s; }
@@ -108,6 +106,12 @@ kbd { font-family: inherit; font-size: 11px; color: var(--color-text-secondary);
 .feedback input::placeholder { color: var(--color-text-muted); }
 .feedback button { width: 34px; color: var(--color-text-muted); }
 .feedback:focus-within { border-color: var(--workspace-focus); }
+.account-menu { position: relative; }
+.account-menu-panel { position: absolute; left: 0; right: 0; bottom: 100%; z-index: 20; display: grid; gap: 2px; padding: 4px; margin-bottom: 4px; background: var(--workspace-white); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-control); box-shadow: var(--workspace-canvas-shadow); }
+.account-menu-panel > button { display: flex; align-items: center; min-height: 34px; padding: 6px 8px; border-radius: var(--radius-control); font-size: 13px; text-align: left; }
+.account-menu-panel > button:hover, .account-menu-panel > button:focus-visible { background: var(--color-border-subtle); }
+.account-menu-usage { margin: 0; padding: 6px 8px; border-top: 1px solid var(--color-border-subtle); font-size: 12px; color: var(--color-text-secondary); }
+.account-menu-slot { padding: 6px 8px; border-top: 1px solid var(--color-border-subtle); }
 .account { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 58px; border-top: 1px solid var(--color-border-subtle); margin-top: 8px; padding: 13px 7px; text-align: left; }
 .account strong { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; flex: 1; }
 .account > svg { color: var(--workspace-accent-ink); }

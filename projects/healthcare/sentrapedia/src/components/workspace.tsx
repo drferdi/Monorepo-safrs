@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, CircleAlert, X } from "lucide-react";
-import { useCallback, useEffect, useReducer, useRef, useState, type ComponentProps } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState, type ComponentProps, type ReactNode } from "react";
 import { createDraft, modes, type ModeId } from "../lib/drafts";
 import { initialWorkspace, newEncounter, workspaceReducer, type Encounter, type Patient } from "../lib/workspace";
 import { localDraftMessages, shortcutFor } from "../lib/workspace-session";
@@ -38,11 +38,11 @@ function stepToast(mode: ModeId): string {
   return composerUsesAadi(mode, false) ? `Mode ${label} siap dengan teks kasus. Tekan Enter untuk menjalankan analisis AADI.` : `Mode ${label} siap dengan data kasus. Lengkapi, lalu tekan Enter.`;
 }
 
-export function WorkspaceApp({ principalId }: { principalId: string }) {
-  return <WorkspaceState key={principalId} principalId={principalId}/>;
+export function WorkspaceApp({ principalId, onSignOut, userButton }: { principalId: string; onSignOut?: () => void; userButton?: ReactNode }) {
+  return <WorkspaceState key={principalId} principalId={principalId} onSignOut={onSignOut} userButton={userButton}/>;
 }
 
-function WorkspaceState({ principalId }: { principalId: string }) {
+function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: string; onSignOut?: () => void; userButton?: ReactNode }) {
   const storageKeys = workspaceStorageKeys(principalId);
   const [state, dispatch] = useReducer(workspaceReducer, initialWorkspace);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -179,7 +179,7 @@ function WorkspaceState({ principalId }: { principalId: string }) {
     {dialog === "knowledge" && <KnowledgeDialog initialTab={dialogId} onClose={closeDialog} onSave={saveAadiAnalysis}/>}
     {dialog === "templates" && <TemplateLibrary state={state} dispatch={dispatch} onChoose={chooseTemplate} onInsert={(next, text) => { chooseTemplate(`mode:${next}`); updatePrompt(insertTemplate(prompt, text)); }} onClose={closeDialog}/>}
     {dialog === "queue" && <WorkQueue state={state} dispatch={dispatch} onClose={closeDialog} onSelect={(id) => { selectEncounter(id); requestAnimationFrame(() => document.querySelectorAll(".assistant-message").item(document.querySelectorAll(".assistant-message").length - 1)?.scrollIntoView({ block: "nearest" })); }}/ >}
-    <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify}/>
+    <Sidebar state={state} open={navigationOpen} mobile={mobile} onToggle={toggleNavigation} onDialog={openDialog} onNew={startNew} onSelect={selectEncounter} onToast={notify} onSignOut={onSignOut} userButton={userButton}/>
     <main className={`main-canvas ${hasMessages ? "chat-view" : "home-view"}`} inert={mobile && navigationOpen} aria-hidden={mobile && navigationOpen}>
       {storageError && <div className="storage-warning" role="alert">{storageError}</div>}
       <WorkspaceHeader hasMessages={hasMessages} name={state.settings.name ?? ""} patientName={patient?.name} encounterTitle={encounter?.title} focusMode={focusMode} panelPressed={!focusMode && !compact && panelOpen}

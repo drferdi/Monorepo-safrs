@@ -41,7 +41,7 @@ describe("contrast of the semantic colour tokens (WCAG 2.2 AA)", () => {
 
 describe("muted text never sits on the surface colour", () => {
   // The inline Clinical Cockpit and the sidebar use --color-background-surface, where muted text is 4.36:1.
-  it.each([".timeline-encounter small", ".timeline-encounter span", ".nav-group-title", ".empty-text"])("%s uses secondary text", (selector) => {
+  it.each([".timeline-encounter small", ".timeline-encounter span", ".account-menu-usage", ".empty-text"])("%s uses secondary text", (selector) => {
     const body = declarations(selector);
     expect(body).toMatch(/color:\s*var\(--color-text-secondary\)/);
     expect(body).not.toMatch(/color:\s*var\(--color-text-muted\)/);

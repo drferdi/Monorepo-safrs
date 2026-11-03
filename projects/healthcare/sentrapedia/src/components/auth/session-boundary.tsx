@@ -13,7 +13,7 @@ export const idleLimitMs = 30 * 60_000;
 const idleCheckMs = 30_000;
 const activityEvents = ["pointerdown", "keydown", "wheel", "touchstart"] as const;
 
-export function SessionBoundary({ userId, children }: { userId: string; children: ReactNode }) {
+export function SessionBoundary({ userId, menuSlot }: { userId: string; menuSlot: (signOut: () => void, userButton: ReactNode) => ReactNode }) {
   const session = useAuth(); const clerk = useClerk(); const router = useRouter();
   const [locked, setLocked] = useState(false); const [failed, setFailed] = useState(false); const [idle, setIdle] = useState(false);
   const root = useRef<HTMLDivElement>(null);
@@ -40,17 +40,11 @@ export function SessionBoundary({ userId, children }: { userId: string; children
     const timer = setInterval(() => { if (Date.now() - lastActivity.current >= idleLimitMs) { clearInterval(timer); void signOut("idle"); } }, idleCheckMs);
     return () => { clearInterval(timer); for (const name of activityEvents) window.removeEventListener(name, touch); };
   }, [eligible, locked, signOut]);
+  // The workspace places sign-out and the Clerk button in its own account menu (menuSlot). Account, devices, passkeys and
+  // deletion live on Clerk's profile page, in full-page form (src/app/account).
   return <div className="authenticated-workspace">
-    <header className="session-toolbar">
-      <span>Sentrapedia beta</span>
-      <PasskeyNudge/>
-      <div className="session-actions">
-        {/* Account, devices, passkeys and deletion live on Clerk's profile page, in full-page form (src/app/account). */}
-        <UserButton userProfileMode="navigation" userProfileUrl="/account"/>
-        <button type="button" onClick={() => signOut("user")}>Keluar</button>
-      </div>
-    </header>
+    <PasskeyNudge/>
     {failed && <p role="alert">Keluar belum berhasil. Workspace tetap terkunci. Coba kembali.</p>}
-    {!eligible || locked ? <p role="status">{idle ? `Workspace terkunci setelah ${idleLimitMs / 60_000} menit tanpa aktivitas.` : "Workspace terkunci."} <Link href="/sign-in">Masuk kembali</Link></p> : <div className="session-content" ref={root}>{children}</div>}
+    {!eligible || locked ? <p role="status">{idle ? `Workspace terkunci setelah ${idleLimitMs / 60_000} menit tanpa aktivitas.` : "Workspace terkunci."} <Link href="/sign-in">Masuk kembali</Link></p> : <div className="session-content" ref={root}>{menuSlot(() => void signOut("user"), <UserButton userProfileMode="navigation" userProfileUrl="/account"/>)}</div>}
   </div>;
 }

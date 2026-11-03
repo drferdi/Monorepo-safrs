@@ -1,10 +1,16 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
+import { AccountMenu } from "../../src/components/account-menu";
 import { ConsentForm } from "../../src/components/auth/consent-form";
 import { PasskeyNudge } from "../../src/components/auth/passkey-nudge";
 import { SessionBoundary, idleLimitMs } from "../../src/components/auth/session-boundary";
+
+// The workspace owns the account menu; this stands in for it so the boundary's lock, idle clock and sign-out are tested alone.
+function Boundary({ children }: { children: ReactNode }) {
+  return <SessionBoundary userId="user_a" menuSlot={(signOut, userButton) => <><AccountMenu name="Sentrapedia" plan="Lite" onOpen={() => undefined} onSignOut={signOut}>{userButton}</AccountMenu>{children}</>}/>;
+}
 
 const external = vi.hoisted(() => ({ auth: { isLoaded: true, userId: "user_a" as string | null }, replace: vi.fn(), refresh: vi.fn(), signOut: vi.fn(), createPasskey: vi.fn(), user: null as null | { id: string; passkeys: unknown[]; createPasskey: () => Promise<unknown> } }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: external.replace, refresh: external.refresh }) }));
@@ -61,24 +67,24 @@ describe("beta acknowledgement", () => {
 describe("session-owned workspace rendering", () => {
   it("never mounts workspace records before the expected user is loaded", () => {
     external.auth = { isLoaded: false, userId: null };
-    const view = render(<SessionBoundary userId="user_a"><p>Draf privat A</p></SessionBoundary>);
+    const view = render(<Boundary><p>Draf privat A</p></Boundary>);
     expect(screen.queryByText("Draf privat A")).toBeNull();
     external.auth = { isLoaded: true, userId: "user_b" };
-    view.rerender(<SessionBoundary userId="user_a"><p>Draf privat A</p></SessionBoundary>);
+    view.rerender(<Boundary><p>Draf privat A</p></Boundary>);
     expect(screen.queryByText("Draf privat A")).toBeNull();
   });
   it("unmounts records and their outstanding work on sign-out or account switch", () => {
     const aborted = new AbortController();
     function Draft() { useEffect(() => () => aborted.abort(), []); return <p>Draf privat A</p>; }
-    const view = render(<SessionBoundary userId="user_a"><Draft/></SessionBoundary>);
+    const view = render(<Boundary><Draft/></Boundary>);
     expect(screen.getByText("Draf privat A")).toBeTruthy();
     external.auth = { isLoaded: true, userId: null };
-    view.rerender(<SessionBoundary userId="user_a"><Draft/></SessionBoundary>);
+    view.rerender(<Boundary><Draft/></Boundary>);
     expect(screen.queryByText("Draf privat A")).toBeNull();
     expect(aborted.signal.aborted).toBe(true);
   });
   it("hides cached records on pagehide and requires a server refresh on pageshow", () => {
-    render(<SessionBoundary userId="user_a"><p>Draf privat A</p></SessionBoundary>);
+    render(<Boundary><p>Draf privat A</p></Boundary>);
     fireEvent(window, new Event("pagehide"));
     expect(screen.queryByText("Draf privat A")).toBeNull();
     fireEvent(window, new Event("pageshow"));
@@ -87,16 +93,19 @@ describe("session-owned workspace rendering", () => {
   });
   it("locks the workspace before requesting sign-out, including a failed request", async () => {
     external.signOut.mockRejectedValue(new Error("offline"));
-    render(<SessionBoundary userId="user_a"><p>Draf privat A</p></SessionBoundary>);
-    fireEvent.click(screen.getByRole("button", { name: "Keluar" }));
+    render(<Boundary><p>Draf privat A</p></Boundary>);
+    fireEvent.click(screen.getByRole("button", { name: /Sentrapedia/ }));
+    fireEvent.click(screen.getByRole("menuitem", { name: "Keluar" }));
     await waitFor(() => expect(external.signOut).toHaveBeenCalled());
     expect(screen.queryByText("Draf privat A")).toBeNull();
     expect(await screen.findByRole("alert")).toBeTruthy();
   });
-  it("offers Clerk's account page beside the explicit sign-out", () => {
-    render(<SessionBoundary userId="user_a"><p>Draf privat A</p></SessionBoundary>);
+  it("offers Clerk's account page beside the explicit sign-out, both inside the account menu", () => {
+    render(<Boundary><p>Draf privat A</p></Boundary>);
+    expect(document.querySelector(".session-toolbar")).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /Sentrapedia/ }));
     expect(screen.getByTestId("user-button")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Keluar" })).toBeTruthy();
+    expect(screen.getByRole("menuitem", { name: "Keluar" })).toBeTruthy();
   });
 });
 
@@ -104,7 +113,7 @@ describe("idle lock", () => {
   it("signs out and locks after the idle limit with no activity, and says why", async () => {
     vi.useFakeTimers();
     external.signOut.mockResolvedValue(undefined);
-    render(<SessionBoundary userId="user_a"><p>Draf privat A</p></SessionBoundary>);
+    render(<Boundary><p>Draf privat A</p></Boundary>);
     await act(async () => { await vi.advanceTimersByTimeAsync(idleLimitMs - 60_000); });
     expect(external.signOut).not.toHaveBeenCalled();
     await act(async () => { await vi.advanceTimersByTimeAsync(90_000); });
@@ -114,7 +123,7 @@ describe("idle lock", () => {
   });
   it("counts any pointer, key, wheel or touch as activity and restarts the clock", async () => {
     vi.useFakeTimers();
-    render(<SessionBoundary userId="user_a"><p>Draf privat A</p></SessionBoundary>);
+    render(<Boundary><p>Draf privat A</p></Boundary>);
     for (const name of ["pointerdown", "keydown", "wheel", "touchstart"]) {
       await act(async () => { await vi.advanceTimersByTimeAsync(idleLimitMs - 60_000); });
       fireEvent(window, new Event(name));
@@ -128,7 +137,7 @@ describe("idle lock", () => {
   it("runs no idle clock while the workspace is not rendered", async () => {
     vi.useFakeTimers();
     external.auth = { isLoaded: true, userId: null };
-    render(<SessionBoundary userId="user_a"><p>Draf privat A</p></SessionBoundary>);
+    render(<Boundary><p>Draf privat A</p></Boundary>);
     await act(async () => { await vi.advanceTimersByTimeAsync(idleLimitMs * 2); });
     expect(external.signOut).not.toHaveBeenCalled();
   });
