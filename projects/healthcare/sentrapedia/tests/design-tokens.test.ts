@@ -72,6 +72,6 @@ describe("Glass radius tokens and canvas sheet", () => {
     expect(globals).toMatch(/--radius-control:\s*8px/);
     expect(globals).toMatch(/--radius-structure:\s*12px/);
     expect(globals).toMatch(/--workspace-canvas-shadow:\s*0 1px 3px rgba\(0, ?0, ?0, ?\.1\), 0 1px 2px -1px rgba\(0, ?0, ?0, ?\.1\)/);
-    expect(readFileSync("src/app/sentra-tokens.css", "utf8")).toMatch(/--radius-control: 2px/);
+    expect(readFileSync(new URL("../src/app/sentra-tokens.css", import.meta.url), "utf8")).toMatch(/--radius-control: 2px/);
   });
 });

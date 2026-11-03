@@ -563,7 +563,7 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 @media (max-width: 950px) and (min-width: 761px) { .sidebar { width: 218px; } .button { font-size: 11px; gap: 5px; padding: 8px; } .composer-tools-left, .composer-tools-right { gap: 5px; } .ad-art { display: none; } .home-content { width: calc(100% - 48px); } .model-select select { width: 85px; font-size: 11px; } }
 @media (max-width: 760px) {
   .app-shell { min-height: 0; padding: 0; }
-  .main-canvas { border-radius: 0; border: 0; }
+  .main-canvas { margin: 0; box-shadow: none; border-radius: 0; border: 0; }
   .sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 22; width: 256px; background: var(--color-background-surface); padding-top: 5px; box-shadow: var(--workspace-modal-shadow); transform: translateX(-105%); transition: transform .2s; }
   .sidebar.is-open { transform: translateX(0); }
   .sidebar-scrim { display: block; position: fixed; inset: 0; background: var(--workspace-overlay); z-index: 21; }
