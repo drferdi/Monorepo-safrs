@@ -7,6 +7,8 @@ import type { Message } from "../lib/workspace";
 import { applyMark } from "../lib/document-pane";
 import { diagnosisContent, diagnosisFieldLabels, diagnosisSectionTitles, doctorSummaryTitle, hasAadiSource, icd10SectionTitle, legacyDiagnosisSectionTitles, referralSectionTitle } from "../lib/aadi/presentation";
 import { DiagnosisDocument } from "./diagnosis-document";
+import { AnalysisDocument } from "./analysis-document";
+import { analysisView } from "../lib/aadi/analysis-view";
 import { freshAnswer, markRevealed } from "../lib/fresh-answer";
 
 const diagnosisLabels = new Set(["Keluhan utama", "Kondisi yang tercatat", "Alergi tercatat", "Obat yang sedang digunakan (input kasus)", "Anamnesis tercatat", "Tanda vital tercatat", "Pemeriksaan fisik tercatat", "Informasi yang belum tersedia", "Pertanyaan lanjutan dari layanan", "Alternatif", "Jangan terlewat", "Kemungkinan utama — belum ditinjau klinisi", "Pertimbangan layanan", "Bidang belum terisi", "Hasil pemeriksaan tercatat", "Usulan pemeriksaan dari layanan", "Kemampuan fasilitas tercatat", "Jejak analisis"]);
@@ -86,10 +88,12 @@ export function DocumentStudio({ message, onEdit, draft, onDraft }: { message: M
   const selection = useRef<{ start: number; end: number } | null>(null);
   const content = diagnosisContent(message);
   const sections = documentSections(content);
+  // An unedited AADI answer renders from its stored result in Glass's shape; an edited one is the markdown it became.
+  const structured = analysisView(message) !== null;
   const diagnosis = hasAadiSource(message) && [doctorSummaryTitle, referralSectionTitle, icd10SectionTitle, ...diagnosisSectionTitles, ...legacyDiagnosisSectionTitles].includes(sections[0]?.title);
   // A fresh analysis or SOAP draft keeps its typing reveal, in one column (Gaffer, 2026-10-21: "use exactly that"). An
   // analysis keeps its folded references and dose check; any other document is plain markdown.
-  const [typing] = useState(() => (diagnosis || (message.mode === "clinic" && sections.length > 1)) && freshAnswer(message));
+  const [typing] = useState(() => !structured && (diagnosis || (message.mode === "clinic" && sections.length > 1)) && freshAnswer(message));
   // Any other fresh answer lets its blocks follow one another in (globals.css, data-reveal).
   const [cascade] = useState(() => !typing && freshAnswer(message));
   useEffect(() => { markRevealed(message.id); }, [message.id]);
@@ -108,7 +112,7 @@ export function DocumentStudio({ message, onEdit, draft, onDraft }: { message: M
       <div className="editor-actions"><button className="button primary" disabled={!body.trim()} onClick={() => { onEdit(body); onDraft(null); }}>Simpan</button><button className="button" onClick={() => onDraft(null)}>Batal</button></div>
     </div> : <>
       <button type="button" className="text-button document-edit" onClick={() => onDraft(content)}><Pencil size={12}/> Edit</button>
-      {diagnosis || typing ? <DiagnosisDocument rail={false} typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} showMeta={diagnosis} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical={diagnosis} hideTitle/>}/> : <DocumentContent content={content} onEdit={onEdit} clinical={diagnosis} hideTitle/>}
+      {structured ? <AnalysisDocument message={message} citePrefix={`cite-${message.id}`}/> : diagnosis || typing ? <DiagnosisDocument rail={false} typing={typing} content={content} selected={selected} onSelect={setSelected} onEdit={onEdit} showMeta={diagnosis} renderContent={(value, edit) => <DocumentContent content={value} onEdit={edit} clinical={diagnosis} hideTitle/>}/> : <DocumentContent content={content} onEdit={onEdit} clinical={diagnosis} hideTitle/>}
     </>}
   </div>;
 }

@@ -309,7 +309,17 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .diagnosis-supporting[open]::details-content { opacity: 1; }
 @starting-style { .diagnosis-supporting[open]::details-content { opacity: 0; } }
 /* TheOracle references (Gaffer, 2026-10-17): two one-line titles, the rest behind one disclosure; a title opens to its passage. */
-.guideline-citations { margin-top: 24px; }
+.analysis-document { display: grid; gap: 20px; font-size: 14px; line-height: 23px; }
+.analysis-section h3 { font-family: var(--font-title); font-weight: 400; font-size: 18px; line-height: 26px; margin: 0 0 8px; color: var(--title-color); }
+.analysis-section h4 { font-size: 12px; font-weight: 600; margin: 8px 0 2px; color: var(--color-text-secondary); }
+.analysis-section ul { margin: 0; padding-left: 18px; }
+.analysis-section p { margin: 0 0 6px; }
+.analysis-diagnoses > li { margin-bottom: 10px; }
+.analysis-diagnoses > li > p { margin: 0; }
+.analysis-note { color: var(--color-text-secondary); }
+.analysis-regimen li[data-gate="doseRemoved"], .analysis-regimen li[data-gate="removed"] { color: var(--color-text-secondary); }
+.analysis-gate-tag { margin-left: 8px; font-size: 11px; font-weight: 500; color: var(--workspace-accent-ink); }
+.guideline-citations { margin-top: 0; }
 .guideline-citations ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .guideline-citation { border: 1px solid rgba(31, 31, 31, .1); border-radius: var(--radius-control); padding: 10px 12px; scroll-margin-top: 16px; }
 .guideline-citation:target { outline: 2px solid var(--color-action-primary); outline-offset: 2px; }

@@ -8,7 +8,6 @@ import { WorkspaceApp } from "../../src/components/workspace";
 import { initialWorkspace, type Encounter } from "../../src/lib/workspace";
 import { THEORACLE_GROUNDING_CAPABILITY } from "../../src/lib/theoracle-grounding-types";
 import type { AadiAnalysis } from "../../src/lib/aadi/contract";
-import { diagnosisSectionTitles } from "../../src/lib/aadi/presentation";
 import { headlineFor } from "../../src/lib/studio";
 
 vi.mock("next/image", () => ({
@@ -219,39 +218,23 @@ describe("workspace UI smoke tests", () => {
       vi.advanceTimersByTime(12000);
     });
 
-    // Assert that the draft appears and diagnosis is shown
+    // The answer is the analysis in Glass's shape in the document pane: the diagnosis tiers, next steps, the therapy
+    // through the dose gate, and the guideline passages as numbered cards.
     expect(screen.getAllByText(/Pneumonia/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Amoxicillin/i).length).toBeGreaterThan(0);
-
-    // Assert that the unsupported dose (1x1000mg) is NOT shown
-    expect(screen.queryByText(/1x1000mg/i)).toBeNull();
-
-    // Assert that unverified dose wording or status appears
-    expect(screen.getAllByText(/dosis: cek pedoman|dosis tidak ditemukan di Oracle/i).length).toBeGreaterThan(0);
-
-    // The answer is the nine-part report in the document pane, in one column with no section rail: its parts as
-    // headings, real tables, and links that open outside.
     const pane = within(screen.getByRole("tabpanel"));
     expect(screen.getByRole("tab", { name: /Analisis kasus/ }).getAttribute("aria-selected")).toBe("true");
     expect(screen.queryByRole("navigation", { name: "Bagian analisis kasus" })).toBeNull();
-    for (const title of diagnosisSectionTitles) expect(pane.getByRole("heading", { name: title })).toBeTruthy();
-    // The guideline passages and the dose check are sub-parts of part 9's fold, the passages as compact titles
-    const fold = [...document.querySelectorAll<HTMLDetailsElement>("details.diagnosis-provenance")].at(-1)!;
-    expect(within(fold).getByRole("heading", { name: "Kutipan pedoman" })).toBeTruthy();
-    expect(within(fold).getByRole("heading", { name: "Cek dosis obat" })).toBeTruthy();
-    expect(fold.querySelector(".oracle-references details.oracle-reference")).toBeTruthy();
-    expect(fold.textContent).not.toMatch(/kemiripan/);
-    const summary = screen.getByRole("region", { name: "Tabel Komponen, Keterangan" });
-    expect(within(summary).getAllByRole("columnheader").map(cell => cell.textContent)).toEqual(["Komponen", "Keterangan"]);
-    expect(within(summary).getByRole("cell", { name: "Laki-laki 35 tahun, batuk dan demam tinggi sejak 3 hari, S 38,5" })).toBeTruthy();
+    expect(pane.getAllByRole("heading", { level: 3 }).map(h => h.textContent)).toEqual(["Pembahasan kasus", "Kemungkinan utama", "Alternatif", "Jangan terlewat", "Langkah diagnostik berikutnya", "Rencana tata laksana", "Edukasi dan tindak lanjut", "Kutipan pedoman"]);
+    // The unsupported dose (1x1000mg) is not shown; its line is marked by the gate and carries the dose check.
+    expect(screen.queryByText(/1x1000mg/i)).toBeNull();
+    const gated = [...document.querySelectorAll<HTMLElement>(".analysis-regimen li[data-gate]")];
+    expect(gated.length).toBeGreaterThan(0);
+    expect(gated.some(li => li.dataset.gate !== "verified" && li.textContent?.includes("Cek dosis obat"))).toBe(true);
+    expect(pane.getByRole("region", { name: "Kutipan pedoman" })).toBeTruthy();
+    expect(pane.getByText(/Laki-laki 35 tahun, batuk dan demam tinggi sejak 3 hari, S 38,5/)).toBeTruthy();
     // One draft marker only: the Status field; no "Draf analisis" badge or subtitle.
     expect(screen.queryByText(/Draf analisis/)).toBeNull();
-    // The report title heads the pane document once; the doctor's summary is the first section of its body.
-    expect(screen.getByRole("heading", { name: "LAPORAN ANALISIS KASUS KLINIS" }).closest(".document-head")).toBeTruthy();
-    expect(pane.getAllByRole("heading", { level: 3 })[0].textContent).toBe("Ringkasan untuk dokter");
-    const nice = screen.getAllByRole("link", { name: "NICE CG150" })[0];
-    expect(nice.getAttribute("href")).toBe("https://www.nice.org.uk/guidance/cg150/chapter/recommendations");
-    expect(nice.getAttribute("rel")).toBe("noopener noreferrer");
     expect(screen.queryByText(/\| --- \|/)).toBeNull();
 
     // Unmount and remount to verify persistence & restoration

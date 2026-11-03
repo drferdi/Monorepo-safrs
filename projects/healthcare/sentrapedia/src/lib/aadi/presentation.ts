@@ -89,10 +89,23 @@ export const diagnosisFieldLabels = new Set(["Keluhan utama", "Pasien", "Anamnes
 export const diagnosisReferenceMarker = "Referensi penyakit terkait";
 
 const recorded = (text: string) => text.split(/\r?\n/).map(line => `  ${line}`).join("\n");
-const vitalLabels: Record<string, string> = { systolic: "Sistolik (mmHg)", diastolic: "Diastolik (mmHg)", heartRate: "Nadi (/menit)", respiratoryRate: "Napas (/menit)", temperature: "Suhu (°C)", spo2: "SpO₂ (%)", gcs: "GCS" };
+export const vitalLabels: Record<string, string> = { systolic: "Sistolik (mmHg)", diastolic: "Diastolik (mmHg)", heartRate: "Nadi (/menit)", respiratoryRate: "Napas (/menit)", temperature: "Suhu (°C)", spo2: "SpO₂ (%)", gcs: "GCS" };
 // Plain words, no "belum terkonfirmasi" (Gaffer, 2026-10-21: "kebanyakan jargon").
 const statusLabels: Record<DifferentialStatus, string> = { unconfirmed: "Kandidat", supported: "Didukung data", unlikely: "Kurang mungkin", screenNow: "Perlu disaring segera", screenIfIndicated: "Perlu disaring sesuai temuan" };
 const groupStatus = { likely: "Kandidat utama", alternatives: "Alternatif", cannotMiss: "Perlu disaring segera" } as const;
+/** The status word for a diagnosis: AADI's own status when it gave one, else its tier's. */
+export function differentialStatus(d: { status?: DifferentialStatus }, tier: keyof AadiResult["differential"]): string { return d.status ? statusLabels[d.status] : groupStatus[tier]; }
+/** "Rujuk · segera" / "Tangani di FKTP · rutin", or "" without a disposition. */
+export function dispositionText(result: AadiResult): string {
+  return result.disposition ? `${result.disposition.decision === "refer" ? "Rujuk" : "Tangani di FKTP"} · ${{ routine: "rutin", urgent: "segera", emergency: "gawat darurat" }[result.disposition.urgency]}` : "";
+}
+/** Part 8's advice lines, shared by the nine-part draft and the structured view. */
+export function educationLines(result: AadiResult, caseData?: CaseState): string[] {
+  const complaintText = [caseData?.chiefComplaint ?? "", caseData?.anamnesis.freeText ?? ""].join(" ");
+  const codes = Object.values(result.differential).flat().map(d => d.icd10.toUpperCase());
+  const pack = headacheWords.test(complaintText) || codes.some(code => headacheCodes.test(code)) ? headachePack : generalPack;
+  return [`Jelaskan bahwa penyebab ${pack.complaint} masih dalam evaluasi.`, "Berikan instruksi tanda bahaya dan tempat mencari pertolongan.", pack.diary, "Tentukan jadwal kontrol serta kriteria kembali lebih cepat berdasarkan hasil asesmen."];
+}
 const links = {
   cg150: "[NICE CG150](https://www.nice.org.uk/guidance/cg150/chapter/recommendations)",
   ng228: "[NICE NG228](https://www.nice.org.uk/guidance/ng228/chapter/Recommendations)",
@@ -182,7 +195,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   // Oracle's Indonesian name where a record has exactly this code (a "G44" record never renames G44.2); else AADI's label.
   const named = (d: { icd10: string; label: string }) => `${theOracleDiseases.find(r => r.kode.toUpperCase() === d.icd10.toUpperCase())?.nama ?? d.label} (${d.icd10})`;
   const demographics = [caseData?.demographics.ageYears == null ? "" : `${caseData.demographics.ageYears} tahun`, caseData?.demographics.sex === "M" ? "Laki-laki" : caseData?.demographics.sex === "F" ? "Perempuan" : "", caseData?.demographics.pregnant === undefined ? "" : `Hamil: ${caseData.demographics.pregnant ? "Ya" : "Tidak"}`].filter(Boolean).join(" · ");
-  const disposition = result.disposition ? `${result.disposition.decision === "refer" ? "Rujuk" : "Tangani di FKTP"} · ${{ routine: "rutin", urgent: "segera", emergency: "gawat darurat" }[result.disposition.urgency]}` : "";
+  const disposition = dispositionText(result);
 
   const vitalItems = caseData ? Object.entries(caseData.vitals).map(([key, value]) => `${vitalLabels[key] ?? key}: ${value}`) : [];
   const resultItems = caseData?.results.map(r => `${r.name}: ${r.value}${r.unit ? ` ${r.unit}` : ""}${r.flag ? ` (${r.flag})` : ""}`) ?? [];
@@ -221,7 +234,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
   };
   // AADI's discriminators are what to look for, not recorded findings (Gaffer, 2026-10-20: "Ya, awali 'cari:'").
   const toSeek = (text: string) => /^cari:/i.test(text) ? text : `cari: ${text}`;
-  const differentialRows = (["likely", "alternatives", "cannotMiss"] as const).flatMap(key => result.differential[key].map(d => [named(d), d.discriminators?.trim() ? toSeek(d.discriminators.trim()) : discriminators(d.icd10), d.status ? statusLabels[d.status] : groupStatus[key]]));
+  const differentialRows = (["likely", "alternatives", "cannotMiss"] as const).flatMap(key => result.differential[key].map(d => [named(d), d.discriminators?.trim() ? toSeek(d.discriminators.trim()) : discriminators(d.icd10), differentialStatus(d, key)]));
   const extraRows = extra.map(e => [`Temuan terkait (${e.icd10})`, discriminators(e.icd10), "Di luar diagnosis banding"]);
   const verified = gate?.drugs.filter(d => d.status === "verified").length ?? 0;
   const gateStatus = !gate ? "Belum dapat dinilai" : gate.therapyRemoved ? "Terapi tidak ditampilkan" : `${verified} dari ${gate.drugs.length} obat dosisnya terverifikasi`;
@@ -278,7 +291,7 @@ export function aadiDraft(result: AadiResult, traceId: string, createdAt: string
       regimen ? field("Terapi referensi", narrative(primary, [["Terapi", "terapi"]])) : "",
     ])],
     [diagnosisSectionTitles[7], join([
-      bullets([`Jelaskan bahwa penyebab ${pack.complaint} masih dalam evaluasi.`, "Berikan instruksi tanda bahaya dan tempat mencari pertolongan.", pack.diary, "Tentukan jadwal kontrol serta kriteria kembali lebih cepat berdasarkan hasil asesmen."]),
+      bullets(educationLines(result, caseData)),
       narrative(primary, [["Segera kembali atau dirujuk bila", "rujukan"]]),
     ])],
     [diagnosisSectionTitles[8], join([
@@ -361,7 +374,7 @@ export function storedCase(message: Pick<Message, "sourceText">): { data: CaseSt
   return source && typeof source === "object" && "case" in source && "result" in source && validCase(source.case) && validResult(source.result) ? { data: source.case, result: source.result } : null;
 }
 // The history as typed, without the encounter heading, and the saved patient's notes apart.
-function caseHistory(data: CaseState): { history: string; notes: string } {
+export function caseHistory(data: CaseState): { history: string; notes: string } {
   const [history, notes = ""] = (data.anamnesis.freeText ?? "").split(/(?:^|\n\n)Catatan kasus\n/);
   return { history: history.replace(/^Konteks Encounter\n/, "").trim(), notes: notes.trim() };
 }
