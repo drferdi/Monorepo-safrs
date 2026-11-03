@@ -66,3 +66,16 @@ describe("MessageCard", () => {
     expect(h.onReuse).toHaveBeenCalledWith("Batuk 3 hari");
   });
 });
+
+describe("pipeline trace in the chat", () => {
+  it("folds the stored stages under Jejak analisis and shows nothing for an answer without them", () => {
+    const base = { case: emptyCase(), result: { contractVersion: "1", status: "ok", differential: { likely: [], alternatives: [], cannotMiss: [] }, evidence: [], missingInformation: [], nextBestActions: [], disposition: null, unfilled: [], meta: { version: "t", model: "t", costUsd: null } } satisfies AadiResult, traceId: "t", createdAt: "2026-10-21T05:00:00.000Z" };
+    const { unmount } = render(<MessageCard message={aadiMessage({ ...base, pipeline: { path: "targeted", stages: [{ stage: "retrieve", ms: 120, ok: true }, { stage: "model", ms: 2400, ok: false, code: "X" }] } })} {...handlers()}/>);
+    const details = screen.getByText("Jejak analisis").closest("details")!;
+    expect(details.className).toBe("pipeline-trace");
+    expect(Array.from(details.querySelectorAll("li")).map((li) => li.textContent)).toEqual(["retrieve · 120 ms", "model · 2400 ms · gagal"]);
+    unmount();
+    render(<MessageCard message={aadiMessage(base)} {...handlers()}/>);
+    expect(screen.queryByText("Jejak analisis")).toBeNull();
+  });
+});

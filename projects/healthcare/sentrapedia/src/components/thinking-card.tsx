@@ -1,23 +1,27 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { useEffect, useState, type CSSProperties } from "react";
-import { thinkingStepAt, thinkingSteps } from "../lib/typing";
-import { Brand } from "./brand";
+import { useEffect, useState } from "react";
 
-/** The answer's place while the analysis runs: the clinical steps appear one after another. */
-export function ThinkingCard({ onCancel }: { onCancel: () => void }) {
-  const [step, setStep] = useState(0);
+/** The answer's place while the analysis runs. It reports only what has happened: the request went out, and
+ *  how long the workspace has been waiting. The gateway's stages arrive with the answer (Jejak analisis). */
+export function ThinkingCard({ onCancel, startedAt }: { onCancel: () => void; startedAt?: number }) {
+  // The card mounts when the request goes out, so its mount is the start unless the caller knows better.
+  const [started] = useState(() => startedAt ?? performance.now());
+  const [seconds, setSeconds] = useState(() => elapsed(started));
   useEffect(() => {
-    const started = performance.now();
-    let frame = requestAnimationFrame(function tick(now) { const next = thinkingStepAt(now - started); setStep(next); if (next < thinkingSteps.length - 1) frame = requestAnimationFrame(tick); });
-    return () => cancelAnimationFrame(frame);
-  }, []);
+    const timer = setInterval(() => setSeconds(elapsed(started)), 1000);
+    return () => clearInterval(timer);
+  }, [started]);
   return <article className="assistant-message thinking-card" aria-busy="true">
-    <header className="message-header"><Brand compact/><strong>Analisis kasus</strong></header>
-    <div role="status"><ol className="thinking-steps">
-      {thinkingSteps.slice(0, step + 1).map((label, index) => <li key={label} data-done={index < step} style={{ "--item-order": index } as CSSProperties}>{index < step ? <Check size={12} aria-hidden="true"/> : <span className="thinking-dot" aria-hidden="true"/>}<span>{label}{index < step ? "" : "…"}</span></li>)}
+    <div role="status" aria-live="polite"><ol className="thinking-steps">
+      <li data-done="true"><Check size={12} aria-hidden="true"/><span>Permintaan diterima</span></li>
+      <li data-done="false"><span className="thinking-dot" aria-hidden="true"/><span>Menunggu jawaban AADI · {seconds} dtk</span></li>
     </ol></div>
     <button type="button" className="text-button" onClick={onCancel}>Batalkan analisis</button>
   </article>;
+}
+
+function elapsed(startedAt: number): number {
+  return Math.max(0, Math.floor((performance.now() - startedAt) / 1000));
 }

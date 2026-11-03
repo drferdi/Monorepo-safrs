@@ -77,12 +77,3 @@ export function wordsUpTo(text: string, count: number): string {
   const space = text.indexOf(" ", Math.max(count, lineStart + marker + 1));
   return text.slice(0, space < 0 || space > lineEnd ? lineEnd : space);
 }
-
-/** What the answer card shows while the analysis runs, one step after another. */
-export const thinkingSteps = ["Permintaan klinis diterima", "Intensi klinis teridentifikasi", "Oracle aktif", "Konteks klinis pasien dihimpun", "Dokumen medis ditelaah", "Literatur dan pedoman klinis ditelusuri", "Temuan klinis dikorelasikan", "Bukti ilmiah sedang disintesis"];
-export const thinkingStepMs = 340;
-
-/** The step in progress `elapsed` ms after the question was sent; the last step holds until the answer. */
-export function thinkingStepAt(elapsed: number): number {
-  return Math.min(thinkingSteps.length - 1, Math.floor(Math.max(0, elapsed) / thinkingStepMs));
-}

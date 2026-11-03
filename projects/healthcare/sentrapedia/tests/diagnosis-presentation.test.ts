@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import { emptyCase, type AadiResult } from "../src/lib/aadi/contract";
-import { diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, pcareCopies, taskDraftFrom, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
+import { pipelineTrace, diagnosisContent, hasAadiSource, diagnosisSectionTitles, doctorSummaryTitle, icd10SectionTitle, aadiDraft, aadiMessage, pcareCopies, taskDraftFrom, referralPrompt, referralSectionTitle, summaryCopies, reportTitle, sourceForDisplay, splitQuotes, theOracleCitations, theOracleReferenceItems, theOracleReferencesTitle } from "../src/lib/aadi/presentation";
 import { documentSections, replaceSection } from "../src/lib/studio";
 import { createDraft } from "../src/lib/drafts";
 import { missingField } from "../src/lib/clinical-templates";
 import { theOracleDiseases } from "../src/lib/theoracle";
-import { revealAt, thinkingStepAt, thinkingStepMs, thinkingSteps, typingDurationMs, unfoldMs } from "../src/lib/typing";
+import { revealAt, typingDurationMs, unfoldMs } from "../src/lib/typing";
 import { regimenLine, theOracleSourceLinks } from "../src/lib/aadi/presentation";
 import { THEORACLE_GROUNDING_CAPABILITY, type TheOracleGroundingBundle } from "../src/lib/theoracle-grounding-types";
 import { initialWorkspace, workspaceReducer, loadWorkspace } from "../src/lib/workspace";
@@ -299,13 +299,14 @@ describe("typing reveal", () => {
   });
 });
 
-describe("thinking steps", () => {
-  it("lists the clinical steps in order and stops on the last one until the answer arrives", () => {
-    expect(thinkingSteps).toEqual(["Permintaan klinis diterima", "Intensi klinis teridentifikasi", "Oracle aktif", "Konteks klinis pasien dihimpun", "Dokumen medis ditelaah", "Literatur dan pedoman klinis ditelusuri", "Temuan klinis dikorelasikan", "Bukti ilmiah sedang disintesis"]);
-    expect(thinkingStepAt(0)).toBe(0);
-    expect(thinkingStepAt(thinkingStepMs * 3 + 1)).toBe(3);
-    expect(thinkingStepAt(60000)).toBe(thinkingSteps.length - 1);
-    expect(thinkingStepMs * (thinkingSteps.length - 1)).toBeLessThanOrEqual(2500);
+describe("pipeline trace", () => {
+  it("pipelineTrace reads stored stages and returns [] for a legacy answer", () => {
+    const stages = [{ stage: "retrieve", ms: 120, ok: true }, { stage: "model", ms: 2400, ok: false, code: "MODEL_TIMEOUT" }];
+    const kept = aadiMessage({ ...analysis, pipeline: { path: "targeted", stages } });
+    expect(pipelineTrace(kept)).toEqual([{ stage: "retrieve", ms: 120, ok: true }, { stage: "model", ms: 2400, ok: false }]);
+    expect(pipelineTrace(aadiMessage(analysis))).toEqual([]);
+    expect(pipelineTrace({ sourceText: undefined })).toEqual([]);
+    expect(pipelineTrace({ sourceText: "{ bukan json" })).toEqual([]);
   });
 });
 

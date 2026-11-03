@@ -7,7 +7,13 @@ import type { EvidenceGateReport } from "../theoracle-evidence-gate";
 
 export interface AadiTherapy { forDiagnosis: { icd10: string; label: string }; regimen: { drug: string; dose: string; route: string; duration: string; note: string }[]; interactions: string[]; contraindications: string[] }
 export type AadiResult = Omit<EngineResult, "meta"> & { contractVersion: "1"; meta: { version: string; model: string | null; costUsd: number | null }; therapy?: AadiTherapy };
-export interface AadiAnalysis { case: CaseState; result: AadiResult; traceId: string; createdAt: string; grounding?: TheOracleGroundingBundle; therapyGrounding?: TheOracleGroundingBundle; evidenceGate?: EvidenceGateReport }
+/** The gateway's record of what ran: kept with the answer so the trace can be shown, never used for a decision. */
+export interface AadiPipeline { path: string; stages: { stage: string; ms: number; ok: boolean; code?: string }[] }
+export interface AadiAnalysis { case: CaseState; result: AadiResult; traceId: string; createdAt: string; grounding?: TheOracleGroundingBundle; therapyGrounding?: TheOracleGroundingBundle; evidenceGate?: EvidenceGateReport; pipeline?: AadiPipeline }
+export function validPipeline(value: unknown): value is AadiPipeline {
+  if (!value || typeof value !== "object" || !("path" in value) || typeof value.path !== "string" || !("stages" in value) || !Array.isArray(value.stages)) return false;
+  return value.stages.every((stage: unknown) => stage && typeof stage === "object" && "stage" in stage && typeof stage.stage === "string" && "ms" in stage && typeof stage.ms === "number" && "ok" in stage && typeof stage.ok === "boolean" && (!("code" in stage) || stage.code === undefined || typeof stage.code === "string"));
+}
 export function validCase(value: unknown): value is CaseState {
   if (validateJson({ contractVersion: "1", traceId: "validation", case: value }, requestSchema).length) return false;
   const data = value as CaseState;

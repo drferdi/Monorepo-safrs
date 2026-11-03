@@ -1,4 +1,4 @@
-import { validCase, validResult, type AadiResult, type AadiAnalysis, type AadiTherapy } from "./contract";
+import { validCase, validPipeline, validResult, type AadiResult, type AadiAnalysis, type AadiTherapy } from "./contract";
 import type { CaseState, DifferentialStatus } from "./types";
 import { referenceIncludes, theOracleSource, theOracleDiseases, type Disease } from "../theoracle";
 import { newId, type Message } from "../workspace";
@@ -345,6 +345,16 @@ export function referralPrompt(message: Pick<Message, "sourceText">): string {
 }
 
 // The case and result stored with an AADI answer; a local draft or an unreadable source has none.
+/** The stages the gateway recorded for a stored answer; `[]` for a legacy answer or one without a trace. */
+export function pipelineTrace(message: Pick<Message, "sourceText">): { stage: string; ms: number; ok: boolean }[] {
+  if (!message.sourceText) return [];
+  try {
+    const source: unknown = JSON.parse(message.sourceText);
+    if (!source || typeof source !== "object" || !("pipeline" in source) || !validPipeline(source.pipeline)) return [];
+    return source.pipeline.stages.map(({ stage, ms, ok }) => ({ stage, ms, ok }));
+  } catch { return []; }
+}
+
 export function storedCase(message: Pick<Message, "sourceText">): { data: CaseState; result: AadiResult } | null {
   if (!hasAadiSource(message)) return null;
   const source: unknown = JSON.parse(message.sourceText!);

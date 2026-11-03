@@ -64,4 +64,7 @@ describe("Glass radius tokens and canvas sheet", () => {
     expect(globals).toMatch(/--workspace-canvas-shadow:\s*0 1px 3px rgba\(0, ?0, ?0, ?\.1\), 0 1px 2px -1px rgba\(0, ?0, ?0, ?\.1\)/);
     expect(readFileSync(new URL("../src/app/sentra-tokens.css", import.meta.url), "utf8")).toMatch(/--radius-control: 2px/);
   });
+  it("chat prose sits flush now that the brand header is gone", () => {
+    expect(globals).toMatch(/\.assistant-message > \.draft-content \{[^}]*padding-left: 0/);
+  });
 });

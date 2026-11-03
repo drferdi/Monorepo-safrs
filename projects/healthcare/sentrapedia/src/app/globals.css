@@ -249,10 +249,11 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .user-message { display: flex; align-items: flex-start; margin: 20px 0 26px auto; width: fit-content; max-width: 80%; background: var(--color-background-surface); border-radius: var(--radius-structure); padding: 12px 10px 12px 17px; gap: 10px; font-size: 15px; line-height: 23px; white-space: pre-wrap; }
 .user-message .icon-button { flex-shrink: 0; width: 24px; height: 24px; color: var(--color-text-muted); }
 .assistant-message { margin: 0 0 28px; }
-.message-header { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
-.message-header .brand img { width: 30px; height: 30px; }
-.message-header strong { font-size: 12px; font-weight: 600; }
 .draft-content { font-size: 14px; line-height: 23px; color: var(--body-color); padding-left: 29px; overflow-wrap: anywhere; }
+.assistant-message > .draft-content { padding-left: 0; }
+.pipeline-trace { margin: 8px 0 0; font-size: 12px; color: var(--color-text-secondary); }
+.pipeline-trace summary { cursor: pointer; }
+.pipeline-trace ol { margin: 6px 0 0; padding-left: 18px; }
 .draft-content h2 { font-family: var(--font-title); font-weight: 300; letter-spacing: 0; color: var(--title-color); font-size: 28px; line-height: 36px; margin: 0 0 16px; }
 .draft-content h3 { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; color: var(--title-color); font-size: 18px; line-height: 26px; margin: 24px 0 8px; }
 .draft-content p { white-space: pre-wrap; margin: 0 0 8px; color: var(--body-color); }

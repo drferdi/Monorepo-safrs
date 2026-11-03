@@ -6,7 +6,7 @@ import { modes } from "../lib/drafts";
 import type { Message } from "../lib/workspace";
 import { DocumentContent } from "./document-studio";
 import { freshAnswer } from "../lib/fresh-answer";
-import { diagnosisContent, hasAadiSource, aadiFocus } from "../lib/aadi/presentation";
+import { diagnosisContent, hasAadiSource, aadiFocus, pipelineTrace } from "../lib/aadi/presentation";
 import { documentTitle, downloadName, workspaceDate } from "../lib/studio";
 import { paneDocument } from "../lib/document-pane";
 import { reviewedText } from "../lib/normal-exam";
@@ -23,6 +23,7 @@ export function MessageCard({ message, onEdit, onToast, onReuse, onOpenDocument 
   const [fresh] = useState(() => message.role === "assistant" && freshAnswer(message));
   if (message.role === "user") return <div className="user-message"><div>{message.content}</div><button className="icon-button" aria-label="Gunakan kembali prompt" title="Gunakan kembali prompt" onClick={() => onReuse(message.content)}><RotateCcw size={13}/></button></div>;
   const aadi = hasAadiSource(message);
+  const trace = aadi ? pipelineTrace(message) : [];
   const content = diagnosisContent(message);
   // What copy and download carry: the stored text, with the auto-normal marker hidden once reviewed (D10).
   const output = reviewedText(content, message.reviewStatus);
@@ -38,6 +39,7 @@ export function MessageCard({ message, onEdit, onToast, onReuse, onOpenDocument 
     {paneDocument(message) ? <>
       <p className="document-line">{aadi ? `Analisis kasus disusun${focus ? ` · fokus: ${focusLabel[focus]}` : ""}.` : `Draf ${modeName} disusun.`}</p>
       <button type="button" className="document-card" onClick={() => onOpenDocument(message.id)}><span><strong>{aadi ? "Analisis kasus" : documentTitle(content).replace(/^# /, "") || modeName}</strong><small>{workspaceDate(message.createdAt)}</small></span></button>
+      {trace.length > 0 && <details className="pipeline-trace"><summary>Jejak analisis</summary><ol>{trace.map((step, index) => <li key={index}>{step.stage} · {step.ms} ms{step.ok ? "" : " · gagal"}</li>)}</ol></details>}
     </> : <>
       <DocumentContent content={content} onEdit={onEdit}/>
       {message.mode === "question" && <div className="evidence-handoff"><strong>Siap untuk peninjauan Evidence</strong><span>Hubungkan AI Clinical dan sumber terverifikasi untuk menjawab ringkasan ini. Draf dapat diedit dan diekspor.</span></div>}
