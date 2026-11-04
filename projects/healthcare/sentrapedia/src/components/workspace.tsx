@@ -24,7 +24,7 @@ import { KnowledgeDialog } from "./knowledge-dialog";
 import { diagnosisContent, aadiMessage, pcareCopies } from "../lib/aadi/presentation";
 import { paneDocuments } from "../lib/document-pane";
 import type { AadiAnalysis } from "../lib/aadi/contract";
-import { caseFieldKeys, composerCase, patientHints, composerUsesAadi, composerAadiMessages, emptyCaseFields, readCaseFields, type CaseFieldKey, type CaseFields } from "../lib/aadi/composer";
+import { composerCase, patientHints, composerUsesAadi, composerAadiMessages, emptyCaseFields, readCaseFields, type CaseFields } from "../lib/aadi/composer";
 import { requestAadiAnalysis } from "../lib/aadi/client";
 import { missingMinimum } from "../lib/soap";
 import { smooth } from "./smooth";
@@ -66,8 +66,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   const [busy, setBusy] = useState(false);
   // The analysis case strip: values read from the text refill as the text changes, until the doctor edits that field.
   const [caseFields, setCaseFields] = useState<CaseFields>(emptyCaseFields);
-  const [manualFields, setManualFields] = useState<CaseFieldKey[]>([]);
-  const resetCaseFields = useCallback(() => { setCaseFields(emptyCaseFields()); setManualFields([]); }, []);
+  const resetCaseFields = useCallback(() => setCaseFields(emptyCaseFields()), []);
   const [analysisError, setAnalysisError] = useState("");
   // Set when an analysis was held back for missing minimum data; the composer then names what is missing.
   const [minimumBlocked, setMinimumBlocked] = useState(false);
@@ -126,8 +125,9 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   function savePatient(p: Patient) { const exists = state.patients.some((item) => item.id === p.id); dispatch({ type: exists ? "patient.edit" : "patient.add", patient: p }); if (!exists) { dispatch({ type: "encounter.add", encounter: newEncounter(p.id) }); setPrompt(""); } closeDialog(); notify(exists ? "Detail Pasien tersimpan." : "Pasien dibuat. Encounter pertama siap digunakan."); }
   function updatePrompt(value: string) {
     setPrompt(value); setAnalysisError("");
+    // Glass's composer is one text box (Gaffer, 2026-11-04): age, sex and vitals are read from the text, never edited apart.
     const found = readCaseFields(value);
-    setCaseFields((fields) => { const next = { ...fields }; for (const key of caseFieldKeys) if (!manualFields.includes(key)) next[key] = found[key] ?? ""; return next; });
+    setCaseFields({ ...emptyCaseFields(), ...found });
   }
   // A failed analysis can still become the local SOAP note (Puskesmas flow, decision 3): offered next to "Coba lagi",
   // never automatic; the draft's source records why AADI did not answer.
@@ -139,7 +139,6 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     resetCaseFields();
     notify("Draf SOAP lokal disusun tanpa analisis AADI. Lengkapi dan verifikasi oleh klinisi.");
   }
-  function editCaseField(key: CaseFieldKey, value: string) { setCaseFields((fields) => ({ ...fields, [key]: value })); setManualFields((keys) => keys.includes(key) ? keys : [...keys, key]); }
   async function analyzeMain(text: string, selectedMode: ModeId, current: Encounter) {
     if (analysisController.current) return;
     const controller = new AbortController(); analysisController.current = controller;
@@ -199,8 +198,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   };
   const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<EncounterOverview state={state} encounter={encounter} patient={patient} {...overviewActions}/>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify} drafts={drafts} onDraft={setDraft}/>;
   const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
-    minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [],
-    caseFields, autoFields: caseFieldKeys.filter((key) => caseFields[key] && !manualFields.includes(key)), onCaseField: editCaseField, ...patientHints(patient) };
+    minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [] };
 
   if (restoring) return <main className="system-loading" aria-busy="true"><PixelLoader label="Sedang membuka workspace…"/><p>Membuka workspace…</p></main>;
 

@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## The composer is one text box like Glass: CaseGuide and the case strip removed (R1, branch `fix/glass-composer-plain-2026-11-04`, cut from `main` `5456c8b8`) - 2026-11-04 B
+
+- Gaffer, seeing the running app after PR #41: the guide under the composer and the L/P, Usia, TD, Nadi, Suhu, RR, SpO₂ strip are not in Glass and are what he disliked. Decision ledgered in `.agents/DECISIONS.md` (2026-11-04); the spec's "CaseGuide: kept" line is amended.
+- **What changed:** `composer.tsx` lost `CaseStrip`, the strip toggle, the `insert` helper and `<CaseGuide>`; `workspace.tsx` lost the manual-field state and the three composer props; `case-guide.tsx` deleted; the strip/guide CSS blocks pruned from `globals.css`. Age, sex and vitals are still read from the text (`readCaseFields`) and sent; the minimum-data line under the box stays.
+- **Tests:** new `tests/ui/composer-plain.test.tsx` (3, written RED first); `case-strip` and `case-guide` UI tests deleted; three strip cases in `chip-row` folded into one; two guide-dependent cases dropped from `tests/ui/normal-exam.test.tsx` (the lib test covers the template).
+- **Verified:** `npx tsc --noEmit` 0; `./node_modules/.bin/eslint src tests` 0 errors (the three pre-existing warnings); Vitest 60 files / 638 tests green; `npm run test:system` 67/67; preview on port 3106 reloaded and read (see the commit).
+- **Not done:** not merged to `main`, not split, not pushed. Those wait for Gaffer's word. `.env.local` still holds `SENTRAPEDIA_AUTH_MODE=local` for the preview.
+
 ## The workspace has Glass's shape: split canvas, document pane, Glass-shaped AADI analysis, chip row, /agent page (R1, branch `feat/glass-workspace-redesign-2026-11-04`, PR #41 merged) - 2026-11-04 Asia/Jakarta
 
 - Gaffer: "pelajari Glass Health, kemudian samakan UI SentraPedia dengan Glass Health". Spec `docs/specs/2026-11-04-glass-workspace-redesign-design.md`, plan `docs/plans/active/2026-11-04-glass-workspace-redesign.md` (14 tasks), executed from `e474f330` on the branch; Tasks 1-8 subagent-driven, 9-14 inline at Gaffer's request ("Native, kerjakan sendiri"). Decisions in `.agents/DECISIONS.md` "2026-11-04 — The workspace returns to Glass's shape"; the one deviation from the spec is the single `ddx` chip.

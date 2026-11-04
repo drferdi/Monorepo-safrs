@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { workspaceStorageKeys } from "../../src/lib/workspace-storage";
 const { storageKey, unreadableKey } = workspaceStorageKeys("user_test");
 void storageKey; void unreadableKey;
@@ -23,45 +23,9 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.restoreAllMocks(); });
 
 const textarea = () => screen.getByLabelText("Pertanyaan atau catatan klinis") as HTMLTextAreaElement;
-const guide = () => within(screen.getByRole("group", { name: "Kelengkapan kasus" }));
 
 describe("normal exam template in the composer", () => {
-  it("names the template, offers Hamil for a P patient, and flags a typed value", async () => {
-    render(<WorkspaceApp principalId="user_test"/>);
-    await act(async () => { await Promise.resolve(); });
-    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
-    fireEvent.change(textarea(), { target: { value: "Keluhan utama: pusing\nDemam 3 hari" } });
-    expect(guide().getByText("Templat normal menunggu usia dan jenis kelamin")).toBeTruthy();
-    expect(guide().queryByRole("button", { name: "Sisipkan Hamil" })).toBeNull();
-    fireEvent.change(textarea(), { target: { value: "Keluhan utama: pusing, perempuan 28 tahun, TD 150/100" } });
-    expect(guide().getByText("Templat normal: Dewasa · P · 28 tahun")).toBeTruthy();
-    expect(guide().getByText("TD 150/100 mmHg: ≥ 140/90 (PERHI 2021)")).toBeTruthy();
-    // The template completes the exam, so it is not asked for; the two optional chips are not counted.
-    expect(guide().getByText("Kelengkapan kasus: 5 dari 8")).toBeTruthy();
-    expect(guide().queryByRole("button", { name: "Sisipkan Pemeriksaan fisik" })).toBeNull();
-    fireEvent.click(guide().getByRole("button", { name: "Sisipkan Hamil" }));
-    expect(textarea().value).toBe("Keluhan utama: pusing, perempuan 28 tahun, TD 150/100\n\nHamil: ");
-    fireEvent.change(textarea(), { target: { value: `${textarea().value}32 minggu` } });
-    expect(guide().getByText("Templat normal: Hamil 32 minggu · P · 28 tahun")).toBeTruthy();
-    expect(guide().getByText("TD 150/100 mmHg: ≥ 140/90 pada kehamilan")).toBeTruthy();
-    expect(guide().queryByRole("button", { name: "Sisipkan Hamil" })).toBeNull();
-    expect(guide().getByText("Kelengkapan kasus: 5 dari 8")).toBeTruthy();
-  });
-
-  it("does not offer Hamil or Nifas for a girl under 10, and lists the typed exam lines in row O", async () => {
-    render(<WorkspaceApp principalId="user_test"/>);
-    await act(async () => { await Promise.resolve(); });
-    fireEvent.click(screen.getByRole("button", { name: "Catatan Klinis (SOAP)" }));
-    fireEvent.change(textarea(), { target: { value: "Keluhan utama: demam, usia: 8 bulan, perempuan, RR 56\nParu: ronki (+/+)" } });
-    expect(guide().getByText("Templat normal: Bayi · P · 8 bulan")).toBeTruthy();
-    expect(guide().getByText("Napas 56 /menit: ≥ 50, napas cepat (MTBS)")).toBeTruthy();
-    expect(guide().queryByRole("button", { name: "Sisipkan Hamil" })).toBeNull();
-    fireEvent.click(guide().getByRole("button", { name: "Susunan SOAP" }));
-    const region = within(screen.getByRole("region", { name: "Susunan SOAP" }));
-    expect(region.getByText("Paru: ronki (+/+)", { selector: ".soap-entry" })).toBeTruthy();
-    expect(region.getByText("Baris pemeriksaan lain dari templat normal Bayi · P · 8 bulan")).toBeTruthy();
-  });
-
+  // The guide's template line, flags and the SOAP region are gone with the plain composer (Gaffer, 2026-11-04); the lib is tested in tests/normal-exam.test.ts.
   it("makes a local SOAP draft whose exam is filled and marked, with the flag kept out of the record", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
