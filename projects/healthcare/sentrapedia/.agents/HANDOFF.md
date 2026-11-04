@@ -6,7 +6,8 @@
 - **What changed:** `composer.tsx` lost `CaseStrip`, the strip toggle, the `insert` helper and `<CaseGuide>`; `workspace.tsx` lost the manual-field state and the three composer props; `case-guide.tsx` deleted; the strip/guide CSS blocks pruned from `globals.css`. Age, sex and vitals are still read from the text (`readCaseFields`) and sent; the minimum-data line under the box stays.
 - **Tests:** new `tests/ui/composer-plain.test.tsx` (3, written RED first); `case-strip` and `case-guide` UI tests deleted; three strip cases in `chip-row` folded into one; two guide-dependent cases dropped from `tests/ui/normal-exam.test.tsx` (the lib test covers the template).
 - **Verified:** `npx tsc --noEmit` 0; `./node_modules/.bin/eslint src tests` 0 errors (the three pre-existing warnings); Vitest 60 files / 638 tests green; `npm run test:system` 67/67; preview on port 3106 reloaded and read (see the commit).
-- **Not done:** not merged to `main`, not split, not pushed. Those wait for Gaffer's word. `.env.local` still holds `SENTRAPEDIA_AUTH_MODE=local` for the preview.
+- **Merged locally** into monorepo `main` as `223e3a68` on Gaffer's "Ya, merge lokal". **Split `5aeb4c41` pushed on Gaffer's word ("Ya, split dan push")** as `fix/sentrapedia-glass-composer-plain-2026-11-04` on the product repository: descends from `03761725` PASS, tree equal PASS, 0 LFS files, no conflict with `sentrapedia/main` (`515fc2cd`). The next split must descend from `5aeb4c41`.
+- **Still Gaffer's:** open and merge the PR on GitHub (`gh` on this machine has an invalid token); PR text in `.agents/PR-glass-composer-plain.md`. `.env.local` still holds `SENTRAPEDIA_AUTH_MODE=local` for the preview.
 
 ## The workspace has Glass's shape: split canvas, document pane, Glass-shaped AADI analysis, chip row, /agent page (R1, branch `feat/glass-workspace-redesign-2026-11-04`, PR #41 merged) - 2026-11-04 Asia/Jakarta
 
