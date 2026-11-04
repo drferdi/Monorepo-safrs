@@ -12,7 +12,7 @@ import type { PersonalTemplate } from "../lib/workflow";
 import type { Encounter, Settings } from "../lib/workspace";
 import { useDictation } from "./use-dictation";
 
-interface Props { prompt: string; onPrompt: (value: string) => void; mode: ModeId; onMode: (mode: ModeId) => void; settings: Settings; onModel: (model: Settings["model"]) => void; context: string; onContext: () => void; onScribe: () => void; encounter?: Pick<Encounter, "messages">; patientName?: string; templates: PersonalTemplate[]; favorites: string[]; templateKey: string | null; onTemplate: (key: string) => void; onSubmit: () => void; busy: boolean; aadiEnabled?: boolean; analysisError?: string; onCancelAnalysis?: () => void; onFallback?: () => void; minimumMissing?: string[] }
+interface Props { prompt: string; onPrompt: (value: string) => void; mode: ModeId; onMode: (mode: ModeId) => void; settings: Settings; onModel: (model: Settings["model"]) => void; context: string; onContext: () => void; onScribe: () => void; encounter?: Pick<Encounter, "messages">; patientName?: string; templates: PersonalTemplate[]; favorites: string[]; templateKey: string | null; onTemplate: (key: string) => void; onSubmit: () => void; busy: boolean; aadiEnabled?: boolean; analysisError?: string; onCancelAnalysis?: () => void; onFallback?: () => void }
 
 const modeLabel = (id: ModeId) => modes.find((item) => item.id === id)!.label;
 
@@ -71,7 +71,6 @@ export function Composer(props: Props) {
   </form>
     <ChipRow encounter={props.encounter} mode={props.mode} templateKey={props.templateKey} templates={props.templates} busy={props.busy} onChip={chip}/>
     {dictation.error &&<div className="composer-analysis"><p className="form-warning" role="alert">{dictation.error}</p></div>}
-    {!!props.minimumMissing?.length && <div className="composer-analysis"><p className="form-warning" role="alert">Analisis belum dijalankan. Lengkapi data minimal: {props.minimumMissing.join(", ")}.</p></div>}
     {props.aadiEnabled && props.analysisError && <div className="composer-analysis"><p className="form-warning" role="alert">{props.analysisError} {props.prompt.trim() && !props.busy && <><button type="button" className="text-button" onClick={props.onSubmit}>Coba lagi</button> {props.onFallback && <button type="button" className="text-button" onClick={props.onFallback}>Susun draf SOAP lokal</button>}</>}</p></div>}
     {/* Options are the rows themselves: focus stays in the textarea, which points at the active row. */}
     {slashOpen && <div className="slash-picker" id={pickerId} role="listbox" aria-label="Pilih templat">{groups.map((group, g) => <div key={group.label} role="group" aria-label={group.label}><span className="slash-label" aria-hidden="true">{group.label}</span>{group.options.map((item, i) => { const at = groups.slice(0, g).reduce((n, earlier) => n + earlier.options.length, 0) + i; return <div role="option" aria-selected={slashIndex === at} id={`${pickerId}-${at}`} key={`${group.label}-${item.key}`} onPointerDown={(event) => event.preventDefault()} onClick={() => choose(item.key)}><strong>{item.label}</strong>{item.key === current ? <Check size={14} aria-label="dipakai"/> : item.hint && <span>{item.hint}</span>}</div>; })}</div>)}{!options.length && <p>Tidak ada templat yang cocok.</p>}</div>}

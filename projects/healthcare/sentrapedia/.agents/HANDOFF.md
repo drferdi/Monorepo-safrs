@@ -1,5 +1,13 @@
 # Sentrapedia handoff
 
+## No minimum-data gate before an analysis, like Glass (R1, branch `fix/glass-composer-no-gate-2026-11-04`, cut from `main` `868f364b`) - 2026-11-04 C
+
+- Gaffer, on the running app after the strip and guide were gone: the "Lengkapi data minimal" line is still an ask; "evaluasi ulang semua … samakan dengan Glass". Evaluation: the engine contract never required age, sex or vitals (`isValidCase`), and the report already names missing data ("Data yang perlu dilengkapi"). The gate was a UI rule from 2026-10-21; reversed, ledgered in `.agents/DECISIONS.md`.
+- **What changed:** `generate()` in `workspace.tsx` sends the case as typed; the `minimumBlocked` state, the `minimumMissing` prop and alert are gone; `src/lib/soap.ts` and `tests/soap.test.ts` deleted (every export was dead once the guide left). `readCaseFields` still fills demographics and vitals from the text.
+- **Other asks checked, none left before submit:** dictation, analysis-error and storage alerts are error states; the AADI case form in the knowledge dialog asks only for the complaint; the local SOAP "Belum diisi" list is output after the fact, which Glass does too.
+- **Verified:** `npx tsc --noEmit` 0; `./node_modules/.bin/eslint src tests` 0 errors (three pre-existing warnings); Vitest 59 files / 629 tests; `npm run test:system` 67/67; preview on port 3106: "Nyeri kepala hebat sejak 2 jam" alone sends `POST /api/aadi` with no alert (502 there is the engine-less preview).
+- **Not verified:** the real engine with `ageYears: null`. **Not done:** merge to `main`, split (must descend from `5aeb4c41`) and push wait for Gaffer's word; the PR for the previous branch is still Gaffer's to open.
+
 ## The composer is one text box like Glass: CaseGuide and the case strip removed (R1, branch `fix/glass-composer-plain-2026-11-04`, cut from `main` `5456c8b8`) - 2026-11-04 B
 
 - Gaffer, seeing the running app after PR #41: the guide under the composer and the L/P, Usia, TD, Nadi, Suhu, RR, SpO₂ strip are not in Glass and are what he disliked. Decision ledgered in `.agents/DECISIONS.md` (2026-11-04); the spec's "CaseGuide: kept" line is amended.
