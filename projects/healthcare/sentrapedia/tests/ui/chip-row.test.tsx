@@ -124,7 +124,7 @@ describe("chip row", () => {
 
   it("Mulai Scribe opens the scribe dialog; the composer has no vitals strip or toggle (Gaffer, 2026-11-04)", () => {
     const onScribe = vi.fn();
-    render(<Composer {...composerProps({ onScribe, aadiEnabled: true, minimumMissing: ["usia"] })}/>);
+    render(<Composer {...composerProps({ onScribe, aadiEnabled: true })}/>);
     fireEvent.click(screen.getByRole("button", { name: "Mulai Scribe" }));
     expect(onScribe).toHaveBeenCalledOnce();
     expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();

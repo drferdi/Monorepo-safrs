@@ -64,13 +64,17 @@ describe("the plain composer", () => {
     expect(within(screen.getByRole("menu", { name: "Salin ke P-Care" })).getByRole("menuitem", { name: /^Salin G44\.2 — / })).toBeTruthy();
   });
 
-  it("names the missing minimum data under the box and sends nothing", async () => {
+  it("sends a bare complaint as it is, like Glass: no minimum-data gate, no alert, the report names what is missing", async () => {
     render(<WorkspaceApp principalId="user_test"/>);
     await act(async () => { await Promise.resolve(); });
     fireEvent.change(box(), { target: { value: "Nyeri kepala hebat sejak 2 jam" } });
     await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Analisis kasus" })); });
-    expect(screen.getByRole("alert").textContent).toMatch(/Lengkapi data minimal: Usia, Jenis kelamin, Tanda vital/);
-    expect(sent).toHaveLength(0);
+    await act(async () => { await Promise.resolve(); });
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(sent).toHaveLength(1);
+    expect(sent[0].chiefComplaint).toBe("Nyeri kepala hebat sejak 2 jam");
+    expect(sent[0].demographics).toEqual({ ageYears: null, sex: "unknown" });
+    expect(sent[0].vitals).toEqual({});
     expectPlainComposer();
   });
 

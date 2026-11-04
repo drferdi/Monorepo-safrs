@@ -581,6 +581,15 @@ Append new decisions at the end. When a decision replaces an earlier one, add a 
 ## 2026-11-04 — The composer is one text box like Glass: CaseGuide and the case strip are gone
 
 - Gaffer, on the running Glass workspace: the guide under the composer ("Tanda bahaya", "Pertanyaan penting", "Kelengkapan kasus", "Susunan SOAP") is not in Glass and was the part he disliked ("justru ini yang saya tidak suka"); the L/P, Usia, TD, Nadi, Suhu, RR, SpO₂ strip and its toggle go too ("sama kan saja dengan UI dari Glass health").
-- Kept: `readCaseFields` on the typed text feeds demographics and vitals into the sent case; `missingMinimum` gates the analysis and its one-line message stays under the box. The normal-exam template in the local SOAP draft is unchanged (it only lost its guide line).
+- Kept: `readCaseFields` on the typed text feeds demographics and vitals into the sent case; `missingMinimum` gates the analysis and its one-line message stays under the box.
+- Status: the gate and its message are removed by the entry below (2026-11-04, no minimum-data gate). The normal-exam template in the local SOAP draft is unchanged (it only lost its guide line).
 - Removed: `src/components/case-guide.tsx`, `CaseStrip`, the `caseFields`/`autoFields`/`onCaseField`/`patientAge`/`patientSex` composer props, the manual-field state in the workspace, and the `.case-strip`/`.case-guide`/`.soap-*`/`.flag-row`/`.exam-*` CSS.
 - Supersedes the "CaseGuide: kept" line of the 2026-11-04 Glass spec (amended in place).
+
+## 2026-11-04 — No minimum-data gate before an analysis, like Glass
+
+- Gaffer, after the strip and guide were gone, still met "Analisis belum dijalankan. Lengkapi data minimal: Usia, Jenis kelamin, Tanda vital": "masih ada minta isi ini itu … samakan dengan Glass". Glass never holds a question back; it answers with what it has and names what is missing in the answer.
+- This reverses the 2026-10-21 rule ("a case analysis needs these before it is sent, so the report is never built on an empty case"). The engine contract never required them: `isValidCase` needs only a chief complaint, with `ageYears: null`, `sex: "unknown"` and empty vitals allowed, and the report already lists "Data yang perlu dilengkapi" from `missingInformation`.
+- Removed: `missingMinimum`, `minimumModes`, the `minimumBlocked` state, the `minimumMissing` prop and alert, and with them the whole of `src/lib/soap.ts` (guide items, SOAP view, flag and question helpers, `insertSection`), dead since the guide left, and `tests/soap.test.ts`.
+- Kept: age, sex and vitals read from the text (`readCaseFields`) still reach the sent case; the dictation, analysis-error and storage alerts are error states, not gates; the local SOAP draft's "Belum diisi" list is output after the fact.
+- Not verified: the real engine's answer to a case with no age; a refusal there surfaces as the existing analysis error, not as a pre-send ask.

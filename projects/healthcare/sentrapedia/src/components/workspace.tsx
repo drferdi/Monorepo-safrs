@@ -24,9 +24,8 @@ import { KnowledgeDialog } from "./knowledge-dialog";
 import { diagnosisContent, aadiMessage, pcareCopies } from "../lib/aadi/presentation";
 import { paneDocuments } from "../lib/document-pane";
 import type { AadiAnalysis } from "../lib/aadi/contract";
-import { composerCase, patientHints, composerUsesAadi, composerAadiMessages, emptyCaseFields, readCaseFields, type CaseFields } from "../lib/aadi/composer";
+import { composerCase, composerUsesAadi, composerAadiMessages, emptyCaseFields, readCaseFields, type CaseFields } from "../lib/aadi/composer";
 import { requestAadiAnalysis } from "../lib/aadi/client";
-import { missingMinimum } from "../lib/soap";
 import { smooth } from "./smooth";
 import { useMediaQuery, useToast, useWorkspacePersistence } from "./workspace-hooks";
 import { ChatComposer, Conversation, HomeFooter, HomeView, WorkspaceHeader } from "./workspace-views";
@@ -68,8 +67,6 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   const [caseFields, setCaseFields] = useState<CaseFields>(emptyCaseFields);
   const resetCaseFields = useCallback(() => setCaseFields(emptyCaseFields()), []);
   const [analysisError, setAnalysisError] = useState("");
-  // Set when an analysis was held back for missing minimum data; the composer then names what is missing.
-  const [minimumBlocked, setMinimumBlocked] = useState(false);
   // The question being analysed: shown at once as the user's message, saved only with its answer.
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
   const pendingText = useRef<string | null>(null);
@@ -142,7 +139,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
   async function analyzeMain(text: string, selectedMode: ModeId, current: Encounter) {
     if (analysisController.current) return;
     const controller = new AbortController(); analysisController.current = controller;
-    setBusy(true); setAnalysisError(""); setMinimumBlocked(false); pendingText.current = text.trim(); setPendingQuestion(text.trim()); setPrompt("");
+    setBusy(true); setAnalysisError(""); pendingText.current = text.trim(); setPendingQuestion(text.trim()); setPrompt("");
     // The home composer gives way to the chat composer; keep typing where the reader is.
     requestAnimationFrame(() => document.querySelector<HTMLTextAreaElement>(".chat-composer textarea")?.focus());
     try {
@@ -164,7 +161,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     let content: string;
     const personal = useTemplate && selectedTemplate?.mode === selectedMode ? selectedTemplate : undefined;
     if (!local && composerUsesAadi(selectedMode, !!personal)) {
-      if (missingMinimum(text, caseFields, patientHints(patient), selectedMode).length) { setMinimumBlocked(true); return; }
+      // No minimum-data gate (Gaffer, 2026-11-04, like Glass): the case goes as typed; the report names what is missing.
       void analyzeMain(text, selectedMode, current); return;
     }
     try { content = personal ? createPersonalDraft(personal, text, current.context) : createDraft({ mode: selectedMode, prompt: text, context: current.context, ...state.settings, patient, caseFields: readCaseFields(text) }); } catch (error) { notify(error instanceof Error ? error.message : "Draf tidak dapat diformat.", "error"); return; }
@@ -197,8 +194,7 @@ function WorkspaceState({ principalId, onSignOut, userButton }: { principalId: s
     onMakeTasks: (text: string) => { const typed = prompt; generate(text, "tasks", false); setPrompt(typed); },
   };
   const paneFor = (onClose: () => void) => encounter && <DocumentPane encounter={encounter} activeId={pane.activeId} onActive={(activeId) => setPane({ activeId })} overview={<EncounterOverview state={state} encounter={encounter} patient={patient} {...overviewActions}/>} tools={paneTools} onClose={onClose} dispatch={dispatch} onToast={notify} drafts={drafts} onDraft={setDraft}/>;
-  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft,
-    minimumMissing: minimumBlocked && prompt.trim() ? missingMinimum(prompt, caseFields, patientHints(patient), mode) : [] };
+  const composerProps: ComponentProps<typeof Composer> = { prompt, onPrompt: updatePrompt, mode, onMode: changeMode, settings: state.settings, onModel: (model) => dispatch({ type: "settings.save", settings: { ...state.settings, model } }), context, onContext: () => openDialog("context"), onScribe: () => openDialog("scribe"), encounter, patientName: patient?.name, templates: state.templates ?? [], favorites: state.favorites ?? [], templateKey, onTemplate: chooseTemplate, onSubmit: () => generate(), busy, aadiEnabled: composerUsesAadi(mode, !!selectedTemplate), analysisError, onCancelAnalysis: cancelAnalysis, onFallback: fallbackDraft };
 
   if (restoring) return <main className="system-loading" aria-busy="true"><PixelLoader label="Sedang membuka workspace…"/><p>Membuka workspace…</p></main>;
 
