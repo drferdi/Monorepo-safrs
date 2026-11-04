@@ -34,7 +34,7 @@ Reshape in place, in stages. Existing components are reshaped one at a time; sto
 - Chip row: one horizontally scrolling row under the composer, 32 px chips, hairline border, no tabs, no "Tindakan cepat" label. Shortlist, in order: **Ajukan pertanyaan · Analisis kasus · Catatan SOAP · Diagnosis Banding · Asesmen dan Rencana · Rujukan · Edukasi pasien · Anamnesis · Ringkasan kunjungan**. "Analisis kasus" is the `ddx` AADI path; "Diagnosis Banding" is the same path with the differential first (today's `ddx` label); the two are kept apart because Gaffer's product copy names both. A chip never submits: it sets the mode and prefills the composer with that mode's opening sentence (new field `opening` on `modes[]`), focus lands in the textarea, the doctor sends. Once the encounter holds a document of that mode, the chip reads "Perbarui …".
 - Removed from under the composer: the four intent tabs, "Templat lain", the quick-actions row, the link row (Referensi penyakit · Analisis kasus · Templat dan favorit · Favoritkan pilihan), the fictional-data checkbox (already withdrawn by the 2026-10-26 decision) and the "/ untuk templat" hint.
 - `/` picker: kept, now the only way to every mode and personal template. Two groups: **Mode** (all 18, in the six clinical categories of `modeCategories`) and **Templat pribadi**. Favourites are shown first when any exist. Behaviour (keyboard, Escape, scroll) unchanged.
-- CaseGuide: kept, rendered as one compact row inside the composer card below the textarea, only when the text holds a complaint (today's trigger). Its SOAP toggle view is kept.
+- CaseGuide and the case strip (L/P, Usia, TD, Nadi, Suhu, RR, SpO₂): removed on 2026-11-04 after Gaffer saw the shipped result ("justru ini yang saya tidak suka"; "sama kan saja dengan UI dari Glass health"). The composer is one text box like Glass's. Age, sex and vitals are still read from the typed text and sent as structured data; when the minimum data is missing, one line under the box names it when Analisis kasus is pressed. (This supersedes the earlier "kept" line.)
 
 ## 3. Encounter chat
 
@@ -95,7 +95,7 @@ Settings schema: two optional fields added (`environment`, `modeInstructions`); 
 Each stage ships on its own and leaves the app usable:
 
 1. Shell and tokens: sidebar order, account menu, canvas, radius tokens, session toolbar merged into the menu.
-2. Composer and chip row: shortlist, `opening` sentences, chip prefill, `/` as the full picker, removal of tabs and rows, CaseGuide inside the card.
+2. Composer and chip row: shortlist, `opening` sentences, chip prefill, `/` as the full picker, removal of tabs and rows; CaseGuide and the case strip removed (2026-11-04 amendment).
 3. Document pane and Ringkasan encounter: split layout, tabs, tools, review head, cockpit retired, mobile sheet.
 4. AADI rendering: the structured document, Kutipan pedoman cards, honest progress list, chat summary and card.
 5. Pengaturan Agent page and settings fields.

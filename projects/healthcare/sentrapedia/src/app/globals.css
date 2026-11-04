@@ -707,47 +707,7 @@ label.button:has(input:focus-visible) { outline: 2px solid var(--workspace-focus
 .not-found h1 { margin: 0; }
 .not-found p { margin: 0; font-size: 15px; color: var(--color-text-secondary); }
 .not-found a { color: var(--workspace-accent-ink); font-size: 14px; min-height: 24px; display: inline-flex; align-items: center; }
-/* Analysis case strip (2026-10-20): age, sex and vitals beside the complaint; a value read from the text is tinted until edited. */
-.case-strip { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 6px 0; }
-.case-field { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 4px 0 8px; border: 1px solid var(--workspace-control-border); border-radius: var(--radius); background: var(--workspace-white); font-size: 12px; color: var(--color-text-secondary); }
-.case-field[data-auto] { background: var(--workspace-accent-soft); border-color: var(--color-border-subtle); }
-.case-field :is(input, select) { width: 56px; height: 26px; border: none; background: none; outline: none; font: inherit; font-size: 13px; color: var(--body-color); }
-.case-field select { width: auto; cursor: pointer; }
-.case-field:focus-within { border-color: var(--workspace-accent-ink); }
-.case-field:has([aria-invalid="true"]) { border: 2px solid var(--workspace-error-text); background: var(--workspace-error-bg); }
-@media (max-width: 760px) { .case-strip { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } .case-field { flex: none; } }
 /* Doctor flow C1 (2026-10-20): on the phone parts 2-4 start folded to their title, in the part title face, and one line. */
-/* Puskesmas flow: the case guide under the composer (phase 2), one wrapping row, no animation. */
-.case-guide { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0 0; font-size: 12px; color: var(--color-text-secondary); }
-.case-guide-count { margin-right: 4px; }
-.case-guide-item { display: inline-flex; align-items: center; gap: 5px; }
-.case-guide .action-chip { height: 28px; padding: 0 9px; font-size: 12px; }
-.case-guide-item[data-filled] { height: 28px; padding: 0 9px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); }
-.soap-view { flex-basis: 100%; display: grid; gap: 6px; padding: 8px 10px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius); background: var(--workspace-white); color: var(--color-text-secondary); font-size: 12px; line-height: 1.6; }
-.soap-row { display: grid; grid-template-columns: 7.5em 1fr; gap: 8px; overflow-wrap: anywhere; white-space: pre-line; }
-.soap-row strong { color: var(--color-text-primary); }
-.soap-row[data-empty] span { color: var(--color-text-secondary); font-style: italic; }
-/* The checklist before an analysis arrives like the analysis answer: the block rises in (answer-in), the branch line draws
-   down, and the rows follow one by one (text-in). */
-.case-checklist { flex-basis: 100%; animation: answer-in 520ms cubic-bezier(.16, 1, .3, 1) both; interpolate-size: allow-keywords; overflow: clip; overflow-clip-margin: 4px; transition: height 480ms cubic-bezier(.16, 1, .3, 1); }
-/* The list opens from nothing to its height instead of pushing the page down at once. */
-@starting-style { .case-checklist { height: 0; } }
-.case-checklist .diagnosis-section { padding: 18px 0 8px; }
-.case-checklist .diagnosis-section-body::before { animation: branch-reveal 320ms cubic-bezier(.23, 1, .32, 1); }
-.case-checklist .diagnosis-section-body > * { animation: text-in 480ms cubic-bezier(.16, 1, .3, 1) 160ms both; }
-@supports (animation-delay: calc(sibling-index() * 1ms)) { .case-checklist .diagnosis-section-body > * { animation-delay: calc(100ms + min(sibling-index(), 12) * 60ms); } }
-@media (prefers-reduced-motion: reduce) { .case-checklist, .case-checklist .diagnosis-section-body::before, .case-checklist .diagnosis-section-body > * { animation: none; transition: none; } }
-.case-checklist input[type="checkbox"] { accent-color: var(--workspace-accent-ink); }
-.case-checklist .draft-task { margin: 0 0 6px; }
-.flag-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; margin-bottom: 6px; }
-.flag-row label { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: var(--color-text-secondary); }
-@media (max-width: 760px) { .soap-row { grid-template-columns: 1fr; gap: 2px; } }
-/* Normal exam template (2026-10-21): the template the SOAP draft will use and the value flags. */
-.case-guide-item[data-optional] { border-style: dashed; }
-.exam-template { flex-basis: 100%; display: flex; align-items: center; gap: 6px; margin: 2px 0 0; color: var(--color-text-secondary); }
-.exam-template[data-ready] { color: var(--workspace-accent-ink); font-weight: 500; }
-.exam-flags { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.exam-flags li { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: var(--radius); background: var(--workspace-error-bg); color: var(--workspace-error-text); overflow-wrap: anywhere; }
 .soap-entry { display: block; color: var(--color-text-primary); font-size: 12px; }
 .soap-note { display: block; margin-top: 2px; color: var(--color-text-secondary); font-style: italic; }
 /* Document pane (R1, spec 4): beside the chat above 1200 px, a sheet below. Hairline borders; it opens with an opacity fade. */

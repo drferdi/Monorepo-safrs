@@ -122,31 +122,12 @@ describe("chip row", () => {
     expect(screen.queryByRole("combobox", { name: "Mode atau templat" })).toBeNull();
   });
 
-  it("Mulai Scribe opens the scribe dialog and the vitals toggle shows the strip on demand", () => {
+  it("Mulai Scribe opens the scribe dialog; the composer has no vitals strip or toggle (Gaffer, 2026-11-04)", () => {
     const onScribe = vi.fn();
-    const caseFields = { sex: "", age: "", bp: "", heartRate: "", temperature: "", respiratoryRate: "", spo2: "" } as const;
-    render(<Composer {...composerProps({ onScribe, aadiEnabled: true, caseFields, autoFields: [], onCaseField: noop })}/>);
+    render(<Composer {...composerProps({ onScribe, aadiEnabled: true, minimumMissing: ["usia"] })}/>);
     fireEvent.click(screen.getByRole("button", { name: "Mulai Scribe" }));
     expect(onScribe).toHaveBeenCalledOnce();
     expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
-    const toggle = screen.getByRole("button", { name: "Usia dan tanda vital" });
-    expect(toggle.getAttribute("aria-pressed")).toBe("false");
-    fireEvent.click(toggle);
-    expect(toggle.getAttribute("aria-pressed")).toBe("true");
-    expect(screen.getByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeTruthy();
-  });
-
-  it("the toggle's choice wins over an automatically opened strip", () => {
-    const caseFields = { sex: "", age: "45", bp: "", heartRate: "", temperature: "", respiratoryRate: "", spo2: "" } as const;
-    render(<Composer {...composerProps({ aadiEnabled: true, caseFields, autoFields: ["age"], onCaseField: noop, minimumMissing: ["usia"] })}/>);
-    expect(screen.getByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Usia dan tanda vital" }));
-    expect(screen.queryByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeNull();
-  });
-
-  it("the strip opens by itself while minimum data is missing", () => {
-    const caseFields = { sex: "", age: "", bp: "", heartRate: "", temperature: "", respiratoryRate: "", spo2: "" } as const;
-    render(<Composer {...composerProps({ aadiEnabled: true, caseFields, autoFields: [], onCaseField: noop, minimumMissing: ["usia"] })}/>);
-    expect(screen.getByRole("group", { name: "Usia, jenis kelamin, dan tanda vital" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Usia dan tanda vital" })).toBeNull();
   });
 });
