@@ -8,7 +8,7 @@
 - **Verified:** `npx tsc --noEmit` 0; `./node_modules/.bin/eslint src tests` 0 errors (three pre-existing warnings); Vitest 59 files / 629 tests; `npm run test:system` 67/67; preview on port 3106: "Nyeri kepala hebat sejak 2 jam" alone sends `POST /api/aadi` with no alert (502 there is the engine-less preview).
 - **Not verified:** the real engine with `ageYears: null`.
 - **Merged locally** into monorepo `main` as `65430a7d`; **split `b60c65c4` pushed on Gaffer's word ("Ya, merge, split, push")** as `fix/sentrapedia-glass-composer-no-gate-2026-11-04` on the product repository: descends from `5aeb4c41` PASS, tree equal PASS, 0 LFS files, no conflict with `sentrapedia/main` (`515fc2cd`). The next split must descend from `b60c65c4`.
-- **Still Gaffer's:** two product branches await PRs, in order: `fix/sentrapedia-glass-composer-plain-2026-11-04` (text in `.agents/PR-glass-composer-plain.md`) then this one, which builds on it (text in `.agents/PR-glass-composer-no-gate.md`); or one PR from this branch alone, since it contains both.
+- **PR #42 merged by Gaffer** (`fa660276` on `sentrapedia/main`, 2026-11-04 22:06 WIB) from `fix/sentrapedia-glass-composer-no-gate-2026-11-04`; it carried the plain-composer commits too, so product `main` now equals split `b60c65c4`. The remote branch `fix/sentrapedia-glass-composer-plain-2026-11-04` (`5aeb4c41`) is fully contained in `main` and only waits to be deleted on GitHub; no PR is needed for it.
 
 ## The composer is one text box like Glass: CaseGuide and the case strip removed (R1, branch `fix/glass-composer-plain-2026-11-04`, cut from `main` `5456c8b8`) - 2026-11-04 B
 
