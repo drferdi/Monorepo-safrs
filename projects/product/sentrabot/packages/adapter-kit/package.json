@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@sentrabot/contracts": "workspace:*",
-    "zod": "^4.1.5"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "typescript": "^5.9.2",

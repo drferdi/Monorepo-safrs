@@ -11,7 +11,7 @@
     "test": "vitest run --root ../.. ../../packages/testkit/src"
   },
   "dependencies": {
-    "@hono/node-server": "^1.19.1",
+    "@hono/node-server": "^2.1.3",
     "@sentrabot/adapter-kit": "workspace:*",
     "@sentrabot/adapters": "workspace:*",
     "@sentrabot/contracts": "workspace:*",

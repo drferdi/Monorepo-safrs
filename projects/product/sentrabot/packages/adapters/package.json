@@ -17,7 +17,7 @@
     "@e2b/desktop": "^2.3.1",
     "@earendil-works/pi-agent-core": "^0.84.3",
     "@earendil-works/pi-ai": "^0.84.3",
-    "@modelcontextprotocol/sdk": "1.30.0",
+    "@modelcontextprotocol/sdk": "1.32.0",
     "@observablehq/plot": "^0.6.17",
     "@sentrabot/adapter-kit": "workspace:*",
     "@sentrabot/contracts": "workspace:*",
@@ -30,8 +30,8 @@
     "pg": "^8.16.3",
     "sharp": "^0.35.3",
     "shell-quote": "1.10.0",
-    "undici": "^7.22.0",
-    "zod": "^4.1.5"
+    "undici": "^7.30.1",
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@types/d3-dsv": "^3.0.7",
