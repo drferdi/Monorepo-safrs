@@ -1,0 +1,60 @@
+export type DataTableColumn = {
+  key: string;
+  header: string;
+};
+
+export function DataTable({
+  columns,
+  rows,
+}: {
+  columns: DataTableColumn[];
+  rows: Record<string, unknown>[];
+}) {
+  return (
+    <div className="overflow-x-auto rounded-control border border-line-subtle">
+      <table className="w-full border-collapse text-left text-(length:--font-size-data)">
+        <thead>
+          <tr className="border-b border-line-subtle bg-surface">
+            {columns.map((column) => (
+              <th
+                key={column.key}
+                scope="col"
+                className="px-(--space-4) py-(--space-3) text-(length:--font-size-label) font-medium uppercase tracking-(--letter-spacing-label) text-secondary"
+              >
+                {column.header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.length === 0 ? (
+            <tr>
+              <td
+                colSpan={columns.length}
+                className="px-(--space-4) py-(--space-5) text-center text-secondary"
+              >
+                Tidak ada data
+              </td>
+            </tr>
+          ) : (
+            rows.map((row) => (
+              <tr
+                key={JSON.stringify(row)}
+                className="border-b border-line-subtle last:border-b-0"
+              >
+                {columns.map((column) => (
+                  <td
+                    key={column.key}
+                    className="px-(--space-4) py-(--space-3) text-primary"
+                  >
+                    {String(row[column.key] ?? "—")}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+}

@@ -1,0 +1,14 @@
+# Python bytecode (the contract `build` writes it)
+__pycache__/
+*.pyc
+
+# Environment files hold secrets; only examples are tracked
+.env
+.env.*
+!.env.example
+
+# Playwright E2E output and dependencies
+e2e/node_modules/
+e2e/test-results/
+e2e/playwright-report/
+e2e/.auth/

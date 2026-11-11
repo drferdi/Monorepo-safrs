@@ -1,0 +1,368 @@
+/* ═══════════════════════════════════════════════════════════════
+   SENTRA CONSOLE — TERMINAL TRANSCRIPT
+   One window (macOS title bar) above a single monospace transcript.
+   Every colour resolves to a console-* token below. Token naming follows
+   the Sentra token style with a console- prefix and stays separate:
+   Sentra tokens are never reused or redefined.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Console palette and measurements: every value below is copied from
+     desktop/renderer/reference/reference-console-sentra.html (the pixel
+     reference). Change the reference first, then this block; never the reverse. */
+  --console-bg-window: #16191d;
+  --console-bg-chrome: #111316;
+  --console-bg-app: #16191d;
+  --console-text: #c5cad3;
+  --console-text-strong: #ffffff;
+  --console-text-dim: #8a929e;
+  --console-prompt: #89ca78;
+  --console-success: #89ca78;
+  --console-path: #61afef;
+  --console-heading: #d55fde;
+  --console-error: #ef596f;
+  --console-warn: #d19a66;
+  --console-accent: #2bbac5;
+  --console-yellow: #e5c07b;
+  --console-rule: rgba(255, 255, 255, 0.07);
+  /* Window shadow: visible only where the window is transparent (macOS); on Windows the
+     window is opaque (desktop/main.ts) and the shadow is clipped. */
+  --console-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.55);
+
+  /* Typography: JetBrains Mono everywhere, one size everywhere (11px, Terminal.app's
+     default point size on a 1x display). Hierarchy comes from colour and spacing only;
+     the chrome token exists so the title bar keeps its own leading, it never carries a
+     different size. */
+  --console-font: 'JetBrains Mono', 'Fira Code', monospace;
+  --console-size-body: 11px;
+  --console-leading-body: 1.45;
+  --console-size-chrome: 11px;
+  --console-leading-chrome: 1.2;
+
+  /* Text layout, in character cells: content sits behind a two-space margin, a status
+     prefix hangs left in a fixed six-character column, prose wraps at 72 characters even
+     when the window fits 120. */
+  --console-margin: 2ch;
+  --console-prefix: 6ch;
+  --console-prose: 72ch;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  overflow: hidden;
+  font-family: var(--console-font);
+  font-size: var(--console-size-body);
+  line-height: var(--console-leading-body);
+  /* 500 is a loaded weight (index.html); it keeps 11px text crisp on the dark background. */
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--console-text);
+  user-select: none;
+}
+
+button, input {
+  font-family: var(--console-font);
+}
+
+/* ═══ WINDOW ═══ */
+/* The only rounded corners in the UI besides the scrollbar thumb. Everything else inside
+   is square. */
+.window {
+  width: 100%;
+  height: 100%;
+  background: var(--console-bg-window);
+  border-radius: 10px;
+  box-shadow: var(--console-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  -webkit-app-region: no-drag !important;
+}
+
+/* ═══ TITLE BAR (drag surface) ═══ */
+.title-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* 28px: the macOS title bar height for a window without a toolbar. */
+  height: 28px;
+  padding: 0 12px;
+  background: var(--console-bg-chrome);
+  /* One hairline divider below the bar and a faint highlight along its top, inset so the
+     bar keeps its height. Chrome colours stay literal, never status tokens. */
+  box-shadow:
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  cursor: grab;
+  user-select: none;
+  -webkit-app-region: no-drag !important;
+}
+
+.title-bar:active {
+  cursor: grabbing;
+}
+
+.title {
+  position: relative;
+  /* Optical centring: the glyphs sit one pixel high in the bar (Chief, 2026-09-23). */
+  top: 1px;
+  font-size: var(--console-size-chrome);
+  line-height: var(--console-leading-chrome);
+  color: var(--console-text-dim);
+  text-align: center;
+  pointer-events: none;
+}
+
+.traffic-lights {
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.traffic-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: var(--console-text-dim);
+}
+
+/* macOS traffic lights are chrome, not content: literal system colours,
+   never the status tokens. */
+.traffic-light.close { background: #ff5f57; }
+.traffic-light.minimize { background: #febc2e; }
+.traffic-light.zoom { background: #28c840; cursor: default; }
+
+.traffic-light:focus-visible {
+  outline: 1px solid var(--console-text-strong);
+  outline-offset: 2px;
+}
+
+/* ═══ TRANSCRIPT (the whole body) ═══ */
+.transcript {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--console-bg-app);
+  font-family: var(--console-font);
+  font-size: var(--console-size-body);
+  line-height: var(--console-leading-body);
+  letter-spacing: 0;
+  color: var(--console-text);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+  -webkit-app-region: no-drag !important;
+}
+
+/* ═══ TRANSCRIPT LINES ═══ */
+/* A line is one row of the transcript: no extra spacing, exactly like a <pre>.
+   Content lines start two cells in; label rows (meta, help) may use the full width. */
+.line {
+  position: relative;
+  display: block;
+  min-width: 0;
+  max-inline-size: 100%;
+  padding-left: var(--console-margin);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Prose wraps at 72 characters: the margin is added because the box includes its padding. */
+.line.type-agent,
+.line.type-user,
+.line.banner-title,
+.line.banner-subtitle,
+.line.banner-hint {
+  max-inline-size: min(100%, calc(var(--console-prose) + var(--console-margin)));
+}
+
+/* Exactly one blank line between blocks; the row keeps its line box via a no-break space. */
+.line.blank-line {
+  min-height: calc(var(--console-size-body) * var(--console-leading-body));
+}
+
+/* Hidden run of 100 "M" used once at boot to measure the real character cell. */
+.cell-probe {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre;
+  pointer-events: none;
+}
+
+.line.type-sys { color: var(--console-accent); }
+/* The echoed command is yellow; the prompt in front of it stays green. */
+.line.type-user { color: var(--console-yellow); }
+.line.type-agent { color: var(--console-text); }
+
+/* Echo of the typed command keeps the prompt in front of it. */
+.line.type-user::before {
+  content: 'sentra ~/myprompt $ ';
+  color: var(--console-prompt);
+}
+
+/* Result status prefixes: ok / warn / error, rendered as a coloured pseudo-element
+   so the DOM and the copied text stay unchanged. A status line starts at column 1: the
+   prefix hangs left in a fixed six-character column (hanging indent), so the text after
+   it always starts at column 7, on wrapped rows too. */
+.line.status-ok,
+.line.status-warn,
+.line.status-error {
+  padding-left: var(--console-prefix);
+  text-indent: calc(-1 * var(--console-prefix));
+  max-inline-size: min(100%, calc(var(--console-prose) + var(--console-prefix)));
+}
+
+.line.status-ok::before,
+.line.status-warn::before,
+.line.status-error::before {
+  display: inline-block;
+  width: var(--console-prefix);
+  text-indent: 0;
+  white-space: pre;
+  font-weight: 700;
+}
+
+.line.status-ok::before { content: 'ok    '; color: var(--console-success); }
+.line.status-warn::before { content: 'warn  '; color: var(--console-warn); }
+.line.status-error::before { content: 'error '; color: var(--console-error); }
+
+/* Meta line is settings, not a verdict; the quality line is the verdict, printed in
+   the status column (ok / warn / error prefix) with the text in body colour. */
+.line.meta-line { color: var(--console-accent); }
+/* help rows: the command column is a green seg-cmd run, the summary stays body text. */
+.line.help-row { color: var(--console-text); }
+.line.quality-line { color: var(--console-text); }
+
+.line.scramble-line {
+  color: var(--console-accent);
+  opacity: 0.85;
+}
+
+/* ═══ BOOT BANNER ═══ */
+/* Printed once at boot, never through the status-prefix path: title in strong text,
+   subtitle dimmed, rule in the heading colour, hint in the path colour, then one blank line. */
+.line.banner-title { color: var(--console-text-strong); }
+.line.banner-subtitle { color: var(--console-text-dim); }
+.line.banner-rule { color: var(--console-heading); }
+.line.banner-hint { color: var(--console-path); }
+.line.banner-blank { min-height: calc(var(--console-size-body) * var(--console-leading-body)); }
+/* Startup block rows (reference-console-startup.html): session labels cyan, commands
+   green, descriptions dim; the rows are label tables, so they use the full width. */
+.line.banner-session,
+.line.banner-example,
+.line.banner-command { color: var(--console-text); }
+.seg-bright { color: var(--console-text-strong); }
+.seg-dim { color: var(--console-text-dim); }
+.seg-label { color: var(--console-accent); }
+.seg-cmd { color: var(--console-prompt); }
+/* Result body runs (reference-console-sentra.html): `## HEADING` in the heading colour,
+   directories blue and bold, file names bright, backticked commands green. */
+.seg-heading { color: var(--console-heading); }
+.seg-dir { color: var(--console-path); font-weight: 700; }
+.seg-file { color: var(--console-text-strong); }
+
+/* ═══ ACTIONABLE LINES ═══ */
+/* Real buttons that look like plain text: no chrome, underline on hover,
+   keyboard focusable, accessible name in aria-label. */
+/* The action row sits in the status text column, dim, under the verdict. */
+.tx-actions {
+  display: block;
+  padding-left: var(--console-prefix);
+}
+
+.tx-action {
+  all: unset;
+  display: inline;
+  cursor: pointer;
+  color: var(--console-path);
+  font: inherit;
+  margin-right: 12px;
+  white-space: nowrap;
+}
+
+.tx-action:hover,
+.tx-action:focus-visible {
+  text-decoration: underline;
+  color: var(--console-text-strong);
+}
+
+.tx-action:disabled {
+  cursor: default;
+  color: var(--console-text-dim);
+  text-decoration: none;
+}
+
+/* ═══ PROMPT LINE (the only input; last line of the transcript) ═══ */
+.prompt-line {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  padding-left: var(--console-margin);
+}
+
+.prompt {
+  color: var(--console-prompt);
+  white-space: pre;
+  flex-shrink: 0;
+}
+
+.prompt-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: 0;
+  color: var(--console-text-strong);
+  caret-color: var(--console-prompt);
+}
+
+.prompt-input::placeholder {
+  color: var(--console-text-dim);
+}
+
+.prompt-input:disabled {
+  color: var(--console-text-dim);
+}
+
+/* ═══ SCROLLBAR ═══ */
+.transcript::-webkit-scrollbar {
+  width: 6px;
+}
+
+.transcript::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* macOS overlay bars are rounded: the one curve inside the window. */
+.transcript::-webkit-scrollbar-thumb {
+  background: var(--console-rule);
+  border-radius: 3px;
+}
+
+.transcript::-webkit-scrollbar-thumb:hover {
+  background: var(--console-text-dim);
+}

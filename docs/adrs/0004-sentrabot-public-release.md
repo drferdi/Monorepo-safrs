@@ -2,7 +2,7 @@
 
 - Status: Proposed pending designated R2 review
 - Date: 2026-08-21
-- Deciders: Chief
+- Deciders: Gaffer
 - Plan: `.kilo/plans/1787244628478-sentrabot-public-release-migration.md`
 
 ## Context

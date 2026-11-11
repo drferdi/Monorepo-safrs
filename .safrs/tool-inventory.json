@@ -138,13 +138,35 @@
     {
       "id": "firecrawl-mcp",
       "owner": "repository-maintainers",
-      "purpose": "Web scrape and search for SOTA/docs research; output is untrusted data",
+      "purpose": "Web scrape and search for SOTA/docs research; output is untrusted data. Absent from the current .cursor/mcp.json (observed 2026-10-13). This records that absence; it is not a permanent removal.",
       "allowed_operations": ["scrape", "search", "map", "extract"],
       "data_scope": "public-web-content-task-scoped",
       "authentication": "FIRECRAWL_API_KEY from user environment",
       "network_endpoints": ["registry.npmjs.org", "api.firecrawl.dev"],
-      "provenance": ".cursor/mcp.json → firecrawl-mcp via npx; env FIRECRAWL_API_KEY",
+      "provenance": "Earlier record pointed at .cursor/mcp.json firecrawl-mcp via npx and FIRECRAWL_API_KEY. Observed 2026-10-13: .cursor/mcp.json contains context7, playwright, and sequential-thinking only. Prior approval is unchanged.",
       "review_status": "APPROVED"
+    },
+    {
+      "id": "retriever-web-scraper",
+      "owner": "Gaffer",
+      "purpose": "Monorepo facility that scrapes websites into our datasets (tools/retriever); output is untrusted data",
+      "allowed_operations": ["mirror-website", "extract-markdown"],
+      "data_scope": "public web pages named by the operator; output stays local in tools/retriever/data (gitignored)",
+      "authentication": "none",
+      "network_endpoints": ["operator-supplied public URLs"],
+      "provenance": "tools/retriever with WinHTTrack 3.50 (C:\\Program Files\\WinHTTrack); approved by Gaffer 2026-10-10",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "myprompt-desktop",
+      "owner": "Gaffer",
+      "purpose": "Standalone MyPrompt prompt-authoring desktop tool in tools/prompt; own repository drferdi/Myprompt",
+      "allowed_operations": ["local-prompt-authoring", "operator-requested-provider-evaluation"],
+      "data_scope": "operator-selected prompts and local workspace; provider requests only when explicitly requested",
+      "authentication": "operator-owned provider credentials; never included in repository or verification output",
+      "network_endpoints": ["operator-configured LLM endpoints", "configured Supabase, Resend, and Xendit services"],
+      "provenance": "tools/prompt/project.contract.json and capsule-local capabilities.json",
+      "review_status": "RESTRICTED"
     },
     {
       "id": "sequential-thinking-mcp",
@@ -177,6 +199,28 @@
       "authentication": "none",
       "network_endpoints": ["127.0.0.1:16686", "127.0.0.1:4317", "127.0.0.1:4318"],
       "provenance": "compose.telemetry.yaml → jaegertracing/all-in-one:1.62",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "openrouter-llm-api",
+      "owner": "repository-maintainers",
+      "purpose": "Model inference gateway for Factory Droid custom models (DeepSeek Pro, DeepSeek V4.1 Flash, GLM-5.3 Flash); prompts can carry repository source and task context",
+      "allowed_operations": ["model-inference"],
+      "data_scope": "repository-source-and-task-context-sent-to-openrouter-and-its-upstream-model-providers",
+      "authentication": "api-key-in-user-scope-factory-settings",
+      "network_endpoints": ["openrouter.ai"],
+      "provenance": "~/.factory/settings.json customModels, baseUrl https://openrouter.ai/api/v1; registered on Gaffer's instruction 2026-10-10",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "typesafe-jev",
+      "owner": "repository-maintainers",
+      "purpose": "Jev decision router for coding agents (tools/typesafe-jev): decides whether to search, spawn a subagent, retry, or ask Gaffer before costly steps",
+      "allowed_operations": ["route-decision"],
+      "data_scope": "one-line-task-goal-and-routing-state-via-tools-typesafe-jev; the user-level Cursor intent hook (~/.cursor/hooks/jev-intent.ps1 via tools/typesafe-jev/mcp/jev_intent.py) sends only the first non-empty line of each prompt, capped at 200 characters",
+      "authentication": "TYPESAFE_API_KEY-from-process-environment",
+      "network_endpoints": ["api.typesafe.ai"],
+      "provenance": "tools/typesafe-jev/playbook (vendored Bodila51/muse-jev-playbook@70edf68, MIT) with typesafe-sdk 0.7.1; approved by Gaffer 2026-10-10",
       "review_status": "APPROVED"
     }
   ]

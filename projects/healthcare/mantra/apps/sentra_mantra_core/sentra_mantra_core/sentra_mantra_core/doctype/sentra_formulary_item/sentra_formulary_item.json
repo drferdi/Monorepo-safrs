@@ -1,0 +1,23 @@
+{
+ "doctype": "DocType",
+ "name": "Sentra Formulary Item",
+ "module": "Sentra MANTRA Core",
+ "autoname": "field:item",
+ "engine": "InnoDB",
+ "custom": 0,
+ "track_changes": 1,
+ "field_order": ["item", "item_name", "active_ingredient", "strength", "dosage_form"],
+ "fields": [
+  {"fieldname": "item", "fieldtype": "Link", "label": "Item", "options": "Item", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "item_name", "fieldtype": "Data", "label": "Nama Item", "fetch_from": "item.item_name", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "active_ingredient", "fieldtype": "Data", "label": "Zat Aktif", "reqd": 1, "in_list_view": 1, "in_standard_filter": 1, "search_index": 1, "description": "Nama zat aktif, bukan merek. Dua item dengan zat aktif dan kekuatan sama saling menggantikan."},
+  {"fieldname": "strength", "fieldtype": "Data", "label": "Kekuatan", "in_list_view": 1, "search_index": 1, "description": "Contoh: 500mg. Substitusi hanya dianggap setara bila kekuatannya sama."},
+  {"fieldname": "dosage_form", "fieldtype": "Data", "label": "Bentuk Sediaan"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "export": 1, "report": 1, "print": 1, "email": 1, "share": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "active_ingredient"
+}

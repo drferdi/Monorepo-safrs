@@ -1,0 +1,36 @@
+{
+  "name": "Atlas",
+  "templateId": "executive-chief-of-staff",
+  "templateVersion": "1.0.0",
+  "locale": "id-ID",
+  "authority": "prepare",
+  "sources": [
+    {
+      "name": "Executive calendar",
+      "access": "read",
+      "authority": "authoritative"
+    },
+    {
+      "name": "Approved email",
+      "access": "read",
+      "authority": "supporting"
+    },
+    {
+      "name": "Management reporting",
+      "access": "read",
+      "authority": "supporting"
+    },
+    {
+      "name": "Decision and action register",
+      "access": "read",
+      "authority": "supporting"
+    }
+  ],
+  "outputs": [
+    "Morning executive brief",
+    "Decision queue",
+    "Commitment register"
+  ],
+  "approvalMode": "explicit-for-consequential-actions",
+  "routineState": "disabled-until-skill-tested"
+}

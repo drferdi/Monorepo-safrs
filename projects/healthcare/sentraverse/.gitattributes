@@ -1,0 +1,39 @@
+# Drferdi's vision, brought to life.
+# Git attributes — line endings and diff drivers
+
+# Default: normalise line endings to LF on commit
+* text=auto eol=lf
+
+# Source files — always LF
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.env text eol=lf
+*.toml text eol=lf
+
+# Binary files — do not modify
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+
+# Diff drivers
+*.md diff=markdown

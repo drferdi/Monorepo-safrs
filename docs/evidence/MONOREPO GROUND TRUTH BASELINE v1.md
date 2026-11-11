@@ -7,16 +7,16 @@
 **Observed HEAD:** `124e9e08bbb2b0f1ec89dfb1ac0292cb29b47c62`
 **Branch:** `main`
 **Freshness:** Local observations are fresh at capture time; historical claims are labeled.
-**Mutation authority:** Chief approved this evidence artifact. It does not authorize remediation implementation.
+**Mutation authority:** Gaffer approved this evidence artifact. It does not authorize remediation implementation.
 
 ## 1. Decision state
 
 | Decision | Approved state | Evidence/status |
 | --- | --- | --- |
-| D-001 visibility | `PUBLIC` | GitHub API reports `public`; matches Chief decision |
-| D-002 platform authority | R0 read-only; R1 machine verification; R2 explicit Chief authorization; R3 explicit human authorization | Chief approved proposed model |
-| D-003 Renovate | All dependency updates may automerge after CI passes | Chief approved; local config does not yet match |
-| D-004 R2 authorization | Implementation → fresh verification → evidence package → Chief review → explicit authorization → merge | Chief approved proposed flow |
+| D-001 visibility | `PUBLIC` | GitHub API reports `public`; matches Gaffer decision |
+| D-002 platform authority | R0 read-only; R1 machine verification; R2 explicit Gaffer authorization; R3 explicit human authorization | Gaffer approved proposed model |
+| D-003 Renovate | All dependency updates may automerge after CI passes | Gaffer approved; local config does not yet match |
+| D-004 R2 authorization | Implementation → fresh verification → evidence package → Gaffer review → explicit authorization → merge | Gaffer approved proposed flow |
 
 ## 2. Git state
 
@@ -42,7 +42,7 @@
 
 - `TASK-20260813-CONTROL-CENTER` is `EXECUTING`, risk `R2`, owner `agent:claude:root`, worktree `worktrees/feat-control-center`.
 - Its active scope includes `projects/internal/control-center/`, `docs/`, `tools/doctor/`, `package.json`, and `pnpm-workspace.yaml`.
-- This active `docs/` ownership blocks a new governance reconciliation claim over the untracked Master Plan until the existing task is reconciled by its owner or Chief-authorized lifecycle action.
+- This active `docs/` ownership blocks a new governance reconciliation claim over the untracked Master Plan until the existing task is reconciled by its owner or Gaffer-authorized lifecycle action.
 - Local lease chain for `TASK-20260813-CONTROL-CENTER` is valid with fencing token 1; remote reconciliation is not recorded.
 - `pnpm status --json` reports ownership structurally OK but governance `FAIL`.
 
@@ -67,7 +67,7 @@
 - `renovate.json` exists.
 - Global `automerge` is `false`.
 - A package rule currently sets patch/minor `automerge` to `true`, `automergeType` to `pr`, and `platformAutomerge` to `false`.
-- Current configuration does not implement Chief-approved all-dependency automerge after CI passes.
+- Current configuration does not implement Gaffer-approved all-dependency automerge after CI passes.
 - No Renovate configuration was changed during Phase 0A.
 
 ## 8. Verification baseline
@@ -101,7 +101,7 @@ docs/plans/active/MASTER REMEDIATION PLAN — SENTRA MONOREPO.md
 
 ## 10. Phase 0A conclusion
 
-Material uncertainty is reduced for Git, worktrees, task state, GitHub state, runtime state, verification state, and contradictions. Phase 0A evidence is complete pending Chief review of this artifact.
+Material uncertainty is reduced for Git, worktrees, task state, GitHub state, runtime state, verification state, and contradictions. Phase 0A evidence is complete pending Gaffer review of this artifact.
 
 Next authorized actions:
 

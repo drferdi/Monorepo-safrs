@@ -29,4 +29,4 @@ artifact hashes → manifest_digest`.
 
 Per `.safrs/automation-policy.json` (`evidence.retention_days`). R3
 approval, execution, rollback, and incident evidence follow the retention
-period Chief selects in Activation Decision 3.
+period Gaffer selects in Activation Decision 3.

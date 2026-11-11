@@ -7,8 +7,8 @@ alwaysApply: false
 
 Use when finishing a task, opening a PR, or claiming green gates.
 
-1. Run `bash scripts/safrs-verify.sh` (or the repo’s documented Windows-equivalent invocation).
-2. Run project-specific tests for touched packages (`pnpm --filter … test` / `typecheck`).
-3. Ensure `.agents/HANDOFF.md` reflects current state, blockers, and next actions.
+1. Governance gate: on Windows run `pnpm governance`. Elsewhere run `bash scripts/safrs-verify.sh`. A green result covers repository governance only.
+2. Full quality verification is separate. For the surfaces this change set touches, run `pnpm check:tokens`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build`, plus `pnpm --filter … test` / `typecheck` where a package owns the change. Never report complete verification from `pnpm governance` alone.
+3. Update only the `HANDOFF.md` of each scope this change set touches, and keep another live session's open claim. Capsule work uses that capsule's handoff. Root `.agents/HANDOFF.md` is for control-plane work only. Never write an unrelated scope's HANDOFF.
 4. Do not weaken tests, token gates, or governance to force a pass.
 5. Flag elevated review when implementation and its governing verification change together.

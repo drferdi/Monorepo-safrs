@@ -1,6 +1,6 @@
 # Lore — how this repository grew
 
-The SAFRS Monorepo was bootstrapped in August 2026 by Dr. Ferdi Iskandar (Chief) and then expanded from a single golden-path demo into a control plane over sovereign capsules.
+The SAFRS Monorepo was bootstrapped in August 2026 by Dr. Ferdi Iskandar (Gaffer) and then expanded from a single golden-path demo into a control plane over sovereign capsules.
 
 This page is historical narrative. It is not architecture truth. ADRs and `MONOREPO_PURPOSE.md` win.
 

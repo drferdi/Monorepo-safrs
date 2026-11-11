@@ -1,0 +1,1398 @@
+/* ═══════════════════════════════════════════════════════════════
+ * SENTRA ASSIST PANEL — Powered-On AI Cockpit (Soft Blue)
+ * Primary: Soft blue backlighting
+ * Secondary: Cyan status LEDs
+ * Internal glow only. No external bloom. No noise.
+ * ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --bl: #6ec8f5;
+  --bl-g: rgba(110, 200, 245, 0.55);
+  --bl-m: rgba(110, 200, 245, 0.22);
+  --bl-f: rgba(110, 200, 245, 0.09);
+  --cy: #63d4ff;
+  --cy-g: rgba(99, 212, 255, 0.5);
+  --cy-m: rgba(99, 212, 255, 0.22);
+  --cy-f: rgba(99, 212, 255, 0.07);
+  --bg-s: #0a0b0d;
+  --bg-i: #07080a;
+  --bg-c: #0d0e11;
+}
+
+/* ═══ RANDOMIZING — Boot sequence (INFEREN tab) ════════════════
+   Semua kolom menampilkan text random bergantian selama boot     */
+
+.sentra-panel-randomizing {
+  box-shadow:
+    inset 0 0 50px rgba(90, 180, 255, 0.085),
+    inset 0 1px 0 rgba(160, 220, 255, 0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 20px 50px rgba(0,0,0,0.65);
+}
+
+/* LED strip rapid random blink */
+.sentra-strip-randomizing .sentra-led {
+  transition: background 60ms ease, box-shadow 60ms ease;
+}
+
+/* ─── Scramble text styling ───────────────────────────────────
+   Text random boot sequence di masing-masing kolom               */
+.sentra-scramble-text {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.08em;
+  color: rgba(110, 200, 245, 0.55) !important;
+  text-shadow: 0 0 6px rgba(110, 200, 245, 0.2);
+}
+
+/* ─── Textarea saat scramble ────────────────────────────────── */
+.sentra-panel-randomizing .sentra-textarea.sentra-scramble-active {
+  border-color: rgba(110, 200, 245, 0.25);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), inset 0 0 16px rgba(90, 180, 255, 0.06);
+}
+
+/* ─── Vital input saat scramble ─────────────────────────────── */
+.sentra-panel-randomizing .sentra-vital-input.sentra-scramble-active {
+  border-color: rgba(110, 200, 245, 0.2);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.25), inset 0 0 12px rgba(90, 180, 255, 0.05);
+}
+
+/* ─── Dropdown saat scramble ────────────────────────────────── */
+.sentra-panel-randomizing .sentra-dropdown-trigger.sentra-scramble-active {
+  border-color: rgba(110, 200, 245, 0.2);
+}
+
+/* Footer note randomizing glow */
+.sentra-panel-randomizing .sentra-footer-note {
+  color: #6ec8f5;
+  opacity: 0.8;
+  animation: footerRandomize 0.15s ease-in-out infinite;
+}
+@keyframes footerRandomize {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* ═══ STATE-BASED PANEL GLOW — Dynamic behaviour ═══════════════ */
+
+/* ACTIVE — full system glow */
+.sentra-panel-active {
+  box-shadow:
+    inset 0 0 50px rgba(90, 180, 255, 0.085),
+    inset 0 1px 0 rgba(160, 220, 255, 0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 20px 50px rgba(0,0,0,0.65);
+}
+
+/* READY — cyan primed glow */
+.sentra-panel-ready {
+  box-shadow:
+    inset 0 0 40px rgba(90, 180, 255, 0.065),
+    inset 0 1px 0 rgba(160, 220, 255, 0.1),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 20px 50px rgba(0,0,0,0.65);
+}
+
+/* PROCESSING — blue scanning pulse */
+.sentra-panel-processing {
+  box-shadow:
+    inset 0 0 55px rgba(90, 180, 255, 0.1),
+    inset 0 1px 0 rgba(160, 220, 255, 0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 20px 50px rgba(0,0,0,0.65);
+  animation: panelScanPulseBlue 1.5s ease-in-out infinite;
+}
+@keyframes panelScanPulseBlue {
+  0%, 100% { box-shadow: inset 0 0 55px rgba(90,180,255,0.1), inset 0 1px 0 rgba(160,220,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.4), 0 20px 50px rgba(0,0,0,0.65); }
+  50%      { box-shadow: inset 0 0 75px rgba(90,180,255,0.14), inset 0 1px 0 rgba(160,220,255,0.14), inset 0 -1px 0 rgba(0,0,0,0.4), 0 20px 50px rgba(0,0,0,0.65); }
+}
+
+/* ALERT — red emergency pulse */
+.sentra-panel-alert {
+  box-shadow:
+    inset 0 0 60px rgba(255, 100, 100, 0.1),
+    inset 0 1px 0 rgba(255, 160, 160, 0.1),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 20px 50px rgba(0,0,0,0.65);
+  animation: panelAlertPulseBlue 0.6s ease-in-out infinite;
+  border-color: rgba(255, 120, 120, 0.25);
+}
+@keyframes panelAlertPulseBlue {
+  0%, 100% { box-shadow: inset 0 0 60px rgba(255,100,100,0.1), inset 0 1px 0 rgba(255,160,160,0.1), inset 0 -1px 0 rgba(0,0,0,0.4), 0 20px 50px rgba(0,0,0,0.65); border-color: rgba(255,120,120,0.2); }
+  50%      { box-shadow: inset 0 0 80px rgba(255,100,100,0.18), inset 0 1px 0 rgba(255,160,160,0.14), inset 0 -1px 0 rgba(0,0,0,0.4), 0 20px 50px rgba(0,0,0,0.65); border-color: rgba(255,120,120,0.35); }
+}
+
+/* ═══ STANDBY — MATI TOTAL ═══════════════════════════════════
+   Semua elemen hampir tidak terlihat. Panel seperti belum
+   dinyalakan. Hanya struktur hardware (panel, screw, bezel)
+   yang terlihat samar.                                              */
+
+.sentra-panel-standby {
+  background: #020204;
+  border-color: rgba(35, 40, 50, 0.04);
+  box-shadow:
+    inset 0 0 15px rgba(0, 0, 0, 0.6),
+    0 4px 12px rgba(0,0,0,0.55);
+}
+/* Panel shimmer line mati saat standby */
+.sentra-panel-standby::before {
+  opacity: 0.03;
+}
+
+/* Title — hampir tidak terlihat */
+.sentra-panel-standby .sentra-panel-title {
+  color: rgba(70, 75, 85, 0.08);
+  text-shadow: none;
+}
+
+/* Subtitle — tidak terlihat */
+.sentra-panel-standby .sentra-panel-subtitle {
+  color: rgba(55, 60, 70, 0.04);
+}
+.sentra-panel-standby .sentra-panel-subtitle span {
+  color: rgba(55, 60, 70, 0.02);
+}
+
+/* LED strip — MATI TOTAL */
+.sentra-strip-standby .sentra-led {
+  opacity: 0 !important;
+}
+
+/* Semua LED di field labels — MATI */
+.sentra-panel-standby .sentra-section-label .sentra-led,
+.sentra-panel-standby .sentra-vital-label .sentra-led,
+.sentra-panel-standby .sentra-status-label .sentra-led {
+  opacity: 0 !important;
+}
+
+/* Header divider — hampir tidak ada */
+.sentra-panel-standby .sentra-header-divider {
+  opacity: 0.02;
+}
+
+/* Tab buttons — MATI, gelap total. Hanya INFEREN sedikit menyala */
+.sentra-panel-standby .sentra-tab-btn {
+  color: rgba(40, 38, 35, 0.03);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  text-shadow: none;
+}
+/* INFEREN — sedikit menyala (standby indicator) */
+.sentra-panel-standby .sentra-tab-btn:first-child {
+  color: rgba(90, 80, 70, 0.2);
+  text-shadow: 0 0 2px rgba(120, 110, 100, 0.1);
+}
+.sentra-panel-standby .sentra-tab-btn:first-child:hover {
+  color: rgba(110, 100, 90, 0.3);
+  text-shadow: 0 0 4px rgba(140, 130, 120, 0.15);
+  border-color: rgba(100, 95, 85, 0.08);
+}
+.sentra-panel-standby .sentra-tabs-container {
+  border-color: rgba(255,255,255,0.003);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.65);
+}
+
+/* Status bar — MATI */
+.sentra-panel-standby .sentra-status-bar {
+  background: #010103;
+  border-color: rgba(30, 35, 45, 0.015);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.65);
+}
+.sentra-panel-standby .sentra-status-bar::before {
+  opacity: 0;
+}
+.sentra-panel-standby .sentra-status-label {
+  color: rgba(65, 60, 55, 0.05);
+  text-shadow: none;
+}
+.sentra-panel-standby .sentra-status-value {
+  color: rgba(45, 40, 35, 0.04);
+}
+.sentra-panel-standby .sentra-status-dots {
+  opacity: 0.015;
+}
+.sentra-panel-standby .sentra-status-divider {
+  opacity: 0.02;
+}
+
+/* Section divider — hampir tidak ada */
+.sentra-panel-standby .sentra-section + .sentra-section::before {
+  opacity: 0.015;
+}
+
+/* ─── SEMUA LABELS MATI — tidak terlihat ──────────────────── */
+.sentra-panel-standby .sentra-section-label {
+  color: rgba(60, 55, 50, 0.05);
+  text-shadow: none;
+}
+.sentra-panel-standby .sentra-vital-label {
+  color: rgba(55, 50, 45, 0.04);
+  text-shadow: none;
+}
+.sentra-panel-standby .sentra-autosens-title {
+  color: rgba(55, 50, 45, 0.05);
+  text-shadow: none;
+}
+.sentra-panel-standby .sentra-vital-unit {
+  color: rgba(40, 38, 35, 0.025);
+}
+
+/* Textarea — MATI */
+.sentra-panel-standby .sentra-textarea {
+  background: #010102;
+  border-color: rgba(255,255,255,0.003);
+  color: transparent;
+}
+.sentra-panel-standby .sentra-textarea::placeholder {
+  color: rgba(40, 38, 35, 0.035);
+}
+
+/* Dropdown — MATI, value juga gelap */
+.sentra-panel-standby .sentra-dropdown-trigger {
+  background: #010102;
+  border-color: rgba(255,255,255,0.003);
+}
+.sentra-panel-standby .sentra-dropdown-trigger .placeholder,
+.sentra-panel-standby .sentra-dropdown-trigger .value {
+  color: rgba(40, 38, 35, 0.04);
+}
+.sentra-panel-standby .sentra-dropdown-trigger svg {
+  opacity: 0.02;
+}
+
+/* Vital input — MATI */
+.sentra-panel-standby .sentra-vital-input {
+  background: #010102;
+  border-color: rgba(30, 35, 45, 0.01);
+}
+.sentra-panel-standby .sentra-vital-field::placeholder {
+  color: rgba(35, 33, 30, 0.025);
+}
+
+/* Autosens card — MATI */
+.sentra-panel-standby .sentra-autosens-card {
+  background: #010103;
+  border-color: rgba(30, 35, 45, 0.01);
+  box-shadow: inset 0 2px 12px rgba(0,0,0,0.6);
+}
+.sentra-panel-standby .sentra-autosens-card::before {
+  opacity: 0.01;
+}
+
+/* CTA — MATI TOTAL */
+.sentra-panel-standby .sentra-btn-primary {
+  background: #010102;
+  color: rgba(35, 33, 30, 0.04);
+  box-shadow: none;
+}
+.sentra-panel-standby .sentra-btn-primary::before {
+  display: none;
+}
+.sentra-panel-standby .sentra-uplink-glow {
+  opacity: 0 !important;
+}
+
+/* Footer note — tidak terlihat */
+.sentra-panel-standby .sentra-footer-note {
+  color: rgba(35, 33, 30, 0.035);
+}
+
+/* Badge AutoComplete — tidak terlihat */
+.sentra-panel-standby .sentra-badge-live {
+  opacity: 0.02;
+}
+
+/* Autosens hint — tidak terlihat */
+.sentra-panel-standby .sentra-autosens-hint {
+  color: rgba(35, 33, 30, 0.03);
+}
+
+/* Serial plate — gelap */
+.sentra-panel-standby .sentra-serial-plate {
+  color: rgba(40, 38, 35, 0.06);
+}
+
+/* Screw — lebih gelap */
+.sentra-panel-standby .sentra-screw {
+  opacity: 0.2;
+}
+
+/* ═══ PANEL ROOT — Powered-on console (blue) ═══════════════════ */
+.sentra-panel {
+  position: relative;
+  background:
+    radial-gradient(ellipse 55% 30% at 50% 0%, rgba(80, 180, 255, 0.11) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 40% at 50% 45%, rgba(70, 170, 250, 0.05) 0%, transparent 50%),
+    #0a0b0d;
+  border: 1px solid rgba(100, 190, 255, 0.18);
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 50px rgba(90, 180, 255, 0.075),
+    inset 0 1px 0 rgba(160, 220, 255, 0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.4),
+    0 20px 50px rgba(0,0,0,0.65);
+  overflow: hidden;
+  width: 100%;
+  max-width: 460px;
+  padding: 20px 16px;
+}
+
+.sentra-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110,200,255,0.4), rgba(180,235,255,0.25), rgba(110,200,255,0.4), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ═══ HEADER — Emissive backlit title (blue) ═══════════════════ */
+.sentra-panel-header {
+  text-align: center;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.sentra-panel-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #e8f0f8;
+  text-shadow:
+    0 0 12px rgba(110, 200, 255, 0.45),
+    0 0 28px rgba(90, 180, 255, 0.25),
+    0 0 55px rgba(70, 160, 255, 0.1),
+    0 -1px 0 rgba(0,0,0,0.6);
+}
+
+.sentra-panel-subtitle {
+  font-size: 11px;
+  color: rgba(185, 170, 145, 0.45);
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.sentra-panel-subtitle span { color: rgba(185, 170, 145, 0.25); }
+
+.sentra-panel-subtitle__motto {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  letter-spacing: 0.03em;
+}
+
+.sentra-header-divider {
+  margin-top: 14px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110,200,255,0.22) 20%, rgba(160,230,255,0.3) 45%, rgba(180,140,255,0.1) 80%, transparent);
+  box-shadow: 0 0 8px rgba(110,200,255,0.08);
+}
+
+/* ═══ LED STRIP ════════════════════════════════════════════════ */
+.sentra-led-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 4px 0;
+}
+
+/* ═══ LED ══════════════════════════════════════════════════════ */
+.sentra-led {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Blue LED — primary soft blue */
+.sentra-led-amber {
+  background: #6ec8f5;
+  box-shadow: 0 0 5px var(--bl-g), 0 0 12px var(--bl-m), 0 0 24px var(--bl-f);
+  animation: bluePulse 3s ease-in-out infinite;
+}
+
+.sentra-led-cyan {
+  background: #63d4ff;
+  box-shadow: 0 0 5px var(--cy-g), 0 0 12px var(--cy-m), 0 0 24px var(--cy-f);
+  animation: cyanPulse 4s ease-in-out infinite;
+}
+
+.sentra-led-dim {
+  background: rgba(90, 100, 110, 0.2);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Red LED — empty/warning state */
+.sentra-led-red {
+  background: #ff6b6b;
+  box-shadow: 0 0 5px rgba(255, 107, 107, 0.55), 0 0 12px rgba(255, 107, 107, 0.22), 0 0 24px rgba(255, 107, 107, 0.09);
+  animation: redPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes redPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px rgba(255,107,107,0.55), 0 0 12px rgba(255,107,107,0.22), 0 0 24px rgba(255,107,107,0.09); }
+  50%      { opacity: 0.5; box-shadow: 0 0 3px rgba(255,107,107,0.3), 0 0 6px rgba(255,107,107,0.12), 0 0 12px rgba(255,107,107,0.04); }
+}
+
+@keyframes bluePulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--bl-g), 0 0 12px var(--bl-m), 0 0 24px var(--bl-f); }
+  50%      { opacity: 0.5; box-shadow: 0 0 3px rgba(110,200,245,0.3), 0 0 6px rgba(110,200,245,0.12), 0 0 12px rgba(110,200,245,0.04); }
+}
+
+@keyframes cyanPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--cy-g), 0 0 12px var(--cy-m), 0 0 24px var(--cy-f); }
+  50%      { opacity: 0.45; box-shadow: 0 0 3px rgba(99,212,255,0.3), 0 0 6px rgba(99,212,255,0.12), 0 0 12px rgba(99,212,255,0.04); }
+}
+
+/* ═══ STATE BADGE ══════════════════════════════════════════════ */
+.sentra-state-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 180ms ease;
+  border: 1px solid;
+}
+
+.sentra-state-standby  { background: rgba(115,115,115,0.08); color: #737373; border-color: rgba(115,115,115,0.15); }
+.sentra-state-ready    { background: rgba(99,179,237,0.1); color: #63B3ED; border-color: rgba(99,179,237,0.25); box-shadow: 0 0 8px rgba(99,179,237,0.1); }
+.sentra-state-processing { background: rgba(110,200,245,0.12); color: #6ec8f5; border-color: rgba(110,200,245,0.3); box-shadow: 0 0 10px rgba(110,200,245,0.12); animation: statePulseBlue 1.2s ease-in-out infinite; }
+.sentra-state-active   { background: rgba(104,211,145,0.1); color: #68D391; border-color: rgba(104,211,145,0.25); box-shadow: 0 0 8px rgba(104,211,145,0.1); }
+.sentra-state-alert    { background: rgba(252,129,129,0.15); color: #FC8181; border-color: rgba(252,129,129,0.4); box-shadow: 0 0 12px rgba(252,129,129,0.15); animation: stateAlertBlue 0.5s ease-in-out infinite; }
+
+@keyframes statePulseBlue {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@keyframes stateAlertBlue {
+  0%, 100% { box-shadow: 0 0 12px rgba(252,129,129,0.15); }
+  50% { box-shadow: 0 0 20px rgba(252,129,129,0.3); }
+}
+
+/* ═══ TAB NAVIGATION ═══════════════════════════════════════════ */
+.sentra-tabs-container {
+  padding: 5px;
+  background: #07080a;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.45), inset 0 -1px 0 rgba(255,255,255,0.015);
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.sentra-tab-row { display: flex; gap: 6px; margin-bottom: 6px; }
+.sentra-tab-row:last-child { margin-bottom: 0; }
+
+.sentra-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 2px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: var(--sentra-font-stack);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 180ms ease;
+  user-select: none;
+  background: transparent;
+  color: rgba(165, 155, 140, 0.45);
+  outline: none;
+}
+
+.sentra-tab-btn:hover { color: rgba(195, 180, 155, 0.65); border-color: rgba(255,255,255,0.06); }
+
+/* Active tab — soft blue emissive */
+.sentra-tab-btn.active {
+  background: rgba(15, 28, 42, 0.75);
+  color: #6ec8f5;
+  border-color: rgba(110, 200, 245, 0.42);
+  box-shadow: inset 0 0 16px rgba(90, 180, 255, 0.16), 0 0 10px rgba(90, 180, 255, 0.16);
+  text-shadow: 0 0 10px rgba(110, 200, 245, 0.55);
+}
+
+.sentra-tab-btn.active.sentra-tab-emergency {
+  color: #ff7a7a;
+  border-color: rgba(255, 100, 100, 0.4);
+  background: rgba(35, 18, 18, 0.7);
+  box-shadow: inset 0 0 14px rgba(255, 70, 70, 0.14), 0 0 8px rgba(255, 70, 70, 0.15);
+  text-shadow: 0 0 8px rgba(255, 100, 100, 0.5);
+}
+
+/* ═══ STATUS BAR ═══════════════════════════════════════════════ */
+.sentra-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background:
+    radial-gradient(ellipse 35% 70% at 12% 50%, rgba(80, 180, 255, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 30% 60% at 88% 50%, rgba(140, 180, 255, 0.04) 0%, transparent 50%),
+    #07080a;
+  border: 1px solid rgba(100, 190, 255, 0.07);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.4), inset 0 0 22px rgba(90, 180, 255, 0.04);
+  position: relative;
+  z-index: 1;
+}
+
+.sentra-status-bar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 6%; right: 6%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110,200,255,0.28), rgba(180,200,255,0.14), transparent);
+  pointer-events: none;
+}
+
+/* Status bar state variants — blue */
+.sentra-bar-ready { background: radial-gradient(ellipse 50% 80% at 80% 50%, rgba(99,179,237,0.05) 0%, transparent 60%), radial-gradient(ellipse 40% 70% at 12% 50%, rgba(80,180,255,0.06) 0%, transparent 55%), #07080a; }
+.sentra-bar-processing { background: radial-gradient(ellipse 50% 80% at 20% 50%, rgba(80,180,255,0.1) 0%, transparent 60%), #07080a; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4), inset 0 0 25px rgba(90,180,255,0.05); }
+.sentra-bar-active { background: radial-gradient(ellipse 50% 80% at 50% 50%, rgba(104,211,145,0.04) 0%, transparent 60%), radial-gradient(ellipse 40% 70% at 12% 50%, rgba(80,180,255,0.08) 0%, transparent 55%), #07080a; }
+.sentra-bar-alert { background: radial-gradient(ellipse 50% 80% at 50% 50%, rgba(252,129,129,0.08) 0%, transparent 60%), #07080a; border-color: rgba(252,129,129,0.2); animation: barAlertBlue 0.6s ease-in-out infinite; }
+@keyframes barAlertBlue {
+  0%, 100% { box-shadow: inset 0 2px 8px rgba(0,0,0,0.4), inset 0 0 12px rgba(255,100,100,0.04); }
+  50% { box-shadow: inset 0 2px 8px rgba(0,0,0,0.4), inset 0 0 28px rgba(255,100,100,0.1); }
+}
+
+.sentra-status-col { display: flex; flex-direction: column; gap: 4px; }
+.sentra-status-row { display: flex; align-items: center; gap: 6px; }
+
+.sentra-status-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* Embossed cream status label */
+  color: rgba(190, 175, 150, 0.5);
+  text-shadow: 0 -1px 1px rgba(0,0,0,0.65), 0 1px 0 rgba(220, 200, 170, 0.08);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sentra-status-dots { color: rgba(175, 160, 135, 0.18); font-size: 9px; letter-spacing: 2px; }
+.sentra-status-value { font-size: 11px; color: rgba(195, 180, 155, 0.65); }
+
+.sentra-status-value.loading {
+  font-style: italic;
+  color: #6ec8f5;
+  text-shadow: 0 0 6px rgba(110, 200, 255, 0.2);
+}
+
+.sentra-status-value.empty { color: rgba(175, 160, 135, 0.28); }
+.sentra-status-divider { width: 1px; height: 32px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.05) 70%, transparent); flex-shrink: 0; }
+
+/* ═══ SECTION LABELS — Embossed neumorphism (cream) ════════════
+   Like laser-etched cream labels on matte dark aluminum. */
+.sentra-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+
+.sentra-section-label {
+  font-size: var(--sentra-label-size);
+  font-weight: 600;
+  letter-spacing: var(--sentra-label-spacing);
+  text-transform: uppercase;
+  /* Embossed cream — carved into dark surface */
+  color: rgba(200, 185, 160, 0.6);
+  text-shadow:
+    0 -1.5px 1px rgba(0,0,0,0.75),
+    0 1px 0 rgba(230, 210, 180, 0.1);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ═══ TEXTAREA ═════════════════════════════════════════════════ */
+.sentra-textarea {
+  width: 100%;
+  padding: 10px 13px;
+  font-size: 13px;
+  font-family: var(--sentra-font-stack);
+  color: #e0e8f0;
+  background: #07080a;
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+  transition: all 180ms ease;
+  outline: none;
+  min-height: 76px;
+  resize: none;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+  caret-color: #6ec8f5;
+}
+
+.sentra-textarea::placeholder { color: rgba(170, 155, 130, 0.3); font-style: italic; }
+
+/* State-based textarea — blue */
+.sentra-textarea-processing {
+  border-color: rgba(110, 200, 245, 0.3);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), inset 0 0 16px rgba(90,180,255,0.06);
+  caret-color: #6ec8f5;
+}
+.sentra-textarea-active {
+  border-color: rgba(104, 211, 145, 0.25);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), inset 0 0 14px rgba(104,211,145,0.05);
+  caret-color: #68D391;
+}
+.sentra-textarea-alert {
+  border-color: rgba(252, 129, 129, 0.35);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), inset 0 0 18px rgba(252,129,129,0.08);
+  caret-color: #FC8181;
+}
+
+.sentra-textarea:focus {
+  background: #0a0b0e;
+  border-color: rgba(110, 200, 245, 0.35);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.35), inset 0 0 20px rgba(90, 180, 255, 0.09), 0 0 0 1px rgba(110, 200, 245, 0.14);
+}
+
+/* ═══ SECTIONS ═════════════════════════════════════════════════ */
+.sentra-section { margin-bottom: 14px; position: relative; z-index: 1; }
+.sentra-section:last-of-type { margin-bottom: 0; }
+
+.sentra-section + .sentra-section::before {
+  content: '';
+  position: absolute;
+  top: -7px; left: 3%; right: 3%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110,200,255,0.14) 20%, rgba(160,230,255,0.18) 45%, rgba(180,140,255,0.07) 80%, transparent);
+}
+
+/* Section ambient glow per state — blue */
+.sentra-section-processing {
+  padding: 8px;
+  margin: -8px -8px 6px;
+  border-radius: 10px;
+  background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(90,180,255,0.04) 0%, transparent 60%);
+}
+
+/* ═══ DROPDOWN ═════════════════════════════════════════════════ */
+.sentra-dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 13px;
+  font-size: 13px;
+  font-family: var(--sentra-font-stack);
+  color: #e0e8f0;
+  background: #07080a;
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+  transition: all 180ms ease;
+  cursor: pointer;
+  outline: none;
+}
+
+.sentra-dropdown-trigger:hover {
+  border-color: rgba(110, 200, 245, 0.22);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.3), inset 0 0 14px rgba(90, 180, 255, 0.06);
+}
+
+.sentra-dropdown-trigger .placeholder { color: rgba(175, 160, 135, 0.3); font-style: italic; }
+.sentra-dropdown-trigger .value { color: #e0e8f0; }
+.sentra-dropdown-trigger svg { color: rgba(165, 150, 125, 0.3); flex-shrink: 0; }
+.sentra-dropdown-trigger:hover svg { color: rgba(160, 220, 255, 0.45); }
+
+/* Dropdown state variants — blue */
+.sentra-input-processing { border-color: rgba(110,200,245,0.2); }
+.sentra-input-active { border-color: rgba(104,211,145,0.15); }
+.sentra-input-alert { border-color: rgba(252,129,129,0.25); }
+
+/* ─── Dropdown Menu ─────────────────────────────────────────── */
+.sentra-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #0d0e12;
+  border: 1px solid rgba(110, 200, 245, 0.25);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 18px rgba(90, 180, 255, 0.08);
+  z-index: 10;
+  overflow: hidden;
+  animation: dropdownIn 120ms ease-out;
+}
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sentra-dropdown-item {
+  width: 100%;
+  display: block;
+  padding: 8px 13px;
+  font-size: 12px;
+  font-family: var(--sentra-font-stack);
+  color: rgba(195, 180, 155, 0.7);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.025);
+  cursor: pointer;
+  text-align: left;
+  transition: all 120ms ease;
+  outline: none;
+}
+.sentra-dropdown-item:last-child { border-bottom: none; }
+.sentra-dropdown-item:hover {
+  background: rgba(110, 200, 245, 0.08);
+  color: rgba(215, 198, 172, 0.9);
+}
+.sentra-dropdown-item.active {
+  background: rgba(110, 200, 245, 0.12);
+  color: #6ec8f5;
+}
+
+/* Ensure form-group can contain absolute dropdown */
+.sentra-form-group { position: relative; }
+
+/* ═══ FORM GRID ════════════════════════════════════════════════ */
+.sentra-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; position: relative; z-index: 1; }
+.sentra-form-group { display: flex; flex-direction: column; gap: 6px; }
+
+/* ═══ AUTOSENS CARD ════════════════════════════════════════════ */
+.sentra-autosens-card {
+  position: relative;
+  background:
+    radial-gradient(ellipse 45% 30% at 85% 8%, rgba(80, 180, 255, 0.09) 0%, transparent 50%),
+    radial-gradient(ellipse 35% 25% at 8% 92%, rgba(140, 180, 255, 0.04) 0%, transparent 45%),
+    #0d0e11;
+  border: 1px solid rgba(100, 190, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 6px;
+  box-shadow: inset 0 2px 12px rgba(0,0,0,0.4), inset 0 0 26px rgba(90, 180, 255, 0.04);
+  z-index: 1;
+}
+
+.sentra-autosens-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 25%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110,200,255,0.22), rgba(180,200,255,0.09), transparent);
+  pointer-events: none;
+}
+
+/* Card state variants — blue */
+.sentra-card-processing {
+  background: radial-gradient(ellipse 60% 40% at 80% 20%, rgba(80,180,255,0.05) 0%, transparent 60%), radial-gradient(ellipse 50% 35% at 85% 8%, rgba(80,180,255,0.055) 0%, transparent 50%), radial-gradient(ellipse 40% 30% at 8% 92%, rgba(140,180,255,0.03) 0%, transparent 45%), #0d0e11;
+  border-color: rgba(110,200,245,0.15);
+  box-shadow: inset 0 2px 12px rgba(0,0,0,0.35), 0 0 18px rgba(90,180,255,0.06), 0 4px 12px rgba(0,0,0,0.2);
+}
+.sentra-card-active {
+  background: radial-gradient(ellipse 60% 40% at 80% 20%, rgba(104,211,145,0.03) 0%, transparent 60%), radial-gradient(ellipse 50% 35% at 85% 8%, rgba(80,180,255,0.055) 0%, transparent 50%), radial-gradient(ellipse 40% 30% at 8% 92%, rgba(140,180,255,0.03) 0%, transparent 45%), #0d0e11;
+  border-color: rgba(104,211,145,0.12);
+}
+.sentra-card-alert {
+  background: radial-gradient(ellipse 60% 40% at 80% 20%, rgba(252,129,129,0.05) 0%, transparent 60%), radial-gradient(ellipse 50% 35% at 85% 8%, rgba(255,100,100,0.06) 0%, transparent 50%), #0d0e11;
+  border-color: rgba(252,129,129,0.2);
+  animation: cardAlertBlue 0.6s ease-in-out infinite;
+}
+@keyframes cardAlertBlue {
+  0%, 100% { box-shadow: inset 0 2px 12px rgba(0,0,0,0.35), 0 0 12px rgba(255,100,100,0.06), 0 4px 12px rgba(0,0,0,0.2); }
+  50% { box-shadow: inset 0 2px 12px rgba(0,0,0,0.35), 0 0 24px rgba(255,100,100,0.12), 0 4px 12px rgba(0,0,0,0.2); }
+}
+
+.sentra-autosens-subheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.sentra-autosens-title {
+  font-size: var(--sentra-label-size);
+  font-weight: 600;
+  letter-spacing: var(--sentra-label-spacing);
+  text-transform: uppercase;
+  /* Embossed cream */
+  color: rgba(195, 178, 150, 0.55);
+  text-shadow: 0 -1px 1px rgba(0,0,0,0.75), 0 1px 0 rgba(225, 205, 175, 0.08);
+  user-select: none;
+}
+
+.sentra-autosens-hint { font-size: 10px; color: rgba(175, 160, 135, 0.3); font-style: italic; }
+
+/* ═══ VITAL INPUT ══════════════════════════════════════════════ */
+.sentra-vital-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background:
+    radial-gradient(ellipse 55% 45% at 20% 0%, rgba(80, 180, 255, 0.07) 0%, transparent 50%),
+    #07080a;
+  border: 1px solid rgba(100, 190, 255, 0.06);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.35);
+  padding: 8px 12px;
+  transition: all 180ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sentra-vital-input::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 35%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(110,200,255,0.14), transparent);
+  pointer-events: none;
+}
+
+/* Vital input state variants — blue */
+.sentra-vital-processing { background: radial-gradient(ellipse 70% 60% at 30% 50%, rgba(80,180,255,0.045) 0%, transparent 55%), #07080a; border-color: rgba(110,200,245,0.15); }
+.sentra-vital-active { background: radial-gradient(ellipse 70% 60% at 30% 50%, rgba(104,211,145,0.025) 0%, transparent 55%), #07080a; }
+.sentra-vital-alert { background: radial-gradient(ellipse 70% 60% at 30% 50%, rgba(252,129,129,0.04) 0%, transparent 55%), #07080a; border-color: rgba(252,129,129,0.15); }
+
+.sentra-vital-input:hover { border-color: rgba(110, 200, 245, 0.18); }
+
+.sentra-vital-input:focus-within {
+  border-color: rgba(110, 200, 245, 0.3);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.25), inset 0 0 18px rgba(90, 180, 255, 0.08), 0 0 0 1px rgba(110, 200, 245, 0.12);
+}
+
+.sentra-vital-inner { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+
+.sentra-vital-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* Embossed cream — carved into control surface */
+  color: rgba(185, 170, 145, 0.55);
+  text-shadow: 0 -1px 1px rgba(0,0,0,0.7), 0 1px 0 rgba(215, 195, 165, 0.09);
+  white-space: nowrap;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sentra-vital-field { background: transparent; border: none; outline: none; font-size: 13px; font-family: var(--sentra-font-stack); color: #e0e8f0; width: 100%; margin-top: 1px; }
+.sentra-vital-field::placeholder { color: rgba(170, 155, 130, 0.28); }
+.sentra-vital-unit { font-size: 11px; color: rgba(180, 165, 140, 0.4); margin-left: 6px; flex-shrink: 0; }
+
+/* ═══ VITAL GRIDS ══════════════════════════════════════════════ */
+.sentra-vital-grid-1 { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.sentra-vital-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sentra-vital-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+/* ═══ LIVE BADGE ═══════════════════════════════════════════════ */
+.sentra-badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-family: var(--sentra-font-stack);
+  white-space: nowrap;
+  flex-shrink: 0;
+  background: rgba(8, 16, 32, 0.75);
+  border: 1px solid rgba(100, 190, 220, 0.32);
+  box-shadow: inset 0 0 10px rgba(100, 190, 220, 0.05), 0 0 8px rgba(100, 190, 220, 0.1);
+  animation: badgeBreathe 2.8s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+  appearance: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sentra-badge-live:disabled {
+  cursor: default;
+}
+
+.sentra-badge-live::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -55%;
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  animation: badgeSweep 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sentra-badge-live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #6ec8f5;
+  box-shadow: 0 0 4px rgba(110, 200, 245, 0.9), 0 0 10px rgba(110, 200, 245, 0.45), 0 0 18px rgba(110, 200, 245, 0.15);
+  animation: badgeDotPulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.sentra-badge-live-text { color: #7ad0f0; text-shadow: 0 0 6px rgba(110, 200, 245, 0.3); position: relative; z-index: 1; }
+
+.sentra-badge-live-signal { display: flex; align-items: flex-end; gap: 1.5px; height: 8px; flex-shrink: 0; }
+.sentra-badge-live-signal span { display: block; width: 2px; border-radius: 1px; background: rgba(110, 200, 245, 0.8); box-shadow: 0 0 3px rgba(110, 200, 245, 0.35); animation: badgeSignalBar 0.9s ease-in-out infinite alternate; }
+.sentra-badge-live-signal span:nth-child(1) { height: 3px; animation-delay: 0s; }
+.sentra-badge-live-signal span:nth-child(2) { height: 6px; animation-delay: 0.15s; }
+.sentra-badge-live-signal span:nth-child(3) { height: 8px; animation-delay: 0.3s; }
+
+@keyframes badgeBreathe {
+  0%, 100% { border-color: rgba(100, 190, 220, 0.25); box-shadow: inset 0 0 10px rgba(100,190,220,0.04), 0 0 6px rgba(100,190,220,0.08); }
+  50%      { border-color: rgba(100, 190, 220, 0.38); box-shadow: inset 0 0 12px rgba(100,190,220,0.08), 0 0 10px rgba(100,190,220,0.15); }
+}
+
+@keyframes badgeDotPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px rgba(110,200,245,0.9), 0 0 10px rgba(110,200,245,0.45), 0 0 18px rgba(110,200,245,0.15); }
+  50%      { opacity: 0.4; box-shadow: 0 0 2px rgba(110,200,245,0.35), 0 0 5px rgba(110,200,245,0.12), 0 0 10px rgba(110,200,245,0.03); }
+}
+
+@keyframes badgeSignalBar {
+  0%   { opacity: 0.3; transform: scaleY(0.5); }
+  100% { opacity: 1;   transform: scaleY(1); }
+}
+
+@keyframes badgeSweep {
+  0%, 85%, 100% { left: -55%; }
+  45% { left: 130%; }
+}
+
+/* ═══ FOOTER ACTIONS ═══════════════════════════════════════════ */
+.sentra-panel-footer {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Primary CTA — Neumorphic cream glow, full-width center */
+.sentra-btn-primary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--sentra-font-stack);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 10px;
+  /* Soft warm grey — blends with cream palette */
+  background: linear-gradient(180deg, #161a20 0%, #111318 50%, #0d1014 100%);
+  color: rgba(215, 198, 172, 0.9);
+  /* Neumorphism: raised with soft shadow + inner glow */
+  box-shadow:
+    /* Raised shadow */
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    /* Top highlight */
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    /* Bottom shadow */
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    /* Subtle cream inner glow */
+    inset 0 0 20px rgba(200, 180, 150, 0.03);
+  text-shadow:
+    0 -1px 1px rgba(0,0,0,0.5),
+    0 1px 0 rgba(230, 210, 180, 0.15),
+    0 0 10px rgba(200, 180, 150, 0.2);
+  cursor: pointer;
+  transition: all 180ms ease;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer sweep */
+.sentra-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -50%;
+  height: 100%;
+  width: 25%;
+  background: linear-gradient(90deg, transparent, rgba(200,180,150,0.06), transparent);
+  transform: skewX(-20deg);
+  animation: ctaLightSweep 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ctaLightSweep {
+  0%, 90%, 100% { left: -50%; }
+  50% { left: 130%; }
+}
+
+/* Uplink glow dot */
+.sentra-uplink-glow {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(200, 180, 150, 0.5);
+  box-shadow:
+    0 0 6px rgba(200, 180, 150, 0.4),
+    0 0 14px rgba(200, 180, 150, 0.2);
+  animation: uplinkGlowPulse 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes uplinkGlowPulse {
+  0%, 100% {
+    opacity: 0.6;
+    box-shadow: 0 0 6px rgba(200,180,150,0.3), 0 0 14px rgba(200,180,150,0.12);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(200,180,150,0.6), 0 0 22px rgba(200,180,150,0.25);
+  }
+}
+
+/* CTA state variants — blue */
+.sentra-cta-processing {
+  background: #1A1C20 !important;
+  color: #6ec8f5 !important;
+  box-shadow: 0 0 22px rgba(90,180,255,0.2), 0 0 55px rgba(90,180,255,0.1) !important;
+  border: 1px solid rgba(110,200,245,0.3) !important;
+  cursor: wait;
+}
+.sentra-cta-active {
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 22px rgba(255,255,255,0.15),
+    0 0 55px rgba(104,211,145,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    inset 0 0 20px rgba(200,180,150,0.04) !important;
+}
+.sentra-cta-alert {
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 0 22px rgba(252,129,129,0.2),
+    0 0 55px rgba(252,129,129,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 -1px 0 rgba(0,0,0,0.3) !important;
+}
+
+.sentra-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.55),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    inset 0 0 28px rgba(200, 180, 150, 0.05);
+  color: rgba(230, 212, 185, 0.95);
+}
+
+.sentra-btn-primary:active:not(:disabled) { transform: translateY(0); }
+
+/* Removed: .sentra-action-row, .sentra-btn-ghost — Uplink is now sole full-width CTA */
+
+.sentra-footer-note {
+  text-align: center;
+  font-size: 10px;
+  font-style: italic;
+  color: rgba(175, 158, 132, 0.4);
+  text-shadow: 0 -1px 1px rgba(0,0,0,0.55), 0 1px 0 rgba(210, 190, 160, 0.06);
+  transition: all 180ms ease;
+}
+
+/* Footer note state variants — blue */
+.sentra-panel-processing .sentra-footer-note { color: #6ec8f5; opacity: 0.7; }
+.sentra-panel-active .sentra-footer-note { color: #68D391; opacity: 0.6; }
+.sentra-panel-alert .sentra-footer-note { color: #FC8181; opacity: 0.8; animation: footerAlertBlue 0.6s ease-in-out infinite; }
+@keyframes footerAlertBlue {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ═══ HARDWARE REALISM ═════════════════════════════════════════ */
+.sentra-screw {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 45%, rgba(0,0,0,0.5) 45%, rgba(0,0,0,0.5) 55%, transparent 55%),
+    linear-gradient(0deg, transparent 45%, rgba(0,0,0,0.5) 45%, rgba(0,0,0,0.5) 55%, transparent 55%),
+    radial-gradient(circle at 40% 40%, rgba(255,255,255,0.15), rgba(140,140,140,0.12) 40%, rgba(60,60,60,0.28) 80%, rgba(30,30,30,0.45) 100%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.08), inset 0 -1px 2px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1.5px rgba(40,40,40,0.6);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.sentra-bezel {
+  position: absolute;
+  inset: -2px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(40, 42, 48, 0.5);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.3), 0 0 0 1px rgba(30,30,35,0.6), 0 2px 4px rgba(0,0,0,0.2);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.sentra-serial-plate {
+  position: absolute;
+  bottom: 10px;
+  right: 24px;
+  font-size: 7px;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(145, 135, 115, 0.3);
+  text-transform: uppercase;
+  padding: 2px 5px;
+  background: rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 2px;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ═══ SPINNER ══════════════════════════════════════════════════ */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.sentra-spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+/* ═══ BADGE ACTIVE STATE ═══════════════════════════════════════ */
+.sentra-badge-active {
+  box-shadow: 0 0 14px rgba(80,190,210,0.22), 0 0 28px rgba(80,190,210,0.12), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  border-color: rgba(80, 190, 210, 0.5) !important;
+}
+
+/* ═══ FIELD VALIDATION — LED only: Biru = filled, Merah = empty ═
+
+/* ═══ PREFERS-REDUCED-MOTION ═══════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .sentra-led-amber, .sentra-led-cyan { animation: none; }
+  .sentra-badge-live, .sentra-badge-live-dot, .sentra-badge-live::before, .sentra-badge-live-signal span { animation: none; }
+  .sentra-btn-primary::before { animation: none; display: none; }
+  .sentra-tab-btn, .sentra-dropdown-trigger, .sentra-vital-input, .sentra-textarea, .sentra-btn-primary { transition: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * REALISTIC MATERIAL TEXTURE OVERRIDE — Approved Design v2.1
+ * Goal: less flat CSS-glass, more tactile medical-grade device.
+ * Adds anisotropic brushed polymer, micro grain, bevel depth,
+ * soft wear on edges, and recessed controls. No layout changes.
+ * ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --sentra-noise-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 .22'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  --sentra-panel-material:
+    var(--sentra-noise-svg),
+    linear-gradient(135deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.008) 18%, transparent 42%),
+    linear-gradient(315deg, rgba(0,0,0,0.35) 0%, transparent 34%),
+    repeating-linear-gradient(92deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(2deg, rgba(0,0,0,0.18) 0 1px, transparent 1px 5px),
+    radial-gradient(ellipse 85% 55% at 50% -8%, rgba(125,205,255,0.115) 0%, rgba(80,160,230,0.045) 34%, transparent 62%),
+    radial-gradient(ellipse 55% 48% at 50% 48%, rgba(70,170,250,0.045) 0%, transparent 58%),
+    linear-gradient(180deg, #101216 0%, #090a0d 42%, #050609 100%);
+}
+
+html,
+body {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 12%, rgba(95,150,210,0.055), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 50% 115%, rgba(0,0,0,0.7), transparent 60%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 7px),
+    #010203 !important;
+}
+
+/* Main enclosure: brushed polymer/aluminum, not flat dark card */
+.sentra-panel {
+  background: var(--sentra-panel-material) !important;
+  background-blend-mode: overlay, screen, multiply, overlay, multiply, screen, screen, normal;
+  border-color: rgba(135, 205, 255, 0.2) !important;
+  outline: 1px solid rgba(255,255,255,0.028);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 2px 10px rgba(255,255,255,0.018),
+    inset 0 -1px 0 rgba(0,0,0,0.72),
+    inset 0 -18px 38px rgba(0,0,0,0.34),
+    inset 0 0 68px rgba(72,160,235,0.07),
+    0 1px 0 rgba(255,255,255,0.035),
+    0 26px 70px rgba(0,0,0,0.78),
+    0 8px 26px rgba(0,0,0,0.55) !important;
+}
+
+.sentra-panel::before {
+  height: 2px !important;
+  left: 10% !important;
+  right: 10% !important;
+  opacity: 0.9;
+  background:
+    linear-gradient(90deg, transparent, rgba(190,230,255,0.38) 24%, rgba(255,255,255,0.44) 50%, rgba(110,200,255,0.28) 74%, transparent) !important;
+  filter: blur(0.15px);
+}
+
+.sentra-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.38;
+  background:
+    var(--sentra-noise-svg),
+    linear-gradient(120deg, rgba(255,255,255,0.035), transparent 18%, rgba(0,0,0,0.18) 74%, transparent),
+    repeating-linear-gradient(96deg, transparent 0 11px, rgba(255,255,255,0.018) 11px 12px, transparent 12px 23px);
+  mix-blend-mode: soft-light;
+}
+
+.sentra-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sentra-bezel {
+  inset: -4px !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(70,76,86,0.72) !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.055), transparent 32%),
+    linear-gradient(315deg, rgba(0,0,0,0.42), transparent 38%);
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,0.04),
+    inset 0 -3px 8px rgba(0,0,0,0.58),
+    0 0 0 1px rgba(0,0,0,0.7),
+    0 10px 26px rgba(0,0,0,0.42) !important;
+}
+
+/* Screws: countersunk and directional, not simple dots */
+.sentra-screw {
+  width: 13px !important;
+  height: 13px !important;
+  background:
+    linear-gradient(42deg, transparent 43%, rgba(8,9,10,0.82) 45%, rgba(8,9,10,0.82) 55%, transparent 57%),
+    radial-gradient(circle at 36% 28%, rgba(255,255,255,0.34), rgba(170,180,190,0.16) 20%, rgba(58,62,70,0.34) 48%, rgba(8,9,11,0.74) 82%) !important;
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.18),
+    inset 0 -2px 3px rgba(0,0,0,0.82),
+    0 1px 1px rgba(255,255,255,0.035),
+    0 2px 5px rgba(0,0,0,0.72),
+    0 0 0 1px rgba(0,0,0,0.82),
+    0 0 0 2px rgba(255,255,255,0.018) !important;
+}
+
+.sentra-tabs-container,
+.sentra-status-bar,
+.sentra-section,
+.sentra-autosens-card,
+.sentra-textarea,
+.sentra-dropdown-trigger,
+.sentra-vital-input,
+.sentra-btn-primary {
+  backdrop-filter: blur(0.8px) saturate(1.08);
+  -webkit-backdrop-filter: blur(0.8px) saturate(1.08);
+}
+
+.sentra-tabs-container,
+.sentra-status-bar,
+.sentra-autosens-card,
+.sentra-textarea {
+  background-image:
+    var(--sentra-noise-svg),
+    linear-gradient(180deg, rgba(255,255,255,0.035), rgba(0,0,0,0.08)),
+    radial-gradient(ellipse 70% 28% at 50% 0%, rgba(110,200,255,0.04), transparent 70%) !important;
+  background-blend-mode: soft-light, overlay, screen;
+}
+
+/* Recessed input wells: tactile, matte, less synthetic neon */
+.sentra-textarea,
+.sentra-dropdown-trigger,
+.sentra-vital-input {
+  border-color: rgba(145, 205, 240, 0.075) !important;
+  box-shadow:
+    inset 0 2px 7px rgba(0,0,0,0.62),
+    inset 0 -1px 0 rgba(255,255,255,0.025),
+    0 1px 0 rgba(255,255,255,0.018) !important;
+}
+
+.sentra-textarea:focus,
+.sentra-dropdown-trigger:focus-visible,
+.sentra-vital-input:focus-within {
+  border-color: rgba(118, 205, 255, 0.34) !important;
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,0.48),
+    inset 0 0 18px rgba(90,180,255,0.065),
+    0 0 0 1px rgba(118,205,255,0.14),
+    0 0 18px rgba(80,180,255,0.075) !important;
+}
+
+.sentra-tab-btn,
+.sentra-btn-primary {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.075),
+    inset 0 -1px 0 rgba(0,0,0,0.55),
+    0 2px 4px rgba(0,0,0,0.5) !important;
+}
+
+.sentra-tab-btn.active,
+.sentra-btn-primary:active:not(:disabled) {
+  transform: translateY(1px) !important;
+  box-shadow:
+    inset 0 2px 7px rgba(0,0,0,0.55),
+    inset 0 0 14px rgba(110,200,245,0.055),
+    0 1px 1px rgba(255,255,255,0.018) !important;
+}
+
+/* Subtle edge wear: gives scale and realism without making it dirty */
+.sentra-panel-header,
+.sentra-tabs-container,
+.sentra-status-bar,
+.sentra-section,
+.sentra-autosens-card,
+.sentra-panel-footer {
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.018)) drop-shadow(0 8px 18px rgba(0,0,0,0.14));
+}
+
+.sentra-serial-plate {
+  background:
+    var(--sentra-noise-svg),
+    linear-gradient(180deg, rgba(255,255,255,0.035), rgba(0,0,0,0.18)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    inset 0 -1px 0 rgba(0,0,0,0.45),
+    0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Keep the powered-off state physically visible, not simply blank */
+.sentra-panel-standby {
+  background:
+    var(--sentra-noise-svg),
+    repeating-linear-gradient(92deg, rgba(255,255,255,0.008) 0 1px, transparent 1px 5px),
+    linear-gradient(180deg, #050608, #020204) !important;
+  background-blend-mode: soft-light, overlay, normal;
+}

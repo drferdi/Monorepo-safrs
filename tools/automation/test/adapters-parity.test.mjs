@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 
 import * as claude from "../src/adapters/claude.mjs";
@@ -147,11 +149,95 @@ test("all enforceable adapters produce identical verdicts for the shared matrix"
   }
 });
 
-test("adapters without an ask channel render ask as a block", () => {
+test("ask prompts the human where the adapter can; Codex has no ask channel and blocks", () => {
   const ask = { decision: "ask", reasonCode: "DB_DESTRUCTIVE", message: "x" };
   assert.equal(codex.render(ask).exitCode, 2);
-  assert.equal(claude.render(ask).exitCode, 2);
+  const rendered = claude.render(ask);
+  assert.equal(rendered.exitCode, 0);
+  assert.deepEqual(JSON.parse(rendered.stdout).hookSpecificOutput, {
+    hookEventName: "PreToolUse",
+    permissionDecision: "ask",
+    permissionDecisionReason: "SAFRS guard: x",
+  });
   assert.equal(cursor.render(ask).permission, "ask");
+  assert.equal(
+    claude.render({ decision: "deny", reasonCode: "FORCE_PUSH", message: "x" })
+      .exitCode,
+    2,
+  );
+});
+
+test("Codex hands merges to its execpolicy prompt only while the prompt rules exist", () => {
+  for (const reasonCode of ["MERGE", "PR_MERGE"]) {
+    const ask = { decision: "ask", reasonCode, message: "x" };
+    const deferred = codex.render(ask, { mergePromptRules: true });
+    assert.equal(deferred.exitCode, 0, reasonCode);
+    assert.match(
+      JSON.parse(deferred.stdout).hookSpecificOutput.additionalContext,
+      /Gaffer/,
+    );
+    assert.equal(codex.render(ask).exitCode, 2, reasonCode);
+  }
+  for (const reasonCode of ["MAIN_REF_UPDATE", "DB_DESTRUCTIVE"]) {
+    const ask = { decision: "ask", reasonCode, message: "x" };
+    assert.equal(
+      codex.render(ask, { mergePromptRules: true }).exitCode,
+      2,
+      reasonCode,
+    );
+  }
+});
+
+test("Claude's PowerShell tool translates like Bash", () => {
+  assert.deepEqual(
+    claude.translate(
+      { tool_name: "PowerShell", tool_input: { command: "git merge feat/x" } },
+      process.cwd(),
+    ),
+    [{ type: "command", command: "git merge feat/x" }],
+  );
+});
+
+test("Claude plan-mode plan files skip the outside-repository deny", (t) => {
+  // An empty value must mean "unset", never "plans/ under the cwd".
+  const saved = process.env.CLAUDE_CONFIG_DIR;
+  process.env.CLAUDE_CONFIG_DIR = "";
+  t.after(() => {
+    if (saved === undefined) {
+      delete process.env.CLAUDE_CONFIG_DIR;
+    } else {
+      process.env.CLAUDE_CONFIG_DIR = saved;
+    }
+  });
+  assert.deepEqual(
+    claude.translate(
+      { tool_name: "Write", tool_input: { file_path: "plans/x.md" } },
+      ROOT,
+    ),
+    [{ type: "write", paths: ["plans/x.md"] }],
+  );
+  const plans = path.join(os.homedir(), ".claude", "plans");
+  for (const tool_name of ["Write", "Edit"]) {
+    assert.deepEqual(
+      claude.translate(
+        { tool_name, tool_input: { file_path: path.join(plans, "x.md") } },
+        ROOT,
+      ),
+      [],
+      tool_name,
+    );
+  }
+  for (const file_path of [
+    path.join(plans, "nested", "x.md"),
+    path.join(plans, "x.sh"),
+    path.join(os.homedir(), ".claude", "settings.json"),
+  ]) {
+    const [event] = claude.translate(
+      { tool_name: "Write", tool_input: { file_path } },
+      ROOT,
+    );
+    assert.equal(authorize(event).reasonCode, "OUTSIDE_REPOSITORY", file_path);
+  }
 });
 
 test("droid adapter denies every mutation while disabled", () => {

@@ -1,0 +1,9 @@
+﻿policy_id,priority,rule,failure_mode
+POL-01,CRITICAL,Agent hanya menjawab dari record berstatus CURRENT untuk pertanyaan kondisi terkini.,Mengutip CP lama atau aturan yang telah diubah.
+POL-02,CRITICAL,"Untuk Pendidikan Agama dan Budi Pekerti, 020 Tahun 2026 mengalahkan 046/H/KR/2025.",Jawaban agama memakai CP 2025 yang sudah diubah.
+POL-03,HIGH,"Regulasi dan CP normatif harus dipisahkan dari panduan, inspirasi ATP, dan buku teks.",Contoh implementasi dipresentasikan sebagai kewajiban hukum.
+POL-04,HIGH,Setiap jawaban faktual kurikulum wajib menyebut dokumen dan halaman sumber.,Jawaban tidak dapat diaudit.
+POL-05,HIGH,Agent tidak boleh membuat TP/ATP dan menyebutnya sebagai rumusan resmi tanpa provenance eksplisit.,Konten generatif dianggap dokumen otoritatif.
+POL-06,HIGH,"Bila sumber berupa hasil pindai belum terverifikasi teksnya, Agent harus menunjuk halaman sumber atau abstain dari kutipan presisi.",Kesalahan OCR menjadi fakta kurikulum.
+POL-07,MEDIUM,"Gunakan retrieval hybrid: metadata filter + full-text + vector, dengan phase/subject sebagai filter keras.",Potongan lintas fase atau mapel tercampur.
+POL-08,MEDIUM,AI summary adalah output turunan; source text tetap source of truth.,Ringkasan menggeser atau mengubah makna CP.

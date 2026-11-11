@@ -12,7 +12,7 @@ Capsule README: `projects/product/kediri-history/README.md`.
 
 | Field | Value |
 | --- | --- |
-| Owner | Chief |
+| Owner | Gaffer |
 | Default risk | R2 |
 | Runtime | Node 24 |
 | Package manager | pnpm 11.21.0, `pnpm-lock.yaml` |
@@ -34,7 +34,7 @@ PGlite remains a fallback when Docker is unavailable; it is not the only proof.
 - No institutional historical images have been acquired yet.
 - The 1869 bridge claim is held at `needs_review`.
 - Motion is not declared production-ready until re-verified against current GSAP skills (Sentra-GSAP standard withdrawn 2026-08-28).
-- Phase 22 deployment waits on Chief. No production remote is created by agents.
+- Phase 22 deployment waits on Gaffer. No production remote is created by agents.
 
 ## Related
 

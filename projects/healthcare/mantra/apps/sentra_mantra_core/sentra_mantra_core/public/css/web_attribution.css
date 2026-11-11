@@ -1,0 +1,36 @@
+/* Login / website footer attribution (Chief 2026-07-17) */
+.web-footer .footer-powered,
+.web-footer .footer-info {
+	font-size: 15px;
+	line-height: 22px;
+	letter-spacing: 0.01em;
+}
+
+.web-footer .footer-powered {
+	text-align: right;
+	color: var(--text-muted, #7c7c7c);
+}
+
+.web-footer .footer-powered a {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.web-footer .footer-powered a:hover {
+	color: var(--text-color, #171717);
+}
+
+@media (max-width: 575px) {
+	.web-footer .footer-powered {
+		text-align: left;
+		margin-top: 8px;
+	}
+}
+
+/* Login page: keep attribution readable under the form */
+body[data-path="login"] .web-footer,
+.page-login .web-footer {
+	margin-top: 24px;
+	padding-bottom: 16px;
+}

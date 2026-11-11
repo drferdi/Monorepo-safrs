@@ -1,18 +1,29 @@
 #!/usr/bin/env python3
-"""Advisory structural checks for independently portable project capsules."""
+"""Blocking structural checks for independently portable project capsules.
+
+Coverage is fail-closed (ADR 0007 decision 1): every projects/<domain>/<capsule>/
+directory except projects/_template has a project.contract.json or an entry in
+.safrs/known-nonconformance.json. Traversal prunes skipped directories in place and
+walks each capsule once (ADR 0007 decision 2).
+"""
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shlex
+import subprocess
 import sys
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path, PureWindowsPath
+from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[2]
+PACKAGE_PROTOCOL = re.compile(r"^(?:file|link|portal|workspace):")
 DEPENDENCY_FIELDS = (
     "dependencies",
     "devDependencies",
@@ -31,6 +42,11 @@ SKIP_DIRECTORIES = {
     "__pycache__",
 }
 ROOT_COUPLING_PREFIXES = ("tools/", "scripts/", "packages/")
+KNOWN_NONCONFORMANCE = ".safrs/known-nonconformance.json"
+KNOWN_LABEL = "known-nonconformance"
+ENTRY_FIELDS = ("capsule", "reason", "reference", "owner", "reviewBy")
+CAPSULE_ID = re.compile(r"^[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9_.-]*$")
+ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 ROOT_METADATA_NAMES = {
     "biome.json",
     "biome.jsonc",
@@ -80,15 +96,33 @@ def is_windows_or_posix_absolute(value: str) -> bool:
         or normalized.startswith("//")
         or PureWindowsPath(value).is_absolute()
         or bool(re.match(r"^[A-Za-z]:", value))
-        or bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", value))
+        or (bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", value)) and bool(re.search(r"[/\\]", value)))
     )
 
 
+def credentialed_url(value: str) -> bool:
+    try:
+        parts = urlsplit(value)
+    except ValueError:
+        return False
+    return bool(parts.username or parts.password)
+
+
 def path_escapes(value: str, base: Path, capsule: Path) -> bool:
+    value = PACKAGE_PROTOCOL.sub("", value, count=1)
     if is_windows_or_posix_absolute(value):
         return True
     candidate = (base / value.replace("\\", "/")).resolve(strict=False)
     return not is_within(candidate, capsule.resolve(strict=False))
+
+
+def contract_path_rejected(value: str, base: Path, capsule: Path) -> bool:
+    if "\0" in value:
+        return True
+    target = PACKAGE_PROTOCOL.sub("", value, count=1)
+    if ".." in target.replace("\\", "/").split("/"):
+        return True
+    return path_escapes(value, base, capsule)
 
 
 def missing_capsule_owned_reference(value: str, base: Path) -> bool:
@@ -118,12 +152,48 @@ def argument_path_candidates(argument: str):
             yield path_candidate
 
 
-def iter_files(capsule: Path, filename: str | None = None):
-    for path in sorted(capsule.rglob("*")):
-        if any(part in SKIP_DIRECTORIES for part in path.relative_to(capsule).parts):
+def git_capsule_files(capsule: Path) -> list[Path] | None:
+    """Tracked and untracked files git does not ignore, or None outside a git work tree.
+
+    Ignored local state (for example a capsule's downloaded runtime) is not capsule source.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(capsule), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+            capture_output=True,
+            check=False,
+        )
+    except OSError:
+        return None
+    if result.returncode != 0:
+        return None
+    files = set()
+    for name in result.stdout.decode("utf-8").split("\0"):
+        if not name or SKIP_DIRECTORIES.intersection(Path(name).parts[:-1]):
             continue
-        if not path.is_file():
-            continue
+        path = capsule / name
+        if path.is_file():
+            files.add(path)
+    return sorted(files)
+
+
+def walk_capsule(capsule: Path) -> list[Path]:
+    """Every regular file in the capsule, found in one pass that never enters skipped directories."""
+    git_files = git_capsule_files(capsule)
+    if git_files is not None:
+        return git_files
+    files = []
+    for directory, directory_names, file_names in os.walk(capsule):
+        directory_names[:] = sorted(name for name in directory_names if name not in SKIP_DIRECTORIES)
+        for name in file_names:
+            path = Path(directory) / name
+            if path.is_file():
+                files.append(path)
+    return sorted(files)
+
+
+def iter_files(files: list[Path], filename: str | None = None):
+    for path in files:
         if filename is None or path.name == filename:
             yield path
 
@@ -162,7 +232,7 @@ def check_contract_paths(
         if not isinstance(values, list):
             continue
         for index, value in enumerate(values):
-            if isinstance(value, str) and path_escapes(value, capsule, capsule):
+            if isinstance(value, str) and contract_path_rejected(value, capsule, capsule):
                 suffix = f"[{index}]" if field != "packageManager.lockfile" else ""
                 findings.append(
                     Finding(
@@ -180,8 +250,17 @@ def check_contract_paths(
         if not isinstance(command, dict) or command.get("program") is None:
             continue
         program = command.get("program")
-        if isinstance(program, str) and any(marker in program for marker in ("/", "\\")):
-            if path_escapes(program, capsule, capsule):
+        if isinstance(program, str) and "\0" in program:
+            findings.append(
+                Finding(
+                    capsule_label,
+                    relative_file,
+                    f"commands.{name}.program",
+                    "command program contains NUL",
+                )
+            )
+        elif isinstance(program, str) and any(marker in program for marker in ("/", "\\")):
+            if contract_path_rejected(program, capsule, capsule):
                 findings.append(
                     Finding(
                         capsule_label,
@@ -205,16 +284,37 @@ def check_contract_paths(
         for index, argument in enumerate(args):
             if not isinstance(argument, str):
                 continue
+            if "\0" in argument:
+                findings.append(
+                    Finding(
+                        capsule_label,
+                        relative_file,
+                        f"commands.{name}.args[{index}]",
+                        "command argument contains NUL",
+                    )
+                )
+                continue
             for candidate in argument_path_candidates(argument):
+                if credentialed_url(candidate):
+                    findings.append(
+                        Finding(
+                            capsule_label,
+                            relative_file,
+                            f"commands.{name}.args[{index}]",
+                            "command argument embeds URL credentials",
+                        )
+                    )
+                    break
                 if candidate.startswith(("http://", "https://")):
                     continue
                 path_like = (
                     candidate in {".", ".."}
                     or any(marker in candidate for marker in ("/", "\\"))
-                    or bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", candidate))
+                    or bool(re.match(r"^[A-Za-z]:", candidate))
+                    or bool(PACKAGE_PROTOCOL.match(candidate))
                     or Path(candidate).name in ROOT_METADATA_NAMES
                 )
-                if path_like and path_escapes(candidate, capsule, capsule):
+                if path_like and contract_path_rejected(candidate, capsule, capsule):
                     findings.append(
                         Finding(
                             capsule_label,
@@ -239,7 +339,7 @@ def check_contract_paths(
             positional = [item for item in args[args.index("build") + 1 :] if not item.startswith("-")]
             if positional:
                 context = positional[-1]
-                if path_escapes(context, capsule, capsule):
+                if contract_path_rejected(context, capsule, capsule):
                     findings.append(
                         Finding(
                             capsule_label,
@@ -250,9 +350,11 @@ def check_contract_paths(
                     )
 
 
-def check_packages(capsule: Path, capsule_label: str, root: Path, findings: list[Finding]):
+def check_packages(
+    capsule: Path, files: list[Path], capsule_label: str, root: Path, findings: list[Finding]
+):
     manifests: list[tuple[Path, dict]] = []
-    for manifest_path in iter_files(capsule, "package.json"):
+    for manifest_path in iter_files(files, "package.json"):
         manifest = read_json(manifest_path, capsule_label, root, findings)
         if manifest is None:
             continue
@@ -364,8 +466,10 @@ def is_json_config(path: Path) -> bool:
     )
 
 
-def check_json_configs(capsule: Path, capsule_label: str, root: Path, findings: list[Finding]):
-    for config_path in iter_files(capsule):
+def check_json_configs(
+    capsule: Path, files: list[Path], capsule_label: str, root: Path, findings: list[Finding]
+):
+    for config_path in iter_files(files):
         if not is_json_config(config_path):
             continue
         config = read_json(config_path, capsule_label, root, findings)
@@ -420,8 +524,10 @@ def docker_sources(remainder: str):
     return [value.strip("\"'") for value in values[:-1]]
 
 
-def check_dockerfiles(capsule: Path, capsule_label: str, root: Path, findings: list[Finding]):
-    for dockerfile in iter_files(capsule):
+def check_dockerfiles(
+    capsule: Path, files: list[Path], capsule_label: str, root: Path, findings: list[Finding]
+):
+    for dockerfile in iter_files(files):
         if not dockerfile.name.startswith("Dockerfile"):
             continue
         try:
@@ -454,7 +560,131 @@ def check_dockerfiles(capsule: Path, capsule_label: str, root: Path, findings: l
                     )
 
 
-def check_repository(root: Path) -> list[Finding]:
+def known_finding(field: str, message: str) -> Finding:
+    return Finding(KNOWN_LABEL, KNOWN_NONCONFORMANCE, field, message)
+
+
+def reference_is_valid(value: str, root: Path) -> bool:
+    normalized = value.replace("\\", "/")
+    if "\0" in value or is_windows_or_posix_absolute(value) or ".." in normalized.split("/"):
+        return False
+    target = (root / normalized).resolve(strict=False)
+    return is_within(target, root) and target.exists()
+
+
+def load_known_nonconformance(root: Path, findings: list[Finding]) -> dict[str, dict]:
+    """Validated entries by capsule id; any defect is a finding, never a silent skip."""
+    path = root / KNOWN_NONCONFORMANCE
+    if not path.exists() and not path.is_symlink():
+        return {}
+    if path.is_symlink() or not path.is_file():
+        findings.append(known_finding("$", "known-nonconformance record must be a real file"))
+        return {}
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        findings.append(known_finding("$", "cannot safely read valid known-nonconformance JSON"))
+        return {}
+    if not isinstance(record, dict) or set(record) != {"version", "entries"}:
+        findings.append(
+            known_finding("$", "known-nonconformance record must hold exactly version and entries")
+        )
+        return {}
+    if record["version"] != 1:
+        findings.append(known_finding("version", "known-nonconformance version must be 1"))
+        return {}
+    if not isinstance(record["entries"], list):
+        findings.append(known_finding("entries", "known-nonconformance entries must be an array"))
+        return {}
+
+    entries: dict[str, dict] = {}
+    for index, entry in enumerate(record["entries"]):
+        field = f"entries[{index}]"
+        if not isinstance(entry, dict) or set(entry) != set(ENTRY_FIELDS):
+            findings.append(
+                known_finding(
+                    field, f"known-nonconformance entry must hold exactly {', '.join(ENTRY_FIELDS)}"
+                )
+            )
+            continue
+        empty = [
+            name for name in ENTRY_FIELDS if not isinstance(entry[name], str) or not entry[name].strip()
+        ]
+        if empty:
+            findings.append(
+                known_finding(field, f"known-nonconformance fields must be non-empty text: {', '.join(empty)}")
+            )
+            continue
+        capsule = entry["capsule"]
+        if not CAPSULE_ID.match(capsule):
+            findings.append(
+                known_finding(
+                    f"{field}.capsule", "known-nonconformance capsule must be domain/capsule outside _template"
+                )
+            )
+            continue
+        if not ISO_DATE.match(entry["reviewBy"]):
+            findings.append(
+                known_finding(f"{field}.reviewBy", "known-nonconformance reviewBy must be a YYYY-MM-DD date")
+            )
+            continue
+        try:
+            date.fromisoformat(entry["reviewBy"])
+        except ValueError:
+            findings.append(
+                known_finding(f"{field}.reviewBy", "known-nonconformance reviewBy is not a real date")
+            )
+            continue
+        if not reference_is_valid(entry["reference"], root):
+            findings.append(
+                known_finding(
+                    f"{field}.reference", "known-nonconformance reference must be an existing repository path"
+                )
+            )
+            continue
+        if capsule in entries:
+            findings.append(
+                known_finding(f"{field}.capsule", f"duplicate known-nonconformance entry for {capsule}")
+            )
+            continue
+        entries[capsule] = entry
+    return entries
+
+
+def capsule_directories(projects: Path, findings: list[Finding], root: Path) -> list[tuple[str, Path]]:
+    """Every projects/<domain>/<capsule>/ entry except the _template domain."""
+    capsules = []
+    for domain in sorted(projects.iterdir()):
+        if domain.name.startswith("_"):
+            continue
+        if domain.is_symlink():
+            findings.append(
+                Finding(domain.name, repository_relative(domain, root), "$", "domain directory is a symbolic link")
+            )
+            continue
+        if not domain.is_dir():
+            continue
+        for capsule in sorted(domain.iterdir()):
+            label = f"{domain.name}/{capsule.name}"
+            if capsule.is_symlink():
+                findings.append(
+                    Finding(label, repository_relative(capsule, root), "$", "capsule directory is a symbolic link")
+                )
+                continue
+            if capsule.is_dir():
+                capsules.append((label, capsule))
+    return capsules
+
+
+@dataclass
+class Inspection:
+    findings: list[Finding]
+    warnings: list[str]
+    contracted: int
+    recorded: int
+
+
+def inspect_repository(root: Path, today: date | None = None) -> Inspection:
     if not root.is_dir() or root.is_symlink():
         raise UnsafeInputError("repository root must be a real directory")
     root = root.resolve(strict=False)
@@ -462,45 +692,89 @@ def check_repository(root: Path) -> list[Finding]:
     if projects.is_symlink() or (projects.exists() and not projects.is_dir()):
         raise UnsafeInputError("projects root must be a real directory")
 
-    contracts = [] if not projects.exists() else sorted(projects.glob("*/*/project.contract.json"))
     findings: list[Finding] = []
-    for contract_path in contracts:
-        capsule = contract_path.parent.resolve(strict=False)
+    warnings: list[str] = []
+    known = load_known_nonconformance(root, findings)
+    capsules = capsule_directories(projects, findings, root) if projects.exists() else []
+    present = {label for label, _ in capsules}
+    contracted = 0
+
+    for label, capsule_directory in capsules:
+        contract_path = capsule_directory / "project.contract.json"
+        if not (contract_path.exists() or contract_path.is_symlink()):
+            if label not in known:
+                findings.append(
+                    Finding(
+                        label,
+                        repository_relative(capsule_directory, root),
+                        "$",
+                        "capsule has neither project.contract.json nor a known-nonconformance entry",
+                    )
+                )
+            continue
+        if label in known:
+            findings.append(
+                Finding(
+                    label,
+                    KNOWN_NONCONFORMANCE,
+                    "capsule",
+                    "known-nonconformance entry names a capsule that has project.contract.json",
+                )
+            )
+        contracted += 1
+        capsule = capsule_directory.resolve(strict=False)
         if contract_path.is_symlink() or not is_within(capsule, projects.resolve(strict=False)):
             findings.append(
                 Finding(
-                    contract_path.parent.as_posix(),
+                    label,
                     repository_relative(contract_path, root),
                     "$",
                     "contract path is not safely contained",
                 )
             )
             continue
-        fallback_label = contract_path.parent.relative_to(projects).as_posix()
-        contract = read_json(contract_path, fallback_label, root, findings)
+        contract = read_json(contract_path, label, root, findings)
         if contract is None:
             continue
         if not isinstance(contract, dict):
             findings.append(
                 Finding(
-                    fallback_label,
+                    label,
                     repository_relative(contract_path, root),
                     "$",
                     "contract must be a JSON object",
                 )
             )
             continue
-        capsule_label = contract.get("id") if isinstance(contract.get("id"), str) else fallback_label
+        capsule_label = contract.get("id") if isinstance(contract.get("id"), str) else label
+        files = walk_capsule(capsule)
         check_contract_paths(contract, capsule, capsule_label, root, findings)
-        check_packages(capsule, capsule_label, root, findings)
-        check_json_configs(capsule, capsule_label, root, findings)
-        check_dockerfiles(capsule, capsule_label, root, findings)
-    return sorted(set(findings))
+        check_packages(capsule, files, capsule_label, root, findings)
+        check_json_configs(capsule, files, capsule_label, root, findings)
+        check_dockerfiles(capsule, files, capsule_label, root, findings)
+
+    for label in sorted(set(known) - present):
+        findings.append(
+            Finding(
+                label,
+                KNOWN_NONCONFORMANCE,
+                "capsule",
+                "known-nonconformance entry names a capsule directory that does not exist",
+            )
+        )
+    today = today or date.today()
+    for label, entry in sorted(known.items()):
+        if label in present and date.fromisoformat(entry["reviewBy"]) < today:
+            warnings.append(
+                f"warning: known-nonconformance entry {label} is overdue for review "
+                f"(reviewBy {entry['reviewBy']})"
+            )
+    recorded = len([label for label in known if label in present])
+    return Inspection(sorted(set(findings)), warnings, contracted, recorded)
 
 
-def active_capsule_count(root: Path) -> int:
-    projects = root / "projects"
-    return 0 if not projects.exists() else len(list(projects.glob("*/*/project.contract.json")))
+def check_repository(root: Path) -> list[Finding]:
+    return inspect_repository(root).findings
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -508,17 +782,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     arguments = parser.parse_args(argv)
     try:
-        findings = check_repository(arguments.root)
-        count = active_capsule_count(arguments.root.resolve(strict=False))
+        inspection = inspect_repository(arguments.root)
     except UnsafeInputError as error:
         print(f"SAFRS project independence unavailable: {error}", file=sys.stderr)
         return 2
-    if findings:
+    for warning in inspection.warnings:
+        print(warning, file=sys.stderr)
+    if inspection.findings:
         print("SAFRS project independence failed:", file=sys.stderr)
-        for finding in findings:
+        for finding in inspection.findings:
             print(finding.render(), file=sys.stderr)
         return 1
-    print(f"SAFRS project independence: OK ({count} active capsules)")
+    summary = f"{inspection.contracted} active capsules"
+    if inspection.recorded:
+        summary += f", {inspection.recorded} known non-conformance"
+    print(f"SAFRS project independence: OK ({summary})")
     return 0
 
 

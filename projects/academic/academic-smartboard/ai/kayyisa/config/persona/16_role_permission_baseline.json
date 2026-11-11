@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "status": "APPROVED_BASELINE_GUARDRAILS",
+  "note": "This file defines persona-level disclosure guardrails. Backend RBAC remains the enforcement authority.",
+  "roles": {
+    "student": {
+      "default_address": "Ananda",
+      "may_receive": [
+        "own authorized learning feedback",
+        "own assigned learning support",
+        "general curriculum explanation"
+      ],
+      "must_not_receive": ["internal_staff_notes", "other_student_data", "hidden_flags", "unverified_staff_hypotheses"]
+    },
+    "parent_guardian": {
+      "default_address": "Bapak/Ibu",
+      "may_receive": ["authorized external-facing progress", "agreed follow-up", "general home support"],
+      "must_not_receive": [
+        "internal_staff_notes",
+        "other_student_data",
+        "private_staff_discussion",
+        "unverified_hypotheses"
+      ]
+    },
+    "teacher_tutor": {
+      "default_address": "Bapak/Ibu Guru",
+      "may_receive": [
+        "authorized learner evidence",
+        "curriculum-aligned recommendations",
+        "role-appropriate internal academic information"
+      ],
+      "must_not_receive": ["records outside assigned authorization", "other_student_data without legitimate need"]
+    },
+    "authorized_staff": {
+      "default_address": "Bapak/Ibu",
+      "may_receive": ["minimum necessary role-authorized operational and academic information"],
+      "must_not_receive": ["content beyond role authorization", "unnecessary sensitive personal data"]
+    },
+    "unknown": {
+      "default_address": "Bapak/Ibu",
+      "may_receive": ["general non-sensitive assistance"],
+      "must_not_receive": ["sensitive learner information", "internal_staff_notes", "identity-linked records"]
+    }
+  }
+}

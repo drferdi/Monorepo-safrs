@@ -1,0 +1,83 @@
+[
+  {
+    "canScroll": false,
+    "composerWidth": 720,
+    "height": 900,
+    "pageWidth": 1440,
+    "promoWidth": 720,
+    "toolbarFits": true,
+    "width": 1440
+  },
+  {
+    "canScroll": false,
+    "composerWidth": 720,
+    "height": 768,
+    "pageWidth": 1024,
+    "promoWidth": 720,
+    "toolbarFits": true,
+    "width": 1024
+  },
+  {
+    "canScroll": true,
+    "composerWidth": 666,
+    "height": 650,
+    "pageWidth": 950,
+    "promoWidth": 666,
+    "toolbarFits": true,
+    "width": 950
+  },
+  {
+    "canScroll": true,
+    "composerWidth": 477,
+    "height": 650,
+    "pageWidth": 761,
+    "promoWidth": 477,
+    "toolbarFits": true,
+    "width": 761
+  },
+  {
+    "canScroll": true,
+    "composerWidth": 570,
+    "height": 650,
+    "pageWidth": 760,
+    "promoWidth": 570,
+    "toolbarFits": true,
+    "width": 760
+  },
+  {
+    "canScroll": true,
+    "composerWidth": 559,
+    "height": 650,
+    "pageWidth": 601,
+    "promoWidth": 559,
+    "toolbarFits": true,
+    "width": 601
+  },
+  {
+    "canScroll": true,
+    "composerWidth": 558,
+    "height": 650,
+    "pageWidth": 600,
+    "promoWidth": 558,
+    "toolbarFits": true,
+    "width": 600
+  },
+  {
+    "canScroll": false,
+    "composerWidth": 358,
+    "height": 844,
+    "pageWidth": 390,
+    "promoWidth": 358,
+    "toolbarFits": true,
+    "width": 390
+  },
+  {
+    "canScroll": true,
+    "composerWidth": 278,
+    "height": 568,
+    "pageWidth": 320,
+    "promoWidth": 278,
+    "toolbarFits": true,
+    "width": 320
+  }
+]

@@ -1,0 +1,22 @@
+﻿field,type,required,meaning,example
+record_id,string,yes,ID stabil dan unik untuk knowledge atom,CP046-MATEMATIKA-FA
+status,enum,yes,CURRENT / SUPERSEDED / PARTIAL / DEFERRED,CURRENT
+document_id,string,yes,Nomor dokumen sumber,KepKa BSKAP 046/H/KR/2025
+document_role,enum,yes,NORMATIVE_CP / REGULATION / GUIDANCE / INSPIRATION / RESOURCE,NORMATIVE_CP
+authority_tier,integer,yes,Prioritas otoritas; 1 = sumber resmi primer,1
+subject,string,conditional,Nama mata pelajaran terstandardisasi,Matematika
+phase,enum A-F,conditional,Fase kurikulum,D
+education_level,string,conditional,Jenjang operasional,SMP/MTs
+grade_range,string,conditional,Rentang kelas umum untuk fase,Kelas VII-IX
+section_type,enum,yes,Jenis unit konten,CP_PHASE
+content,text,yes,"Teks sumber, bukan ringkasan AI",Fase D ...
+source_page_start,integer,yes,Halaman awal bukti,116
+source_page_end,integer,yes,Halaman akhir bukti,118
+source_url,URL,yes,Lokasi sumber primer atau salinan terverifikasi,https://bpmpbabel.kemendikdasmen.go.id/PPID/wp-content/uploads/2025/07/KepKaBSKAP-046_2025-ttg-CP.pdf
+source_file_sha256,sha256,recommended,Sidik jari file untuk version pinning,45809d2c88a612f90ee5adbd60d71a8952527d6924c626d126ea6926ae3d3394
+content_sha256,sha256,recommended,Sidik jari knowledge atom untuk audit perubahan,3bd248c267e06a64c83e6eb3b94f56368d2c1f215b46d1902ee2f87dd92241f3
+effective_from,date,yes,Tanggal mulai berlaku,2025-07-16
+effective_to,date/null,no,Tanggal berakhir jika dicabut/diganti,
+superseded_by,string/null,no,Dokumen/record pengganti,BKPDM-020-2026
+extraction_method,enum,yes,PDF_TEXT_LAYER / MULTIMODAL_OCR / MANUAL,PDF_TEXT_LAYER
+verification_status,enum,yes,Status pemeriksaan struktur dan isi,AUTOMATED_STRUCTURE_CHECKED

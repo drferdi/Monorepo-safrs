@@ -1,0 +1,32 @@
+{
+  "checkedUtc": "2026-10-08T20:22:44.9750099Z",
+  "sources": [
+    "https://openrouter.ai/api/v1/models",
+    "https://openrouter.ai/api/v1/endpoints/zdr"
+  ],
+  "model": "apodex/apodex-1.1-mini:free",
+  "pricing": {
+    "prompt": "0",
+    "completion": "0"
+  },
+  "contextLength": 262144,
+  "parameters": [
+    "frequency_penalty",
+    "include_reasoning",
+    "max_tokens",
+    "presence_penalty",
+    "reasoning",
+    "repetition_penalty",
+    "response_format",
+    "seed",
+    "stop",
+    "structured_outputs",
+    "temperature",
+    "tool_choice",
+    "tools",
+    "top_k",
+    "top_p"
+  ],
+  "eligibleZdrEndpoints": 1,
+  "liveInferenceTested": false
+}

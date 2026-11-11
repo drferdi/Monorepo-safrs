@@ -1,0 +1,280 @@
+.journey {
+  --neural-bg: #06090e;
+  --neural-white: #e5e9ee;
+  --neural-muted: #95a2b2;
+  --neural-blue: #9bb9d7;
+  --neural-line: rgb(185 208 231 / 19%);
+  --neural-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  background: var(--neural-bg);
+  color: var(--neural-white);
+  font-family: var(--font-inter), sans-serif;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.journey * { box-sizing: border-box; }
+.journey button, .journey a { -webkit-tap-highlight-color: transparent; }
+.journey button { font: inherit; cursor: pointer; }
+.journey a { color: inherit; text-decoration: none; }
+.journey :is(a, button):focus-visible { outline: 1px solid var(--neural-blue); outline-offset: 7px; }
+.stage { position: relative; min-height: 100svh; }
+.atmosphere, .canvas, .vignette { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.atmosphere { background: radial-gradient(ellipse at 67% 40%, rgb(40 59 80 / 20%), transparent 58%), radial-gradient(ellipse at 15% 75%, rgb(22 37 63 / 15%), transparent 50%); }
+.canvas { display: none; }
+.vignette { background: radial-gradient(ellipse at 60% 48%, transparent 30%, rgb(3 5 9 / 48%) 100%); }
+.scrim { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: rgb(6 9 14 / 60%); }
+/* The carrier (brief 2026-10-09 §2): the one entity handed from chapter to chapter, drawn as a
+   soft point of light over the canvases and under the text; the renderer places it every frame.
+   Reading mode, no JavaScript and the text-only fallback show the story without it. */
+.carrier { position: absolute; z-index: 1; top: 0; left: 0; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; pointer-events: none; opacity: 0; --carrier: 235 173 102; background: radial-gradient(circle, rgb(var(--carrier) / 95%) 0, rgb(var(--carrier) / 45%) 18%, rgb(var(--carrier) / 12%) 42%, transparent 70%); mix-blend-mode: screen; will-change: transform, opacity; }
+.journey:not([data-enhanced="cinematic"]) .carrier { display: none; }
+.header { position: absolute; z-index: 4; top: 0; left: 0; width: 100%; padding: 36px 4.2vw; display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+.wordmark { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; letter-spacing: .21em; white-space: nowrap; }
+/* The official mark (Chief 2026-10-09): the neuron, white on transparent. */
+.mark { display: block; width: auto; height: 28px; }
+.wordmarkDot { font-size: 9px; align-self: flex-start; margin-left: -9px; margin-top: 6px; }
+.edition, .specimen, .coordinates, .eyebrow, .annotation, .begin, .controls, .cta, .loading { font-family: var(--neural-mono); }
+.edition { font-size: 11px; color: var(--neural-muted); letter-spacing: .12em; }
+.nav { display: flex; align-items: center; gap: 30px; font-size: 11px; }
+.nav button { color: inherit; border: 0; background: none; padding: 8px 0; }
+.nav a:last-child { border-bottom: 1px solid var(--neural-line); padding-block: 8px; }
+.nav a span { margin-left: 9px; }
+.specimen { position: absolute; left: 4.2vw; top: 150px; display: flex; align-items: center; gap: 14px; font-size: 11px; letter-spacing: .12em; color: var(--neural-muted); }
+.specimen i { width: 44px; height: 1px; background: var(--neural-line); }
+.narrative { position: relative; z-index: 2; }
+.chapter { min-height: 90svh; padding: 210px 8vw 130px; position: relative; display: flex; align-items: center; outline: none; }
+.chapter > div { width: min(600px, 100%); }
+.eyebrow { font-size: 11px; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; color: var(--neural-muted); display: flex; align-items: center; gap: 18px; margin: 0 0 30px; }
+.index { color: var(--neural-blue); font-size: 12px; padding-right: 15px; border-right: 1px solid var(--neural-line); }
+.chapter h1, .chapter h2 { font-family: var(--font-jakarta), sans-serif; font-size: clamp(42px, 5.1vw, 82px); font-weight: 400; line-height: 1.13; letter-spacing: -.045em; margin: 0; }
+/* Direct children only: SplitText nests its own line, mask, word and character spans inside the
+   h2, and a block rule on those would break every word onto its own line. */
+.chapter h1 > span, .chapter h2 > span { display: block; }
+.soft { color: var(--neural-muted); }
+/* Until the experience is ready the opening words wait faint, never hidden (the h1 stays the page's
+   first contentful text), and `revealHero` brings them in. Without scripts, with reduced motion,
+   or once ready (data-loading="false"), they are simply there. If the scripts never start (no
+   data-loading at all), they come up by themselves after a few seconds. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .journey:not([data-loading="false"]) h1 > span { opacity: .08; }
+  .journey:not([data-loading]) h1 > span { animation: hero-unaided .8s 5s forwards; }
+}
+@keyframes hero-unaided { to { opacity: 1; } }
+.description { color: var(--neural-muted); font-size: 12px; line-height: 1.85; max-width: 330px; margin: 28px 0 0; text-wrap: pretty; }
+.annotation { display: flex; align-items: center; gap: 9px; font-size: 11px; letter-spacing: .12em; color: var(--neural-blue); margin-top: 38px; }
+.annotation > span { width: 4px; height: 4px; border: 1px solid var(--neural-blue); border-radius: 50%; }
+.begin { display: flex; align-items: center; gap: 36px; font-size: 11px !important; letter-spacing: .15em; background: none; border: 0; color: var(--neural-white); padding: 0; margin-top: 46px; }
+.begin span { border: 1px solid var(--neural-line); border-radius: 50%; display: grid; place-items: center; width: 30px; height: 30px; font-size: 14px; }
+.division { padding-left: 56%; }
+.division > div { width: 440px; }
+.division h2, .division .description, .division .eyebrow, .centered .description, .centered .annotation, .centered .eyebrow, .overview button { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
+.division h2 { font-size: clamp(32px, 3.2vw, 54px); letter-spacing: -.045em; line-height: 1.2; }
+.division .eyebrow { color: var(--neural-blue); }
+.division .description { max-width: 260px; }
+.marker { position: absolute; right: 47%; top: 44%; width: 24% !important; display: flex; align-items: center; }
+.marker i { display: block; height: 1px; background: linear-gradient(90deg, var(--neural-blue), var(--neural-line)); width: 100%; transform-origin: left; }
+.marker span { flex: 0 0 5px; height: 5px; border-radius: 50%; background: var(--neural-white); box-shadow: 0 0 16px var(--neural-blue); }
+.centered { text-align: center; justify-content: center; padding-left: 5vw; padding-right: 5vw; }
+.centered > div { width: min(850px, 100%); }
+.centered h2 { font-size: clamp(39px, 7.5vw, 112px); letter-spacing: .035em; font-weight: 300; color: rgb(229 233 238 / 92%); text-shadow: 0 0 2px rgb(229 233 238 / 30%), 0 0 30px rgb(6 9 14 / 95%), 0 0 64px rgb(6 9 14 / 85%), 0 0 130px rgb(6 9 14 / 60%); }
+.centered .eyebrow, .centered .annotation { justify-content: center; }
+.centered .description { margin-inline: auto; max-width: 390px; }
+.centered .annotation { margin-top: 28px; }
+/* SentraSquad (Chief 2026-10-09): the team under the network's title, five across, each name over
+   its role, with the chapter's soft halo. */
+.squad { margin-top: 40px; }
+.squad > p { margin: 0 0 18px; font-family: var(--neural-mono); font-size: 11px; letter-spacing: .32em; text-transform: uppercase; color: #91b9d1; }
+.squad ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; width: min(1120px, 90vw); position: relative; left: 50%; translate: -50% 0; }
+.squad li > div { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.squad strong { font-family: var(--font-jakarta), sans-serif; font-size: 18px; font-weight: 500; letter-spacing: .01em; color: #fff; }
+.squad span { font-family: var(--neural-mono); font-size: 11px; line-height: 1.6; letter-spacing: .1em; color: var(--neural-muted); }
+.squad > p, .squad span, .squad strong { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
+.squad span { color: #b4c2d2; }
+.cta { display: inline-flex; align-items: center; gap: 42px; padding: 19px 0; margin-top: 27px; border-bottom: 1px solid var(--neural-blue); font-size: 11px; letter-spacing: .12em; }
+.cta span { font-size: 17px; }
+.coordinates { position: absolute; right: 4.2vw; top: 43%; display: flex; flex-direction: column; gap: 25px; text-align: right; font-size: 11px; line-height: 1.8; color: var(--neural-muted); letter-spacing: .1em; }
+.crosshair { font-size: 21px; color: var(--neural-blue); font-weight: 200; }
+.controls { display: flex; justify-content: space-between; align-items: center; gap: 24px; position: absolute; bottom: 30px; left: 4.2vw; right: 4.2vw; z-index: 5; font-size: 11px; letter-spacing: .08em; color: var(--neural-muted); }
+.chapterStatus { display: flex; align-items: center; gap: 20px; min-width: 230px; }
+.chapterStatus > span:first-child { color: var(--neural-blue); }
+.chapterStatus > span:last-child { text-transform: uppercase; }
+.transport { display: flex; justify-content: center; }
+.transport button { border: 0; background: transparent; padding: 13px 5px; min-height: 44px; }
+.transport span { display: block; width: 2px; height: 10px; background: var(--neural-line); transition: height .2s, background .2s; }
+.transport button[aria-current="step"] span { height: 20px; background: var(--neural-blue); }
+.transport button:hover span { background: var(--neural-white); }
+.settings { display: flex; align-items: center; gap: 24px; }
+.settings button { padding: 12px 0; border: 0; background: transparent; color: inherit; font-size: 11px; letter-spacing: .08em; white-space: nowrap; }
+.soundIcon { font-size: 14px; color: var(--neural-blue); margin-right: 7px; }
+.progress { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--neural-line); z-index: 5; }
+.progress > span { display: block; height: 100%; background: var(--neural-blue); transform: scaleX(0); transform-origin: left; }
+.progress i { position: absolute; bottom: 0; width: 1px; height: 5px; background: var(--neural-line); transform: translateX(-.5px); transition: height .3s, background .3s; }
+.progress i[data-active="true"] { height: 9px; background: var(--neural-blue); }
+/* The signal head: a full-width carrier GSAP translates by (progress - 1) * 100 % (no stylesheet
+   transform, which GSAP would read back as pixels), the dot on its right end, a short glow trailing
+   behind it; without the script there is no progress to ride, so no head. */
+.head { position: absolute; inset: 0; pointer-events: none; }
+.journey:not([data-enhanced]) .head { display: none; }
+.head span { position: absolute; right: -3px; top: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--neural-white); box-shadow: 0 0 10px 2px rgb(155 185 215 / 55%), -14px 0 12px -4px rgb(155 185 215 / 35%); }
+.cursor { position: fixed; z-index: 10; top: -5px; left: -5px; width: 10px; height: 10px; border: 1px solid var(--neural-blue); border-radius: 50%; pointer-events: none; opacity: 0; }
+.cursor[data-active="true"] { box-shadow: 0 0 25px 5px rgb(155 185 215 / 20%); }
+.cursor span { position: absolute; left: 18px; top: -2px; white-space: nowrap; font-family: var(--neural-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--neural-blue); opacity: 0; transition: opacity .25s; }
+.cursor[data-active="true"] span { opacity: 1; }
+.loading { display: none; }
+.journey[data-loading="true"] .loading { display: flex; position: absolute; right: 15%; top: 49%; flex-direction: column; gap: 16px; font-size: 11px; letter-spacing: .1em; color: var(--neural-blue); }
+.loading i { width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--neural-blue), transparent); }
+.overview { display: none; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.overview button { position: absolute; pointer-events: auto; width: 240px; padding: 9px 0; border: 0; border-top: 1px solid var(--neural-line); background: transparent; color: var(--neural-white); font-family: var(--neural-mono); font-size: 12px; line-height: 1.8; text-align: left; }
+.overview button span { margin-right: 10px; color: var(--neural-blue); }
+.overview button:nth-child(1) { left: 16%; top: 29%; }
+.overview button:nth-child(2) { right: 13%; top: 31%; }
+.overview button:nth-child(3) { left: 18%; bottom: 25%; }
+.overview button:nth-child(4) { right: 13%; bottom: 24%; }
+.overview button:nth-child(5) { left: 42%; top: 21%; }
+.journey[data-enhanced="cinematic"] .overview { display: block; visibility: hidden; }
+.skip { position: fixed; z-index: 30; top: 10px; left: 10px; background: var(--neural-bg); border: 1px solid var(--neural-blue); padding: 15px; font-size: 12px; transform: translateY(-200%); }
+.skip:focus { transform: translateY(0); }
+.audioError { position: absolute; bottom: 48px; right: 0; }
+.noScript { padding: 20px 4.2vw; font-size: 12px; }
+.journey[data-enhanced="cinematic"] .stage { height: 100svh; min-height: 100svh; }
+.journey[data-enhanced="cinematic"] .narrative { position: absolute; inset: 0; }
+.journey[data-enhanced="cinematic"] .chapter { position: absolute; inset: 0; min-height: 0; padding-top: 155px; padding-bottom: 125px; }
+.journey[data-enhanced="cinematic"] .chapter > div { pointer-events: auto; }
+.journey[data-enhanced="reading"] .canvas, .journey[data-enhanced="reading"] .atmosphere, .journey[data-enhanced="reading"] .vignette { position: fixed; height: 100svh; opacity: .4; }
+.journey[data-enhanced="reading"] .header { position: fixed; background: rgb(6 9 14 / 94%); padding-block: 20px; }
+.journey[data-enhanced="reading"] .controls { position: fixed; bottom: 0; left: 0; right: 0; padding: 5px 4.2vw; background: rgb(6 9 14 / 95%); }
+.journey[data-enhanced="reading"] .specimen, .journey[data-enhanced="reading"] .coordinates { display: none; }
+.journey[data-enhanced="reading"] .chapter { border-bottom: 1px solid var(--neural-line); }
+
+@media (max-width: 1000px) {
+  .edition { display: none; }
+  .chapterStatus { min-width: 155px; gap: 10px; }
+  .settings { gap: 16px; }
+  .transport button { padding-inline: 4px; }
+  .coordinates { display: none; }
+  .division { padding-left: 49%; }
+  .marker { right: 54%; width: 15% !important; }
+}
+@media (max-width: 767px) {
+  .overview button { width: 150px; font-size: 10px; }
+  .overview button:nth-child(1) { left: 7%; top: 25%; }
+  .overview button:nth-child(2) { right: 7%; top: 27%; }
+  .overview button:nth-child(3) { left: 7%; bottom: auto; top: 34%; }
+  .overview button:nth-child(4) { right: 7%; bottom: auto; top: 36%; }
+  .overview button:nth-child(5) { left: 7%; top: 44%; }
+  .vignette { background: linear-gradient(180deg, rgb(6 9 14 / 90%) 0%, transparent 27%, rgb(6 9 14 / 15%) 42%, rgb(6 9 14 / 85%) 72%, var(--neural-bg) 100%); }
+  .header { padding: 24px 7vw; align-items: flex-start; flex-wrap: wrap; gap: 18px; }
+  .wordmark { font-size: 11px; }
+  .mark { height: 24px; }
+  .nav { width: 100%; justify-content: space-between; gap: 12px; font-size: 10px; }
+  .specimen { top: 135px; left: 7vw; font-size: 10px; gap: 10px; }
+  .specimen i { width: 25px; }
+  .chapter, .division { padding: 240px 7vw 145px; align-items: flex-end; }
+  .journey[data-enhanced="cinematic"] .chapter { padding: 190px 7vw 145px; }
+  .chapter h1, .chapter h2 { font-size: clamp(33px, 8.5vw, 58px); letter-spacing: -.05em; }
+  .centered h2 { font-size: clamp(27px, 7.2vw, 52px); letter-spacing: .015em; }
+  .squad { margin-top: 24px; }
+  .squad > p { margin-bottom: 12px; font-size: 10px; }
+  .squad ul { grid-template-columns: repeat(2, 1fr); gap: 12px 16px; width: 100%; }
+  .squad li:last-child { grid-column: 1 / -1; }
+  .squad strong { font-size: 16px; }
+  .squad span { font-size: 10px; }
+  .eyebrow { margin-bottom: 20px; font-size: 10px; gap: 12px; }
+  .description { margin-top: 20px; font-size: 11px; max-width: 290px; }
+  .annotation { font-size: 10px; margin-top: 22px; line-height: 1.8; }
+  .begin { margin-top: 24px; font-size: 10px !important; }
+  .marker { top: 31%; left: 24%; width: 35% !important; transform: rotate(28deg); }
+  .controls { bottom: 19px; left: 7vw; right: 7vw; flex-wrap: wrap; gap: 8px; }
+  .chapterStatus { font-size: 10px; min-width: 0; flex: 1; gap: 12px; }
+  .chapterStatus > span:first-child { white-space: nowrap; }
+  .transport { order: 3; width: 100%; justify-content: space-between; }
+  .transport button { padding: 7px; min-width: 14px; min-height: 30px; }
+  .settings { gap: 12px; }
+  .settings button { font-size: 10px; }
+  .soundIcon { display: none; }
+  .cursor { display: none; }
+  .journey[data-enhanced="reading"] .header { padding-inline: 7vw; }
+  .journey[data-enhanced="reading"] .controls { padding-inline: 7vw; }
+  .journey[data-enhanced="reading"] .chapter { min-height: 95svh; padding-top: 190px; }
+}
+@media (max-width: 767px) and (max-height: 700px) {
+  .journey[data-enhanced="cinematic"] .chapter { padding-bottom: 112px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey *, .journey *::before, .journey *::after { scroll-behavior: auto !important; transition: none !important; }
+  .cursor { display: none; }
+}
+@media (max-height: 620px) and (min-width: 768px) {
+  .specimen { top: 95px; }
+  .chapter h1, .chapter h2 { font-size: 42px; }
+  .description { margin-top: 16px; }
+  .annotation { margin-top: 18px; }
+  .begin { margin-top: 20px; }
+  .journey[data-enhanced="cinematic"] .chapter { padding-top: 110px; padding-bottom: 90px; }
+}
+/* THE LEGACY (Chief 2026-10-09): the final chapter carries the founder's film (`LegacyScene`,
+   `legacy.module.css`) under its words. In the flow (reading mode, no JavaScript) the scene is a
+   poster above the text; in cinematic mode it fills the stage and the words sit over it with the
+   same soft halo the division chapters use (no backdrop shape). */
+.human { flex-wrap: wrap; row-gap: 40px; }
+.legacyCopy { position: relative; z-index: 1; }
+.legacyCopy h2, .legacyCopy .eyebrow, .tagline, .signature, .brand, .legacyCopy .cta { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
+.legacyCopy h2 { font-weight: 300; letter-spacing: .04em; color: rgb(241 244 248 / 94%); }
+.presence { font-size: 12px; letter-spacing: .32em; color: var(--neural-white); margin-bottom: 34px; }
+.tagline { font-family: var(--font-jakarta), sans-serif; font-size: 14px; font-weight: 300; letter-spacing: .2em; text-transform: uppercase; color: #c5cfda; margin: 26px 0 0; }
+.signature, .brand { font-family: var(--neural-mono); display: flex; flex-direction: column; gap: 9px; letter-spacing: .22em; text-transform: uppercase; margin: 0; }
+.signature { margin-top: 42px; }
+.signature strong { font-family: var(--font-inter), sans-serif; font-size: 13px; font-weight: 500; letter-spacing: .3em; color: var(--neural-white); }
+.signature span, .brand span { font-size: 11px; color: var(--neural-muted); }
+.brand { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--neural-line); gap: 8px; }
+.brand strong { font-size: 12px; font-weight: 400; letter-spacing: .36em; color: #91b9d1; }
+.legacyCopy .cta { margin-top: 30px; }
+/* The ecosystem beside the founder: in the flow it follows the words; on the cinematic stage it
+   stands at the right edge, centred on the figure. Positioned without a transform (the scene
+   tweens its y). */
+.legacyDivisions { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 13px; }
+.legacyDivisions > span { font-family: var(--neural-mono); font-size: 11px; letter-spacing: .36em; text-transform: uppercase; color: #91b9d1; padding-bottom: 16px; margin-bottom: 3px; border-bottom: 1px solid var(--neural-line); }
+.legacyDivisions a { font-family: var(--font-jakarta), sans-serif; font-size: 13px; font-weight: 300; letter-spacing: .06em; color: #c5cfda; text-decoration: none; transition: color .3s; }
+.legacyDivisions a:hover, .legacyDivisions a:focus-visible { color: var(--neural-white); }
+.legacyDivisions > * { text-shadow: 0 0 22px rgb(6 9 14 / 96%), 0 0 44px rgb(6 9 14 / 90%), 0 0 80px rgb(6 9 14 / 70%); }
+@media (min-width: 768px) {
+  .journey[data-enhanced="cinematic"] .legacyDivisions { position: absolute; top: 0; bottom: 0; right: 4.2vw; justify-content: center; align-items: flex-end; text-align: right; pointer-events: none; }
+  .journey[data-enhanced="cinematic"] .legacyDivisions > * { pointer-events: auto; }
+}
+@media (max-width: 767px) {
+  .journey[data-enhanced="cinematic"] .legacyDivisions { display: none; }
+}
+@media (max-width: 767px) {
+  .presence { font-size: 10px; letter-spacing: .26em; margin-bottom: 22px; }
+  .tagline { font-size: 11px; letter-spacing: .16em; margin-top: 18px; }
+  .signature { margin-top: 26px; gap: 6px; }
+  .signature strong { font-size: 12px; }
+  .signature span, .brand span { font-size: 10px; }
+  .brand { margin-top: 20px; padding-top: 16px; }
+  .legacyCopy .cta { margin-top: 20px; }
+}
+/* Short phones: the network chapter makes room for the SentraSquad by leaving its sentence to the
+   reading view, and the squad closes up. */
+@media (max-width: 767px) and (max-height: 700px) {
+  .journey[data-enhanced="cinematic"] .centered .description:has(~ .squad) { display: none; }
+  .squad { margin-top: 16px; }
+  .squad > p { margin-bottom: 8px; }
+  .squad ul { gap: 6px 14px; }
+  .squad li > div { gap: 2px; }
+  .squad strong { font-size: 14px; }
+  .squad span { line-height: 1.4; }
+}
+/* Short phones: the legacy's words close up so the way on clears the controls. */
+@media (max-width: 767px) and (max-height: 700px) {
+  .tagline { margin-top: 12px; }
+  .signature { margin-top: 16px; }
+  .brand { margin-top: 14px; padding-top: 12px; }
+  .legacyCopy .cta { margin-top: 8px; padding-block: 12px; }
+}
+@media (max-height: 620px) and (min-width: 768px) {
+  .presence { margin-bottom: 20px; }
+  .tagline { margin-top: 16px; font-size: 12px; }
+  .signature { margin-top: 24px; }
+  .brand { margin-top: 18px; padding-top: 14px; }
+  .legacyCopy .cta { margin-top: 18px; }
+}

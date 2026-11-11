@@ -35,8 +35,6 @@
     "db:migrate": "pnpm --filter @safrs/database migrate",
     "db:seed": "pnpm --filter @safrs/database seed",
     "db:reset": "pnpm --filter @safrs/database reset",
-    "dev:email": "pnpm --filter @safrs/web dev:email",
-    "stripe:listen": "pnpm --filter @safrs/web stripe:listen",
     "project:new": "node tools/project-wizard/src/cli.mjs",
     "project:status": "node tools/project-standalone/src/cli.mjs status",
     "project:verify": "node tools/project-standalone/src/cli.mjs verify",

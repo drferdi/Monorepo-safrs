@@ -1,0 +1,914 @@
+{
+  "_brand": "Masterplan and masterpiece by codieverse+.",
+  "source": {
+    "file": "data/desease-percentage.xlsx",
+    "sheet": "SIP UKP 2 - Kesakitan Umum",
+    "period_from": "01-2025",
+    "period_to": "05-2026",
+    "metric": "Total",
+    "generated_at": "2026-05-04",
+    "library_size": 100
+  },
+  "items": [
+    {
+      "source_no": 94,
+      "source_name": "Hipertensi Esensial",
+      "normalized_name": "Hipertensi Esensial",
+      "source_icd10": "I10",
+      "primary_icd10": "I10",
+      "total_cases": 8585,
+      "rank": 1
+    },
+    {
+      "source_no": 203,
+      "source_name": "Diabetes Mellitus Tipe 2",
+      "normalized_name": "Diabetes Mellitus Tipe 2",
+      "source_icd10": "E11",
+      "primary_icd10": "E11",
+      "total_cases": 2597,
+      "rank": 2
+    },
+    {
+      "source_no": 153,
+      "source_name": "Rintis Akut",
+      "normalized_name": "Rinitis Akut",
+      "source_icd10": "J00",
+      "primary_icd10": "J00",
+      "total_cases": 1058,
+      "rank": 3
+    },
+    {
+      "source_no": 99,
+      "source_name": "Fraktur Terbuka",
+      "normalized_name": "Fraktur Terbuka",
+      "source_icd10": "T14",
+      "primary_icd10": "T14",
+      "total_cases": 739,
+      "rank": 4
+    },
+    {
+      "source_no": 100,
+      "source_name": "Fraktur Tertutup",
+      "normalized_name": "Fraktur Tertutup",
+      "source_icd10": "T14",
+      "primary_icd10": "T14",
+      "total_cases": 739,
+      "rank": 5
+    },
+    {
+      "source_no": 16,
+      "source_name": "Tuberkulosis (TB) Paru",
+      "normalized_name": "Tuberkulosis (TB) Paru",
+      "source_icd10": "A15",
+      "primary_icd10": "A15",
+      "total_cases": 608,
+      "rank": 6
+    },
+    {
+      "source_no": 34,
+      "source_name": "Gastritis",
+      "normalized_name": "Gastritis",
+      "source_icd10": "K29.7",
+      "primary_icd10": "K29.7",
+      "total_cases": 510,
+      "rank": 7
+    },
+    {
+      "source_no": 131,
+      "source_name": "Gangguan Psikotik",
+      "normalized_name": "Gangguan Psikotik",
+      "source_icd10": "F20;F20.0;F20.1;F20.2;F20.3;F20.3;F20.4;F20.5;F20.",
+      "primary_icd10": "F20",
+      "total_cases": 509,
+      "rank": 8
+    },
+    {
+      "source_no": 35,
+      "source_name": "Gastroenteritis (Kolera dan Giardiasis)",
+      "normalized_name": "Gastroenteritis (Kolera dan Giardiasis)",
+      "source_icd10": "A09",
+      "primary_icd10": "A09",
+      "total_cases": 446,
+      "rank": 9
+    },
+    {
+      "source_no": 143,
+      "source_name": "Influenza",
+      "normalized_name": "Influenza",
+      "source_icd10": "J11",
+      "primary_icd10": "J11",
+      "total_cases": 313,
+      "rank": 10
+    },
+    {
+      "source_no": 162,
+      "source_name": "Dermatitis Atopik",
+      "normalized_name": "Dermatitis Atopik",
+      "source_icd10": "L20",
+      "primary_icd10": "L20",
+      "total_cases": 305,
+      "rank": 11
+    },
+    {
+      "source_no": 134,
+      "source_name": "Asma Bronkial",
+      "normalized_name": "Asma Bronkial",
+      "source_icd10": "J45",
+      "primary_icd10": "J45",
+      "total_cases": 226,
+      "rank": 12
+    },
+    {
+      "source_no": 202,
+      "source_name": "Diabetes Mellitus Tipe 1",
+      "normalized_name": "Diabetes Mellitus Tipe 1",
+      "source_icd10": "E10",
+      "primary_icd10": "E10",
+      "total_cases": 214,
+      "rank": 13
+    },
+    {
+      "source_no": 88,
+      "source_name": "Serumen Prop",
+      "normalized_name": "Serumen Prop",
+      "source_icd10": "H61.2",
+      "primary_icd10": "H61.2",
+      "total_cases": 155,
+      "rank": 14
+    },
+    {
+      "source_no": 141,
+      "source_name": "Faringitis Akut",
+      "normalized_name": "Faringitis Akut",
+      "source_icd10": "J02.9",
+      "primary_icd10": "J02.9",
+      "total_cases": 145,
+      "rank": 15
+    },
+    {
+      "source_no": 163,
+      "source_name": "Dermatitis Kontak Alergi",
+      "normalized_name": "Dermatitis Kontak Alergi",
+      "source_icd10": "L23",
+      "primary_icd10": "L23",
+      "total_cases": 120,
+      "rank": 16
+    },
+    {
+      "source_no": 15,
+      "source_name": "TB selain Paru (ekstra paru)",
+      "normalized_name": "TB selain Paru (ekstra paru)",
+      "source_icd10": "A18",
+      "primary_icd10": "A18",
+      "total_cases": 104,
+      "rank": 17
+    },
+    {
+      "source_no": 124,
+      "source_name": "Vertigo",
+      "normalized_name": "Vertigo",
+      "source_icd10": "R42",
+      "primary_icd10": "R42",
+      "total_cases": 102,
+      "rank": 18
+    },
+    {
+      "source_no": 216,
+      "source_name": "Infeksi Saluran Kemih",
+      "normalized_name": "Infeksi Saluran Kemih",
+      "source_icd10": "N39.0",
+      "primary_icd10": "N39.0",
+      "total_cases": 88,
+      "rank": 19
+    },
+    {
+      "source_no": 147,
+      "source_name": "Penyakit Paru Obstruktif Kronis",
+      "normalized_name": "Penyakit Paru Obstruktif Kronis",
+      "source_icd10": "J44.9",
+      "primary_icd10": "J44.9",
+      "total_cases": 85,
+      "rank": 20
+    },
+    {
+      "source_no": 197,
+      "source_name": "Skabies",
+      "normalized_name": "Skabies",
+      "source_icd10": "B86",
+      "primary_icd10": "B86",
+      "total_cases": 78,
+      "rank": 21
+    },
+    {
+      "source_no": 4,
+      "source_name": "Demam dengue",
+      "normalized_name": "Demam dengue",
+      "source_icd10": "A90",
+      "primary_icd10": "A90",
+      "total_cases": 77,
+      "rank": 22
+    },
+    {
+      "source_no": 107,
+      "source_name": "Vulnus",
+      "normalized_name": "Vulnus",
+      "source_icd10": "T14.1",
+      "primary_icd10": "T14.1",
+      "total_cases": 73,
+      "rank": 23
+    },
+    {
+      "source_no": 120,
+      "source_name": "Tension Headache",
+      "normalized_name": "Tension Headache",
+      "source_icd10": "G44.2",
+      "primary_icd10": "G44.2",
+      "total_cases": 69,
+      "rank": 24
+    },
+    {
+      "source_no": 192,
+      "source_name": "Pioderma",
+      "normalized_name": "Pioderma",
+      "source_icd10": "L08.0",
+      "primary_icd10": "L08.0",
+      "total_cases": 57,
+      "rank": 25
+    },
+    {
+      "source_no": 130,
+      "source_name": "Gangguan Perkembangan dan Perilaku Pada Anak dan Remaja",
+      "normalized_name": "Gangguan Perkembangan dan Perilaku Pada Anak dan Remaja",
+      "source_icd10": "F80;F80.0;F80.1;F80.2;F80.3;F80.8;F80.9;F90;F90.0;",
+      "primary_icd10": "F80",
+      "total_cases": 53,
+      "rank": 26
+    },
+    {
+      "source_no": 208,
+      "source_name": "Lipidemia",
+      "normalized_name": "Lipidemia",
+      "source_icd10": "E78.5",
+      "primary_icd10": "E78.5",
+      "total_cases": 52,
+      "rank": 27
+    },
+    {
+      "source_no": 56,
+      "source_name": "Ulkus mulut",
+      "normalized_name": "Ulkus mulut",
+      "source_icd10": "K12",
+      "primary_icd10": "K12",
+      "total_cases": 44,
+      "rank": 28
+    },
+    {
+      "source_no": 86,
+      "source_name": "Otitis Media Supuratif Kronik",
+      "normalized_name": "Otitis Media Supuratif Kronik",
+      "source_icd10": "H66",
+      "primary_icd10": "H66",
+      "total_cases": 44,
+      "rank": 29
+    },
+    {
+      "source_no": 190,
+      "source_name": "Abses, furuncke dan carbuncle",
+      "normalized_name": "Abses, Furuncle dan Carbuncle",
+      "source_icd10": "L02",
+      "primary_icd10": "L02",
+      "total_cases": 42,
+      "rank": 30
+    },
+    {
+      "source_no": 32,
+      "source_name": "Demam tifoid",
+      "normalized_name": "Demam tifoid",
+      "source_icd10": "A01.0",
+      "primary_icd10": "A01.0",
+      "total_cases": 39,
+      "rank": 31
+    },
+    {
+      "source_no": 214,
+      "source_name": "Hipertropi Prostat",
+      "normalized_name": "Hipertrofi Prostat",
+      "source_icd10": "N40",
+      "primary_icd10": "N40",
+      "total_cases": 39,
+      "rank": 32
+    },
+    {
+      "source_no": 66,
+      "source_name": "Hordeolum",
+      "normalized_name": "Hordeolum",
+      "source_icd10": "H00.0",
+      "primary_icd10": "H00.0",
+      "total_cases": 37,
+      "rank": 33
+    },
+    {
+      "source_no": 200,
+      "source_name": "Urtikaria",
+      "normalized_name": "Urtikaria",
+      "source_icd10": "L50",
+      "primary_icd10": "L50",
+      "total_cases": 35,
+      "rank": 34
+    },
+    {
+      "source_no": 19,
+      "source_name": "Anemia defisiensi besi",
+      "normalized_name": "Anemia defisiensi besi",
+      "source_icd10": "D50",
+      "primary_icd10": "D50",
+      "total_cases": 30,
+      "rank": 35
+    },
+    {
+      "source_no": 222,
+      "source_name": "Anemia Defisiensi Besi pada Kehamilan",
+      "normalized_name": "Anemia Defisiensi Besi pada Kehamilan",
+      "source_icd10": "D50",
+      "primary_icd10": "D50",
+      "total_cases": 30,
+      "rank": 36
+    },
+    {
+      "source_no": 154,
+      "source_name": "Rintis Alergi",
+      "normalized_name": "Rinitis Alergi",
+      "source_icd10": "J30.4",
+      "primary_icd10": "J30.4",
+      "total_cases": 29,
+      "rank": 37
+    },
+    {
+      "source_no": 171,
+      "source_name": "Tinea corporis",
+      "normalized_name": "Tinea corporis",
+      "source_icd10": "B35.4",
+      "primary_icd10": "B35.4",
+      "total_cases": 26,
+      "rank": 38
+    },
+    {
+      "source_no": 59,
+      "source_name": "Blefaritis",
+      "normalized_name": "Blefaritis",
+      "source_icd10": "H01.0",
+      "primary_icd10": "H01.0",
+      "total_cases": 25,
+      "rank": 39
+    },
+    {
+      "source_no": 174,
+      "source_name": "Tinea pedis",
+      "normalized_name": "Tinea pedis",
+      "source_icd10": "B35.3",
+      "primary_icd10": "B35.3",
+      "total_cases": 24,
+      "rank": 40
+    },
+    {
+      "source_no": 77,
+      "source_name": "Pterygium",
+      "normalized_name": "Pterygium",
+      "source_icd10": "H11.0",
+      "primary_icd10": "H11.0",
+      "total_cases": 23,
+      "rank": 41
+    },
+    {
+      "source_no": 150,
+      "source_name": "Bronkopneumonia",
+      "normalized_name": "Bronkopneumonia",
+      "source_icd10": "J18.0",
+      "primary_icd10": "J18.0",
+      "total_cases": 20,
+      "rank": 42
+    },
+    {
+      "source_no": 158,
+      "source_name": "Tonsilitis Akut",
+      "normalized_name": "Tonsilitis Akut",
+      "source_icd10": "J03.9",
+      "primary_icd10": "J03.9",
+      "total_cases": 20,
+      "rank": 43
+    },
+    {
+      "source_no": 235,
+      "source_name": "Tumor Payudara",
+      "normalized_name": "Tumor Payudara",
+      "source_icd10": "C50.9",
+      "primary_icd10": "C50.9",
+      "total_cases": 20,
+      "rank": 44
+    },
+    {
+      "source_no": 49,
+      "source_name": "Parotitis",
+      "normalized_name": "Parotitis",
+      "source_icd10": "B26",
+      "primary_icd10": "B26",
+      "total_cases": 19,
+      "rank": 45
+    },
+    {
+      "source_no": 156,
+      "source_name": "Sinusitis Akut",
+      "normalized_name": "Sinusitis Akut",
+      "source_icd10": "J01",
+      "primary_icd10": "J01",
+      "total_cases": 19,
+      "rank": 46
+    },
+    {
+      "source_no": 205,
+      "source_name": "Hiperurisemia - Gout Athritis",
+      "normalized_name": "Hiperurisemia - Gout Arthritis",
+      "source_icd10": "E79.0",
+      "primary_icd10": "E79.0",
+      "total_cases": 19,
+      "rank": 47
+    },
+    {
+      "source_no": 82,
+      "source_name": "Benda asing ditelinga",
+      "normalized_name": "Benda Asing di Telinga",
+      "source_icd10": "T16",
+      "primary_icd10": "T16",
+      "total_cases": 18,
+      "rank": 48
+    },
+    {
+      "source_no": 126,
+      "source_name": "Gangguan Anxietas",
+      "normalized_name": "Gangguan Anxietas",
+      "source_icd10": "F40;F40.1;F40.1;F40.2;F40.8;F40.9",
+      "primary_icd10": "F40",
+      "total_cases": 18,
+      "rank": 49
+    },
+    {
+      "source_no": 109,
+      "source_name": "Bells Palsy",
+      "normalized_name": "Bell Palsy",
+      "source_icd10": "G51.0",
+      "primary_icd10": "G51.0",
+      "total_cases": 16,
+      "rank": 50
+    },
+    {
+      "source_no": 185,
+      "source_name": "Luka bakar derajat I dan II",
+      "normalized_name": "Luka bakar derajat I dan II",
+      "source_icd10": "T30",
+      "primary_icd10": "T30",
+      "total_cases": 15,
+      "rank": 51
+    },
+    {
+      "source_no": 37,
+      "source_name": "Hemoroid grade 1-2",
+      "normalized_name": "Hemoroid grade 1-2",
+      "source_icd10": "I84",
+      "primary_icd10": "I84",
+      "total_cases": 14,
+      "rank": 52
+    },
+    {
+      "source_no": 164,
+      "source_name": "Dermatitis Kontak Iritan",
+      "normalized_name": "Dermatitis Kontak Iritan",
+      "source_icd10": "L24",
+      "primary_icd10": "L24",
+      "total_cases": 14,
+      "rank": 53
+    },
+    {
+      "source_no": 186,
+      "source_name": "Milaria",
+      "normalized_name": "Milaria",
+      "source_icd10": "L74.3",
+      "primary_icd10": "L74.3",
+      "total_cases": 14,
+      "rank": 54
+    },
+    {
+      "source_no": 70,
+      "source_name": "Konjungtivitis infeksi",
+      "normalized_name": "Konjungtivitis infeksi",
+      "source_icd10": "H10.9",
+      "primary_icd10": "H10.9",
+      "total_cases": 12,
+      "rank": 55
+    },
+    {
+      "source_no": 95,
+      "source_name": "Infark Miokard",
+      "normalized_name": "Infark Miokard",
+      "source_icd10": "I21.9",
+      "primary_icd10": "I21.9",
+      "total_cases": 12,
+      "rank": 56
+    },
+    {
+      "source_no": 191,
+      "source_name": "Impetigo",
+      "normalized_name": "Impetigo",
+      "source_icd10": "L01",
+      "primary_icd10": "L01",
+      "total_cases": 12,
+      "rank": 57
+    },
+    {
+      "source_no": 84,
+      "source_name": "Otitis Eksterna",
+      "normalized_name": "Otitis Eksterna",
+      "source_icd10": "H60.9",
+      "primary_icd10": "H60.9",
+      "total_cases": 11,
+      "rank": 58
+    },
+    {
+      "source_no": 194,
+      "source_name": "Pitiarisis Versikolor",
+      "normalized_name": "Pitiriasis Versikolor",
+      "source_icd10": "B36.0",
+      "primary_icd10": "B36.0",
+      "total_cases": 11,
+      "rank": 59
+    },
+    {
+      "source_no": 230,
+      "source_name": "Mastitis",
+      "normalized_name": "Mastitis",
+      "source_icd10": "N61",
+      "primary_icd10": "N61",
+      "total_cases": 11,
+      "rank": 60
+    },
+    {
+      "source_no": 140,
+      "source_name": "Epistaksis",
+      "normalized_name": "Epistaksis",
+      "source_icd10": "R04.0",
+      "primary_icd10": "R04.0",
+      "total_cases": 10,
+      "rank": 61
+    },
+    {
+      "source_no": 165,
+      "source_name": "Dermatitis Numularis",
+      "normalized_name": "Dermatitis Numularis",
+      "source_icd10": "L20.8",
+      "primary_icd10": "L20.8",
+      "total_cases": 10,
+      "rank": 62
+    },
+    {
+      "source_no": 52,
+      "source_name": "Refluksgastroesofageal",
+      "normalized_name": "Refluks Gastroesofageal",
+      "source_icd10": "K21.9",
+      "primary_icd10": "K21.9",
+      "total_cases": 9,
+      "rank": 63
+    },
+    {
+      "source_no": 85,
+      "source_name": "Otitis Media Akut",
+      "normalized_name": "Otitis Media Akut",
+      "source_icd10": "H65",
+      "primary_icd10": "H65",
+      "total_cases": 9,
+      "rank": 64
+    },
+    {
+      "source_no": 91,
+      "source_name": "Angina Pektoris Stabil",
+      "normalized_name": "Angina Pektoris Stabil",
+      "source_icd10": "I20.9",
+      "primary_icd10": "I20.9",
+      "total_cases": 9,
+      "rank": 65
+    },
+    {
+      "source_no": 93,
+      "source_name": "Gagal Jantung akut dan kronik",
+      "normalized_name": "Gagal Jantung akut dan kronik",
+      "source_icd10": "I50.9",
+      "primary_icd10": "I50.9",
+      "total_cases": 9,
+      "rank": 66
+    },
+    {
+      "source_no": 18,
+      "source_name": "Varisela",
+      "normalized_name": "Varisela",
+      "source_icd10": "B01.9",
+      "primary_icd10": "B01.9",
+      "total_cases": 8,
+      "rank": 67
+    },
+    {
+      "source_no": 72,
+      "source_name": "Low vision",
+      "normalized_name": "Low vision",
+      "source_icd10": "H54",
+      "primary_icd10": "H54",
+      "total_cases": 8,
+      "rank": 68
+    },
+    {
+      "source_no": 112,
+      "source_name": "Kejang Demam",
+      "normalized_name": "Kejang Demam",
+      "source_icd10": "R56.0",
+      "primary_icd10": "R56.0",
+      "total_cases": 8,
+      "rank": 69
+    },
+    {
+      "source_no": 167,
+      "source_name": "Dermatitis Popok",
+      "normalized_name": "Dermatitis Popok",
+      "source_icd10": "L22",
+      "primary_icd10": "L22",
+      "total_cases": 8,
+      "rank": 70
+    },
+    {
+      "source_no": 211,
+      "source_name": "Tirotoksikosis",
+      "normalized_name": "Tirotoksikosis",
+      "source_icd10": "E05.9",
+      "primary_icd10": "E05.9",
+      "total_cases": 8,
+      "rank": 71
+    },
+    {
+      "source_no": 213,
+      "source_name": "Fimosis",
+      "normalized_name": "Fimosis",
+      "source_icd10": "N47",
+      "primary_icd10": "N47",
+      "total_cases": 8,
+      "rank": 72
+    },
+    {
+      "source_no": 227,
+      "source_name": "Kanker Serviks",
+      "normalized_name": "Kanker Serviks",
+      "source_icd10": "C53.9",
+      "primary_icd10": "C53.9",
+      "total_cases": 8,
+      "rank": 73
+    },
+    {
+      "source_no": 73,
+      "source_name": "Mata kering",
+      "normalized_name": "Mata kering",
+      "source_icd10": "H04.1",
+      "primary_icd10": "H04.1",
+      "total_cases": 7,
+      "rank": 74
+    },
+    {
+      "source_no": 155,
+      "source_name": "Rintis Vacomotor",
+      "normalized_name": "Rinitis Vasomotor",
+      "source_icd10": "J30.0",
+      "primary_icd10": "J30.0",
+      "total_cases": 7,
+      "rank": 75
+    },
+    {
+      "source_no": 172,
+      "source_name": "Tinea corporis",
+      "normalized_name": "Tinea corporis",
+      "source_icd10": "B35.6",
+      "primary_icd10": "B35.6",
+      "total_cases": 7,
+      "rank": 76
+    },
+    {
+      "source_no": 68,
+      "source_name": "Katarak pada pasien dewasa",
+      "normalized_name": "Katarak pada pasien dewasa",
+      "source_icd10": "H26.9",
+      "primary_icd10": "H26.9",
+      "total_cases": 6,
+      "rank": 77
+    },
+    {
+      "source_no": 119,
+      "source_name": "Stroke",
+      "normalized_name": "Stroke",
+      "source_icd10": "I63.9",
+      "primary_icd10": "I63.9",
+      "total_cases": 6,
+      "rank": 78
+    },
+    {
+      "source_no": 184,
+      "source_name": "Liken Simpleks Kronik (Neurodermatitis Sirkumripta)",
+      "normalized_name": "Liken Simpleks Kronik (Neurodermatitis Sirkumripta)",
+      "source_icd10": "L28.0",
+      "primary_icd10": "L28.0",
+      "total_cases": 6,
+      "rank": 79
+    },
+    {
+      "source_no": 209,
+      "source_name": "Malnutrisi Energi Protein",
+      "normalized_name": "Malnutrisi Energi Protein",
+      "source_icd10": "E46",
+      "primary_icd10": "E46",
+      "total_cases": 6,
+      "rank": 80
+    },
+    {
+      "source_no": 3,
+      "source_name": "Demam berdarah dengue",
+      "normalized_name": "Demam berdarah dengue",
+      "source_icd10": "A91",
+      "primary_icd10": "A91",
+      "total_cases": 5,
+      "rank": 81
+    },
+    {
+      "source_no": 127,
+      "source_name": "Gangguan Campuran Anxietas dan Depresi",
+      "normalized_name": "Gangguan Campuran Anxietas dan Depresi",
+      "source_icd10": "F41.2",
+      "primary_icd10": "F41.2",
+      "total_cases": 5,
+      "rank": 82
+    },
+    {
+      "source_no": 168,
+      "source_name": "Dermatitis Seboroik",
+      "normalized_name": "Dermatitis Seboroik",
+      "source_icd10": "L21",
+      "primary_icd10": "L21",
+      "total_cases": 5,
+      "rank": 83
+    },
+    {
+      "source_no": 25,
+      "source_name": "Thalasemia",
+      "normalized_name": "Thalasemia",
+      "source_icd10": "D56",
+      "primary_icd10": "D56",
+      "total_cases": 4,
+      "rank": 84
+    },
+    {
+      "source_no": 98,
+      "source_name": "Artritis, Osteoartritis",
+      "normalized_name": "Artritis, Osteoartritis",
+      "source_icd10": "M19.9",
+      "primary_icd10": "M19.9",
+      "total_cases": 4,
+      "rank": 85
+    },
+    {
+      "source_no": 133,
+      "source_name": "Insomnia",
+      "normalized_name": "Insomnia",
+      "source_icd10": "F51.0",
+      "primary_icd10": "F51.0",
+      "total_cases": 4,
+      "rank": 86
+    },
+    {
+      "source_no": 145,
+      "source_name": "Kanker Paru",
+      "normalized_name": "Kanker Paru",
+      "source_icd10": "C34.9",
+      "primary_icd10": "C34.9",
+      "total_cases": 4,
+      "rank": 87
+    },
+    {
+      "source_no": 175,
+      "source_name": "Tinea Ungium",
+      "normalized_name": "Tinea Ungium",
+      "source_icd10": "B35.1",
+      "primary_icd10": "B35.1",
+      "total_cases": 4,
+      "rank": 88
+    },
+    {
+      "source_no": 181,
+      "source_name": "Hepes Simplek",
+      "normalized_name": "Herpes Simpleks",
+      "source_icd10": "B00.9",
+      "primary_icd10": "B00.9",
+      "total_cases": 4,
+      "rank": 89
+    },
+    {
+      "source_no": 195,
+      "source_name": "Reaksi Gigitan Serangga",
+      "normalized_name": "Reaksi Gigitan Serangga",
+      "source_icd10": "T63.4",
+      "primary_icd10": "T63.4",
+      "total_cases": 4,
+      "rank": 90
+    },
+    {
+      "source_no": 206,
+      "source_name": "Hipoglikemia",
+      "normalized_name": "Hipoglikemia",
+      "source_icd10": "E16.2",
+      "primary_icd10": "E16.2",
+      "total_cases": 4,
+      "rank": 91
+    },
+    {
+      "source_no": 219,
+      "source_name": "Pielonefritis tanpa komplikasi",
+      "normalized_name": "Pielonefritis tanpa komplikasi",
+      "source_icd10": "N10",
+      "primary_icd10": "N10",
+      "total_cases": 4,
+      "rank": 92
+    },
+    {
+      "source_no": 9,
+      "source_name": "Lepra",
+      "normalized_name": "Lepra",
+      "source_icd10": "A30",
+      "primary_icd10": "A30",
+      "total_cases": 3,
+      "rank": 93
+    },
+    {
+      "source_no": 17,
+      "source_name": "Tuberkulosis dengan HIV",
+      "normalized_name": "Tuberkulosis dengan HIV",
+      "source_icd10": "B20.0",
+      "primary_icd10": "B20.0",
+      "total_cases": 3,
+      "rank": 94
+    },
+    {
+      "source_no": 39,
+      "source_name": "Hepatitis B",
+      "normalized_name": "Hepatitis B",
+      "source_icd10": "B16",
+      "primary_icd10": "B16",
+      "total_cases": 3,
+      "rank": 95
+    },
+    {
+      "source_no": 50,
+      "source_name": "Perdarahan gastrointestinal",
+      "normalized_name": "Perdarahan gastrointestinal",
+      "source_icd10": "K92.9;K62.5",
+      "primary_icd10": "K92.9",
+      "total_cases": 3,
+      "rank": 96
+    },
+    {
+      "source_no": 64,
+      "source_name": "Hifema",
+      "normalized_name": "Hifema",
+      "source_icd10": "H21.0",
+      "primary_icd10": "H21.0",
+      "total_cases": 3,
+      "rank": 97
+    },
+    {
+      "source_no": 69,
+      "source_name": "Konjungtivitis alergi",
+      "normalized_name": "Konjungtivitis alergi",
+      "source_icd10": "H10.1",
+      "primary_icd10": "H10.1",
+      "total_cases": 3,
+      "rank": 98
+    },
+    {
+      "source_no": 74,
+      "source_name": "Miopa ringan",
+      "normalized_name": "Miopia Ringan",
+      "source_icd10": "H52.1",
+      "primary_icd10": "H52.1",
+      "total_cases": 3,
+      "rank": 99
+    },
+    {
+      "source_no": 79,
+      "source_name": "Retinopati Diabetik",
+      "normalized_name": "Retinopati Diabetik",
+      "source_icd10": "H36.0",
+      "primary_icd10": "H36.0",
+      "total_cases": 3,
+      "rank": 100
+    }
+  ]
+}

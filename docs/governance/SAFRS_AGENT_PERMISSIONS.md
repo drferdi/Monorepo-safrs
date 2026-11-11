@@ -38,6 +38,6 @@ Machine-checked today: `.safrs/automation-policy.json` records the
 publisher's `may` / `may_not` lists and `check_automation_policy.py`
 enforces their shape; `.github/workflows/safrs-publish.yml` holds
 `pull-requests: write` and nothing else, granted through the explicit
-`workflow_write_permissions` allowlist. Until Chief approves the separate
+`workflow_write_permissions` allowlist. Until Gaffer approves the separate
 publisher identity (Activation Decision 2) that workflow is
 evaluation-only and requests nothing.

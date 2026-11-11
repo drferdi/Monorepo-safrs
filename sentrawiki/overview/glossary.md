@@ -5,7 +5,7 @@ Project-specific terms. Prefer these over inventing synonyms.
 | Term | Definition |
 | --- | --- |
 | **SAFRS** | Sentra Agent-First Repository Standard. Current version: v1.1. Spec: `SAFRS_SPEC.md`. |
-| **Chief** | Dr. Ferdi Iskandar — the human authority for this repository. |
+| **Gaffer** | Dr. Ferdi Iskandar — the human authority for this repository. |
 | **Control plane** | The repository root: policy, orchestration, verification. Optional for capsule survival. |
 | **Project capsule** | A sovereign project at `projects/<domain>/<capsule>/`. Must remain operable after extraction. |
 | **Domain folder** | `projects/<domain>/` — routing only (`AGENTS.md` + `README.md`). No application code. |

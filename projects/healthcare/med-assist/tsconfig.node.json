@@ -1,0 +1,11 @@
+{
+  "_brand": "Masterplan and masterpiece by Drferdi.",
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["wxt.config.ts"]
+}

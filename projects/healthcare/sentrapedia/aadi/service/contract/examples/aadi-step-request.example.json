@@ -1,0 +1,197 @@
+{
+  "contractVersion": "1",
+  "traceId": "example-trace-0001",
+  "case": {
+    "demographics": {
+      "ageYears": 22,
+      "sex": "M"
+    },
+    "chiefComplaint": "Abdominal pain",
+    "anamnesis": {
+      "freeText": "22-year-old man with no significant past medical history presents with abdominal pain that started about 20 hours ago. The pain began as a dull ache around the belly button and over the last 10 hours moved to the right lower abdomen, where it is now sharp, constant, and rated 7 out of 10. Walking, coughing, and going over bumps in the car make it worse; lying still helps a little. He has lost his appetite since yesterday evening and vomited twice this morning (food, no blood, no bile). He felt warm and had chills overnight but did not measure his temperature. Last bowel movement was yesterday morning and was normal; no diarrhea, no blood in stool. No burning on urination, no blood in urine, no increased urinary frequency, no flank pain. No testicular pain or swelling. No cough, shortness of breath, or chest pain. No recent travel, no sick contacts, no new foods. No previous abdominal surgery. No known drug allergies. Does not smoke, drinks alcohol occasionally on weekends, no drug use. Works as a university student. Family history is non-contributory."
+    },
+    "vitals": {
+      "systolic": 128,
+      "diastolic": 78,
+      "heartRate": 104,
+      "respiratoryRate": 18,
+      "temperature": 38.1,
+      "spo2": 99
+    },
+    "physicalExam": [
+      "Vitals: T 100.6 F, HR 104, BP 128/78, RR 18, SpO2 99% on room air.",
+      "General: Young man lying still on the stretcher, appears uncomfortable, in moderate distress due to pain.",
+      "HEENT: Dry mucous membranes, no scleral icterus.",
+      "Neck: Supple.",
+      "Cardiovascular: Tachycardic, regular rhythm, no murmurs.",
+      "Lungs: Clear to auscultation bilaterally, no crackles or wheezes.",
+      "Abdomen: Soft, non-distended. Hypoactive bowel sounds. Tenderness maximal in the right lower quadrant at McBurney's point with voluntary guarding and localized rebound tenderness. Positive Rovsing sign. Positive psoas sign. No palpable mass. No hepatosplenomegaly. No costovertebral angle tenderness.",
+      "Genitourinary: Normal external genitalia, testes non-tender without swelling.",
+      "Rectal: Deferred.",
+      "Extremities: Warm, no edema.",
+      "Neuro: Alert and oriented, no focal deficits.",
+      "Skin: No rash, no jaundice."
+    ],
+    "results": [
+      {
+        "name": "White Blood Cells",
+        "value": 15.8,
+        "unit": "K/uL",
+        "flag": "abnormal"
+      },
+      {
+        "name": "Neutrophils",
+        "value": 86,
+        "unit": "%",
+        "flag": "abnormal"
+      },
+      {
+        "name": "Lymphocytes",
+        "value": 9,
+        "unit": "%",
+        "flag": "abnormal"
+      },
+      {
+        "name": "Hemoglobin",
+        "value": 15.1,
+        "unit": "g/dL"
+      },
+      {
+        "name": "Hematocrit",
+        "value": 44.2,
+        "unit": "%"
+      },
+      {
+        "name": "Platelet Count",
+        "value": 268,
+        "unit": "K/uL"
+      },
+      {
+        "name": "Sodium",
+        "value": 138,
+        "unit": "mEq/L"
+      },
+      {
+        "name": "Potassium",
+        "value": 4,
+        "unit": "mEq/L"
+      },
+      {
+        "name": "Chloride",
+        "value": 101,
+        "unit": "mEq/L"
+      },
+      {
+        "name": "Bicarbonate",
+        "value": 24,
+        "unit": "mEq/L"
+      },
+      {
+        "name": "Urea Nitrogen",
+        "value": 14,
+        "unit": "mg/dL"
+      },
+      {
+        "name": "Creatinine",
+        "value": 0.9,
+        "unit": "mg/dL"
+      },
+      {
+        "name": "Glucose",
+        "value": 102,
+        "unit": "mg/dL",
+        "flag": "abnormal"
+      },
+      {
+        "name": "C-Reactive Protein",
+        "value": 48,
+        "unit": "mg/L",
+        "flag": "abnormal"
+      },
+      {
+        "name": "Lipase",
+        "value": 32,
+        "unit": "IU/L"
+      },
+      {
+        "name": "Alanine Aminotransferase (ALT)",
+        "value": 22,
+        "unit": "IU/L"
+      },
+      {
+        "name": "Asparate Aminotransferase (AST)",
+        "value": 24,
+        "unit": "IU/L"
+      },
+      {
+        "name": "Alkaline Phosphatase",
+        "value": 71,
+        "unit": "IU/L"
+      },
+      {
+        "name": "Bilirubin, Total",
+        "value": 0.8,
+        "unit": "mg/dL"
+      },
+      {
+        "name": "Lactate",
+        "value": 1.4,
+        "unit": "mmol/L"
+      },
+      {
+        "name": "Specific Gravity",
+        "value": 1.024
+      },
+      {
+        "name": "pH",
+        "value": 6,
+        "unit": "units"
+      },
+      {
+        "name": "Leukocytes",
+        "value": "NEG"
+      },
+      {
+        "name": "Nitrite",
+        "value": "NEG"
+      },
+      {
+        "name": "Blood",
+        "value": "NEG"
+      },
+      {
+        "name": "Protein",
+        "value": "NEG",
+        "unit": "mg/dL"
+      },
+      {
+        "name": "Ketone",
+        "value": "15",
+        "unit": "mg/dL",
+        "flag": "abnormal"
+      },
+      {
+        "name": "WBC",
+        "value": 1,
+        "unit": "#/hpf"
+      },
+      {
+        "name": "RBC",
+        "value": 1,
+        "unit": "#/hpf"
+      },
+      {
+        "name": "Ultrasound Abdomen",
+        "value": "EXAMINATION: Ultrasound, right lower quadrant.\nINDICATION: Right lower quadrant pain, fever, leukocytosis.\nFINDINGS: In the right lower quadrant there is a blind-ending, non-compressible tubular structure measuring 9 mm in diameter arising from the cecum, with a thickened hyperemic wall on color Doppler. A 6 mm echogenic focus with posterior acoustic shadowing is seen near its base, consistent with an appendicolith. Surrounding echogenic inflamed fat. Trace free fluid adjacent to it. No drainable fluid collection. Normal-appearing right kidney without hydronephrosis.\nIMPRESSION: Findings consistent with acute appendicitis with an appendicolith. No sonographic evidence of abscess."
+      },
+      {
+        "name": "CT Abdomen",
+        "value": "EXAMINATION: CT abdomen and pelvis with intravenous contrast.\nINDICATION: Right lower quadrant pain, fever, leukocytosis.\nFINDINGS: The appendix is dilated to 11 mm with wall thickening and mucosal hyperenhancement. A 6 mm appendicolith is present at the appendiceal base. Moderate periappendiceal fat stranding. No extraluminal gas. No periappendiceal fluid collection or abscess. The remainder of the bowel is normal in caliber without obstruction. Liver, gallbladder, pancreas, spleen, adrenal glands, and kidneys are unremarkable. No hydronephrosis. No free air. Small amount of free fluid in the pelvis.\nIMPRESSION: Acute uncomplicated appendicitis with appendicolith. No perforation or abscess."
+      }
+    ],
+    "currentMedications": [],
+    "knownConditions": [],
+    "allergies": [],
+    "facilityCapabilities": []
+  }
+}

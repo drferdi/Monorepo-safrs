@@ -1,0 +1,42 @@
+{
+ "doctype": "DocType",
+ "name": "Sentra Report Cycle",
+ "module": "Sentra MANTRA Indonesia",
+ "autoname": "format:RCYC-{YYYY}-{#####}",
+ "engine": "InnoDB",
+ "custom": 0,
+ "track_changes": 1,
+ "field_order": [
+  "report_card", "report_name", "periode_label", "status",
+  "sec_periode", "period_start", "period_end", "tenggat_internal", "deadline_eksternal",
+  "sec_catatan", "catatan_penyusun", "catatan_sumber",
+  "sec_defect", "defects",
+  "sec_submission", "submitted_at", "nomor_referensi", "hasil_submission", "catatan_error"
+ ],
+ "fields": [
+  {"fieldname": "report_card", "fieldtype": "Link", "label": "Report Card", "options": "Sentra Report Card", "reqd": 1, "in_list_view": 1, "in_standard_filter": 1},
+  {"fieldname": "report_name", "fieldtype": "Data", "label": "Nama Laporan", "fetch_from": "report_card.report_name", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "periode_label", "fieldtype": "Data", "label": "Periode", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "in_list_view": 1, "in_standard_filter": 1, "default": "Dibuka", "options": "Dibuka\nDraf\nDiajukan untuk Validasi\nDikembalikan\nTervalidasi\nDisetujui\nDikirim Eksternal\nDiterima\nPerlu Koreksi\nDitutup"},
+  {"fieldname": "sec_periode", "fieldtype": "Section Break", "label": "Periode & Tenggat"},
+  {"fieldname": "period_start", "fieldtype": "Date", "label": "Awal Periode"},
+  {"fieldname": "period_end", "fieldtype": "Date", "label": "Akhir Periode"},
+  {"fieldname": "tenggat_internal", "fieldtype": "Date", "label": "Tenggat Internal"},
+  {"fieldname": "deadline_eksternal", "fieldtype": "Date", "label": "Deadline Eksternal"},
+  {"fieldname": "sec_catatan", "fieldtype": "Section Break", "label": "Penyusunan"},
+  {"fieldname": "catatan_penyusun", "fieldtype": "Text", "label": "Catatan Penyusun"},
+  {"fieldname": "catatan_sumber", "fieldtype": "Text", "label": "Catatan Sumber / Ekstraksi"},
+  {"fieldname": "sec_defect", "fieldtype": "Section Break", "label": "Defect Validasi"},
+  {"fieldname": "defects", "fieldtype": "Table", "label": "Defects", "options": "Sentra Report Defect"},
+  {"fieldname": "sec_submission", "fieldtype": "Section Break", "label": "Submission & Bukti"},
+  {"fieldname": "submitted_at", "fieldtype": "Datetime", "label": "Waktu Submit"},
+  {"fieldname": "nomor_referensi", "fieldtype": "Data", "label": "Nomor Referensi / Receipt"},
+  {"fieldname": "hasil_submission", "fieldtype": "Select", "label": "Hasil Submission", "options": "\nDiterima\nPerlu Koreksi\nGagal Teknis"},
+  {"fieldname": "catatan_error", "fieldtype": "Small Text", "label": "Catatan Error Teknis"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "export": 1, "report": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

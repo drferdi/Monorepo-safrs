@@ -1,0 +1,245 @@
+name: sentrabot-prod
+
+services:
+  postgres:
+    image: postgres:16@sha256:e17e86066e5ef83e0952a9347f5c792b7ece00972e2aa787a6986f471b3dd3d5
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 200
+    mem_limit: 2g
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sentrabot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-sentrabot}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sentrabot} -d ${POSTGRES_DB:-sentrabot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    # The tag is what the updater moves. `docker compose pull` fetches it, `up -d` recreates onto
+    # it, and the previous tag stays in .env so a rollback is one redeploy rather than a rebuild.
+    #
+    # The default tag is `local`, which no registry serves, so a fresh install builds from the
+    # checkout via `up -d --build` instead of failing on a `pull` of an image that does not exist
+    # yet. Once a release is published, pin SENTRABOT_IMAGE_TAG to it and the pull path takes over.
+    image: ${SENTRABOT_IMAGE:-ghcr.io/drferdii/sentrabot/app}:${SENTRABOT_IMAGE_TAG:-local}
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-}
+    restart: unless-stopped
+    command:
+      - bash
+      - -lc
+      - pnpm --filter @sentrabot/db exec prisma migrate deploy && pnpm --filter @sentrabot/api start
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 256
+    mem_limit: 1536m
+    env_file:
+      - ../../.env
+    environment:
+      NODE_ENV: production
+      API_HOST: "0.0.0.0"
+      DATABASE_URL: postgres://${POSTGRES_USER:-sentrabot}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-sentrabot}
+      DATA_DIR: /data
+      SANDBOX_PROVIDER: e2b
+      WAKEUP_DRIVER: graphile
+      AGENT_RUNTIME: pi
+      SENTRABOT_UPDATER_URL: http://updater:7092
+    expose:
+      - "3100"
+    volumes:
+      - appdata:/data
+    networks:
+      - app
+      - data
+      - control
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3100/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  worker:
+    image: ${SENTRABOT_IMAGE:-ghcr.io/drferdii/sentrabot/app}:${SENTRABOT_IMAGE_TAG:-local}
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-}
+    restart: unless-stopped
+    command: ["pnpm", "--filter", "@sentrabot/worker", "start"]
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 512
+    mem_limit: 2g
+    env_file:
+      - ../../.env
+    environment:
+      BETTER_AUTH_SECRET: ""
+      NODE_ENV: production
+      DATABASE_URL: postgres://${POSTGRES_USER:-sentrabot}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-sentrabot}
+      DATA_DIR: /data
+      SANDBOX_PROVIDER: e2b
+      SCREEN_PROXY_SECRET: ""
+      WAKEUP_DRIVER: graphile
+      AGENT_RUNTIME: pi
+    volumes:
+      - appdata:/data
+    networks:
+      - app
+      - data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  web:
+    image: ${SENTRABOT_IMAGE:-ghcr.io/drferdii/sentrabot/app}:${SENTRABOT_IMAGE_TAG:-local}
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-}
+    restart: unless-stopped
+    command: ["pnpm", "--filter", "@sentrabot/web", "preview", "--host", "0.0.0.0", "--port", "5173"]
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    pids_limit: 128
+    mem_limit: 512m
+    environment:
+      NODE_ENV: production
+      API_PROXY_TARGET: http://api:3100
+      SENTRABOT_HOST: ${SENTRABOT_HOST:-app.example.com}
+      SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
+    expose:
+      - "5173"
+    networks:
+      - edge
+      - app
+    depends_on:
+      api:
+        condition: service_healthy
+
+  # The updater holds the Docker socket, which is root-equivalent on the host, so it is opt-in and
+  # deliberately the narrowest service here: no `ports` (nothing on the host), only the dedicated
+  # `control` network shared with the API, and no `env_file` — secrets stay in the bind-mounted
+  # `.env` that Compose reads for interpolation, not in this process. Caddy has no route to it. The
+  # API reaches it as http://updater:7092 with the shared token. It is also the one service the
+  # update never recreates, because it is the process performing the update.
+  updater:
+    profiles: [updater]
+    # Pinned separately from the application image: the updater does not recreate itself, so moving
+    # its own version is an operator action, not something an update can do underneath itself.
+    image: ${SENTRABOT_UPDATER_IMAGE:-ghcr.io/drferdii/sentrabot/updater}:${SENTRABOT_UPDATER_IMAGE_TAG:-local}
+    build:
+      context: ../..
+      dockerfile: infra/updater/Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-}
+    restart: unless-stopped
+    init: true
+    user: root
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 1g
+    environment:
+      NODE_ENV: production
+      # Keep interpolation optional so deployments that do not enable this profile need no token.
+      # resolveUpdaterConfig still refuses to start the sidecar without a dedicated secure value.
+      SENTRABOT_UPDATER_TOKEN: ${SENTRABOT_UPDATER_TOKEN:-}
+      SENTRABOT_UPDATER_HOST: "0.0.0.0"
+      SENTRABOT_UPDATER_PORT: "7092"
+      SENTRABOT_IMAGE: ${SENTRABOT_IMAGE:-ghcr.io/drferdii/sentrabot/app}
+      # `-p` is available to Compose interpolation but is not injected into containers unless it is
+      # declared here. The sidecar must target the project the operator actually started.
+      COMPOSE_PROJECT_NAME: ${COMPOSE_PROJECT_NAME:-sentrabot-prod}
+      # Must equal the host path it is mounted from, or every relative bind mount in this file would
+      # resolve somewhere else. /srv/sentrabot is the supported Linux production layout.
+      SENTRABOT_DEPLOY_DIR: ${SENTRABOT_DEPLOY_DIR:-/srv/sentrabot}
+      SENTRABOT_COMPOSE_FILE: infra/compose/docker-compose.prod.yml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${SENTRABOT_DEPLOY_DIR:-/srv/sentrabot}:${SENTRABOT_DEPLOY_DIR:-/srv/sentrabot}
+    networks:
+      - control
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:7092/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  caddy:
+    image: caddy:2@sha256:df7f1c2fb114453b951de51a98efc010db1655a92c2e86be6706714e2417a78d
+    restart: unless-stopped
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    pids_limit: 128
+    mem_limit: 256m
+    environment:
+      SENTRABOT_HOST: ${SENTRABOT_HOST:-app.example.com}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ${CADDYFILE_PATH:-./Caddyfile.prod}:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    networks:
+      - edge
+      - app
+    tmpfs:
+      - /tmp
+    depends_on:
+      web:
+        condition: service_started
+
+volumes:
+  pgdata:
+  appdata:
+  caddydata:
+  caddyconfig:
+
+networks:
+  edge:
+  app:
+  control:
+  data:
+    internal: true

@@ -1,0 +1,24 @@
+{
+  "theme": {
+    "extend": {
+      "colors": {
+        "sentraAi": {
+          "black": "#000000",
+          "white": "#FFFFFF",
+          "ink": "#0A0A0A",
+          "muted": "#A3A3A3",
+          "surface": "#111111"
+        }
+      },
+      "fontFamily": {
+        "sentraAi": [
+          "Inter",
+          "Geist",
+          "Satoshi",
+          "ui-sans-serif",
+          "system-ui"
+        ]
+      }
+    }
+  }
+}

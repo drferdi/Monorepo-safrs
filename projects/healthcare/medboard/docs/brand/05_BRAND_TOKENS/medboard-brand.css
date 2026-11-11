@@ -1,0 +1,20 @@
+:root {
+  --medboard-black: #000000;
+  --medboard-white: #FFFFFF;
+  --medboard-gray: #7B8493;
+  --medboard-navy: #07111F;
+  --medboard-accent-cyan: #00C2FF;
+  --medboard-accent-blue: #0066FF;
+  --medboard-accent-gradient: linear-gradient(135deg, #0066FF 0%, #00C2FF 100%);
+  --medboard-font-display: "Inter Display", "Inter", Arial, sans-serif;
+  --medboard-font-body: "Inter", Arial, sans-serif;
+}
+
+@theme {
+  --color-medboard-black: #000000;
+  --color-medboard-white: #FFFFFF;
+  --color-medboard-gray: #7B8493;
+  --color-medboard-navy: #07111F;
+  --color-medboard-cyan: #00C2FF;
+  --color-medboard-blue: #0066FF;
+}

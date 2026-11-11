@@ -24,7 +24,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 3,
+      "read_order": 4,
       "scope": "always"
     },
     {
@@ -32,9 +32,23 @@
       "path": ".agents/knowledge/03_ARCHITECTURE.md",
       "type": "canonical",
       "status": "CANONICAL",
-      "normativity": "MUST",
-      "read_order": 4,
-      "scope": "always"
+      "normativity": "SHOULD",
+      "scope": "task:architecture",
+      "paths": [
+        "package.json",
+        "pnpm-workspace.yaml",
+        "turbo.json",
+        "tsconfig.json",
+        "biome.jsonc",
+        "**/package.json",
+        "**/pnpm-lock.yaml",
+        "**/tsconfig*.json",
+        "packages/**",
+        ".safrs/**",
+        "tools/**",
+        "scripts/**",
+        "projects/**/AGENTS.md"
+      ]
     },
     {
       "id": "context",
@@ -51,7 +65,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:implementation"
+      "scope": "task:implementation",
+      "paths": [
+        "**/*.{ts,tsx,js,jsx,mjs,cjs,py}"
+      ]
     },
     {
       "id": "coding",
@@ -59,7 +76,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:implementation"
+      "scope": "task:implementation",
+      "paths": [
+        "**/*.{ts,tsx,js,jsx,mjs,cjs,py}"
+      ]
     },
     {
       "id": "documentation",
@@ -67,7 +87,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:documentation"
+      "scope": "task:documentation",
+      "paths": [
+        "**/*.md"
+      ]
     },
     {
       "id": "decisions",
@@ -75,7 +98,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:decision"
+      "scope": "task:decision",
+      "paths": [
+        "docs/adrs/**"
+      ]
     },
     {
       "id": "products",
@@ -253,6 +279,19 @@
       "id": "golden-path-adr-0001",
       "path": "docs/adrs/0001-solo-developer-golden-path.md",
       "type": "adr",
+      "status": "SUPERSEDED",
+      "superseded_by": "standalone-capsules-adr-0006"
+    },
+    {
+      "id": "standalone-capsules-adr-0006",
+      "path": "docs/adrs/0006-standalone-project-capsules.md",
+      "type": "adr",
+      "status": "ACCEPTED"
+    },
+    {
+      "id": "capsule-sovereignty-adr-0007",
+      "path": "docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md",
+      "type": "adr",
       "status": "ACCEPTED"
     },
     {
@@ -268,12 +307,6 @@
       "status": "HISTORICAL"
     },
     {
-      "id": "safrs-bootstrap-plan",
-      "path": "docs/plans/completed/SAFRS_BOOTSTRAP_IMPLEMENTATION.md",
-      "type": "plan",
-      "status": "COMPLETED"
-    },
-    {
       "id": "golden-path-execution-prompt",
       "path": "docs/bootstrap/CODEX_IMPLEMENT_GOLDEN_PATH.md",
       "type": "reference",
@@ -286,18 +319,21 @@
       "status": "HISTORICAL"
     },
     {
-      "id": "safrs-governance-remediation-plan",
-      "path": "docs/plans/completed/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md",
-      "type": "plan",
-      "status": "COMPLETED"
-    },
-    {
       "id": "handoff",
       "path": ".agents/HANDOFF.md",
       "type": "reference",
       "status": "ACTIVE",
       "normativity": "MUST",
       "read_order": 2,
+      "scope": "always"
+    },
+    {
+      "id": "session-boundaries",
+      "path": ".agents/BOUNDARIES.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MUST",
+      "read_order": 3,
       "scope": "always"
     },
     {
@@ -323,7 +359,10 @@
       "type": "reference",
       "status": "ACTIVE",
       "normativity": "SHOULD",
-      "scope": "task:decision"
+      "scope": "task:decision",
+      "paths": [
+        "docs/adrs/**"
+      ]
     },
     {
       "id": "progress-board",
@@ -338,9 +377,23 @@
       "path": "docs/architecture/MONOREPO_PURPOSE.md",
       "type": "canonical",
       "status": "CANONICAL",
-      "normativity": "MUST",
-      "scope": "always",
-      "read_order": 7
+      "normativity": "SHOULD",
+      "scope": "task:architecture",
+      "paths": [
+        "package.json",
+        "pnpm-workspace.yaml",
+        "turbo.json",
+        "tsconfig.json",
+        "biome.jsonc",
+        "**/package.json",
+        "**/pnpm-lock.yaml",
+        "**/tsconfig*.json",
+        "packages/**",
+        ".safrs/**",
+        "tools/**",
+        "scripts/**",
+        "projects/**/AGENTS.md"
+      ]
     },
     {
       "id": "agent-autonomy-model",
@@ -348,7 +401,12 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:governance"
+      "scope": "task:governance",
+      "paths": [
+        ".safrs/**",
+        "tools/safrs/**",
+        "scripts/safrs-verify.*"
+      ]
     },
     {
       "id": "capsule-sovereignty",
@@ -356,7 +414,10 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:implementation"
+      "scope": "task:implementation",
+      "paths": [
+        "**/*.{ts,tsx,js,jsx,mjs,cjs,py}"
+      ]
     },
     {
       "id": "purpose-driven-audit",
@@ -372,7 +433,12 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "SHOULD",
-      "scope": "task:governance"
+      "scope": "task:governance",
+      "paths": [
+        ".safrs/**",
+        "tools/safrs/**",
+        "scripts/safrs-verify.*"
+      ]
     },
     {
       "id": "context-active-avery",
@@ -472,6 +538,7 @@
     "task:product",
     "task:review",
     "task:governance",
-    "task:planning"
+    "task:planning",
+    "task:architecture"
   ]
 }

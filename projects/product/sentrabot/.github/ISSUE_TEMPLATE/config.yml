@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerabilities
+    url: https://github.com/drferdii/sentrabot/blob/main/SECURITY.md
+    about: Report security issues to security@sentrabot.com — do not open a public issue.
+  - name: User support
+    url: mailto:support@sentrabot.com
+    about: Questions about using Sentra Bot or self-hosting help.
+  - name: Maintainer
+    url: mailto:elie@sentrabot.com
+    about: Reach the maintainer directly.

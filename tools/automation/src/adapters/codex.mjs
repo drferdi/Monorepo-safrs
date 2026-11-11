@@ -42,8 +42,40 @@ export function translate(payload, root) {
   return [];
 }
 
-/** Map a guard result to the Codex hook protocol (exit code + streams). */
-export function render(result) {
+/**
+ * Map a guard result to the Codex hook protocol (exit code + streams).
+ * Codex hooks cannot ask, so "ask" blocks. The exception: merges covered by
+ * ~/.codex/rules/safrs-merge.rules (decision "prompt"), where Codex itself
+ * asks Gaffer; the hook passes them on only while that file exists.
+ */
+const CODEX_PROMPTED = new Set(["MERGE", "PR_MERGE"]);
+
+/** Command shapes the argv-prefix rules in safrs-merge.rules can match. Other
+ *  spellings (git.exe, git -C <path>, chained commands) would slip past the
+ *  Codex prompt, so the hook blocks them instead. */
+export function promptRulesMatch(command) {
+  return /^\s*(?:rtk\s+)?(?:git\s+(?:merge|pull)|gh\s+pr\s+merge)(?:\s|$)/u.test(
+    command,
+  );
+}
+
+export function render(result, { mergePromptRules = false } = {}) {
+  if (
+    result.decision === "ask" &&
+    mergePromptRules &&
+    CODEX_PROMPTED.has(result.reasonCode)
+  ) {
+    return {
+      exitCode: 0,
+      stdout: JSON.stringify({
+        hookSpecificOutput: {
+          hookEventName: "PreToolUse",
+          additionalContext:
+            "SAFRS: Codex will ask Gaffer before this merge (safrs-merge.rules); run it only after Gaffer's explicit go.",
+        },
+      }),
+    };
+  }
   if (
     result.decision === "deny" ||
     result.decision === "ask" ||

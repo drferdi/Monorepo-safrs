@@ -11,6 +11,14 @@
   "files": {
     "includes": [
       "**",
+      // Setiap capsule di projects/ wajib mandiri (repo, toolchain, dan lint
+      // sendiri; AGENTS.md "Standalone project contract"). Root tidak pernah
+      // melint atau memformat kode capsule. Pengecualian projects/** di bawah
+      // ini tertutup oleh baris ini dan dipertahankan hanya sebagai catatan.
+      "!!projects",
+      // Fasilitas mandiri di tools/ (toolchain sendiri, rencananya repo sendiri).
+      "!!tools/retriever",
+      "!!tools/prompt",
       // Sisa pengecualian di bawah ini dilacak Git tetapi bukan sumber kanonik.
       // Kontrol plane SAFRS dan cache Turbo: dihasilkan mesin.
       "!!**/.safrs",
@@ -53,6 +61,8 @@
       "!!projects/*/portfolio*/**/src/portfolio-markup.js",
       // Skema/migrasi database dan dokumentasi impor: format asing.
       "!!database",
+      // Vendored third-party code (tools/typesafe-jev/README.md): never reformat upstream files.
+      "!!tools/typesafe-jev/playbook",
       "!!docs/design-system",
       "!!docs/brand",
       "!!docs/library",

@@ -1,0 +1,8 @@
+{"label":"v06idx+v06cat+lama","id":"lay_terms-06","dx":"G44.2","drugs":[["Parasetamol","removed"]]}
+{"label":"v06idx+v06cat+lama","id":"abbreviations-01","dx":"J44.1","drugs":[["prednison","verified"]]}
+{"label":"v06idx+v06cat+lama","id":"abbreviations-03","dx":"N30.0","drugs":[["ciprofloxacin","verified"]]}
+{"label":"v06idx+v06cat+lama","id":"typos-05","dx":"J45.9","drugs":[["salbutamol","doseRemoved"]]}
+{"label":"v06idx+v06cat+lama","id":"mixed_id_en-02","dx":"I50.0","drugs":[["Ramipril","doseRemoved"],["Bisoprolol","doseRemoved"]]}
+{"label":"v06idx+v06cat+lama","id":"mixed_id_en-02","dx":"I50.1","drugs":[["Ramipril","verified"],["Bisoprolol","verified"]]}
+{"label":"v06idx+v06cat+lama","id":"lay_terms-05","dx":"R42","drugs":[["betahistin","verified"]]}
+{"label":"v06idx+v06cat+lama","id":"lay_terms-05","dx":"H81.1","drugs":[["betahistin","verified"]]}

@@ -1,0 +1,4872 @@
+/*
+ * Sistem visual Kediri.
+ *
+ * Snapshot token adalah satu-satunya tempat nilai warna dan radius mentah
+ * boleh muncul; semua yang di bawah memakai var(--token), dan
+ * scripts/check-tokens.mjs mengukur ulang kontras setiap pasangan semantik.
+ *
+ * Dua dunia, sesuai Bible 04 bagian 13: permukaan dokumenter (Arsip, Explore,
+ * Sumber) terang dan tenang; Journey gelap dan sinematik. Kegelapan harus
+ * bermakna, bukan sekadar tampak mahal.
+ */
+@import "../../modules/design-system/tokens/tokens.css";
+@import "../../modules/design-system/tokens/kediri.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--reading-canvas);
+  color: var(--reading-ink);
+  font-family: var(--type-interface);
+  font-size: var(--type-size-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Dunia sinematik dipasang per halaman, bukan per tema peramban: Journey
+ * gelap, permukaan dokumenter terang. Kegelapan harus bermakna (Bible 04
+ * bagian 13), jadi ia melekat pada rute yang memang sinematik.
+ */
+[data-journey="true"] {
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+  font-family: var(--type-body);
+  min-height: 100vh;
+}
+
+/* ---------- fondasi aksesibilitas ---------- */
+
+/*
+ * Skip link adalah kontrol pertama yang menerima fokus (UX Bible bagian 29).
+ * Tersembunyi secara visual sampai difokuskan, tidak pernah dari pohon
+ * aksesibilitas.
+ */
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  z-index: 100;
+  transform: translateY(-250%);
+  padding: var(--space-2) var(--space-3);
+  background: var(--reading-canvas);
+  color: var(--reading-ink);
+  border: 1px solid var(--reading-ink);
+  border-radius: var(--radius-control);
+  font-family: var(--type-interface);
+  text-decoration: none;
+}
+
+/*
+ * Skip link tampil pada :focus, bukan hanya :focus-visible.
+ *
+ * WebKit tidak selalu menerapkan :focus-visible untuk fokus hasil Tab, dan
+ * gate Sentra-GSAP menangkapnya: di WebKit desktop dan mobile, Tab pertama
+ * tidak pernah mencapai elemen fokus yang TERLIHAT, sehingga jalan pintas ke
+ * konten praktis tidak ada di sana. Skip link adalah janji aksesibilitas, jadi
+ * ia tidak boleh bergantung pada satu selector yang dukungannya berbeda-beda.
+ */
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 2px solid var(--reading-accent);
+  outline-offset: 3px;
+}
+
+[data-journey="true"] :focus-visible {
+  outline-color: var(--cinema-accent);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- tautan ---------- */
+
+a {
+  color: var(--reading-accent);
+  text-underline-offset: 3px;
+}
+
+[data-journey="true"] a {
+  color: var(--cinema-accent);
+}
+
+/* ---------- kerangka tata letak ---------- */
+
+.shell {
+  /* Talang dinamai supaya lapisan era dapat menembusnya ke tepi viewport. */
+  --shell-gutter: clamp(1rem, 4vw, 3.5rem);
+
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0 var(--shell-gutter);
+}
+
+.measure {
+  max-width: var(--measure-narrative);
+}
+
+/* ---------- navigasi global ---------- */
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--reading-rule);
+  font-family: var(--type-interface);
+  flex-wrap: wrap;
+}
+
+[data-journey="true"] .site-nav {
+  border-bottom-color: var(--cinema-rule);
+}
+
+.site-nav a,
+.site-nav button {
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+}
+
+.site-nav button {
+  cursor: pointer;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.site-nav .wordmark {
+  font-family: var(--type-interface);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.site-nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible,
+.site-nav button:hover,
+.site-nav button:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ---------- tipografi ---------- */
+
+.eyebrow {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--reading-ink-muted);
+  margin: 0 0 var(--space-2);
+}
+
+[data-journey="true"] .eyebrow {
+  color: var(--cinema-ink-muted);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--type-narrative);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.title-page {
+  font-size: var(--type-size-era);
+  line-height: 1.02;
+  margin: 0 0 var(--space-4);
+}
+
+.title-scene {
+  font-size: var(--type-size-scene);
+  line-height: 1.05;
+  margin: 0 0 var(--space-3);
+}
+
+.lead {
+  font-family: var(--type-narrative);
+  font-size: var(--type-size-lead);
+  line-height: 1.5;
+  margin: 0 0 var(--space-4);
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+.prose {
+  font-family: var(--type-narrative);
+  line-height: 1.65;
+}
+
+/*
+ * Waktu monumental: tanggal berperilaku sebagai objek arsitektural, bukan
+ * sebagai label (Bible 04 bagian 8).
+ */
+.monumental {
+  font-family: var(--type-interface);
+  font-size: var(--type-size-monumental);
+  font-weight: 600;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.archive-label {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--reading-ink-muted);
+}
+
+/* ---------- badge evidence ---------- */
+
+/*
+ * Bentuk, label, lalu warna — dalam urutan itu (Bible 04 bagian 20). Warna
+ * bersifat pelengkap; labelnya selalu terlihat, sehingga tidak ada makna yang
+ * dibawa warna saja.
+ */
+.evidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--reading-evidence);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-control);
+  padding: 0.25em 0.6em;
+  white-space: nowrap;
+}
+
+[data-journey="true"] .evidence-badge {
+  color: var(--cinema-evidence);
+}
+
+.evidence-badge .symbol {
+  font-size: 0.9em;
+  line-height: 1;
+}
+
+/* ---------- kartu dan daftar ---------- */
+
+.record-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--reading-rule);
+}
+
+.record-list > li {
+  border-bottom: 1px solid var(--reading-rule);
+  padding: var(--space-3) 0;
+}
+
+.record-list a {
+  color: inherit;
+  text-decoration: none;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.record-list a:hover .record-title,
+.record-list a:focus-visible .record-title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.record-title {
+  font-family: var(--type-narrative);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.record-meta {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--reading-ink-muted);
+}
+
+.card-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--reading-rule);
+  border: 1px solid var(--reading-rule);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.card-grid > * {
+  background: var(--reading-canvas);
+  padding: var(--space-4);
+}
+
+/* ---------- tabel metadata arsip ---------- */
+
+.metadata {
+  display: grid;
+  grid-template-columns: minmax(9rem, 22%) 1fr;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--reading-rule);
+}
+
+.metadata > div {
+  display: contents;
+}
+
+.metadata dt {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--reading-ink-muted);
+  padding: var(--space-2) var(--space-3) var(--space-2) 0;
+  border-bottom: 1px solid var(--reading-rule);
+}
+
+.metadata dd {
+  margin: 0;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--reading-rule);
+}
+
+@media (max-width: 40rem) {
+  .metadata {
+    grid-template-columns: 1fr;
+  }
+  .metadata dt {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+/* ---------- Journey: panggung, bukan halaman ---------- */
+
+/*
+ * KELAS PRODUK.
+ *
+ * Sisa situs ini permukaan dokumenter: shell terukur, kolom baca, garis rambut.
+ * Journey BUKAN itu. Ia instalasi sinematik (UX Bible bagian 26), dan tata
+ * bahasanya berbeda sejak fondasi: tepi ke tepi, tipografi monumental, ruang
+ * kosong yang disengaja, satu subjek per bingkai.
+ *
+ * Karena itu Journey melepaskan lebar shell sepenuhnya, bukan menegosiasikannya.
+ */
+.shell[data-journey="true"] {
+  --shell-gutter: clamp(1.5rem, 5vw, 6rem);
+
+  max-width: none;
+  padding: 0;
+  overflow-x: clip;
+}
+
+[data-journey="true"] .journey-intro,
+[data-journey="true"] .journey-act > header,
+[data-journey="true"] .scene-readout,
+[data-journey="true"] .finale-readout,
+[data-journey="true"] .site-footer {
+  padding-inline: var(--shell-gutter);
+}
+
+/*
+ * Chrome instalasi: tipis, tetap, tidak pernah menjadi menu situs.
+ *
+ * Latar SERAGAM di seluruh tinggi nav, bukan gradien yang meluruh ke
+ * transparan di dalam kotaknya sendiri. Nav ini `position:fixed` — apa pun
+ * di bawahnya akan lewat di baliknya saat gulir (perilaku normal untuk
+ * header melayang), dan gradien lama nyaris tembus pandang tepat di baris
+ * tempat wordmark/tautan berada, membuat teks yang lewat (mis. "Lewati ke
+ * bab berikutnya") terbaca menabrak KEDIRI (tinjauan visual 2026-08-28,
+ * mobile 1015/921). Peluruhan visual ke transparan sekarang terjadi
+ * DI LUAR kotak nav lewat pseudo-elemen, bukan menembus tempat teksnya.
+ */
+[data-journey="true"] .site-nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  padding: var(--space-3) var(--shell-gutter);
+  border-bottom: 0;
+  background: var(--cinema-canvas);
+}
+
+[data-journey="true"] .site-nav::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 1.5rem;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--cinema-canvas) 92%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+
+[data-journey="true"] .site-nav a,
+[data-journey="true"] .site-nav button {
+  font-family: var(--type-archive);
+  font-size: 0.66rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+[data-journey="true"] .site-nav .wordmark {
+  font-size: 0.72rem;
+  letter-spacing: 0.42em;
+}
+
+/* ---------- kartu judul pembuka ---------- */
+
+.journey-intro {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  gap: var(--space-4);
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 86%, transparent) 0%,
+      color-mix(in srgb, var(--cinema-canvas) 54%, transparent) 46%,
+      color-mix(in srgb, var(--cinema-canvas) 24%, transparent) 100%
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 72%, transparent),
+      transparent 62%
+    ),
+    var(--cinema-canvas);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/*
+ * Bingkai Prolog dan Finale: SATU citra 2026 yang sama, dua perlakuan.
+ * Citranya elemen <img> (responsif, ber-alt, lazy untuk Finale), bukan
+ * background CSS — dan Finale mengunjungi kembali perspektif pembuka,
+ * bukan aset ke-28.
+ */
+.framing-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* Induknya isolate: -1 menempatkan citra di atas latar induk tetapi di
+     bawah seluruh naskah — elemen absolut tanpa ini melukis di atas teks. */
+  z-index: -1;
+}
+
+.framing-stage img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Finale lebih tenang: kamera akhirnya berhenti, paletnya mereda. */
+.framing-stage[data-framing="finale"] img {
+  object-position: 50% 56%;
+  filter: saturate(0.82) brightness(0.92);
+}
+
+.journey-intro {
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.journey-visual-label {
+  position: absolute;
+  top: clamp(5.75rem, 12svh, 7.5rem);
+  right: var(--shell-gutter);
+  margin: 0;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--cinema-rule);
+  background: color-mix(in srgb, var(--cinema-canvas) 74%, transparent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  backdrop-filter: blur(0.35rem);
+}
+
+.journey-intro .eyebrow {
+  font-size: 0.66rem;
+  letter-spacing: 0.36em;
+}
+
+/*
+ * Rentangnya yang monumental, bukan kata "Perjalanan". Yang dijanjikan halaman
+ * ini sebelas abad, dan itu yang harus memenuhi bingkai.
+ */
+.journey-range {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-monumental);
+  line-height: 0.84;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--cinema-ink);
+  margin: 0;
+}
+
+.journey-intro .title-page {
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--cinema-ink-muted);
+  margin: 0;
+}
+
+.journey-intro .lead {
+  max-width: 44ch;
+  color: var(--cinema-ink-muted);
+  font-size: 1rem;
+}
+
+.finale-readout {
+  min-height: 72svh;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: var(--space-5);
+  padding-block: clamp(5rem, 14svh, 10rem);
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+}
+
+.journey-begin {
+  border-bottom: 1px solid var(--cinema-accent);
+  color: var(--cinema-ink);
+  font-family: var(--type-archive);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  padding-bottom: 0.4em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.editorial-preview-banner {
+  max-width: var(--measure-narrative);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--cinema-accent);
+  background: var(--cinema-surface);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+}
+
+.editorial-preview-banner strong {
+  color: var(--cinema-accent);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ---------- Scene 00: kota menjadi sungai ---------- */
+
+/*
+ * Prolog adalah satu dunia gambar. Tidak ada kartu hero yang disusul salinan
+ * narasi; stage, lead, beat, dan notice editorial berada dalam satu pelat.
+ */
+.prologue-scene {
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+}
+
+.prologue-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: grid;
+  grid-template-areas: "frame";
+  /*
+   * Baris eksplisit `1fr`, bukan `auto` implisit. Track auto mengukur
+   * tingginya dari konten `.prologue-plate` (dengan `align-self: stretch`
+   * yang lingkar-balik ke ukuran itu sendiri); saat chrome eyebrow/judul
+   * disembunyikan (§ direktif runtime 2026-08-28) kontennya menyusut dan
+   * baris ikut menyusut sesaat sebelum GSAP mengukur ulang — CLS 0.163,
+   * terukur di Chromium 1024×768. `1fr` mengambil tinggi dari kontainer
+   * (min-height di atas), bukan dari konten, sehingga stabil sejak cat
+   * pertama tanpa bergantung pada apa yang terlihat di dalamnya.
+   */
+  grid-template-rows: 1fr;
+  align-items: center;
+  overflow: hidden;
+}
+
+.prologue-stage > * {
+  grid-area: frame;
+}
+
+.prologue-surface {
+  position: relative;
+  opacity: 1;
+  transform-origin: 54% 52%;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.prologue-water-line {
+  align-self: end;
+  justify-self: stretch;
+  width: 70%;
+  height: 1px;
+  margin: 0 auto clamp(5rem, 17svh, 11rem);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent) 24%,
+    var(--cinema-rule) 76%,
+    transparent
+  );
+  transform-origin: center;
+  opacity: 0.72;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.prologue-plate {
+  align-self: stretch;
+  justify-self: stretch;
+  width: 100%;
+  max-width: none;
+  padding: clamp(6rem, 13svh, 8rem) var(--shell-gutter) clamp(3rem, 8svh, 6rem);
+  grid-template-columns: minmax(0, 0.9fr) minmax(19rem, 0.72fr);
+  grid-template-rows: auto auto 1fr auto auto;
+  align-items: end;
+  column-gap: clamp(2rem, 7vw, 9rem);
+}
+
+.prologue-context {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--cinema-rule);
+  border-bottom: 1px solid var(--cinema-rule);
+  padding-block: var(--space-3);
+}
+
+.prologue-title {
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+  margin: 0;
+}
+
+.prologue-scene .stage-plate {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  max-width: min(94vw, 56rem);
+}
+
+.prologue-scene .stage-context {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.prologue-lead {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+  max-width: 24ch;
+  border-left: 0;
+  border-top: 1px solid var(--cinema-accent);
+  padding-top: var(--space-3);
+  padding-left: 0;
+  font-size: clamp(2rem, 3.8vw, 3.8rem);
+  line-height: 1.08;
+}
+
+.prologue-passages {
+  grid-column: 1;
+  grid-row: 3;
+  align-self: start;
+  margin: 0;
+  max-width: 48ch;
+}
+
+.prologue-notice {
+  grid-column: 1;
+  grid-row: 4;
+  align-self: end;
+  width: min(100%, 34rem);
+  margin-top: var(--space-4);
+}
+
+.prologue-actions {
+  grid-column: 2;
+  grid-row: 4 / span 2;
+  align-self: end;
+  justify-self: start;
+}
+
+.prologue-actions a {
+  color: inherit;
+  border-bottom: 1px solid var(--cinema-accent);
+  padding-bottom: 0.35em;
+  text-decoration: none;
+}
+
+/* ---------- pembuka Prolog: dua babak footage dan satu naskah ---------- */
+
+/*
+ * Babak pembuka (direktif Chief 2026-09-04). Footage-nya dekoratif dan
+ * default-nya `opacity: 0`, persis seperti copper dan portal di bawah: tanpa
+ * JavaScript tidak ada satu pun yang berkedip, dan hanya timeline
+ * `prologueReveal` yang menaikkannya. Naskahnya historis, jadi ia justru
+ * TERBACA pada alur statis dan hanya disembunyikan ketika motion aktif.
+ */
+/*
+ * DASAR adalah alur statis, bukan sebaliknya: panggung mendapat baris sendiri
+ * untuk naskah pembuka sehingga ia tidak pernah menumpuk di sel "frame"
+ * bersama pelat ketika tidak ada timeline (tanpa JavaScript, reduced motion,
+ * mobile). Pola baris terpisah ini sama dengan `.scene-nomenclature` di 921
+ * dan 1042. Varian motion di bawah mengembalikannya menjadi satu sel penuh.
+ */
+/*
+ * Urutan alur statis: BINGKAI 2026 lebih dulu, baru naskah era Daha. Pada
+ * mobile pengunjung harus disambut "KEDIRI, 2026" — bukan kalimat tentang
+ * Daha abad ke-11 yang belum punya konteks (terukur 2026-09-04 di 375 px:
+ * naskah Daha tampil di atas judul). Varian motion tetap menumpuknya di satu
+ * sel dan menempatkannya di antara dua footage lewat timeline.
+ */
+.prologue-stage:has(.prologue-overture) {
+  grid-template-areas: "frame" "overture";
+  grid-template-rows: 1fr auto;
+}
+
+.prologue-overture {
+  position: relative;
+  z-index: 0;
+  grid-area: overture;
+  align-self: start;
+  justify-self: stretch;
+  pointer-events: none;
+}
+
+.prologue-overture-clip {
+  position: absolute;
+  inset: 0;
+  display: none;
+  opacity: 0;
+  /*
+   * Vignette elips sedikit lebih rapat daripada semula (96%/94%, 80→100%):
+   * bersama pembesaran 1,09× pada <video>, sudut kanan-bawah — tempat
+   * watermark alat pada render 1080p — jatuh di luar elips dan meredup ke
+   * `.stage-void`. SEMENTARA; longgarkan kembali saat render bersih tiba.
+   */
+  mask-image: radial-gradient(
+    ellipse 92% 88% at 50% 50%,
+    black 66%,
+    transparent 96%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 92% 88% at 50% 50%,
+    black 66%,
+    transparent 96%
+  );
+}
+
+.prologue-overture-clip video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  /*
+   * SEMENTARA (2026-09-04): kedua render 1080p masih membawa watermark alat
+   * di sudut kanan-bawah. Pembesaran kecil dengan titik asal condong ke
+   * kiri-atas mendorong sudut itu keluar bingkai tanpa menyentuh berkasnya.
+   * Hapus dua baris ini begitu Chief menimpa render tanpa watermark.
+   */
+  transform: scale(1.09);
+  transform-origin: 40% 36%;
+}
+
+.prologue-overture-copy {
+  display: grid;
+  gap: var(--space-3);
+  max-width: min(100%, 46rem);
+  padding: var(--space-5) var(--shell-gutter);
+  color: var(--cinema-ink);
+  font-family: var(--type-body);
+  font-size: clamp(1rem, 1.15vw, 1.15rem);
+  line-height: 1.78;
+  text-wrap: pretty;
+}
+
+.prologue-overture-copy p:first-child {
+  font-family: var(--type-narrative);
+  font-size: clamp(1.5rem, 2.6vw, 2.3rem);
+  line-height: 1.24;
+  color: var(--cinema-ink);
+}
+
+.prologue-overture-copy p:last-child {
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: clamp(0.68rem, 0.85vw, 0.78rem);
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- Prologue Cinematic Title di Layar Gelap ---------- */
+.prologue-cinematic-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-6) var(--shell-gutter);
+  pointer-events: none;
+  z-index: 8;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.cinematic-title-eyebrow {
+  display: block;
+  font-family: var(--type-mono);
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+  margin-bottom: var(--space-4);
+  opacity: 0.9;
+}
+
+.cinematic-title-heading {
+  font-family: var(--type-display);
+  font-size: clamp(2.2rem, 5.2vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: 0.04em;
+  color: var(--cinema-ink);
+  max-width: 24ch;
+  text-wrap: balance;
+  text-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.9),
+    0 0 50px rgba(205, 167, 91, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prologue-cinematic-title {
+    filter: none !important;
+  }
+}
+
+/* ---------- Presenter Text & Logo di Video 1 (Smooth Typing) ---------- */
+/*
+ * Kredit presenter duduk di sepertiga bawah — konvensi kartu "presents" —
+ * bukan di tengah bingkai, supaya tidak bersaing dengan kota yang sedang
+ * diperkenalkan footage (tinjauan visual 2026-09-04).
+ */
+.prologue-overture-present {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-block-end: clamp(4.5rem, 13svh, 8rem);
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.overture-present-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  background: none;
+}
+
+.overture-present-logo {
+  width: clamp(2rem, 2.8vw, 2.75rem);
+  height: clamp(2rem, 2.8vw, 2.75rem);
+  display: block;
+  object-fit: contain;
+  filter: invert(72%) sepia(52%) saturate(520%) hue-rotate(5deg)
+    brightness(105%) contrast(98%) drop-shadow(0 2px 16px rgba(0, 0, 0, 0.9));
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.overture-present-text {
+  font-family: var(--type-display);
+  font-size: clamp(0.9rem, 1.45vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cinema-ink);
+  text-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.95),
+    0 0 24px rgba(205, 167, 91, 0.4);
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.typing-char {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.typing-cursor {
+  display: inline-block;
+  color: var(--cinema-accent);
+  margin-left: 0.2em;
+  font-weight: 300;
+  animation: typingCursorBlink 0.75s infinite alternate ease-in-out;
+}
+
+@keyframes typingCursorBlink {
+  0% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 8px var(--cinema-accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prologue-overture-present {
+    filter: none !important;
+  }
+  .overture-present-logo,
+  .typing-char {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+  .typing-cursor {
+    display: none;
+  }
+}
+
+/*
+ * Varian motion: panggung kembali menjadi satu sel, footage mengisi bingkai
+ * penuh, dan naskah pembuka menjadi lapisan di tengah yang dimulai dari nol —
+ * timeline `prologueReveal` yang memunculkannya di antara dua footage.
+ */
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  .prologue-stage:has(.prologue-overture) {
+    grid-template-areas: "frame";
+    grid-template-rows: 1fr;
+  }
+
+  .prologue-overture {
+    grid-area: frame;
+    align-self: stretch;
+  }
+
+  .prologue-overture-clip {
+    display: block;
+  }
+
+  .prologue-overture-copy {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    align-content: center;
+    justify-items: center;
+    max-width: none;
+    margin: 0 auto;
+    padding-inline: max(var(--shell-gutter), calc((100% - 46rem) / 2));
+    opacity: 0;
+    text-align: center;
+  }
+
+  /*
+   * Layar pertama sebagai title sequence (2026-09-04): citra dan naskah
+   * berangkat dari nol dan dimunculkan entrance berbasis waktu milik
+   * director (`intro`, ±2,4 detik, kalah oleh gulir). Hanya kontainer DALAM
+   * citra (`.stage-media`) yang disembunyikan — `.prologue-surface` dan
+   * `.stage-plate` dipegang timeline scrub dan tidak boleh diberi keadaan
+   * awal di sini. Blok `scripting: none` di bawah membatalkannya tanpa JS.
+   */
+  .prologue-surface .stage-media,
+  .prologue-scene .stage-context .eyebrow,
+  .prologue-scene .stage-context .title-scene,
+  .prologue-lead,
+  .prologue-passages .stage-beat,
+  .prologue-stage .prologue-scroll-cue {
+    /* Beat disembunyikan per elemen (bukan wadahnya), karena entrance
+       men-tween tiap `.stage-beat`. Cue memakai selektor berspesifisitas
+       lebih tinggi: aturan dasarnya (opacity 0.9) berada lebih bawah. */
+    opacity: 0;
+  }
+
+  /*
+   * Letterbox 2,39:1 layar pertama. `--letterbox` (persen tinggi bingkai)
+   * di-tween GSAP dari pita penuh ke 0 — pola `--dolly`; tanpa nilai (varian
+   * statis, atau setelah clearProps) inset-nya 0 dan tidak berpengaruh.
+   */
+  .prologue-surface .stage-media {
+    clip-path: inset(calc(var(--letterbox, 0) * 1%) 0%);
+  }
+
+  /* "KEDIRI, 2026" adalah baris hero layar pertama, bukan label. */
+  .prologue-scene .stage-context .title-scene {
+    font-size: calc(var(--type-size-scene) * 1.25);
+  }
+}
+
+/*
+ * Tanpa JavaScript tidak ada timeline yang menaikkan opacity kembali, jadi
+ * perlakuan overlay di atas HARUS dibatalkan — kalau tidak, naskah era Daha
+ * berdiri di opacity nol dan sejarahnya hilang dari halaman (terbukti pada
+ * pemeriksaan tanpa-JS 2026-09-04). Blok ini sengaja berada SESUDAH varian
+ * motion supaya memenangkan kaskade pada lebar yang sama.
+ */
+@media (scripting: none) {
+  .prologue-stage:has(.prologue-overture) {
+    grid-template-areas: "frame" "overture";
+    grid-template-rows: 1fr auto;
+  }
+
+  .prologue-overture {
+    grid-area: overture;
+    align-self: start;
+    padding-block: var(--space-4) var(--space-6);
+  }
+
+  .prologue-overture-clip {
+    display: none;
+  }
+
+  .prologue-overture-copy {
+    position: static;
+    inset: auto;
+    max-width: min(100%, 46rem);
+    opacity: 1;
+    text-align: start;
+  }
+
+  /* Keadaan awal entrance layar pertama dibatalkan: komposisi langsung utuh. */
+  .prologue-surface .stage-media,
+  .prologue-scene .stage-context .eyebrow,
+  .prologue-scene .stage-context .title-scene,
+  .prologue-lead,
+  .prologue-passages .stage-beat {
+    opacity: 1;
+  }
+
+  .prologue-stage .prologue-scroll-cue {
+    opacity: 0.9;
+  }
+}
+
+/*
+ * Surface procedural resolusi-independen: air → horizon → tembaga. Seluruh
+ * bentuk adalah metafora presentasi, bukan citra artefak atau bukti sejarah.
+ */
+.prologue-material-world {
+  position: relative;
+  z-index: -1;
+  align-self: stretch;
+  justify-self: stretch;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.prologue-city-veil,
+.prologue-copper-field,
+.prologue-horizon {
+  position: absolute;
+  display: block;
+}
+
+.prologue-city-veil {
+  inset: 0;
+  opacity: 0.08;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--cinema-canvas) 8%, transparent),
+      color-mix(in srgb, var(--cinema-canvas) 72%, transparent) 62%,
+      var(--cinema-canvas)
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 68%, transparent),
+      transparent 45%,
+      color-mix(in srgb, var(--cinema-canvas) 48%, transparent)
+    );
+}
+
+.prologue-water-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: color-mix(in srgb, var(--cinema-ink) 64%, var(--cinema-accent));
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.12;
+  mix-blend-mode: screen;
+}
+
+.prologue-water-field path:nth-child(2) {
+  opacity: 0.74;
+}
+
+.prologue-water-field path:nth-child(3) {
+  opacity: 0.5;
+}
+
+.prologue-water-field path:nth-child(4) {
+  opacity: 0.3;
+}
+
+.prologue-horizon {
+  z-index: 2;
+  inset-inline: 12%;
+  top: 72%;
+  height: 1px;
+  opacity: 0;
+  background: color-mix(in srgb, var(--cinema-accent) 78%, var(--cinema-ink));
+}
+
+.prologue-copper-field {
+  inset: 0;
+  opacity: 0;
+  background:
+    repeating-linear-gradient(
+      98deg,
+      color-mix(in srgb, var(--cinema-surface) 82%, transparent) 0 1px,
+      transparent 1px 0.48rem
+    ),
+    repeating-linear-gradient(
+      4deg,
+      color-mix(in srgb, var(--cinema-rule) 34%, transparent) 0 1px,
+      transparent 1px 1.35rem
+    ),
+    radial-gradient(
+      ellipse at 50% 72%,
+      color-mix(in srgb, var(--cinema-accent) 38%, transparent),
+      color-mix(in srgb, var(--cinema-surface) 82%, var(--cinema-canvas)) 52%,
+      var(--cinema-canvas) 100%
+    );
+}
+
+.prologue-portal {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  opacity: 0;
+  text-align: center;
+}
+
+.prologue-portal-date {
+  font-family: var(--font-cinzel), var(--type-narrative), serif;
+  font-size: clamp(7rem, 24vw, 21rem);
+  font-weight: 500;
+  line-height: 0.78;
+  letter-spacing: -0.08em;
+  color: var(--cinema-ink);
+}
+
+.prologue-portal-label {
+  max-width: 30ch;
+  font-family: var(--type-archive);
+  font-size: clamp(0.62rem, 0.85vw, 0.78rem);
+  line-height: 1.5;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cinema-ink) 72%, var(--cinema-accent));
+}
+
+/* Affordance gulir GSAP sinematik */
+.prologue-scroll-cue {
+  position: absolute;
+  bottom: clamp(1.75rem, 4.5svh, 3rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scroll-cue-text {
+  font-family: var(--type-archive);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+  opacity: 0.9;
+}
+
+.scroll-cue-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  stroke: var(--cinema-accent);
+  opacity: 0.85;
+}
+
+/* ---------- handoff: motif di dalam dunia shot, bukan rule antarsection ---------- */
+
+.scene-handoff {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(1.5rem, 1fr) minmax(0.8rem, 0.3fr) minmax(
+      1.5rem,
+      1fr
+    );
+  align-items: center;
+  width: min(31vw, 26rem);
+  height: clamp(1.5rem, 4vw, 3.5rem);
+  color: var(--cinema-rule);
+  pointer-events: none;
+}
+
+.scene-handoff[data-handoff-phase="incoming"] {
+  inset-block-start: clamp(5rem, 15svh, 9rem);
+  inset-inline-start: var(--shell-gutter);
+  transform-origin: left center;
+}
+
+.scene-handoff[data-handoff-phase="outgoing"] {
+  inset-block-end: clamp(5rem, 15svh, 9rem);
+  inset-inline-end: var(--shell-gutter);
+  transform-origin: right center;
+}
+
+.scene-handoff > span {
+  display: block;
+  height: 1px;
+  transform-origin: center;
+}
+
+.scene-handoff__outgoing {
+  width: 100%;
+  background: var(--cinema-surface);
+  transform-origin: right center;
+}
+
+.scene-handoff__transform {
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--cinema-surface),
+    var(--cinema-accent),
+    var(--cinema-rule)
+  );
+}
+
+.scene-handoff__incoming {
+  width: 100%;
+  background: var(--cinema-accent);
+  transform-origin: left center;
+}
+
+.scene-handoff[data-handoff="water-copper"] {
+  width: min(34vw, 30rem);
+  color: var(--cinema-accent);
+}
+
+.scene-handoff[data-handoff="water-copper"] .scene-handoff__outgoing {
+  height: 0.2rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-surface) 25%,
+    var(--cinema-accent) 78%,
+    transparent
+  );
+}
+
+/*
+ * Motif "air menjadi tembaga" adalah SEAM tipis yang bercahaya, bukan balok:
+ * kolom tengah grid selebar 0.3fr pernah terisi penuh menjadi persegi emas
+ * 54x49 px tepat di bawah portal 879 (tinjauan visual 2026-09-04) dan terbaca
+ * sebagai artefak UI, bukan transformasi material.
+ */
+.scene-handoff[data-handoff="water-copper"] .scene-handoff__transform {
+  height: 100%;
+  width: 0.35rem;
+  justify-self: center;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--cinema-accent),
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="water-copper"] .scene-handoff__incoming {
+  height: 0.2rem;
+  background: linear-gradient(
+    90deg,
+    var(--cinema-accent),
+    var(--cinema-surface) 72%,
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="inscription-mark"] {
+  width: min(24vw, 19rem);
+  color: var(--cinema-accent);
+}
+
+.scene-handoff[data-handoff="inscription-mark"] .scene-handoff__outgoing,
+.scene-handoff[data-handoff="inscription-mark"] .scene-handoff__incoming {
+  height: 0.3rem;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--cinema-accent) 0 0.08rem,
+    transparent 0.08rem 0.42rem
+  );
+}
+
+.scene-handoff[data-handoff="inscription-mark"] .scene-handoff__transform {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent),
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="name-world"] {
+  width: min(28vw, 22rem);
+  color: var(--cinema-ink-muted);
+}
+
+.scene-handoff[data-handoff="name-world"] .scene-handoff__outgoing,
+.scene-handoff[data-handoff="name-world"] .scene-handoff__incoming {
+  height: 0.14rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-ink-muted) 34%,
+    var(--cinema-rule) 66%,
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="name-world"] .scene-handoff__transform {
+  width: 0.7rem;
+  height: 0.7rem;
+  justify-self: center;
+  border: 1px solid var(--cinema-ink-muted);
+  border-radius: var(--radius-control);
+  background: var(--cinema-canvas);
+}
+
+.scene-handoff[data-handoff="record-territory"] {
+  width: min(32vw, 27rem);
+  color: var(--cinema-surface);
+}
+
+.scene-handoff[data-handoff="record-territory"] .scene-handoff__outgoing,
+.scene-handoff[data-handoff="record-territory"] .scene-handoff__incoming {
+  height: 0.2rem;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--cinema-surface) 0 1.5rem,
+    transparent 1.5rem 1.85rem
+  );
+}
+
+.scene-handoff[data-handoff="record-territory"] .scene-handoff__transform {
+  height: 100%;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--cinema-surface) 0 1px,
+    transparent 1px 0.45rem
+  );
+}
+
+.scene-handoff[data-handoff="territory-centre"] {
+  width: min(26vw, 21rem);
+  color: var(--cinema-accent);
+}
+
+.scene-handoff[data-handoff="territory-centre"] .scene-handoff__outgoing,
+.scene-handoff[data-handoff="territory-centre"] .scene-handoff__incoming {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent) 42%,
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="territory-centre"] .scene-handoff__transform {
+  width: 1.5rem;
+  height: 1.5rem;
+  justify-self: center;
+  border: 1px solid var(--cinema-accent);
+  border-radius: var(--radius-control);
+  background: radial-gradient(
+    circle,
+    var(--cinema-accent) 0 0.15rem,
+    transparent 0.16rem
+  );
+}
+
+@media (min-width: 48rem) and (max-width: 63.999rem) and (
+    prefers-reduced-motion: no-preference
+  ) {
+  /* Mencerminkan PIN_DISTANCES.prologueReveal di modules/motion/scenes.ts. */
+  .prologue-pin-space {
+    display: block;
+    height: 300svh;
+  }
+
+  .prologue-stage {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+  /* Mencerminkan PIN_DISTANCES.prologueReveal di modules/motion/scenes.ts. */
+  .prologue-pin-space {
+    display: block;
+    height: 420svh;
+  }
+
+  .prologue-stage {
+    position: sticky;
+    top: 0;
+  }
+}
+
+/* ---------- era ---------- */
+
+.journey-act {
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+}
+
+/* Kartu judul era: satu layar, hampir kosong. */
+.journey-act > header {
+  position: relative;
+  min-height: 74svh;
+  display: grid;
+  align-content: end;
+  gap: var(--space-3);
+  padding-block: var(--space-7) var(--space-6);
+}
+
+/*
+ * Act I adalah bidikan video penuh, bukan kartu antara yang boleh tersapu oleh
+ * satu wheel-scroll. Satu viewport utuh memberi tempo yang sama dengan
+ * panggung sinematik sebelumnya; handoff GSAP baru dimulai setelah separuh
+ * perjalanan kartu. Mobile dan reduced-motion tetap memakai alur normal.
+ */
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  .journey-act > header[data-opening-handoff-source="true"] {
+    min-height: 100svh;
+  }
+}
+
+.journey-act > header::before {
+  content: "";
+  position: absolute;
+  inset: auto var(--shell-gutter) 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--cinema-accent),
+    var(--cinema-rule) 36%,
+    transparent
+  );
+}
+
+.journey-act > header .archive-label {
+  font-family: var(--type-archive);
+  font-size: 0.7rem;
+  letter-spacing: 0.34em;
+  color: var(--cinema-accent);
+}
+
+.journey-act > header .title-scene {
+  /*
+   * Judul era memakai kapital inskripsi (direktif editorial Chief
+   * 2026-08-29): serif bersejarah, bobot sedang, tracking terbuka — bukan
+   * sans tebal ber-tracking negatif.
+   */
+  font-family: var(--type-display);
+  font-size: calc(var(--type-size-era) * 0.84);
+  line-height: 1.04;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.journey-act > header .lead {
+  max-width: 42ch;
+  color: var(--cinema-ink-muted);
+}
+
+/*
+ * Kartu judul era tanpa media latar (Pusat Kekuasaan Berpindah, dsb):
+ * Format tengah (middle) dan bentangan teks horizontal yang lebih leluasa.
+ */
+.journey-act > header:not([data-header-media]) {
+  min-height: 82svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  padding-block: clamp(5.5rem, 13svh, 9rem);
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+
+.journey-act > header:not([data-header-media])::before {
+  inset: auto 20% 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--cinema-rule) 45%, transparent) 25%,
+    var(--cinema-accent) 50%,
+    color-mix(in srgb, var(--cinema-rule) 45%, transparent) 75%,
+    transparent
+  );
+  opacity: 0.55;
+}
+
+.journey-act > header:not([data-header-media]) .archive-label {
+  margin-inline: auto;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.36em;
+}
+
+.journey-act > header:not([data-header-media]) .title-scene {
+  max-width: 28ch;
+  margin-inline: auto;
+  text-align: center;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.1;
+  letter-spacing: 0.07em;
+  margin-bottom: var(--space-2);
+}
+
+.journey-act > header:not([data-header-media]) .lead {
+  max-width: min(100%, 64rem);
+  margin-inline: auto;
+  text-align: center;
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-body);
+  font-size: clamp(1.02rem, 1.25vw, 1.18rem);
+  line-height: 1.82;
+  letter-spacing: 0.012em;
+  text-wrap: pretty;
+  margin-bottom: var(--space-3);
+}
+
+.journey-act > header:not([data-header-media]) .lead:last-child {
+  margin-bottom: 0;
+}
+
+/*
+ * Tiket tonggak sejarah (revisi Chief 2026-08-30) — bergantian dengan efek
+ * typing di kepala Act I. Baseline SERVER-RENDERED (tanpa JS, atau motion
+ * mati): alur normal, tujuh baris berdiri sendiri — keadaan baca yang utuh.
+ * Baru saat motion benar-benar menyala (`data-ticker-motion`, diset skrip
+ * setelah island terpasang) baris-barisnya bertumpuk pada kotak yang sama
+ * (position: absolute) sehingga hanya satu tampak sekaligus dan bergantian.
+ */
+.act-milestone-ticker-wrap {
+  margin-top: var(--space-4);
+  max-width: 42ch;
+}
+
+.act-milestone-ticker {
+  position: relative;
+}
+
+.act-milestone-ticker[data-ticker-motion="true"] {
+  min-height: 3.4em;
+}
+
+.act-milestone-line {
+  margin: 0 0 var(--space-2);
+  font-family: var(--type-body);
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  line-height: 1.6;
+  color: var(--cinema-ink);
+}
+
+.act-milestone-ticker[data-ticker-motion="true"] .act-milestone-line {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+
+.act-milestone-year {
+  font-family: var(--type-archive);
+  letter-spacing: 0.06em;
+  color: var(--cinema-accent);
+}
+
+.act-milestone-char--space {
+  white-space: pre;
+}
+
+/* ---------- panggung ---------- */
+
+.scene {
+  scroll-margin-top: 0;
+}
+
+.scene-pin-space {
+  display: none;
+}
+
+/*
+ * Peta pacing per koreografi (direktif §19: durasi tidak seragam).
+ * Nilai-nilai ini MENCERMINKAN `PIN_DISTANCES` di modules/motion/scenes.ts —
+ * ruang pin dirender server supaya tidak ada CLS, jadi tingginya harus
+ * disepakati kedua sisi. Shot kontemplatif menahan lebih lama; shot ritmis
+ * bergerak lebih cepat.
+ */
+@media (min-width: 48rem) and (max-width: 63.999rem) and (
+    prefers-reduced-motion: no-preference
+  ) {
+  .scene-pin-space {
+    display: block;
+    height: 240svh;
+  }
+
+  /*
+   * 879 kini 5 beat, bukan 4 (revisi Chief 2026-08-30) — jatah gulir naik
+   * +25% (mencerminkan PIN_DISTANCES.inscriptionReveal di scenes.ts)
+   * supaya tiap beat tetap dapat ruang yang sama, bukan makin sempit.
+   */
+  .scene[data-choreography="inscriptionReveal"] .scene-pin-space {
+    height: 325svh;
+  }
+
+  .scene[data-choreography="bridgeConstruction"] .scene-pin-space {
+    height: 260svh;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .scene-pin-space {
+    height: 250svh;
+  }
+
+  .scene[data-choreography="manuscriptWorld"] .scene-pin-space,
+  .scene[data-choreography="industrialExpansion"] .scene-pin-space {
+    height: 230svh;
+  }
+
+  .scene[data-choreography="nameEndures"] .scene-pin-space {
+    height: 190svh;
+  }
+
+  .scene[data-choreography="dahaLiving"] .scene-pin-space {
+    height: 200svh;
+  }
+
+  .scene[data-choreography="politicalFracture"] .scene-pin-space,
+  .scene[data-choreography="bridgeLift"] .scene-pin-space {
+    height: 215svh;
+  }
+
+  .scene[data-choreography="nameEmerges"] .scene-pin-space,
+  .scene[data-choreography="revolutionMachine"] .scene-pin-space {
+    height: 205svh;
+  }
+
+  .scene[data-choreography] .scene-stage {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+  .scene-pin-space {
+    display: block;
+    height: 390svh;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .scene-pin-space {
+    height: 525svh;
+  }
+
+  .scene[data-choreography="bridgeConstruction"] .scene-pin-space {
+    height: 420svh;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .scene-pin-space {
+    height: 400svh;
+  }
+
+  .scene[data-choreography="manuscriptWorld"] .scene-pin-space,
+  .scene[data-choreography="industrialExpansion"] .scene-pin-space {
+    height: 370svh;
+  }
+
+  .scene[data-choreography="nameEndures"] .scene-pin-space {
+    height: 300svh;
+  }
+
+  .scene[data-choreography="dahaLiving"] .scene-pin-space {
+    height: 320svh;
+  }
+
+  .scene[data-choreography="politicalFracture"] .scene-pin-space,
+  .scene[data-choreography="bridgeLift"] .scene-pin-space {
+    height: 350svh;
+  }
+
+  .scene[data-choreography="nameEmerges"] .scene-pin-space,
+  .scene[data-choreography="revolutionMachine"] .scene-pin-space {
+    height: 330svh;
+  }
+
+  .scene[data-choreography] .scene-stage {
+    position: sticky;
+    top: 0;
+  }
+}
+
+/*
+ * PANGGUNG. Bingkai penuh layar. Gulir adalah kameranya.
+ */
+.scene-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: grid;
+  grid-template-areas: "frame";
+  /* Baris eksplisit — lihat catatan CLS di .prologue-stage. */
+  grid-template-rows: 1fr;
+  align-items: center;
+  overflow: hidden;
+}
+
+.scene-stage > * {
+  grid-area: frame;
+}
+
+.stage-void {
+  align-self: stretch;
+  justify-self: stretch;
+  background: var(--cinema-canvas);
+  z-index: -3;
+}
+
+/*
+ * Permukaan disingkap CAHAYA, bukan opacity.
+ *
+ * `--lit` berjalan 0 -> 1 di bawah kendali timeline, dan mask membuka bingkai
+ * pada sudut yang sama dengan pita cahaya. Yang tersingkap tetap tersingkap:
+ * keterbacaan adalah peristiwa, dan ia searah.
+ *
+ * `--dolly` adalah kamera. Yang membesar permukaannya, bukan halamannya.
+ */
+.stage-surface {
+  /* Static baseline harus utuh tanpa JavaScript. GSAP mengatur 0 saat shot mulai. */
+  --lit: 1;
+  --dolly: 1;
+
+  align-self: stretch;
+  justify-self: stretch;
+  position: relative;
+  z-index: -2;
+  color: var(--cinema-rule);
+  transform: scale(var(--dolly));
+  transform-origin: 62% 46%;
+  will-change: transform;
+  -webkit-mask-image: linear-gradient(
+    104deg,
+    /* Mask hanya membaca kanal alfa, jadi warna opak apa pun setara. */
+    currentcolor 0,
+    currentcolor calc(var(--lit) * 134%),
+    transparent calc(var(--lit) * 134% + 15%)
+  );
+  mask-image: linear-gradient(
+    104deg,
+    /* Mask hanya membaca kanal alfa, jadi warna opak apa pun setara. */
+    currentcolor 0,
+    currentcolor calc(var(--lit) * 134%),
+    transparent calc(var(--lit) * 134% + 15%)
+  );
+}
+
+.stage-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  mask-image: radial-gradient(
+    ellipse 98% 95% at 50% 50%,
+    black 82%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 98% 95% at 50% 50%,
+    black 82%,
+    transparent 100%
+  );
+}
+
+.stage-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/*
+ * JENDELA BINGKAI (Authority Rule 1).
+ *
+ * Jendela di `modules/motion/framing.ts` HANYA bekerja bila transform ini
+ * benar-benar diterapkan pada <img>. Sesi 2026-09-03 sempat menggantinya
+ * dengan `transform: none` (alasan: "tanpa pembesaran ekstrem") tanpa
+ * keputusan tercatat — akibatnya kata "kadhiri" dan tarikh yang terbakar di
+ * raster 879/921/1015/1042 kembali tampil, dan gate vitest hanya menguji
+ * simulator, bukan bingkai yang dirender. Dipulihkan 2026-09-04: kalau
+ * sebuah jendela terasa terlalu besar, ubah JENDELANYA di framing.ts (dan
+ * gate akan menguji ulang), jangan matikan mekanismenya.
+ *
+ * Mobile lebih dulu, karena jendela mobile adalah komposisi tersendiri dan
+ * bukan desktop yang dikecilkan (UX Bible bagian 26).
+ */
+.stage-media img,
+.framing-stage img {
+  transform-origin: center center;
+}
+
+.stage-media[style*="--frame-zoom-m"] img,
+.framing-stage[style*="--frame-zoom-m"] img {
+  object-position: var(--frame-pos-m, center center);
+  transform: scale(var(--frame-zoom-m, 1))
+    translate(var(--frame-x-m, 0%), var(--frame-y-m, 0%));
+}
+
+@media (min-width: 48rem) {
+  .stage-media[style*="--frame-zoom-d"] img,
+  .framing-stage[style*="--frame-zoom-d"] img {
+    object-position: var(--frame-pos-d, center center);
+    transform: scale(var(--frame-zoom-d, 1))
+      translate(var(--frame-x-d, 0%), var(--frame-y-d, 0%));
+  }
+}
+
+/*
+ * Titik fokus per scene (manifest: docs/shots/image-manifest.md, "Strategi
+ * crop"). Crop historis penting tidak diserahkan pada object-fit buta:
+ * aksara digeser agar tetap di bingkai; citra dengan tipografi terbakar di
+ * kiri-atas digeser agar pelat tipografi panggung mendapat ruang negatifnya.
+ */
+/*
+ * Scene Batch A (00–04) tidak lagi diarahkan di sini. Pengarahan bingkainya
+ * pindah ke jendela manifest di src/modules/motion/framing.ts, yang juga
+ * mengeluarkan teks terbakar dari bingkai. Aturan di bawah hanya berlaku bagi
+ * scene yang batch-nya belum dibuka.
+ */
+.scene[data-media-slot="1135-panjalu-jayati"] .stage-media img {
+  object-position: 45% 50%;
+}
+
+.scene[data-media-slot="1222-ganter"] .stage-media img,
+.scene[data-media-slot="1869-brantas-bridge"] .stage-media img,
+.scene[data-media-slot="1912-bridge-lift"] .stage-media img,
+.scene[data-media-slot="1950-city-republic"] .stage-media img,
+.scene[data-media-slot="1958-from-1000-square-metres"] .stage-media img {
+  object-position: 60% 55%;
+}
+
+.scene[data-media-slot="2024-2026-river-to-runway"] .stage-media img {
+  object-position: 60% 45%;
+}
+
+/*
+ * LAPISAN NAMA (Authority Rule 1).
+ *
+ * Nama tempat dan wilayah hidup di sini sebagai teks sungguhan, bukan sebagai
+ * piksel di dalam citra. Ia dapat dibaca pembaca layar, disalin, diterjemahkan,
+ * dan diperbaiki — tiga hal yang mustahil dilakukan pada teks yang terbakar ke
+ * dalam raster.
+ *
+ * Tipografinya monumental karena pada 921 nama itu memang subjek utamanya;
+ * pada 1042 ia lebih kecil, sebab di sana yang dominan adalah sungainya.
+ */
+.scene-nomenclature {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.scene-name {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  align-items: center;
+  text-align: center;
+  color: var(--cinema-ink);
+  text-shadow:
+    0 0.02em 0.14em rgb(0 0 0 / 68%),
+    0 0 0.6em rgb(0 0 0 / 34%);
+}
+
+.scene-name__word {
+  font-size: clamp(2rem, 6.4vw, 5.5rem);
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.scene-name__gloss {
+  font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+/*
+ * Tradisi tidak pernah tampil dengan otoritas yang sama seperti sejarah.
+ * 04_VISUAL_ACCEPTANCE: History dan Tradition harus dapat dibedakan. Perbedaan
+ * itu dibuat di sini secara teknis, bukan diserahkan pada tafsir pembaca.
+ */
+.scene-name[data-epistemic="tradition"] .scene-name__word {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  opacity: 0.86;
+}
+
+/* 921 — satu nama, di tengah, memikul seluruh scene. */
+.scene[data-media-slot="921-kadhiri"] .scene-nomenclature {
+  place-items: center;
+}
+
+/*
+ * KADHIRI dipusatkan secara horizontal di seluruh viewport, sementara
+ * kalimat pemikul tetap di kolom kiri. 13ch masih membuat baris terakhirnya
+ * berhenti persis di ambang huruf K — jarak terukur hanya ~7px dan kotak
+ * `.scene-name` (termasuk letter-spacing setelah huruf terakhir) bahkan
+ * tumpang tindih 30px (tinjauan visual 2026-08-28 ronde keempat). Ini bukan
+ * lagi soal lolos-tidaknya satu ambang batas: bidang bacanya dipersempit
+ * lebih jauh DAN diberi margin kanan eksplisit, supaya jeda antara kalimat
+ * dan nama terasa jelas sebagai pemisahan hierarki, bukan kebetulan pas.
+ */
+/*
+ * Tarikh besar (154px) + kalimat pemikul enam-baris membuat total tinggi
+ * plat nyaris pas dengan satu viewport (2px sisa) setelah perbaikan di
+ * atas — terlalu tipis untuk aman lintas-peramban. Padding bawah dikurangi
+ * sedikit khusus di sini untuk margin nyata, bukan sekadar lolos.
+ */
+.scene[data-media-slot="921-kadhiri"] .stage-plate {
+  padding-bottom: clamp(2.5rem, 7svh, 5rem);
+}
+
+/*
+ * Kalimat pemikul 921 kembali ke lebar dan ukuran bawaannya. Penyempitan
+ * 11ch yang pernah di sini hanya ada untuk menghindar dari KADHIRI yang
+ * dulunya melayang di tengah viewport — sejak panggung 921 dipartisi
+ * (baris "name"/"plate", lihat blok di bawah), KADHIRI hidup di barisnya
+ * sendiri dan tidak lagi berbagi ruang dengan kalimat ini. Bidang sempit
+ * itu justru merugikan: membungkus 6 baris, membuat plat setinggi hampir
+ * satu viewport penuh dan mencekik baris nama sampai KADHIRI terpotong.
+ */
+
+/*
+ * 1042 — nama beristirahat di tengah lalu terpisah ke tepiannya masing-masing
+ * di bawah kendali timeline. Posisi istirahatnya sengaja berimpit: kesatuan
+ * harus terbaca sebelum pemisahan berarti.
+ *
+ * Sumbu vertikal digeser turun dari true-center: kalimat pemikul empat-baris
+ * (lebar wajarnya, lihat catatan di `.master-line`) berbagi tinggi persis
+ * dengan sumbu tengah viewport, tempat PANJALU/JANGGALA beristirahat secara
+ * bawaan — tabrakan nyata, terbukti pada tinjauan visual dan e2e 2026-08-28
+ * ronde kelima. PANJALU dan JANGGALA (bukan BRANTAS, yang sudah punya
+ * `align-self: end` sendiri) turun secukupnya untuk berhenti setelah
+ * kalimat pemikul berakhir.
+ */
+.scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
+  justify-items: center;
+  align-items: center;
+  grid-template-areas: "stack";
+}
+
+.scene[data-media-slot="1042-river-divides-kingdom"] .scene-name {
+  grid-area: stack;
+}
+
+/*
+ * PARTISI STRUKTURAL PANGGUNG (desktop/tablet lebar) — 921 & 1042.
+ *
+ * Sebelumnya `.scene-nomenclature` adalah lapisan `absolute inset:0` yang
+ * memusatkan diri terhadap SELURUH viewport — berbagi ruang dengan teks
+ * `.stage-plate` tanpa mekanisme apa pun yang mencegah keduanya bersentuhan.
+ * Semua tabrakan (KADHIRI vs kalimat pemikul di 921, PANJALU/JANGGALA vs
+ * "Sejarah mengingat..." di 1042) lahir dari situ, dan tiap perbaikan angka
+ * piksel hanya memindahkan tabrakan, bukan menghilangkannya.
+ *
+ * Kini panggung kedua scene ini dibagi menjadi DUA BARIS NYATA: baris "name"
+ * (sisa ruang, 1fr) dan baris "plate" (auto, setinggi kontennya). Nama
+ * wilayah memusatkan diri DI DALAM baris miliknya sendiri — ia secara
+ * geometris tidak pernah bisa menyentuh teks di baris bawah, berapa pun
+ * panjang konten atau ukuran viewport. Ini pola yang sama dengan varian
+ * mobile+reduced-motion di bawah ("frame"/"name") — filosofinya kini
+ * konsisten di semua breakpoint. Lapisan latar (void, permukaan citra,
+ * motif handoff) tetap membentang penuh lewat span kedua baris.
+ */
+@media (min-width: 48rem) {
+  .scene[data-media-slot="921-kadhiri"] .scene-stage,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-stage {
+    grid-template-areas: "name" "plate";
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-stage > *,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-stage > * {
+    /* Latar & motif tetap satu bingkai penuh, membentang kedua baris. */
+    grid-area: 1 / 1 / -1 / -1;
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-nomenclature,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
+    grid-area: name;
+    position: static;
+    inset: auto;
+    /*
+     * `align-self: stretch` WAJIB: `.scene-stage` punya `align-items:
+     * center`, yang tanpa ini memusatkan kotak nomenklatur di tengah baris
+     * dan mendorong nama naik ke zona nav (terukur: KADHIRI 43px dari atap
+     * pada 1440×900). Direntangkan penuh, lalu nama duduk di DASAR baris —
+     * tepat di atas blok teks, sejauh mungkin dari nav dan label pratinjau
+     * editorial di tepi atas. Padding bawah = jeda napas ke kalimat pemikul.
+     */
+    align-self: stretch;
+    align-items: end;
+    padding-bottom: clamp(1rem, 2.5svh, 1.5rem);
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .stage-plate,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .stage-plate {
+    grid-area: plate;
+    /*
+     * Padding kepala besar milik `.stage-plate` umum (hingga 7rem) ada
+     * untuk model tumpukan: mencegah tepi atas plat mencapai zona nav.
+     * Di model partisi, baris nama-lah yang memisahkan plat dari nav —
+     * padding itu hanya mencekik baris nama sampai nama terdesak ke bawah
+     * nav (terukur 1440×900 & 1024×768). Cukup jeda tipis di sini.
+     */
+    padding-top: clamp(1.5rem, 4svh, 2.5rem);
+    padding-bottom: clamp(1.75rem, 4svh, 2.5rem);
+  }
+
+  /*
+   * Ruang beat dipesan SETINGGI BEAT TERPANJANG YANG SEBENARNYA — diukur
+   * langsung (klona natural, lebar asli) per band viewport, bukan ditebak:
+   * 921 → 274px @1440, 187px @768-1024; 1042 → 135px @1440, 106px @768-1024.
+   * Nilai dasar (di bawah, untuk mobile) tetap berlaku di luar band ini.
+   */
+  .scene[data-choreography="nameEmerges"] .stage-passages {
+    min-height: 8rem;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-passages {
+    min-height: 5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .scene[data-choreography="nameEmerges"] .stage-passages {
+    min-height: 11.5rem;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-passages {
+    min-height: 6rem;
+  }
+}
+
+.scene[data-media-slot="1042-river-divides-kingdom"] .scene-name__word {
+  font-size: clamp(1.4rem, 3.2vw, 2.6rem);
+}
+
+.scene[data-media-slot="1042-river-divides-kingdom"]
+  .scene-name[data-anchor="river"] {
+  align-self: end;
+  padding-bottom: clamp(2rem, 8vh, 6rem);
+}
+
+.scene[data-media-slot="1042-river-divides-kingdom"]
+  .scene-name[data-anchor="river"]
+  .scene-name__word {
+  font-size: clamp(0.9rem, 1.6vw, 1.25rem);
+  letter-spacing: 0.42em;
+  opacity: 0.9;
+}
+
+/*
+ * Mobile adalah desain tersendiri, bukan desktop yang dikecilkan. Tanpa
+ * koreografi pemisahan, nama-nama 1042 tidak boleh menumpuk di satu titik:
+ * di sini mereka menjadi tumpukan vertikal yang terbaca.
+ */
+@media (max-width: 47.999rem) {
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
+    grid-template-areas: none;
+    align-content: center;
+    gap: clamp(1rem, 4vh, 2rem);
+  }
+
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-name {
+    grid-area: auto;
+  }
+
+  .scene[data-media-slot="1042-river-divides-kingdom"]
+    .scene-name[data-anchor="river"] {
+    align-self: center;
+    padding-bottom: 0;
+  }
+}
+
+/*
+ * Mobile + beat menumpuk (tanpa-JavaScript ATAU reduced-motion): nama
+ * (KADHIRI; PANJALU/JANGGALA/BRANTAS) adalah satu-satunya isi 921 dan 1042
+ * yang masih melapis SELURUH panggung (`inset:0`). Selama beat tumpang
+ * tindih satu sel itu aman — footprint-nya kecil. Begitu beat menumpuk
+ * vertikal penuh (perbaikan CLS di atas), nama itu menutupi paragraf yang
+ * lewat di bawahnya — terbukti pada tinjauan visual 2026-08-28 ronde kedua.
+ * Panggung mendapat baris kedua eksplisit khusus nama; `1fr` untuk "frame"
+ * (bukan `auto`) menghindari sirkularitas ukuran yang sama seperti CLS di
+ * atas, dan "name" auto-size aman karena isinya teks biasa, bukan anak
+ * `align-self:stretch`.
+ */
+/*
+ * Berlaku untuk SELURUH mobile, bukan hanya mobile+tanpa-JS dan
+ * mobile+reduced: varian koreografi mobile memang tidak pernah membangun
+ * timeline (attachScene mengembalikan pembersih kosong), jadi beat-nya sudah
+ * menumpuk vertikal dan lapisan nama `inset:0` menutupi paragraf persis
+ * seperti kedua kasus lain (terbukti pada tangkapan mobile 1042 2026-09-03).
+ */
+@media (max-width: 47.999rem) {
+  .scene[data-media-slot="921-kadhiri"] .scene-stage,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-stage {
+    grid-template-areas: "frame" "name";
+    grid-template-rows: 1fr auto;
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-nomenclature,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
+    grid-area: name;
+    position: static;
+    inset: auto;
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--shell-gutter);
+    background: var(--cinema-canvas);
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-name,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-name {
+    grid-area: auto;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .scene[data-media-slot="1042-river-divides-kingdom"]
+    .scene-name[data-anchor="river"] {
+    align-self: auto;
+    padding-bottom: 0;
+  }
+}
+
+.stage-media-shade {
+  position: absolute;
+  inset: 0;
+  background:
+/* Gradasi vertikal atas & bawah: menghapus potongan tegas dan mengalirkan citra ke kanvas */
+    linear-gradient(
+      180deg,
+      var(--cinema-canvas) 0%,
+      color-mix(in srgb, var(--cinema-canvas) 85%, transparent) 8%,
+      transparent 22%,
+      transparent 76%,
+      color-mix(in srgb, var(--cinema-canvas) 88%, transparent) 92%,
+      var(--cinema-canvas) 100%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 82%, transparent),
+      color-mix(in srgb, var(--cinema-canvas) 14%, transparent) 58%,
+      color-mix(in srgb, var(--cinema-canvas) 42%, transparent)
+    );
+}
+
+/* Prolog ditayangkan penuh; naskah pembuka sudah selesai sebelum footage masuk. */
+.prologue-surface .stage-media-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at center,
+      transparent 30%,
+      color-mix(in srgb, var(--cinema-canvas) 58%, transparent) 75%,
+      var(--cinema-canvas) 100%
+    ),
+    linear-gradient(
+      0deg,
+      var(--cinema-canvas) 0%,
+      transparent 20%,
+      transparent 80%,
+      var(--cinema-canvas) 100%
+    );
+  pointer-events: none;
+}
+
+.stage-media--pending {
+  display: grid;
+  place-items: start end;
+  box-sizing: border-box;
+  padding: clamp(6rem, 12svh, 8rem) var(--shell-gutter);
+  background:
+    radial-gradient(
+      circle at 68% 34%,
+      color-mix(in srgb, var(--cinema-accent) 10%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(
+      112deg,
+      transparent 0 48%,
+      color-mix(in srgb, var(--cinema-rule) 52%, transparent) 48% 48.1%,
+      transparent 48.1% 100%
+    ),
+    var(--cinema-surface);
+}
+
+.media-slot-card {
+  width: min(34vw, 30rem);
+  display: grid;
+  gap: var(--space-2);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  border: 1px solid var(--cinema-rule);
+  background: color-mix(in srgb, var(--cinema-canvas) 68%, transparent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  backdrop-filter: blur(0.5rem);
+}
+
+.media-slot-card span,
+.media-slot-card small {
+  font-size: 0.58rem;
+}
+
+.media-slot-card strong {
+  color: var(--cinema-ink);
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  font-weight: 500;
+}
+
+.stage-surface svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/*
+ * Di atas citra produksi, Kanvas Historis berubah peran: dari subjek menjadi
+ * tekstur — garis geometri tipis di atas foto (blueprint di atas jembatan),
+ * bukan dua subjek yang bersaing dalam satu bingkai.
+ */
+.stage-media[data-media-state="ready"] ~ svg {
+  opacity: 0.32;
+  mix-blend-mode: screen;
+}
+
+.stage-surface path,
+.stage-surface line {
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.stage-surface circle {
+  fill: currentcolor;
+  opacity: 0.55;
+}
+
+.stage-surface .grain-fracture path {
+  stroke: var(--cinema-accent);
+  opacity: 0.45;
+}
+
+/* Cahaya menyudut: pita tipis yang melintasi bingkai. */
+.stage-light {
+  align-self: stretch;
+  justify-self: stretch;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    104deg,
+    transparent 43%,
+    color-mix(in srgb, var(--cinema-accent) 30%, transparent) 50%,
+    transparent 57%
+  );
+}
+
+/* Pelat teks: kiri bawah bingkai, seperti kartu judul film. */
+.stage-plate {
+  align-self: end;
+  justify-self: start;
+  max-width: min(94vw, 62rem);
+  /*
+   * Lantai aman atas: plat ini rata-bawah, tetapi saat isinya cukup tinggi
+   * (mis. 1042 — tarikh monumental + tiga baris kalimat pemikul + nama
+   * wilayah), tepi atasnya bisa mencapai zona nav tetap dan terpotong oleh
+   * `overflow: hidden` panggung — terbukti pada tinjauan visual 2026-08-26
+   * (tarikh "1042" tertimpa wordmark). Padding ini tidak mengubah apa pun
+   * untuk scene berisi pendek — plat tetap rata-bawah, hanya kotaknya
+   * mendapat ruang kepala yang tak pernah terlihat sampai benar-benar
+   * dibutuhkan.
+   */
+  padding: clamp(4.5rem, 11svh, 7rem) var(--shell-gutter)
+    clamp(3.5rem, 11svh, 8rem);
+  display: grid;
+  gap: var(--space-3);
+}
+
+/*
+ * Tarikh adalah subjek, bukan label. Ia memenuhi bingkai dan hadir bertahap,
+ * karena pengetahuan tentang tarikh itu pun sampai kepada kita bertahap.
+ */
+.stage-date {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.14em;
+  font-family: var(--type-archive);
+  font-size: var(--type-size-monumental);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  color: var(--cinema-ink);
+  margin: 0;
+}
+
+.stage-date .date-unit {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.14em;
+}
+
+.stage-date .date-sep {
+  color: var(--cinema-accent);
+  font-size: 0.3em;
+  transform: translateY(-1em);
+}
+
+.stage-context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  /*
+   * Scene 01-04: kedua anak (eyebrow, judul) menjadi visually-hidden
+   * (position: absolute), sehingga tanpa min-height ini flex container
+   * mengukur dirinya sendiri sebagai 0px tinggi — grid row `auto` di
+   * `.stage-plate` ikut menciut ke 0, dan kontainernya berhenti terhitung
+   * "visible" sama sekali (bukan cuma sr-only). 1px menyamai teknik
+   * `.visually-hidden` sendiri: tetap ada, tidak pernah nol.
+   */
+  min-height: 1px;
+}
+
+.scene-status {
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--cinema-rule);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.stage-sequence,
+.stage-object {
+  font-family: var(--type-archive);
+  font-size: 0.64rem;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cinema-ink-muted);
+  margin: 0;
+}
+
+.stage-sequence {
+  color: var(--cinema-accent);
+}
+
+.stage-object span {
+  color: var(--cinema-accent);
+  margin-right: 0.8em;
+}
+
+/* Judul turun menjadi label: kalimat master yang memikul bidikan. */
+.scene-stage .title-scene {
+  font-family: var(--type-archive);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 500;
+  /* Kehadiran diturunkan lewat WARNA, bukan opacity — kontrak a11y
+     reduced-motion menuntut tidak ada elemen tertinggal transparan. */
+  color: color-mix(in srgb, var(--cinema-accent) 72%, transparent);
+  margin: 0;
+}
+
+.master-line {
+  /*
+   * Headline scene (direktif editorial 2026-08-29): serif bersejarah dengan
+   * bobot sedang dan tracking tenang — bukan pernyataan tebal ber-tracking
+   * negatif. Ukurannya sedikit diturunkan agar tidak mendominasi citra.
+   */
+  font-family: var(--type-narrative);
+  font-size: calc(var(--type-size-scene) * 0.88);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  text-wrap: balance;
+  max-width: 22ch;
+  margin: 0;
+  color: var(--cinema-ink);
+}
+
+/*
+ * Micro-label seragam di seluruh panggung Journey (direktif editorial
+ * 2026-08-29): kecil, uppercase, tracking 0.15em, kehadiran diturunkan.
+ */
+[data-journey="true"] .journey-act > header .archive-label,
+[data-journey="true"] .eyebrow,
+.scene-stage .stage-sequence,
+.stage-visual-label,
+.scene-stage .scene-status {
+  font-size: clamp(0.65rem, 0.8vw, 0.72rem);
+  letter-spacing: 0.15em;
+  color: color-mix(in srgb, currentcolor 68%, transparent);
+}
+
+/* ---------- 879: epigraphic field ---------- */
+
+/*
+ * Satu scene, satu tesis: sebuah catatan mendahului kerajaan. Permukaan logam
+ * memenuhi bingkai tetapi tidak menyamar sebagai artefak asli; indeks museum
+ * dan kelas bukti tetap terlihat pada kedalaman Glance.
+ */
+.scene[data-choreography="inscriptionReveal"] .scene-stage {
+  background:
+    radial-gradient(
+      ellipse at 68% 38%,
+      color-mix(in srgb, var(--cinema-accent) 9%, transparent),
+      transparent 44%
+    ),
+    var(--cinema-canvas);
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-surface {
+  color: color-mix(in srgb, var(--cinema-accent) 42%, var(--cinema-rule));
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 78%, transparent) 0%,
+      color-mix(in srgb, var(--cinema-canvas) 18%, transparent) 44%,
+      color-mix(in srgb, var(--cinema-canvas) 42%, transparent) 100%
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 88%, transparent) 0%,
+      transparent 54%
+    ),
+    radial-gradient(
+      ellipse at 24% 28%,
+      color-mix(in srgb, var(--cinema-accent) 11%, transparent),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 76% 64%,
+      color-mix(in srgb, var(--cinema-surface) 82%, transparent),
+      transparent 56%
+    ),
+    var(--cinema-canvas);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform-origin: 66% 44%;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-surface svg {
+  mix-blend-mode: soft-light;
+  opacity: 0.22;
+}
+
+.scene .stage-visual-label {
+  z-index: 1;
+  align-self: start;
+  justify-self: end;
+  margin: clamp(5.75rem, 12svh, 7.5rem) var(--shell-gutter) 0;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--cinema-rule);
+  background: color-mix(in srgb, var(--cinema-canvas) 74%, transparent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  backdrop-filter: blur(0.35rem);
+}
+
+/* ---------- transisi sambutan pembuka Act I ---------- */
+
+/*
+ * Alur normal sesudah header Act I dan sebelum panggung 879. Tingginya kurang
+ * dari setengah viewport dan address duduk di upper field agar tidak ada jeda
+ * kanvas kosong sebelum huruf pertama terlihat. Tidak ada panel atau bidang
+ * tambahan di belakang tipografi; kanvas act tetap menjadi permukaan induknya.
+ */
+.scene-opening-transition {
+  min-height: clamp(18rem, 44svh, 28rem);
+  display: grid;
+  place-items: start center;
+  padding: clamp(2.5rem, 5svh, 4rem) var(--shell-gutter);
+  background: transparent;
+}
+
+.scene-opening-address {
+  width: min(100%, 34rem);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  backdrop-filter: none;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 2px 10px rgba(0, 0, 0, 0.8),
+    0 0 24px rgba(0, 0, 0, 0.6);
+}
+
+.opening-address-line {
+  margin: 0 0 0.35rem;
+  color: var(--cinema-ink);
+}
+
+.opening-address-line:last-child {
+  margin-bottom: 0;
+}
+
+/*
+ * Hierarki dibalik (revisi Chief): aksara Jawa dekoratif — kebanyakan
+ * pembaca tidak bisa membacanya, jadi ia BUKAN baris paling menonjol.
+ * Baris Latin (kalimat yang sungguhan dibaca) memikul bobot utama, lebih
+ * besar dari sebelumnya — sekelas sambutan, bukan caption kecil.
+ */
+.opening-address-line-0 {
+  font-size: clamp(1.1rem, 1.9vw, 1.4rem);
+  line-height: 1.6;
+  color: var(--cinema-ink-muted);
+}
+
+.opening-address-line-1 {
+  font-family: var(--type-narrative);
+  font-style: italic;
+  font-size: clamp(1.5rem, 2.6vw, 1.95rem);
+  line-height: 1.35;
+  color: var(--cinema-ink);
+}
+
+.opening-address-line-2 {
+  font-family: var(--type-body);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  color: var(--cinema-accent);
+}
+
+.opening-address-char--space {
+  white-space: pre;
+}
+
+/* ---------- 1135: authority converges ---------- */
+
+.scene[data-choreography="royalConsolidation"] .scene-stage {
+  background: var(--cinema-canvas);
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-surface {
+  color: color-mix(in srgb, var(--cinema-accent) 44%, var(--cinema-rule));
+  background:
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 92%, transparent) 0%,
+      transparent 54%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 54%, transparent),
+      transparent 36%,
+      transparent 64%,
+      color-mix(in srgb, var(--cinema-canvas) 54%, transparent)
+    ),
+    var(--cinema-canvas);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform-origin: center 56%;
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-surface svg {
+  mix-blend-mode: screen;
+  opacity: 0.18;
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-plate {
+  width: 100%;
+  max-width: none;
+  grid-template-columns: minmax(0, 0.8fr) minmax(18rem, 0.65fr);
+  align-items: end;
+  column-gap: clamp(2rem, 8vw, 10rem);
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-context {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--cinema-rule);
+  padding-top: var(--space-3);
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-date {
+  grid-column: 1;
+  font-size: clamp(7rem, 21vw, 20rem);
+  line-height: 0.72;
+}
+
+.scene[data-choreography="royalConsolidation"] .master-line {
+  grid-column: 2;
+  border-left: 1px solid var(--cinema-accent);
+  padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
+  font-size: clamp(2rem, 3.8vw, 4.6rem);
+  max-width: 16ch;
+}
+
+/* ---------- 1869: iron crosses water ---------- */
+
+.scene[data-choreography="bridgeConstruction"] .scene-stage {
+  background: var(--cinema-canvas);
+}
+
+/* Scene ini adalah malam industri di dalam era kolonial yang umumnya terang.
+ * Override-nya tetap memakai primitif token Kediri, bukan palet lokal baru. */
+.scene[data-choreography="bridgeConstruction"] {
+  --cinema-canvas: var(--kediri-black);
+  --cinema-surface: var(--kediri-river-deep);
+  --cinema-ink: var(--kediri-civic-white);
+  --cinema-ink-muted: var(--kediri-stone);
+  --cinema-rule: var(--kediri-iron);
+  --cinema-accent: var(--kediri-civic-gold);
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-surface {
+  color: color-mix(in srgb, var(--cinema-accent) 62%, var(--cinema-rule));
+  background:
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 90%, transparent) 0%,
+      transparent 58%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 66%, transparent) 0%,
+      transparent 50%,
+      color-mix(in srgb, var(--cinema-canvas) 34%, transparent) 100%
+    ),
+    var(--cinema-canvas);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform-origin: 60% 44%;
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-plate {
+  width: 100%;
+  max-width: none;
+  grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.72fr);
+  align-items: end;
+  column-gap: clamp(2rem, 7vw, 9rem);
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-context {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--cinema-rule);
+  padding-top: var(--space-3);
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-date {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: clamp(7rem, 20vw, 19rem);
+  line-height: 0.72;
+}
+
+/* "18 MARET" adalah presisi, bukan monumen: tahunnya yang memikul bingkai.
+   Tiga baris raksasa bertabrakan dengan tipografi yang terbakar di citra. */
+.scene[data-choreography="bridgeConstruction"]
+  .stage-date
+  .date-unit:nth-child(-n + 2) {
+  font-size: 0.075em;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  color: var(--cinema-ink-muted);
+}
+
+.scene[data-choreography="bridgeConstruction"]
+  .stage-date
+  .date-unit:last-child {
+  flex-basis: 100%;
+  color: var(--cinema-ink);
+}
+
+.scene[data-choreography="bridgeConstruction"]
+  .stage-date
+  .date-unit:last-child
+  .date-sep {
+  display: none;
+}
+
+.scene[data-choreography="bridgeConstruction"] .master-line {
+  grid-column: 2;
+  border-left: 1px solid var(--cinema-accent);
+  padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
+  font-size: clamp(2rem, 3.7vw, 4.5rem);
+  max-width: 17ch;
+}
+
+.scene[data-choreography="inscriptionReveal"] .material-base {
+  fill: color-mix(in srgb, var(--cinema-surface) 76%, transparent);
+}
+
+.scene[data-choreography="inscriptionReveal"] .material-fields ellipse {
+  fill: color-mix(in srgb, var(--cinema-accent) 8%, transparent);
+}
+
+.scene[data-choreography="inscriptionReveal"] .grain-strata path {
+  opacity: 0.34;
+  stroke-width: 1.15;
+}
+
+.scene[data-choreography="inscriptionReveal"] .material-scores path {
+  opacity: 0.18;
+  stroke-width: 0.75;
+}
+
+.scene[data-choreography="inscriptionReveal"] .grain-pits {
+  opacity: 0.66;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-plate {
+  align-self: stretch;
+  width: 100%;
+  max-width: none;
+  padding-top: clamp(6rem, 13svh, 8rem);
+  padding-bottom: clamp(3rem, 8svh, 6rem);
+  grid-template-columns: minmax(0, 1.15fr) minmax(21rem, 0.65fr);
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(2rem, 6vw, 8rem);
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-context {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: auto auto minmax(12rem, 1fr) auto;
+  align-items: center;
+  border-top: 1px solid var(--cinema-rule);
+  border-bottom: 1px solid var(--cinema-rule);
+  padding-block: 0.8rem;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-context .title-scene {
+  color: var(--cinema-ink);
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-object {
+  justify-self: end;
+  text-align: right;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-context .evidence-badge {
+  font-size: 0.62rem;
+  border: 0;
+  padding-inline: 0;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-date {
+  grid-column: 1;
+  grid-row: 2;
+  /*
+   * Dinaikkan (revisi Chief 2026-08-30): `align-self:end` menahan "879"
+   * raksasa di dasar baris, mendesak beat body-text di bawahnya sampai
+   * mepet tepi bawah viewport. `center` (bukan `start` — itu malah nabrak
+   * sambutan Jawa di kanan-atas) memberi ruang kepala tanpa tabrakan.
+   */
+  align-self: center;
+  display: flex;
+  gap: 0.025em;
+  font-size: clamp(9rem, 27vw, 27rem);
+  line-height: 0.68;
+  letter-spacing: -0.085em;
+  max-width: 100%;
+}
+
+.scene[data-choreography="inscriptionReveal"]
+  .stage-date
+  .date-unit:nth-child(-n + 2) {
+  font-size: 0.075em;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  color: var(--cinema-ink-muted);
+}
+
+.scene[data-choreography="inscriptionReveal"]
+  .stage-date
+  .date-unit:last-child {
+  flex-basis: 100%;
+  color: var(--cinema-ink);
+}
+
+.scene[data-choreography="inscriptionReveal"]
+  .stage-date
+  .date-unit:last-child
+  .date-sep {
+  display: none;
+}
+
+.scene[data-choreography="inscriptionReveal"] .master-line {
+  grid-column: 2;
+  grid-row: 2;
+  /* Ikut naik bersama .stage-date (revisi Chief 2026-08-30) — keduanya
+     tetap sebaris satu sama lain, hanya pindah ke tengah baris bersama. */
+  align-self: center;
+  max-width: 14ch;
+  border-left: 1px solid var(--cinema-accent);
+  padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
+  font-size: clamp(2.25rem, 4.4vw, 5.2rem);
+  line-height: 0.98;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+/* ---------- bacaan: dokumennya, setelah bidikan ---------- */
+
+/*
+ * Strip arsip setelah shot: bukti, status, navigasi. Pendek dan fungsional —
+ * naskah naratifnya sudah selesai dibaca DI DALAM shot.
+ */
+.scene-readout {
+  padding-block: clamp(1.25rem, 3svh, 2.25rem);
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  font-family: var(--type-body);
+  position: relative;
+  border-top: none;
+}
+
+.narrative-stack {
+  display: grid;
+  gap: var(--space-3);
+  max-width: var(--measure-narrative);
+}
+
+.narrative-stack p {
+  font-family: var(--type-body);
+  font-size: var(--type-size-lead);
+  line-height: 1.55;
+  font-weight: 400;
+  color: var(--cinema-ink);
+  margin: 0;
+}
+
+/*
+ * Pelat naskah DI ATAS CITRA.
+ *
+ * Tumpuk-menimpa (satu sel grid, `grid-area: 1/1`) adalah DEFAULT — bukan
+ * lagi digerbang `[data-motion-ready="true"]`. Menunggu atribut yang ditulis
+ * JS setelah hidrasi berarti cat pertama merender tumpukan vertikal penuh
+ * (tinggi natural), lalu menyusut ke satu sel begitu GSAP mount — sebuah
+ * lompatan tata letak saat hidrasi karena race antara cat dan JS.
+ * `@media (scripting: none)` di bawah mengevaluasi kemampuan peramban saat
+ * CSS diuraikan, tanpa race — baseline tanpa-JavaScript
+ * kini tercapai TANPA membuat pengguna berskrip menanggung lompatan.
+ */
+.stage-passages {
+  /*
+   * `width` EKSPLISIT, bukan cuma `max-width`. Sejak `.stage-beat` menjadi
+   * `position:absolute` (lihat catatan di sana), tidak ada lagi konten
+   * flow-normal di sini yang bisa dijadikan induk dasar ukuran intrinsik —
+   * pada scene dengan `justify-self:end` (921), kotak ini kolaps ke ~32px
+   * dan satu beat merenggang jadi 956px tinggi karena teksnya terpaksa
+   * wrap ekstrem (tinjauan visual + e2e 2026-08-28 ronde kelima).
+   */
+  position: relative;
+  width: min(100%, 52ch);
+  margin-top: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  max-width: 52ch;
+}
+
+/* Setiap scene menyajikan naskah lengkap dalam alur baca yang jelas. */
+.scene[data-choreography] .stage-passages {
+  min-height: 0;
+}
+
+/*
+ * `min-height` PER SCENE, bukan satu angka untuk semua — beat terpanjang
+ * tiap scene berbeda jauh (172px sampai 385px), dan angka seragam berarti
+ * memboroskan tinggi pada scene berbeat pendek, yang justru membangkitkan
+ * kembali overflow yang baru saja diperbaiki di atas. Nilainya diukur
+ * langsung dari tinggi natural (position:absolute, lebar 100%) beat
+ * terpanjang tiap scene, plus sedikit ruang.
+ */
+.scene[data-choreography="inscriptionReveal"] .stage-passages {
+  min-height: 10rem;
+}
+
+.scene[data-choreography="nameEmerges"] .stage-passages {
+  min-height: 7.5rem;
+}
+
+.scene[data-choreography="nameEndures"] .stage-passages {
+  min-height: 13rem;
+}
+
+.scene[data-choreography="dahaLiving"] .stage-passages {
+  /* Beat terpanjang: tiga kalimat generasi (±6 baris pada 44ch). Tanpa
+     reservasi ini beat absolute naik menimpa baris akhir master. */
+  min-height: 8.5rem;
+}
+
+.scene[data-choreography="dividedKingdom"] .stage-passages {
+  /*
+   * Enam beat editorial 1042 tampil satu per satu. Ruang ini menampung dua
+   * baris body copy tanpa mengubah partisi panggung PANJALU/JANGGALA.
+   */
+  min-height: 4.5rem;
+}
+
+.stage-beat {
+  /*
+   * `position: absolute` yang benar-benar keluar dari alur — BUKAN
+   * `grid-area: 1/1` seperti sebelumnya. CSS Grid tetap mengikutkan SEMUA
+   * item bertumpuk (termasuk yang opacity:0) ke perhitungan tinggi track
+   * auto milik induknya, diambil dari yang TERTINGGI di antara mereka.
+   * Beat yang sedang terlihat di 1042 tingginya 172px, tetapi
+   * `.stage-passages` tetap terhitung 385px karena beat lain (tak
+   * terlihat) lebih panjang — 213px ruang terbuang yang PERSIS
+   * menyebabkan beat terakhir terpotong tepi bawah viewport yang di-pin
+   * (tinjauan visual 2026-08-28 ronde kelima). `position:absolute` benar-
+   * benar tidak berkontribusi ke ukuran induk, apa pun opacity-nya.
+   */
+  position: static;
+  grid-area: auto;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: grid;
+  gap: var(--space-2);
+  max-width: none;
+  /* Body copy berdiri langsung di atas visual; tidak ada panel hitam. */
+  padding: 0;
+  background: none;
+}
+
+.prologue-scene .stage-beat {
+  background: none;
+  padding: 0;
+}
+
+/*
+ * Bergilir satu-per-satu terbukti gampang "hilang" bagi pengunjung: jendela
+ * scroll yang lebar sekalipun tidak menjamin `pendingEntrance` (delayedCall
+ * 0.22 detik di director.ts) sempat memutar sebelum target beat berikutnya
+ * membatalkannya. Revisi Chief 2026-08-30: SEMUA beat 879 & 921 tampil
+ * sekaligus, alur statis — pola sama dengan fallback mobile/reduced-motion/
+ * tanpa-JS, tetapi di sini UNCONDITIONAL (bukan cuma di media query itu),
+ * supaya tidak ada satu pun kalimat yang bisa "kelewat" gulir di kondisi
+ * apa pun. 879 juga TIDAK BOLEH ada blok/gradient gelap di belakang teks —
+ * kontras dijaga murni lewat text-shadow bertumpuk; 921 sudah tidak
+ * memakainya sejak awal (naskah pindah ke ruang negatif citra).
+ */
+.scene[data-choreography="inscriptionReveal"] .stage-beat,
+.scene[data-choreography="nameEmerges"] .stage-beat {
+  position: static;
+  grid-area: auto;
+  max-width: none;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-beat {
+  background: none;
+  padding: 0;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-beat p {
+  font-size: clamp(0.875rem, calc(0.9vw + 0.0625rem), 0.9625rem);
+  line-height: 1.82;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.72),
+    0 2px 10px rgba(0, 0, 0, 0.48),
+    0 0 24px rgba(0, 0, 0, 0.32);
+}
+
+/*
+ * Body copy sinematik (direktif editorial Chief 2026-08-29): sans modern
+ * kecil, halus, terbaca — standar museum/arsip digital. Ukuran, warna, dan
+ * jarak barisnya token, bukan selera per scene.
+ */
+.stage-passages p,
+.prologue-passages p,
+.stage-beat p {
+  margin: 0;
+  font-family: var(--type-body);
+  font-size: clamp(0.95rem, 1.05vw, 1.0625rem);
+  line-height: 1.65;
+  letter-spacing: 0.012em;
+  font-weight: 400;
+  color: var(--cinema-body-ink);
+  text-wrap: pretty;
+}
+
+/* Beat Prolog (revisi Chief): +1px dan naik sedikit dari tepi bawah plate. */
+.prologue-passages p {
+  font-size: clamp(0.9375rem, 0.9vw, 1.025rem);
+}
+
+.prologue-passages {
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  .prologue-passages {
+    margin-bottom: clamp(4rem, 9svh, 6.5rem);
+  }
+}
+
+/* Saat satu beat memikul bingkai sendirian, kalimat pertamanya bersuara —
+   lewat bobot, bukan ukuran. */
+.stage-beat p {
+  max-width: 42ch;
+}
+
+.stage-beat p:first-child {
+  font-weight: 500;
+  color: var(--cinema-ink);
+}
+
+/*
+ * Tumpukan vertikal penuh, bukan tumpang tindih satu sel: dua kasus yang
+ * SAMA-SAMA tidak akan pernah mendapat timeline yang menyingkap beat
+ * bergiliran. (1) peramban tidak mengeksekusi skrip sama sekali. (2)
+ * `prefers-reduced-motion: reduce` — skrip tetap berjalan, tetapi janji
+ * aksesibilitas "seluruh perjalanan tanpa gerak" (UX Bible, terkunci
+ * `smoke.spec.ts` "reduced motion keeps the whole journey") berarti tidak
+ * boleh ada satu pun beat yang bersembunyi di baliknya — kalau tetap
+ * tumpang-tindih, sesi reduced-motion memaksa opacity semua beat menjadi 1
+ * SEKALIGUS di sel yang sama: bertumpuk ilegal, terbukti pada tangkapan
+ * layar tinjauan visual 2026-08-28 (879, 921, 1015, prologue).
+ */
+@media (scripting: none), (prefers-reduced-motion: reduce),
+  (max-width: 47.999rem) {
+  .stage-passages {
+    gap: var(--space-3);
+  }
+
+  .stage-beat {
+    /*
+     * `position: static` saja tidak cukup — item grid tetap memakai
+     * `grid-area` dari rule dasar (1/1) terlepas dari properti position-nya.
+     * `grid-area: auto` mengembalikannya ke penempatan otomatis satu baris
+     * per beat, sehingga benar-benar berhenti tumpang tindih (terbukti
+     * menumpuk ilegal pada tinjauan visual 2026-08-28 sebelum baris ini ada).
+     *
+     * `max-width: 47.999rem` ikut di sini: varian koreografi MOBILE memang
+     * menyalakan SEMUA beat sekaligus ("dokumennya selalu utuh", lihat
+     * scene-section.tsx) — dengan beat absolute mereka menumpuk di satu
+     * titik (terukur 375×812, ketiga beat 921 opacity 1 bertindihan).
+     * Aturan aliran-normal yang sama berlaku untuk ketiganya.
+     */
+    position: static;
+    grid-area: auto;
+    max-width: none;
+  }
+
+  /* Alur statis mewarisi token body copy yang sama; hanya bobot yang
+     membedakan kalimat pembuka. */
+  .stage-beat p {
+    font-weight: 400;
+  }
+
+  .stage-beat p:first-child {
+    font-weight: 500;
+  }
+}
+
+/*
+ * Kasus keempat aliran-normal: scene TANPA koreografi. Ia tidak pernah punya
+ * island motion, jadi tidak ada mesin yang menggilirkan beat — dengan rule
+ * dasar absolute, seluruh beat menumpuk bertindihan di desktop (terbukti pada
+ * tinjauan Chief 2026-08-28, "teks dobel", scene Daha). Ia dokumen statis:
+ * beat mengalir vertikal seperti varian mobile/reduced/tanpa-JS.
+ */
+.scene:not([data-choreography]) .stage-passages {
+  gap: var(--space-3);
+}
+
+.scene:not([data-choreography]) .stage-beat {
+  position: static;
+  grid-area: auto;
+  max-width: none;
+}
+
+.scene:not([data-choreography]) .stage-beat p {
+  font-weight: 400;
+}
+
+.scene:not([data-choreography]) .stage-beat p:first-child {
+  font-weight: 500;
+}
+
+/*
+ * Teks merespons komposisi citranya (direktif §6): 921 — kata "kadhiri"
+ * hidup di tengah-kiri batu, maka naskah pindah ke ruang negatif kanan.
+ * 1015 — lempeng gelap memenuhi tengah; naskah tetap kiri tetapi lebih
+ * tinggi, di bidang bayang yang kosong.
+ */
+.scene[data-media-slot="921-kadhiri"] .stage-passages {
+  justify-self: start;
+  width: min(100%, 38rem);
+  max-width: 38rem;
+  margin-top: clamp(1.25rem, 3svh, 2rem);
+  margin-right: 0;
+  gap: clamp(0.65rem, 1.4svh, 0.9rem);
+}
+
+.scene[data-media-slot="921-kadhiri"] .stage-beat {
+  background: none;
+  padding: 0;
+}
+
+/* Foto prasasti sudah menjadi subjek visual; blueprint generik varian `word`
+   justru menambah garis yang tidak bermakna pada scene ini. */
+.scene[data-media-slot="921-kadhiri"] .stage-surface > svg {
+  display: none;
+}
+
+/* Motif transisi prasasti sudah selesai pada scene sebelumnya. Menampilkannya
+   kembali di 921 hanya menciptakan garis putus-putus tanpa fungsi naratif. */
+.scene[data-media-slot="921-kadhiri"]
+.scene-handoff[data-handoff-phase="incoming"] {
+  display: none;
+}
+
+/*
+ * Scene 921 kini memakai tarikh lengkap sebagai subheading editorial.
+ * Skala monumental sebelumnya dirancang untuk satu angka tahun; saat diberi
+ * tiga kata, setiap unit jatuh ke baris baru dan separator tampak seperti
+ * titik yatim di kiri. Tarikh lengkap ini harus tetap satu baris, halus, dan
+ * berada di bawah hierarki nama KADHIRI.
+ */
+.scene[data-media-slot="921-kadhiri"][data-choreography="nameEmerges"]
+.stage-date {
+  flex-wrap: nowrap;
+  gap: 0.72em;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  line-height: 1.35;
+  letter-spacing: 0.15em;
+  color: var(--cinema-accent);
+}
+
+.scene[data-media-slot="921-kadhiri"] .stage-date .date-unit {
+  gap: 0;
+}
+
+.scene[data-media-slot="921-kadhiri"][data-choreography="nameEmerges"]
+  .master-line {
+  max-width: 22ch;
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.scene[data-media-slot="921-kadhiri"] .stage-passages p {
+  max-width: none;
+  font-size: clamp(0.875rem, 1vw, 0.975rem);
+  line-height: 1.72;
+  letter-spacing: 0.015em;
+}
+
+@media (min-width: 48rem) {
+  .scene[data-media-slot="921-kadhiri"] .scene-nomenclature {
+    justify-items: start;
+    padding-inline: clamp(1.25rem, 5vw, 5rem);
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-name {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+/* Beat awal mempertahankan warna teksnya tanpa bidang latar atau panel. */
+.scene[data-choreography="nameEmerges"] .stage-beat,
+.scene[data-choreography="nameEndures"] .stage-beat,
+.scene[data-choreography="dividedKingdom"] .stage-beat {
+  background: none;
+}
+
+.scene[data-choreography="nameEmerges"] .stage-beat p,
+.scene[data-choreography="nameEndures"] .stage-beat p,
+.scene[data-choreography="dividedKingdom"] .stage-beat p {
+  color: var(--cinema-ink);
+  text-shadow: none;
+}
+
+/*
+ * 1042 di layar lebar: tarikh monumental + kalimat pemikul 4 baris + satu
+ * beat adalah tumpukan konten terpanjang dari keempat scene ini. Panggung
+ * yang di-pin GSAP dipatok setinggi viewport — `min-height` pada
+ * `.scene-stage` tidak membantu di sini, karena ScrollTrigger menahannya
+ * pas satu layar berapa pun nilainya. Rata-bawah di tinggi tetap itu, tepi
+ * atas tumpukan mencapai zona motif handoff masuk dan menembus digit
+ * "1042" — terbukti pada tinjauan visual 2026-08-28 ronde kedua. Perbaikan
+ * yang benar: tarikh scene ini sendiri yang mengecil secukupnya, bukan
+ * panggungnya — pola yang sama dengan "18 MARET 1869" di bridgeConstruction.
+ */
+.scene[data-choreography="dividedKingdom"] .stage-date {
+  font-size: clamp(3rem, 9vw, 7rem);
+}
+
+/*
+ * Mempersempit atau mengecilkan kalimat pemikul untuk lolos dari PANJALU
+ * ternyata mustahil dicapai bersamaan dengan anggaran tinggi satu viewport
+ * — teks ini butuh empat baris LEBAR untuk tetap pendek secara tinggi;
+ * setiap upaya mempersempitnya menambah baris (dan tinggi) lebih dari yang
+ * dihemat (diverifikasi berulang, tinjauan visual 2026-08-28 ronde kelima).
+ * Kalimat pemikul dikembalikan ke lebar wajarnya (261px, muat nyaman);
+ * PANJALU/JANGGALA yang bergeser turun sedikit di bawah — lihat override
+ * `.scene-nomenclature` untuk 1042.
+ */
+
+/*
+ * Percobaan pertama menurunkan motif handoff masuk supaya lolos dari tarikh
+ * — itu justru memindahkannya tepat ke baris pertama kalimat pemikul
+ * ("Sejarah mengingat..."), bukan menghilangkan tabrakannya (tinjauan visual
+ * 2026-08-28 ronde keempat: tembus di kedua breakpoint desktop DAN laptop
+ * 1024×768). Perbaikan yang benar memakai DUA pengungkit sekaligus, diukur
+ * presisi di 1440×900 dan 1024×768 pada progres baca dan handoff:
+ *   1. Motif naik MENDEKATI nav (bukan menjauh) — nav berhenti di 57px di
+ *      semua breakpoint yang diuji, jadi motif tetap aman di atasnya.
+ *   2. Plat turun lebih jauh (di bawah) supaya kalimat pemikul dimulai jauh
+ *      di bawah motif.
+ * Hasilnya jeda vertikal ±80-90px di kedua breakpoint — bukan sekadar lolos
+ * ambang minimum, tetapi ruang napas yang terasa jelas.
+ */
+.scene[data-choreography="dividedKingdom"]
+.scene-handoff[data-handoff-phase="incoming"] {
+  inset-block-start: clamp(4rem, 9svh, 5.5rem);
+}
+
+/*
+ * Padding ekstra atas/bawah yang pernah menumpuk di plat 1042 (untuk
+ * menjauhkan kalimat pemikul dari motif handoff dan nama wilayah) sudah
+ * dicabut seluruhnya — sejak panggung 1042 dipartisi menjadi baris
+ * "name"/"plate", plat berdiri di barisnya sendiri dan jarak dari lapisan
+ * lain dijamin struktur, bukan padding manual. Padding dasar `.stage-plate`
+ * berlaku apa adanya.
+ */
+
+.scene[data-media-slot="921-kadhiri"][data-choreography="nameEmerges"]
+.stage-beat {
+  background: none;
+}
+
+.epistemic-note {
+  max-width: var(--measure-narrative);
+  margin: 0;
+  padding: var(--space-3);
+  border-left: 2px solid var(--cinema-accent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}
+
+.epistemic-note span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--cinema-accent);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/*
+ * Kelas bukti dan objek untuk Scene 01-04: kecil, tenang, di strip bacaan —
+ * bukan lagi memimpin panggung sinematik. `.evidence-badge`/`.stage-object`
+ * dipakai ulang apa adanya; baris ini hanya mengatur jaraknya.
+ */
+.readout-provenance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.scene-readout .scene-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-family: var(--type-archive);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.scene-readout .scene-actions a {
+  color: inherit;
+  border-bottom: 1px solid var(--cinema-rule);
+  padding-bottom: 0.35em;
+  text-decoration: none;
+}
+
+.scene-readout .scene-actions a:hover,
+.scene-readout .scene-actions a:focus-visible {
+  border-color: var(--cinema-accent);
+  color: var(--cinema-accent);
+}
+
+/* ---------- finale: kamera kembali ke 2026 ---------- */
+
+.journey-finale {
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+}
+
+.finale-frame {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: end;
+  gap: var(--space-4);
+  padding: clamp(7rem, 15svh, 11rem) var(--shell-gutter)
+    clamp(4rem, 11svh, 8rem);
+  background: var(--cinema-canvas);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.finale-frame .title-scene {
+  color: var(--cinema-accent);
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+}
+
+.finale-frame .master-line {
+  max-width: 18ch;
+}
+
+.finale-frame .journey-visual-label {
+  top: clamp(5.75rem, 12svh, 7.5rem);
+}
+
+.finale-coda {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: clamp(3rem, 10svh, 8rem);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--cinema-accent);
+  font-family: var(--type-archive);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.finale-coda p {
+  margin: 0;
+}
+
+.finale-coda p:last-child {
+  margin-top: var(--space-4);
+  color: var(--cinema-accent);
+  font-size: clamp(1.5rem, 4vw, 3.5rem);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 47.999rem) {
+  /* Mobile: novel grafis. Pelat naik ke tengah, tarikh tetap monumental. */
+  .stage-plate {
+    align-self: center;
+    padding-bottom: var(--space-6);
+  }
+
+  .scene[data-scene-type="supporting"] .scene-stage,
+  .scene[data-scene-type="interlude"] .scene-stage,
+  .scene[data-scene-type="optional"] .scene-stage {
+    min-height: 82svh;
+  }
+
+  .media-slot-card {
+    width: min(62vw, 18rem);
+    gap: var(--space-1);
+    padding: var(--space-3);
+  }
+
+  .media-slot-card strong {
+    display: none;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .scene-stage {
+    min-height: max(46rem, 100svh);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-plate {
+    align-self: stretch;
+    padding-top: clamp(5.5rem, 12svh, 7rem);
+    padding-bottom: clamp(2rem, 5svh, 3.5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    row-gap: var(--space-4);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-surface {
+    background-position: 58% center;
+  }
+
+  .scene .stage-visual-label {
+    margin-top: clamp(4.5rem, 9svh, 6rem);
+  }
+
+  .scene[data-choreography="royalConsolidation"] .stage-surface {
+    background-position: 50% center;
+  }
+
+  .scene[data-choreography="bridgeConstruction"] .stage-surface {
+    background-position: 64% center;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .stage-plate,
+  .scene[data-choreography="bridgeConstruction"] .stage-plate {
+    width: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .stage-context,
+  .scene[data-choreography="bridgeConstruction"] .stage-context,
+  .scene[data-choreography="royalConsolidation"] .stage-date,
+  .scene[data-choreography="bridgeConstruction"] .stage-date,
+  .scene[data-choreography="royalConsolidation"] .master-line,
+  .scene[data-choreography="bridgeConstruction"] .master-line {
+    grid-column: 1;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .stage-date,
+  .scene[data-choreography="bridgeConstruction"] .stage-date {
+    font-size: clamp(7rem, 37vw, 11rem);
+  }
+
+  .scene[data-choreography="royalConsolidation"] .master-line,
+  .scene[data-choreography="bridgeConstruction"] .master-line {
+    border-left: 0;
+    border-top: 1px solid var(--cinema-accent);
+    padding: var(--space-3) 0 0;
+    font-size: clamp(1.8rem, 7.5vw, 2.8rem);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-context {
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-object {
+    grid-column: 1 / -1;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-context .evidence-badge {
+    justify-self: end;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-date {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+    font-size: clamp(8rem, 42vw, 12rem);
+    line-height: 0.7;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .master-line {
+    grid-column: 1;
+    grid-row: 3;
+    border-left: 0;
+    border-top: 1px solid var(--cinema-accent);
+    padding: var(--space-3) 0 0;
+    font-size: clamp(1.9rem, 8vw, 3rem);
+    line-height: 1.02;
+    max-width: 17ch;
+  }
+}
+
+/*
+ * Prolog memakai object-position dari jendela pengarahan manifest ketika ada.
+ * Nilai di bawah hanyalah cadangan bila pengarahan itu dilepas — tanpa
+ * `:not()` aturan ini menang atas manifest semata-mata karena letaknya lebih
+ * bawah di berkas, dan pengarahan scene 00 diam-diam tidak berlaku.
+ */
+.prologue-surface .stage-media:not([style*="--frame-pos-d"]) img {
+  object-position: 50% 46%;
+}
+
+/* ---------- reduced motion ---------- */
+
+/*
+ * Reduced motion bukan versi rusak, ia versi pameran digital (UX Bible bagian
+ * 28). Reset ini harus mengalahkan animasi scene mana pun yang ditambahkan
+ * kemudian.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore-start lint/complexity/noImportantStyles: reduced motion adalah
+       janji aksesibilitas, bukan preferensi gaya. Tanpa !important, jaminan ini
+       bocor pada scene pertama yang menetapkan animasinya sendiri dengan
+       spesifisitas lebih tinggi. */
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    /* biome-ignore-end lint/complexity/noImportantStyles: lihat di atas */
+  }
+}
+
+/* ---------- beranda ---------- */
+
+.home-hero {
+  padding: clamp(3rem, 12vh, 8rem) 0 var(--space-7);
+  border-bottom: 1px solid var(--reading-rule);
+}
+
+.home-range {
+  font-size: 1rem;
+  letter-spacing: 0.24em;
+  margin: 0 0 var(--space-4);
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: baseline;
+  margin-top: var(--space-5);
+  font-family: var(--type-interface);
+}
+
+.action-primary {
+  border: 1px solid currentColor;
+  border-radius: var(--radius-control);
+  padding: 0.6em 1.2em;
+  text-decoration: none;
+}
+
+.home-modes {
+  padding: var(--space-7) 0;
+}
+
+.home-modes article {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+/* ---------- footer ---------- */
+
+.site-footer {
+  margin-top: var(--space-8);
+  padding: var(--space-5) 0 var(--space-7);
+  border-top: 1px solid var(--reading-rule);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  font-family: var(--type-interface);
+  font-size: 0.85rem;
+}
+
+[data-journey="true"] .site-footer {
+  border-top-color: var(--cinema-rule);
+}
+
+.site-footer ul {
+  display: flex;
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+/* ---------- Journey: intro, timeline, bukti ---------- */
+
+.journey-intro {
+  padding: clamp(3rem, 14vh, 9rem) 0 var(--space-6);
+}
+
+.journey-timeline {
+  position: relative;
+  display: inline-block;
+}
+
+.journey-timeline > button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--cinema-rule);
+  border-radius: var(--radius-control);
+  padding: 0.35em 0.8em;
+  cursor: pointer;
+}
+
+body[data-timeline-open="true"] {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+.timeline-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.timeline-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--cinema-rule);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.timeline-panel-head button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--cinema-rule);
+  border-radius: var(--radius-control);
+  padding: 0.35em 0.8em;
+  cursor: pointer;
+}
+
+.timeline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 44rem;
+}
+
+.timeline-list a {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0 var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--cinema-rule);
+  text-decoration: none;
+  color: inherit;
+}
+
+.timeline-list [data-hero="true"] .timeline-title {
+  font-weight: 600;
+}
+
+.timeline-date {
+  font-family: var(--type-archive);
+  font-variant-numeric: tabular-nums;
+  color: var(--cinema-accent);
+}
+
+.timeline-title {
+  font-family: var(--type-narrative);
+}
+
+.timeline-act {
+  grid-column: 2;
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cinema-ink-muted);
+}
+
+/*
+ * Pengungkapan bukti memakai <details> asli: bekerja tanpa JavaScript, sudah
+ * dapat diakses keyboard dan pembaca layar, dan tidak merusak tombol Back.
+ */
+.evidence-disclosure {
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--cinema-rule);
+  padding-top: var(--space-3);
+  max-width: var(--measure-narrative);
+}
+
+.evidence-disclosure > summary {
+  cursor: pointer;
+  color: var(--cinema-ink);
+  background: none;
+  font-family: var(--type-body);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+}
+
+.evidence-disclosure > summary::marker {
+  color: var(--cinema-accent);
+}
+
+.evidence-disclosure > div {
+  display: grid;
+  gap: var(--space-3);
+  background: none;
+}
+
+.claim {
+  border-top: 1px solid var(--reading-rule);
+  padding-top: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+[data-journey="true"] .claim {
+  border-top-color: var(--cinema-rule);
+}
+
+.claim-statement {
+  font-size: 1.05rem;
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- media ---------- */
+
+.media-figure {
+  margin: var(--space-5) 0;
+}
+
+.media-figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.media-figure figcaption {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  max-width: var(--measure-narrative);
+}
+
+.media-record {
+  display: grid;
+  gap: var(--space-1);
+  max-width: var(--measure-narrative);
+  margin: var(--space-5) 0;
+}
+
+/* ---------- arsip ---------- */
+
+.archive-header {
+  padding: var(--space-6) 0 var(--space-5);
+  border-bottom: 1px solid var(--reading-rule);
+  margin-bottom: var(--space-5);
+}
+
+.search-form {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin: var(--space-4) 0;
+  font-family: var(--type-interface);
+}
+
+.search-form input {
+  font: inherit;
+  padding: 0.55em 0.8em;
+  border: 1px solid var(--reading-rule);
+  border-radius: var(--radius-control);
+  background: var(--reading-canvas);
+  color: inherit;
+  min-width: min(22rem, 100%);
+}
+
+.search-form button {
+  font: inherit;
+  padding: 0.55em 1.1em;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-control);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.section-stack > section {
+  margin-top: var(--space-6);
+}
+
+/* ---------- mobile ---------- */
+
+/*
+ * Mobile bukan desktop yang dikecilkan (UX Bible bagian 26). Ukuran tipografi
+ * monumental turun ke rentangnya sendiri, dan tidak ada kolom yang diperas.
+ */
+@media (max-width: 48rem) {
+  .timeline-list a {
+    grid-template-columns: 1fr;
+  }
+  .timeline-act {
+    grid-column: 1;
+  }
+  .metadata {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- geometri rekayasa 1869 ---------- */
+
+/*
+ * Gambar garis, bukan bukti. Strokenya sengaja tipis dan tidak berwarna
+ * dokumenter, supaya tidak pernah salah dibaca sebagai foto arsip.
+ */
+.bridge-geometry {
+  display: block;
+  width: 100%;
+  max-width: 46rem;
+  height: auto;
+  margin: var(--space-5) 0;
+  overflow: visible;
+}
+
+.bridge-geometry line,
+.bridge-geometry path {
+  fill: none;
+  stroke-linecap: square;
+  vector-effect: non-scaling-stroke;
+}
+
+.bridge-water {
+  stroke: var(--cinema-surface);
+  stroke-width: 6;
+}
+
+.bridge-truss {
+  stroke: var(--cinema-rule);
+  stroke-width: 1.5;
+}
+
+.bridge-deck {
+  stroke: var(--cinema-accent);
+  stroke-width: 2;
+}
+
+.bridge-pier {
+  stroke: var(--cinema-ink-muted);
+  stroke-width: 2;
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-surface .bridge-geometry {
+  width: min(72vw, 70rem);
+  max-width: none;
+  margin: 0 auto;
+  /*
+   * Di atas foto full-bleed, 0.24 + screen membuat garis yang "menggambar
+   * dirinya" tidak pernah terlihat — gerak yang tidak menyampaikan apa pun
+   * (audit 2026-09-03). Cukup terang untuk terbaca sebagai diagram, tetap
+   * cukup redup untuk tidak pernah menyaingi foto.
+   */
+  opacity: 0.62;
+  mix-blend-mode: screen;
+}
+
+.scene[data-choreography="bridgeConstruction"]
+  .stage-surface
+  .bridge-geometry
+  line,
+.scene[data-choreography="bridgeConstruction"]
+  .stage-surface
+  .bridge-geometry
+  path {
+  stroke-width: 2.5;
+}
+
+/* Diletakkan setelah seluruh kontrol dasar agar override mobile tidak membuat
+ * urutan spesifisitas menurun bagi tombol di permukaan lain. */
+@media (max-width: 47.999rem) {
+  [data-journey="true"] .site-nav {
+    align-items: center;
+    padding-block: var(--space-2);
+  }
+
+  [data-journey="true"] .site-nav > ul > li:not(:first-child) {
+    display: none;
+  }
+
+  [data-journey="true"] .journey-timeline > button {
+    border: 0;
+    padding-inline: 0;
+  }
+
+  /* Label media panggung tetap ringkas di mobile; address Act I berada di
+   * alur normal tersendiri dan tetap terbaca sebagai copy semantik. */
+  .scene .stage-visual-label {
+    display: none;
+  }
+}
+
+/* Prolog mobile: satu panel baca vertikal, bukan desktop yang diperas. */
+@media (max-width: 47.999rem) {
+  .prologue-pin-space {
+    display: none;
+  }
+
+  .prologue-stage {
+    min-height: max(52rem, 100svh);
+    align-items: stretch;
+  }
+
+  /* Naskah pembuka membuka panel mobile, di atas pelat "KEDIRI, 2026". */
+  .prologue-overture {
+    padding-block-start: clamp(5rem, 11svh, 6.5rem);
+  }
+
+  .prologue-overture-copy {
+    padding-block: 0 var(--space-4);
+  }
+
+  .prologue-plate,
+  .prologue-stage .stage-plate {
+    align-self: stretch;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto auto;
+    row-gap: var(--space-4);
+    padding: clamp(5.5rem, 12svh, 7rem) var(--shell-gutter)
+      clamp(2.5rem, 6svh, 4rem);
+  }
+
+  .prologue-context,
+  .prologue-lead,
+  .prologue-passages,
+  .prologue-notice,
+  .prologue-actions {
+    grid-column: 1;
+  }
+
+  .prologue-context {
+    grid-row: 1;
+  }
+
+  .prologue-lead {
+    grid-row: 2;
+    max-width: 17ch;
+    border-left: 0;
+    border-top: 1px solid var(--cinema-accent);
+    padding: var(--space-3) 0 0;
+    font-size: clamp(2rem, 9vw, 3.1rem);
+  }
+
+  .prologue-passages {
+    grid-row: 3;
+  }
+
+  .prologue-notice {
+    grid-row: 4;
+  }
+
+  .prologue-actions {
+    grid-row: 5;
+  }
+}
+
+[data-journey="true"] .scene,
+[data-journey="true"] #prologue-2026 {
+  scroll-margin-top: calc(
+    clamp(4.75rem, 12svh, 7rem) +
+    env(safe-area-inset-top)
+  );
+}
+
+/* Early Act I mobile: each shot has its own vertical reading composition. */
+@media (max-width: 47.999rem) {
+  .scene-opening-transition {
+    min-height: auto;
+    padding-block: clamp(2.5rem, 7svh, 4rem);
+  }
+
+  .scene-opening-address {
+    text-align: start;
+  }
+
+  [data-journey="true"] .site-nav {
+    padding-block-start: calc(var(--space-2) + env(safe-area-inset-top));
+  }
+
+  [data-journey="true"] .scene,
+  [data-journey="true"] #prologue-2026 {
+    scroll-margin-top: calc(
+      clamp(5.5rem, 12svh, 7.5rem) +
+      env(safe-area-inset-top)
+    );
+  }
+
+  .scene-handoff {
+    width: min(44vw, 14rem);
+    height: clamp(1.25rem, 7vw, 2.25rem);
+  }
+
+  .scene-handoff[data-handoff-phase="incoming"] {
+    inset-block-start: max(5.5rem, calc(env(safe-area-inset-top) + 4.5rem));
+    inset-inline-start: var(--shell-gutter);
+  }
+
+  .scene-handoff[data-handoff-phase="outgoing"] {
+    inset-block-end: clamp(3rem, 9svh, 5.5rem);
+    inset-inline-end: var(--shell-gutter);
+  }
+
+  .scene-handoff[data-handoff="water-copper"] {
+    width: min(48vw, 15rem);
+  }
+
+  .scene-handoff[data-handoff="inscription-mark"] {
+    width: min(36vw, 11rem);
+  }
+
+  .scene-handoff[data-handoff="record-territory"] {
+    width: min(42vw, 13rem);
+  }
+
+  .scene-handoff[data-handoff="territory-centre"] {
+    width: min(34vw, 10rem);
+  }
+
+  .prologue-stage {
+    min-height: max(54rem, 110svh);
+  }
+
+  .prologue-plate {
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .scene-stage {
+    min-height: max(50rem, 112svh);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-plate {
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+    overflow: visible;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-date {
+    font-size: clamp(7rem, 36vw, 10rem);
+  }
+
+  .scene[data-choreography="nameEmerges"] .scene-stage {
+    min-height: max(48rem, 106svh);
+  }
+
+  .scene[data-choreography="nameEmerges"] .stage-plate {
+    align-self: stretch;
+    justify-self: end;
+    max-width: min(44rem, 50vw);
+    margin-right: clamp(1.5rem, 5vw, 5rem);
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+    padding-bottom: clamp(3rem, 8svh, 5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    row-gap: var(--space-4);
+    overflow: visible;
+  }
+
+  .scene[data-choreography="nameEmerges"] .stage-context {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .scene[data-choreography="nameEmerges"] .stage-date {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: clamp(5.5rem, 29vw, 8.5rem);
+  }
+
+  .scene[data-choreography="nameEmerges"] .master-line {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 16ch;
+    border-top: 1px solid var(--cinema-accent);
+    padding-top: var(--space-3);
+    font-size: clamp(1.9rem, 8vw, 3rem);
+  }
+
+  .scene[data-choreography="nameEmerges"] .stage-passages {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .scene[data-choreography="nameEndures"] .scene-stage {
+    min-height: max(44rem, 98svh);
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-plate {
+    align-self: stretch;
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+    padding-bottom: clamp(3rem, 8svh, 5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    row-gap: var(--space-4);
+    overflow: visible;
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-context {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-date {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: clamp(4.75rem, 25vw, 7.5rem);
+  }
+
+  .scene[data-choreography="nameEndures"] .master-line {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 17ch;
+    border-top: 1px solid var(--cinema-accent);
+    padding-top: var(--space-3);
+    font-size: clamp(1.85rem, 7.7vw, 2.8rem);
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-passages {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .scene-stage {
+    min-height: max(54rem, 112svh);
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-plate {
+    align-self: stretch;
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+    padding-bottom: clamp(3rem, 8svh, 5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    row-gap: var(--space-4);
+    overflow: visible;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-context {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-date {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: clamp(5.75rem, 30vw, 9rem);
+  }
+
+  .scene[data-choreography="dividedKingdom"] .master-line {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 16ch;
+    border-top: 1px solid var(--cinema-accent);
+    padding-top: var(--space-3);
+    font-size: clamp(1.9rem, 8vw, 3rem);
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-passages {
+    grid-column: 1;
+    grid-row: 4;
+  }
+}
+
+/* ---------- ScrollSmoother (100% GSAP; direktif Chief 2026-08-28) ---------- */
+
+/*
+ * Saat ScrollSmoother aktif, konten hidup di dalam wadah yang
+ * ditransformasikan — CSS sticky tidak dapat bekerja di sana, jadi pin
+ * ScrollTrigger mengambil alih penahanan bingkai. Ruang gulirnya tetap
+ * `.scene-pin-space` hasil server render (pinSpacing: false), sehingga
+ * dokumen tidak pernah bergeser dan tidak ada CLS. Tanpa atribut ini
+ * (tanpa JS, mobile, reduced, atau smoother gagal dibuat), aturan sticky
+ * lama tetap berlaku utuh.
+ */
+html[data-smooth="true"] .scene[data-choreography] .scene-stage,
+html[data-smooth="true"] .prologue-stage {
+  position: relative;
+  top: auto;
+}
+
+/*
+ * Baris hasil SplitText (topeng baris Jam 2). Topengnya elemen wrapper
+ * dengan overflow:hidden yang dibuat plugin; baris di dalamnya bergerak
+ * dengan transform murni. Padding-block kecil menjaga descender tidak
+ * terpangkas topeng saat beristirahat.
+ */
+html[data-smooth="true"] .stage-beat,
+html[data-smooth="true"] .master-line {
+  backface-visibility: hidden;
+}
+
+/* ---------- media video slot (direktif Chief 2026-08-28) ---------- */
+
+/*
+ * Video diperlakukan persis seperti citra: memenuhi bingkai, disapu shade
+ * dan mask cahaya --lit yang sama, dan ikut dolly kamera karena hidup di
+ * dalam .stage-surface / .stage-media yang sudah ditransformasikan timeline.
+ */
+.stage-media video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center center;
+  transform-origin: center center;
+}
+
+.prologue-video-sequence,
+.prologue-video-sequence video {
+  width: 100%;
+  height: 100%;
+}
+
+.prologue-video-sequence {
+  position: relative;
+}
+
+.prologue-video-sequence video {
+  position: absolute;
+  inset: 0;
+}
+
+.prologue-video-sequence video + video {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Prolog mempertahankan seluruh perspektif sumber 16:9 di dalam panggung. */
+.prologue-surface .stage-media video {
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* ---------- latar kartu judul act (pratinjau editorial) ---------- */
+
+.journey-act > header[data-header-media] {
+  isolation: isolate;
+  overflow: clip;
+}
+
+.act-header-media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.act-header-media img,
+.act-header-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+  /* Kartu judul tetap kartu judul: citra hadir sebagai kabut latar,
+     bukan sebagai bukti — naskah di atasnya harus tetap memimpin. */
+  opacity: 0.34;
+}
+
+.act-header-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--cinema-canvas) 0%,
+    transparent 42%,
+    color-mix(in srgb, var(--cinema-canvas) 68%, transparent) 78%,
+    var(--cinema-canvas) 100%
+  );
+}
+
+/* ---------- kredit pembuka (direktif Chief 2026-08-28) ---------- */
+
+/*
+ * Lockup dua baris dengan logomark, garis vertikal, dan garis horisontal.
+ * Hanya hidup di dalam intro bermotion (html[data-smooth]); ia branding
+ * presentasi, bukan naskah sejarah — varian statis tidak pernah melihatnya.
+ */
+.prologue-credit {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  text-align: center;
+  color: var(--cinema-ink);
+  pointer-events: none;
+}
+
+html[data-smooth="true"] .prologue-credit {
+  display: flex;
+}
+
+/*
+ * Logomark memakai mask sehingga warnanya milik token sinema, bukan milik
+ * berkas — satu aset untuk setiap era dan tema.
+ */
+.credit-logo {
+  width: clamp(3.2rem, 6vw, 4.6rem);
+  aspect-ratio: 1;
+  background: var(--cinema-ink);
+  mask: url("/static/sentra-logomark.svg") center / contain no-repeat;
+}
+
+.credit-vline {
+  width: 1px;
+  height: clamp(1.6rem, 3.5vh, 2.6rem);
+  background: linear-gradient(180deg, var(--cinema-accent), var(--cinema-rule));
+  transform-origin: top center;
+}
+
+.credit-hline {
+  width: min(24rem, 56vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent) 30%,
+    var(--cinema-accent) 70%,
+    transparent
+  );
+  transform-origin: center;
+}
+
+.credit-line {
+  margin: 0;
+  font-family: var(--type-archive);
+  text-transform: uppercase;
+  color: var(--cinema-ink);
+}
+
+.credit-line-primary {
+  font-size: clamp(0.72rem, 1.15vw, 0.95rem);
+  letter-spacing: 0.5em;
+  word-spacing: 1.05em;
+  text-indent: 0.5em;
+}
+
+.credit-line-secondary {
+  font-size: clamp(0.6rem, 0.85vw, 0.74rem);
+  letter-spacing: 0.72em;
+  text-indent: 0.72em;
+  color: var(--cinema-ink-muted);
+}
+
+/* ---------- kartu judul resmi (direktif Chief 2026-08-28) ---------- */
+
+.prologue-title-card {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  text-align: center;
+  color: var(--cinema-ink);
+  pointer-events: none;
+}
+
+html[data-smooth="true"] .prologue-title-card {
+  display: flex;
+}
+
+.title-card-name {
+  /*
+   * Efek medieval (direktif Chief): kapital inskripsi Cinzel, dan kontras
+   * DITURUNKAN — bukan putih murni, melainkan gading yang dihangatkan bara
+   * accent, dengan bayang lembut agar duduk DI DALAM footage, bukan
+   * menempel di atasnya.
+   */
+  font-family: var(--font-cinzel), var(--type-narrative), serif;
+  font-weight: 600;
+  font-size: clamp(3.2rem, 9.4vw, 7.4rem);
+  line-height: 0.98;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cinema-ink) 58%, var(--cinema-accent) 42%);
+  opacity: 0.94;
+  filter: drop-shadow(0 3px 22px rgba(8, 5, 2, 0.55));
+}
+
+.title-card-rule {
+  width: min(19rem, 46vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent) 30%,
+    var(--cinema-accent) 70%,
+    transparent
+  );
+  transform-origin: center;
+}
+
+.title-card-sub {
+  max-width: 34rem;
+  font-family: var(--type-archive);
+  font-size: clamp(0.66rem, 1vw, 0.85rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  word-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--cinema-ink-muted);
+}
+
+/* ---------- jeda bukti prasasti (revisi Chief 2026-08-30: scroll-driven) ---------- */
+
+/*
+ * Bidikan sendiri di alur dokumen normal, di ANTARA Prolog dan Act I — bukan
+ * overlay bertumpuk di atas video prolog. Panggungnya (`.interlude-stage`)
+ * di-pin oleh `PrologueInscriptionInterlude` (ScrollTrigger scrub) pada
+ * varian bermotion desktop/tablet; mobile dan reduced tidak pernah dipin,
+ * kontennya tampak statis dalam alur normal. Keadaan awal (opacity 1) adalah
+ * BASELINE server-rendered — GSAP yang menyetel ke 0 hanya saat motion aktif.
+ */
+.interlude-scene {
+  background: var(--cinema-canvas);
+}
+
+.interlude-stage {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 5rem);
+}
+
+.interlude-frame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 42rem;
+  text-align: center;
+}
+
+.interlude-intro-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.interlude-eyebrow {
+  margin: 0;
+  font-family: var(--type-archive);
+  font-size: 0.68rem;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+}
+
+.interlude-intro {
+  margin: 0;
+  font-family: var(--type-body);
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--cinema-ink);
+}
+
+.interlude-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding-top: var(--space-4);
+  list-style: none;
+  border-top: 1px solid var(--cinema-rule);
+}
+
+.interlude-card-tag {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-family: var(--type-archive);
+  font-size: 0.62rem;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+}
+
+.interlude-quote {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-cinzel), var(--type-narrative), serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.1vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--cinema-ink);
+}
+
+.interlude-body {
+  margin: 0 0 var(--space-2);
+  font-family: var(--type-body);
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--cinema-body-ink);
+}
+
+.interlude-source {
+  margin: 0;
+  font-family: var(--type-archive);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cinema-ink-muted);
+}
+
+.interlude-outro {
+  margin-top: var(--space-2);
+  font-family: var(--font-cinzel), var(--type-narrative), serif;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: color-mix(in srgb, var(--cinema-ink) 58%, var(--cinema-accent) 42%);
+}
+
+@media (min-width: 48rem) {
+  /* Scene 1015 memecah naskah panjang menjadi beat tunggal. Bidang baca yang
+     sedikit lebih lebar menjaga setiap beat pada satu atau dua baris tanpa
+     mengecilkan font maupun menambahkan panel di belakang teks. Diletakkan
+     setelah aturan panggung umum agar override ini tidak menambah konflik
+     specificity pada sistem tipografi global. */
+  .scene[data-choreography="nameEndures"] .stage-passages {
+    width: min(100%, 44rem);
+    max-width: 44rem;
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-beat,
+  .scene[data-choreography="nameEndures"] .stage-beat p {
+    max-width: none;
+  }
+
+  /* Scene 1042 memakai enam beat tunggal. Lebar yang sama menjaga kalimat
+     sejarah dan tradisi tetap pendek tanpa panel atau pengecilan tipografi. */
+  .scene[data-choreography="dividedKingdom"] .stage-passages {
+    width: min(100%, 44rem);
+    max-width: 44rem;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-beat,
+  .scene[data-choreography="dividedKingdom"] .stage-beat p {
+    max-width: none;
+  }
+}
+
+/* ---------- paruh kedua: tata letak kanan (Babak VI ke bawah) ---------- */
+
+/*
+ * Pembeda paruh kedua Journey (direktif Chief 2026-09-03): mulai "Besi, Gula,
+ * dan Kota Modern", pelat naskah berpindah ke sisi KANAN bingkai dan duduk di
+ * tengah vertikal — bukan lagi menempel dasar bingkai, yang membuat body copy
+ * terdorong terlalu ke bawah dan terpotong tepi pin. Kartu judul act ikut
+ * rata-kanan. Label visual pindah ke kiri agar tidak bertabrakan dengan
+ * pelat. Naskah tetap rata-kiri di dalam pelatnya: keterbacaan lebih dulu.
+ * Desktop dan tablet saja; mobile tetap novel grafis vertikal.
+ */
+@media (min-width: 48rem) {
+  .journey-act[data-layout="right"] > header:not([data-header-media]) {
+    align-items: flex-end;
+    text-align: end;
+  }
+
+  /* Anak kartu memakai `margin-inline: auto` + `text-align: center` dari
+     format tengah Babak III; di paruh kedua ketiganya rata-kanan. */
+  .journey-act[data-layout="right"]
+    > header:not([data-header-media])
+    .archive-label,
+  .journey-act[data-layout="right"]
+    > header:not([data-header-media])
+    .title-scene,
+  .journey-act[data-layout="right"] > header:not([data-header-media]) .lead {
+    margin-inline: auto 0;
+    text-align: end;
+  }
+
+  .journey-act[data-layout="right"] > header:not([data-header-media]) .lead {
+    max-width: min(100%, 48rem);
+  }
+
+  .journey-act[data-layout="right"] > header:not([data-header-media])::before {
+    inset: auto 0 0 40%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--cinema-rule) 45%, transparent) 40%,
+      var(--cinema-accent)
+    );
+  }
+
+  .journey-act[data-layout="right"] .stage-plate {
+    align-self: center;
+    justify-self: end;
+    padding-block: clamp(5rem, 11svh, 6.5rem) clamp(2rem, 5svh, 3.5rem);
+    gap: var(--space-2);
+  }
+
+  /*
+   * Tarikh dua baris (1947–1948, 2024–2026) pada ukuran monumental membuat
+   * pelat 1.000 px+ pada viewport 900 px — beat terakhir terpotong tepi pin
+   * (terukur 2026-09-03). Di paruh kedua tarikh dibatasi terhadap tinggi
+   * viewport supaya seluruh pelat selalu muat di tengah bingkai.
+   */
+  .journey-act[data-layout="right"] .stage-date {
+    font-size: min(var(--type-size-monumental), clamp(5rem, 17svh, 12rem));
+  }
+
+  .journey-act[data-layout="right"] .stage-passages {
+    margin-top: var(--space-2);
+  }
+
+  /* Pelat dua kolom (1135-gaya, 1869-gaya) tetap selebar bingkai, tetapi
+     naik ke tengah bersama pelat lain. */
+  .journey-act[data-layout="right"]
+    .scene[data-choreography="royalConsolidation"]
+    .stage-plate,
+  .journey-act[data-layout="right"]
+    .scene[data-choreography="bridgeConstruction"]
+    .stage-plate {
+    align-items: center;
+  }
+
+  .journey-act[data-layout="right"] .scene .stage-visual-label {
+    justify-self: start;
+  }
+
+  /*
+   * Pelat di KANAN menuntut bayangan citra yang berat di kanan pula — cermin
+   * dari gradien horizontal `.stage-media-shade` bawaan (berat di kiri, untuk
+   * pelat kiri paruh pertama). Tanpa cermin ini naskah Babak VI–IX bertumpu
+   * langsung di atas bagian citra yang paling ramai (terukur 2026-09-04:
+   * sugar, 1906, 1912, people tidak terbaca di desktop).
+   */
+  .journey-act[data-layout="right"] .stage-media-shade {
+    background:
+      linear-gradient(
+        180deg,
+        var(--cinema-canvas) 0%,
+        color-mix(in srgb, var(--cinema-canvas) 85%, transparent) 8%,
+        transparent 22%,
+        transparent 76%,
+        color-mix(in srgb, var(--cinema-canvas) 88%, transparent) 92%,
+        var(--cinema-canvas) 100%
+      ),
+      linear-gradient(
+        270deg,
+        color-mix(in srgb, var(--cinema-canvas) 86%, transparent),
+        color-mix(in srgb, var(--cinema-canvas) 58%, transparent) 34%,
+        color-mix(in srgb, var(--cinema-canvas) 16%, transparent) 62%,
+        color-mix(in srgb, var(--cinema-canvas) 30%, transparent)
+      );
+  }
+
+  /*
+   * Era terang (Babak VI): ink gelap di atas citra ramai butuh veil gading
+   * yang lebih tebal daripada era gelap — kanvas terang tidak punya bayangan
+   * yang "menyerap" citra seperti kanvas hitam.
+   */
+  .journey-act[data-era="colonialIndustrial"][data-layout="right"]
+  .stage-media-shade {
+    background:
+      linear-gradient(
+        180deg,
+        var(--cinema-canvas) 0%,
+        color-mix(in srgb, var(--cinema-canvas) 82%, transparent) 10%,
+        color-mix(in srgb, var(--cinema-canvas) 22%, transparent) 26%,
+        color-mix(in srgb, var(--cinema-canvas) 22%, transparent) 72%,
+        color-mix(in srgb, var(--cinema-canvas) 84%, transparent) 90%,
+        var(--cinema-canvas) 100%
+      ),
+      linear-gradient(
+        270deg,
+        color-mix(in srgb, var(--cinema-canvas) 94%, transparent),
+        color-mix(in srgb, var(--cinema-canvas) 78%, transparent) 36%,
+        color-mix(in srgb, var(--cinema-canvas) 30%, transparent) 64%,
+        color-mix(in srgb, var(--cinema-canvas) 42%, transparent)
+      );
+  }
+}
+
+/*
+ * Era terang di lebar ponsel: pelat duduk di dasar bingkai, jadi veil gading
+ * dibuat berat di bawah (terukur 2026-09-04: sugar tidak terbaca di 375 px).
+ */
+@media (max-width: 47.999rem) {
+  .journey-act[data-era="colonialIndustrial"] .stage-media-shade {
+    background:
+      linear-gradient(
+        180deg,
+        var(--cinema-canvas) 0%,
+        color-mix(in srgb, var(--cinema-canvas) 78%, transparent) 10%,
+        color-mix(in srgb, var(--cinema-canvas) 24%, transparent) 30%,
+        color-mix(in srgb, var(--cinema-canvas) 56%, transparent) 52%,
+        color-mix(in srgb, var(--cinema-canvas) 88%, transparent) 70%,
+        var(--cinema-canvas) 100%
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--cinema-canvas) 62%, transparent),
+        color-mix(in srgb, var(--cinema-canvas) 30%, transparent) 58%,
+        color-mix(in srgb, var(--cinema-canvas) 50%, transparent)
+      );
+  }
+}

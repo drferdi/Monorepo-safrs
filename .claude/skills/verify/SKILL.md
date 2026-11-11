@@ -41,9 +41,12 @@ Add the package-scoped tests for every touched package
 ## Prohibited
 
 Never weaken a test, token gate, security check, or governance control to make the
-sequence pass (`AGENTS.md` rule 6). Never skip a gate and report the run as complete.
+sequence pass. Never skip a gate and report the run as complete.
 
 ## Session close
 
-Before declaring done: overwrite `.agents/HANDOFF.md`, append durable decisions to
-`.agents/DECISIONS.md`, and update `.agents/PROGRESS.md` if an area status changed.
+Review the diff, then overwrite the `HANDOFF.md` of every scope the change set touches and keep
+each under about 1,000 tokens. Capsule work updates `projects/<domain>/<capsule>/.agents/HANDOFF.md`
+and appends capsule-only decisions to that `DECISIONS.md`; root `.agents/` is only for
+control-plane work (root tooling, governance, CI, `packages/`, cross-capsule orchestration).
+`tools/safrs/check_handoff.py` enforces this.

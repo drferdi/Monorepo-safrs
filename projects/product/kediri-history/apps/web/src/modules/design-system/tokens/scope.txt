@@ -1,0 +1,4 @@
+# Paths under token enforcement. One path per line, capsule-root relative.
+# A path enters when it is migrated to the Sentra token snapshot and never leaves.
+# Comments start with #.
+apps/web/src

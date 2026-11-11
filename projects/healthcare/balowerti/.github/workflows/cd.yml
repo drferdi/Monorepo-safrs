@@ -1,0 +1,52 @@
+# Architected and built by the one and only Drferdi.
+name: CD — Deploy to Railway
+
+on:
+  push:
+    branches: ["master", "main"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target deployment environment"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - production
+
+jobs:
+  deploy:
+    name: Deploy to Railway (Production)
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://puskesmas-website-production.up.railway.app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check + Vite production build
+        run: npm run build
+
+      - name: Verify dist output
+        run: |
+          if [ ! -f "dist/index.html" ]; then
+            echo "ERROR: dist/index.html not found — build may have failed."
+            exit 1
+          fi
+          echo "Build output verified. dist/index.html exists."
+
+      # Railway deploys automatically on push to master via its GitHub integration.
+      # This job validates the build succeeds before Railway's deployment starts.
+      - name: Deployment triggered
+        run: |
+          echo "Build validated. Railway will deploy automatically via GitHub integration."
+          echo "Production URL: https://puskesmas-website-production.up.railway.app"

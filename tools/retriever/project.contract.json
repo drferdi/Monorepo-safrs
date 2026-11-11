@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "tools/retriever",
+  "owner": "Gaffer (dr. Ferdi Iskandar)",
+  "risk": "R1",
+  "runtime": {
+    "name": "node",
+    "version": "24.18.0"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": {
+      "program": "pnpm",
+      "args": ["install", "--frozen-lockfile"]
+    },
+    "lint": {
+      "program": "pnpm",
+      "args": ["run", "lint"]
+    },
+    "typecheck": {
+      "program": "pnpm",
+      "args": ["run", "typecheck"]
+    },
+    "test": {
+      "program": "pnpm",
+      "args": ["run", "test"]
+    },
+    "build": {
+      "program": "pnpm",
+      "args": ["run", "build"]
+    },
+    "run": {
+      "program": "pnpm",
+      "args": ["run", "smoke"]
+    },
+    "deployDryRun": {
+      "program": "pnpm",
+      "args": ["run", "deploy:dry-run"]
+    }
+  },
+  "smoke": {
+    "kind": "none",
+    "notApplicableReason": "Electron desktop app; run builds and checks startup in smoke mode without scraping."
+  },
+  "artifacts": [
+    "dist/index.js",
+    "dist-electron/desktop/bootstrap.js",
+    "dist-electron/desktop/renderer/index.html"
+  ],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "host-tool", "name": "HTTrack", "locator": "httrack executable installed on host", "required": true }
+  ],
+  "mutableStatePaths": ["data"]
+}

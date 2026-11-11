@@ -1,0 +1,83 @@
+# Jev decision router
+
+Jev is the repository's shared decision router for coding agents. Before a web search, a
+subagent, a retry of a failed approach, an approval-needing action, or a choice between
+materially different routes, agents ask Jev what to do next (see root `AGENTS.md`, "Jev
+Decision Layer").
+
+Jev belongs to the monorepo control plane. **Capsules must never depend on it**: it is not a
+build, test, or runtime dependency of any project under `projects/`.
+
+## Layout
+
+| Path | Contents |
+| --- | --- |
+| `playbook/` | Vendored [Bodila51/muse-jev-playbook](https://github.com/Bodila51/muse-jev-playbook) at commit `70edf68` (MIT, see `playbook/LICENSE`); upstream `.github/` omitted. |
+| `mcp/jev_mcp.py` | MCP stdio server exposing one tool, `jev_route`. No third-party dependencies. |
+| `mcp/jev_hook.py` | `PreToolUse` hook (Claude Code, Factory Droid, Grok) that consults Jev before research or subagents. Never blocks a tool. |
+| `mcp/jev_intent.py` | Classifies one prompt line for Cursor's prompt-submit hook through the playbook client. Fails open. |
+
+Local, untracked files (ignored by `playbook/.gitignore`): `playbook/.venv/`,
+`playbook/config.yaml` (mode and thresholds; start from `playbook/config.example.yaml`), and
+`playbook/logs/*.jsonl` (decision log; may contain task context).
+
+## Setup (Windows)
+
+```powershell
+cd tools/typesafe-jev/playbook
+uv venv .venv --python 3.12
+uv pip install --python .venv\Scripts\python.exe -r requirements.txt
+copy config.example.yaml config.yaml   # then set mode: active
+```
+
+The TypeSafe API key is read from the `TYPESAFE_API_KEY` environment variable. Never put it in a
+file in this repository.
+
+## Agent wiring
+
+Every agent runs the server with the playbook's own interpreter:
+
+```text
+command: <repo>\tools\typesafe-jev\playbook\.venv\Scripts\python.exe
+args:    <repo>\tools\typesafe-jev\mcp\jev_mcp.py --playbook <repo>\tools\typesafe-jev\playbook --agent <name>
+```
+
+Every agent, Claude Code included, points to these absolute paths from its user-level
+configuration, so `tools/typesafe-jev` in the main checkout is the only Jev. The repository ships no
+`.mcp.json`: its `${CLAUDE_PROJECT_DIR}` path resolved against the directory a session started in.
+Sessions started in a capsule or a worktree then failed with "The system cannot find the path
+specified", because `.venv` exists only in the main checkout. That entry also shadowed the
+working user entry.
+
+## Agent coverage
+
+Each agent gets the tool, a rule to use it, and an automatic trigger where the agent supports one.
+
+| Agent | `jev_route` tool | Rule | Automatic trigger |
+| --- | --- | --- | --- |
+| Claude Code | `~/.claude.json` (user scope, `claude mcp add -s user`) | root `AGENTS.md` | `PreToolUse` hook before WebSearch, WebFetch, Agent, Task |
+| Codex | `~/.codex/config.toml` | `AGENTS.md`, `~/.codex/AGENTS.md` | none available |
+| Cursor | `~/.cursor/mcp.json` | `.cursor/rules/10-jev.mdc` | user `beforeSubmitPrompt` intent hook (`jev-intent.ps1` → `mcp/jev_intent.py`) |
+| Factory Droid | `~/.factory/mcp.json` | `AGENTS.md`, `~/.factory/AGENTS.md` | `~/.factory/hooks.json`: `SessionStart` reminder and `PreToolUse` hook before WebSearch, FetchUrl, Task |
+| Gemini (Antigravity) | `~/.gemini/config/mcp_config.json` | `GEMINI.md` adapter, `~/.gemini/config/GEMINI.md` | none available |
+| Grok | `~/.grok/config.toml` | `~/.grok/rules/jev.md`, `AGENTS.md` | `PreToolUse` hook in `~/.grok/config.toml` before web_search, web_fetch, task |
+| Opencode | `jev-router` plugin | `~/.config/opencode/AGENTS.md` | plugin consults before the first expensive tool |
+
+Factory Droid runs hook commands with `cmd.exe`: use unquoted paths (they have no spaces) and wrap
+PowerShell text in `powershell -NoProfile -Command "..."`.
+
+Every server instance is started with `--agent <name>` and appends one line per call to
+`playbook/logs/agents.jsonl` (agent, kind, action; no goal text). Check coverage with:
+
+```text
+python tools/typesafe-jev/mcp/jev_usage.py --days 7
+```
+
+If an agent process started before `TYPESAFE_API_KEY` was set, the server and the hook read it
+from the Windows user environment.
+
+## Governance
+
+- Network: `api.typesafe.ai`, registered as `typesafe-jev` in `.safrs/tool-inventory.json`.
+- Data sent: a one-line English goal and routing state. Never secrets or repository content.
+- Updating the vendored playbook is an R2 change: record the new upstream commit here.

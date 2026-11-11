@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "baseline_date": "2026-07-29",
+  "curriculum": "Kurikulum Merdeka",
+  "rules": [
+    {
+      "priority": 1,
+      "match": {
+        "subject_group": "Pendidikan Agama dan Budi Pekerti"
+      },
+      "resolve_document_id": "BKPDM-020-2026",
+      "status": "CURRENT",
+      "note": "Overrides BSKAP-046-2025 only for the six religion subjects."
+    },
+    {
+      "priority": 2,
+      "match": {
+        "scope": "all_nonreligion_subjects"
+      },
+      "resolve_document_id": "BSKAP-046-2025",
+      "status": "CURRENT",
+      "note": "Remains current for subjects not amended by BKPDM-020-2026."
+    }
+  ],
+  "failure_behavior": {
+    "unknown_subject": "ABSTAIN_AND_REQUEST_SUBJECT",
+    "conflicting_current_sources": "ABSTAIN_AND_RAISE_VERSION_CONFLICT",
+    "religion_text_not_structured": "CITE_SOURCE_PAGE_OR_ABSTAIN"
+  }
+}

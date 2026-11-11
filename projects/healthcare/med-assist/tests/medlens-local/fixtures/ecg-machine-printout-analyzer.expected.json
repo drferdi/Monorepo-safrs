@@ -1,0 +1,165 @@
+{
+  "status": "ok",
+  "module": "ecg",
+  "image_quality": {
+    "readable": true,
+    "issues": []
+  },
+  "source_file": {
+    "sourceFileId": "ecg-8165e5a591fc",
+    "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+    "sourceType": "ecg_image_with_printed_result",
+    "fileName": "ekg.png"
+  },
+  "extraction_method": "ocr",
+  "ocr_metadata": {
+    "ocr_source": "crop",
+    "selected_region": "structured-ecg",
+    "region_score": 18,
+    "candidate_count": 3,
+    "full_image_ocr_used": false
+  },
+  "raw_ecg_relevant_text": [
+    "Ventricular rate 82 bpm",
+    "PR interval 164 ms",
+    "QRS duration 96 ms",
+    "QT/QTc 376/428 ms",
+    "P/QRS/T axes 55 69 31",
+    "Normal sinus rhythm",
+    "Machine interpretation",
+    "Borderline ECG",
+    "Nonspecific ST abnormality"
+  ],
+  "ignored_or_redacted_identifiers_detected": false,
+  "physician_verification_required": true,
+  "ecg_clinical_output": {
+    "status": "source_grounded",
+    "findings": [
+      {
+        "sourceFileId": "ecg-8165e5a591fc",
+        "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+        "sourceType": "ecg_image_with_printed_result",
+        "extractionMethod": "ocr",
+        "rawText": "Ventricular rate 82 bpm",
+        "normalizedFinding": "Ventricular rate 82 bpm",
+        "confidence": 0.92,
+        "evidenceLocation": {
+          "regionLabel": "structured-ecg"
+        }
+      },
+      {
+        "sourceFileId": "ecg-8165e5a591fc",
+        "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+        "sourceType": "ecg_image_with_printed_result",
+        "extractionMethod": "ocr",
+        "rawText": "PR interval 164 ms",
+        "normalizedFinding": "PR interval 164 ms",
+        "confidence": 0.92,
+        "evidenceLocation": {
+          "regionLabel": "structured-ecg"
+        }
+      },
+      {
+        "sourceFileId": "ecg-8165e5a591fc",
+        "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+        "sourceType": "ecg_image_with_printed_result",
+        "extractionMethod": "ocr",
+        "rawText": "QRS duration 96 ms",
+        "normalizedFinding": "QRS duration 96 ms",
+        "confidence": 0.92,
+        "evidenceLocation": {
+          "regionLabel": "structured-ecg"
+        }
+      },
+      {
+        "sourceFileId": "ecg-8165e5a591fc",
+        "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+        "sourceType": "ecg_image_with_printed_result",
+        "extractionMethod": "ocr",
+        "rawText": "QT/QTc 376/428 ms",
+        "normalizedFinding": "QT/QTc 376/428 ms",
+        "confidence": 0.92,
+        "evidenceLocation": {
+          "regionLabel": "structured-ecg"
+        }
+      },
+      {
+        "sourceFileId": "ecg-8165e5a591fc",
+        "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+        "sourceType": "ecg_image_with_printed_result",
+        "extractionMethod": "ocr",
+        "rawText": "P/QRS/T axes 55 69 31",
+        "normalizedFinding": "P/QRS/T axes 55 69 31",
+        "confidence": 0.92,
+        "evidenceLocation": {
+          "regionLabel": "structured-ecg"
+        }
+      },
+      {
+        "sourceFileId": "ecg-8165e5a591fc",
+        "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+        "sourceType": "ecg_image_with_printed_result",
+        "extractionMethod": "ocr",
+        "rawText": "Normal sinus rhythm",
+        "normalizedFinding": "Normal sinus rhythm",
+        "confidence": 0.92,
+        "evidenceLocation": {
+          "regionLabel": "structured-ecg"
+        }
+      },
+      {
+        "sourceFileId": "ecg-8165e5a591fc",
+        "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+        "sourceType": "ecg_image_with_printed_result",
+        "extractionMethod": "ocr",
+        "rawText": "Borderline ECG",
+        "normalizedFinding": "Borderline ECG",
+        "confidence": 0.92,
+        "evidenceLocation": {
+          "regionLabel": "structured-ecg"
+        }
+      },
+      {
+        "sourceFileId": "ecg-8165e5a591fc",
+        "sourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+        "sourceType": "ecg_image_with_printed_result",
+        "extractionMethod": "ocr",
+        "rawText": "Nonspecific ST abnormality",
+        "normalizedFinding": "Nonspecific ST abnormality",
+        "confidence": 0.92,
+        "evidenceLocation": {
+          "regionLabel": "structured-ecg"
+        }
+      }
+    ],
+    "redFlags": [],
+    "limitations": [
+      "Only source-grounded printed ECG text is surfaced.",
+      "Every surfaced ECG finding must be reviewed by a clinician."
+    ],
+    "clinicianReviewRequired": true
+  },
+  "audit_log": {
+    "uploadedSourceHash": "8165e5a591fcd6d6562b19c8bf5889f04ec5f77a0ebfd1b5df0a6eb455c782a6",
+    "extractionMethod": "ocr",
+    "rawExtractedText": [
+      "Ventricular rate 82 bpm",
+      "PR interval 164 ms",
+      "QRS duration 96 ms",
+      "QT/QTc 376/428 ms",
+      "P/QRS/T axes 55 69 31",
+      "Normal sinus rhythm",
+      "Machine interpretation",
+      "Borderline ECG",
+      "Nonspecific ST abnormality"
+    ],
+    "rejectedLlmAdditions": [],
+    "finalRenderedOutput": {
+      "status": "source_grounded",
+      "findingsCount": 8,
+      "redFlagsCount": 0
+    },
+    "outputPassedEvidenceGate": true
+  },
+  "disclaimer": "This ECG output is source-grounded extraction support and must be reviewed by a clinician."
+}

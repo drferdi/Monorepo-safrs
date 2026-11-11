@@ -49,7 +49,7 @@ async function main() {
     confirmation: options.confirm,
     justification: options.justification,
   });
-  stdout.write(`Recorded: projects/${options.project}/capabilities.json\n`);
+  stdout.write(`Recorded: ${options.project.startsWith("tools/") ? options.project : `projects/${options.project}`}/capabilities.json\n`);
 }
 
 try {

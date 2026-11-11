@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "id": "internal/golden-path",
+  "owner": "Chief",
+  "risk": "R2",
+  "runtime": { "name": "node", "version": "24.18.0" },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"]
+    },
+    "lint": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "lint"] },
+    "typecheck": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "typecheck"]
+    },
+    "test": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "test"] },
+    "build": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "build"]
+    },
+    "run": {
+      "program": "node",
+      "args": [
+        "scripts/pnpm.mjs",
+        "--filter",
+        "@safrs/web",
+        "exec",
+        "next",
+        "start",
+        "-H",
+        "127.0.0.1",
+        "-p",
+        "3390"
+      ]
+    },
+    "deployDryRun": {
+      "program": "node",
+      "args": ["scripts/deploy-dry-run.mjs"]
+    }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 3390,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 60
+  },
+  "artifacts": ["apps/web/.next"],
+  "externalDependencies": [
+    {
+      "kind": "registry",
+      "name": "npm registry",
+      "locator": "https://registry.npmjs.org",
+      "required": true
+    },
+    {
+      "kind": "database",
+      "name": "PostgreSQL (local, disposable)",
+      "locator": "DATABASE_URL",
+      "required": false
+    },
+    {
+      "kind": "service",
+      "name": "Stripe",
+      "locator": "STRIPE_SECRET_KEY",
+      "required": false
+    }
+  ],
+  "mutableStatePaths": [
+    "node_modules",
+    "coverage",
+    "apps/web/node_modules",
+    "apps/web/next-env.d.ts",
+    "apps/web/tsconfig.tsbuildinfo",
+    "apps/web/test-results",
+    "apps/web/playwright-report",
+    "packages/api/node_modules",
+    "packages/config/node_modules",
+    "packages/database/node_modules",
+    "packages/database/src/generated",
+    "packages/env/node_modules",
+    "packages/schemas/node_modules",
+    "packages/telemetry/node_modules",
+    "packages/token/node_modules",
+    "packages/ui/node_modules"
+  ]
+}

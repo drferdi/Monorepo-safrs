@@ -2,6 +2,7 @@
 name: safrs-auditor
 description: Classify an uncommitted or branch change set under SAFRS risk tiers and draft the session-close artefacts. Use before declaring work complete, before opening a pull request, or when asked "what risk tier is this change".
 tools: Read, Grep, Glob, Bash
+model: sonnet
 ---
 
 # SAFRS auditor

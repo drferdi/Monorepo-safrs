@@ -9,13 +9,10 @@ Hybrid writer for onboarding. Produce a bootstrap briefing in chat. Write `.agen
 
 ## Read first
 
-1. `.agents/knowledge/00_READ_FIRST.md`
-2. `.agents/HANDOFF.md`
-3. `.agents/knowledge/02_OBJECTIVES.md`
-4. `.agents/knowledge/03_ARCHITECTURE.md`
-5. `.agents/knowledge/04_CONTEXT.md`
-6. Root `AGENTS.md` (Read order + monorepo topology only)
-7. `docs/bootstrap/CURSOR_SETUP.md` (Cursor adapter map)
+1. Root `AGENTS.md`, then every **Always (MUST)** document in its generated routing block, in
+   order (single source: `.safrs/document-registry.json`; do not copy the list here)
+2. The `task:architecture` documents from the same block (topology for the briefing)
+3. `docs/bootstrap/CURSOR_SETUP.md` (Cursor adapter map)
 
 ## Write allowlist (after apply only)
 
@@ -24,7 +21,7 @@ Hybrid writer for onboarding. Produce a bootstrap briefing in chat. Write `.agen
 
 ## Procedure
 
-1. Detect audience: new agent / reinstall / human Chief.
+1. Detect audience: new agent / reinstall / human Gaffer.
 2. Emit a bootstrap briefing: mission, topology (`projects/` vs `packages/` vs `tools/`), MUST-read list, current HANDOFF snapshot, risk tiers one-liner, how to invoke `/safrs-session` and `/verify`.
 3. Draft `CONTEXT_BOOTSTRAP.md` content in chat (pointers + current state bullets).
 4. Wait for apply before writing.

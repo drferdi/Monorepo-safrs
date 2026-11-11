@@ -1,0 +1,3 @@
+﻿"relationship_id","source_resource_id","relationship_type","target_resource_id","evidence","verification_status","notes"
+"REL-001","REG-001","amends","REG-002","Portal summary: 'Perubahan atas Permendikdasmen 12/2024'","verified_current","13/2025 amends (does not replace) 12/2024."
+"REL-002","REG-002","amended_by","REG-001","Portal summary: 'Perubahan atas Permendikdasmen 12/2024'","verified_current","Inverse of REL-001."

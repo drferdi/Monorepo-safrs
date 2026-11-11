@@ -45,6 +45,10 @@ for d in registry.get('documents', []):
         errors.append(f"{d.get('id')}: invalid scope {s}")
     if (n is None) != (s is None):
         errors.append(f"{d.get('id')}: normativity and scope must be set together")
+    globs = d.get('paths')
+    if globs is not None and (s is None or not isinstance(globs, list) or not globs
+                              or not all(isinstance(g, str) and g for g in globs)):
+        errors.append(f"{d.get('id')}: paths must be a non-empty list of globs on a routed document")
     if o is not None:
         if n != 'MUST':
             errors.append(f"{d.get('id')}: read_order requires normativity MUST")

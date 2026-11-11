@@ -7,7 +7,7 @@ Every authoritative markdown file under `docs/spds/` starts with this header. Fi
 document_id: "01"
 title: "Read First"
 status: active
-authority: Chief
+authority: Gaffer
 owner: "<human owner>"
 version: "1.0.0"
 created: "YYYY-MM-DD"

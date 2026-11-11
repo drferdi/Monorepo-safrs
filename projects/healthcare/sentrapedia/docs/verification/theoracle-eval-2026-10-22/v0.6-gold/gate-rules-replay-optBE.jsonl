@@ -1,0 +1,39 @@
+{"id":"lay_terms-01","dx":"B80","drugs":["albendazol 1x400mg"],"status":["verified"]}
+{"id":"lay_terms-02","dx":"B86","drugs":["permethrin 1x5%"],"status":["verified"]}
+{"id":"lay_terms-03","dx":"B36.0","drugs":["Ketokonazol 2x2%"],"status":["verified"]}
+{"id":"lay_terms-04","dx":"H00.0","drugs":["kloramfenikol 3x1%","eritromisin 3x500mg"],"status":["verified","verified"]}
+{"id":"lay_terms-07","dx":"H61.2","drugs":["Karbogliserin 3x2-3tetes"],"status":["verified"]}
+{"id":"lay_terms-08","dx":"L27.2","drugs":["cetirizine 1x10mg"],"status":["doseRemoved"]}
+{"id":"lay_terms-10","dx":"K12.0","drugs":["chlorhexidine 3x0,2%","triamcinolone acetonide 2x0,1%"],"status":["verified","verified"]}
+{"id":"lay_terms-11","dx":"A37.0","drugs":["azitromisin 1x10mg/kgBB"],"status":["verified"]}
+{"id":"lay_terms-12","dx":"B26.9","drugs":["parasetamol 3x500mg"],"status":["verified"]}
+{"id":"lay_terms-13","dx":"I84.2","drugs":["Diosmin + Hesperidin 3x2tablet"],"status":["verified"]}
+{"id":"lay_terms-14","dx":"K29.7","drugs":["Omeprazole 1x20mg","Antasida 3x1tablet"],"status":["verified","verified"]}
+{"id":"lay_terms-16","dx":"L74.3","drugs":["bedak salisil 2x2%"],"status":["verified"]}
+{"id":"abbreviations-02","dx":"A91","drugs":["Parasetamol 3x500-1000mg"],"status":["verified"]}
+{"id":"abbreviations-04","dx":"H66.0","drugs":["Amoxicillin 3x10mg/kgBB","Paracetamol 3x15mg/kgBB"],"status":["verified","verified"]}
+{"id":"abbreviations-05","dx":"H66.1","drugs":["Ofloxacin 2x4tetes","Amoxicillin 3x500mg"],"status":["verified","verified"]}
+{"id":"abbreviations-07","dx":"A15.0","drugs":["Isoniazid 1x300mg"],"status":["verified"]}
+{"id":"abbreviations-10","dx":"P07.1","drugs":["Vitamin K1 1x1mg"],"status":["verified"]}
+{"id":"abbreviations-11","dx":"F41.1","drugs":["sertralin 1x25mg"],"status":["verified"]}
+{"id":"abbreviations-12","dx":"G44.2","drugs":["Asetaminofen 1x1000mg"],"status":["verified"]}
+{"id":"abbreviations-13","dx":"H81.1","drugs":["betahistin 3x6mg"],"status":["verified"]}
+{"id":"abbreviations-15","dx":"K21.9","drugs":["omeprazol 2x20mg"],"status":["verified"]}
+{"id":"mixed_id_en-01","dx":"J18.9","drugs":["amoksisilin 3x1g"],"status":["verified"]}
+{"id":"mixed_id_en-04","dx":"I63.9","drugs":["aspirin 1x160mg"],"status":["verified"]}
+{"id":"mixed_id_en-05","dx":"A91","drugs":["Parasetamol 3x10-15mg/kgBB"],"status":["verified"]}
+{"id":"mixed_id_en-06","dx":"L20.9","drugs":["Desonid 2x0,05%"],"status":["verified"]}
+{"id":"mixed_id_en-07","dx":"I10","drugs":["amlodipine 1x5mg"],"status":["verified"]}
+{"id":"mixed_id_en-08","dx":"H60.9","drugs":["ofloxacin 10x0.3%","ibuprofen 3x400mg"],"status":["verified","verified"]}
+{"id":"mixed_id_en-10","dx":"H40.1","drugs":["timolol 2x1tetes"],"status":["verified"]}
+{"id":"mixed_id_en-13","dx":"B20","drugs":["efavirenz 1x600mg"],"status":["verified"]}
+{"id":"mixed_id_en-14","dx":"B50.9","drugs":["primakuin 1x3tablet"],"status":["verified"]}
+{"id":"typos-01","dx":"A15.0","drugs":["Isoniazid 1x300mg","Rifampisin 1x600mg"],"status":["verified","verified"]}
+{"id":"typos-02","dx":"I10","drugs":["Amlodipine 1x5mg"],"status":["verified"]}
+{"id":"typos-06","dx":"A01.0","drugs":["Chloramphenicol 4x500mg"],"status":["verified"]}
+{"id":"typos-07","dx":"B86","drugs":["permethrin 1x5%"],"status":["verified"]}
+{"id":"typos-09","dx":"A09","drugs":["Oralit 1x200ml","Zinc 1x20mg"],"status":["verified","verified"]}
+{"id":"typos-10","dx":"G43.9","drugs":["Ibuprofen 1x400mg"],"status":["verified"]}
+{"id":"typos-11","dx":"D56.1","drugs":["Asam folat 2x1mg","Vitamin E 2x200IU"],"status":["removed","verified"]}
+{"id":"typos-13","dx":"F20.9","drugs":["Risperidone 1x2mg","Trihexyphenidyl 2x2mg"],"status":["verified","verified"]}
+{"id":"typos-15","dx":"L01.0","drugs":["mupirosin 3x2%"],"status":["verified"]}

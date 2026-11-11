@@ -1,0 +1,48 @@
+{
+  "release": "Sentra Chief of Staff Production Starter",
+  "version": "2.1.0",
+  "researchBaseline": "2026-08-31",
+  "localeBaseline": "id-ID",
+  "catalog": {
+    "domains": 13,
+    "roleTemplates": 66,
+    "roleOverlays": 66,
+    "roleEvaluationManifests": 66,
+    "featuredTemplates": 15
+  },
+  "runtime": {
+    "language": "TypeScript",
+    "nodeMinimum": "22",
+    "policyEffects": [
+      "ALLOW",
+      "REQUIRE_APPROVAL",
+      "DENY"
+    ],
+    "defaultAuthority": "prepare"
+  },
+  "verification": {
+    "automatedTests": 17,
+    "testFailures": 0,
+    "validTemplates": 66,
+    "invalidTemplates": 0,
+    "templateWarnings": 0,
+    "jsonFilesParsed": 157,
+    "secretPatternScan": "pass",
+    "placeholderScan": "pass"
+  },
+  "governancePacks": [
+    "global agentic baseline",
+    "enterprise shared-computer boundary",
+    "healthcare high-risk",
+    "Indonesia AI/data baseline"
+  ],
+  "workedExamples": [
+    "Clara — Healthcare Operations",
+    "Atlas — Executive",
+    "Lex — Legal Affairs"
+  ],
+  "notes": [
+    "This is an engineering/governance starter, not legal advice.",
+    "Production connectors, credentials, and organization-specific authorization are intentionally not included."
+  ]
+}

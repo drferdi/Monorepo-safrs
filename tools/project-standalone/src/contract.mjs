@@ -14,6 +14,7 @@ const topLevelKeys = new Set([
   "externalDependencies",
   "mutableStatePaths",
 ]);
+const optionalTopLevelKeys = new Set([...topLevelKeys, "repository"]);
 const commandNames = [
   "install",
   "lint",
@@ -69,12 +70,14 @@ function requireKeys(value, required, field, errors) {
   }
 }
 
+const packageProtocol = /^(?:file|link|portal|workspace):/u;
+
 function isAbsoluteOnAnyPlatform(value) {
   return (
     path.posix.isAbsolute(value.replaceAll("\\", "/")) ||
     path.win32.isAbsolute(value) ||
     /^[A-Za-z]:/u.test(value) ||
-    /^[A-Za-z][A-Za-z0-9+.-]*:/u.test(value)
+    (/^[A-Za-z][A-Za-z0-9+.-]*:/u.test(value) && /[/\\]/u.test(value))
   );
 }
 
@@ -102,8 +105,9 @@ function isUrl(value) {
 
 export function safeRelativePath(value) {
   if (!nonEmptyString(value) || value.includes("\0")) return false;
-  if (isAbsoluteOnAnyPlatform(value) || hasParentSegment(value)) return false;
-  const normalized = path.posix.normalize(value.replaceAll("\\", "/"));
+  const target = value.replace(packageProtocol, "");
+  if (isAbsoluteOnAnyPlatform(target) || hasParentSegment(target)) return false;
+  const normalized = path.posix.normalize(target.replaceAll("\\", "/"));
   return (
     normalized !== "." && normalized !== ".." && !normalized.startsWith("../")
   );
@@ -120,6 +124,10 @@ function validateRelativePath(value, field, errors) {
 function validateProgram(program, field, errors) {
   if (!nonEmptyString(program)) {
     errors.push(`${field} must be a non-empty string.`);
+    return;
+  }
+  if (program.includes("\0")) {
+    errors.push(`${field} must not contain NUL.`);
     return;
   }
   const basename = path.win32.basename(program).toLowerCase();
@@ -143,6 +151,10 @@ function validateProgram(program, field, errors) {
 function validateArgument(argument, field, errors) {
   if (typeof argument !== "string") {
     errors.push(`${field} must be a string.`);
+    return;
+  }
+  if (argument.includes("\0")) {
+    errors.push(`${field} must not contain NUL.`);
     return;
   }
   const candidates = [argument];
@@ -170,7 +182,7 @@ function validateArgument(argument, field, errors) {
       pathCandidate === ".." ||
       /[/\\]/u.test(pathCandidate) ||
       /^[A-Za-z]:/u.test(pathCandidate) ||
-      /^[A-Za-z][A-Za-z0-9+.-]*:/u.test(pathCandidate);
+      packageProtocol.test(pathCandidate);
     if (pathLike && !safeRelativePath(pathCandidate)) {
       errors.push(`${field} contains an absolute or parent-escaping path.`);
       return;
@@ -210,8 +222,27 @@ function validateCommand(value, name, errors) {
     }
     return;
   }
-  rejectUnknownKeys(value, new Set(["program", "args"]), field, errors);
+  rejectUnknownKeys(
+    value,
+    new Set(
+      name === "run"
+        ? ["program", "args"]
+        : ["program", "args", "timeoutSeconds"],
+    ),
+    field,
+    errors,
+  );
   requireKeys(value, ["program", "args"], field, errors);
+  if (
+    hasOwn(value, "timeoutSeconds") &&
+    (!Number.isInteger(value.timeoutSeconds) ||
+      value.timeoutSeconds < 1 ||
+      value.timeoutSeconds > 600)
+  ) {
+    errors.push(
+      `${field}.timeoutSeconds must be a positive integer of at most 600 seconds.`,
+    );
+  }
   validateProgram(value.program, `${field}.program`, errors);
   if (!Array.isArray(value.args)) {
     errors.push(`${field}.args must be an array.`);
@@ -325,8 +356,19 @@ function validateSmoke(value, errors) {
 export function validateContract(contract) {
   const errors = [];
   if (!isObject(contract)) return ["$ must be an object."];
-  rejectUnknownKeys(contract, topLevelKeys, "$", errors);
+  rejectUnknownKeys(contract, optionalTopLevelKeys, "$", errors);
   requireKeys(contract, topLevelKeys, "$", errors);
+  if (
+    hasOwn(contract, "repository") &&
+    (typeof contract.repository !== "string" ||
+      !/^(?:https:\/\/[A-Za-z0-9.-]+\/|git@[A-Za-z0-9.-]+:)[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/u.test(
+        contract.repository,
+      ))
+  ) {
+    errors.push(
+      "$.repository must be an HTTPS or SSH Git URL without credentials.",
+    );
+  }
   if (contract.schemaVersion !== 1)
     errors.push("$.schemaVersion must equal 1.");
   if (

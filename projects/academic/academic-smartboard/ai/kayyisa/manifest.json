@@ -1,0 +1,237 @@
+{
+  "package_name": "Kurikulum Merdeka 2026 — Agent Kayyisa Knowledge Package",
+  "package_version": "3.0.0",
+  "persona_version": "1.0.0",
+  "baseline_date": "2026-07-29",
+  "runtime_persona_entrypoint": "config/persona/SYSTEM_PROMPT_COMPILED.md",
+  "vector_knowledge_allowlist": [
+    "runtime/knowledge/**/*.jsonl"
+  ],
+  "architecture": {
+    "config": "System instruction, policies, role guardrails, and runtime contract.",
+    "runtime_knowledge": "Only normalized semantic knowledge atoms.",
+    "runtime_resolver": "Structured current-version and provenance resolution.",
+    "sources": "Original authoritative evidence for audit and reprocessing.",
+    "tests": "Behavioral release-gate scenarios.",
+    "tools": "Static validation.",
+    "operations": "Human-only workbook, backlog, and implementation handoff.",
+    "docs": "Approved design and implementation plan."
+  },
+  "files": [
+    {
+      "path": ".agent-ingest.json",
+      "size_bytes": 1575,
+      "sha256": "e84a0662973145f2d19a95179bec0df7505a98b3090254b81d69680b9b3626eb"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "size_bytes": 948,
+      "sha256": "85c90d19dff5a4867b1361597a2a8dfb6bdfcdd535950656faf5c33a87c211d1"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 2241,
+      "sha256": "b3c2478ad86739954ef81c2b25eab76d02ca47dded867c2cf1f2714d37b45fd0"
+    },
+    {
+      "path": "config/agent_policies.csv",
+      "size_bytes": 1252,
+      "sha256": "85b3bc1b387bf2cea041246feeaf0cbc29d8e389e241565f51a16aa813c26938"
+    },
+    {
+      "path": "config/data_dictionary.csv",
+      "size_bytes": 1723,
+      "sha256": "ee322050778dff3e4dd357ebc50fec872647e039d5c1a39fea7587bf125d8a07"
+    },
+    {
+      "path": "config/persona/00_persona_manifest.json",
+      "size_bytes": 1501,
+      "sha256": "8e49b5db552f635ef7a95a0ba912ed90b4a259911f2071074b69a5a43898b401"
+    },
+    {
+      "path": "config/persona/01_identity_and_mission.md",
+      "size_bytes": 1179,
+      "sha256": "327edba8d5c439d9b2d6fa36f49e2be085aa048d9ce838c01d117a98811736ab"
+    },
+    {
+      "path": "config/persona/02_roles_and_tasks.md",
+      "size_bytes": 1995,
+      "sha256": "7d585ae716a2f1f0fa14dba1a79bb94702fa6fe6791a321ccfbeb6309fe27af3"
+    },
+    {
+      "path": "config/persona/03_character_and_values.md",
+      "size_bytes": 1346,
+      "sha256": "4e2bbe9669667d67dc82de9379ceee44159d96d90a761efa8e98ef6b87906314"
+    },
+    {
+      "path": "config/persona/04_communication_style.md",
+      "size_bytes": 1564,
+      "sha256": "8b01e0c15d72d29b84bf5d2966b5521a25c116095a981d4d866303ae2ce3eada"
+    },
+    {
+      "path": "config/persona/05_javanese_language_policy.md",
+      "size_bytes": 1330,
+      "sha256": "f5a51b4d2a9edf1aee43267e84b16933eca866c13215c867fdd8c6c3e4cd65fa"
+    },
+    {
+      "path": "config/persona/06_teacher_respect_protocol.md",
+      "size_bytes": 1477,
+      "sha256": "616dbcb4d9aadae982373c5ab93fd74093c2783f077ee9e0c5dbb50a116c7b0e"
+    },
+    {
+      "path": "config/persona/07_student_care_protocol.md",
+      "size_bytes": 1352,
+      "sha256": "5b9c77ed86e3354b65920866af0f484ee45e3893434f585d51573abe20cd728e"
+    },
+    {
+      "path": "config/persona/08_parent_and_staff_protocol.md",
+      "size_bytes": 1221,
+      "sha256": "4193400878c3502e5023dac9b6be331528b31f663b79996317e884e8fed9c56b"
+    },
+    {
+      "path": "config/persona/09_learning_support_workflow.md",
+      "size_bytes": 1702,
+      "sha256": "fb2de97542574c06bb76fa72f17cd2e33a8fe3d88a75120961d96487270f95ff"
+    },
+    {
+      "path": "config/persona/10_safety_and_boundaries.md",
+      "size_bytes": 1480,
+      "sha256": "4a0df1940cfb563dfc92d2cf92211583996045d343adcd92738d99d60784fd09"
+    },
+    {
+      "path": "config/persona/11_privacy_and_internal_notes.md",
+      "size_bytes": 1377,
+      "sha256": "a4272f481beb7ff2ae8d7d19e1faebad97d16ad34ed31cde7d846d8c613f748d"
+    },
+    {
+      "path": "config/persona/12_response_patterns.md",
+      "size_bytes": 1580,
+      "sha256": "7bbc6c9acc1709324dff1bc75a3b732df54879e0143fe8531a795391714fc409"
+    },
+    {
+      "path": "config/persona/13_prohibited_behaviors.md",
+      "size_bytes": 1281,
+      "sha256": "d320b831b7df8e45519734bcf3199a69c4bea44a98c78ac3a95cb1f4530f8573"
+    },
+    {
+      "path": "config/persona/14_conversation_examples.jsonl",
+      "size_bytes": 8229,
+      "sha256": "138e9815a20174c12c01552a245d46ba0a1396e2493e2853c32cecdc21500d7e"
+    },
+    {
+      "path": "config/persona/15_persona_evaluation_rubric.md",
+      "size_bytes": 3093,
+      "sha256": "87c44aef2d2bf03155ed45e9bcc57e16bd4bf8bd8edc6d526540d9b77c168d31"
+    },
+    {
+      "path": "config/persona/16_role_permission_baseline.json",
+      "size_bytes": 1751,
+      "sha256": "4aee0e5563c8564deb6352bae4f230963b6fe2ca715c8f8c7b2cd1a274b135d5"
+    },
+    {
+      "path": "config/persona/17_domain_priority_and_source_policy.md",
+      "size_bytes": 1248,
+      "sha256": "89d5a9dd0c32753db046986060f10191fc8cdc5dcbc7a98c674734ef4e9a0e87"
+    },
+    {
+      "path": "config/persona/18_emotional_support_protocol.md",
+      "size_bytes": 932,
+      "sha256": "41c85bea8c320ff514212cda47e865b87d8bef57d9f7e407d008cd3e003f887b"
+    },
+    {
+      "path": "config/persona/19_feedback_and_correction_protocol.md",
+      "size_bytes": 1053,
+      "sha256": "6d51dd0cb3db8e581e33e13f16deecd8bb5d35036357ee9219af87a5f57907bc"
+    },
+    {
+      "path": "config/persona/SYSTEM_PROMPT_COMPILED.md",
+      "size_bytes": 28662,
+      "sha256": "b5ad26c4b453853442006c52f0ef6f55e416119f5ccaf83b11e77b8264d73769"
+    },
+    {
+      "path": "config/runtime/agent_runtime_contract.json",
+      "size_bytes": 1113,
+      "sha256": "6a8097a006f8a3460b3b7f49798508ea5c233ef9b7eb5872baa351b32efdc6ec"
+    },
+    {
+      "path": "docs/plans/2026-07-29-agent-kayyisa-persona-implementation.md",
+      "size_bytes": 4438,
+      "sha256": "2f76e876cf39a11d507fbc8e4471df8ae35a1b636a0c9866336781ffe31b0edc"
+    },
+    {
+      "path": "docs/specs/2026-07-29-agent-kayyisa-persona-design.md",
+      "size_bytes": 3726,
+      "sha256": "477014ac714cfa06c53ed294eb13787070a085a38034ea36e26a44e2248b5e17"
+    },
+    {
+      "path": "operations/CLAUDE_IMPLEMENTATION_HANDOFF_AGENT_KAYYISA.md",
+      "size_bytes": 5912,
+      "sha256": "aa9bbbd989923294984833bd8bb5d06498b04c380cb2663a29ddae4386b65394"
+    },
+    {
+      "path": "operations/Kurikulum_Merdeka_2026_Agent_Knowledge_Pack.xlsx",
+      "size_bytes": 70428,
+      "sha256": "cefaea3b77cb47fabbeca1d165a23487d31e10440ae58bd907d0c1feb30270af"
+    },
+    {
+      "path": "operations/folder_tree.txt",
+      "size_bytes": 441,
+      "sha256": "d629a35876f543f3f03954acd58e9c95fecd12c28ce35dab979c57e0c3296bdd"
+    },
+    {
+      "path": "operations/folder_tree_v3.txt",
+      "size_bytes": 1509,
+      "sha256": "774ce1cb8ea680acdf758c1f32277868500bb832b7d1bd069e7bd8191b19da31"
+    },
+    {
+      "path": "operations/ingestion_backlog.csv",
+      "size_bytes": 1222,
+      "sha256": "b686dbf59ff1094059ec0c2439f0b6cc1ac7cf565271545e7d10adf52d5920e8"
+    },
+    {
+      "path": "runtime/knowledge/cp/cp_phase_chunks_current_nonreligion.jsonl",
+      "size_bytes": 217892,
+      "sha256": "e4675e281e5fa14a700afe2f01645d3ba9497765bb8fe8210c98ea480da53f30"
+    },
+    {
+      "path": "runtime/resolver/source_registry.csv",
+      "size_bytes": 6246,
+      "sha256": "be5105bf54ece990aed06eabe76a9f8ec1cf2e5a4e5309e7f5132d408addb8d7"
+    },
+    {
+      "path": "runtime/resolver/subject_coverage.csv",
+      "size_bytes": 8774,
+      "sha256": "4087d67ee7d3763159089cd9d2434d174aac76a71f0a8ca74497eda869b8fe7d"
+    },
+    {
+      "path": "runtime/resolver/version_resolver.json",
+      "size_bytes": 865,
+      "sha256": "b655d1e74f29912c7abd159d1d7205ccc5b87c4d3f88596eed920139b58c6928"
+    },
+    {
+      "path": "sources/official/cp/BKPDM_020_2026_CP_agama_scan.pdf",
+      "size_bytes": 8510107,
+      "sha256": "598278746b0f62333fdcab520d5dd4c1a9650c94bd3906acff4254100976552b"
+    },
+    {
+      "path": "sources/official/cp/BSKAP_046_2025_CP.pdf",
+      "size_bytes": 14908908,
+      "sha256": "45809d2c88a612f90ee5adbd60d71a8952527d6924c626d126ea6926ae3d3394"
+    },
+    {
+      "path": "tests/persona/README.md",
+      "size_bytes": 914,
+      "sha256": "6ace3e795e4291dbc0e21a7e912d4231bc949f5bd01fc1a7bed4c03a9162d1ff"
+    },
+    {
+      "path": "tests/persona/persona_test_cases.jsonl",
+      "size_bytes": 8917,
+      "sha256": "2ebe9755fb6e5e9a2b3b75a55f00d6c718cbe87e6998584365600670d9f91d5c"
+    },
+    {
+      "path": "tools/validate_agent_kayyisa.py",
+      "size_bytes": 6732,
+      "sha256": "c562fe94e97c78a4e6aae1dff13882953376f4e049791ae5504e16b54794989a"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+name: Sentra Autonomous Agent (Jules)
+
+on: [push]
+
+jobs:
+  agent-review:
+      runs-on: ubuntu-latest
+          steps:
+                - name: Trigger Jules Agent
+                        uses: github/copilot-agent-action@v1
+                                with:
+                                          command: "analyze, fix, and complete"
+                                                    context: "Follow standards in AGENTS.md and .cursorrules"
+                                                              auto_pr: true

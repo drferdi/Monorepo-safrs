@@ -1,0 +1,3 @@
+-- No-op migration retained to preserve migration history ordering.
+-- The actual clinical case audit schema change runs in
+-- 20260315_add_clinical_case_audit_events after clinical_reports exists.

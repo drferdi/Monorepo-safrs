@@ -10,7 +10,8 @@ does not redefine R0–R3.
 
 ## Session start
 
-1. Read `.agents/HANDOFF.md` — current state, work in flight, blockers.
+1. Read `.agents/HANDOFF.md` — current state, work in flight, blockers. For capsule-scoped
+   work, read that capsule's `.agents/HANDOFF.md` first, then its `.agents/CONTEXT.md`.
 2. Follow the Read order in root `AGENTS.md` (MUST docs only unless task-scoped).
 3. Do not clobber work another agent owns in HANDOFF.
 4. Prefer Plan Mode for multi-file or R2/R3 work (`@04-plan-r2-r3`).
@@ -29,6 +30,9 @@ does not redefine R0–R3.
 
 1. Optional: run `safrs-auditor` to classify risk and draft HANDOFF/DECISIONS text.
 2. Run `/verify` (or follow `.cursor/skills/verify`) — paste command evidence.
-3. Overwrite `.agents/HANDOFF.md` (under ~1k tokens).
-4. Append durable decisions to `.agents/DECISIONS.md` only when needed; update `.agents/PROGRESS.md` if area status changed.
+3. Overwrite the handoff of every scope you touched (under ~1k tokens): the capsule's
+   `projects/<domain>/<capsule>/.agents/HANDOFF.md` for capsule work, the root
+   `.agents/HANDOFF.md` only for control-plane work.
+4. Append durable decisions to the same scope's `DECISIONS.md` only when needed; update the root
+   `.agents/PROGRESS.md` if control-plane area status changed.
 5. Flag integrity review when implementation and governing verification change together.

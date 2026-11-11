@@ -1,0 +1,26 @@
+<svg width="520" height="230" viewBox="0 0 520 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wave" x1="36" y1="190" x2="486" y2="70" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#155CFF" stop-opacity="0"/>
+      <stop offset="0.45" stop-color="#155CFF" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#43C6FF"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(408 131) rotate(158) scale(244 112)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#155CFF" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#155CFF" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#318AFF" fill-opacity="0.42"/>
+    </pattern>
+    <clipPath id="mesh">
+      <path d="M0 211C70 184 121 190 184 169C248 147 301 104 359 92C422 79 462 92 520 51V230H0V211Z"/>
+    </clipPath>
+  </defs>
+  <rect width="520" height="230" fill="url(#glow)"/>
+  <g clip-path="url(#mesh)">
+    <rect width="520" height="230" fill="url(#dots)"/>
+  </g>
+  <path d="M-16 213C63 197 102 196 166 173C232 150 283 110 349 97C416 84 465 91 538 38" stroke="url(#wave)" stroke-width="2"/>
+  <path d="M-18 224C54 219 106 207 169 186C236 163 290 125 352 110C420 94 474 99 540 57" stroke="url(#wave)" stroke-opacity="0.64"/>
+  <path d="M-22 198C48 177 94 181 157 160C225 137 276 94 342 80C410 66 469 74 540 28" stroke="url(#wave)" stroke-opacity="0.5"/>
+</svg>

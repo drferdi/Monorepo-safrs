@@ -18,6 +18,11 @@
     ".husky/**",
     "**/.mcp.json",
     "projects/**/AGENTS.md",
+    "projects/product/kediri-history/.agents/**",
+    "projects/product/kediri-history/docs/ARCHITECTURE_LOCK.md",
+    "projects/product/kediri-history/docs/bibles/**",
+    "projects/product/kediri-history/docs/implementation/**",
+    "projects/product/kediri-history/research/**",
     "projects/**/ai/**",
     "projects/**/safety-critical/**",
     "projects/**/production/**",
@@ -49,12 +54,24 @@
     "scripts/safrs-verify.sh",
     "tests/repository/automation-policy.test.mjs",
     "tools/automation/**",
+    "tools/project-standalone/**",
     "tests/fixtures/automation/**",
     "docs/bootstrap/**",
     ".safrs/approvals/**",
     ".safrs/evidence/**",
     "tests/architecture/**",
-    "tests/security/**"
+    "tests/security/**",
+    "projects/healthcare/medboard/src/lib/cdss/**",
+    "projects/healthcare/med-assist/lib/iskandar-diagnosis-engine/**",
+    "projects/healthcare/med-assist/lib/emergency-detector/**",
+    "projects/healthcare/med-assist/lib/clinical/**",
+    "projects/healthcare/med-assist/public/data/penyakit.json",
+    "projects/healthcare/sidelab-src/sidelab-engine/sidelab/**",
+    "projects/healthcare/sidelab-src/sidelab-engine/tests/clinical/**",
+    "projects/healthcare/mantra/apps/sentra_mantra_integrations/**",
+    "projects/healthcare/mantra/apps/sentra_mantra_hospital/**",
+    ".devin/**",
+    ".grok/**"
   ],
   "verification_control_patterns": [
     ".safrs/**",
@@ -77,6 +94,7 @@
     "tools/task/**",
     "tools/status/**",
     "tools/automation/**",
+    "tools/project-standalone/**",
     "tests/fixtures/automation/**",
     "tests/governance/test_automation_contracts.py",
     "scripts/safrs-verify.mjs",
@@ -96,7 +114,11 @@
     "tests/architecture/**",
     "tests/security/**",
     ".github/CODEOWNERS",
-    ".github/pull_request_template.md"
+    ".github/pull_request_template.md",
+    ".devin/hooks.v1.json",
+    ".devin/hooks/**",
+    ".devin/config.json",
+    ".grok/hooks/**"
   ],
   "risk_overrides": [
     {
@@ -104,7 +126,16 @@
       "patterns": [
         "projects/**/safety-critical/**",
         "projects/**/production/**",
-        "infrastructure/production/**"
+        "infrastructure/production/**",
+        "projects/healthcare/medboard/src/lib/cdss/**",
+        "projects/healthcare/med-assist/lib/iskandar-diagnosis-engine/**",
+        "projects/healthcare/med-assist/lib/emergency-detector/**",
+        "projects/healthcare/med-assist/lib/clinical/**",
+        "projects/healthcare/med-assist/public/data/penyakit.json",
+        "projects/healthcare/sidelab-src/sidelab-engine/sidelab/**",
+        "projects/healthcare/sidelab-src/sidelab-engine/tests/clinical/**",
+        "projects/healthcare/mantra/apps/sentra_mantra_integrations/**",
+        "projects/healthcare/mantra/apps/sentra_mantra_hospital/**"
       ]
     }
   ]

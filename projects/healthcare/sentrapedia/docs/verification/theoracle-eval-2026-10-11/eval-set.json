@@ -1,0 +1,886 @@
+{
+ "name": "TheOracle retrieval eval set",
+ "created": "2026-10-11",
+ "status": "draft - gold labels await Gaffer review",
+ "fictional": true,
+ "metric": "recall@5: hit when any of the top-5 retrieved chunks comes from a gold document; for exact_terms, when any top-5 chunk literally contains the term (case-insensitive).",
+ "queries": [
+  {
+   "id": "lay_terms-01",
+   "category": "lay_terms",
+   "query": "anak gatal di dubur terutama malam hari, katanya cacingan",
+   "gold": [
+    "oksiuriasis-enterobiasis-cacing-kremi.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-02",
+   "category": "lay_terms",
+   "query": "kulit gatal sekali kalau malam, keluarga serumah juga ikut gatal",
+   "gold": [
+    "skabies-kudis.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-03",
+   "category": "lay_terms",
+   "query": "bercak putih bersisik halus di punggung, panuan",
+   "gold": [
+    "tinea-versikolor-pitiriasis-versikolor-panu.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-04",
+   "category": "lay_terms",
+   "query": "benjolan merah nyeri di kelopak mata, bintitan",
+   "gold": [
+    "hordeolum-bintitan.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-05",
+   "category": "lay_terms",
+   "query": "kepala terasa berputar setiap kali bangun dari tidur",
+   "gold": [
+    "vertigo-posisi-paroksismal-jinak-bppv.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-06",
+   "category": "lay_terms",
+   "query": "sakit kepala seperti diikat kencang di kedua sisi",
+   "gold": [
+    "tension-type-headache-tth.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-07",
+   "category": "lay_terms",
+   "query": "telinga terasa budeg karena kotoran telinga mengeras",
+   "gold": [
+    "serumen-prop-impaksi-serumen.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-08",
+   "category": "lay_terms",
+   "query": "biduran dan bentol gatal setelah makan udang",
+   "gold": [
+    "urtikaria-akut.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-09",
+   "category": "lay_terms",
+   "query": "bintil berisi air di seluruh badan anak disertai demam",
+   "gold": [
+    "varisela-cacar-air.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-10",
+   "category": "lay_terms",
+   "query": "sariawan yang hilang timbul di mulut",
+   "gold": [
+    "ulkus-mulut-stomatitis-aftosa-rekuren.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-11",
+   "category": "lay_terms",
+   "query": "anak batuk terus menerus sampai muntah dan bunyi melengking",
+   "gold": [
+    "pertusis-batuk-rejan.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-12",
+   "category": "lay_terms",
+   "query": "pipi bengkak di bawah telinga, gondongan",
+   "gold": [
+    "parotitis-epidemika-gondongan-mumps.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-13",
+   "category": "lay_terms",
+   "query": "wasir berdarah saat buang air besar",
+   "gold": [
+    "hemoroid-eksterna-dan-interna-derajat-1-2.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-14",
+   "category": "lay_terms",
+   "query": "perih di ulu hati kalau telat makan, maag",
+   "gold": [
+    "gastritis.md",
+    "gastroesophageal-reflux-disease-gerd.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-15",
+   "category": "lay_terms",
+   "query": "anak tidak tumbuh tinggi dibanding teman sebayanya",
+   "gold": [
+    "stunting.md",
+    "stunting-2022.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "lay_terms-16",
+   "category": "lay_terms",
+   "query": "bintik kecil gatal di leher bayi karena kepanasan",
+   "gold": [
+    "miliaria-biang-keringat.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-01",
+   "category": "abbreviations",
+   "query": "tatalaksana PPOK eksaserbasi akut",
+   "gold": [
+    "penyakit-paru-obstruktif.md",
+    "penyakit-paru-obstruktif-2019.pdf",
+    "gold-copd-2024.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-02",
+   "category": "abbreviations",
+   "query": "DBD dengan trombositopenia pada dewasa",
+   "gold": [
+    "infeksi-dengue-pada-dewasa.md",
+    "infeksi-dengue-anak-dan-remaja.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-03",
+   "category": "abbreviations",
+   "query": "ISK pada wanita dewasa tidak hamil",
+   "gold": [
+    "infeksi-saluran-kemih.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-04",
+   "category": "abbreviations",
+   "query": "OMA pada anak usia 2 tahun",
+   "gold": [
+    "otitis-media-akut-oma.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-05",
+   "category": "abbreviations",
+   "query": "OMSK dengan otore kronik",
+   "gold": [
+    "otitis-media-supuratif-kronik.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-06",
+   "category": "abbreviations",
+   "query": "SKA dengan elevasi segmen ST",
+   "gold": [
+    "sindroma-koroner-akut.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-07",
+   "category": "abbreviations",
+   "query": "TB paru BTA positif kasus baru",
+   "gold": [
+    "tuberkolosis.md",
+    "tuberkulosis-2019.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-08",
+   "category": "abbreviations",
+   "query": "DM tipe 2 dengan obesitas",
+   "gold": [
+    "diabetes-melitus-tipe-2-dewasa.md",
+    "esc-cvd-diabetes-2023.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-09",
+   "category": "abbreviations",
+   "query": "PGK stadium 5 persiapan hemodialisis",
+   "gold": [
+    "penyakit-ginjal-kronik.md",
+    "penyakit-ginjal-tahap-akhir.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-10",
+   "category": "abbreviations",
+   "query": "resusitasi dan transpor BBLR",
+   "gold": [
+    "tindakan-resusitasi-stabilitasi-dan-tranpor-bayi-berat-lahir-r.md",
+    "resusitasi-bblr-2018.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-11",
+   "category": "abbreviations",
+   "query": "GAD dengan keluhan cemas berlebihan",
+   "gold": [
+    "gangguan-cemas-menyeluruh-gad.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-12",
+   "category": "abbreviations",
+   "query": "TTH episodik",
+   "gold": [
+    "tension-type-headache-tth.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-13",
+   "category": "abbreviations",
+   "query": "BPPV manuver Epley",
+   "gold": [
+    "vertigo-posisi-paroksismal-jinak-bppv.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-14",
+   "category": "abbreviations",
+   "query": "LLA pada anak kemoterapi induksi",
+   "gold": [
+    "leukemia-limfoblastik-akut-pada-anak.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "abbreviations-15",
+   "category": "abbreviations",
+   "query": "GERD dengan heartburn malam hari",
+   "gold": [
+    "gastroesophageal-reflux-disease-gerd.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-01",
+   "category": "mixed_id_en",
+   "query": "community acquired pneumonia pada dewasa, antibiotik empiris",
+   "gold": [
+    "pneumonia-pada-dewasa.md",
+    "pneumonia.md",
+    "pneumonia-dewasa-2023.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-02",
+   "category": "mixed_id_en",
+   "query": "heart failure dengan ejection fraction rendah",
+   "gold": [
+    "gagal-jantung.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-03",
+   "category": "mixed_id_en",
+   "query": "anemia pada chronic kidney disease",
+   "gold": [
+    "penyakit-ginjal-kronik.md",
+    "penyakit-ginjal-tahap-akhir.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-04",
+   "category": "mixed_id_en",
+   "query": "stroke iskemik akut, time window trombolisis",
+   "gold": [
+    "stroke.md",
+    "stroke-2019.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-05",
+   "category": "mixed_id_en",
+   "query": "warning signs dengue pada anak",
+   "gold": [
+    "infeksi-dengue-anak-dan-remaja.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-06",
+   "category": "mixed_id_en",
+   "query": "atopic dermatitis pada bayi, penggunaan emollient",
+   "gold": [
+    "dermatitis-atopik.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-07",
+   "category": "mixed_id_en",
+   "query": "target blood pressure pada hipertensi anak",
+   "gold": [
+    "hipertensi-pada-anak.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-08",
+   "category": "mixed_id_en",
+   "query": "otitis eksterna akut, swimmer ear",
+   "gold": [
+    "otitis-eksterna.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-09",
+   "category": "mixed_id_en",
+   "query": "fluid resuscitation pada sepsis anak",
+   "gold": [
+    "sepsis-pada-anak.md",
+    "sepsis-anak-2021.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-10",
+   "category": "mixed_id_en",
+   "query": "tekanan intraokular tinggi pada open angle glaucoma",
+   "gold": [
+    "glaukoma.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-11",
+   "category": "mixed_id_en",
+   "query": "congenital cataract pada bayi",
+   "gold": [
+    "katarak-pada-anak.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-12",
+   "category": "mixed_id_en",
+   "query": "HBsAg positif, chronic hepatitis B carrier",
+   "gold": [
+    "hepatitis-b.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-13",
+   "category": "mixed_id_en",
+   "query": "first line ARV regimen untuk HIV dewasa",
+   "gold": [
+    "hiv.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-14",
+   "category": "mixed_id_en",
+   "query": "malaria falciparum tanpa komplikasi, terapi ACT",
+   "gold": [
+    "malaria.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "mixed_id_en-15",
+   "category": "mixed_id_en",
+   "query": "skrining mammografi untuk breast cancer",
+   "gold": [
+    "kanker-payudara.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-01",
+   "category": "typos",
+   "query": "tuberkulosiss batuk berdahak lebih dari dua minggu",
+   "gold": [
+    "tuberkolosis.md",
+    "tuberkulosis-2019.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-02",
+   "category": "typos",
+   "query": "obat hipertensii untuk dewasa",
+   "gold": [
+    "hipertensi-dewasa.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-03",
+   "category": "typos",
+   "query": "diabetis melitus tipe 2 kontrol gula",
+   "gold": [
+    "diabetes-melitus-tipe-2-dewasa.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-04",
+   "category": "typos",
+   "query": "pnemonia pada balita napas cepat",
+   "gold": [
+    "pneumonia.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-05",
+   "category": "typos",
+   "query": "serangan astma bronkial pada anak",
+   "gold": [
+    "asma-bronkiale.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-06",
+   "category": "typos",
+   "query": "demam tifoit hari ketujuh",
+   "gold": [
+    "demam-tifoid.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-07",
+   "category": "typos",
+   "query": "skabies kudisan gatel di sela jari",
+   "gold": [
+    "skabies-kudis.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-08",
+   "category": "typos",
+   "query": "konjungtifitis bakteri mata merah belekan",
+   "gold": [
+    "konjungtivitis-bakteri-dan-viral.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-09",
+   "category": "typos",
+   "query": "gastroentritis diare akut pada anak",
+   "gold": [
+    "gastroenteritis-akut-diare-akut.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-10",
+   "category": "typos",
+   "query": "migrain tanpa aura berdenyut sebelah",
+   "gold": [
+    "migren-tanpa-aura.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-11",
+   "category": "typos",
+   "query": "talasemia mayor kebutuhan transfusi",
+   "gold": [
+    "thalasemia.md",
+    "thalasemia-2018.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-12",
+   "category": "typos",
+   "query": "osteoatritis lutut pada lansia",
+   "gold": [
+    "osteoartritis.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-13",
+   "category": "typos",
+   "query": "skizofernia terapi antipsikotik",
+   "gold": [
+    "skizofrenia.md",
+    "skizofrenia-2025.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-14",
+   "category": "typos",
+   "query": "epistaxsis anterior pada anak",
+   "gold": [
+    "epistaksis.md"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "typos-15",
+   "category": "typos",
+   "query": "impetico krustosa di sekitar hidung",
+   "gold": [
+    "impetigo-krustosa-dan-bulosa.md",
+    "dermatovenereologi-perdoski-2017.pdf",
+    "dermatovenereologi-perdoski-2021.pdf"
+   ],
+   "status": "draft"
+  },
+  {
+   "id": "exact_terms-01",
+   "category": "exact_terms",
+   "query": "dosis amoksisilin 500 mg",
+   "gold": [],
+   "status": "draft",
+   "subtype": "drug_dose",
+   "term": "amoksisilin 500 mg",
+   "derived": "literal-match",
+   "gold_chunks": 2
+  },
+  {
+   "id": "exact_terms-02",
+   "category": "exact_terms",
+   "query": "parasetamol 500 mg untuk demam dewasa",
+   "gold": [],
+   "status": "draft",
+   "subtype": "drug_dose",
+   "term": "parasetamol 500 mg",
+   "derived": "literal-match",
+   "gold_chunks": 6
+  },
+  {
+   "id": "exact_terms-03",
+   "category": "exact_terms",
+   "query": "mulai metformin 500 mg",
+   "gold": [],
+   "status": "draft",
+   "subtype": "drug_dose",
+   "term": "metformin 500 mg",
+   "derived": "literal-match",
+   "gold_chunks": 1
+  },
+  {
+   "id": "exact_terms-04",
+   "category": "exact_terms",
+   "query": "albendazol 400 mg dosis tunggal",
+   "gold": [],
+   "status": "draft",
+   "subtype": "drug_dose",
+   "term": "albendazol 400 mg",
+   "derived": "literal-match",
+   "gold_chunks": 5
+  },
+  {
+   "id": "exact_terms-05",
+   "category": "exact_terms",
+   "query": "krim permetrin 5%",
+   "gold": [],
+   "status": "draft",
+   "subtype": "drug_dose",
+   "term": "permetrin 5%",
+   "derived": "literal-match",
+   "gold_chunks": 3
+  },
+  {
+   "id": "exact_terms-06",
+   "category": "exact_terms",
+   "query": "oseltamivir untuk influenza",
+   "gold": [],
+   "status": "draft",
+   "subtype": "drug_dose",
+   "term": "oseltamivir",
+   "derived": "literal-match",
+   "gold_chunks": 1
+  },
+  {
+   "id": "exact_terms-07",
+   "category": "exact_terms",
+   "query": "artesunat injeksi malaria berat",
+   "gold": [],
+   "status": "draft",
+   "subtype": "drug_dose",
+   "term": "artesunat",
+   "derived": "literal-match",
+   "gold_chunks": 3
+  },
+  {
+   "id": "exact_terms-08",
+   "category": "exact_terms",
+   "query": "primakuin untuk malaria vivax",
+   "gold": [],
+   "status": "draft",
+   "subtype": "drug_dose",
+   "term": "primakuin",
+   "derived": "literal-match",
+   "gold_chunks": 5
+  },
+  {
+   "id": "exact_terms-09",
+   "category": "exact_terms",
+   "query": "kode ICD-10 L70.0",
+   "gold": [],
+   "status": "draft",
+   "subtype": "icd10",
+   "term": "L70.0",
+   "derived": "literal-match",
+   "gold_chunks": 2
+  },
+  {
+   "id": "exact_terms-10",
+   "category": "exact_terms",
+   "query": "kode ICD-10 J18.9",
+   "gold": [],
+   "status": "draft",
+   "subtype": "icd10",
+   "term": "J18.9",
+   "derived": "literal-match",
+   "gold_chunks": 1
+  },
+  {
+   "id": "exact_terms-11",
+   "category": "exact_terms",
+   "query": "kode ICD-10 A01.0",
+   "gold": [],
+   "status": "draft",
+   "subtype": "icd10",
+   "term": "A01.0",
+   "derived": "literal-match",
+   "gold_chunks": 1
+  },
+  {
+   "id": "exact_terms-12",
+   "category": "exact_terms",
+   "query": "kode ICD-10 N39.0",
+   "gold": [],
+   "status": "draft",
+   "subtype": "icd10",
+   "term": "N39.0",
+   "derived": "literal-match",
+   "gold_chunks": 1
+  },
+  {
+   "id": "exact_terms-13",
+   "category": "exact_terms",
+   "query": "kode ICD-10 I63",
+   "gold": [],
+   "status": "draft",
+   "subtype": "icd10",
+   "term": "I63",
+   "derived": "literal-match",
+   "gold_chunks": 2
+  },
+  {
+   "id": "exact_terms-14",
+   "category": "exact_terms",
+   "query": "kode ICD-10 K29",
+   "gold": [],
+   "status": "draft",
+   "subtype": "icd10",
+   "term": "K29",
+   "derived": "literal-match",
+   "gold_chunks": 3
+  },
+  {
+   "id": "exact_terms-15",
+   "category": "exact_terms",
+   "query": "gula darah puasa 126 mg/dL",
+   "gold": [],
+   "status": "draft",
+   "subtype": "lab",
+   "term": "126 mg/dL",
+   "derived": "literal-match",
+   "gold_chunks": 11
+  },
+  {
+   "id": "exact_terms-16",
+   "category": "exact_terms",
+   "query": "pemeriksaan antigen NS1",
+   "gold": [],
+   "status": "draft",
+   "subtype": "lab",
+   "term": "NS1",
+   "derived": "literal-match",
+   "gold_chunks": 23
+  },
+  {
+   "id": "exact_terms-17",
+   "category": "exact_terms",
+   "query": "tes widal",
+   "gold": [],
+   "status": "draft",
+   "subtype": "lab",
+   "term": "widal",
+   "derived": "literal-match",
+   "gold_chunks": 9
+  },
+  {
+   "id": "exact_terms-18",
+   "category": "exact_terms",
+   "query": "troponin meningkat",
+   "gold": [],
+   "status": "draft",
+   "subtype": "lab",
+   "term": "troponin",
+   "derived": "literal-match",
+   "gold_chunks": 22
+  },
+  {
+   "id": "exact_terms-19",
+   "category": "exact_terms",
+   "query": "jumlah CD4 rendah",
+   "gold": [],
+   "status": "draft",
+   "subtype": "lab",
+   "term": "CD4",
+   "derived": "literal-match",
+   "gold_chunks": 88
+  },
+  {
+   "id": "exact_terms-20",
+   "category": "exact_terms",
+   "query": "skor CURB-65",
+   "gold": [],
+   "status": "draft",
+   "subtype": "score",
+   "term": "CURB-65",
+   "derived": "literal-match",
+   "gold_chunks": 8
+  },
+  {
+   "id": "exact_terms-21",
+   "category": "exact_terms",
+   "query": "skor NIHSS",
+   "gold": [],
+   "status": "draft",
+   "subtype": "score",
+   "term": "NIHSS",
+   "derived": "literal-match",
+   "gold_chunks": 7
+  },
+  {
+   "id": "exact_terms-22",
+   "category": "exact_terms",
+   "query": "skor qSOFA",
+   "gold": [],
+   "status": "draft",
+   "subtype": "score",
+   "term": "qSOFA",
+   "derived": "literal-match",
+   "gold_chunks": 4
+  },
+  {
+   "id": "exact_terms-23",
+   "category": "exact_terms",
+   "query": "skor CHA2DS2-VASc",
+   "gold": [],
+   "status": "draft",
+   "subtype": "score",
+   "term": "CHA2DS2-VASc",
+   "derived": "literal-match",
+   "gold_chunks": 5
+  },
+  {
+   "id": "exact_terms-24",
+   "category": "exact_terms",
+   "query": "skor Centor",
+   "gold": [],
+   "status": "draft",
+   "subtype": "score",
+   "term": "Centor",
+   "derived": "literal-match",
+   "gold_chunks": 17
+  },
+  {
+   "id": "exact_terms-25",
+   "category": "exact_terms",
+   "query": "skor ABCD2",
+   "gold": [],
+   "status": "draft",
+   "subtype": "score",
+   "term": "ABCD2",
+   "derived": "literal-match",
+   "gold_chunks": 10
+  },
+  {
+   "id": "exact_terms-26",
+   "category": "exact_terms",
+   "query": "skor APGAR",
+   "gold": [],
+   "status": "draft",
+   "subtype": "score",
+   "term": "APGAR",
+   "derived": "literal-match",
+   "gold_chunks": 13
+  },
+  {
+   "id": "exact_terms-27",
+   "category": "exact_terms",
+   "query": "kuesioner PHQ-9",
+   "gold": [],
+   "status": "draft",
+   "subtype": "score",
+   "term": "PHQ-9",
+   "derived": "literal-match",
+   "gold_chunks": 4
+  }
+ ]
+}

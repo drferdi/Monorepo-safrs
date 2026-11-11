@@ -33,7 +33,13 @@ root stylesheet:
 @import "tailwindcss";
 @import "@sentra/token/tokens.css";
 @import "@sentra/token/tailwind.css";
+@import "@sentra/token/archivo.css";
 ```
+
+In a Next.js app, load the fonts from `@sentra/token/fonts` and put
+`fontSans.variable` and `fontMono.variable` on `<html>`, not `<body>` —
+`archivo.css` points the family tokens at them, and it only resolves on the
+element that declares the tokens.
 
 Import semantic tokens only. Anything named `--p-*` is a private primitive; if
 you find yourself reaching for one, the semantic token you need is missing — add

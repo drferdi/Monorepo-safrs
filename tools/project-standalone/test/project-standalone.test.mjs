@@ -3,6 +3,7 @@ import {
   mkdir,
   mkdtemp,
   readFile,
+  rename,
   rm,
   symlink,
   writeFile,
@@ -14,10 +15,15 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { runCli } from "../src/cli.mjs";
-import { loadAndValidateContract, validateContract } from "../src/contract.mjs";
+import {
+  ContractError,
+  loadAndValidateContract,
+  safeRelativePath,
+  validateContract,
+} from "../src/contract.mjs";
 import { assertSafeTree, copyCapsule } from "../src/extraction.mjs";
 import { createSanitizedEnvironment, runCommand } from "../src/process.mjs";
-import { statusCapsules, verifyCapsule } from "../src/verify.mjs";
+import { resolveCapsules, statusCapsules, verifyCapsule } from "../src/verify.mjs";
 
 const toolRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const repositoryRoot = path.resolve(toolRoot, "../..");
@@ -144,6 +150,53 @@ async function createRepository(projectContract = contract()) {
   return { root, capsule };
 }
 
+test("tool capsules are discovered and selected without a projects directory", async () => {
+  const { root, capsule } = await createRepository(contract({ id: "tools/example" }));
+  try {
+    await mkdir(path.join(root, "tools"));
+    await rename(capsule, path.join(root, "tools", "example"));
+    await rm(path.join(root, "projects"), { recursive: true, force: true });
+    assert.deepEqual((await resolveCapsules(root)).map((item) => item.id), ["tools/example"]);
+    assert.equal((await resolveCapsules(root, "tools/example"))[0].id, "tools/example");
+    assert.equal((await statusCapsules({ root, selector: "tools/example", checkerPath }))[0].structural, "PASS");
+    await writeFile(path.join(root, "tools", "example", "package.json"), JSON.stringify({ dependencies: { bad: "workspace:*" } }));
+    await assert.rejects(statusCapsules({ root, selector: "tools/example", checkerPath }), /independence|structural/iu);
+    await assert.rejects(resolveCapsules(root, "tools/../example"), ContractError);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("tool capsule discovery rejects symbolic directories and contracts", async () => {
+  const { root } = await createRepository();
+  const outside = await temporaryDirectory();
+  try {
+    await mkdir(path.join(root, "tools"));
+    await symlink(outside, path.join(root, "tools", "escape"), process.platform === "win32" ? "junction" : "dir");
+    await assert.rejects(resolveCapsules(root, "tools/escape"), /real directory|symbolic link/u);
+    await assert.rejects(resolveCapsules(root), /symbolic link/u);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
+  }
+});
+
+test("contract repository is optional and must be a credential-free Git URL", () => {
+  assert.deepEqual(
+    validateContract(
+      contract({ repository: "git@github.com:drferdi/Sentrapedia.git" }),
+    ),
+    [],
+  );
+  for (const repository of ["", "https://token@github.com/drferdi/x.git", 42]) {
+    assert.ok(
+      validateContract(contract({ repository })).some((error) =>
+        error.includes("$.repository"),
+      ),
+    );
+  }
+});
+
 test("contract validation reports precise fields and rejects unsafe argv", async () => {
   assert.deepEqual(validateContract(contract()), []);
 
@@ -208,6 +261,55 @@ test("contract validation reports precise fields and rejects unsafe argv", async
   );
 });
 
+test("command arguments follow the shared path-classification vectors", async () => {
+  const vectors = JSON.parse(
+    await readFile(
+      path.join(
+        repositoryRoot,
+        "tools",
+        "safrs",
+        "fixtures",
+        "path-classification.json",
+      ),
+      "utf8",
+    ),
+  );
+  const mismatches = [];
+  for (const { value, expect } of vectors) {
+    const candidate = contract();
+    candidate.commands.build.args = [value];
+    const rejected = validateContract(candidate).some((error) =>
+      error.includes("$.commands.build.args[0]"),
+    );
+    if (rejected !== (expect === "reject"))
+      mismatches.push(`argument ${value}`);
+    if (
+      !/^https?:/u.test(value) &&
+      safeRelativePath(value) !== (expect === "accept")
+    ) {
+      mismatches.push(`safeRelativePath ${value}`);
+    }
+  }
+  assert.deepEqual(mismatches, []);
+});
+
+test("command arguments and programs containing NUL are rejected", () => {
+  const candidate = contract();
+  candidate.commands.build.args = ["dist\u0000x", "--out=dist\u0000"];
+  candidate.commands.test.program = "node\u0000";
+  const errors = validateContract(candidate);
+  for (const field of [
+    "$.commands.build.args[0]",
+    "$.commands.build.args[1]",
+    "$.commands.test.program",
+  ]) {
+    assert.ok(
+      errors.some((error) => error.includes(field)),
+      `${field} accepted NUL`,
+    );
+  }
+});
+
 test("contract loader rejects invalid JSON with an actionable path", async () => {
   const root = await temporaryDirectory();
   try {
@@ -245,6 +347,103 @@ test("safe extraction copies only capsule files and excludes outputs", async () 
   } finally {
     await rm(root, { recursive: true, force: true });
     await rm(destination, { recursive: true, force: true });
+  }
+});
+
+test("status reports an invalid contract as one failed capsule and checks the rest", async () => {
+  const { root } = await createRepository();
+  const broken = path.join(root, "projects", "internal", "broken");
+  await mkdir(broken, { recursive: true });
+  await writeFile(
+    path.join(broken, "project.contract.json"),
+    `${JSON.stringify(contract({ id: "internal/broken", risk: "R9" }), null, 2)}\n`,
+  );
+  let output = "";
+  try {
+    const exitCode = await runCli(["status"], {
+      root,
+      checkerPath,
+      stdout: {
+        write: (chunk) => {
+          output += chunk;
+        },
+      },
+    });
+    assert.notEqual(exitCode, 0);
+    assert.match(output, /^CAPSULE internal\/broken$/mu);
+    assert.match(output, /^ {2}contract: FAIL — .*risk/mu);
+    assert.match(output, /^CAPSULE internal\/example$/mu);
+    assert.match(output, /^ {2}contract: PASS \(R1\)$/mu);
+    assert.match(output, /^ {2}structural: PASS$/mu);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("safe tree accepts a link that resolves inside the capsule", async (context) => {
+  const { root, capsule } = await createRepository();
+  try {
+    await mkdir(path.join(capsule, "store", "pkg"), { recursive: true });
+    await writeFile(path.join(capsule, "store", "pkg", "index.js"), "ok\n");
+    try {
+      await symlink(
+        path.join(capsule, "store", "pkg"),
+        path.join(capsule, "linked-pkg"),
+        "junction",
+      );
+      await symlink(path.join("store", "pkg", "index.js"), path.join(capsule, "linked-file"));
+    } catch (error) {
+      if (error?.code === "EPERM") {
+        context.skip("This Windows account cannot create test symlinks.");
+        return;
+      }
+      throw error;
+    }
+    await assertSafeTree(capsule);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("safe tree rejects links that resolve outside the capsule, directly or through a chain", async (context) => {
+  const { root, capsule } = await createRepository();
+  try {
+    const outside = path.join(root, "outside");
+    await mkdir(outside);
+    const cases = [
+      ["parent", async (link) => symlink("..", link, "dir")],
+      ["absolute", async (link) => symlink(outside, link, "dir")],
+      ["junction", async (link) => symlink(outside, link, "junction")],
+      [
+        "chain",
+        async (link) => {
+          await symlink(outside, path.join(capsule, "hop"), "junction");
+          await symlink(path.join(capsule, "hop"), link, "junction");
+        },
+      ],
+      ["dangling", async (link) => symlink(path.join(capsule, "missing"), link, "junction")],
+    ];
+    for (const [label, create] of cases) {
+      const link = path.join(capsule, `escape-${label}`);
+      try {
+        await create(link);
+      } catch (error) {
+        if (error?.code === "EPERM") {
+          context.skip("This Windows account cannot create test symlinks.");
+          return;
+        }
+        throw error;
+      }
+      await assert.rejects(
+        assertSafeTree(capsule),
+        /symbolic link|reparse point/iu,
+        label,
+      );
+      await rm(link, { recursive: false, force: true });
+      await rm(path.join(capsule, "hop"), { recursive: false, force: true });
+    }
+  } finally {
+    await rm(root, { recursive: true, force: true });
   }
 });
 
@@ -298,6 +497,88 @@ test("sanitized environment is a strict allowlist with an isolated home", () => 
   assert.equal(environment.USERPROFILE, isolatedHome);
   assert.ok(environment.PATH.includes(path.dirname(process.execPath)));
   assert.ok(!environment.PATH.includes(forbiddenRoot));
+});
+
+test("isolated home also carries the Windows APPDATA and LOCALAPPDATA roots", () => {
+  const isolatedHome = path.join(os.tmpdir(), "safrs-isolated-home");
+  const environment = createSanitizedEnvironment(
+    {},
+    {
+      APPDATA: "C:Users\realAppDataRoaming",
+      LOCALAPPDATA: "C:Users\realAppDataLocal",
+    },
+    isolatedHome,
+  );
+  assert.equal(environment.APPDATA, `${isolatedHome}/AppData/Roaming`);
+  assert.equal(environment.LOCALAPPDATA, `${isolatedHome}/AppData/Local`);
+});
+
+test("lifecycle commands see existing APPDATA and LOCALAPPDATA directories inside the isolated home", async () => {
+  const probing = contract();
+  probing.commands.test = {
+    program: "node",
+    args: [
+      "-e",
+      "const fs = require('node:fs'); for (const name of ['APPDATA', 'LOCALAPPDATA']) { const value = process.env[name]; if (!value || !value.startsWith(process.env.HOME) || !fs.statSync(value).isDirectory()) process.exit(9); }",
+    ],
+  };
+  const { root } = await createRepository(probing);
+  try {
+    const result = await verifyCapsule({
+      root,
+      selector: "internal/example",
+      checkerPath,
+    });
+    assert.equal(result.ok, true);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("contract timeoutSeconds is an optional integer from 1 to 600 on finite commands", () => {
+  const valid = contract();
+  valid.commands.install.timeoutSeconds = 600;
+  valid.commands.build.timeoutSeconds = 1;
+  assert.deepEqual(validateContract(valid), []);
+
+  for (const bad of [0, 601, 1.5, "120"]) {
+    const invalid = contract();
+    invalid.commands.install.timeoutSeconds = bad;
+    assert.ok(
+      validateContract(invalid).some((error) =>
+        error.includes("$.commands.install.timeoutSeconds"),
+      ),
+      `timeoutSeconds ${JSON.stringify(bad)} must be rejected`,
+    );
+  }
+
+  const onRun = contract();
+  onRun.commands.run.timeoutSeconds = 30;
+  assert.ok(
+    validateContract(onRun).some((error) =>
+      error.includes("$.commands.run.timeoutSeconds"),
+    ),
+  );
+});
+
+test("verify stops a lifecycle stage at its contract timeoutSeconds", {
+  timeout: 30_000,
+}, async () => {
+  const hanging = contract();
+  hanging.commands.test = {
+    program: "node",
+    args: ["-e", "setInterval(() => {}, 1000)"],
+    timeoutSeconds: 1,
+  };
+  const { root } = await createRepository(hanging);
+  try {
+    await assert.rejects(
+      verifyCapsule({ root, selector: "internal/example", checkerPath }),
+      /test timed out after 1 seconds/u,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test("status validates structural readiness without lifecycle execution", async () => {

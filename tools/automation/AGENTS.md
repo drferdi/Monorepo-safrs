@@ -10,7 +10,7 @@ Rules:
    `.safrs/sensitive-paths.json`). Every change is at least R2 and needs
    designated review.
 2. No runtime dependencies. Node built-ins only. A new dependency needs
-   Chief approval plus an approved tool-inventory entry first.
+   Gaffer approval plus an approved tool-inventory entry first.
 3. Canonical JSON and digest semantics are frozen by
    `test/canonical-json.test.mjs`, and mirrored by
    `tools/safrs/check_task_contract.py`. Changing them requires updating

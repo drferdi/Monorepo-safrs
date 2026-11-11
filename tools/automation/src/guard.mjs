@@ -48,6 +48,10 @@ const SELF_GUARD_PATTERNS = [
   ".husky/pre-push",
   "tools/automation/src/guard.mjs",
   "tools/automation/src/adapters/codex.mjs",
+  ".devin/hooks.v1.json",
+  ".devin/hooks/**",
+  ".devin/config.json",
+  ".grok/hooks/**",
 ];
 
 /** Template filenames are always safe; remove them before pattern tests so
@@ -55,6 +59,14 @@ const SELF_GUARD_PATTERNS = [
 function stripTemplateNames(command) {
   return command.replaceAll(/\.env\.(?:example|template|dist)\b/giu, "");
 }
+
+/** A git/gh invocation up to its subcommand: `git` or `git.exe` (optionally
+ *  quoted), then global options such as `-C <path>`, `-c key=value`,
+ *  `--git-dir <dir>`, or `--no-pager`. */
+const ARG = String.raw`(?:"[^"]*"|'[^']*'|\S+)`;
+const GIT = String.raw`\bgit(?:\.exe)?["']?(?:\s+(?:-[Cc]\s+${ARG}|--(?:git-dir|work-tree|namespace)\s+${ARG}|--?[\w-]+(?:=${ARG})?))*\s+`;
+const GH = String.raw`\bgh(?:\.exe)?["']?(?:\s+(?:-R\s+${ARG}|--?[\w-]+(?:=${ARG})?))*\s+`;
+const invokes = (source) => new RegExp(source, "iu");
 
 const COMMAND_RULES = [
   {
@@ -71,8 +83,12 @@ const COMMAND_RULES = [
     reasonCode: "FORCE_PUSH",
     decision: "deny",
     test: (command) =>
-      /\bgit\s+push\s+[^\n]*--force(?!-with-lease)\b/iu.test(command) ||
-      /\bgit\s+push\s+[^\n]*(?<![\w-])-f(?![\w-])/iu.test(command),
+      invokes(String.raw`${GIT}push\s+[^\n]*--force(?!-with-lease)\b`).test(
+        command,
+      ) ||
+      invokes(String.raw`${GIT}push\s+[^\n]*(?<![\w-])-f(?![\w-])`).test(
+        command,
+      ),
     message:
       "force-push is prohibited; use a normal push or --force-with-lease.",
   },
@@ -85,6 +101,47 @@ const COMMAND_RULES = [
       ),
     message:
       "direct destructive database commands are prohibited; use repository wrappers with explicit human authorization.",
+  },
+  {
+    reasonCode: "GIT_RESET_HARD",
+    decision: "ask",
+    test: (command) =>
+      invokes(String.raw`${GIT}reset\s+[^\n]*--hard\b`).test(command),
+    message: "git reset --hard discards work; confirm with a human first.",
+  },
+  {
+    reasonCode: "PR_MERGE",
+    decision: "ask",
+    test: (command) => invokes(String.raw`${GH}pr\s+merge\b`).test(command),
+    message:
+      "merging needs Gaffer's explicit go in this conversation; ask Gaffer first (where the agent cannot prompt, Gaffer runs the merge).",
+  },
+  {
+    reasonCode: "MERGE",
+    decision: "ask",
+    test: (command) =>
+      invokes(
+        String.raw`${GIT}merge(?![\w-])(?![^\n]*--(?:abort|continue|quit)\b)`,
+      ).test(command) || invokes(String.raw`${GIT}pull(?![\w-])`).test(command),
+    message:
+      "merging needs Gaffer's explicit go in this conversation; ask Gaffer first (where the agent cannot prompt, Gaffer runs the merge).",
+  },
+  {
+    reasonCode: "MAIN_REF_UPDATE",
+    decision: "ask",
+    test: (command) =>
+      invokes(
+        String.raw`${GIT}(?:fetch|push)\s+(?:-\S+\s+)*\.\s+\S+:(?:refs\/heads\/)?main\b`,
+      ).test(command) ||
+      invokes(String.raw`${GIT}branch\s+(?:-f|--force)\s+main\b`).test(
+        command,
+      ) ||
+      invokes(
+        String.raw`${GIT}(?:checkout|switch)\s+(?:-\S+\s+)*-[BC]\s+main\b`,
+      ).test(command) ||
+      invokes(String.raw`${GIT}update-ref\s+refs\/heads\/main\b`).test(command),
+    message:
+      "merging needs Gaffer's explicit go in this conversation; ask Gaffer first (where the agent cannot prompt, Gaffer runs the merge).",
   },
   {
     reasonCode: "CREDENTIAL_ACCESS",
@@ -182,7 +239,7 @@ export function authorize(event, context = {}) {
         return {
           decision: "deny",
           reasonCode: "SELF_GUARD_MODIFICATION",
-          message: `Codex may not modify its own enforcement boundary: ${target}`,
+          message: `an agent may not modify an enforcement boundary: ${target}`,
         };
       }
       if (target.startsWith("../") || path.isAbsolute(target)) {

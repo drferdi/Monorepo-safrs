@@ -1,0 +1,2567 @@
+{
+ "model": {
+  "name": "embeddinggemma-300m",
+  "id": "onnx-community/embeddinggemma-300m-ONNX",
+  "revision": "5090578d9565bb06545b4552f76e6bc2c93e4a66",
+  "dtype": "fp32",
+  "dims": 768,
+  "chunks": 20423,
+  "truncated": 0,
+  "cpuGpuMinCosine": 0.9999999999943454,
+  "indexDevice": "dml (AMD RX 6750 XT)",
+  "indexSeconds": 1394,
+  "peakRssMb": 2117
+ },
+ "device": "cpu (AMD Ryzen 5 7500F) for queries",
+ "latencyMs": {
+  "queryEmbedMedian": 14.1,
+  "queryEmbedP95": 16.9,
+  "searchMedian": 11,
+  "searchP95": 12.4
+ },
+ "recall": {
+  "lay_terms": {
+   "hits": 15,
+   "total": 16,
+   "recallAt5": 0.938
+  },
+  "abbreviations": {
+   "hits": 13,
+   "total": 15,
+   "recallAt5": 0.867
+  },
+  "mixed_id_en": {
+   "hits": 13,
+   "total": 15,
+   "recallAt5": 0.867
+  },
+  "typos": {
+   "hits": 14,
+   "total": 15,
+   "recallAt5": 0.933
+  },
+  "exact_terms": {
+   "hits": 19,
+   "total": 27,
+   "recallAt5": 0.704
+  },
+  "exact_terms.drug_dose": {
+   "hits": 4,
+   "total": 8,
+   "recallAt5": 0.5
+  },
+  "exact_terms.icd10": {
+   "hits": 3,
+   "total": 6,
+   "recallAt5": 0.5
+  },
+  "exact_terms.lab": {
+   "hits": 4,
+   "total": 5,
+   "recallAt5": 0.8
+  },
+  "exact_terms.score": {
+   "hits": 8,
+   "total": 8,
+   "recallAt5": 1
+  },
+  "overall": {
+   "hits": 74,
+   "total": 88,
+   "recallAt5": 0.841
+  }
+ },
+ "rows": [
+  {
+   "id": "lay_terms-01",
+   "category": "lay_terms",
+   "query": "anak gatal di dubur terutama malam hari, katanya cacingan",
+   "hit": true,
+   "top5": [
+    {
+     "title": "oksiuriasis-enterobiasis-cacing-kremi.md",
+     "score": 0.5629
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.5046
+    },
+    {
+     "title": "askariasis.md",
+     "score": 0.4646
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.462
+    },
+    {
+     "title": "ankilostomiasis-infeksi-cacing-tambang.md",
+     "score": 0.4593
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-02",
+   "category": "lay_terms",
+   "query": "kulit gatal sekali kalau malam, keluarga serumah juga ikut gatal",
+   "hit": true,
+   "top5": [
+    {
+     "title": "skabies-kudis.md",
+     "score": 0.4727
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.4395
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.4343
+    },
+    {
+     "title": "dermatitis-atopik.md",
+     "score": 0.4307
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.4252
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-03",
+   "category": "lay_terms",
+   "query": "bercak putih bersisik halus di punggung, panuan",
+   "hit": true,
+   "top5": [
+    {
+     "title": "tinea-versikolor-pitiriasis-versikolor-panu.md",
+     "score": 0.4812
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.4378
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.4338
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.4287
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.4276
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-04",
+   "category": "lay_terms",
+   "query": "benjolan merah nyeri di kelopak mata, bintitan",
+   "hit": true,
+   "top5": [
+    {
+     "title": "hordeolum-bintitan.md",
+     "score": 0.62
+    },
+    {
+     "title": "kalazion.md",
+     "score": 0.5693
+    },
+    {
+     "title": "blefaritis.md",
+     "score": 0.5007
+    },
+    {
+     "title": "episkleritis.md",
+     "score": 0.4846
+    },
+    {
+     "title": "konjungtivitis-bakteri-dan-viral.md",
+     "score": 0.4792
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-05",
+   "category": "lay_terms",
+   "query": "kepala terasa berputar setiap kali bangun dari tidur",
+   "hit": true,
+   "top5": [
+    {
+     "title": "vertigo-posisi-paroksismal-jinak-bppv.md",
+     "score": 0.4558
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4389
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4306
+    },
+    {
+     "title": "tumor-otak-2020.pdf",
+     "score": 0.4169
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4021
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-06",
+   "category": "lay_terms",
+   "query": "sakit kepala seperti diikat kencang di kedua sisi",
+   "hit": true,
+   "top5": [
+    {
+     "title": "tension-type-headache-tth.md",
+     "score": 0.6241
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4969
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4862
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4784
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4732
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-07",
+   "category": "lay_terms",
+   "query": "telinga terasa budeg karena kotoran telinga mengeras",
+   "hit": true,
+   "top5": [
+    {
+     "title": "serumen-prop-impaksi-serumen.md",
+     "score": 0.5853
+    },
+    {
+     "title": "otitis-eksterna.md",
+     "score": 0.5054
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4737
+    },
+    {
+     "title": "otitis-media-supuratif-kronik.md",
+     "score": 0.4532
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4437
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-08",
+   "category": "lay_terms",
+   "query": "biduran dan bentol gatal setelah makan udang",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4378
+    },
+    {
+     "title": "urtikaria-akut.md",
+     "score": 0.4209
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.3997
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.3697
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-09",
+   "category": "lay_terms",
+   "query": "bintil berisi air di seluruh badan anak disertai demam",
+   "hit": false,
+   "top5": [
+    {
+     "title": "kejang-demam-sederhana.md",
+     "score": 0.4336
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4111
+    },
+    {
+     "title": "sepsis-pada-anak.md",
+     "score": 0.4
+    },
+    {
+     "title": "sepsis-pada-anak.md",
+     "score": 0.3979
+    },
+    {
+     "title": "sepsis-anak-2021.pdf",
+     "score": 0.3949
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-10",
+   "category": "lay_terms",
+   "query": "sariawan yang hilang timbul di mulut",
+   "hit": true,
+   "top5": [
+    {
+     "title": "ulkus-mulut-stomatitis-aftosa-rekuren.md",
+     "score": 0.6017
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5039
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4917
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4784
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4775
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-11",
+   "category": "lay_terms",
+   "query": "anak batuk terus menerus sampai muntah dan bunyi melengking",
+   "hit": true,
+   "top5": [
+    {
+     "title": "pertusis-batuk-rejan.md",
+     "score": 0.5383
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.442
+    },
+    {
+     "title": "bronkitis-akut.md",
+     "score": 0.4176
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.373
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.3706
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-12",
+   "category": "lay_terms",
+   "query": "pipi bengkak di bawah telinga, gondongan",
+   "hit": true,
+   "top5": [
+    {
+     "title": "parotitis-epidemika-gondongan-mumps.md",
+     "score": 0.5411
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4714
+    },
+    {
+     "title": "otitis-eksterna.md",
+     "score": 0.4275
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.424
+    },
+    {
+     "title": "otitis-media-supuratif-kronik.md",
+     "score": 0.4057
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-13",
+   "category": "lay_terms",
+   "query": "wasir berdarah saat buang air besar",
+   "hit": true,
+   "top5": [
+    {
+     "title": "hemoroid-eksterna-dan-interna-derajat-1-2.md",
+     "score": 0.548
+    },
+    {
+     "title": "penyakit-dalam-papdi-2024.pdf",
+     "score": 0.528
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5258
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5193
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-14",
+   "category": "lay_terms",
+   "query": "perih di ulu hati kalau telat makan, maag",
+   "hit": true,
+   "top5": [
+    {
+     "title": "gastritis.md",
+     "score": 0.4568
+    },
+    {
+     "title": "gastroesophageal-reflux-disease-gerd.md",
+     "score": 0.4515
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4268
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.3903
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.3862
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-15",
+   "category": "lay_terms",
+   "query": "anak tidak tumbuh tinggi dibanding teman sebayanya",
+   "hit": true,
+   "top5": [
+    {
+     "title": "stunting.md",
+     "score": 0.402
+    },
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.3519
+    },
+    {
+     "title": "hipertensi-pada-anak.md",
+     "score": 0.3456
+    },
+    {
+     "title": "stunting.md",
+     "score": 0.3443
+    },
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.338
+    }
+   ]
+  },
+  {
+   "id": "lay_terms-16",
+   "category": "lay_terms",
+   "query": "bintik kecil gatal di leher bayi karena kepanasan",
+   "hit": true,
+   "top5": [
+    {
+     "title": "miliaria-biang-keringat.md",
+     "score": 0.4311
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.4228
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.4214
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.3924
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.3896
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-01",
+   "category": "abbreviations",
+   "query": "tatalaksana PPOK eksaserbasi akut",
+   "hit": true,
+   "top5": [
+    {
+     "title": "penyakit-paru-obstruktif-2019.pdf",
+     "score": 0.6213
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.6016
+    },
+    {
+     "title": "penyakit-paru-obstruktif-2019.pdf",
+     "score": 0.5893
+    },
+    {
+     "title": "penyakit-paru-obstruktif-2019.pdf",
+     "score": 0.5778
+    },
+    {
+     "title": "penyakit-paru-obstruktif-2019.pdf",
+     "score": 0.5675
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-02",
+   "category": "abbreviations",
+   "query": "DBD dengan trombositopenia pada dewasa",
+   "hit": true,
+   "top5": [
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.5911
+    },
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.5823
+    },
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.5619
+    },
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.5522
+    },
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.5415
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-03",
+   "category": "abbreviations",
+   "query": "ISK pada wanita dewasa tidak hamil",
+   "hit": true,
+   "top5": [
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.4964
+    },
+    {
+     "title": "infeksi-saluran-kemih.md",
+     "score": 0.4832
+    },
+    {
+     "title": "infeksi-saluran-kemih.md",
+     "score": 0.4808
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.4592
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.458
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-04",
+   "category": "abbreviations",
+   "query": "OMA pada anak usia 2 tahun",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.446
+    },
+    {
+     "title": "otitis-media-akut-oma.md",
+     "score": 0.4109
+    },
+    {
+     "title": "hipertensi-pada-anak.md",
+     "score": 0.3836
+    },
+    {
+     "title": "fornas-2025.pdf",
+     "score": 0.3728
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "score": 0.3662
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-05",
+   "category": "abbreviations",
+   "query": "OMSK dengan otore kronik",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5479
+    },
+    {
+     "title": "otitis-media-akut-oma.md",
+     "score": 0.428
+    },
+    {
+     "title": "otitis-media-supuratif-kronik.md",
+     "score": 0.4239
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4238
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4175
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-06",
+   "category": "abbreviations",
+   "query": "SKA dengan elevasi segmen ST",
+   "hit": false,
+   "top5": [
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.4036
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.3881
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.3838
+    },
+    {
+     "title": "ppk-bedah-umum.pdf",
+     "score": 0.3809
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.3802
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-07",
+   "category": "abbreviations",
+   "query": "TB paru BTA positif kasus baru",
+   "hit": true,
+   "top5": [
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.6292
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.6004
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.5934
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.5704
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.5673
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-08",
+   "category": "abbreviations",
+   "query": "DM tipe 2 dengan obesitas",
+   "hit": true,
+   "top5": [
+    {
+     "title": "diabetes-melitus-tipe-2-dewasa.md",
+     "score": 0.582
+    },
+    {
+     "title": "diabetes-melitus-tipe-2-dewasa.md",
+     "score": 0.5715
+    },
+    {
+     "title": "diabetes-melitus-tipe-2-dewasa.md",
+     "score": 0.5341
+    },
+    {
+     "title": "diabetes-melitus-tipe-2-dewasa.md",
+     "score": 0.4993
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4979
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-09",
+   "category": "abbreviations",
+   "query": "PGK stadium 5 persiapan hemodialisis",
+   "hit": false,
+   "top5": [
+    {
+     "title": "penyakit-dalam-papdi-2024.pdf",
+     "score": 0.4623
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "score": 0.3977
+    },
+    {
+     "title": "bedah-toraks-2020.pdf",
+     "score": 0.3935
+    },
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "score": 0.3866
+    },
+    {
+     "title": "bedah-toraks-2020.pdf",
+     "score": 0.3816
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-10",
+   "category": "abbreviations",
+   "query": "resusitasi dan transpor BBLR",
+   "hit": true,
+   "top5": [
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.6403
+    },
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.6199
+    },
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.6112
+    },
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.6044
+    },
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.602
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-11",
+   "category": "abbreviations",
+   "query": "GAD dengan keluhan cemas berlebihan",
+   "hit": true,
+   "top5": [
+    {
+     "title": "gangguan-cemas-menyeluruh-gad.md",
+     "score": 0.6845
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4519
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.44
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.4345
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4324
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-12",
+   "category": "abbreviations",
+   "query": "TTH episodik",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.299
+    },
+    {
+     "title": "tension-type-headache-tth.md",
+     "score": 0.2935
+    },
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.284
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.2835
+    },
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.2691
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-13",
+   "category": "abbreviations",
+   "query": "BPPV manuver Epley",
+   "hit": true,
+   "top5": [
+    {
+     "title": "vertigo-posisi-paroksismal-jinak-bppv.md",
+     "score": 0.6187
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5289
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4999
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4878
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4802
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-14",
+   "category": "abbreviations",
+   "query": "LLA pada anak kemoterapi induksi",
+   "hit": true,
+   "top5": [
+    {
+     "title": "leukemia-limfoblastik-akut-pada-anak.md",
+     "score": 0.4608
+    },
+    {
+     "title": "leukemia-limfoblastik-akut-pada-anak.md",
+     "score": 0.4176
+    },
+    {
+     "title": "leukemia-limfoblastik-akut-pada-anak.md",
+     "score": 0.4143
+    },
+    {
+     "title": "stunting-2022.pdf",
+     "score": 0.411
+    },
+    {
+     "title": "sepsis-anak-2021.pdf",
+     "score": 0.401
+    }
+   ]
+  },
+  {
+   "id": "abbreviations-15",
+   "category": "abbreviations",
+   "query": "GERD dengan heartburn malam hari",
+   "hit": true,
+   "top5": [
+    {
+     "title": "gastroesophageal-reflux-disease-gerd.md",
+     "score": 0.5842
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4621
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.462
+    },
+    {
+     "title": "penyakit-paru-obstruktif-2019.pdf",
+     "score": 0.4123
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.3802
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-01",
+   "category": "mixed_id_en",
+   "query": "community acquired pneumonia pada dewasa, antibiotik empiris",
+   "hit": true,
+   "top5": [
+    {
+     "title": "penyakit-dalam-papdi-2024.pdf",
+     "score": 0.6181
+    },
+    {
+     "title": "pneumonia-dewasa-2023.pdf",
+     "score": 0.6021
+    },
+    {
+     "title": "pneumonia-dewasa-2023.pdf",
+     "score": 0.6008
+    },
+    {
+     "title": "pneumonia-dewasa-2023.pdf",
+     "score": 0.5986
+    },
+    {
+     "title": "pneumonia-dewasa-2023.pdf",
+     "score": 0.5939
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-02",
+   "category": "mixed_id_en",
+   "query": "heart failure dengan ejection fraction rendah",
+   "hit": true,
+   "top5": [
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "score": 0.5058
+    },
+    {
+     "title": "gagal-jantung.md",
+     "score": 0.4967
+    },
+    {
+     "title": "gagal-jantung.md",
+     "score": 0.4895
+    },
+    {
+     "title": "esc-cvd-diabetes-2023.pdf",
+     "score": 0.4854
+    },
+    {
+     "title": "esc-cvd-diabetes-2023.pdf",
+     "score": 0.4804
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-03",
+   "category": "mixed_id_en",
+   "query": "anemia pada chronic kidney disease",
+   "hit": true,
+   "top5": [
+    {
+     "title": "penyakit-ginjal-kronik.md",
+     "score": 0.5222
+    },
+    {
+     "title": "penyakit-ginjal-kronik.md",
+     "score": 0.4947
+    },
+    {
+     "title": "penyakit-dalam-papdi-2024.pdf",
+     "score": 0.4868
+    },
+    {
+     "title": "penyakit-dalam-papdi-2024.pdf",
+     "score": 0.4624
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4481
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-04",
+   "category": "mixed_id_en",
+   "query": "stroke iskemik akut, time window trombolisis",
+   "hit": true,
+   "top5": [
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.6282
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.6228
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.6216
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.6138
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.5937
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-05",
+   "category": "mixed_id_en",
+   "query": "warning signs dengue pada anak",
+   "hit": true,
+   "top5": [
+    {
+     "title": "infeksi-dengue-anak-dan-remaja.md",
+     "score": 0.6127
+    },
+    {
+     "title": "infeksi-dengue-anak-dan-remaja.md",
+     "score": 0.6123
+    },
+    {
+     "title": "infeksi-dengue-anak-dan-remaja.md",
+     "score": 0.6061
+    },
+    {
+     "title": "infeksi-dengue-anak-dan-remaja.md",
+     "score": 0.6035
+    },
+    {
+     "title": "infeksi-dengue-anak-dan-remaja.md",
+     "score": 0.5835
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-06",
+   "category": "mixed_id_en",
+   "query": "atopic dermatitis pada bayi, penggunaan emollient",
+   "hit": true,
+   "top5": [
+    {
+     "title": "dermatitis-atopik.md",
+     "score": 0.5188
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.5126
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.5118
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.5041
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.4963
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-07",
+   "category": "mixed_id_en",
+   "query": "target blood pressure pada hipertensi anak",
+   "hit": true,
+   "top5": [
+    {
+     "title": "hipertensi-pada-anak.md",
+     "score": 0.683
+    },
+    {
+     "title": "hipertensi-pada-anak.md",
+     "score": 0.6615
+    },
+    {
+     "title": "hipertensi-pada-anak.md",
+     "score": 0.6531
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.6448
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.5692
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-08",
+   "category": "mixed_id_en",
+   "query": "otitis eksterna akut, swimmer ear",
+   "hit": true,
+   "top5": [
+    {
+     "title": "otitis-eksterna.md",
+     "score": 0.6404
+    },
+    {
+     "title": "otitis-media-akut-oma.md",
+     "score": 0.5483
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5242
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.521
+    },
+    {
+     "title": "otitis-media-supuratif-kronik.md",
+     "score": 0.5184
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-09",
+   "category": "mixed_id_en",
+   "query": "fluid resuscitation pada sepsis anak",
+   "hit": true,
+   "top5": [
+    {
+     "title": "sepsis-anak-2021.pdf",
+     "score": 0.6764
+    },
+    {
+     "title": "sepsis-anak-2021.pdf",
+     "score": 0.6614
+    },
+    {
+     "title": "sepsis-anak-2021.pdf",
+     "score": 0.6462
+    },
+    {
+     "title": "sepsis-anak-2021.pdf",
+     "score": 0.6449
+    },
+    {
+     "title": "sepsis-anak-2021.pdf",
+     "score": 0.6413
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-10",
+   "category": "mixed_id_en",
+   "query": "tekanan intraokular tinggi pada open angle glaucoma",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5726
+    },
+    {
+     "title": "glaukoma.md",
+     "score": 0.5369
+    },
+    {
+     "title": "glaukoma.md",
+     "score": 0.5236
+    },
+    {
+     "title": "glaukoma.md",
+     "score": 0.5046
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5034
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-11",
+   "category": "mixed_id_en",
+   "query": "congenital cataract pada bayi",
+   "hit": true,
+   "top5": [
+    {
+     "title": "katarak-pada-anak.md",
+     "score": 0.5626
+    },
+    {
+     "title": "katarak-pada-anak.md",
+     "score": 0.5618
+    },
+    {
+     "title": "katarak-pada-dewasa.md",
+     "score": 0.4841
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4259
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4183
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-12",
+   "category": "mixed_id_en",
+   "query": "HBsAg positif, chronic hepatitis B carrier",
+   "hit": true,
+   "top5": [
+    {
+     "title": "hepatitis-b.md",
+     "score": 0.5621
+    },
+    {
+     "title": "hepatitis-b.md",
+     "score": 0.528
+    },
+    {
+     "title": "stunting-2022.pdf",
+     "score": 0.5084
+    },
+    {
+     "title": "hepatitis-b.md",
+     "score": 0.5084
+    },
+    {
+     "title": "stunting-2022.pdf",
+     "score": 0.4923
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-13",
+   "category": "mixed_id_en",
+   "query": "first line ARV regimen untuk HIV dewasa",
+   "hit": false,
+   "top5": [
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.5725
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5204
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5183
+    },
+    {
+     "title": "fornas-2025.pdf",
+     "score": 0.5051
+    },
+    {
+     "title": "fornas-2025.pdf",
+     "score": 0.5012
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-14",
+   "category": "mixed_id_en",
+   "query": "malaria falciparum tanpa komplikasi, terapi ACT",
+   "hit": false,
+   "top5": [
+    {
+     "title": "penyakit-dalam-papdi-2024.pdf",
+     "score": 0.5111
+    },
+    {
+     "title": "fornas-2025.pdf",
+     "score": 0.4814
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4731
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "score": 0.4685
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4651
+    }
+   ]
+  },
+  {
+   "id": "mixed_id_en-15",
+   "category": "mixed_id_en",
+   "query": "skrining mammografi untuk breast cancer",
+   "hit": true,
+   "top5": [
+    {
+     "title": "kanker-payudara.md",
+     "score": 0.4658
+    },
+    {
+     "title": "kanker-payudara.md",
+     "score": 0.4556
+    },
+    {
+     "title": "kanker-payudara.md",
+     "score": 0.4505
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4351
+    },
+    {
+     "title": "kanker-prostat.md",
+     "score": 0.3981
+    }
+   ]
+  },
+  {
+   "id": "typos-01",
+   "category": "typos",
+   "query": "tuberkulosiss batuk berdahak lebih dari dua minggu",
+   "hit": true,
+   "top5": [
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.5645
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.5645
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.5544
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.5479
+    },
+    {
+     "title": "tuberkulosis-2019.pdf",
+     "score": 0.5457
+    }
+   ]
+  },
+  {
+   "id": "typos-02",
+   "category": "typos",
+   "query": "obat hipertensii untuk dewasa",
+   "hit": true,
+   "top5": [
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.5332
+    },
+    {
+     "title": "ppk-bedah-umum.pdf",
+     "score": 0.5175
+    },
+    {
+     "title": "hipertensi-dewasa.md",
+     "score": 0.5122
+    },
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "score": 0.5068
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "score": 0.5031
+    }
+   ]
+  },
+  {
+   "id": "typos-03",
+   "category": "typos",
+   "query": "diabetis melitus tipe 2 kontrol gula",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.554
+    },
+    {
+     "title": "diabetes-melitus-tipe-2-dewasa.md",
+     "score": 0.5496
+    },
+    {
+     "title": "diabetes-melitus-tipe-2-dewasa.md",
+     "score": 0.5289
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.5252
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.5236
+    }
+   ]
+  },
+  {
+   "id": "typos-04",
+   "category": "typos",
+   "query": "pnemonia pada balita napas cepat",
+   "hit": false,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5364
+    },
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.5097
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4914
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4582
+    },
+    {
+     "title": "asfiksia.md",
+     "score": 0.4511
+    }
+   ]
+  },
+  {
+   "id": "typos-05",
+   "category": "typos",
+   "query": "serangan astma bronkial pada anak",
+   "hit": true,
+   "top5": [
+    {
+     "title": "asma-bronkiale.md",
+     "score": 0.575
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5121
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4918
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.4882
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.4881
+    }
+   ]
+  },
+  {
+   "id": "typos-06",
+   "category": "typos",
+   "query": "demam tifoit hari ketujuh",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5348
+    },
+    {
+     "title": "demam-tifoid.md",
+     "score": 0.5331
+    },
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.4811
+    },
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.4787
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4764
+    }
+   ]
+  },
+  {
+   "id": "typos-07",
+   "category": "typos",
+   "query": "skabies kudisan gatel di sela jari",
+   "hit": true,
+   "top5": [
+    {
+     "title": "skabies-kudis.md",
+     "score": 0.6455
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.5988
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.5983
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.5683
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5591
+    }
+   ]
+  },
+  {
+   "id": "typos-08",
+   "category": "typos",
+   "query": "konjungtifitis bakteri mata merah belekan",
+   "hit": true,
+   "top5": [
+    {
+     "title": "konjungtivitis-bakteri-dan-viral.md",
+     "score": 0.6367
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.525
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5023
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4825
+    },
+    {
+     "title": "konjungtivitis-alergi.md",
+     "score": 0.4786
+    }
+   ]
+  },
+  {
+   "id": "typos-09",
+   "category": "typos",
+   "query": "gastroentritis diare akut pada anak",
+   "hit": true,
+   "top5": [
+    {
+     "title": "gastroenteritis-akut-diare-akut.md",
+     "score": 0.6173
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.6076
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5374
+    },
+    {
+     "title": "disentri-basiler-shigellosis.md",
+     "score": 0.5072
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5011
+    }
+   ]
+  },
+  {
+   "id": "typos-10",
+   "category": "typos",
+   "query": "migrain tanpa aura berdenyut sebelah",
+   "hit": true,
+   "top5": [
+    {
+     "title": "migren-tanpa-aura.md",
+     "score": 0.7265
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.6135
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5691
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.555
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5506
+    }
+   ]
+  },
+  {
+   "id": "typos-11",
+   "category": "typos",
+   "query": "talasemia mayor kebutuhan transfusi",
+   "hit": true,
+   "top5": [
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.6554
+    },
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.6284
+    },
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.6055
+    },
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.5983
+    },
+    {
+     "title": "thalasemia-2018.pdf",
+     "score": 0.5926
+    }
+   ]
+  },
+  {
+   "id": "typos-12",
+   "category": "typos",
+   "query": "osteoatritis lutut pada lansia",
+   "hit": true,
+   "top5": [
+    {
+     "title": "osteoartritis.md",
+     "score": 0.6239
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5726
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5463
+    },
+    {
+     "title": "osteoartritis.md",
+     "score": 0.5352
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5308
+    }
+   ]
+  },
+  {
+   "id": "typos-13",
+   "category": "typos",
+   "query": "skizofernia terapi antipsikotik",
+   "hit": true,
+   "top5": [
+    {
+     "title": "skizofrenia-2025.pdf",
+     "score": 0.6267
+    },
+    {
+     "title": "skizofrenia-2025.pdf",
+     "score": 0.624
+    },
+    {
+     "title": "skizofrenia-2025.pdf",
+     "score": 0.6045
+    },
+    {
+     "title": "skizofrenia-2025.pdf",
+     "score": 0.598
+    },
+    {
+     "title": "skizofrenia-2025.pdf",
+     "score": 0.5975
+    }
+   ]
+  },
+  {
+   "id": "typos-14",
+   "category": "typos",
+   "query": "epistaxsis anterior pada anak",
+   "hit": true,
+   "top5": [
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.5622
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.551
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.5403
+    },
+    {
+     "title": "epistaksis.md",
+     "score": 0.4868
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4824
+    }
+   ]
+  },
+  {
+   "id": "typos-15",
+   "category": "typos",
+   "query": "impetico krustosa di sekitar hidung",
+   "hit": true,
+   "top5": [
+    {
+     "title": "impetigo-krustosa-dan-bulosa.md",
+     "score": 0.5622
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4336
+    },
+    {
+     "title": "rinosinusitis-kronik.md",
+     "score": 0.4299
+    },
+    {
+     "title": "rinitis-vasomotor.md",
+     "score": 0.4286
+    },
+    {
+     "title": "rinitis-alergika.md",
+     "score": 0.4267
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-01",
+   "category": "exact_terms",
+   "subtype": "drug_dose",
+   "query": "dosis amoksisilin 500 mg",
+   "hit": false,
+   "top5": [
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.5778
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.5615
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5561
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.5275
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.5057
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-02",
+   "category": "exact_terms",
+   "subtype": "drug_dose",
+   "query": "parasetamol 500 mg untuk demam dewasa",
+   "hit": false,
+   "top5": [
+    {
+     "title": "fornas-2023.pdf",
+     "score": 0.4376
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.4124
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.3987
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.389
+    },
+    {
+     "title": "stunting-2022.pdf",
+     "score": 0.3597
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-03",
+   "category": "exact_terms",
+   "subtype": "drug_dose",
+   "query": "mulai metformin 500 mg",
+   "hit": false,
+   "top5": [
+    {
+     "title": "fornas-2023.pdf",
+     "score": 0.5029
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.5018
+    },
+    {
+     "title": "skizofrenia-2025.pdf",
+     "score": 0.4754
+    },
+    {
+     "title": "fornas-2025.pdf",
+     "score": 0.4745
+    },
+    {
+     "title": "esc-cvd-diabetes-2023.pdf",
+     "score": 0.4466
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-04",
+   "category": "exact_terms",
+   "subtype": "drug_dose",
+   "query": "albendazol 400 mg dosis tunggal",
+   "hit": false,
+   "top5": [
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5667
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5087
+    },
+    {
+     "title": "fornas-2025.pdf",
+     "score": 0.5026
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4895
+    },
+    {
+     "title": "fornas-2023.pdf",
+     "score": 0.487
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-05",
+   "category": "exact_terms",
+   "subtype": "drug_dose",
+   "query": "krim permetrin 5%",
+   "hit": true,
+   "top5": [
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.4717
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2017.pdf",
+     "score": 0.4545
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.4538
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.4508
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.446
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-06",
+   "category": "exact_terms",
+   "subtype": "drug_dose",
+   "query": "oseltamivir untuk influenza",
+   "hit": true,
+   "top5": [
+    {
+     "title": "influenza.md",
+     "score": 0.5713
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4167
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4049
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.3965
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.3909
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-07",
+   "category": "exact_terms",
+   "subtype": "drug_dose",
+   "query": "artesunat injeksi malaria berat",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fornas-2025.pdf",
+     "score": 0.5004
+    },
+    {
+     "title": "malaria.md",
+     "score": 0.4667
+    },
+    {
+     "title": "malaria.md",
+     "score": 0.4524
+    },
+    {
+     "title": "malaria.md",
+     "score": 0.4364
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4343
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-08",
+   "category": "exact_terms",
+   "subtype": "drug_dose",
+   "query": "primakuin untuk malaria vivax",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5573
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5547
+    },
+    {
+     "title": "malaria.md",
+     "score": 0.4507
+    },
+    {
+     "title": "penyakit-dalam-papdi-2024.pdf",
+     "score": 0.4307
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4277
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-09",
+   "category": "exact_terms",
+   "subtype": "icd10",
+   "query": "kode ICD-10 L70.0",
+   "hit": false,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4632
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4518
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4326
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4191
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.4182
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-10",
+   "category": "exact_terms",
+   "subtype": "icd10",
+   "query": "kode ICD-10 J18.9",
+   "hit": false,
+   "top5": [
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4305
+    },
+    {
+     "title": "angina-pectoris-stabil.md",
+     "score": 0.4299
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4097
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.403
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4025
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-11",
+   "category": "exact_terms",
+   "subtype": "icd10",
+   "query": "kode ICD-10 A01.0",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4868
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4671
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4637
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4579
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4541
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-12",
+   "category": "exact_terms",
+   "subtype": "icd10",
+   "query": "kode ICD-10 N39.0",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4558
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4558
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4496
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4428
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4315
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-13",
+   "category": "exact_terms",
+   "subtype": "icd10",
+   "query": "kode ICD-10 I63",
+   "hit": true,
+   "top5": [
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4796
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4651
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4454
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4339
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.426
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-14",
+   "category": "exact_terms",
+   "subtype": "icd10",
+   "query": "kode ICD-10 K29",
+   "hit": false,
+   "top5": [
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4374
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4113
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4059
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4056
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.3949
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-15",
+   "category": "exact_terms",
+   "subtype": "lab",
+   "query": "gula darah puasa 126 mg/dL",
+   "hit": true,
+   "top5": [
+    {
+     "title": "diabetes-melitus-pada-anak.md",
+     "score": 0.5168
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.5159
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.5084
+    },
+    {
+     "title": "diabetes-melitus-tipe-2-dewasa.md",
+     "score": 0.5
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4923
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-16",
+   "category": "exact_terms",
+   "subtype": "lab",
+   "query": "pemeriksaan antigen NS1",
+   "hit": true,
+   "top5": [
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.499
+    },
+    {
+     "title": "peran-patologi-klinik-unair.pdf",
+     "score": 0.4934
+    },
+    {
+     "title": "infeksi-dengue-pada-dewasa.md",
+     "score": 0.4663
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4538
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4254
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-17",
+   "category": "exact_terms",
+   "subtype": "lab",
+   "query": "tes widal",
+   "hit": false,
+   "top5": [
+    {
+     "title": "fornas-2025.pdf",
+     "score": 0.3607
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.3574
+    },
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.3509
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.3452
+    },
+    {
+     "title": "gawat-darurat-medis-bedah-unair.pdf",
+     "score": 0.3397
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-18",
+   "category": "exact_terms",
+   "subtype": "lab",
+   "query": "troponin meningkat",
+   "hit": true,
+   "top5": [
+    {
+     "title": "esc-chronic-coronary-syndromes-2024.pdf",
+     "score": 0.4906
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.4844
+    },
+    {
+     "title": "esc-chronic-coronary-syndromes-2024.pdf",
+     "score": 0.4474
+    },
+    {
+     "title": "trauma-2017.pdf",
+     "score": 0.413
+    },
+    {
+     "title": "esc-chronic-coronary-syndromes-2024.pdf",
+     "score": 0.4067
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-19",
+   "category": "exact_terms",
+   "subtype": "lab",
+   "query": "jumlah CD4 rendah",
+   "hit": true,
+   "top5": [
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5965
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5239
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5208
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5124
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4896
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-20",
+   "category": "exact_terms",
+   "subtype": "score",
+   "query": "skor CURB-65",
+   "hit": true,
+   "top5": [
+    {
+     "title": "pneumonia-dewasa-2023.pdf",
+     "score": 0.6301
+    },
+    {
+     "title": "pneumonia-dewasa-2023.pdf",
+     "score": 0.6297
+    },
+    {
+     "title": "pneumonia-dewasa-2023.pdf",
+     "score": 0.5284
+    },
+    {
+     "title": "pneumonia-dewasa-2023.pdf",
+     "score": 0.443
+    },
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "score": 0.437
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-21",
+   "category": "exact_terms",
+   "subtype": "score",
+   "query": "skor NIHSS",
+   "hit": true,
+   "top5": [
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.6017
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.5237
+    },
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "score": 0.4474
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4468
+    },
+    {
+     "title": "stroke-2019.pdf",
+     "score": 0.4453
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-22",
+   "category": "exact_terms",
+   "subtype": "score",
+   "query": "skor qSOFA",
+   "hit": true,
+   "top5": [
+    {
+     "title": "sepsis-2017.pdf",
+     "score": 0.5253
+    },
+    {
+     "title": "sepsis-2017.pdf",
+     "score": 0.501
+    },
+    {
+     "title": "sepsis-2017.pdf",
+     "score": 0.4985
+    },
+    {
+     "title": "sepsis.md",
+     "score": 0.472
+    },
+    {
+     "title": "skizofrenia-2025.pdf",
+     "score": 0.444
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-23",
+   "category": "exact_terms",
+   "subtype": "score",
+   "query": "skor CHA2DS2-VASc",
+   "hit": true,
+   "top5": [
+    {
+     "title": "esc-cvd-diabetes-2023.pdf",
+     "score": 0.5042
+    },
+    {
+     "title": "faa-aviation-medical-examiners.pdf",
+     "score": 0.4856
+    },
+    {
+     "title": "aha-asa-stroke-primary-prevention-2024.pdf",
+     "score": 0.4773
+    },
+    {
+     "title": "esc-cvd-diabetes-2023.pdf",
+     "score": 0.4711
+    },
+    {
+     "title": "esc-cvd-diabetes-2023.pdf",
+     "score": 0.4549
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-24",
+   "category": "exact_terms",
+   "subtype": "score",
+   "query": "skor Centor",
+   "hit": true,
+   "top5": [
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.5306
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.495
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.4654
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.4298
+    },
+    {
+     "title": "tonsilitis-2018.pdf",
+     "score": 0.4127
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-25",
+   "category": "exact_terms",
+   "subtype": "score",
+   "query": "skor ABCD2",
+   "hit": true,
+   "top5": [
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5559
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5475
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.5406
+    },
+    {
+     "title": "patologi-klinik-anatomik-unair.pdf",
+     "score": 0.4876
+    },
+    {
+     "title": "dermatovenereologi-perdoski-2021.pdf",
+     "score": 0.4168
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-26",
+   "category": "exact_terms",
+   "subtype": "score",
+   "query": "skor APGAR",
+   "hit": true,
+   "top5": [
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "score": 0.4765
+    },
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.4681
+    },
+    {
+     "title": "sirosis-hati-dewasa-2025.pdf",
+     "score": 0.4521
+    },
+    {
+     "title": "stunting-2022.pdf",
+     "score": 0.4462
+    },
+    {
+     "title": "resusitasi-bblr-2018.pdf",
+     "score": 0.4375
+    }
+   ]
+  },
+  {
+   "id": "exact_terms-27",
+   "category": "exact_terms",
+   "subtype": "score",
+   "query": "kuesioner PHQ-9",
+   "hit": true,
+   "top5": [
+    {
+     "title": "faa-aviation-medical-examiners.pdf",
+     "score": 0.4115
+    },
+    {
+     "title": "fasyankes-primer-idi-2017.pdf",
+     "score": 0.4015
+    },
+    {
+     "title": "fktp-kmk-2022.pdf",
+     "score": 0.392
+    },
+    {
+     "title": "faa-aviation-medical-examiners.pdf",
+     "score": 0.3823
+    },
+    {
+     "title": "skizofrenia-2025.pdf",
+     "score": 0.3794
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "indonesia-ai-data-baseline",
+  "version": "2026.08.31",
+  "jurisdiction": "ID",
+  "effectiveStatus": "internal",
+  "rules": [
+    {"id":"pdp-baseline","effect":"require","statement":"Map workflows involving personal data to applicable obligations under Indonesia's Personal Data Protection framework and organization policy before deployment."},
+    {"id":"ai-ethics-baseline","effect":"require","statement":"Apply security, transparency, accountability, and responsible-use controls consistent with current Indonesian AI ethics guidance and later superseding instruments."},
+    {"id":"regulatory-status-label","effect":"require","statement":"Distinguish enacted law, binding regulation, advisory guidance, draft instruments, and public policy statements."},
+    {"id":"no-draft-as-law","effect":"deny","statement":"Do not present a draft RPerpres or announced policy as enacted law unless an official source confirms establishment."},
+    {"id":"sector-overlay","effect":"require","statement":"Apply sector-specific Indonesian rules in addition to this baseline for healthcare, finance, public services, employment, or other regulated activity."}
+  ]
+}

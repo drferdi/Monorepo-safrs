@@ -10,7 +10,7 @@
 - Location: `projects/product/sentrabot/`
 - Public URL: https://sentrahai.com
 - License: Apache-2.0
-- Human Owner: Chief (dr. Ferdi Iskandar)
+- Human Owner: Gaffer (dr. Ferdi Iskandar)
 
 ## Objective
 
@@ -72,14 +72,14 @@ Web (Vite 127.0.0.1:5173), Mobile (Expo), Desktop (Electron) connect to:
 
 | Date | Decision | Rationale | Owner | Impact | Status |
 |------|----------|-----------|-------|--------|--------|
-| 2024-06-14 | Local-first architecture | Indonesian health data governed by strict privacy regulations (UU No. 27/2022). Patient data must never leave RSIA Melinda infrastructure. | Chief | All data layer decisions | Enforced |
-| 2024-08-03 | BPJS-first workflow | ~90% of RSIA Melinda patients utilize BPJS. Optimizing for BPJS maximizes immediate impact. | Chief | Feature prioritization | Active |
-| 2024-10-15 | Voice capability via Vapi | Automated phone reminders. Indonesian elderly and low-literacy patients respond better to voice than SMS/app. | Chief | Patient engagement | Active |
-| 2025-03-20 | Monorepo native migration | Consolidate scattered repositories into unified SAFRS monorepo. Eliminates version drift. | Chief | Repository structure | Completed |
-| 2025-07-10 | Electron desktop app | RSIA Melinda staff work from fixed nursing station computers. Desktop provides persistent notifications and tray integration. | Chief | Frontend distribution | Active |
-| 2026-01-15 | @sentra/token design system | Semantic token-based design replacing ad-hoc styling. Typography: Geist + Geist Mono exclusively. | Chief | UI/UX standardization | Superseded |
-| 2026-09-22 | Typography back to Archivo | Sentraverse UI v1.0 locks Archivo (one family, width axis for display) + JetBrains Mono; the Geist switch diverged from the reference. | Chief | UI/UX standardization | Active |
-| 2026-09-02 | apps/api IS the harness | Eliminated separate harness process on port 8799. API server already owns commands, SSE, permissions. | Chief | Runtime architecture | Completed |
+| 2024-06-14 | Local-first architecture | Indonesian health data governed by strict privacy regulations (UU No. 27/2022). Patient data must never leave RSIA Melinda infrastructure. | Gaffer | All data layer decisions | Enforced |
+| 2024-08-03 | BPJS-first workflow | ~90% of RSIA Melinda patients utilize BPJS. Optimizing for BPJS maximizes immediate impact. | Gaffer | Feature prioritization | Active |
+| 2024-10-15 | Voice capability via Vapi | Automated phone reminders. Indonesian elderly and low-literacy patients respond better to voice than SMS/app. | Gaffer | Patient engagement | Active |
+| 2025-03-20 | Monorepo native migration | Consolidate scattered repositories into unified SAFRS monorepo. Eliminates version drift. | Gaffer | Repository structure | Completed |
+| 2025-07-10 | Electron desktop app | RSIA Melinda staff work from fixed nursing station computers. Desktop provides persistent notifications and tray integration. | Gaffer | Frontend distribution | Active |
+| 2026-01-15 | @sentra/token design system | Semantic token-based design replacing ad-hoc styling. Typography: Geist + Geist Mono exclusively. | Gaffer | UI/UX standardization | Superseded |
+| 2026-09-22 | Typography back to Archivo | Sentraverse UI v1.0 locks Archivo (one family, width axis for display) + JetBrains Mono; the Geist switch diverged from the reference. | Gaffer | UI/UX standardization | Active |
+| 2026-09-02 | apps/api IS the harness | Eliminated separate harness process on port 8799. API server already owns commands, SSE, permissions. | Gaffer | Runtime architecture | Completed |
 
 ## Current Focus
 
@@ -109,11 +109,11 @@ Web (Vite 127.0.0.1:5173), Mobile (Expo), Desktop (Electron) connect to:
 
 | # | Blocker | Severity | Dependency | ETA | Owner | Impact if Unresolved | Mitigation |
 |---|---------|----------|------------|-----|-------|---------------------|------------|
-| 1 | BPJS API integration | Critical | BPJS credential (sensitive, R3 escalation) | TBD | Chief | Cannot automate claim submission; manual process continues | Direct negotiation with BPJS regional office; alternative batch upload |
-| 2 | Voice agent stability | High | Vapi credits & testing infrastructure | TBD | Chief | Reminder system unreliable; patient no-show rate high | Implement SMS fallback; reduce voice to critical appointments |
-| 3 | Production deploy to RSIA Melinda | High | IT infrastructure approval & VPN setup | TBD | Chief | Product stuck in staging; no real patient data validation | Staged rollout: start with 1 department (Poli Anak) before hospital-wide |
-| 4 | HIS integration | Medium | RSIA Melinda HIS vendor API documentation | TBD | Chief | Duplicate data entry; staff use both HIS and SentraBot | Develop HIS bridge adapter; prioritize read-only integration first |
-| 5 | Electron desktop performance | Medium | Desktop app startup time > 5s on hospital computers | TBD | Chief | Nursing staff resistance; prefer browser over slow app | Profile and optimize bundle size; implement lazy loading |
+| 1 | BPJS API integration | Critical | BPJS credential (sensitive, R3 escalation) | TBD | Gaffer | Cannot automate claim submission; manual process continues | Direct negotiation with BPJS regional office; alternative batch upload |
+| 2 | Voice agent stability | High | Vapi credits & testing infrastructure | TBD | Gaffer | Reminder system unreliable; patient no-show rate high | Implement SMS fallback; reduce voice to critical appointments |
+| 3 | Production deploy to RSIA Melinda | High | IT infrastructure approval & VPN setup | TBD | Gaffer | Product stuck in staging; no real patient data validation | Staged rollout: start with 1 department (Poli Anak) before hospital-wide |
+| 4 | HIS integration | Medium | RSIA Melinda HIS vendor API documentation | TBD | Gaffer | Duplicate data entry; staff use both HIS and SentraBot | Develop HIS bridge adapter; prioritize read-only integration first |
+| 5 | Electron desktop performance | Medium | Desktop app startup time > 5s on hospital computers | TBD | Gaffer | Nursing staff resistance; prefer browser over slow app | Profile and optimize bundle size; implement lazy loading |
 
 ## Related Projects
 

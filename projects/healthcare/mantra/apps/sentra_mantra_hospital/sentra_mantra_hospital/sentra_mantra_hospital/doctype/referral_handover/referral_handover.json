@@ -1,0 +1,208 @@
+{
+ "actions": [],
+ "autoname": "format:REF-HANDOVER-{YYYY}-{#####}",
+ "creation": "2026-07-26 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "patient",
+  "arrival_at",
+  "arrival_service_date",
+  "accepted_by_employee",
+  "referral_partner",
+  "company",
+  "branch",
+  "eligibility_section",
+  "payer_category",
+  "service_line",
+  "inpatient_class",
+  "tariff_rule",
+  "eligible_amount",
+  "eligibility_status",
+  "exception_reason",
+  "source_reference",
+  "workflow_state",
+  "deduplication_key"
+ ],
+ "fields": [
+  {
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Patient",
+   "options": "Patient",
+   "reqd": 1
+  },
+  {
+   "fieldname": "arrival_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Arrival At",
+   "reqd": 1
+  },
+  {
+   "fieldname": "arrival_service_date",
+   "fieldtype": "Date",
+   "hidden": 1,
+   "label": "Arrival Service Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "accepted_by_employee",
+   "fieldtype": "Link",
+   "label": "Accepted By Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "referral_partner",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Referral Partner",
+   "options": "Referral Partner",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "eligibility_section",
+   "fieldtype": "Section Break",
+   "label": "Eligibility"
+  },
+  {
+   "fieldname": "payer_category",
+   "fieldtype": "Data",
+   "label": "Payer Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "service_line",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Service Line",
+   "options": "Outpatient\nInpatient\nPharmacy",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.service_line == 'Inpatient'",
+   "fieldname": "inpatient_class",
+   "fieldtype": "Data",
+   "label": "Inpatient Class"
+  },
+  {
+   "fieldname": "tariff_rule",
+   "fieldtype": "Link",
+   "label": "Tariff Rule",
+   "options": "Referral Tariff Rule",
+   "read_only": 1
+  },
+  {
+   "fieldname": "eligible_amount",
+   "fieldtype": "Currency",
+   "label": "Eligible Amount",
+   "read_only": 1
+  },
+  {
+   "default": "Exception",
+   "fieldname": "eligibility_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Eligibility Status",
+   "options": "Eligible\nException",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "exception_reason",
+   "fieldtype": "Small Text",
+   "label": "Exception Reason",
+   "read_only": 1
+  },
+  {
+   "fieldname": "source_reference",
+   "fieldtype": "Data",
+   "label": "Source Reference"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "workflow_state",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Workflow State",
+   "options": "Draft\nEligible\nException\nResolved",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deduplication_key",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Deduplication Key",
+   "read_only": 1,
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-07-26 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Sentra MANTRA Hospital",
+ "name": "Referral Handover",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Nursing User",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "MANTRA Director",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "arrival_at",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "name",
+ "track_changes": 1
+}

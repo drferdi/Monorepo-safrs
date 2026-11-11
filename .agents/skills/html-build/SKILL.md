@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 Migrasi **teknologi**, bukan redesign. HTML (+ CSS + asset) asli = single source of truth visual.
 
-Communicate in **Bahasa Indonesia**; address user as **Chief**. Keep code identifiers in English.
+Communicate in **Bahasa Indonesia**; address user as **Gaffer**. Keep code identifiers in English.
 
 ## Parse
 
@@ -87,7 +87,7 @@ Approach for captured Next/Webflow/SSR HTML:
 5. Compose one balanced HTML string in `App` (`dangerouslySetInnerHTML` + `display: contents` wrapper if needed so unclosed outer wrappers stay valid)
 6. Re-port only visible interactions (accordion, tabs, marquee, viewport CSS vars)
 
-Present approach briefly; if Chief has not already approved this workflow, ask once for path/location then proceed under these defaults.
+Present approach briefly; if Gaffer has not already approved this workflow, ask once for path/location then proceed under these defaults.
 
 ### 4 — Implement
 
@@ -112,13 +112,13 @@ Before declaring migrate done:
 4. No console errors that break UI; no broken local images that exist on disk
 5. Primary interactions work
 
-### 7 — Rebrand (only with `--rebrand` or Chief request)
+### 7 — Rebrand (only with `--rebrand` or Gaffer request)
 
 - **Text (+ href destinations) only.** Design/CSS/class/assets untouched.
 - Work **wave-by-wave** (Header+Hero → Testimonials → Demo → … → Footer) unless `--e2e`.
 - Log every change in `REBRAND.md`.
 - Avoid false celebrity endorsements: if quotes change, also change attribution names (photos may wait for later image-swap).
-- Prefer brand voice from Chief’s product docs when available.
+- Prefer brand voice from Gaffer’s product docs when available.
 - After each wave (non-e2e): short table before/after; ask to continue unless `--e2e`.
 
 ### 8 — Bahasa Indonesia (only with `--lang id`)

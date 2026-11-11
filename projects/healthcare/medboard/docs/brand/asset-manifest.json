@@ -1,0 +1,586 @@
+{
+  "kit": "MedBoard Brand Kit v1.0",
+  "fileCount": 116,
+  "files": [
+    {
+      "path": "00_GUIDELINES/MedBoard_Brand_Guidelines_v1.0.pdf",
+      "bytes": 21456,
+      "sha256": "67f066a2658a835d7341c5b8fdf9c32c737d11e44296bb32e476440d2d005385"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_AppIcon_accent.svg",
+      "bytes": 1226,
+      "sha256": "78854d9b97fefe6f9b24b1264885a7573bbf15e8e2bc5cde3ac22d8ceb48d4c1"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_AppIcon_dark.svg",
+      "bytes": 1065,
+      "sha256": "4428fdc4de7f0f531eeae6d678b197d19b8f091b36168c853d340ccd86c4735e"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_AppIcon_light.svg",
+      "bytes": 1065,
+      "sha256": "1f30bf6f78c80d89442b6b2e9643e645055aef8f3c8d054d5283dbfa0b570c03"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_Accent.svg",
+      "bytes": 6908,
+      "sha256": "a481dc236e775d41003d447742e7455edd427eacd8b4fb81b529acaa4911b8f1"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_Black.eps",
+      "bytes": 8528,
+      "sha256": "de3948512628cdd95b8a5fb33fd6657ae265785c7aa3d9443e9da5bf511642af"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_Black.pdf",
+      "bytes": 3136,
+      "sha256": "62ab5d213ad04a6a083732763a4d06cce435a7fc3888c3257387457694385319"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_Black.svg",
+      "bytes": 6350,
+      "sha256": "eedf2888101aa52aac0c8f14cbfa26e010d4a484d10d69ad61eadffccd742b81"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_Full_Black.svg",
+      "bytes": 25955,
+      "sha256": "81261b194252aa9f20caeed7c45d30143d8d86d2cc504e2487da0c7ad7b3e242"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_Full_White.svg",
+      "bytes": 26080,
+      "sha256": "be3e09baf0b93b3e4fa44c7db25ab58e1da51064f58e8c1aa926aef1e15327a2"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_Tagline_Black.svg",
+      "bytes": 15221,
+      "sha256": "7c5373c731ca582227410e7c9b32cd6b67b26447bc2e80f93834aa95eee31f1a"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_Tagline_White.svg",
+      "bytes": 15346,
+      "sha256": "064a52c03a3de2f07318fe1b1fa1a96535e01af20732f0cf30db34815a71f580"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_White.eps",
+      "bytes": 8528,
+      "sha256": "9250b14111af87492162152daed0f2cbea7f5eca16bc49023c23fc2ddf2a00fc"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_White.pdf",
+      "bytes": 3137,
+      "sha256": "9821f633010195e1fed581993f4cf4edf35beb64267b477c9d51c73313b89b4e"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Horizontal_White.svg",
+      "bytes": 6475,
+      "sha256": "f826c6cba0aa76348d5982abc19d9618d1906c2f81d5b90ee0f845a63e4b2482"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_Accent.svg",
+      "bytes": 6649,
+      "sha256": "ff04d733bd8c0a6a7cad846b21a5db4793817d6645969dab6099a841c099428d"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_Black.eps",
+      "bytes": 9001,
+      "sha256": "b29ffaf97969c3ee03e8b5ffa73aa1c28f2efb56065a15a03192d6fd16890b27"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_Black.pdf",
+      "bytes": 3197,
+      "sha256": "f6b385e26d13eb0cfc327dfcc4fb513c3d32d224d5a47fbfb81b2bbb720c0764"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_Black.svg",
+      "bytes": 6091,
+      "sha256": "6e239c5c0bc38d85b49f170225b1b6d58e28002208909d4dcd55a0086d9866e6"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_Tagline_Black.svg",
+      "bytes": 14909,
+      "sha256": "06bba1b6df761a84c3c122ba37cf956ca2a9b960dba765625737bd9459d2ac7c"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_Tagline_White.svg",
+      "bytes": 15034,
+      "sha256": "434a90c970d8d2a92ae9f8d3163e9ecf3943a1ff3b78d31dcc697d30b93f8d04"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_White.eps",
+      "bytes": 9001,
+      "sha256": "1b7eeabd9b656d8190dfcbd790397fcccb2471b06c04448439f6ae51f8ecdbc5"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_White.pdf",
+      "bytes": 3199,
+      "sha256": "6b8df4df8bf15d3d51e9ff960a74856a3e1197d4b2eab4e4f5f3077e8ac3d03f"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Logo_Stacked_White.svg",
+      "bytes": 6216,
+      "sha256": "b67326146a023bae5ca5b9bf0412b9fdfdbea6b09150c113f2f0afa9ff14f693"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Mark_Accent.svg",
+      "bytes": 1203,
+      "sha256": "2d3523ef5561e7c3730ce632eb0d8b8a19c6ff7272c89953b9c470bc82ea36f2"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Mark_Black.eps",
+      "bytes": 4388,
+      "sha256": "a0039254846503783146366f33b78a7fb3664e7375809ce125488a32abd36e26"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Mark_Black.pdf",
+      "bytes": 1635,
+      "sha256": "4618b1602cf6cf6d044ac3ef019e7f08fc0edd8f79c77f38b27d737056aaedec"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Mark_Black.svg",
+      "bytes": 953,
+      "sha256": "e49e0c4fd411c022119bcdd4732e9b4cdea3bbb1be67fb23de60a4057bc86772"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Mark_White.eps",
+      "bytes": 4388,
+      "sha256": "5744cedbad01b907c66fcc5e4ad68625fe5215487cc00abc64c8de471716c2e9"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Mark_White.pdf",
+      "bytes": 1636,
+      "sha256": "859ca628371fdcf8a56b1d0ce0e3dacd1f07f875680402e3605c55c3385f9031"
+    },
+    {
+      "path": "01_LOGO_VECTOR/MedBoard_Mark_White.svg",
+      "bytes": 953,
+      "sha256": "b01fbcc56af59805862e81bf9c25a72eda4b43ef47de6bd6ea7bf25687be8dc2"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Accent_1200w.png",
+      "bytes": 15315,
+      "sha256": "b9ea9b00ed8098ea5a647f6594f0430c167cefdb1bce6079fa94b353e5ace115"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Accent_2400w.png",
+      "bytes": 32634,
+      "sha256": "9f1dfe4db9df6fec10a59d31f48ad74a3fc3d6f87022f39d979c85b6f52ab7c0"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Black_1200w.png",
+      "bytes": 13556,
+      "sha256": "16eba05bc767079610e404cc47eb8e7ce37f297a98a559fe6b80b33170d69fff"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Black_2400w.png",
+      "bytes": 29082,
+      "sha256": "a2d55b570ab7c59c00b305a35936081733af862b6de387238f91d5d5230d5451"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Full_Black_1200w.png",
+      "bytes": 30057,
+      "sha256": "b97be2670eaf5bcbbf3a1b61c5b45903d093627d94de4aeae673acc7b91a3831"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Full_Black_2400w.png",
+      "bytes": 62726,
+      "sha256": "358f7d03f08bac50b6f1aaa585a17a71096d58562546bcd372db0f7eeeb06945"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Full_White_1200w.png",
+      "bytes": 29207,
+      "sha256": "d12599eed2d6368f1c39b1c9f1cf0b741696c878060dd832a2baad819f3be3cb"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Full_White_2400w.png",
+      "bytes": 61550,
+      "sha256": "c618385ccb2f70ae3feb9a6d1539f106717f081e5ba91ab5373509d8587c6efb"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Tagline_Black_1200w.png",
+      "bytes": 23145,
+      "sha256": "32c2816df9f8848175e488d39756636f485ad7bcd9b3b57c296c6ce8606c68cf"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Tagline_Black_2400w.png",
+      "bytes": 47809,
+      "sha256": "cb5eaf417558b1563b3038538e97acc4c83661dec8772a8835309ff9ed226ffb"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Tagline_White_1200w.png",
+      "bytes": 22153,
+      "sha256": "a0900619e81c146c823f6f5d22972f1d9b031973377361f3aea6f69053fde35a"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_Tagline_White_2400w.png",
+      "bytes": 46523,
+      "sha256": "b3be3437b058a052f54c72a77be5144ab2f4392e5c68ca9e61e5d51460639e42"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_White_1200w.png",
+      "bytes": 12409,
+      "sha256": "ffd4680cc14dd1aacf68cdf50c5660aa49cb519be506c1975da852efe5d63c6e"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Horizontal_White_2400w.png",
+      "bytes": 26926,
+      "sha256": "61539e3802812365b31a0906754da53a01181257cd1c0ecf9d31acb6b92eaf3d"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_Accent_1600w.png",
+      "bytes": 44264,
+      "sha256": "d94905e4aa9d7f32c66cbbc9d26bc7efc3ffc6709a392b76eec1cee0a696e529"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_Accent_800w.png",
+      "bytes": 19544,
+      "sha256": "7fcc1cf8ea5a277ee1bfd03716774f13d6e7a1b7bf5b5ec14a9f0cc5d074f9fc"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_Black_1600w.png",
+      "bytes": 38352,
+      "sha256": "c33c86e1485562b5d577a59c770908c2f2b2b60b46173947d9714649ee736f56"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_Black_800w.png",
+      "bytes": 16851,
+      "sha256": "cdb6a99922c6763f783af0160df526061c1884e244fbcc5284e25d33dcd7dcc5"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_Tagline_Black_1600w.png",
+      "bytes": 56331,
+      "sha256": "66c8f96d3a484c56b2b298807a8a4bc7dc25181a9224187171d3bf6736229152"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_Tagline_Black_800w.png",
+      "bytes": 26384,
+      "sha256": "be9cee63dfb3049a7f43c817445cbb25da8235082f2a5576177bfd3415cef04b"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_Tagline_White_1600w.png",
+      "bytes": 54868,
+      "sha256": "9f8219406aecc0dd9389399ace00313800e2eb9b7041f4c8463a5beadda75af6"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_Tagline_White_800w.png",
+      "bytes": 25371,
+      "sha256": "cdb4aba65403bf34c1a78b02c9966bac6aa6fbe51f6c1d7156a672aaeaeecd55"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_White_1600w.png",
+      "bytes": 35814,
+      "sha256": "8a504f30b12d7764477736153ecb4665840c0a0ccdc590b30be997569b21d95b"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Logo_Stacked_White_800w.png",
+      "bytes": 15786,
+      "sha256": "d006ac1f43c9e714ad9c1ee5e5020dc3d2dc4021c5dab376d971bd56af01247c"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Accent_1024.png",
+      "bytes": 37923,
+      "sha256": "839a6175d70e1e6a84946171468a57660fb48e9553c9e312d61f39e9bb93696a"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Accent_128.png",
+      "bytes": 3135,
+      "sha256": "bcb722794e07d3cb544deeb2ebd0b71ac688a098a90e849708d3e1544be909e7"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Accent_2048.png",
+      "bytes": 93795,
+      "sha256": "c28ed5eef23e583699c379891b1261de5d9ad6c1095d4a7009d857902c496591"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Accent_256.png",
+      "bytes": 6532,
+      "sha256": "b8a432cd31f39b795a43360c2f62ab99af92f973bdf2c912ad590f0565671d5c"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Accent_512.png",
+      "bytes": 14832,
+      "sha256": "d9310a8754f4e6c2496e54d97201dbdc2bf8a6845de6fb86e6cdde2656bd9a8d"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Black_1024.png",
+      "bytes": 20625,
+      "sha256": "c82f9327e24f2fa061a94a1840f5a055225a227bc2e2b88ba5482d73454f6044"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Black_128.png",
+      "bytes": 2134,
+      "sha256": "6761c0674a47c52bbf78a363222507fde0fbe5fc94e3e2da6b5dc514f596ead1"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Black_2048.png",
+      "bytes": 50116,
+      "sha256": "89b62085cb12a960f9c657f4cd3608dee008aced6682618acaa3d66fd654256b"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Black_256.png",
+      "bytes": 4400,
+      "sha256": "f0f285686a3f273f4568e6c504b56c23d7fcb78f6a3dcadce114ecd0f5cc20ec"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_Black_512.png",
+      "bytes": 9207,
+      "sha256": "22fcb0e62a1c510762568141116f0f3dae5730c67b3ca9faf3b34c5b2c3d784f"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_White_1024.png",
+      "bytes": 19146,
+      "sha256": "8991c20213d68a59d8650ce30a1176dcf883e3f679b861b8838961d4e0ff0802"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_White_128.png",
+      "bytes": 2026,
+      "sha256": "41407f6bd55bf76eeb4c09972ec1b6c8da95ca29284dd7b476fc8cf66822e752"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_White_2048.png",
+      "bytes": 47140,
+      "sha256": "4cae53001f52971104dfe4dd758d97f5a0195e7ac6ad37a65c4dc755b8bebb62"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_White_256.png",
+      "bytes": 4091,
+      "sha256": "f30f9d399c482ad4476796f1472696063a280acce4dfd86e612741b0a2afec65"
+    },
+    {
+      "path": "02_LOGO_PNG/MedBoard_Mark_White_512.png",
+      "bytes": 8555,
+      "sha256": "82482520963e6936e089a5293c99fa4021afce8e34d522878d73be93064c1373"
+    },
+    {
+      "path": "03_APP_ICONS/MedBoard_AppIcon_accent_1024.png",
+      "bytes": 57002,
+      "sha256": "74ca5ddf9a8b2d2127180ee9fb1ba0ffd566881d72818715180693bf9e935163"
+    },
+    {
+      "path": "03_APP_ICONS/MedBoard_AppIcon_dark_1024.png",
+      "bytes": 27588,
+      "sha256": "097be97d7028a00d12053660c055318ac15f5ef39d0de47f2ba2c7de45a9b4b0"
+    },
+    {
+      "path": "03_APP_ICONS/MedBoard_AppIcon_light_1024.png",
+      "bytes": 26587,
+      "sha256": "1073ba4cbf7a841251b0dbc634b27ce20e85911b976fc036027070dafc43a045"
+    },
+    {
+      "path": "03_APP_ICONS/android-chrome-192x192.png",
+      "bytes": 5722,
+      "sha256": "9924d428a4b6373b5fa24b48a8b663060314e305ad2e5734c6ca4c3f00d544e8"
+    },
+    {
+      "path": "03_APP_ICONS/android-chrome-512x512.png",
+      "bytes": 17179,
+      "sha256": "b44add30f52064da03b67aefb2250d96c4597f25f484d1ce9d6143daa1a63a49"
+    },
+    {
+      "path": "03_APP_ICONS/apple-touch-icon.png",
+      "bytes": 5386,
+      "sha256": "8f806e5b6b878a9457e89a1d3cf4d4edd41eda2092e2dab00d404754fa4703ad"
+    },
+    {
+      "path": "03_APP_ICONS/favicon-16x16.png",
+      "bytes": 447,
+      "sha256": "d1c3f944d9a8801cf8a901e02430e0604fc759c4f6cb35d8e6b292679eca17d0"
+    },
+    {
+      "path": "03_APP_ICONS/favicon-32x32.png",
+      "bytes": 841,
+      "sha256": "2209dc33ca04f32d7e332e4db1ec9a0ca2deb4886cb792ed2cc01738010f22ed"
+    },
+    {
+      "path": "03_APP_ICONS/favicon-48x48.png",
+      "bytes": 1197,
+      "sha256": "1dff26aeebcc08acbc30dfb24bc54590e4e4b7d0115e569152078c3a4e46ffef"
+    },
+    {
+      "path": "03_APP_ICONS/favicon-64x64.png",
+      "bytes": 1639,
+      "sha256": "a299b3fda23fb921ba050735d1ce89389e8b386243522d306cb204611c2ebf0f"
+    },
+    {
+      "path": "03_APP_ICONS/favicon.ico",
+      "bytes": 16066,
+      "sha256": "64f19c6410918154996095ce34f48a401dbf5011376bab1a48e8e581751c1c35"
+    },
+    {
+      "path": "04_SOCIAL/MedBoard_OG_Dark_1200x630.png",
+      "bytes": 43574,
+      "sha256": "5ecb5d84af18ade494c695d6e9954e711fd96edc50df60cdf39357c417fcbee9"
+    },
+    {
+      "path": "04_SOCIAL/MedBoard_OG_Light_1200x630.png",
+      "bytes": 43566,
+      "sha256": "c630f23d90e4951c75d3e4e7ec6442aac9696f1a709b26ba49055a2adb93a7ab"
+    },
+    {
+      "path": "04_SOCIAL/MedBoard_Twitter_1200x630.png",
+      "bytes": 43574,
+      "sha256": "5ecb5d84af18ade494c695d6e9954e711fd96edc50df60cdf39357c417fcbee9"
+    },
+    {
+      "path": "05_BRAND_TOKENS/brand-tokens.json",
+      "bytes": 1007,
+      "sha256": "14a947d0d7c0fbe7b7678d459906b1156588674a055e3e93c50109dd0229638d"
+    },
+    {
+      "path": "05_BRAND_TOKENS/medboard-brand.css",
+      "bytes": 617,
+      "sha256": "0ba24c37ca7670d29cca6d51f3156776d6f20b07753885305447d0fc2e9551f2"
+    },
+    {
+      "path": "05_BRAND_TOKENS/site.webmanifest",
+      "bytes": 425,
+      "sha256": "65216aa5438b04357a6ca51b8fc3527a2fd979029e31165af39c9510a26ccb26"
+    },
+    {
+      "path": "06_NEXTJS_READY/README.md",
+      "bytes": 498,
+      "sha256": "59bc50bf10c0ee660de4f4ca5e8f7787c7a4f7e39673319b3788b609144285f5"
+    },
+    {
+      "path": "06_NEXTJS_READY/apple-icon.png",
+      "bytes": 5386,
+      "sha256": "8f806e5b6b878a9457e89a1d3cf4d4edd41eda2092e2dab00d404754fa4703ad"
+    },
+    {
+      "path": "06_NEXTJS_READY/favicon.ico",
+      "bytes": 16066,
+      "sha256": "64f19c6410918154996095ce34f48a401dbf5011376bab1a48e8e581751c1c35"
+    },
+    {
+      "path": "06_NEXTJS_READY/icon.png",
+      "bytes": 17179,
+      "sha256": "b44add30f52064da03b67aefb2250d96c4597f25f484d1ce9d6143daa1a63a49"
+    },
+    {
+      "path": "06_NEXTJS_READY/manifest.webmanifest",
+      "bytes": 425,
+      "sha256": "65216aa5438b04357a6ca51b8fc3527a2fd979029e31165af39c9510a26ccb26"
+    },
+    {
+      "path": "06_NEXTJS_READY/opengraph-image.png",
+      "bytes": 43574,
+      "sha256": "5ecb5d84af18ade494c695d6e9954e711fd96edc50df60cdf39357c417fcbee9"
+    },
+    {
+      "path": "06_NEXTJS_READY/twitter-image.png",
+      "bytes": 43574,
+      "sha256": "5ecb5d84af18ade494c695d6e9954e711fd96edc50df60cdf39357c417fcbee9"
+    },
+    {
+      "path": "07_SOURCE_MASTER/Approved_Reference_Mark.png",
+      "bytes": 8192,
+      "sha256": "b1cc4adad2edbdf1de6dc1b0cd1e7b78122e06e884e4e4e67d2db7a8efa98c3f"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_AppIcon_accent.svg",
+      "bytes": 1226,
+      "sha256": "78854d9b97fefe6f9b24b1264885a7573bbf15e8e2bc5cde3ac22d8ceb48d4c1"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_AppIcon_dark.svg",
+      "bytes": 1065,
+      "sha256": "4428fdc4de7f0f531eeae6d678b197d19b8f091b36168c853d340ccd86c4735e"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_AppIcon_light.svg",
+      "bytes": 1065,
+      "sha256": "1f30bf6f78c80d89442b6b2e9643e645055aef8f3c8d054d5283dbfa0b570c03"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Horizontal_Accent_editable.svg",
+      "bytes": 1407,
+      "sha256": "58fc361a0d56cfdab711f8a7012767e177fb254f3c7cd6150f442fe20a00aa44"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Horizontal_Black_editable.svg",
+      "bytes": 1157,
+      "sha256": "cc61bc8602f7a4f2c113592cb4d35873fb962c5d07ebc3990ec11d15b2f47ea5"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Horizontal_Full_Black_editable.svg",
+      "bytes": 1489,
+      "sha256": "eec658caff59ffa0627f41b27532d14fc1c44701d4f7c8cd8c35d188331f70cb"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Horizontal_Full_White_editable.svg",
+      "bytes": 1489,
+      "sha256": "210147d2d7d0c24ef45bd03b4d0fd4f698d2a508bce028e6e3463ebd36919b94"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Horizontal_Tagline_Black_editable.svg",
+      "bytes": 1322,
+      "sha256": "973c51576b353df259b65b844c67eb119176d55bd13caf3d8daed9ab5518a8f3"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Horizontal_Tagline_White_editable.svg",
+      "bytes": 1322,
+      "sha256": "a74f0002f9ea1e13c4e9eb65bd6b57780510f4cb46b3bdea6fb0d29974935303"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Horizontal_White_editable.svg",
+      "bytes": 1157,
+      "sha256": "aa191d2db909324a71e3b78c46c841f29f9b85c8ee8551d7632088f21151758d"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Stacked_Accent_editable.svg",
+      "bytes": 1408,
+      "sha256": "be8df0fc342d4a60ba9985f4cd764500f2cc8d52dc4020c2c98a5f92fb2226b2"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Stacked_Black_editable.svg",
+      "bytes": 1158,
+      "sha256": "bc1f5724bf76b22c49620a65171b7120fae352eddb30a58acf4b9d94a87dbd73"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Stacked_Tagline_Black_editable.svg",
+      "bytes": 1326,
+      "sha256": "9505c2b211309a6d18a683d200ceac19cb5ad947cda6ee58acf58a663b8f1a48"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Stacked_Tagline_White_editable.svg",
+      "bytes": 1326,
+      "sha256": "234d1a57caf6802f3334bce3223b562bafdd9329e97ac9a497467324fcbc72d0"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_Logo_Stacked_White_editable.svg",
+      "bytes": 1158,
+      "sha256": "b9769cf4d691ab8edd5329c8dc4186ee6dac47c626c0b3effddbb6b879dd90db"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_OG_Dark_editable.svg",
+      "bytes": 1539,
+      "sha256": "e9d6ca057423de22f401fd4bd02a90f81de4c2429faf135dff343b641b7c3620"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_OG_Dark_outlined.svg",
+      "bytes": 26121,
+      "sha256": "01e66f993a4f2a66454fd7d3cfe5af7ca72ca27d05b4a6027bded27042d872e6"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_OG_Light_editable.svg",
+      "bytes": 1539,
+      "sha256": "8331aa7b2a3739657b66ec9e608157ff83db3d98c0dddc32987bcbbeb3ead263"
+    },
+    {
+      "path": "07_SOURCE_MASTER/MedBoard_OG_Light_outlined.svg",
+      "bytes": 26023,
+      "sha256": "002cdcbcd85efe90852e5a64266f920cce075e83cdbec8b33274c67f142b2a35"
+    },
+    {
+      "path": "08_PREVIEWS/MedBoard_Brand_Sheet_v1.0.png",
+      "bytes": 144930,
+      "sha256": "491a867a4e8b84c1368671ca26a4a05e78ce469982aae95a5ef64dbe4d9571f9"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1523,
+      "sha256": "244d0d1563de84715f854771b53d2080b7e65257fd4b5d1e7ddd0073c7574d68"
+    }
+  ]
+}

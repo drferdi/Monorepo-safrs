@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "tools/prompt",
+  "owner": "Chief",
+  "risk": "R2",
+  "runtime": { "name": "node", "version": "24.18.0" },
+  "packageManager": { "name": "pnpm", "version": "11.21.0", "lockfile": "pnpm-lock.yaml" },
+  "commands": {
+    "install": { "program": "pnpm", "args": ["install", "--frozen-lockfile"] },
+    "lint": { "program": "pnpm", "args": ["run", "lint"] },
+    "typecheck": { "program": "pnpm", "args": ["run", "typecheck"] },
+    "test": { "program": "pnpm", "args": ["run", "test"] },
+    "build": { "program": "pnpm", "args": ["run", "build"] },
+    "run": { "program": "pnpm", "args": ["exec", "electron", "./dist-electron/desktop/bootstrap.js", "--smoke"] },
+    "deployDryRun": { "program": "pnpm", "args": ["run", "deploy:dry-run"] }
+  },
+  "smoke": {
+    "kind": "none",
+    "notApplicableReason": "Desktop Electron app; the contract schema has no desktop probe. run starts the built app with --smoke (hidden window, exits 0 after the renderer loads)."
+  },
+  "artifacts": ["dist-electron/desktop/bootstrap.js", "dist-electron/desktop/renderer/index.html"],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "database", "name": "PostgreSQL", "locator": "DATABASE_URL", "required": true },
+    { "kind": "service", "name": "OpenAI", "locator": "OPENAI_API_KEY", "required": false },
+    { "kind": "service", "name": "Anthropic", "locator": "ANTHROPIC_API_KEY", "required": false },
+    { "kind": "service", "name": "xAI", "locator": "XAI_API_KEY", "required": false },
+    { "kind": "service", "name": "Local Ollama model", "locator": "OLLAMA_MODEL", "required": false },
+    { "kind": "service", "name": "Supabase", "locator": "NEXT_PUBLIC_SUPABASE_URL", "required": true },
+    { "kind": "service", "name": "Resend", "locator": "RESEND_API_KEY", "required": true },
+    { "kind": "service", "name": "Xendit", "locator": "XENDIT_SECRET_KEY", "required": true }
+  ],
+  "mutableStatePaths": []
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "healthcare/mantra",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R2",
+  "runtime": { "name": "python", "version": "3.12" },
+  "packageManager": { "name": "bench", "version": null, "lockfile": "bench-apps.lock.json" },
+  "commands": {
+    "install": { "program": "python", "args": ["scripts/capsule_check.py", "install"] },
+    "lint": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "No Python linter is pinned for the custom apps; the ADR-0001 boundary scan runs as part of `test`."
+    },
+    "typecheck": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "The Frappe custom apps have no type-checking contract; Python syntax is checked by `build`."
+    },
+    "test": { "program": "python", "args": ["scripts/capsule_check.py", "test"] },
+    "build": { "program": "python", "args": ["-m", "compileall", "-q", "apps", "scripts", "e2e"] },
+    "run": { "program": "python", "args": ["scripts/capsule_check.py", "run"] },
+    "deployDryRun": { "program": "python", "args": ["scripts/capsule_check.py", "deploy-dry-run"] }
+  },
+  "smoke": {
+    "kind": "none",
+    "notApplicableReason": "Static contract (Chief, 2026-09-27): the runtime is a Frappe bench with MariaDB and Redis in the dev container (.devcontainer/), built from the upstream commits in bench-apps.lock.json, which the standalone verifier cannot start. `run` validates the Procfile and prints how to start the bench; Frappe unit tests run with `bench run-tests` inside the container (docs/testing.md)."
+  },
+  "artifacts": ["apps/sentra_mantra_core/sentra_mantra_core/__pycache__"],
+  "externalDependencies": [
+    { "kind": "runtime", "name": "Python for the static checks (bench accepts >=3.10,<3.15)", "locator": "python", "required": true },
+    { "kind": "service", "name": "Docker for the dev container runtime", "locator": ".devcontainer/docker-compose.yml", "required": false },
+    { "kind": "database", "name": "MariaDB root password for the dev container", "locator": "MARIADB_ROOT_PASSWORD", "required": false },
+    { "kind": "registry", "name": "Upstream Frappe apps pinned by commit", "locator": "bench-apps.lock.json", "required": false },
+    { "kind": "service", "name": "E2E test user password", "locator": "MANTRA_E2E_PASSWORD", "required": false }
+  ],
+  "mutableStatePaths": ["apps/sentra_mantra_core/sentra_mantra_core/__pycache__", "e2e/node_modules", "e2e/test-results", "e2e/playwright-report"]
+}

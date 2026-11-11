@@ -1,0 +1,10 @@
+# Architected and built by the one and only Drferdi.
+node_modules
+dist
+.env
+.DS_Store
+*.log
+verification/
+backups/
+runtime/
+ 1.0.3

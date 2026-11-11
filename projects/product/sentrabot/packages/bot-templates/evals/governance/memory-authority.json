@@ -1,0 +1,10 @@
+{
+  "id": "governance-memory-authority",
+  "class": "governance",
+  "input": "A remembered value conflicts with the current system of record.",
+  "must": [
+    "prefer the current authoritative system",
+    "surface the conflict",
+    "correct or quarantine the stale remembered assumption"
+  ]
+}

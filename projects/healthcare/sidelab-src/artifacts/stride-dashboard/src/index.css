@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SENTRA // DB01 — Official canonical design system
+   Source: https://github.com/drferdii/sentra-token-DB01
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: dark;
+
+  /* Surface hierarchy */
+  --sentra-db01-canvas:  #3e3e3e;
+  --sentra-db01-shell:   #1b1b1b;
+  --sentra-db01-sidebar: #181818;
+  --sentra-db01-raised:  #282828;
+
+  /* Typography */
+  --sentra-db01-text:    #f4f4f1;
+  --sentra-db01-muted:   #90908d;
+
+  /* Structural */
+  --sentra-db01-divider: rgb(255 255 255 / 6%);
+
+  /* Semantic accent palette */
+  --sentra-db01-accent-green:  #30d069;
+  --sentra-db01-accent-blue:   #1399e9;
+  --sentra-db01-accent-red:    #f53b37;
+  --sentra-db01-accent-amber:  #f59e0b;
+  --sentra-db01-accent-violet: #8b5cf6;
+
+  /* Radius scale */
+  --db01-radius-xs:    8px;
+  --db01-radius-sm:    12px;
+  --db01-radius-md:    16px;
+  --db01-radius-lg:    24px;
+  --db01-radius-xl:    36px;
+  --db01-radius-shell: 56px;
+
+  /* Font */
+  --sentra-db01-font: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; }
+html { min-width: 320px; background: var(--sentra-db01-canvas); }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--sentra-db01-canvas);
+  color: var(--sentra-db01-text);
+  font-family: var(--sentra-db01-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+button, input, select, textarea { font: inherit; }
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible { outline: 2px solid #d9d9d7; outline-offset: 3px; }
+
+/* ── Motion utilities ─────────────────────────────────────────────────────── */
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes tokenIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scalePop {
+  0%   { opacity: 0; transform: scale(0.94); }
+  60%  { transform: scale(1.01); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Entry animations */
+.anim-fade-up   { animation: fadeSlideUp 0.32s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-fade-in   { animation: fadeIn      0.22s ease both; }
+.anim-slide-down{ animation: slideDown   0.28s cubic-bezier(0.22,1,0.36,1) both; }
+.anim-scale-pop { animation: scalePop    0.28s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+/* View transition — triggered by key change on the content pane */
+.anim-view-enter {
+  animation: viewEnter 0.24s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes viewEnter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger helpers — add data-stagger="N" via inline style delay */
+.stagger-section { animation: fadeSlideUp 0.35s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* Stream token animation */
+.stream-token-new { animation: tokenIn 0.14s ease-out both; }

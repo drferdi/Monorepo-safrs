@@ -1,0 +1,64 @@
+import { useReducedMotion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+
+/**
+ * The 4x4 "Pixel loader" from lab.xevrion.dev (the middle variant, Chief's pick), placed beside
+ * the Diagnosis step title. Cells are numbered row by row; each frame lists the lit cells.
+ * The cycle was read from the reference's DOM: a single pixel spirals in and back out, a
+ * two-pixel snake crosses the grid twice, then the grid pulses inner ring / outer ring / empty
+ * six times. One frame per tick; a cell switches on and off at once (Chief, 2026-09-29: steady
+ * like a console, no easing, scaling or ripple).
+ */
+export const PIXEL_TICK_MS = 110;
+
+const SPIRAL = [0, 1, 2, 3, 7, 11, 15, 14, 13, 12, 8, 4, 5, 6, 10, 9];
+const SNAKE = [0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 15, 14, 13, 12];
+const INNER = [5, 6, 9, 10];
+const OUTER = [0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15];
+
+const spiral = [...SPIRAL, ...SPIRAL.slice(1, -1).reverse()].map((cell) => [cell]);
+const snakePass = SNAKE.map((cell, index) => (index === 0 ? [cell] : [SNAKE[index - 1], cell]));
+const pulse = [INNER, OUTER, []];
+
+export const PIXEL_FRAMES: number[][] = [
+  ...spiral,
+  ...snakePass,
+  ...snakePass,
+  ...Array.from({ length: 6 }, () => pulse).flat(),
+];
+
+const CELLS = Array.from({ length: 16 }, (_, index) => index);
+/** The reference's 4x4 pixel check, in stroke order: short arm down, long arm up. */
+export const PIXEL_CHECK = [8, 13, 10, 7];
+
+/**
+ * A tone colours the cells: `accent` the page green, `danger` red, `warning` orange (Tatalaksana);
+ * none keeps the title colour.
+ * `done` ends the cycle: the grid clears and shows the check.
+ */
+export function PixelLoader({ tone, done = false }: { tone?: 'accent' | 'danger' | 'warning'; done?: boolean } = {}) {
+  const reduceMotion = useReducedMotion();
+  const [frame, setFrame] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion || done) return undefined;
+    const id = setInterval(() => setFrame((current) => (current + 1) % PIXEL_FRAMES.length), PIXEL_TICK_MS);
+    return () => clearInterval(id);
+  }, [reduceMotion, done]);
+
+  const litCells = new Set(done ? PIXEL_CHECK : reduceMotion ? INNER : PIXEL_FRAMES[frame]);
+  return (
+    <span
+      className={tone ? `dx-pixel-loader dx-pixel-loader--${tone}` : 'dx-pixel-loader'}
+      data-testid="dx-pixel-loader"
+      aria-hidden="true"
+    >
+      {CELLS.map((cell) => {
+        const on = litCells.has(cell);
+        return (
+          <span key={cell} data-on={on} />
+        );
+      })}
+    </span>
+  );
+}

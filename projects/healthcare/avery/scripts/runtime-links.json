@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "comment": "Tabel junction lokasi-native -> runtime/. Satu-satunya sumber; dibaca Get-AveryRuntimeLinks (scripts/lib/common.ps1). 'link' boleh memuat %VAR% environment; 'target' relatif terhadap direktori runtime/ capsule.",
+  "links": [
+    { "link": "%USERPROFILE%\\.hermes", "target": "hermes-home" },
+    { "link": "%USERPROFILE%\\.hermes-web-ui", "target": "hermes-web-ui" },
+    { "link": "%APPDATA%\\hermes-studio", "target": "appdata-roaming" },
+    { "link": "%LOCALAPPDATA%\\hermes-studio-updater", "target": "updater" },
+    { "link": "D:\\Devops\\abyss-monorepo\\apps\\healthcare\\hoamanagement\\Hermes Studio", "target": "hermes-studio" }
+  ]
+}

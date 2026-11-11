@@ -1,0 +1,136 @@
+# MedBoard — .gitignore
+# Sections: dependencies, build output, environment and secrets, local state,
+# tests, editors and OS, internal working files, clinical data, model weights.
+
+# ── Dependencies ─────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+.pnpm-store/
+
+# ── Build output ─────────────────────────────────────────────
+.next/
+out/
+dist/
+build/
+.output/
+.turbo/
+.cache/
+*.tsbuildinfo
+.eslintcache
+
+# ── Environment and secrets (never commit) ───────────────────
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cert
+secrets.json
+secrets.yaml
+credentials.json
+service-account*.json
+*-service-account.json
+
+# ── Local runtime state and generated reports ───────────────
+# The server writes queues, histories and contributions here.
+/runtime/
+/output/
+mintlify-docs/
+*.log
+/logs/
+npm-debug.log*
+pnpm-debug.log*
+
+# ── Tests and coverage ───────────────────────────────────────
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# ── Editors and OS ───────────────────────────────────────────
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# ── Internal working files (kept locally, not part of the project) ──
+# Session notes, plans and AI-tool settings. AGENTS.md and .agents/ stay tracked:
+# the monorepo topology requires them in every capsule.
+AGENTS.override.md
+CLAUDE.md
+GEMINI.md
+QWEN.md
+.agent/
+.claude/
+.codex/
+.gemini/
+.cursor/
+.continue/
+.copilot/
+.roo/
+.kilo/
+.qoder/
+.qoderignore
+.windsurf/
+.roomodes
+.clinerules
+.aider*
+.mcp.json
+.superpowers/
+.playwright-mcp/
+code-review.md
+PLANS.md
+PROJECTS.md
+docs/redesign-glass.md
+docs/redesign-glass-plan-1.md
+docs/document-extraction-engine.md
+docs/extraction-quality-scoring-system.md
+docs/superpowers/
+docs/internal/
+
+# ── Clinical and personal data (UU Kesehatan No. 17/2023, UU PDP) ──
+# Patient-identifying data never enters the repository in any form.
+*.sqlite
+*.sqlite3
+*.db
+*.dicom
+*.dcm
+*.hl7
+*.hl7v2
+*.fhir.json
+data/phi/
+data/patient/
+data/clinical/
+data/clinical-raw/
+fixtures/phi/
+tests/fixtures/phi/
+training-data/
+dataset/
+datasets/
+vector-store/local/
+embeddings-cache/
+
+# ── Model weights ────────────────────────────────────────────
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+*.npy
+*.npz
+*.gguf
+*.ggml
+models/weights/
+checkpoints/

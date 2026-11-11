@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentra/med-assist/diagnosis-engine/mira-step-response.schema.json",
+  "title": "MIRA reasoning service: step response",
+  "description": "Returned by POST {VITE_MIRA_SERVICE_URL}/v1/diagnosis/step. Mirrors EngineResult in lib/diagnosis-engine/types.ts; the client adds engineId, traceId and measured latency. Anything the service cannot fill is left empty and listed in `unfilled`, never invented.",
+  "type": "object",
+  "required": [
+    "contractVersion",
+    "status",
+    "differential",
+    "evidence",
+    "missingInformation",
+    "nextBestActions",
+    "disposition",
+    "unfilled",
+    "meta"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": { "const": "1" },
+    "status": { "enum": ["ok", "unavailable"] },
+    "differential": {
+      "type": "object",
+      "required": ["likely", "alternatives", "cannotMiss"],
+      "additionalProperties": false,
+      "properties": {
+        "likely": { "$ref": "#/$defs/diagnosisList" },
+        "alternatives": { "$ref": "#/$defs/diagnosisList" },
+        "cannotMiss": { "$ref": "#/$defs/diagnosisList" }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["icd10", "supporting", "opposing"],
+        "additionalProperties": false,
+        "properties": {
+          "icd10": { "type": "string" },
+          "supporting": { "$ref": "#/$defs/stringList" },
+          "opposing": { "$ref": "#/$defs/stringList" }
+        }
+      }
+    },
+    "missingInformation": { "$ref": "#/$defs/stringList" },
+    "nextBestActions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "item", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["question", "exam", "test"] },
+          "item": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "disposition": {
+      "type": ["object", "null"],
+      "required": ["decision", "urgency"],
+      "additionalProperties": false,
+      "properties": {
+        "decision": { "enum": ["treat", "refer"] },
+        "urgency": { "enum": ["routine", "urgent", "emergency"] }
+      }
+    },
+    "unfilled": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "field": {
+            "enum": [
+              "differential.likely",
+              "differential.alternatives",
+              "differential.cannotMiss",
+              "evidence.supporting",
+              "evidence.opposing",
+              "missingInformation",
+              "nextBestActions",
+              "disposition"
+            ]
+          },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": ["code", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "required": ["version", "model", "costUsd"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string" },
+        "model": { "type": ["string", "null"] },
+        "costUsd": { "type": ["number", "null"], "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "stringList": { "type": "array", "items": { "type": "string" } },
+    "diagnosisList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["icd10", "label", "confidenceTier"],
+        "additionalProperties": false,
+        "properties": {
+          "icd10": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" },
+          "confidenceTier": { "enum": ["high", "moderate", "low", "unknown"] },
+          "score": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    }
+  }
+}

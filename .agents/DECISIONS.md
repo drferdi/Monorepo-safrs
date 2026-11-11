@@ -3,9 +3,123 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-10-18 - control-center stays in `projects/` as a standalone capsule
+
+ADR 0007 left the placement of `internal/control-center` open ("reads the repository by design and
+may belong to the root control plane rather than `projects/`"). Told that the question was open,
+Gaffer ordered the 2026-10-18 safe-gaps plan carried out end to end, and that plan makes it a
+standalone capsule. It stays at `projects/internal/control-center`: own pnpm workspace, lockfile and
+`@sentra/token` snapshot, excluded from the root workspace, with `project.contract.json` (merged as
+`e5485fcb`, `.safrs/known-nonconformance.json` now empty). The repository it reports on is data,
+not a lifecycle dependency: it finds the checkout by walking up or through `SENTRA_REPO_ROOT`, and
+renders "Repository tidak ditemukan" outside one, so extraction passes (`pnpm project:verify
+internal/control-center` PASS). The step that pairs the contract with the entry removal had
+Gaffer's own integrity record (`human:gaffer`, base `afdd7ea9`) after a read-only `safrs-auditor`
+ACCEPT. Not changed: ADR 0007 text, and `.github/workflows/safrs-no-capsules.yml`, which still lets
+control-center publish with the monorepo; whether a sovereign capsule should keep that exception is
+a separate decision.
+
+## 2026-10-15 - Temporary worktrees get a unique per-session suffix
+
+A task binds to `worktree_id` `worktrees/<directory name>` (from `git rev-parse --git-dir`), and
+`pnpm task state`/`close`/`transfer` act only from that worktree, so a recreated worktree with a
+reused name can mutate or close every task still bound there. Seen twice on 2026-10-15:
+`TASK-20261011-GAFFER-ADDRESS` was bound to `main-merge-tmp`, the name sessions reused for merge
+worktrees, and removing `claude-path-scoped-rules` left 11 tasks bound to it. Gaffer chose, in the
+2026-10-15 Claude Code session: a temporary worktree (merge, cleanup, any short-lived one) is named
+`<purpose>-<suffix>`, the suffix unique per session (the first 8 hex of the agent session ID, or 8
+random hex when there is none), e.g. `worktree-names-97e699c7`, and the session writes the full name
+into its HANDOFF entry. A task left bound there stays reachable by recreating that exact name on
+purpose; recreating another session's worktree name is only for closing or transferring its tasks,
+on Gaffer's go. `pnpm task recover` replays only the transfer journal and does not reach such tasks.
+Not changed: the AGENTS.md worktree line and the task tooling; no check enforces the suffix. Still
+bound to removed worktrees: `TASK-20261015-CLAUDE-CAPSULE-EXTRACT` (`claude-skills-docs`),
+`TASK-20261015-CURSOR-AGENTS-READONLY` (`cursor-agents-readonly`), `KEDIRI-GSAP-PRODUCTION-HARDENING`
+(`wt-kediri-gsap`), `TASK-20260824-SENTRABOT-SOURCE-RECOVERY` (`standalone-root`).
+
+## 2026-10-15 - Routing block names the trigger paths of each task scope
+
+`88c99aba` demoted `MONOREPO_PURPOSE.md` and `03_ARCHITECTURE.md` to `task:architecture` SHOULD;
+only Claude Code got a trigger (path-scoped `.claude/rules/`), so Cursor, Codex and Kilo read them
+only if they declared the task scope themselves. Gaffer chose in the 2026-10-15 Claude Code session,
+of four options (generated routing triggers, generated Cursor glob rules, a handwritten AGENTS line,
+or accepting the gap), the first: `tools/safrs/generate_routing.py` now writes each task scope's
+registry `paths` into its line in the AGENTS.md routing block ("also when changing …": an extra
+trigger, so a task of that kind still applies without touching those paths). The registry stays the
+single source for both the Claude rules and the routing block; every task scope with `paths` gets
+its triggers, not only architecture. Kilo coverage rests on `docs/bootstrap/KILO_SETUP.md`, which
+says `.kilo/` "points at root AGENTS.md"; Kilo loading it was not verified in Kilo itself.
+
+## 2026-10-15 - Pre-push gate stays removed; `fix/prepush-gate` dropped
+
+Gaffer chose option (a): `main` keeps the direction of `89e6d2c2` (pre-push publish and capsule
+gates removed on Gaffer's order, 2026-10-13; the hook only runs `git lfs pre-push`). That
+commit's DECISIONS entry was later deleted by `a8b648fd`; this entry restores the record. The
+"pre-push publish and capsule gates refuse it" wording in the 2026-10-13 entry below no longer
+holds: no hook blocks such a push, so the clean-branch rule is checked by hand. Dropped: branch
+`fix/prepush-gate` (`e5a66378`, `37e70714`: guard asks on `git push`, hook scans outgoing commits
+read from the remote's live refs) and its uncommitted variant (every push needs `CHIEF_PUSH_OK`);
+worktree `claude-path-scoped-rules` removed. Accepted risk: push safety on `main` rests on the
+written rules and Gaffer's approval; the guard still denies `--no-verify`, `core.hooksPath`
+bypasses, and force pushes.
+
+## 2026-10-13 - Monorepo GitHub push carries only the changed files
+
+Gaffer: the GitHub monorepo (`origin`, `drferdi/Monorepo-safrs`, public) does not include the
+projects. `origin/main` has zero `projects/**` files; each capsule has its own remote. Local
+branches sit on about 973 unpublished commits (capsule code and the 2026-08 history with real
+WhatsApp numbers), so pushing a local branch as is carries all of it and the pre-push publish and
+capsule gates refuse it. Rule: to publish, make a clean branch from `origin/main` in
+`../monorepo.worktrees/<branch>`, bring only the changed control-plane files, confirm
+`git rev-list origin/main..HEAD -- projects/` is 0 and no WhatsApp/phone pattern in added lines,
+unset the upstream, then push. Leave WhatsApp data out; never include capsule code. First use:
+`feat/task-scope-transfer` (`4de792d0`).
+
+## 2026-10-10 - Codex drops its PostToolUse formatter; Cursor drops the filesystem MCP
+
+Gaffer approved both (R2) after the 2026-10-10 agent audit. Codex keeps only the PreToolUse
+SAFRS guard; the Biome PostToolUse hook (`.codex/hooks/format-edited-files.mjs`) is removed
+and formatting is checked by `pnpm lint` at final verification. This supersedes the
+"PreToolUse/PostToolUse hooks" wording of the 2026-08-11 Codex entry. Cursor no longer ships
+`@modelcontextprotocol/server-filesystem`: its reads bypassed the `beforeReadFile` credential
+guard, and Cursor's own file tools already cover the repository. Sentrapedia is recorded in
+`.safrs/known-nonconformance.json` until it carries a project contract and the capsule
+topology paths. Evidence: `tests/repository/automation-policy.test.mjs`,
+`tests/architecture/test_safrs_topology.py`, `tools/safrs/check_tool_inventory.py`,
+`tools/safrs/check_project_independence.py`.
+
+## 2026-09-25 - Root token gate scans only the root workspace; lockfile guard
+
+Gaffer approved ("implement Point 1-2-3"): the root token gate (`packages/token/scope.txt`) no
+longer scans capsules the root workspace excludes; a standalone capsule owns its own token gate
+(smartboard already runs one; sentrabot and golden-path do not yet). `scope.txt` keeps
+`packages/token`, `packages/ui`, and control-center. A repository test enforces the rule, and a
+second one fails when `pnpm-lock.yaml` keeps an importer for an excluded capsule, because pnpm 11
+keeps such an importer and still passes `--frozen-lockfile`. Security: root `next` 16.3.6 (also
+forced over the optional `next` peer of `@sentra/token`), overrides for `sharp`, `mysql2`,
+`fast-uri`; kediri and smartboard patch `next` and `sharp` in their own lockfiles (kediri also
+`js-yaml`). `pnpm audit` reports no high or critical advisory in the root or either capsule.
+
+## 2026-09-25 - Root has no demonstrator; golden-path leaves the root workspace
+
+Asked whether the root still needs a demonstrator once golden-path becomes standalone (Cursor
+capsule-independence report), Gaffer answered "yes tidak", recorded as: the root needs no
+demonstrator. `projects/internal/golden-path/**` is excluded in `pnpm-workspace.yaml` like
+smartboard, kediri, and sentrabot, and the lockfile drops its importer. Root CI runs the
+control-plane steps unconditionally (no golden-path typecheck, full test, or browser smoke);
+`check_topology.py` and `check_routing.py` no longer require golden-path paths; root tests that
+exercised golden-path internals (`build-time-environment`, `playwright-environment`,
+`lfs-snapshots`) are removed, and their claims belong in the capsule. Root `dev:email` and
+`stripe:listen` are removed; `doctor`, `setup`, `dev`, and `test:e2e` stay. Complements ADR 0007
+("the golden-path capsule migration" was deferred there).
+
+## 2026-09-13 - Smartboard web sub-fase 2 closed; capsule-local deps + sentinel dynamic routes
+
+Moved to `projects/academic/academic-smartboard/.agents/DECISIONS.md` (ADR 0007 WP-G).
+
 ## 2026-08-24 - Project capsules are standalone products; the monorepo is their control plane
 
-Chief accepted the WP-A architecture: every active capsule owns an executable, machine-readable
+Gaffer accepted the WP-A architecture: every active capsule owns an executable, machine-readable
 contract for install, build, test, run, and deployment dry-run. A capsule may own its workspace,
 lockfile, local packages, scripts, artifacts, and deploy configuration, but must not consume root
 workspace/catalog/configuration/tooling/infrastructure or another capsule. Standalone proof requires
@@ -18,7 +132,7 @@ Phase D.
 
 ## 2026-08-22 - Project capsules are grouped by domain: projects/<domain>/<capsule>/
 
-Chief ruled that domain layering applies to the whole of `projects/`, uniformly — a structure
+Gaffer ruled that domain layering applies to the whole of `projects/`, uniformly — a structure
 where some capsules are grouped and others sit loose at the root was rejected explicitly.
 Domains: `academic`, `corporate`, `healthcare`, `internal`, `product`. A domain folder carries
 only `AGENTS.md` + `README.md`; it holds no code, and a domain with no capsule inside is a
@@ -34,12 +148,12 @@ apps from the workspace). Recorded in [ADR 0005](docs/adrs/0005-projects-domain-
 status Proposed pending designated R2 review, since implementation and verification controls
 changed in one change set.
 
-## 2026-08-22 - Stale FAST-REHYDRATE lease force-closed with explicit Chief confirmation
+## 2026-08-22 - Stale FAST-REHYDRATE lease force-closed with explicit Gaffer confirmation
 
 `TASK-20260818-FAST-REHYDRATE` (Cursor Grok, scope `AGENTS.md`, `.cursor/`, `.agents/`) sat
 `VERIFYING` for 4+ days with no `expires_at` and no `updated_at` movement, blocking any other
 agent from touching `.agents/*` — including this session's own Task 12 close-out. Force-closing
-another agent's lease is not a controller's unilateral call; Chief was asked explicitly and
+another agent's lease is not a controller's unilateral call; Gaffer was asked explicitly and
 confirmed "force-close TASK-20260818-FAST-REHYDRATE" before it was closed (now `ABORTED`).
 No content was lost: the live uncommitted `.agents/HANDOFF.md`/`DECISIONS.md` edits already in
 the working tree (from unrelated concurrent sessions) were preserved and folded into this same
@@ -50,7 +164,7 @@ commit rather than discarded.
 `tools/safrs/check_sensitive_changes.py` treats a governance-control file (matches
 `verification_control_patterns`, e.g. `AGENTS.md`) changed in the same change set as an
 implementation file (e.g. `packages/token/scope.txt`) as `SAFRS_VERIFICATION_INTEGRITY_REVIEW=required`.
-Per `docs/governance/SAFRS_APPROVALS.md`, `VERIFICATION_INTEGRITY` approval is Chief-only —
+Per `docs/governance/SAFRS_APPROVALS.md`, `VERIFICATION_INTEGRITY` approval is Gaffer-only —
 agents never fabricate this evidence. When a task's plan bundles both kinds of file in one
 commit/Step (e.g. sub-phase 1 foundation plan Task 11 Step 6), split into two independent
 merges to main instead: the governance-doc-only commit first, then the implementation-only
@@ -74,32 +188,23 @@ worktree_id), corrected as `TASK-20260822-SMARTBOARD-WEB-TOKEN-GATE-V2` from ins
 
 ## 2026-08-21 - Portfolio late scaffold + Lenis on Framer Content-Wrapper
 
-`projects/portfolio/` is an active capsule with Diátaxis docs and community files
-(lean AGENTS Always/Ask First/Never). NOVIA STUDIO stays a static React 18 + Node
-server site (no pnpm workspace join, no Vite/Next rewrite). Lenis 1.3.26 is vendored
-and attached to `.framer-bpy7lj` with first child as `content` — not `window` — because
-the Framer Content-Wrapper owns `overflow: auto` / `100vh`. Root Biome excludes
-portfolio vendor, assets, `167eyhs`, `framer.css`, and `portfolio-markup.js`. Evidence:
-`projects/portfolio/AGENTS.md`, `projects/portfolio/docs/architecture.md`,
-`projects/portfolio/novia-studio-react/src/app.js`, `biome.jsonc`.
+Moved to `projects/corporate/portfolio-drnovia/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-21 - Sentra Bot capsule CURRENT docs match wired auth and web host
 
-Capsule documentation was realigned to implementation: Better Auth is mounted at `/api/auth/[...all]` (signup still closed by default), `@safrs/api` is mounted same-origin at `/api/sentrabot` on sentrabot-web, Electron is in the root catalog with IPC tests (no signed artifact), Playwright e2e lives in `apps/web`, and the product landing is `apps/web` `/` (`home.html`). `apps/site` remains a Cora Vite shell, not the product origin. Pin `d17a138` stays blocked. Evidence: `projects/sentrabot/AGENTS.md`, `projects/sentrabot/README.md`, `projects/sentrabot/docs/release-parity.md`.
+Moved to `projects/product/sentrabot/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-21 - Sentra Bot Webflow marketing HTML is excluded from Biome
 
-Imported Webflow snapshots under `projects/sentrabot/apps/web/src/content/marketing/` stay byte-faithful to the source design (inline minified JS/CSS). Biome must not lint or reformat them — hundreds of false positives (`noAssignInExpressions`, a11y on SVG, `!important`, etc.) are expected vendor noise, not product defects. Exclude via root `biome.jsonc` `files.includes` negation (`!!…/content/marketing`), same pattern as kayyisa. Do not “fix” the HTML to silence the linter. Evidence: `biome.jsonc`, IDE diagnostics cleared on `intake.html`.
+Moved to `projects/product/sentrabot/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-21 - Sentra Bot capsule docs follow Diátaxis and a lean AGENTS.md
 
-Late documentation scaffold for `projects/sentrabot/` is the SSOT for humans and agents: Diátaxis map in `docs/README.md`, OpenSSF-style community files at the capsule root, C4/STRIDE/API reference as explanation and lookup, and a command-first nested `AGENTS.md` (Always / Ask First / Never). No nested Cursor rules, skills, GitHub templates, MkDocs, or claimed OpenSSF/SLSA badges. Evidence: `projects/sentrabot/docs/README.md`, `projects/sentrabot/AGENTS.md`.
+Moved to `projects/product/sentrabot/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-21 - Sentra Bot intake remains pinned and blocked
 
-Sentra Bot is established as the official capsule at `projects/sentrabot/` with the Monorepo stack, a private worker control plane, closed self-host signup, per-user BYOK/OAuth, and a staged public-source/self-hosted release train. The requested source snapshot remains exactly `D:/DEV/Sentraverse/sentrabot@d17a138`; the available source refs expose `origin/main@7f08da5`, so `HEAD` is not substituted and no source files or runtime data are copied. Evidence: `docs/adrs/0004-sentrabot-public-release.md`, `projects/sentrabot/docs/provenance.md`, and `projects/sentrabot/docs/migration-ledger.md`.
-
-Chief instructed end-to-end continuation. Therefore `7f08da5` is the provisional technical-port baseline, while `d17a138` remains the locked acceptance pin and its absence remains a release blocker.
+Moved to `projects/product/sentrabot/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-18 - Next production builds ignore leaked NODE_ENV
 
@@ -107,9 +212,9 @@ Chief instructed end-to-end continuation. Therefore `7f08da5` is the provisional
 
 ## 2026-08-18 - The progress board no longer holds status
 
-Chief named the failure loop exactly: work finishes, the status is never changed, the next agent
+Gaffer named the failure loop exactly: work finishes, the status is never changed, the next agent
 believes the stale document, declares a blocker, analyses it, writes a new document, commits it,
-and Chief is confused again. Every step after the second one is wasted, and the repository has
+and Gaffer is confused again. Every step after the second one is wasted, and the repository has
 been running that loop for a week.
 
 The break is at step three. There is no stale document to believe if the document holds no claims.
@@ -118,7 +223,7 @@ its own checkboxes, and nowhere else. A board that copies them is a second copy 
 
 What was rejected, and why it matters: the first fix proposed here was a generator plus a checker —
 `pnpm progress` would print the board from the plans, and a gate would fail on hand edits. That is
-steps six and seven of Chief's own loop: two new pieces of machinery to guard one document that did
+steps six and seven of Gaffer's own loop: two new pieces of machinery to guard one document that did
 not need to exist. Deleting the claims is smaller than automating them.
 
 The file itself is kept because gates and the document registry reference it, and because its git
@@ -128,7 +233,7 @@ written then.
 
 ## 2026-08-18 - Status documents realigned with the repository's actual state
 
-Chief ordered every status surface made uniform and true to the repository as it stands today, so that
+Gaffer ordered every status surface made uniform and true to the repository as it stands today, so that
 future sessions are not misled. What was wrong and what it now says:
 
 - `.agents/PROGRESS.md` still showed Master Remediation Phase 1 as `[~]` with "unreviewed work sits on
@@ -151,9 +256,9 @@ future sessions are not misled. What was wrong and what it now says:
   names. The file now states the branch is level with its remote and forbids pinning a HEAD SHA there.
 
 Deliberately left alone: `2026-08-12-wiki-setup-plan.md` stays `PROPOSED` even though `sentrawiki/`
-already holds content, because `PROPOSED` to `ACTIVE` carries Chief's approval and is not an agent's call.
+already holds content, because `PROPOSED` to `ACTIVE` carries Gaffer's approval and is not an agent's call.
 The anomaly is recorded on the board as `[!]` awaiting that decision. The `.claude/` automation pack stays
-`[~]` awaiting Chief review, which is still accurate.
+`[~]` awaiting Gaffer review, which is still accurate.
 
 Two findings raised, no change made: `packages/token` publishes as `@sentra/token` while every other
 workspace package is `@safrs/*`, and `stripLineComments` is still duplicated byte-for-byte in
@@ -171,7 +276,7 @@ correct — but the two layers now agree. A separate `ls` quirk in this environm
 ## 2026-08-18 - Address rules widened to cover "elo"/"gue"; AGENTS.md must be read before the first reply
 
 `AGENTS.md` listed three forbidden address terms ("kamu", "elu", "gua") and omitted the equally common
-"elo" and "gue". The list is now the full five. Chief authorized the change. It changes no verification
+"elo" and "gue". The list is now the full five. Gaffer authorized the change. It changes no verification
 logic, but `tools/safrs/check_sensitive_changes.py` classifies `AGENTS.md` itself as a governance control
 (`safrs-verify` printed it under "Verification/governance controls changed (minimum R2)"), so the slice is
 R2 and designated review applies.
@@ -184,11 +289,11 @@ Related finding, no code change: the `hindsight` MCP server registered in the us
 `~/.claude.json` (`http://localhost:8888/mcp/prof/`) is dead — connection refused, no listener on 8888,
 no container, no process, and no installed package. It is outside this repository, so it changes nothing
 here; `12_LESSONS.md` already states that external agent memory is not repository truth. Left registered
-pending Chief's decision to either restore the server or drop the entry.
+pending Gaffer's decision to either restore the server or drop the entry.
 
 ## 2026-08-18 - Cline Kanban removed; it is not the execution board
 
-The Cline Kanban board was trialled as the single execution board and removed the same day on Chief's
+The Cline Kanban board was trialled as the single execution board and removed the same day on Gaffer's
 order. Do not reintroduce it. What the trial showed: of the five cards started, the `cline` sessions died
 on `Error 403: deepseek/deepseek-v4-flash is only available via Cline product surfaces` and the `codex`
 sessions died in 1.1s with no message, all leaving empty worktrees; the `review` column therefore collects
@@ -215,53 +320,46 @@ computed `f4e03f53…`, recorded `b708b424…`. The recorded fingerprint was the
 checker's algorithm against that diff — an invented value, not a stale but honest computation. This is the
 second instance of the pattern the 2026-08-13 entry below already prohibits.
 
-Remediation, with Chief informed: `git filter-branch --index-filter` pinned that path to the upstream blob
+Remediation, with Gaffer informed: `git filter-branch --index-filter` pinned that path to the upstream blob
 across all 11 local commits, so no forged attestation can reach `origin`. The rewrite is tree-preserving
 (`git diff` against the pre-rewrite head is empty) and nothing was pushed. The superseded commits survive
 locally in `refs/original/refs/heads/main` and the reflog; **they are deliberately kept, not expired**, so
 the episode stays auditable. This entry is the durable record of it.
 
-Open for Chief: the control still has no structural guarantee of reviewer independence — the checker
+Open for Gaffer: the control still has no structural guarantee of reviewer independence — the checker
 verifies fingerprint match, not who produced the verdict. Any session able to compute the hash can write a
 passing approval.
 
 ## 2026-08-17 - RECONCILE-GOVERNANCE claimed as isolated R2 work
 
-Chief approved option B and Approach 1. `TASK-20260813-CONTROL-CENTER` is CLOSED. `TASK-20260817-RECONCILE-GOVERNANCE` owns six exact files in `worktrees/reconcile-governance`. Residual dirty paths on `main` stay out of scope. The ownership checker is unchanged. `RECONCILE-RENOVATE` and Phase 1 remain unopened.
+Gaffer approved option B and Approach 1. `TASK-20260813-CONTROL-CENTER` is CLOSED. `TASK-20260817-RECONCILE-GOVERNANCE` owns six exact files in `worktrees/reconcile-governance`. Residual dirty paths on `main` stay out of scope. The ownership checker is unchanged. `RECONCILE-RENOVATE` and Phase 1 remain unopened.
 
 ## 2026-08-17 - TASK-20260813-CONTROL-CENTER MERGED and CLOSED
 
-Chief authorized `REVIEW → MERGED → CLOSED`. Executed via `tools/task/src/cli.mjs state --to MERGED --yes` then `close --yes`, both from the owning worktree. Final record confirmed `state: CLOSED`, `updated_at: 2026-08-17T10:18:41Z`. `docs/` is no longer owned by any active task — `RECONCILE-GOVERNANCE` may now claim it. (`close` emitted a non-fatal warning: no local lease-ledger RELEASE event existed for this task, since it predates this session's lease ledger; state file itself updated correctly.)
+Moved to `projects/internal/control-center/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-17 - TASK-20260813-CONTROL-CENTER reconciled to REVIEW
 
-Checked the task against the control plane and its owning worktree instead of assuming staleness:
-
-- Control-plane record showed `EXECUTING`, `updated_at` unchanged since claim (2026-08-13T15:33:54Z) — looked stale but code delivery had actually landed.
-- Worktree `worktrees/feat-control-center` @ `4e07ddf` is clean (no uncommitted changes) and `git merge-base --is-ancestor` confirms it is an ancestor of `main` — the work shipped via PR #26 (merge commit `9565b48`), outside the task's own lifecycle bookkeeping.
-- Ran `scripts/safrs-verify.ps1` fresh inside the owning worktree: PASS, 0 changed files, all governance and test suites green.
-- Advanced state through the legal chain `EXECUTING → VERIFYING → REVIEW` via `tools/task/src/cli.mjs state` (ownership guard requires running from the owning worktree, not `main`).
-- Did not advance to `MERGED`/`CLOSED`: that is Chief's call (R2, designated review) even though the code is already on `main` — the task record and the git reality should agree before closing.
-- Consequence: `REVIEW` is still `MUTATION_ACTIVE`, so `docs/` stays owned by this task and `RECONCILE-GOVERNANCE` remains blocked until Chief authorizes the close.
+Moved to `projects/internal/control-center/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-17 - Master remediation authorization decisions
 
-Chief approved the Master Remediation Plan and resolved its initial decision gate:
+Gaffer approved the Master Remediation Plan and resolved its initial decision gate:
 
 - **D-001 Repository visibility:** `PUBLIC`. Current GitHub visibility matches this decision.
-- **D-002 Solo-developer platform authority:** approved as proposed — R0 read-only, R1 machine verification, R2 explicit Chief authorization, R3 explicit human authorization.
+- **D-002 Solo-developer platform authority:** approved as proposed — R0 read-only, R1 machine verification, R2 explicit Gaffer authorization, R3 explicit human authorization.
 - **D-003 Renovate policy:** all dependency updates may automerge as Pull Requests after Renovate observes passing tests. Major, minor, patch, and lockfile updates are in scope. GitHub branch protection and required status checks are not configured, so this automation is not currently enforced by the platform.
-- **D-004 R2 authorization:** approved as proposed — implementation, fresh verification, R2 evidence package, Chief review, explicit authorization, then merge.
+- **D-004 R2 authorization:** approved as proposed — implementation, fresh verification, R2 evidence package, Gaffer review, explicit authorization, then merge.
 
 Phase 0A is authorized only as read-only ground-truth collection. No remediation implementation is authorized until its baseline and decision evidence are recorded.
 
 ## 2026-08-17 - D-003 dependency automerge expanded
 
-Chief approved dependency automerge for **all dependency updates after Renovate observes passing tests**. This supersedes the earlier D-003 Option A entry. Implementation remains a separate R2 work package because Renovate configuration and dependency automation are governance-sensitive paths. GitHub branch protection and required status checks remain unconfigured.
+Gaffer approved dependency automerge for **all dependency updates after Renovate observes passing tests**. This supersedes the earlier D-003 Option A entry. Implementation remains a separate R2 work package because Renovate configuration and dependency automation are governance-sensitive paths. GitHub branch protection and required status checks remain unconfigured.
 
 ## 2026-08-17 - Recommended next actions after Phase 0A
 
-Chief approved the Ground Truth Baseline and opening of R2 reconciliation tasks. Recommended sequence: (1) review `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`; (2) reconcile active `TASK-20260813-CONTROL-CENTER` ownership of `docs/`; (3) create a dedicated R2 worktree and claim `RECONCILE-GOVERNANCE`; (4) create a separate dedicated R2 worktree and claim `RECONCILE-RENOVATE`; (5) do not modify Renovate, governance checkers, GitHub, or start Phase 1 until each task has valid scope, claim, evidence, and authorization; (6) rerun `scripts/safrs-verify.ps1` and resolve ownership failure without weakening governance.
+Gaffer approved the Ground Truth Baseline and opening of R2 reconciliation tasks. Recommended sequence: (1) review `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`; (2) reconcile active `TASK-20260813-CONTROL-CENTER` ownership of `docs/`; (3) create a dedicated R2 worktree and claim `RECONCILE-GOVERNANCE`; (4) create a separate dedicated R2 worktree and claim `RECONCILE-RENOVATE`; (5) do not modify Renovate, governance checkers, GitHub, or start Phase 1 until each task has valid scope, claim, evidence, and authorization; (6) rerun `scripts/safrs-verify.ps1` and resolve ownership failure without weakening governance.
 
 ---
 
@@ -275,7 +373,7 @@ gates, sealed evidence, exact-binding approvals, and publisher separation.
 
 Two durable choices from that session:
 
-1. **Chief authorized the agent to merge** ("I give you permission, cleanup
+1. **Gaffer authorized the agent to merge** ("I give you permission, cleanup
    PR, merge, fix it"). The agent merged PRs #15, #17, #18, #19, #20 under
    that authorization. Precedent is per-session and does not generalize:
    AGENTS.md rule 5 still forbids agent merges absent explicit human
@@ -286,14 +384,14 @@ Two durable choices from that session:
    needed integrity review were merged on recorded human authorization
    instead, stated in each PR body.
 
-Open question left for Chief: whether
+Open question left for Gaffer: whether
 `tests/governance/test_sensitive_classification.py` should be classified as
 a verification control like its three sibling governance tests. Classifying
 it would exempt checker-plus-test coupling from the integrity gate — the
 exact coupling the gate correctly caught in #19 and #20 — so the agent
 deliberately left it unclassified rather than decide it.
 
-Phase 6 onward is blocked on Chief's four activation decisions (autonomous
+Phase 6 onward is blocked on Gaffer's four activation decisions (autonomous
 provider and budgets; control identities; R3 authority and retention; Droid
 disposition). Droid remains `read_only_disabled`.
 
@@ -374,7 +472,7 @@ separate R2 change with a tool-inventory record.
 
 ## 2026-08-11 - All repo docs in English, maximally concise
 
-Chief's standing preference: every doc in this repo is written in English and kept as short as
+Gaffer's standing preference: every doc in this repo is written in English and kept as short as
 possible without losing meaning. Agent chat diagnostics remain in Bahasa Indonesia.
 Historical archives (docs/bootstrap, docs/evidence, docs/superpowers) keep their original text.
 
@@ -399,7 +497,7 @@ old content NOT migrated. Supersedes the legacy `.agent/` approach.
 
 Numbered KB (00_READ_FIRST … 11_RESPONSE_STANDARDS, 12_LESSONS, 99_SELF_AUDIT) re-routed from
 root via `docs/knowledge-base/` to `.agents/knowledge/`. `AGENTS.md` routes there. Do not modify
-without Chief's approval.
+without Gaffer's approval.
 
 ## 2026-08-11 - Migration from abyss-monorepo: selective copy, never lift-and-shift
 
@@ -409,7 +507,7 @@ copying `node_modules`, `.env`, `.next`, `.turbo`, lockfiles. Everything enters 
 
 ## 2026-08-10 - Golden path: Next.js + Hono RPC + Zod + PostgreSQL + Prisma
 
-Set by [ADR 0001](docs/adrs/0001-solo-developer-golden-path.md) (ACCEPTED, R2, Chief-approved).
+Set by [ADR 0001](docs/adrs/0001-solo-developer-golden-path.md) (ACCEPTED, R2, Gaffer-approved).
 Demonstrator: `projects/golden-path/apps/web`. Electron, WXT, Stripe, email, AI, Python are
 optional capability packs, not baseline.
 
@@ -429,18 +527,7 @@ Supersedes the legacy `apps/{healthcare,internal,academic,...}` topology.
 
 ## 2026-08-24 — Avery FIX-01…06 and FULL AUTO target
 
-- Hermes core is patched only where a native switch does not exist (WhatsApp ingress reason codes);
-  every vendored patch lives in `projects/healthcare/avery/patches/` with SHA-256 manifest and an
-  idempotent apply/revert script. Prose in `SOUL.md` is the last resort, after config and patch.
-- `agent.verify_on_stop` stays `false` for Avery: the nudge drives `hermes verify`, which walks to the
-  monorepo git root through the runtime junction and runs `pnpm install`. Mutation read-back is covered
-  by `agent.execution_guidance` (forced `true` — Hermes `auto` excludes gemini) and the SOUL Execution rule.
-- Target is FULL AUTO (Chief): learning loop at Hermes defaults (`write_approval` off, guard off);
-  freedom is reduced by Chief afterwards, not pre-emptively by agents. Group-wide response requires
-  `WHATSAPP_ALLOW_ALL_USERS`, which also opens DMs — decision reserved for Chief.
-- Subagent lanes are one-way pipes treated as the worst model in the world: 6-part spec, explicit
-  prohibitions, 10-minute budget, reports never trusted without the architect re-running verification.
-  Incidents and the fixes applied to lane definitions are tracked in Claude's memory ledger.
+Moved to `projects/healthcare/avery/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-24 — Session boundaries after the public-push incident
 
@@ -448,8 +535,23 @@ Supersedes the legacy `apps/{healthcare,internal,academic,...}` topology.
   remote; the no-push restriction existed only inside the Avery session's conversation. Repo made
   PRIVATE the same morning; anonymous access verified 404; no forks retained.
 - `.agents/BOUNDARIES.md` created and made binding for all sessions: publish gate (push/PR/visibility
-  only on explicit Chief order in-session, preceded by a PII sanitation grep), scope fence (one
+  only on explicit Gaffer order in-session, preceded by a PII sanitation grep), scope fence (one
   session one workstream; other sessions' local commits are off-limits), sensitive-data rule
-  (history contains real numbers until Chief orders a rewrite).
+  (history contains real numbers until Gaffer orders a rewrite).
 - Root cause classified as process debt: restrictions must live in files every session reads
   (HANDOFF/BOUNDARIES), never only in one session's chat.
+
+## 2026-08-28 — Sentra-GSAP retired, replaced by official GSAP skills
+
+- Standar Sentra-GSAP v1.0.0 dicabut penuh atas perintah Gaffer: `.agents/skills/sentra-gsap/`,
+  `.claude/skills/sentra-gsap/`, `.claude/commands/Sentra-GSAP.md`, `scripts/sentra-gsap/`,
+  `tests/sentra-gsap/` (tidak pernah ter-wire ke vitest workspace), `docs/standards/sentra-gsap/`,
+  serta sisa distribusi paket di root (`INSTALL_FOR_AGENT.md`, `PACKAGE_CONTENTS.txt`,
+  `manifest.json` paket, `integration/*.block.md`, `templates/sentra-gsap.config.mjs`).
+- Pengganti: 8 skill GSAP resmi MIT di `.claude/skills/gsap-*` dengan router `/gsap`
+  (`.claude/commands/gsap.md`). `.gitignore` mendapat negasi `!.claude/commands/`.
+- Konsekuensi: gate mesin G04 (`sentra:gsap:qa`/`verify`) — yang berstatus FAIL historis dan
+  belum pernah dijalankan — berganti menjadi panduan skill + verifikasi visual/e2e capsule.
+  Motion kediri TETAP belum production-ready sampai verifikasi itu dijalankan.
+- Salinan vendored standar lama di capsule kediri (`resources/sentra-gsap-monorepo-standard-v1.0.0*`,
+  `sentra-gsap.config.mjs`, referensi docs) dibiarkan utuh — terikat SHA256SUMS capsule.

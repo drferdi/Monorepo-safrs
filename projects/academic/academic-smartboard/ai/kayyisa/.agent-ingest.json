@@ -1,0 +1,53 @@
+{
+  "schema_version": "2.0",
+  "vector_knowledge_include": ["runtime/knowledge/**/*.jsonl"],
+  "structured_resolver_import": [
+    "runtime/resolver/source_registry.csv",
+    "runtime/resolver/subject_coverage.csv",
+    "runtime/resolver/version_resolver.json"
+  ],
+  "system_instruction_entrypoint": "config/persona/SYSTEM_PROMPT_COMPILED.md",
+  "configuration_load": [
+    "config/agent_policies.csv",
+    "config/data_dictionary.csv",
+    "config/persona/16_role_permission_baseline.json",
+    "config/runtime/agent_runtime_contract.json"
+  ],
+  "audit_only_persona_sources": [
+    "config/persona/00_persona_manifest.json",
+    "config/persona/01_*.md",
+    "config/persona/02_*.md",
+    "config/persona/03_*.md",
+    "config/persona/04_*.md",
+    "config/persona/05_*.md",
+    "config/persona/06_*.md",
+    "config/persona/07_*.md",
+    "config/persona/08_*.md",
+    "config/persona/09_*.md",
+    "config/persona/10_*.md",
+    "config/persona/11_*.md",
+    "config/persona/12_*.md",
+    "config/persona/13_*.md",
+    "config/persona/17_*.md",
+    "config/persona/18_*.md",
+    "config/persona/19_*.md"
+  ],
+  "exclude_from_vector_embedding": [
+    "config/**",
+    "sources/**",
+    "operations/**",
+    "tests/**",
+    "tools/**",
+    "docs/**",
+    "*.xlsx",
+    "*.pdf",
+    "*.csv",
+    "*.md",
+    "*.json"
+  ],
+  "hard_rules": [
+    "Never recursively embed the package root.",
+    "Load SYSTEM_PROMPT_COMPILED.md exactly once as system instruction.",
+    "Do not vector-embed persona, policies, resolver data, source PDFs, tests, or operational documents."
+  ]
+}

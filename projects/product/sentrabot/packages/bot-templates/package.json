@@ -1,0 +1,21 @@
+{
+  "name": "@sentrabot/bot-templates",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Sentra Chief of Staff Production Starter: 66 role templates, policy engine, governance packs, and evaluation assets for Indonesia-first agentic systems.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "clean": "node scripts/clean.cjs",
+    "build": "tsc -p tsconfig.json",
+    "test": "tsc -p tsconfig.json && node --test tests/*.test.cjs",
+    "validate:templates": "tsc -p tsconfig.json && node dist/src/cli/validate-templates.js",
+    "check:json": "node scripts/check-json.cjs",
+    "check": "node scripts/check-json.cjs && tsc -p tsconfig.json && node --test tests/*.test.cjs && node dist/src/cli/validate-templates.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

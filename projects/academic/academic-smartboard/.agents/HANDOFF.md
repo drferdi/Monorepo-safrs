@@ -1,0 +1,50 @@
+# HANDOFF
+
+Last updated: 2026-10-11 (Claude Code, local `main`, task `TASK-20261011-GAFFER-ADDRESS`)
+
+Overwrite this file at the end of every capsule-scoped session; never append. Durable decisions go
+to `DECISIONS.md`.
+
+## Current state
+
+- 2026-10-11 (Claude Code, task `TASK-20261011-GAFFER-ADDRESS`, R1): docs in this capsule now address the owner as "Gaffer" instead of "Chief" (wording only; no code, config or behaviour change).
+- Security patch (2026-09-25): `apps/site` and `apps/web` pin `next` 16.3.6 (was 16.3.0, RCE
+  advisories below 16.3.3); `pnpm-workspace.yaml` overrides `next` 16.3.6 (also the optional peer
+  of the vendored `@sentra/token`) and `sharp >=0.35.4`. Capsule `pnpm audit --audit-level=high`
+  exit 0 (2 moderate remain). `project-standalone verify academic/academic-smartboard` PASS on
+  every stage after the change.
+- The root token gate no longer scans this capsule (Chief, 2026-09-25); the capsule's own gate
+  (`node scripts/check-tokens.mjs` in `pnpm test`) remains the enforcement.
+
+- Lint repaired in two commits on `fix/smartboard-lint-repair`:
+  - `5f21af33` style: `biome check --write src` in `apps/web` (safe fixes only, 67 files).
+  - `e2209818` fix: the remaining a11y and correctness findings fixed in code, with no
+    suppression. Modal backdrops close through a sibling `<button tabIndex={-1}>` instead of a
+    clickable `div`; labelled regions use `section`, `ul`/`li`, `fieldset`, or
+    `role="progressbar"`; labels are tied to controls with `htmlFor`/`id`; non-null assertions
+    became guards; index keys became a client-only uid (template fields, stripped before save),
+    content keys (report rows), or character offsets (emphasis parts). In
+    `akademik/cakupan/page.tsx` the outcome reset moved into the grade and subject change handlers
+    and the effect that clears an unavailable subject.
+- Biome in `apps/web/src`: 138 errors, 10 warnings, 3 infos before; 0 of each after.
+- Capsule root `pnpm run lint`, `pnpm run typecheck`, `pnpm run test` exit 0 (web 103 tests,
+  site 2 tests, token gate passes).
+- `node tools/project-standalone/src/cli.mjs verify academic/academic-smartboard` (worktree root,
+  2026-09-25) passes every stage: install, lint, typecheck, test, build, artifacts (2 declared),
+  deployDryRun, run, smoke (`/` -> 200), cleanup. RESULT PASS.
+- The capsule `node_modules` folders were deleted for the verify run; run
+  `pnpm install --frozen-lockfile` before working locally again.
+
+## Work in flight
+
+None. The branch is not pushed or merged.
+
+## Blockers
+
+None.
+
+## Next action
+
+- Chief reviews the two commits, then decides on push and merge.
+- Visual check of the modal backdrops and the Kayyisa quick-prompt fieldsets in a browser was not
+  done; no UI tests cover them.

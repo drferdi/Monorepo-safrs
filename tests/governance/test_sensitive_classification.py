@@ -11,6 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CHECKER = 'tools/safrs/check_sensitive_changes.py'
+MEMORY_MODULE = 'tools/safrs/memory_files.py'
 REVIEW_EVIDENCE = '.safrs/reviews/verification-integrity.json'
 
 
@@ -19,6 +20,9 @@ def install_checker(repository, config=None):
     (repository / 'tools/safrs').mkdir(parents=True, exist_ok=True)
     (repository / '.safrs').mkdir(exist_ok=True)
     shutil.copy2(ROOT / CHECKER, repository / CHECKER)
+    shutil.copy2(ROOT / MEMORY_MODULE, repository / MEMORY_MODULE)
+    # Importing the shared module writes __pycache__/, which the real repository ignores.
+    (repository / '.gitignore').write_text('__pycache__/\n', encoding='utf-8')
     if config is None:
         shutil.copy2(ROOT / '.safrs/sensitive-paths.json', repository / '.safrs/sensitive-paths.json')
     else:
@@ -178,6 +182,141 @@ class SensitiveClassificationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0, result.stdout)
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
 
+    def test_reclassifying_implementation_as_a_control_still_requires_review(self):
+        """A change set cannot exempt its own implementation by adding it to
+        verification_control_patterns in the same change set."""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['.safrs/**'],
+                'verification_control_patterns': ['.safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, 'tools/verifier/run.mjs', 'export {};\n')
+            commit_baseline(repository)
+            config['patterns'].append('tools/verifier/**')
+            config['verification_control_patterns'].append('tools/verifier/**')
+            write(repository, '.safrs/sensitive-paths.json', json.dumps(config))
+            write(repository, 'tools/verifier/run.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'reclassify the verifier')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_declassifying_a_control_still_requires_review(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['.safrs/**', 'tools/verifier/**'],
+                'verification_control_patterns': ['.safrs/**', 'tools/verifier/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, 'tools/verifier/check.mjs', 'export const strict = true;\n')
+            write(repository, 'src/app.mjs', 'export {};\n')
+            commit_baseline(repository)
+            config['patterns'] = []
+            config['verification_control_patterns'] = []
+            write(repository, '.safrs/sensitive-paths.json', json.dumps(config))
+            write(repository, 'tools/verifier/check.mjs', 'export const strict = false;\n')
+            write(repository, 'src/app.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'declassify the verifier')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+            self.assertIn('SAFRS_RISK=R2', result.stdout)
+
+    def test_renaming_a_control_out_of_its_pattern_still_requires_review(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/verifier/**'],
+                'verification_control_patterns': ['tools/verifier/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, 'tools/verifier/check.mjs', 'export const strict = true;\n' * 20)
+            write(repository, 'src/app.mjs', 'export {};\n')
+            commit_baseline(repository)
+            git(repository, 'mv', 'tools/verifier/check.mjs', 'src/check.mjs')
+            write(repository, 'src/app.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'move the verifier')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('  - tools/verifier/check.mjs', result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_base_control_patterns_must_be_a_list_of_strings(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['.safrs/**'],
+                'verification_control_patterns': '*',
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            config['verification_control_patterns'] = ['.safrs/**']
+            write(repository, '.safrs/sensitive-paths.json', json.dumps(config))
+            write(repository, 'src/app.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'repair the config')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn('review base', result.stderr)
+
+    def test_control_already_classified_at_base_needs_no_review_alone(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['.safrs/**', 'tools/verifier/**'],
+                'verification_control_patterns': ['.safrs/**', 'tools/verifier/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, 'tools/verifier/run.mjs', 'export {};\n')
+            commit_baseline(repository)
+            write(repository, 'tools/verifier/run.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'change the verifier')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW', result.stdout)
+
     def test_memory_files_do_not_count_as_implementation(self):
         """The handoff gate forces HANDOFF.md into every change set; counting
         it as implementation made pure control changes look coupled."""
@@ -194,6 +333,28 @@ class SensitiveClassificationTests(unittest.TestCase):
             write(repository, 'tools/safrs/check_extra.py', '# control\n')
             write(repository, '.agents/HANDOFF.md', '# handoff\n')
             write(repository, '.agents/PROGRESS.md', '# progress\n')
+
+            result = run_checker(repository)
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn('INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_capsule_agent_files_do_not_count_as_implementation(self):
+        """Capsule .agents/** is session memory (ADR 0007 decision 7), so a
+        capsule handoff next to a control change must not demand review."""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**', 'projects/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            write(repository, 'tools/safrs/check_extra.py', '# control\n')
+            write(repository, 'projects/internal/unicom/.agents/HANDOFF.md', '# handoff\n')
+            write(repository, 'projects/internal/unicom/.agents/DECISIONS.md', '# decisions\n')
 
             result = run_checker(repository)
 

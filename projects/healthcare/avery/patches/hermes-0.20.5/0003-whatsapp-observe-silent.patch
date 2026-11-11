@@ -1,0 +1,55 @@
+diff --git a/gateway/platforms/whatsapp_common.py b/gateway/platforms/whatsapp_common.py
+index 3312456..5eed5f7 100644
+--- a/gateway/platforms/whatsapp_common.py
++++ b/gateway/platforms/whatsapp_common.py
+@@ -241,6 +241,40 @@ class WhatsAppBehaviorMixin:
+             "on",
+         }
+ 
++    def _observe_unmentioned_group_message(self, data: Dict[str, Any]) -> None:
++        """Persist allowlisted group text without invoking the model.
++
++        Baca tanpa balas: catat, jangan kirim. Gagal tulis tidak boleh
++        mengubah keputusan ingress.
++        """
++        try:
++            from datetime import datetime, timezone
++            from pathlib import Path as _Path
++
++            from hermes_constants import get_hermes_home
++
++            body = str(data.get("body") or "").strip()
++            if not body:
++                return
++            chat_id = str(data.get("chatId") or "")
++            sender = str(data.get("senderId") or data.get("from") or "")
++            rec = {
++                "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
++                "chat_id": chat_id,
++                "sender": sender,
++                "text": body[:500],
++            }
++            path = _Path(get_hermes_home()) / "state" / "group-observe.jsonl"
++            path.parent.mkdir(parents=True, exist_ok=True)
++            with path.open("a", encoding="utf-8") as fh:
++                fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
++            max_lines = 2000
++            lines = path.read_text(encoding="utf-8").splitlines()
++            if len(lines) > max_lines:
++                path.write_text("\n".join(lines[-max_lines:]) + "\n", encoding="utf-8")
++        except Exception:
++            logger.debug("[%s] group observe write failed", self.name, exc_info=True)
++
+     def _whatsapp_free_response_chats(self) -> set[str]:
+         raw = self.config.extra.get("free_response_chats")
+         if raw is None:
+@@ -521,7 +555,8 @@ class WhatsAppBehaviorMixin:
+             return True, "PASSED"
+         if self._message_matches_mention_patterns(data):
+             return True, "PASSED"
+-        return False, "MENTION_MISMATCH"
++        self._observe_unmentioned_group_message(data)
++        return False, "OBSERVED_SILENT"
+ 
+     def _should_process_message(self, data: Dict[str, Any]) -> bool:
+         chat_id = str(data.get("chatId") or "")

@@ -1,0 +1,40 @@
+---
+description: Use verified session capabilities and stop on mandatory conflicts
+alwaysApply: true
+---
+
+# Capability awareness (Cursor adapter)
+
+Canonical policy stays in root `AGENTS.md`, `.agents/BOUNDARIES.md`, and
+`.cursor/rules/01-safrs.mdc`. This rule does not redefine risk tiers, approval
+boundaries, or a second governance framework. If two mandatory documents
+disagree, stop that step, name both sources, and ask Gaffer.
+
+1. On an ordinary turn, reuse capabilities already classified in this session.
+   Do not re-list MCP servers, skills, or subagents.
+2. Deep discovery runs only when the workspace, branch, or MCP catalog changed,
+   a needed tool fails, or the task needs a capability not yet classified here.
+3. Read the one skill whose description matches the task. Skip skill scans for
+   simple answers, deterministic calculations, and routine edits. SAFRS session
+   hydration stays the Always (MUST) list. Superpowers and other vendor skills
+   do not run before that hydration and do not override SAFRS.
+4. Classify each tool before relying on it:
+   - **verified** — a successful in-scope call happened this session
+   - **available** — present, not yet called
+   - **blocked** — present, but auth, a daemon, or a policy gate prevents use
+   - **unavailable** — named in docs or config, absent from the live catalog
+5. Choose a verified tool that already does the job. `gh` for GitHub. The IDE
+   browser for local UI. Prisma wrappers for the root database. Sentry and
+   Supabase only for products that already use them. Do not add a second tool
+   that duplicates a working one.
+6. Delegate to a subagent only when it improves quality, speed, or context
+   isolation. Call Jev before spawning, before the first web search, and before
+   a choice between materially different routes.
+7. A clear instruction in this conversation that names the operation, and
+   satisfies scope and governance conditions, authorizes that operation. The
+   literal word "go" is not required. A general approval to implement a task
+   does not authorize git push, merge, production deployment, database
+   migration or reset, credential changes, or external publication.
+8. Before claiming done, paste the command and its outcome. `pnpm governance`
+   on Windows is the governance gate only. Never report complete verification
+   from that command alone.

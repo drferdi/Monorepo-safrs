@@ -970,18 +970,33 @@ as the source of truth if it falls out of date.
 ```bash
 pnpm install          # Node 24.18.x, pnpm 11
 pnpm setup            # .env from template + local Postgres (Docker) + migrate + seed
-pnpm dev              # golden-path app on http://localhost:3000
+pnpm dev              # local Postgres + control-center on http://127.0.0.1:3100
 pnpm check            # governance + tokens + lint + typecheck + test + build
 ```
 
+`pnpm setup` creates `.env` from [`.env.example`](.env.example). Never commit `.env`; agents are
+blocked from reading it.
+
+| Variable | Used for |
+| --- | --- |
+| `DATABASE_URL` | Local Postgres started by `pnpm db:start` (Docker) |
+| `APP_URL` | Base URL of the local app |
+| `NODE_ENV` | Runtime mode (`development` locally) |
+| `EMAIL_FROM`, `RESEND_API_KEY` | Email capability (`tools/capabilities/manifests/email.json`) |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` | Stripe capability (`tools/capabilities/manifests/stripe.json`) |
+| `OTEL_SDK_DISABLED`, `OTEL_EXPORTER_OTLP_ENDPOINT` | Optional OpenTelemetry export (`compose.telemetry.yaml`) |
+
 Working on this repository as an agent (or with one) starts at
-[`AGENTS.md`](AGENTS.md), which routes to everything else. Complete documentation and knowledge base guides are available on the [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki).
+[`AGENTS.md`](AGENTS.md), which routes to everything else. Its read order (six
+MUST documents, then task-scoped ones) and Claude Code's path-scoped rules in
+`.claude/rules/` are both generated from `.safrs/document-registry.json` by
+`python tools/safrs/generate_routing.py`; edit the registry, not the outputs. Complete documentation and knowledge base guides are available on the [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki).
 
 ### Current capsules
 
 | Capsule | Current state | Entry point |
 | --- | --- | --- |
-| <sub>`golden-path`</sub> | <sub>Implemented reference flow: Next.js → typed Hono API → Prisma → local PostgreSQL</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
+| <sub>`golden-path`</sub> | <sub>Pending standalone migration; outside the root workspace, and the root has no demonstrator (Gaffer, 2026-09-25)</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
 | <sub>`control-center`</sub> | <sub>Implemented local, read-only operator dashboard; remains usable when Docker or the database is unavailable</sub> | <sub>`projects/internal/control-center/apps/web`</sub> |
 | <sub>`academic-smartboard`</sub> | <sub>Sovereign curriculum, Kayyisa AI knowledge package, and Next.js application surfaces (Subphases 1–5 completed)</sub> | <sub>`projects/academic/academic-smartboard`</sub> |
 | <sub>`kediri-history`</sub> | <sub>Sovereign standalone capsule; digital heritage storytelling, historical archives, and GSAP scenes</sub> | <sub>`projects/product/kediri-history`</sub> |
@@ -1006,7 +1021,7 @@ Working on this repository as an agent (or with one) starts at
 ### Automation control plane
 
 Phases 1–5 of the SAFRS Full Automation Control Plane are implemented and merged.
-Phases 6–8 are deliberately parked: Chief resolved the activation decisions on
+Phases 6–8 are deliberately parked: Gaffer resolved the activation decisions on
 2026-08-18, but no autonomous runner has been named. Canonical behavior lives in
 [`SAFRS_AUTOMATION.md`](docs/governance/SAFRS_AUTOMATION.md),
 [`SAFRS_APPROVALS.md`](docs/governance/SAFRS_APPROVALS.md), and
@@ -1034,7 +1049,7 @@ Two properties are worth knowing before relying on it:
 
 Vendor adapters (Codex, Claude, Cursor) are thin translators into the shared
 guard, so all three reach the same verdict for the same behavior. Droid
-remains `read_only_disabled`; Chief resolved on 2026-08-18 that no unattended
+remains `read_only_disabled`; Gaffer resolved on 2026-08-18 that no unattended
 Droid workflow will be introduced without a separately reviewed artifact and
 installer.
 
@@ -1043,19 +1058,29 @@ installer.
 | Capability | Status | Command | Requires |
 | --- | --- | --- | --- |
 | <sub>Single-command local bootstrap</sub> | <sub>Verified</sub> | <sub>`pnpm dev`</sub> | <sub>Docker (Postgres)</sub> |
-| <sub>Local email development (`golden-path`)</sub> | <sub>Installed; needs credentials</sub> | <sub>`pnpm dev:email`</sub> | <sub>`EMAIL_FROM`, `RESEND_API_KEY`</sub> |
-| <sub>Stripe sandbox webhooks (`golden-path`)</sub> | <sub>Installed; needs credentials</sub> | <sub>`pnpm stripe:listen`</sub> | <sub>`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, local Stripe CLI</sub> |
-| <sub>Renovate</sub> | <sub>Patch, minor, pin, digest, and lockfile updates auto-merge only after tests pass; major updates wait for Chief</sub> | <sub>—</sub> | <sub>Dependency dashboard enabled; GitHub-native auto-merge is disabled</sub> |
+| <sub>Renovate</sub> | <sub>Patch, minor, pin, digest, and lockfile updates auto-merge only after tests pass; major updates wait for Gaffer</sub> | <sub>—</sub> | <sub>Dependency dashboard enabled; GitHub-native auto-merge is disabled</sub> |
 | <sub>GitHub security</sub> | <sub>Secret scanning, push protection, Dependabot alerts and security updates, and dependency graph enabled</sub> | <sub>—</sub> | <sub>Live GitHub API check on 2026-08-20; continuous drift audit is not implemented</sub> |
-| <sub>CODEOWNERS R2/R3 enforcement</sub> | <sub>Declared, **not yet enforced**</sub> | <sub>—</sub> | <sub>Branch protection on `main` (checklist in [`PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md))</sub> |
+| <sub>CODEOWNERS R2/R3 enforcement</sub> | <sub>Declared, **not yet enforced**</sub> | <sub>—</sub> | <sub>Code-owner review in the `main` ruleset (checklist in [`PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md))</sub> |
 | <sub>Publisher auto-merge</sub> | <sub>Evaluation-only</sub> | <sub>—</sub> | <sub>`SAFRS_PUBLISHER_ENABLED` stays false until Phase 6 activates the required identity and controls</sub> |
 
 > [!IMPORTANT]
-> `main` currently has **no branch protection**, so the eight gates above are
-> published but not required. Requiring them, together with creating the
-> auditor and publisher identities, is parked Phase 6 work. Chief resolved the
-> activation policy on 2026-08-18; activation waits for a named runner and the
-> Phase 6 reviewed change.
+> Since 2026-10-12 the GitHub ruleset **SAFRS main protection** guards `main`:
+> changes arrive by pull request with one approving review (stale reviews are
+> dismissed), the eight gates above plus `verify` and `governance` must pass,
+> and deletion and force-push are blocked. Only the repository Admin role may
+> bypass, and only when merging a pull request, so apps cannot merge on their
+> own. Code-owner review is not required yet. Creating the auditor and
+> publisher identities is still parked Phase 6 work.
+
+**Merges happen only on Gaffer's go.** Agents ask before `git merge`,
+`git pull`, fast-forwarding `main`, and `gh pr merge`, and never enable
+auto-merge. The shared guard enforces this for every spelling (`git.exe`,
+`git -C <path>`, `git -c key=value`): Claude Code shows a permission prompt,
+Codex asks through its own approval prompt (`~/.codex/rules/safrs-merge.rules`)
+and otherwise blocks, and fast-forwarding `main` from Codex always blocks. The
+guard also asks before `git reset --hard`, and denies force-push, hook
+bypasses (`--no-verify`, `core.hooksPath`), and agent
+writes to the guard's own files.
 
 Additional optional capabilities (see `tools/capabilities/manifests/` for the
 full catalog) can be previewed and recorded per project with:

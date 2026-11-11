@@ -1,0 +1,2232 @@
+[
+  {
+    "kode_obat": "20001",
+    "nama_obat": "Albendazol suspensi 200mg/5 ml (program)",
+    "bentuk_sediaan": "suspensi",
+    "kekuatan_dosis": "200mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiparasit",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20002",
+    "nama_obat": "Albendazol tablet 400 mg (program)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "400 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiparasit",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500141",
+    "nama_obat": "Alopurinol tablet 100 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "100 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20004",
+    "nama_obat": "Alopurinol tablet 300 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "300 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20007",
+    "nama_obat": "Amitriptilin HCL tablet salut 25 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "25 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20008",
+    "nama_obat": "Amlodipin tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20009",
+    "nama_obat": "Amlodipin tablet 5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "0001",
+    "nama_obat": "Amoksilin 125 Mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "125 Mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20012",
+    "nama_obat": "Amoksisilin kapsul/kaplet 500 mg",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20013",
+    "nama_obat": "Amoksisilin sirup kering 125 mg/5 ml",
+    "bentuk_sediaan": "sirup",
+    "kekuatan_dosis": "125 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20014",
+    "nama_obat": "Amoksisilin sirup kering forte 250 mg/5 ml",
+    "bentuk_sediaan": "sirup",
+    "kekuatan_dosis": "250 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20016",
+    "nama_obat": "Ampisilin Serbuk injeksi i.m/i.v.1000 mg",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "1000 mg",
+    "rute": "injeksi_iv",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20017",
+    "nama_obat": "Antasida Doen I tablet kunyah kombinasi",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20018",
+    "nama_obat": "Antasida Doen II suspensi",
+    "bentuk_sediaan": "suspensi",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20019",
+    "nama_obat": "Antibakteri Doen Salep Kombinasi",
+    "bentuk_sediaan": "Salep",
+    "kekuatan_dosis": null,
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "dermatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20020",
+    "nama_obat": "Antifungi Doen kombinasi",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antijamur",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20021",
+    "nama_obat": "Antihemoroid Doen kombinasi",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "rektal",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500126",
+    "nama_obat": "Antimigrain Doen kombinasi",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20022",
+    "nama_obat": "Aquabidest 25 cc",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_iv",
+    "status_aktif": true,
+    "kelas_terapi": "cairan_elektrolit",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20025",
+    "nama_obat": "Asam Askorbat (Vitamin C) tablet 50 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "50 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20026",
+    "nama_obat": "Asam Folat tablet 1 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "1 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20027",
+    "nama_obat": "Asam Mefenamat kapsul/kaplet 500 mg",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20029",
+    "nama_obat": "Asiklovir tablet 400 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "400 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antivirus",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20030",
+    "nama_obat": "Atropin Sulfat injeksi 0,25 mg/ml-1 ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "25 mg",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "darurat",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20031",
+    "nama_obat": "Attapulgite 600mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "600mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20032",
+    "nama_obat": "Bedaquiline 100mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "100mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20033",
+    "nama_obat": "Benzatin benzil penisilin 2,4 ui/ml",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500227",
+    "nama_obat": "Betadine BKKBN",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antiseptik_desinfektan",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20034",
+    "nama_obat": "Betahistine tablet 6 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "6 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20035",
+    "nama_obat": "Betametason krim 0,1 % (sebagai valerat)",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "1 %",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "dermatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20037",
+    "nama_obat": "Bisakodil Supositoria 10 mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "10 mg",
+    "rute": "rektal",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20038",
+    "nama_obat": "Bisakodil tablet 5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500116",
+    "nama_obat": "Bisoprolol tablet 2,5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2,5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500164",
+    "nama_obat": "BLUD Amlodipin tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500166",
+    "nama_obat": "BLUD Amlodipn tablet 5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500160",
+    "nama_obat": "BLUD Amoksisilin tablet 500 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500156",
+    "nama_obat": "BLUD Antasida DOEN tablet",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500162",
+    "nama_obat": "BLUD Asam mefenamat tablet 500 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500158",
+    "nama_obat": "BLUD Asan Folat tablet 1 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "1 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500150",
+    "nama_obat": "BLUD Atapulgit tablet",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500159",
+    "nama_obat": "BLUD Bedak Salisil",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "dermatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500151",
+    "nama_obat": "BLUD Betahistin tablet 6 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "6 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500157",
+    "nama_obat": "BLUD Dimenhidrinat tablet 50 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "50 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiemetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500163",
+    "nama_obat": "BLUD Domperidon 50 mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiemetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500152",
+    "nama_obat": "BLUD Glimepirid tablet 2 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antidiabetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500155",
+    "nama_obat": "BLUD Kaptopril tablet 25 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "25 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500154",
+    "nama_obat": "BLUD Lisinopril tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500153",
+    "nama_obat": "BLUD Lisinopril tablet 5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500161",
+    "nama_obat": "BLUD Loratadin tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500165",
+    "nama_obat": "BLUD Setritizin tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500167",
+    "nama_obat": "BLUD USG Gel Botol",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "lainnya",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500147",
+    "nama_obat": "BLUD Vitamin B komplek tablet",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500148",
+    "nama_obat": "BLUD Vitamin B6 tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500149",
+    "nama_obat": "BLUD Vitamin C tablet 50 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "50 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400337",
+    "nama_obat": "Captopril 25 mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "25 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20040",
+    "nama_obat": "Cefadroxil 250 mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "250 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20041",
+    "nama_obat": "Cefadroxil 500mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "500mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20042",
+    "nama_obat": "Clofazimine 100mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "100mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20043",
+    "nama_obat": "Cycloserine 250mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "250mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20044",
+    "nama_obat": "Deksametason injeksi i.v. 5 mg/ml- 1 ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "5 mg",
+    "rute": "injeksi_iv",
+    "status_aktif": true,
+    "kelas_terapi": "kortikosteroid",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500338",
+    "nama_obat": "DEPO PROGESTIN BKKBN",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "kontrasepsi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20047",
+    "nama_obat": "Diazepam Rectal Tube 5 mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "5 mg",
+    "rute": "rektal",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20048",
+    "nama_obat": "Diazepam tablet 5mg (program)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20049",
+    "nama_obat": "Difenhidramin HCL injeksi i.m. 10 mg/ml- 1 ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "10 mg",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20051",
+    "nama_obat": "Dimenhidrinat tablet 50 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "50 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiemetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500113",
+    "nama_obat": "Doksisiklin kapsul/kaplet 100 mg",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "100 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20052",
+    "nama_obat": "Dolutegrafir 50mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "50mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiretroviral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20053",
+    "nama_obat": "Dolutegrafir 50mg+Lamifudine 300mg+Tenofovir 300mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "50mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiretroviral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20054",
+    "nama_obat": "Domperidon suspensi 5 mg/5ml",
+    "bentuk_sediaan": "suspensi",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiemetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20055",
+    "nama_obat": "Domperidon tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiemetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20057",
+    "nama_obat": "Epinefrine (Adrenalin) injeksi 0,1% (sebagai HCl)",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "1%",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "darurat",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20060",
+    "nama_obat": "Etanol 70 %",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "70 %",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antiseptik_desinfektan",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20061",
+    "nama_obat": "Ethambutol 100 mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "100 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20062",
+    "nama_obat": "Ethambutol 400mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "400mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20063",
+    "nama_obat": "Etil Klorida Semprot",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "anestesi_lokal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20067",
+    "nama_obat": "Fenol Gliserol tetes telinga 10%",
+    "bentuk_sediaan": "tetes",
+    "kekuatan_dosis": "10%",
+    "rute": "otik",
+    "status_aktif": true,
+    "kelas_terapi": "stomatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20068",
+    "nama_obat": "Fitomenadion(Vit K1) injeksi 10 %/ml-1 ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "10 %",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20069",
+    "nama_obat": "Fitomenadion(Vit K1) tablet salut gula 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20070",
+    "nama_obat": "Flukonazol kapsul 150 mg (program)",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "150 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antijamur",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20072",
+    "nama_obat": "Garam Oralit untuk 200 ml air (program)",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "200 ml",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20073",
+    "nama_obat": "Gentamisin salep mata 0,3%",
+    "bentuk_sediaan": "salep",
+    "kekuatan_dosis": "3%",
+    "rute": "oftalmik",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20074",
+    "nama_obat": "Gentamisin tetes mata 0,3%",
+    "bentuk_sediaan": "tetes",
+    "kekuatan_dosis": "3%",
+    "rute": "oftalmik",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500052",
+    "nama_obat": "Glimepirid tablet 4 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "4 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antidiabetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20077",
+    "nama_obat": "Glimepiride tablet 1 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "1 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antidiabetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20078",
+    "nama_obat": "Glimepiride tablet 2 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antidiabetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20079",
+    "nama_obat": "Glukose larutan infus 10% steril",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "10%",
+    "rute": "infus_iv",
+    "status_aktif": true,
+    "kelas_terapi": "cairan_elektrolit",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400091",
+    "nama_obat": "Glukose larutan infus 40 % Steril",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "40 %",
+    "rute": "infus_iv",
+    "status_aktif": true,
+    "kelas_terapi": "cairan_elektrolit",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400345",
+    "nama_obat": "Griseofulvin tab 500mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "500mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antijamur",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20083",
+    "nama_obat": "Haloperidol Dekanoat 50 mg/ml Injeksi",
+    "bentuk_sediaan": "Injeksi",
+    "kekuatan_dosis": "50 mg",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20084",
+    "nama_obat": "Haloperidol drops 2 mg / 15ml",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20085",
+    "nama_obat": "Haloperidol tablet 0,5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20086",
+    "nama_obat": "Haloperidol tablet 5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500138",
+    "nama_obat": "Haloperidol tablet 5 mg (program)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500367",
+    "nama_obat": "Haloperidol/Haldol injeksi 50 mg/ml (program)",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "50 mg",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20087",
+    "nama_obat": "Haloperidol/Lodomer injeksi 5 mg/ml (program)",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "5 mg",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20218",
+    "nama_obat": "Hidrogen Peroksida H2O2 3% 800 cc",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "3%",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antiseptik_desinfektan",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20089",
+    "nama_obat": "Hidroklortiazid (HCT) tablet 25 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "25 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500121",
+    "nama_obat": "hidroklortiazide (hct) hibah",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20090",
+    "nama_obat": "Hidrokortison krim 2,5 %",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "2,5 %",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "dermatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20091",
+    "nama_obat": "Hiosin-N-butilbromida tablet",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20094",
+    "nama_obat": "Ibuprofen tablet 400 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "400 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500364",
+    "nama_obat": "Injeksi Kontrasepsi 3 bulan bkkbn",
+    "bentuk_sediaan": "Injeksi",
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "kontrasepsi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20095",
+    "nama_obat": "Isoniazid tablet 300 mg (program)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "300 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20096",
+    "nama_obat": "Isosorbid dinitrat tablet sublingual 5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "sublingual",
+    "status_aktif": true,
+    "kelas_terapi": "kardiovaskular",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20097",
+    "nama_obat": "Kalsium Glukonat Injeksi",
+    "bentuk_sediaan": "Injeksi",
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20098",
+    "nama_obat": "Kalsium Laktat (Kalk) tablet 500 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500133",
+    "nama_obat": "Kaolin Pectin Tablet",
+    "bentuk_sediaan": "Tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20100",
+    "nama_obat": "Karbamazepin tablet 200 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "200 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "neurologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20101",
+    "nama_obat": "Ketokonazol krim 2%",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "2%",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antijamur",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20102",
+    "nama_obat": "Ketokonazol tablet 200 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "200 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antijamur",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500302",
+    "nama_obat": "KLINDAMISIN 300 MG",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "300 MG",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20103",
+    "nama_obat": "Klindamisin kapsul 150 mg",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "150 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20104",
+    "nama_obat": "Kloramfenikol Kapsul/kaplet 250 mg",
+    "bentuk_sediaan": "Kapsul",
+    "kekuatan_dosis": "250 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500100",
+    "nama_obat": "Kloramfenikol Salep Mata 1 %",
+    "bentuk_sediaan": "Salep",
+    "kekuatan_dosis": "1 %",
+    "rute": "oftalmik",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20105",
+    "nama_obat": "Kloramfenikol suspensi 125 mg/5 ml",
+    "bentuk_sediaan": "suspensi",
+    "kekuatan_dosis": "125 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20107",
+    "nama_obat": "Kloramfenikol Tetes Mata",
+    "bentuk_sediaan": "Tetes",
+    "kekuatan_dosis": null,
+    "rute": "oftalmik",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20108",
+    "nama_obat": "Kloramfenikol Tetes Telinga 3 %",
+    "bentuk_sediaan": "Tetes",
+    "kekuatan_dosis": "3 %",
+    "rute": "otik",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20109",
+    "nama_obat": "Klorfeniramin Maleat ( CTM ) tablet 4 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "4 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20110",
+    "nama_obat": "Klorpromazin HCL tablet salut 100 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "100 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20112",
+    "nama_obat": "Kodein Fosfat tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20113",
+    "nama_obat": "Kombipak azitrhromycin-cefixim",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20120",
+    "nama_obat": "Kotrimoksazol Forte tablet",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20121",
+    "nama_obat": "Kotrimoksazol suspensi kombinasi",
+    "bentuk_sediaan": "suspensi",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20127",
+    "nama_obat": "Levofloxacin 250mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "250mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "fornas_note": "Fornas 2023 mencantumkan Levofloksasin 500mg sebagai dosis standar FKTP. 250mg tetap dapat digunakan untuk ITK.",
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20129",
+    "nama_obat": "Lidokain HCL 2% Injeksi",
+    "bentuk_sediaan": "Injeksi",
+    "kekuatan_dosis": "2%",
+    "rute": "injeksi_lokal",
+    "status_aktif": true,
+    "kelas_terapi": "anestesi_lokal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20130",
+    "nama_obat": "Lidokain injeksi 2% (HCl) + Epineprin 1:80.000-2 ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "2%",
+    "rute": "injeksi_lokal",
+    "status_aktif": true,
+    "kelas_terapi": "anestesi_lokal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20131",
+    "nama_obat": "Linezolid 600mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "600mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20132",
+    "nama_obat": "Lisinopril tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400136",
+    "nama_obat": "Lisinopril tablet 5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20134",
+    "nama_obat": "Loratadin tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500054",
+    "nama_obat": "Lotion Kombinasi Difenhidramin2%-kalamin5%-zinc10%-gliserin5%",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "2%",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500232",
+    "nama_obat": "Magnesium Sulfat injeksi (IV) 20%-25 ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "20%",
+    "rute": "injeksi_iv",
+    "status_aktif": true,
+    "kelas_terapi": "hormon_obstetri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500233",
+    "nama_obat": "Magnesium Sulfat injeksi (IV) 40%-25 ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "40%",
+    "rute": "injeksi_iv",
+    "status_aktif": true,
+    "kelas_terapi": "hormon_obstetri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20135",
+    "nama_obat": "Metamizol injeksi 500 mg/ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "500 mg",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20136",
+    "nama_obat": "Metformin HCl tablet 500 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antidiabetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20137",
+    "nama_obat": "Metildopa tab 250 mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "250 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihipertensi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20138",
+    "nama_obat": "Metoklopramid Injeksi 5mg/ml",
+    "bentuk_sediaan": "Injeksi",
+    "kekuatan_dosis": "5mg",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "antiemetik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20139",
+    "nama_obat": "Metronidazol tablet 500 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik_antiprotozoa",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20141",
+    "nama_obat": "Mikonazol krim/salep 2% (nitrat)",
+    "bentuk_sediaan": "salep",
+    "kekuatan_dosis": "2%",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antijamur",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400324",
+    "nama_obat": "Mometason Furoat krim 0,1%",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "1%",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "dermatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20142",
+    "nama_obat": "Monoklorkamfer Mentol cairan (CHKM)",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "stomatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20143",
+    "nama_obat": "Moxiflocaxin 400mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "400mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500208",
+    "nama_obat": "Multivitamin MMS",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20144",
+    "nama_obat": "N-asetilsistein kapsul 200 mg",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "200 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "pernapasan",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20145",
+    "nama_obat": "Natrium Diklofenak tablet 50 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "50 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20146",
+    "nama_obat": "Natrium Klorida larutan infus 0,9% steril",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "9%",
+    "rute": "infus_iv",
+    "status_aktif": true,
+    "kelas_terapi": "cairan_elektrolit",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20147",
+    "nama_obat": "Nevirapine tablet 200 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "200 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiretroviral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20148",
+    "nama_obat": "Nistatin 100.000 ui/ml drop",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "kardiovaskular",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20149",
+    "nama_obat": "Nistatin tablet vaginal 100.000 IU/g",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "100.000 IU",
+    "rute": "vaginal",
+    "status_aktif": true,
+    "kelas_terapi": "kardiovaskular",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500046",
+    "nama_obat": "Nutricia Nutridrink 400g",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "400g",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "nutrisi_formula",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20151",
+    "nama_obat": "Obat Anti Tuberkulosis(OAT) Dosis Harian(program)",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20152",
+    "nama_obat": "Obat Antituberkulosis FDC Kategori Anak",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20156",
+    "nama_obat": "Obat Kusta MB Dewasa",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20159",
+    "nama_obat": "Oksitosin injeksi 10 IU/ ml- 1 ml",
+    "bentuk_sediaan": "injeksi",
+    "kekuatan_dosis": "10 IU",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "hormon_obstetri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20160",
+    "nama_obat": "Omeprazol kapsul/kaplet 20 mg",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "20 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20161",
+    "nama_obat": "Omeprazole Sodium 40 mg inj",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "40 mg",
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "gastrointestinal",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20163",
+    "nama_obat": "Parasetamol sirup 120 mg/ 5 ml",
+    "bentuk_sediaan": "sirup",
+    "kekuatan_dosis": "120 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20164",
+    "nama_obat": "Parasetamol tablet 500 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20165",
+    "nama_obat": "Perak Sulfadiazin krim 1%",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "1%",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "dermatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20167",
+    "nama_obat": "Permetrin Krim 5%",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "5%",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antiparasit",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500120",
+    "nama_obat": "Pil KB Kombinasi",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "kontrasepsi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20168",
+    "nama_obat": "Piridoksin HCL tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500251",
+    "nama_obat": "Povidon Iodida Larutan 10% 300 ml",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "10%",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "antiseptik_desinfektan",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20170",
+    "nama_obat": "Prednison tablet 5 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "kortikosteroid",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20217",
+    "nama_obat": "Pretomanid 200mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "200mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20173",
+    "nama_obat": "Ranitidin tablet 150 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "150 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "fornas_2023": false,
+    "fornas_note": "Ditarik dari Fornas 2023 — NDMA contamination (BPOM advisory). Pertimbangkan Omeprazol atau Famotidin sebagai pengganti.",
+    "kelas_terapi": "gastrointestinal"
+  },
+  {
+    "kode_obat": "20174",
+    "nama_obat": "Retinol (Vitamin A) 100.000 IU kapsul lunak (program)",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "100.000 IU",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20175",
+    "nama_obat": "Retinol (Vitamin A) 200.000 IU kapsul lunak (program)",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "200.000 IU",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20176",
+    "nama_obat": "Rifampisin 75 mg + Isoniazid 50 mg 3HR TB",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "75 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20178",
+    "nama_obat": "Rifapentin 150mg Lepasan",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "150mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20179",
+    "nama_obat": "Rifapentin 300 mg + Isoniazid 300 mg 3HP-HIV",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "300 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20180",
+    "nama_obat": "RIFAPENTIN 300MG+ISONIAZID 300MG 3HP CF TB",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "300MG",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20181",
+    "nama_obat": "Ringer Laktat larutan Infus steril",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "infus_iv",
+    "status_aktif": true,
+    "kelas_terapi": "cairan_elektrolit",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20182",
+    "nama_obat": "Risperidon tablet 2 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20183",
+    "nama_obat": "Risperidon tablet 2 mg (program)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20184",
+    "nama_obat": "Salbutamol cairan ih mg/ml",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "inhalasi",
+    "status_aktif": true,
+    "kelas_terapi": "pernapasan",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20185",
+    "nama_obat": "Salbutamol tablet 2 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "pernapasan",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400178",
+    "nama_obat": "Salbutamol tablet 2 mg (sebagai sulfat)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "pernapasan",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400180",
+    "nama_obat": "Salep 2-4 kombinasi",
+    "bentuk_sediaan": "Salep",
+    "kekuatan_dosis": null,
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "dermatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20187",
+    "nama_obat": "Salisil Bedak 2 %",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "2 %",
+    "rute": "topikal",
+    "status_aktif": true,
+    "kelas_terapi": "dermatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20188",
+    "nama_obat": "Sefadroksil sirup kering 125 mg/5ml",
+    "bentuk_sediaan": "sirup",
+    "kekuatan_dosis": "125 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20189",
+    "nama_obat": "Semen Seng Fosfat serbuk dan cairan",
+    "bentuk_sediaan": "serbuk",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "stomatologi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20191",
+    "nama_obat": "Setirizine sirup 5 mg/5ml",
+    "bentuk_sediaan": "sirup",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20192",
+    "nama_obat": "Setirizine tablet 10 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "10 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antihistamin",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20195",
+    "nama_obat": "Simvastatin tablet 20 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "20 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "kardiovaskular",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400187",
+    "nama_obat": "Siprofloksasin tablet 500 mg (sebagai HCl)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500010",
+    "nama_obat": "Susu Dangro Gain & Grow",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "nutrisi_formula",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500303",
+    "nama_obat": "Susu Nutricia Infantrini 400 gr (Program)",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "400 g",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "nutrisi_formula",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500048",
+    "nama_obat": "SUSU SGM ANANDA GAIN 100  (PROGRAM)",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "nutrisi_formula",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2400307",
+    "nama_obat": "Susu SGM Gain Optigrow",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "nutrisi_formula",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20197",
+    "nama_obat": "Tablet Tambah Darah Kombinasi (program)",
+    "bentuk_sediaan": "Tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500013",
+    "nama_obat": "Tambah Darah Ferro-K Drop",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500139",
+    "nama_obat": "Tambah Darah Ferro-K Sirup",
+    "bentuk_sediaan": "Sirup",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20198",
+    "nama_obat": "Tenofir 300mg+Lamivudin 300mg+Efaviren 600mg (Tripel FDC) dewasa",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "300mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiretroviral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20201",
+    "nama_obat": "Tenofovir tablet 300mg + Lamivudin 300 mg (PrEP)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "300mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiretroviral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20202",
+    "nama_obat": "Tiamin HCL Mononitrat (Vitamin B1) Tablet 50 mg",
+    "bentuk_sediaan": "Tablet",
+    "kekuatan_dosis": "50 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20203",
+    "nama_obat": "Trifluoperazin tablet 5 mg (program)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "5 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20204",
+    "nama_obat": "Triheksifenidil Hidroklorida tablet 2 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500263",
+    "nama_obat": "Triheksifenidil Hidroklorida tablet 2 mg (PROGRAM)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "2 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "psikiatri",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20206",
+    "nama_obat": "Tuberculin PPD",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_id",
+    "status_aktif": true,
+    "kelas_terapi": "antituberkulosis",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20221",
+    "nama_obat": "Vaksin BCG + Pelarut",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_id",
+    "status_aktif": true,
+    "kelas_terapi": "vaksin_imunisasi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20222",
+    "nama_obat": "Vaksin Campak 10 DS (MR) + PELARUT",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vaksin_imunisasi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20227",
+    "nama_obat": "Vaksin Human Papilloma (HPV)",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vaksin_imunisasi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20231",
+    "nama_obat": "Vaksin PCV",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vaksin_imunisasi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20232",
+    "nama_obat": "Vaksin Pentavac 10ds",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vaksin_imunisasi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20234",
+    "nama_obat": "Vaksin POLIO IPV 5 dosis",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vaksin_imunisasi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500264",
+    "nama_obat": "Vaksin Rotarix",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vaksin_imunisasi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20236",
+    "nama_obat": "Vaksin Rotavac (Rotavirus)",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": null,
+    "rute": "injeksi_im",
+    "status_aktif": true,
+    "kelas_terapi": "vaksin_imunisasi",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20209",
+    "nama_obat": "Vitamin B Komplek Tablet",
+    "bentuk_sediaan": "Tablet",
+    "kekuatan_dosis": null,
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20211",
+    "nama_obat": "Vitamin B6 50mg",
+    "bentuk_sediaan": null,
+    "kekuatan_dosis": "50mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20213",
+    "nama_obat": "Zidofudine (ZDV) 300mg + Lamivudine (3TC) 150mg tablet (Program)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "300mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiretroviral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20215",
+    "nama_obat": "Zinc sirup 20 mg/5 ml",
+    "bentuk_sediaan": "sirup",
+    "kekuatan_dosis": "20 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "20216",
+    "nama_obat": "Zinc tablet 20 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "20 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "O2500305",
+    "nama_obat": "Zinc tablet 20 mg (program)",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "20 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "vitamin_mineral",
+    "fornas_2023": true
+  },
+  {
+    "kode_obat": "F2023001",
+    "nama_obat": "Ondansetron tablet 4 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "4 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antiemetik",
+    "fornas_2023": true,
+    "fornas_tingkat": "FKTP"
+  },
+  {
+    "kode_obat": "F2023002",
+    "nama_obat": "Fenitoin tablet 100 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "100 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "neurologi",
+    "fornas_2023": true,
+    "fornas_tingkat": "FKTP"
+  },
+  {
+    "kode_obat": "F2023003",
+    "nama_obat": "Azithromycin kapsul/tablet 500 mg",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "500 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true,
+    "fornas_tingkat": "FKTP"
+  },
+  {
+    "kode_obat": "F2023004",
+    "nama_obat": "Sefiksim kapsul 100 mg",
+    "bentuk_sediaan": "kapsul",
+    "kekuatan_dosis": "100 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik",
+    "fornas_2023": true,
+    "fornas_tingkat": "FKTP"
+  },
+  {
+    "kode_obat": "F2023005",
+    "nama_obat": "Acarbose tablet 50 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "50 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antidiabetik",
+    "fornas_2023": true,
+    "fornas_tingkat": "FKTP"
+  },
+  {
+    "kode_obat": "F2023006",
+    "nama_obat": "Metilprednisolon tablet 4 mg",
+    "bentuk_sediaan": "tablet",
+    "kekuatan_dosis": "4 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "kortikosteroid",
+    "fornas_2023": true,
+    "fornas_tingkat": "FKTP"
+  },
+  {
+    "kode_obat": "F2023007",
+    "nama_obat": "Metronidazol suspensi 125 mg/5 ml",
+    "bentuk_sediaan": "suspensi",
+    "kekuatan_dosis": "125 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "antibiotik_antiprotozoa",
+    "fornas_2023": true,
+    "fornas_tingkat": "FKTP"
+  },
+  {
+    "kode_obat": "F2023008",
+    "nama_obat": "Ibuprofen suspensi 100 mg/5 ml",
+    "bentuk_sediaan": "suspensi",
+    "kekuatan_dosis": "100 mg",
+    "rute": "oral",
+    "status_aktif": true,
+    "kelas_terapi": "analgesik_antipiretik",
+    "fornas_2023": true,
+    "fornas_tingkat": "FKTP"
+  }
+]

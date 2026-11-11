@@ -25,7 +25,7 @@ Nothing below invents capability. Each surface drives machinery that is already 
 | Codegen | `tools/codegen/src/cli.mjs` | complete |
 | Dependency graph | `tools/deps-graph/src/cli.mjs` | complete |
 | Design tokens | `packages/token` + `scripts/check-tokens.mjs` | complete |
-| Wiki | `sentrawiki/` (46 pages) | complete |
+| Wiki | `sentrawiki/` (79 pages) | complete |
 
 ## 1. The shared foundation (prerequisite for everything)
 
@@ -142,7 +142,7 @@ The largest dormant asset. 93 parsed medical documents nobody can reach without 
 **S11. Capability packs** — the six manifests, with preview-then-enable (`capability:add --preview`
 is read-only and safe; apply is R2 and needs the exact phrase).
 
-**S12. Knowledge search** — search across `sentrawiki/` 46 pages and `docs/`, answering "what is
+**S12. Knowledge search** — search across `sentrawiki/` 79 pages and `docs/`, answering "what is
 this and where is it explained".
 
 **S13. Observability** — Jaeger traces, once `compose.telemetry.yaml` is up.

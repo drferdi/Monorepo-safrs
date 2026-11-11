@@ -32,4 +32,8 @@ Run in this order and stop at the first failure caused by the current change set
 
 ## Session close
 
-Overwrite `.agents/HANDOFF.md` before declaring done.
+Review the diff, then overwrite the `HANDOFF.md` of every scope the change set touches and keep
+each under about 1,000 tokens. Capsule work updates `projects/<domain>/<capsule>/.agents/HANDOFF.md`
+and appends capsule-only decisions to that `DECISIONS.md`; root `.agents/` is only for
+control-plane work (root tooling, governance, CI, `packages/`, cross-capsule orchestration).
+`tools/safrs/check_handoff.py` enforces this.

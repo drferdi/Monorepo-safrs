@@ -1,0 +1,83 @@
+{
+  "expo": {
+    "name": "Sentra Bot",
+    "slug": "sentrabot",
+    "owner": "inbox-zero",
+    "scheme": "sentrabot",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "icon": "./assets/icon.png",
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#050506"
+        }
+      ],
+      "expo-router",
+      "expo-secure-store",
+      "expo-audio",
+      "expo-localization",
+      "@react-native-vector-icons/ionicons",
+      "@react-native-vector-icons/material-design-icons",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#2965EC"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Sentra Bot uses your photo library so you can attach images to a bot message.",
+          "cameraPermission": "Sentra Bot uses the camera so you can attach photos to a bot message.",
+          "microphonePermission": false
+        }
+      ],
+      "expo-sharing",
+      "./plugins/with-worklets-headers"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.sentrabot.app",
+      "buildNumber": "1",
+      "supportsTablet": false,
+      "icon": "./assets/icon.png",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSCameraUsageDescription": "Sentra Bot uses the camera so you can attach photos to a bot message.",
+        "NSPhotoLibraryUsageDescription": "Sentra Bot uses your photo library so you can attach images to a bot message.",
+        "NSLocalNetworkUsageDescription": "Sentra Bot connects to a self-hosted Sentra Bot server on your local network.",
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        }
+      }
+    },
+    "android": {
+      "package": "com.sentrabot.app",
+      "versionCode": 10,
+      "softwareKeyboardLayoutMode": "resize",
+      "icon": "./assets/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "monochromeImage": "./assets/monochrome-icon.png",
+        "backgroundColor": "#2965EC"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "router": {},
+      "supportsRTL": true,
+      "eas": {
+        "projectId": "07f7eb04-45e3-47fe-9374-99a2f991131e"
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+lay_terms-01 8108 ms B80
+lay_terms-02 5334 ms B86
+lay_terms-03 4450 ms B36.0
+lay_terms-04 4792 ms H00.0
+lay_terms-05 4639 ms H81.1
+lay_terms-06 4429 ms G44.2
+lay_terms-07 4385 ms H61.2
+lay_terms-08 4872 ms L50.0
+lay_terms-09 569 ms FAIL 502 MODEL_ERROR
+lay_terms-10 645 ms FAIL 502 MODEL_ERROR
+lay_terms-11 470 ms FAIL 502 MODEL_ERROR
+lay_terms-12 101 ms FAIL 503 API_ERRORS
+lay_terms-13 91 ms FAIL 503 API_ERRORS
+lay_terms-14 101 ms FAIL 503 API_ERRORS
+lay_terms-15 93 ms FAIL 503 API_ERRORS
+lay_terms-16 92 ms FAIL 503 API_ERRORS
+abbreviations-01 92 ms FAIL 503 API_ERRORS
+abbreviations-02 83 ms FAIL 503 API_ERRORS
+abbreviations-03 92 ms FAIL 503 API_ERRORS
+abbreviations-04 87 ms FAIL 503 API_ERRORS
+abbreviations-05 76 ms FAIL 503 API_ERRORS
+abbreviations-06 94 ms FAIL 503 API_ERRORS
+abbreviations-07 91 ms FAIL 502 SERVICE
+abbreviations-08 90 ms FAIL 502 SERVICE
+abbreviations-09 87 ms FAIL 502 SERVICE
+abbreviations-10 87 ms FAIL 502 SERVICE
+abbreviations-11 83 ms FAIL 502 SERVICE
+abbreviations-12 79 ms FAIL 502 SERVICE
+abbreviations-13 88 ms FAIL 502 SERVICE
+abbreviations-14 78 ms FAIL 502 SERVICE
+abbreviations-15 79 ms FAIL 502 SERVICE
+mixed_id_en-01 83 ms FAIL 502 SERVICE
+mixed_id_en-02 88 ms FAIL 502 SERVICE
+mixed_id_en-03 74 ms FAIL 502 SERVICE
+mixed_id_en-04 81 ms FAIL 502 SERVICE
+mixed_id_en-05 80 ms FAIL 502 SERVICE
+mixed_id_en-06 97 ms FAIL 502 SERVICE
+mixed_id_en-07 82 ms FAIL 502 SERVICE
+mixed_id_en-08 89 ms FAIL 502 SERVICE
+mixed_id_en-09 72 ms FAIL 502 SERVICE
+mixed_id_en-10 86 ms FAIL 502 SERVICE
+mixed_id_en-11 77 ms FAIL 502 SERVICE
+mixed_id_en-12 85 ms FAIL 502 SERVICE
+mixed_id_en-13 82 ms FAIL 502 SERVICE
+mixed_id_en-14 90 ms FAIL 502 SERVICE
+mixed_id_en-15 81 ms FAIL 502 SERVICE
+typos-01 81 ms FAIL 502 SERVICE
+typos-02 81 ms FAIL 502 SERVICE
+typos-03 85 ms FAIL 502 SERVICE
+typos-04 90 ms FAIL 502 SERVICE
+typos-05 89 ms FAIL 502 SERVICE
+typos-06 85 ms FAIL 502 SERVICE
+typos-07 87 ms FAIL 502 SERVICE
+typos-08 81 ms FAIL 502 SERVICE
+typos-09 80 ms FAIL 502 SERVICE
+typos-10 88 ms FAIL 502 SERVICE
+typos-11 89 ms FAIL 502 SERVICE
+typos-12 89 ms FAIL 502 SERVICE
+typos-13 96 ms FAIL 502 SERVICE
+typos-14 91 ms FAIL 502 SERVICE
+typos-15 93 ms FAIL 502 SERVICE

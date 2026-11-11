@@ -1,0 +1,151 @@
+diff --git a/gateway/platforms/whatsapp_common.py b/gateway/platforms/whatsapp_common.py
+index aa3cccd..3312456 100644
+--- a/gateway/platforms/whatsapp_common.py
++++ b/gateway/platforms/whatsapp_common.py
+@@ -77,6 +77,94 @@ def _redact_jid(value) -> str:
+     return f"…{tail}" if tail else "…"
+ 
+ 
++def _local_outbound_safety_drop_reason(text):
++    """Fail-closed copy of avery_outbound.safety.drop_reason.
++
++    Keep in sync with projects/healthcare/avery/src/avery_outbound/safety.py.
++    """
++    if text is None:
++        return "EMPTY"
++    raw = str(text)
++    if not raw.strip():
++        return "EMPTY"
++    stripped = raw.strip()
++    separator_chars = set(" \t\r\n-_–—=*•·─━═~.|/\\")
++    if stripped and all(ch in separator_chars for ch in stripped):
++        return "SEPARATOR_ONLY"
++    checks = (
++        (re.compile(r"thinking-only\s+response", re.I), "THINKING_ONLY"),
++        (re.compile(r"empty\s+response\s+from\s+model", re.I), "EMPTY_MODEL"),
++        (re.compile(r"the model returned no response", re.I), "EMPTY_MODEL"),
++        (re.compile(r"\(\s*empty\s*\)", re.I), "EMPTY_MODEL"),
++        (re.compile(r"fallback\s+provider", re.I), "FALLBACK_PROVIDER"),
++        (re.compile(r"\bjob_id\b", re.I), "JOB_ID"),
++        (re.compile(r"cronjob response", re.I), "JOB_ID"),
++        (re.compile(r"to stop or manage this job", re.I), "JOB_ID"),
++        (re.compile(r"traceback", re.I), "TRACEBACK"),
++    )
++    for pattern, reason in checks:
++        if pattern.search(raw):
++            return reason
++    if re.search(
++        r"(?i)(\bretrying\b(\s+(in|with|once|from|after)|\.{2,}|…)"
++        r"|;\s*retrying\b"
++        r"|retrying\s+\()",
++        raw,
++    ):
++        return "RETRYING"
++    if re.search(
++        r"(?im)^(?:\s*(?:reading skill|searching files|updating memory|"
++        r"calling tool|using tool|running tool|tool result|tool_call|"
++        r"tool\.started|tool\.completed|tool\.failed)\b).*"
++        r"|^\s*\[[^\]]*tool[^\]]*\]",
++        raw,
++    ):
++        return "TOOL"
++    if re.search(
++        r"(?is)("
++        r"<\|im_start\|>|<\|im_end\|>|"
++        r"\[INST\]|<<SYS>>|"
++        r"you are \*?\*?avery|"
++        r"identification workflow|"
++        r"do not participate|"
++        r"require_mention|"
++        r"always execute this|"
++        r"system prompt|"
++        r"### (?:system|instruction)|"
++        r"soul\.md|"
++        r"skills_list|"
++        r"skill_view\("
++        r")",
++        raw,
++    ):
++        return "INTERNAL_INSTRUCTION"
++    return None
++
++
++def _outbound_safety_drop_reason(text):
++    """Prefer the capsule module; fall back to the local copy."""
++    try:
++        from avery_outbound.safety import drop_reason
++        return drop_reason(text)
++    except Exception:
++        pass
++    try:
++        from pathlib import Path as _Path
++        from hermes_constants import get_hermes_home
++        src = _Path(get_hermes_home()).resolve().parent.parent / "src"
++        safety_py = src / "avery_outbound" / "safety.py"
++        if safety_py.is_file():
++            import sys
++            src_s = str(src)
++            if src_s not in sys.path:
++                sys.path.insert(0, src_s)
++            from avery_outbound.safety import drop_reason
++            return drop_reason(text)
++    except Exception:
++        pass
++    return _local_outbound_safety_drop_reason(text)
++
++
+ class WhatsAppBehaviorMixin:
+     """Shared behavior for all WhatsApp adapters (Baileys + Cloud API).
+ 
+diff --git a/plugins/platforms/whatsapp/adapter.py b/plugins/platforms/whatsapp/adapter.py
+index 56bcf6d..7871808 100644
+--- a/plugins/platforms/whatsapp/adapter.py
++++ b/plugins/platforms/whatsapp/adapter.py
+@@ -284,7 +284,11 @@ import sys
+ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+ 
+ from gateway.config import Platform, PlatformConfig
+-from gateway.platforms.whatsapp_common import WhatsAppBehaviorMixin
++from gateway.platforms.whatsapp_common import (
++    WhatsAppBehaviorMixin,
++    _outbound_safety_drop_reason,
++    _redact_jid,
++)
+ from gateway.whatsapp_identity import to_whatsapp_jid
+ from gateway.platforms.base import (
+     BasePlatformAdapter,
+@@ -944,6 +948,16 @@ class WhatsAppAdapter(WhatsAppBehaviorMixin, BasePlatformAdapter):
+         if not content or not content.strip():
+             return SendResult(success=True, message_id=None)
+ 
++        safety_reason = _outbound_safety_drop_reason(content)
++        if safety_reason:
++            logging.getLogger(__name__).info(
++                "[%s] outbound safety drop reason=%s chat=%s",
++                self.name,
++                safety_reason,
++                _redact_jid(chat_id),
++            )
++            return SendResult(success=True, message_id=None)
++
+         chat_id = to_whatsapp_jid(chat_id)
+ 
+         try:
+@@ -1006,6 +1020,17 @@ class WhatsAppAdapter(WhatsAppBehaviorMixin, BasePlatformAdapter):
+         bridge_exit = await self._check_managed_bridge_exit()
+         if bridge_exit:
+             return SendResult(success=False, error=bridge_exit)
++
++        safety_reason = _outbound_safety_drop_reason(content)
++        if safety_reason:
++            logging.getLogger(__name__).info(
++                "[%s] outbound safety drop reason=%s chat=%s op=edit",
++                self.name,
++                safety_reason,
++                _redact_jid(chat_id),
++            )
++            return SendResult(success=True, message_id=message_id)
++
+         try:
+             import aiohttp
+             async with self._http_session.post(

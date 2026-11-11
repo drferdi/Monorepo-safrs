@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "academic/academic-smartboard",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R1",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": {
+      "program": "node",
+      "args": [
+        "scripts/pnpm.mjs",
+        "install"
+      ]
+    },
+    "lint": {
+      "program": "node",
+      "args": [
+        "scripts/pnpm.mjs",
+        "run",
+        "lint"
+      ]
+    },
+    "typecheck": {
+      "program": "node",
+      "args": [
+        "scripts/pnpm.mjs",
+        "-r",
+        "typecheck"
+      ]
+    },
+    "test": {
+      "program": "node",
+      "args": [
+        "scripts/pnpm.mjs",
+        "run",
+        "test"
+      ]
+    },
+    "build": {
+      "program": "node",
+      "args": [
+        "scripts/pnpm.mjs",
+        "-r",
+        "build"
+      ]
+    },
+    "run": {
+      "program": "node",
+      "args": [
+        "scripts/serve.mjs"
+      ]
+    },
+    "deployDryRun": {
+      "program": "node",
+      "args": [
+        "scripts/deploy-dry-run.mjs"
+      ]
+    }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4310,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 30
+  },
+  "artifacts": [
+    "apps/site/out",
+    "apps/web/out"
+  ],
+  "externalDependencies": [],
+  "mutableStatePaths": [
+    "node_modules",
+    "apps/site/node_modules",
+    "apps/web/node_modules",
+    "packages/token/node_modules",
+    "apps/site/.next",
+    "apps/web/.next"
+  ]
+}

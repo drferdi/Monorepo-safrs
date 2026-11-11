@@ -1,0 +1,23 @@
+{
+  "name": "@sentrabot/worker",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node ../../scripts/dev-watch.mjs src/index.ts",
+    "start": "tsx src/index.ts",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --root ../.. apps/worker/src"
+  },
+  "dependencies": {
+    "@sentrabot/adapter-kit": "workspace:*",
+    "@sentrabot/adapters": "workspace:*",
+    "@sentrabot/core": "workspace:*",
+    "@sentrabot/db": "workspace:*",
+    "@sentrabot/memory": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.10"
+  }
+}

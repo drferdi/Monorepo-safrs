@@ -1,0 +1,41 @@
+{
+  "brand": "MedBoard",
+  "descriptor": "Clinical Smartboard by Sentra",
+  "tagline": "See Earlier. Decide Better.",
+  "logo": {
+    "markSource": "approved two-row board/checklist symbol",
+    "clearSpace": "1x = thickness of a horizontal bar",
+    "minimumDigital": {
+      "markPx": 16,
+      "horizontalPx": 120
+    },
+    "minimumPrint": {
+      "markMm": 6,
+      "horizontalMm": 30
+    }
+  },
+  "colors": {
+    "core": {
+      "black": "#000000",
+      "white": "#FFFFFF"
+    },
+    "neutral": {
+      "gray": "#7B8493",
+      "navy": "#07111F"
+    },
+    "optionalDigitalAccent": {
+      "cyan": "#00C2FF",
+      "blue": "#0066FF",
+      "gradient": "linear-gradient(135deg,#0066FF 0%,#00C2FF 100%)"
+    }
+  },
+  "typography": {
+    "display": "Inter Display Bold",
+    "body": "Inter Regular/Medium",
+    "fallback": "Arial, sans-serif"
+  },
+  "voice": {
+    "primary": "Clinical intelligence, expressed with restraint and clarity.",
+    "principle": "Technology enables, but humans decide."
+  }
+}

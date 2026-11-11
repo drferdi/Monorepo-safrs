@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "updated_at": "2026-06-19",
+    "description": "Configuration knobs for `sidelab.pharma_validator.enforce_minimum_three_therapies`. Setiap knob dapat di-override via env SIDELAB_VALIDATOR_<KEY> (uppercase, dot->underscore)."
+  },
+  "min_verified_therapies": 3,
+  "max_therapies_before_overpolypharmacy": 5,
+  "kausal_primer_kelas": [
+    "Analgesik (non-narkotik)",
+    "Analgesik anti-inflamasi (NSAID)",
+    "Antipiretik",
+    "Antibakteri",
+    "Antitusif",
+    "Mukolitik dan ekspektoran",
+    "Antasida dan antiulcerosi",
+    "Antifungal",
+    "Antihistamin sistemik",
+    "Bronkodilator"
+  ],
+  "kausal_primer_atc": [
+    "M01A",
+    "N02B",
+    "J01",
+    "A02B",
+    "D01",
+    "R03",
+    "R05"
+  ],
+  "justifikasi_section_keyword": "JUSTIFIKASI KLINIS",
+  "accept_if_two_kausal_plus_justification": true,
+  "panel_emitted_when_justifikasi_accepted": "justifikasi_short_floor"
+}

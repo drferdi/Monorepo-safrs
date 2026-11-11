@@ -1,0 +1,64 @@
+#home-bottom .system-anatomy { --anatomy-paper: #fafaf8; --anatomy-top: #fff; --anatomy-shade-0: #d5d8d6; --anatomy-shade-1: #e1e4e1; --anatomy-shade-2: #e9ece8; --anatomy-shade-3: #f1f3ef; --anatomy-hi: #464e4a; --anatomy-mid: #8a938d; --anatomy-lo: #aeb6af; --anatomy-faint: #d0d6d0; --anatomy-dot: #59665f; --anatomy-weight: .65px; margin: 0 0 100px; }
+#home-bottom .anatomy-plate { position: relative; background: var(--anatomy-paper); border-block: 1px solid var(--clinical-rule); }
+#home-bottom .anatomy-heading, #home-bottom .anatomy-footer { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 22px 28px; }
+#home-bottom .anatomy-heading p, #home-bottom .anatomy-footer p { margin: 0; color: var(--clinical-muted); font-size: 14px; line-height: 1.5; letter-spacing: .02em; }
+#home-bottom .anatomy-heading p span { margin-right: 18px; color: var(--clinical-ink); }
+#home-bottom .anatomy-eyebrow { margin: 0 0 28px; }
+#home-bottom .anatomy-heading { padding: 30px 28px; align-items: flex-end; }
+#home-bottom .anatomy-heading h3 { margin: 12px 0 0; color: var(--clinical-ink); font-size: clamp(30px, 4.6vw, 64px); font-weight: 500; line-height: 1.05; letter-spacing: -.055em; }
+#home-bottom .anatomy-heading p { font-size: 12px; letter-spacing: .1em; }
+#home-bottom .anatomy-controls { display: flex; gap: 6px; }
+#home-bottom .system-anatomy button { font: inherit; font-size: 14px; line-height: 1.4; color: var(--clinical-muted); background: transparent; border: 1px solid transparent; padding: 10px 14px; cursor: pointer; transition: color .2s, border-color .2s, background-color .2s; }
+#home-bottom .system-anatomy button[aria-pressed="true"] { color: var(--clinical-ink); border-color: var(--clinical-rule); background: #fff; }
+#home-bottom .system-anatomy button:focus-visible { outline: 2px solid var(--clinical-tosca); outline-offset: 4px; }
+#home-bottom .anatomy-stage { position: relative; aspect-ratio: 1120 / 700; overflow: hidden; }
+#home-bottom .system-anatomy-svg { display: block; width: 100%; height: auto; }
+#home-bottom .system-anatomy-svg path, #home-bottom .system-anatomy-svg circle { vector-effect: non-scaling-stroke; }
+#home-bottom .system-anatomy .iso-fill { fill: var(--anatomy-paper); }
+#home-bottom .system-anatomy .iso-top { fill: var(--anatomy-top); }
+#home-bottom .system-anatomy .iso-shade[data-shade="0"] { fill: var(--anatomy-shade-0); }
+#home-bottom .system-anatomy .iso-shade[data-shade="1"] { fill: var(--anatomy-shade-1); }
+#home-bottom .system-anatomy .iso-shade[data-shade="2"] { fill: var(--anatomy-shade-2); }
+#home-bottom .system-anatomy .iso-shade[data-shade="3"] { fill: var(--anatomy-shade-3); }
+#home-bottom .system-anatomy .iso-line { fill: none; stroke: var(--anatomy-lo); stroke-width: var(--anatomy-weight); stroke-linecap: round; stroke-linejoin: round; }
+#home-bottom .system-anatomy .iso-line[data-tone="hi"] { stroke: var(--anatomy-hi); }
+#home-bottom .system-anatomy .iso-line[data-tone="mid"] { stroke: var(--anatomy-mid); }
+#home-bottom .system-anatomy .iso-line[data-tone="faint"] { stroke: var(--anatomy-faint); }
+#home-bottom .system-anatomy .iso-dots circle { fill: var(--anatomy-dot); opacity: .7; }
+#home-bottom .system-anatomy [data-component="system-board"] .iso-top { fill: #edf2ef; }
+#home-bottom .system-anatomy [data-component="processor-core"] .iso-top,
+#home-bottom .system-anatomy [data-component="memory-chip"] .iso-top { fill: #283532; }
+#home-bottom .system-anatomy [data-component="input-glass"] .iso-top,
+#home-bottom .system-anatomy [data-component="document-glass"] .iso-top { fill: #eefaf6; }
+#home-bottom .system-anatomy .anatomy-data-trace { stroke: #229d87; stroke-width: 2px; stroke-dasharray: 10 65; }
+#home-bottom .system-anatomy [data-anatomy-stage] .iso-top { transition: fill .5s ease; }
+#home-bottom .system-anatomy [data-anatomy-stage][data-selected] .iso-top { fill: #8cd6c7; }
+#home-bottom .system-anatomy [data-anatomy-stage][data-selected] .iso-line[data-tone="hi"] { stroke: #277e70; }
+#home-bottom .anatomy-controls[hidden] { display: none; }
+#home-bottom .system-anatomy [data-anatomy-assembly] { transition: opacity .5s ease; }
+#home-bottom .system-anatomy[data-focus] [data-anatomy-assembly]:not([data-focus]) { opacity: .48; }
+#home-bottom .anatomy-footer { border-top: 1px solid var(--clinical-rule); }
+#home-bottom .anatomy-footer [data-anatomy-readout] { color: var(--clinical-ink); font-variant-numeric: tabular-nums; }
+#home-bottom .anatomy-legend { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0 28px 28px; gap: 28px; }
+#home-bottom .anatomy-legend button { display: flex; flex-direction: column; align-items: flex-start; text-align: left; border: 0; border-top: 1px solid var(--clinical-rule); padding: 18px 0 0; }
+#home-bottom .anatomy-legend button[aria-pressed="true"] { border-top-color: #277e70; background: none; }
+#home-bottom .anatomy-legend span { display: block; margin-bottom: 10px; font-size: 12px; color: #277e70; }
+#home-bottom .anatomy-legend strong { display: block; font-size: clamp(18px, 1.6vw, 22px); font-weight: 500; line-height: 1.25; color: var(--clinical-ink); letter-spacing: -.025em; }
+#home-bottom .anatomy-legend small { display: block; margin-top: 10px; font-size: 16px; line-height: 1.6; color: var(--clinical-muted); }
+#home-bottom .system-anatomy figcaption { margin-top: 24px; font-size: 14px; line-height: 1.7; color: var(--clinical-muted); max-width: 90ch; }
+#home-bottom [data-anatomy-status] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 767px) {
+  #home-bottom .system-anatomy { margin-bottom: 64px; }
+  #home-bottom .anatomy-heading, #home-bottom .anatomy-footer { padding: 18px 14px; flex-wrap: wrap; gap: 10px; }
+  #home-bottom .anatomy-heading p { width: 100%; }
+  #home-bottom .anatomy-heading { align-items: flex-start; }
+  #home-bottom .anatomy-controls { margin-top: 10px; }
+  #home-bottom .anatomy-stage { aspect-ratio: 1.2; display: flex; align-items: center; }
+  #home-bottom .system-anatomy-svg { width: 115%; max-width: none; flex: 0 0 115%; margin-left: -7.5%; }
+  #home-bottom .anatomy-legend { grid-template-columns: 1fr 1fr; padding: 0 14px 24px; gap: 24px 18px; }
+  #home-bottom .anatomy-legend strong { font-size: 18px; }
+  #home-bottom .anatomy-legend small { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #home-bottom .system-anatomy *, #home-bottom .system-anatomy button { transition: none; }
+}

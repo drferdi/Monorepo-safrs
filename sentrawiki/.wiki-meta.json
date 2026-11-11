@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-21T00:00:00Z",
-  "commitHash": "21f477425762c615a0c835967c2f8b7d0ab3c380",
-  "branch": "feat/gaffer-safrs-wiring",
+  "generatedAt": "2026-10-18T00:00:00Z",
+  "commitHash": "e3d37073e8e08d5ad08d2389cc4938a1a8bcdf96",
+  "branch": "main",
   "pageCount": 80,
   "note": "Derived navigation. Canonical truth remains SAFRS_SPEC.md, MONOREPO_PURPOSE.md, ADRs, and capsule docs.",
   "topLevelSections": [

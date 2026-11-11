@@ -2,6 +2,7 @@
 name: token-guard
 description: Review UI, CSS, and email surfaces against the Sentra design-token contract before `pnpm check:tokens` runs. Use after writing or changing any rendered surface (.tsx, .jsx, .css, email templates) or any file under packages/ui or packages/token.
 tools: Read, Grep, Glob, Bash
+model: sonnet
 ---
 
 # Token guard

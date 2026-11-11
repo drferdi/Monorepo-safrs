@@ -1,0 +1,53 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "SentraBot",
+  "description": "Dokumentasi SentraBot — platform agen local-first untuk kebutuhan orang Indonesia.",
+  "colors": {
+    "primary": "#5B8CFF",
+    "light": "#8FB0FF",
+    "dark": "#244CB2"
+  },
+  "favicon": "/logo/favicon.png",
+  "logo": {
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png",
+    "href": "https://sentrahai.com"
+  },
+  "appearance": { "default": "dark" },
+  "fonts": { "family": "Geist" },
+  "icons": { "library": "lucide" },
+  "background": { "decoration": "gradient" },
+  "navigation": {
+    "groups": [
+      { "group": "Mulai", "pages": ["index", "mulai/paket", "mulai/pasang"] },
+      { "group": "Menjalankan", "pages": ["menjalankan/computer-runtime", "menjalankan/performa"] },
+      { "group": "Kebijakan", "pages": ["kebijakan/privasi", "kebijakan/ketentuan"] }
+    ]
+  },
+  "navbar": {
+    "links": [{ "label": "Mengenai Sentra", "href": "https://sentrahai.com/tentang.html" }],
+    "primary": { "type": "button", "label": "Coba SentraBot", "href": "https://sentrahai.com" }
+  },
+  "footer": {
+    "socials": { "website": "https://sentrahai.com" },
+    "links": [
+      {
+        "header": "Sentra",
+        "items": [
+          { "label": "Mengenai Sentra", "href": "https://sentrahai.com/tentang.html" },
+          { "label": "Privasi", "href": "https://sentrahai.com/privasi.html" },
+          { "label": "Ketentuan", "href": "https://sentrahai.com/ketentuan.html" }
+        ]
+      }
+    ]
+  },
+  "search": { "prompt": "Cari dokumentasi…" },
+  "seo": {
+    "organization": {
+      "name": "Sentra Artificial Intelligence",
+      "legalName": "PT Adianda Putri Iskandar",
+      "url": "https://sentrahai.com"
+    }
+  }
+}

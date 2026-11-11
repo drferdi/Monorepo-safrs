@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+
+const source = readFileSync(new URL('./site-header.tsx', import.meta.url), 'utf8')
+const styles = readFileSync(new URL('../../src/globals.scss', import.meta.url), 'utf8')
+
+assert.match(source, /UI_COPY\.navigation\.search/)
+assert.match(source, /useState\(''\)/)
+assert.match(source, /#notifications/)
+assert.match(source, /#settings/)
+assert.match(source, /aria-expanded=\{menuOpen\}/)
+assert.match(source, /aria-controls="medlink-navigation"/)
+assert.match(source, /event\.key !== 'Escape'/)
+assert.match(source, /menuButtonRef\.current\?\.focus\(\)/)
+assert.match(source, /aria-current=/)
+assert.match(source, /Buka menu navigasi/)
+assert.match(source, /UI_COPY\.navigation\.logout/)
+assert.match(source, /navigate\('logbook'\)/)
+assert.doesNotMatch(source, /activeView === 'notifications' \|\| isSentraboard/)
+assert.match(source, /ARTIFICIAL INTELLIGENCE/)
+assert.match(source, /ARTIFICIAL INTELLIGENCE TECHNOLOGY/)
+assert.match(source, /d01-sidebar--sentraboard/)
+assert.match(source, /d01-profile__initials/)
+assert.match(source, /activeView === 'sentraboard'/)
+assert.match(source, /d01-profile__status/)
+assert.match(source, /UI_COPY\.navigation\.ready/)
+assert.match(styles, /\.d01-profile__status\s*\{/)
+assert.match(styles, /\.d01-profile__status-dot\s*\{/)
+assert.match(styles, /\.d01-sidebar--menu-open \.d01-nav/)
+assert.match(styles, /\.medlink-shell \.d01-nav\s*{[^}]*overflow-x:\s*visible/s)
+assert.match(styles, /\.d01-sidebar--sentraboard\s+\.d01-profile__initials\s*\{/)
+
+console.log('site header navigation contract passed')

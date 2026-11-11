@@ -1,0 +1,4 @@
+# Architected and built by the one and only Drferdi.
+User-agent: *
+Allow: /
+Sitemap: https://puskesmasbalowerti.com/sitemap.xml

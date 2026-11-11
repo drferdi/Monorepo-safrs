@@ -1,0 +1,11 @@
+{
+  "id": "reliability-missing-source",
+  "class": "reliability",
+  "input": "The system of record is unavailable during a scheduled routine.",
+  "must": [
+    "report source unavailability",
+    "not use memory as replacement authority",
+    "return partial completion if useful",
+    "avoid repeated non-idempotent side effects"
+  ]
+}

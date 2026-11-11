@@ -1,0 +1,9 @@
+/* The board's own token file was dropped in favour of the repository's shared
+   tokens: every custom property control-center.css uses is already defined by
+   @sentra/token, and raw colour values outside packages/token are rejected by
+   `pnpm check:tokens`. */
+@import "@sentra/token/tokens.css";
+/* Repoints the two family tokens to Archivo + JetBrains Mono. Must follow
+   tokens.css; every other token stays exactly as the system defines it. */
+@import "@sentra/token/archivo.css";
+@import "./control-center.css";

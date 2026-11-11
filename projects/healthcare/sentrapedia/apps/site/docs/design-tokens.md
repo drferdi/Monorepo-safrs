@@ -1,0 +1,7 @@
+# Design tokens and asset provenance
+
+The website keeps Gaffer-approved Sentrapedia brand colors: ink `#191c1c`, action `#13786e`, and decorative tosca `#40e0d0`. These are capsule-owned product identity values and are not substitutions for the shared Sentra application's status or chrome colors. The existing theme CSS also carries historical values; changing them requires a separate visual review.
+
+`assets/design-audit.css` contains a local snapshot of Sentra's semantic `--color-background-canvas` token (`#ffffff`) and uses it for website surfaces. The source is `packages/token/src/tokens.css` at the 2026-10-14 migration snapshot, SHA-256 `e02db587593b180a7195fa4d12bdec5762bef4f9d4f2d89d1f4f024152f37474`. This note is provenance only; the site subsystem never loads that root path. The partial snapshot avoids changing approved brand colors while keeping a real local semantic token in use. Any broader token migration needs a visual comparison and capsule-local copy or versioned external package.
+
+Asset provenance at migration is the active independent Sentrapediasite checkout and its `reference/design-integrity.json` baseline. `docs/migration-manifest.json` proves byte identity. Local GSAP and jQuery bundles retain their embedded license notices. The carried Caveat font includes an OFL file; the mirrored theme's Inter font and third-party theme assets need a license inventory before public redistribution. Byte identity does not establish distribution rights.

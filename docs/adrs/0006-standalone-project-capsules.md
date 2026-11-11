@@ -3,7 +3,7 @@
 - Status: Accepted
 - Risk: R2
 - Date: 2026-08-23
-- Deciders: Chief
+- Deciders: Gaffer
 
 ## Context
 

@@ -1,12 +1,16 @@
 /**
- * Typeface option: Archivo + JetBrains Mono.
+ * Binds the family tokens to the fonts loaded by next/font.
  *
- * Import after `tokens.css` to repoint the two family tokens. Only the family
- * names change — every colour, space, radius, and line token stays as the
- * system defines it.
+ * next/font registers Archivo and JetBrains Mono under generated family names
+ * and exposes them as --font-sans / --font-mono. The plain names in tokens.css
+ * ("Archivo", "JetBrains Mono") only match a locally installed copy, so a
+ * Next.js app imports this file after `tokens.css` to put the loaded fonts
+ * first. Every colour, space, radius and line token stays as the system
+ * defines it.
  *
- * Pair with `@sentra/token/fonts-archivo`, which supplies --font-sans and
- * --font-mono as self-hosted variable fonts.
+ * Pair with `@sentra/token/fonts` (or `fonts-archivo`), and put the two
+ * variable classes on <html>, not <body>: a var() inside a custom property is
+ * resolved on the element that declares it (:root here).
  */
 :root {
   --font-family-sans:

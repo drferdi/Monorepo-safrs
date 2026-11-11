@@ -9,7 +9,7 @@ authority: architecture
 
 ## Mission
 
-The SAFRS Monorepo exists to let a single human Chief operate many software projects through autonomous AI engineering with minimal manual work.
+The SAFRS Monorepo exists to let a single human Gaffer operate many software projects through autonomous AI engineering with minimal manual work.
 
 Its operating model is:
 
@@ -103,11 +103,11 @@ Explicit versioned external dependencies are allowed.
 
 ## I-04 — Human Governs, Agents Execute
 
-Chief determines purpose, allowed scope, policy, risk boundaries, genuine architecture/product decisions, production authority, and irreversible high-impact authorization.
+Gaffer determines purpose, allowed scope, policy, risk boundaries, genuine architecture/product decisions, production authority, and irreversible high-impact authorization.
 
 Agents determine routine implementation details inside the approved envelope.
 
-The system must not require Chief to act as terminal operator, task-state janitor, or per-command confirmation service.
+The system must not require Gaffer to act as terminal operator, task-state janitor, or per-command confirmation service.
 
 ## I-05 — Machine Handles Deterministic Governance
 
@@ -161,9 +161,9 @@ Do not migrate frameworks merely because newer alternatives exist.
 
 The desired experience is:
 
-> Chief gives an objective. The system determines project context, routes work, executes, retries, verifies, and returns a concise result.
+> Gaffer gives an objective. The system determines project context, routes work, executes, retries, verifies, and returns a concise result.
 
-Chief should not have to manually:
+Gaffer should not have to manually:
 
 - run routine package-manager commands;
 - resolve stale claims;
@@ -222,7 +222,7 @@ Allowed dependencies include explicit and reproducible package registries, conta
 
 When evaluating any implementation, ask:
 
-1. Does this reduce Chief's manual operational burden?
+1. Does this reduce Gaffer's manual operational burden?
 2. Does this increase agent end-to-end execution capability?
 3. Does this preserve project sovereignty?
 4. Does this keep root optional?
@@ -241,4 +241,4 @@ The Monorepo is aligned with purpose when:
 - deterministic governance self-enforces or self-reconciles;
 - genuine risk boundaries still stop execution appropriately;
 - project/repository health is machine-verifiable;
-- Chief receives concise decisions and outcomes rather than infrastructure noise.
+- Gaffer receives concise decisions and outcomes rather than infrastructure noise.

@@ -4,11 +4,11 @@
 
 ## Mission
 
-Let a single human Chief operate many software projects through autonomous AI engineering with minimal manual work.
+Let a single human Gaffer operate many software projects through autonomous AI engineering with minimal manual work.
 
 The desired operator experience:
 
-> Chief gives an objective. The system determines project context, routes work, executes, retries, verifies, and returns a concise result.
+> Gaffer gives an objective. The system determines project context, routes work, executes, retries, verifies, and returns a concise result.
 
 ## What the root may do
 
@@ -41,7 +41,7 @@ A capsule may depend on declared external systems or versioned artifacts. It mus
 
 When evaluating any implementation, ask:
 
-1. Does this reduce Chief's manual operational burden?
+1. Does this reduce Gaffer's manual operational burden?
 2. Does this increase agent end-to-end execution capability?
 3. Does this preserve project sovereignty?
 4. Does this keep root optional?

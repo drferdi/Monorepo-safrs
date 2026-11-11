@@ -1,0 +1,193 @@
+{"key":"SP0011#1","action":"obat","obat":"ferrous sulfate/fumarate","alasan":"quote names ferrous sulfate/fumarate 65mg","lain":"frekuensi \"2x/hari\" but quote says \"1-2x/hari\""}
+{"key":"SP0014#97","action":"obat","obat":"omeprazole","alasan":"quote: omeprazole 40 mg intravena"}
+{"key":"SP0014#101","action":"biarkan","alasan":"obat correct; quote has \"epinefrin15mcg\" without space"}
+{"key":"SP0014#106","action":"obat","obat":"Fentanil","alasan":"quote: Opioid: Fentanil 1,5-3 mcg/ml","lain":"dosis lacks \"/ml\"; quote says \"1,5-3 mcg/ml\""}
+{"key":"SP0014#110","action":"obat","obat":"Fentanil","alasan":"quote: Opioid: Fentanil 50-100 mcg"}
+{"key":"SP0014#334","action":"biarkan","alasan":"obat correct; quote has \"epinefrin15mcg\" without space"}
+{"key":"SP0015#4","action":"hapus","alasan":"dietary sodium limit, not a drug dose"}
+{"key":"SP0015#8","action":"biarkan","alasan":"quote starts at \"dinitrat\", full drug name cut off"}
+{"key":"SP0015#24","action":"biarkan","alasan":"quote names class Nitrat only, no specific drug"}
+{"key":"SP0015#71","action":"biarkan","alasan":"quote names class Nitrat only, no specific drug"}
+{"key":"SP0015#78","action":"biarkan","alasan":"quote names class Nitrat only, no specific drug"}
+{"key":"SP0023#9","action":"obat","obat":"Salbutamol","alasan":"\"buli\" is from nebulisasi; dose is Salbutamol"}
+{"key":"SP0023#10","action":"hapus","alasan":"SpO2 target 93-95%, not a dose"}
+{"key":"SP0023#11","action":"obat","obat":"Metilprednisolon","alasan":"quote: Metilprednisolon 32-40 mg"}
+{"key":"SP0023#14","action":"obat","obat":"Salbutamol","alasan":"\"buli\" is from nebulisasi; dose is Salbutamol"}
+{"key":"SP0023#15","action":"hapus","alasan":"SpO2 target 93-95%, not a dose"}
+{"key":"SP0023#16","action":"obat","obat":"Metilprednisolon","alasan":"quote: Metilprednisolon 32-40 mg"}
+{"key":"SP0025#22","action":"obat","obat":"diclofenac","alasan":"quote: diclofenac 75mg IM"}
+{"key":"SP0035#5","action":"obat","obat":"Dekstrometorfan","alasan":"quote: Antitusif: Dekstrometorfan 3 x 15 mg"}
+{"key":"SP0035#7","action":"obat","obat":"Ambroksol","alasan":"quote: Mukolitik (Ambroksol 3 x 30 mg oral)"}
+{"key":"SP0035#10","action":"obat","obat":"Dekstrometorfan","alasan":"quote: Antitusif: Dekstrometorfan 3 x 15 mg"}
+{"key":"SP0035#12","action":"obat","obat":"Ambroksol","alasan":"quote: Mukolitik (Ambroksol 3 x 30 mg oral)"}
+{"key":"SP0040#23","action":"obat","obat":"Ceftriaxon","alasan":"quote: Antibiotik: Ceftriaxon 2 x 1 gr iv"}
+{"key":"SP0040#30","action":"obat","obat":"Metilprednisolon","alasan":"quote: Metilprednisolon 2 x 125 mg"}
+{"key":"SP0042#11","action":"obat","obat":"metilprednisolon","alasan":"quote: metilprednisolon 32 mg/hari"}
+{"key":"SP0042#25","action":"obat","obat":"metilprednisolon","alasan":"quote: injeksi metilprednisolon 3 x 30 mg"}
+{"key":"SP0042#53","action":"biarkan","alasan":"quote names class Kortikosteroid only, no specific drug"}
+{"key":"SP0053#13","action":"obat","obat":"azitromycin","alasan":"quote: azitromycin 500mg 1x/hari"}
+{"key":"SP0053#15","action":"biarkan","alasan":"quote spells kiprofloksasin 500mg 2x/hari; spelling differs from obat"}
+{"key":"SP0056#7","action":"obat","obat":"hydrocortisone","alasan":"quote: hydrocortisone 1% (wajah)","lain":"frekuensi \"2x/hari\" but quote says \"apply 1-2x/hari\""}
+{"key":"SP0056#8","action":"obat","obat":"triamcinolone","alasan":"quote: triamcinolone 0.1% (badan)","lain":"frekuensi \"2x/hari\" but quote says \"apply 1-2x/hari\""}
+{"key":"SP0060#22","action":"obat","obat":"selenium sulfide","alasan":"quote: Shampoo selenium sulfide 2.5%"}
+{"key":"SP0064#79","action":"hapus","alasan":"HbA1c target 7%, lab value not a dose"}
+{"key":"SP0064#80","action":"hapus","alasan":"HbA1c target 6,5%, lab value not a dose"}
+{"key":"SP0064#81","action":"hapus","alasan":"HbA1c target 8%, lab value not a dose"}
+{"key":"SP0064#95","action":"biarkan","alasan":"two products IdegLira atau IglarLixi share 10 unit dose"}
+{"key":"SP0064#96","action":"biarkan","alasan":"two products IdegLira atau IglarLixi share 10 unit dose"}
+{"key":"SP0065#0","action":"obat","obat":"ORS (oral rehydration salts)","alasan":"quote: WHO low-osmolarity ORS 75 mL/kg","lain":"dosis \"75 mL\" lacks per kg; quote says \"75 mL/kg dalam 4 jam\""}
+{"key":"SP0065#1","action":"biarkan","alasan":"100 mL/kg \"with IV/NGT\": ORS or IV fluid unclear","lain":"dosis \"100 mL\" lacks per kg; quote says \"100 mL/kg\""}
+{"key":"SP0066#1","action":"obat","obat":"albendazole","alasan":"quote: albendazole 400mg 1x/hari"}
+{"key":"SP0068#0","action":"obat","obat":"ciprofloxacin","alasan":"quote: ciprofloxacin 500mg 2x/hari"}
+{"key":"SP0068#1","action":"obat","obat":"azitromycin","alasan":"quote: azitromycin ... 250mg hari 2-5","lain":"frekuensi \"2x/hari\" not in quote for this dose; quote says \"250mg hari 2-5\""}
+{"key":"SP0073#16","action":"hapus","alasan":"\"tersedianya CaGlukonas10%\" is availability requirement, not a dose"}
+{"key":"SP0074#0","action":"obat","obat":"salbutamol","alasan":"quote: salbutamol nebulisasi 2.5-5mg"}
+{"key":"SP0075#3","action":"biarkan","alasan":"quote cut at \"karbama\"; sesudah reads zepin 400-1200mg/hari"}
+{"key":"SP0077#4","action":"obat","obat":"Fluorometolon","alasan":"quote: Fluorometolon 0.1% 3-4 kali sehari","lain":"frekuensi \"4 kali sehari\" but quote says \"3-4 kali sehari\""}
+{"key":"SP0077#8","action":"obat","obat":"Fluorometolon","alasan":"quote: Fluorometolon 0.1% 3-4 kali sehari","lain":"frekuensi \"4 kali sehari\" but quote says \"3-4 kali sehari\""}
+{"key":"SP0085#1","action":"obat","obat":"diethylcarbamazine (DEC)","alasan":"quote: diethylcarbamazine (DEC) 6mg/kg"}
+{"key":"SP0086#1","action":"obat","obat":"betametason","alasan":"quote: salep kortikosteroid (0,05% betametason)"}
+{"key":"SP0098#24","action":"hapus","alasan":"SaO2 target >70%, not a dose"}
+{"key":"SP0100#3","action":"biarkan","alasan":"obat correct; quote has \"imipramin1-2x\" without space"}
+{"key":"SP0100#11","action":"biarkan","alasan":"obat correct; quote has \"imipramin1-2x\" without space"}
+{"key":"SP0100#17","action":"biarkan","alasan":"obat correct; quote has \"imipramin1-2x\" without space"}
+{"key":"SP0106#8","action":"biarkan","alasan":"drug not in quote, sebelum empty; dose matches quote"}
+{"key":"SP0106#25","action":"obat","obat":"hiosin butilbromid","alasan":"quote: antispasmodik hiosin butilbromid 10 mg prn"}
+{"key":"SP0106#29","action":"obat","obat":"Trimetroprim/Sulfamethoxazole","alasan":"quote: Trimetroprim/Sulfamethoxazole 160/800 2x 1 tablet"}
+{"key":"SP0106#38","action":"obat","obat":"Trimetroprim/Sulfametoksazol","alasan":"quote: Trimetroprim/Sulfametoksazol 160/800 2x 1 tablet"}
+{"key":"SP0106#51","action":"obat","obat":"hiosin butilbromid","alasan":"quote: antispasmodik hiosin butilbromid 10 mg prn"}
+{"key":"SP0107#46","action":"biarkan","alasan":"quote names only class combination kortikosteroid + antibiotik","lain":"frekuensi \"6 x\" but quote says \"4-6 x 1 tetes sehari\""}
+{"key":"SP0109#28","action":"obat","obat":"rFVIIa","alasan":"quote: dosis rFVIIa 90 mcg/kg","lain":"dosis \"90 mcg\" lacks per kg; quote says \"90 mcg/kg\""}
+{"key":"SP0109#30","action":"hapus","alasan":"efficacy statistic \"efikasi pFVIII 100%\", not a dose"}
+{"key":"SP0109#31","action":"obat","obat":"rFVIIa","alasan":"quote: rFVIIa dengan dosis 90 mcg/kg/2-3","lain":"dosis \"90 mcg\" lacks per kg; quote says \"90 mcg/kg/2-3\""}
+{"key":"SP0113#17","action":"hapus","alasan":"statistic \"16% memiliki sirosis\", not a dose"}
+{"key":"SP0116#2","action":"biarkan","alasan":"drug Asiklovir in sebelum; row matches quote"}
+{"key":"SP0120#29","action":"obat","obat":"Metilprednisolon","alasan":"quote: tambahkan Metilprednisolon 15-20 mg IV"}
+{"key":"SP0124#10","action":"hapus","alasan":"dietary sodium intake, nutrient not a drug dose"}
+{"key":"SP0124#24","action":"hapus","alasan":"dietary sodium restriction, nutrient not a drug dose"}
+{"key":"SP0124#25","action":"hapus","alasan":"dietary sodium/salt restriction, nutrient not a drug dose"}
+{"key":"SP0124#34","action":"hapus","alasan":"dietary salt restriction, nutrient not a drug dose"}
+{"key":"SP0129#0","action":"obat","obat":"Levotiroksin sodium","alasan":"quote: Levotiroksin sodium (L-thyroxine) 1.6mcg/kg","lain":"dosis \"1.6mcg\" lacks per kg; quote says \"1.6mcg/kg BB ideal/hari\""}
+{"key":"SP0129#1","action":"obat","obat":"Levotiroksin sodium","alasan":"quote: Levotiroksin sodium ... dosis awal 25-50mcg/hari"}
+{"key":"SP0131#2","action":"obat","obat":"triamcinolone","alasan":"quote: intralesional triamcinolone injection (0.1-0.2mL of 10mg/mL)"}
+{"key":"SP0131#3","action":"biarkan","alasan":"triamcinolone; 10mg is strength 10mg/mL, not the dose","lain":"dosis \"10mg\" is a concentration; quote says \"0.1-0.2mL of 10mg/mL\""}
+{"key":"SP0133#5","action":"obat","obat":"Kloksasilin/Dikloksasilin","alasan":"quote gives one dose for Kloksasilin/Dikloksasilin 4 x 250-500 mg"}
+{"key":"SP0133#12","action":"obat","obat":"Kloksasilin/Dikloksasilin","alasan":"quote gives one dose for Kloksasilin/Dikloksasilin 4 x 250-500 mg"}
+{"key":"SP0139#126","action":"obat","obat":"trimethoprim-sulfamethoxazole DS","alasan":"quote: trimethoprim-sulfamethoxazole DS 1 tablet 2x/hari"}
+{"key":"SP0140#8","action":"obat","obat":"oseltamivir","alasan":"quote: Antiviral: oseltamivir 75mg 2x/hari"}
+{"key":"SP0140#15","action":"obat","obat":"pseudoefedrin","alasan":"quote: Dekongestan, seperti pseudoefedrin (60 mg setiap 4-6 jam)"}
+{"key":"SP0140#21","action":"obat","obat":"pseudoefedrin","alasan":"quote: Dekongestan, seperti pseudoefedrin (60 mg setiap 4-6 jam)"}
+{"key":"SP0161#6","action":"biarkan","alasan":"quote has TT5 and booster 0,5 ml IM; obat acceptable"}
+{"key":"SP0171#8","action":"biarkan","alasan":"quote names brand TERFACEF only; generic name not in quote","lain":"dosis holds the whole label paragraph, cut at \"Dianjurkan untuk pemb\""}
+{"key":"SP0171#11","action":"biarkan","alasan":"quote \"Merek CEFTRIAXONE\" matches drug; \"vial\" is only form","lain":"dosis holds the whole label paragraph, cut at \"dan untu\""}
+{"key":"SP0174#1","action":"obat","obat":"Natrium Kromoglikat","alasan":"quote: Natrium Kromoglikat 2% 4 kali sehari"}
+{"key":"SP0174#9","action":"obat","obat":"Natrium Kromoglikat","alasan":"quote: Natrium Kromoglikat 2% 4 kali sehari"}
+{"key":"SP0177#59","action":"biarkan","alasan":"taper schedule row; drug named before quote, row matches"}
+{"key":"SP0177#60","action":"biarkan","alasan":"taper schedule row; drug named before quote, row matches"}
+{"key":"SP0177#61","action":"biarkan","alasan":"taper schedule row; sesudah names Prednison, row matches"}
+{"key":"SP0177#82","action":"biarkan","alasan":"taper row; drug not in quote, sebelum empty; dose matches"}
+{"key":"SP0177#83","action":"biarkan","alasan":"taper row; drug not in quote, sebelum empty; dose matches"}
+{"key":"SP0177#84","action":"biarkan","alasan":"taper row; drug not in quote, sebelum empty; dose matches"}
+{"key":"SP0178#53","action":"biarkan","alasan":"table splits \"MAGNESIUM ... SULFAT IV\" in quote; row matches"}
+{"key":"SP0178#54","action":"biarkan","alasan":"table splits \"MAGNESIUM ... SULFAT IV\" in quote; row matches"}
+{"key":"SP0178#61","action":"biarkan","alasan":"CEFAZOLIN is last word of sebelum; row matches"}
+{"key":"SP0178#78","action":"biarkan","alasan":"drug not in quote, sebelum empty; only maximum dose given"}
+{"key":"SP0178#88","action":"biarkan","alasan":"quote gives FIGO 600 mcg per oral, no drug name"}
+{"key":"SP0178#89","action":"biarkan","alasan":"quote gives FIGO 800 mcg sublingual, no drug name"}
+{"key":"SP0182#1","action":"hapus","alasan":"gene fusion frequency 25%, statistic not a dose"}
+{"key":"SP0182#3","action":"hapus","alasan":"gene fusion frequency 22%, statistic not a dose"}
+{"key":"SP0182#28","action":"hapus","alasan":"lab value Fosfat >6.5 mg/dl, not a dose"}
+{"key":"SP0183#11","action":"obat","obat":"metilprednisolon aseponat","alasan":"quote: metilprednisolon aseponat 0,1% salep/krim","lain":"frekuensi \"1-3x/hari\" is betametason's; quote+sesudah give \"1-\" \"2x/hari\" for this drug"}
+{"key":"SP0183#17","action":"obat","obat":"metilprednisolon aseponat","alasan":"quote: metilprednisolon aseponat salep/krim 0,1% 1-2 kali sehari"}
+{"key":"SP0193#66","action":"biarkan","alasan":"quote names Dihydroartemisinin + Piperakuin (DHP) 3 tablet; acceptable"}
+{"key":"SP0193#85","action":"obat","obat":"artemether-lumefantrine","alasan":"quote: artemether-lumefantrine (Coartem) 4 tablet"}
+{"key":"SP0196#38","action":"hapus","alasan":"dietary sodium limit <2300 mg/hr, nutrient not a drug"}
+{"key":"SP0196#90","action":"biarkan","alasan":"phosphate daily requirement; nutrient or IV electrolyte unclear"}
+{"key":"SP0197#7","action":"obat","obat":"Trimethoprim/sulfamethoxazole","alasan":"quote: Trimethoprim/sulfamethoxazole: 160 mg/800 mg, 2x sehari","lain":"dosis \"160 mg\" is only half of quote \"160 mg/800 mg\""}
+{"key":"SP0197#8","action":"obat","obat":"Trimethoprim/sulfamethoxazole","alasan":"quote: Trimethoprim/sulfamethoxazole: 160 mg/800 mg, 2x sehari","lain":"dosis \"800 mg\" is only half of quote \"160 mg/800 mg\""}
+{"key":"SP0198#1","action":"obat","obat":"Sodium Hyaluronate","alasan":"quote: Sodium Hyaluronate 0.1%","lain":"frekuensi \"6 kali sehari\" but quote says \"4-6 kali sehari\""}
+{"key":"SP0198#3","action":"obat","obat":"Sodium Hyaluronate","alasan":"quote: Sodium Hyaluronate 0.1%","lain":"frekuensi \"6 kali sehari\" but quote says \"4-6 kali sehari\""}
+{"key":"SP0208#29","action":"obat","obat":"semaglutide","alasan":"quote: semaglutide 2.4mg SC/minggu"}
+{"key":"SP0212#25","action":"biarkan","alasan":"supplement not named in quote; garbled table row"}
+{"key":"SP0215#24","action":"obat","obat":"Cotrimoxazole","alasan":"quote: Cotrimoxazole: (kombinasi trimethroprim 80 mg dan","lain":"dosis \"80 mg\" is only the trimethroprim component"}
+{"key":"SP0215#25","action":"obat","obat":"Cotrimoxazole","alasan":"sebelum: Cotrimoxazole: kombinasi ... sulfamethoxazole 400 mg tablet","lain":"dosis \"400 mg\" is only the sulfamethoxazole component"}
+{"key":"SP0215#26","action":"obat","obat":"Cotrimoxazole","alasan":"sebelum names Cotrimoxazole; quote: untuk dewasa 2x2 tablet"}
+{"key":"SP0215#27","action":"obat","obat":"Cotrimoxazole","alasan":"sebelum names Cotrimoxazole; quote: sulfamethoxazole 200 mg suspensi","lain":"populasi empty but sebelum ends \"anak\" before \"(trimethroprim 40 mg dan sulfamethoxazole 200 mg)\""}
+{"key":"SP0216#26","action":"hapus","alasan":"Brudzinski sign percentage, statistic not a dose"}
+{"key":"SP0216#27","action":"hapus","alasan":"Brudzinski sign percentage, statistic not a dose"}
+{"key":"SP0216#28","action":"hapus","alasan":"Brudzinski sign percentage, statistic not a dose"}
+{"key":"SP0216#29","action":"hapus","alasan":"Brudzinski sign percentage, statistic not a dose"}
+{"key":"SP0223#41","action":"hapus","alasan":"dietary sodium limit <2,3 gram/hari, nutrient not a drug"}
+{"key":"SP0223#53","action":"hapus","alasan":"water quality limit Sodium 70 mg/Liter, not a dose"}
+{"key":"SP0223#56","action":"hapus","alasan":"water quality limit Klorida 0,5 mg/Liter, not a dose"}
+{"key":"SP0223#58","action":"hapus","alasan":"water quality limit Nitrat 2,0 mg/Liter, not a dose"}
+{"key":"SP0223#59","action":"hapus","alasan":"water quality limit Sulfat 100 mg/Liter, not a dose"}
+{"key":"SP0223#103","action":"obat","obat":"Gliseril Trinitrat","alasan":"quote: Gliseril Trinitrat 0,5 mg sublingual"}
+{"key":"SP0223#158","action":"obat","obat":"metilprednisolon","alasan":"quote: dosis metilprednisolon mencapai 10mg/hari"}
+{"key":"SP0223#163","action":"obat","obat":"Metilprednisolon","alasan":"quote: Metilprednisolon 500mg intravena"}
+{"key":"SP0223#247","action":"hapus","alasan":"dietary sodium limit <2g/hari, nutrient not a drug"}
+{"key":"SP0235#0","action":"obat","obat":"ferrosulfat","alasan":"quote: Pemberian ferrosulfat 325 mg tiga kali sehari"}
+{"key":"SP0241#11","action":"biarkan","alasan":"Eritromisin named at end of sebelum; row matches"}
+{"key":"SP0248#10","action":"obat","obat":"MgSO4","alasan":"same sentence: \"dosisrumatan 6 g\" + sesudah \"MgSO4 dalam 6 jam\""}
+{"key":"SP0249#1","action":"obat","obat":"labetalol","alasan":"quote: labetalol 20mg IV"}
+{"key":"SP0249#2","action":"obat","obat":"labetalol","alasan":"quote: labetalol 20mg IV then 20-80mg q20-30min"}
+{"key":"SP0249#3","action":"obat","obat":"labetalol","alasan":"quote: labetalol ... (maks 300mg)","lain":"dosis \"300mg\" is the maximum, quote says \"maks 300mg\""}
+{"key":"SP0253#43","action":"biarkan","alasan":"garbled fragment \"1% pulpa\"; no drug named, may not be dose"}
+{"key":"SP0253#51","action":"biarkan","alasan":"table row: Cephalosporine ... (Cephalexin) 500 mg; acceptable"}
+{"key":"SP0253#61","action":"biarkan","alasan":"two drugs cefazolin atau ceftriaxone share the dose"}
+{"key":"SP0253#63","action":"biarkan","alasan":"two drugs cefazolin atau ceftriaxone share the dose"}
+{"key":"SP0254#1","action":"biarkan","alasan":"SAR named in sebelum; row matches quote"}
+{"key":"SP0254#2","action":"biarkan","alasan":"VAR named in quote; row acceptable"}
+{"key":"SP0254#5","action":"obat","obat":"Rabies immunoglobulin (RIG)","alasan":"quote: Rabies immunoglobulin (RIG): 20 IU/kg","lain":"dosis \"20 IU\" lacks per kg; quote says \"20 IU/kg\""}
+{"key":"SP0256#11","action":"obat","obat":"Prednison","alasan":"sebelum: kortikosteroid Prednison 60-80 mg/hari, diturunkan 5-10 mg","lain":"dosis \"5-10 mg\" is the taper step, quote says \"dosis diturunkan 5-10 mg/hari\""}
+{"key":"SP0257#20","action":"biarkan","alasan":"Antasida atau Natrium Alginat could own 10 mL dose","lain":"frekuensi \"4 x\" but quote says \"3-4 x 10 mL\""}
+{"key":"SP0257#25","action":"biarkan","alasan":"Antasida atau Natrium Alginat could own 10 mL dose","lain":"frekuensi \"4 x\" but quote says \"3-4 x 10 mL\""}
+{"key":"SP0268#31","action":"hapus","alasan":"oxygenation target 92-97%, not a dose"}
+{"key":"SP0269#3","action":"obat","obat":"Natrium Dokusat","alasan":"quote: tetes telinga Natrium Dokusat 0.5%"}
+{"key":"SP0269#4","action":"biarkan","alasan":"2-3 tetes applies to Karbogliserin/Gliserin or Natrium Dokusat"}
+{"key":"SP0269#8","action":"obat","obat":"Natrium Dokusat","alasan":"quote: tetes telinga Natrium Dokusat 0.5%"}
+{"key":"SP0269#9","action":"biarkan","alasan":"2-3 tetes applies to Karbogliserin/Gliserin or Natrium Dokusat"}
+{"key":"SP0271#0","action":"obat","obat":"hyoscine butylbromide","alasan":"quote: hyoscine butylbromide 10mg 3x/hari"}
+{"key":"SP0271#1","action":"obat","obat":"mebeverine","alasan":"quote: mebeverine 135mg 3x/hari"}
+{"key":"SP0271#4","action":"obat","obat":"amitriptyline","alasan":"quote ends \"amitriptyline 10-5\", sesudah \"0mg HS\""}
+{"key":"SP0275#1","action":"obat","obat":"metilprednisolon","alasan":"quote: diberikan metilprednisolon 30-40 mg/hari"}
+{"key":"SP0276#39","action":"hapus","alasan":"dietary sodium 1500 mg, nutrient not a drug"}
+{"key":"SP0279#5","action":"obat","obat":"Metilprednisolon","alasan":"quote: Metilprednisolon oral (32 mg/hari"}
+{"key":"SP0280#141","action":"biarkan","alasan":"quote names class kortikosteroid only, no specific drug"}
+{"key":"SP0280#142","action":"biarkan","alasan":"quote names class kortikosteroid only, no specific drug"}
+{"key":"SP0280#143","action":"biarkan","alasan":"quote names class kortikosteroid only, no specific drug"}
+{"key":"SP0280#144","action":"biarkan","alasan":"quote names class kortikosteroid only, no specific drug"}
+{"key":"SP0280#145","action":"biarkan","alasan":"quote names class kortikosteroid only, no specific drug"}
+{"key":"SP0280#150","action":"biarkan","alasan":"obat correct; quote has \"(MPA)KEMENTERIAN\" page-header glued"}
+{"key":"SP0281#2","action":"obat","obat":"Sulfur presipitatum","alasan":"quote: Salep 2-4 (Sulfur presipitatum 4-10%)"}
+{"key":"SP0281#5","action":"obat","obat":"Sulfur presipitatum","alasan":"quote: Salep 2-4 (Sulfur presipitatum 4-10%)"}
+{"key":"SP0288#18","action":"obat","obat":"rFVIIa","alasan":"quote: rFVIIa (15-90 μg/kg)","lain":"dosis \"15-90 μg\" lacks per kg; quote says \"15-90 μg/kg\""}
+{"key":"SP0293#0","action":"biarkan","alasan":"obat correct; quote has \"epinefrin15mcg\" without space"}
+{"key":"SP0300#13","action":"obat","obat":"Tetanus immunoglobulin (TIG)","alasan":"quote: Tetanus immunoglobulin (TIG) 3000-6000 unit IM"}
+{"key":"SP0302#28","action":"biarkan","alasan":"drug not in quote, sebelum empty; dose matches quote"}
+{"key":"SP0303#75","action":"biarkan","alasan":"quote: infus glukosa 200mg/kg (dektrosa 10% 2ml/kg); acceptable"}
+{"key":"SP0313#3","action":"obat","obat":"Selenium Sulfida","alasan":"quote: Sampo Selenium Sulfida 1.8-2.5%","lain":"frekuensi \"3 kali\" but quote says \"2-3 kali seminggu\""}
+{"key":"SP0313#9","action":"obat","obat":"selenium sulfida","alasan":"quote: Suspensi selenium sulfida 1,8%"}
+{"key":"SP0313#12","action":"obat","obat":"selenium sulfida","alasan":"quote: Suspensi selenium sulfida 1,8%"}
+{"key":"SP0313#15","action":"obat","obat":"Selenium Sulfida","alasan":"quote: Sampo Selenium Sulfida 1.8-2.5%","lain":"frekuensi \"3 kali\" but quote says \"2-3 kali seminggu\""}
+{"key":"SP0313#21","action":"obat","obat":"selenium sulfide","alasan":"quote: selenium sulfide 2.5% lotion (Selsun)","lain":"frekuensi \"2x\" is ketoconazole's \"2x/minggu\"; selenium: \"ulang 7 hari berturut\""}
+{"key":"SP0314#16","action":"obat","obat":"dexamethasone","alasan":"quote: Kortikosteroid • dexamethasone intravena 0,15-1 mg/kgbb"}
+{"key":"SP0314#17","action":"biarkan","alasan":"deksametason named in sebelum; row matches quote"}
+{"key":"SP0317#8","action":"hapus","alasan":"study statistic \"573 pasien trauma, 1.2%\", not a dose"}
+{"key":"SP0320#109","action":"biarkan","alasan":"garbled table \"10–15 300 mg mg/kg\"; drug not in quote"}
+{"key":"SP0322#33","action":"biarkan","alasan":"quote says only \"steroid\"; deksametason not named in quote"}
+{"key":"SP0322#34","action":"biarkan","alasan":"quote says only \"steroid\"; deksametason not named in quote"}
+{"key":"SP0322#51","action":"biarkan","alasan":"quote gives 4-8 mg per hari, drug not named in quote"}
+{"key":"SP0322#71","action":"biarkan","alasan":"quote names class kortikosteroid only, no specific drug"}
+{"key":"SP0323#1","action":"biarkan","alasan":"quote: krim triamcinolone acetonide 0,1% in ora base; acceptable"}
+{"key":"SP0323#13","action":"obat","obat":"triamcinolone acetonide","alasan":"quote: krim triamcinolone acetonide 0,1%"}
+{"key":"SP0325#10","action":"obat","obat":"Metilprednisolon","alasan":"quote: Metilprednisolon 16-32 mg/hari oral"}
+{"key":"SP0325#12","action":"obat","obat":"Prednison","alasan":"sebelum: kortikosteroid Prednison 60-80 mg/hari, diturunkan 5-10 mg","lain":"dosis \"5-10 mg\" is the taper step, quote says \"dosis diturunkan 5-10 mg/hari\""}
+{"key":"SP0325#18","action":"obat","obat":"Prednison","alasan":"sebelum: kortikosteroid Prednison 60-80 mg/hari ... dosis diturunkan","lain":"dosis \"5-10 mg\" is the taper step, quote says \"diturunkan 5-10 mg/hari\""}
+{"key":"SP0325#28","action":"obat","obat":"Metilprednisolon","alasan":"quote: Metilprednisolon 16-32 mg/hari oral"}
+{"key":"SP0331#1","action":"obat","obat":"Betahistin dihidroklorida","alasan":"quote: Betahistin dihidroklorida 2 x 24 mg oral"}
+{"key":"SP0331#5","action":"obat","obat":"Betahistin dihidroklorida","alasan":"quote: Betahistin dihidroklorida 2 x 24 mg oral"}
+{"key":"SP0331#14","action":"hapus","alasan":"Epley maneuver 80-90% effective, statistic not a dose"}
+{"key":"SP0336#0","action":"hapus","alasan":"F-75 formula 75 kcal/100mL, nutrient not a drug dose"}
+{"key":"SP0336#1","action":"hapus","alasan":"F-75 formula \"low sodium\", 100mL is nutrient concentration"}
+{"key":"SP0336#6","action":"hapus","alasan":"weight gain target 2g/kg/hari, not a dose"}

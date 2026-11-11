@@ -1,0 +1,53 @@
+{
+  "beforeDirectFlow": {
+    "traceId": "f291a531-7370-44a9-9639-8e9a8b316270",
+    "status": "ok",
+    "latencyMs": 83671,
+    "reportedCostUsd": 0.012046,
+    "completedCalls": 2,
+    "likelyCount": 2,
+    "alternativeCount": 2,
+    "cannotMissCount": 7,
+    "browserResultVisible": true,
+    "fictionalTest": true
+  },
+  "limitations": [
+    "Technical diagnostic output, not clinically validated.",
+    "Supporting/opposing evidence empty in this response; examination and disposition incomplete.",
+    "Source remains the original service audit, never a PNPK page citation."
+  ],
+  "directFlow": {
+    "traceId": "affc7755-3579-4c2f-949a-7478a3a6e92d",
+    "status": "ok",
+    "latencyMs": 46422,
+    "reportedCostUsd": 0.028188,
+    "completedCalls": 2,
+    "likelyCount": 2,
+    "alternativeCount": 2,
+    "cannotMissCount": 5,
+    "browserResultVisible": true,
+    "dialogOpened": false,
+    "fictionalTest": true,
+    "promptCleared": true,
+    "confirmationReset": true
+  },
+  "verification": {
+    "typecheckExit": 0,
+    "lintExit": 0,
+    "lintWarnings": 0,
+    "testsPassed": 85,
+    "testFilesPassed": 8,
+    "buildExit": 0,
+    "buildId": "h0fh-2dGzat9cI_azodiB",
+    "deployDryRunExit": 0,
+    "standaloneTracesValidated": 6,
+    "externalSourceDependencies": 0,
+    "matchingSourceFiles": 70,
+    "sourceUnchangedAfterReload": true,
+    "draftFinalizationBlocked": true,
+    "qaEncountersRemoved": 2,
+    "chiefPromptPreserved": true,
+    "realPatientInference": false,
+    "mobileRechecked": false
+  }
+}

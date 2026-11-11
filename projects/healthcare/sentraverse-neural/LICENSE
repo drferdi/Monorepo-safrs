@@ -1,0 +1,62 @@
+PROPRIETARY SOFTWARE LICENSE
+
+Copyright © 2025–2026 Sentra Healthcare Solutions. All rights reserved.
+Founder & Clinical Steward: Dr. Ferdi Iskandar, S.H., M.Kn., CMDC, CLM
+
+---
+
+NOTICE TO ALL USERS
+
+This software and all associated source code, documentation, design assets,
+clinical logic, and data models (collectively, the "Software") are the
+exclusive proprietary property of Sentra Healthcare Solutions.
+
+UNAUTHORIZED USE STRICTLY PROHIBITED
+
+No part of this Software may be:
+
+  - copied, reproduced, or duplicated in any form;
+  - distributed, published, or transmitted to any third party;
+  - modified, adapted, translated, or reverse-engineered;
+  - sublicensed, sold, rented, leased, or otherwise commercially exploited;
+  - used to train machine learning models or AI systems;
+
+without the prior express written permission of Sentra Healthcare Solutions.
+
+PERMITTED USE
+
+Access to this repository is granted solely for:
+
+  (a) internal development and review by authorized Sentra team members;
+  (b) security research conducted under a responsible disclosure agreement
+      signed with Sentra Healthcare Solutions.
+
+CLINICAL DISCLAIMER
+
+This Software is a clinical decision-support tool. It is not a certified
+medical device under any regulatory framework (BPOM, Kemenkes, FDA, MDR,
+or equivalent) unless explicitly stated in separate regulatory documentation.
+
+All clinical outputs are intended to assist — not replace — the judgment of
+licensed healthcare professionals. Final clinical decisions remain the sole
+responsibility of the treating clinician.
+
+NO WARRANTY
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, ACCURACY OF CLINICAL RECOMMENDATIONS, OR
+NON-INFRINGEMENT. IN NO EVENT SHALL SENTRA HEALTHCARE SOLUTIONS BE LIABLE
+FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OF OR
+INABILITY TO USE THIS SOFTWARE.
+
+CONTACT
+
+To request a commercial license or report a security vulnerability:
+
+  Email : drferdiiskandar@melinda.co.id
+  Web   : https://sentrahai.com
+
+---
+
+Architected and built by Drferdi — Sentra Healthcare Solutions © 2025–2026

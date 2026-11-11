@@ -5,6 +5,6 @@
   "type": "module",
   "description": "SAFRS automation control plane: canonical contracts, monotonic risk, scope safety",
   "scripts": {
-    "test": "node --test test/canonical-json.test.mjs test/scopes.test.mjs test/risk.test.mjs test/contracts.test.mjs"
+    "test": "node scripts/test.mjs"
   }
 }

@@ -17,6 +17,7 @@ try {
   const raw = readFileSync(0, "utf8").trim();
   payload = raw ? JSON.parse(raw) : null;
 } catch {
+  // hooks.json declares failClosed: an unreadable payload must not read unguarded.
   respond({ permission: "deny" });
 }
 

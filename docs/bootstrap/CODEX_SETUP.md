@@ -7,7 +7,7 @@ Canonical policy remains `AGENTS.md`; `.codex/` and `.agents/skills/` are adapte
 | Surface | Purpose |
 | --- | --- |
 | `.codex/config.toml` | Three child threads and pinned Context7 MCP |
-| `.codex/hooks.json` / `hooks/*.mjs` | SAFRS PreToolUse guard and PostToolUse Biome formatting |
+| `.codex/hooks.json` / `hooks/guard-tool-use.mjs` | SAFRS PreToolUse guard (no PostToolUse formatter) |
 | `.codex/agents/*.toml` | SAFRS and security reviewers, read-only by default |
 | `.agents/skills/*` | `$verify` and `$prisma-migration` workflows |
 
@@ -20,10 +20,10 @@ hooks, restart Codex, open `/hooks`, review the exact hook definitions, and trus
 ## Guardrails
 
 The PreToolUse hook blocks credential-shaped files, force-push, direct Prisma reset, and
-direct database-drop commands. Both hooks resolve the nearest repository root, so they work
+direct database-drop commands. The hook resolves the nearest repository root, so it works
 when Codex starts in the root or a nested project directory. The guard reads R2 paths from
-`.safrs/sensitive-paths.json`; the formatter uses the repository Biome binary and never
-replaces final verification.
+`.safrs/sensitive-paths.json`. Codex has no PostToolUse formatter; formatting is checked by
+`pnpm lint` during final verification.
 
 ## Skills and reviewers
 

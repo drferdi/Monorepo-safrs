@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, rmdirSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmdirSync,
+  rmSync,
+} from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -10,6 +17,28 @@ const hookPath = path.join(
   "guard-sensitive-paths.mjs",
 );
 const repoRoot = path.resolve(path.dirname(hookPath), "..", "..");
+// Absolute on every platform: a "C:/..." literal is a relative path on POSIX,
+// where the guard would then allow it and these tests would fail.
+const OUTSIDE_FILE = path.join(os.tmpdir(), "outside-the-repo", "file.txt");
+
+/** True inside a linked worktree, whose git dir differs from the common dir. */
+function inLinkedWorktree() {
+  const [gitDir, commonDir] = execFileSync(
+    "git",
+    [
+      "-C",
+      repoRoot,
+      "rev-parse",
+      "--path-format=absolute",
+      "--git-dir",
+      "--git-common-dir",
+    ],
+    { encoding: "utf8" },
+  )
+    .trim()
+    .split(/\r?\n/u);
+  return path.resolve(gitDir) !== path.resolve(commonDir);
+}
 
 function runHook(payload, spawnOptions = {}) {
   const result = spawnSync("node", [hookPath], {
@@ -18,14 +47,28 @@ function runHook(payload, spawnOptions = {}) {
     encoding: "utf8",
     ...spawnOptions,
   });
-  return { exitCode: result.status, stderr: result.stderr ?? "" };
+  return {
+    exitCode: result.status,
+    stderr: result.stderr ?? "",
+    stdout: result.stdout ?? "",
+  };
 }
+
+test("malformed payload is blocked (fail closed)", () => {
+  const result = spawnSync("node", [hookPath], {
+    input: "not-json",
+    cwd: repoRoot,
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /could not be parsed/);
+});
 
 test("write outside the repository is denied", () => {
   const result = runHook({
     tool_name: "Write",
     tool_input: {
-      file_path: "C:/Users/nobody/outside-the-repo/file.txt",
+      file_path: OUTSIDE_FILE,
       content: "x",
     },
   });
@@ -33,8 +76,59 @@ test("write outside the repository is denied", () => {
   assert.match(result.stderr, /outside the repository/);
 });
 
+test("write outside the repository is denied from a subdirectory cwd too", () => {
+  // Regression: the root fell back to process.cwd() (here tools/), the guard
+  // import failed, node exited 1, and Claude ran the write unguarded.
+  const result = runHook(
+    {
+      tool_name: "Write",
+      tool_input: {
+        file_path: OUTSIDE_FILE,
+        content: "x",
+      },
+    },
+    { cwd: path.join(repoRoot, "tools") },
+  );
+  assert.equal(result.exitCode, 2, result.stderr);
+  assert.match(result.stderr, /outside the repository/);
+});
+
+test("a guard that cannot be loaded blocks (fail closed)", () => {
+  const outside = mkdtempSync(path.join(os.tmpdir(), "guard-no-repo-"));
+  try {
+    const result = runHook(
+      { tool_name: "Bash", tool_input: { command: "echo hi" } },
+      { cwd: outside },
+    );
+    assert.equal(result.exitCode, 2, result.stderr);
+    assert.match(result.stderr, /fail closed/);
+  } finally {
+    rmSync(outside, { recursive: true, force: true });
+  }
+});
+
+test("write to a plan-mode plan file is allowed", () => {
+  const { CLAUDE_CONFIG_DIR: _ignored, ...env } = process.env;
+  const result = runHook(
+    {
+      tool_name: "Write",
+      tool_input: {
+        file_path: path.join(os.homedir(), ".claude", "plans", "some-plan.md"),
+        content: "x",
+      },
+    },
+    { env },
+  );
+  assert.equal(result.exitCode, 0, result.stderr);
+});
+
 test("write to a sibling worktree of this repo is allowed even when the hook's own cwd is lowercase-drive", {
-  skip: process.platform !== "win32" && process.platform !== "darwin",
+  // The repro needs the main checkout: inside a linked worktree
+  // --git-common-dir is always absolute, so the precondition below can
+  // never hold there.
+  skip:
+    (process.platform !== "win32" && process.platform !== "darwin") ||
+    (inLinkedWorktree() && "needs the main checkout, not a linked worktree"),
 }, () => {
   // Regression test for the actual mechanism (confirmed by running the
   // two `git` invocations directly against this repo, git 2.55.0.windows.3,
@@ -147,4 +241,59 @@ test("write to a verification-control path stays allowed but carries an R2 notic
   });
   assert.equal(result.exitCode, 0);
   assert.match(result.stderr, /R2/);
+});
+
+test("Bash from a subdirectory is still guarded", () => {
+  const result = runHook(
+    {
+      tool_name: "Bash",
+      tool_input: { command: "git push --force origin main" },
+    },
+    { cwd: path.join(repoRoot, "tools") },
+  );
+  assert.equal(result.exitCode, 2);
+  assert.match(result.stderr, /force-push/);
+});
+
+test("a merge asks Gaffer through Claude's permission prompt", () => {
+  const result = runHook({
+    tool_name: "Bash",
+    tool_input: { command: "git merge feat/x" },
+  });
+  assert.equal(result.exitCode, 0);
+  const output = JSON.parse(result.stdout).hookSpecificOutput;
+  assert.equal(output.permissionDecision, "ask");
+  assert.match(output.permissionDecisionReason, /Gaffer/);
+});
+
+test("the PowerShell tool is guarded like Bash", () => {
+  const settings = JSON.parse(
+    readFileSync(path.join(repoRoot, ".claude/settings.json"), "utf8"),
+  );
+  assert.ok(
+    settings.hooks.PreToolUse.some((entry) =>
+      entry.matcher.split("|").includes("PowerShell"),
+    ),
+  );
+  const blocked = runHook({
+    tool_name: "PowerShell",
+    tool_input: { command: "git.exe push --force origin main" },
+  });
+  assert.equal(blocked.exitCode, 2);
+  const asked = runHook({
+    tool_name: "PowerShell",
+    tool_input: { command: "git -C D:/DEV/monorepo merge feat/x" },
+  });
+  assert.equal(
+    JSON.parse(asked.stdout).hookSpecificOutput.permissionDecision,
+    "ask",
+  );
+});
+
+test("ordinary Bash from a subdirectory is allowed", () => {
+  const result = runHook(
+    { tool_name: "Bash", tool_input: { command: "git status" } },
+    { cwd: path.join(repoRoot, "tools") },
+  );
+  assert.equal(result.exitCode, 0);
 });

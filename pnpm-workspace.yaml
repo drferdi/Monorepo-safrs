@@ -3,8 +3,28 @@ packages:
   # academic-smartboard adalah capsule standalone dengan workspace pnpm sendiri;
   # jangan di-resolve oleh workspace root (kontrak standalone, AGENTS.md §112).
   - '!projects/academic/academic-smartboard/**'
+  # kediri-history adalah capsule standalone berdaulat dengan workspace pnpm,
+  # lockfile, biome, dan tsconfig sendiri; glob projects/*/*/apps/* di atas akan
+  # menyerap apps/web-nya ke workspace root dan melanggar kontrak standalone
+  # (AGENTS.md "Standalone project contract"; keputusan Chief G01/G03 2026-08-26).
+  - '!projects/product/kediri-history/**'
+  # sentrabot berdiri sendiri sebagai workspace pnpm mandiri dengan lockfile,
+  # biome, dan CI sendiri; glob projects/*/*/apps/* tidak boleh menyerap
+  # apps-nya ke workspace root (keputusan kemandirian produk 2026-09-03).
+  - '!projects/product/sentrabot/**'
+  # golden-path bukan lagi demonstrator root; capsule ini menjadi standalone
+  # dengan workspace pnpm sendiri (keputusan Chief 2026-09-25, ADR 0007).
+  - '!projects/internal/golden-path/**'
+  # Setiap capsule healthcare berdiri sendiri; jangan pernah diserap workspace root.
+  - '!projects/healthcare/**'
+  # control-center berdiri sendiri dengan workspace pnpm, lockfile, dan snapshot
+  # @sentra/token sendiri (safe-gaps Module 3, 2026-10-18).
+  - '!projects/internal/control-center/**'
   - packages/*
   - tools/*
+  # retriever punya workspace dan lockfile sendiri (rencananya repo sendiri).
+  - '!tools/retriever'
+  - '!tools/prompt/**'
 
 allowBuilds:
   '@prisma/engines': true
@@ -41,10 +61,10 @@ catalog:
   clsx: 2.1.1
   electron: 43.4.1
   fast-check: 4.9.0
-  hono: 4.13.7
+  hono: 4.13.11
   husky: 9.1.7
   lucide-react: 0.516.0
-  next: 16.3.8
+  next: 16.4.1
   pg: 8.16.3
   postcss: 8.5.26
   prisma: 7.9.1
@@ -56,8 +76,8 @@ catalog:
   tailwindcss: 4.3.3
   turbo: 2.10.9
   typescript: 7.0.2
-  vitest: 4.1.11
-  zod: 4.4.3
+  vitest: 4.1.12
+  zod: 4.6.6
 
 # Minutes (pnpm unit): 1440 = 1 day. A quoted duration string crashes pnpm
 # with "Invalid time value" during install and implicit deps checks.
@@ -69,13 +89,19 @@ minimumReleaseAgeExclude:
 
 # Force transitive copies onto patched releases (Dependabot GHSA remediation).
 overrides:
-  next: "catalog:"
   postcss: "catalog:"
+  # @sentra/token has an optional next peer; without this it resolves an older,
+  # vulnerable next (GHSA-p293-qw3h-jr36, GHSA-2xp9-vwfh-vxw4 < 16.3.3).
+  next: "catalog:"
   sharp: ">=0.35.5"
   source-map-js: ">=1.2.2"
   "@grpc/grpc-js": ">=1.14.5"
-  fast-uri: ">=3.1.6"
-  mysql2: ">=3.22.0"
   # GHSA-ggr8-5vv4-36mx / CVE-2026-40345: uncontrolled recursion in
   # deepmerge-ts < 8.0.0, pulled in transitively by @prisma/config.
   deepmerge-ts: ">=8.0.1"
+  # Security advisories on prisma transitive dependencies (pnpm audit 2026-09-25):
+  # mysql2 < 3.22.0 auth plugin downgrade; fast-uri < 3.1.6 SSRF and host confusion.
+  mysql2: "^3.22.0"
+  fast-uri: ">=3.1.9"
+  launch-editor: ">=2.14.2"
+  vite: ">=8.2.4"

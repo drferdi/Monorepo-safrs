@@ -1,0 +1,56 @@
+# ── AI-agent tooling, notes, and scratch (local only — never commit) ──────
+.claude/
+.codex/
+.cursor/
+.continue/
+.lingma/
+.roo/
+.windsurf/
+.agent/
+.aider*
+.openclaude/
+.mcp.json
+droid-wiki/
+.playwright-mcp/
+.superpowers/
+CLAUDE.md
+QWEN.md
+GEMINI.md
+COPILOT.md
+CURSOR.md
+CURSOR-*.md
+
+# ── Archived / superseded content — do not resurrect ───────────────────────
+archieved/
+ckg/
+doc/
+docs/superpowers/
+
+# ── Build and package manager artifacts ────────────────────────────────────
+node_modules/
+.output/
+dist/
+.vscode/
+.wxt/
+.turbo/
+
+# ── Local environment overrides ─────────────────────────────────────────────
+.env.local
+.env.*.local
+
+# ── Test, coverage, and smoke artifacts ─────────────────────────────────────
+coverage/
+playwright-report/
+test-results/
+output/
+tests/e2e/.live-edge-profile/
+eng.traineddata
+*.traineddata
+
+# ── Auto-generated documentation ────────────────────────────────────────────
+docs/api/
+
+# ── Generated codebase dumps ─────────────────────────────────────────────
+repomix-output.xml
+# Scratch runtime verification specs (never committed)
+tests/e2e/zz-*.spec.ts

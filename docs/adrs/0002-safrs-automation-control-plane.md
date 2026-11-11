@@ -2,7 +2,7 @@
 
 - Status: Accepted
 - Date: 2026-08-13
-- Deciders: Chief (drferdii)
+- Deciders: Gaffer (drferdii)
 - Plan: `docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`
 
 ## Context

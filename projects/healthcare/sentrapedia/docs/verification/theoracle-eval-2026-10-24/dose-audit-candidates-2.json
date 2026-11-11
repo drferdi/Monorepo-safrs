@@ -1,0 +1,198 @@
+{
+ "generated": "2026-10-24",
+ "round": 2,
+ "note": "mechanical proposals of the audit re-run on the SSOT after round 1 (dose-audit.mjs on f5e8f58e...); approved by Gaffer: \"Ya, terapkan 7 kandidat mekanis baru (SP0219, SP0223, SP0239)\"",
+ "ssot": {
+  "identical": true,
+  "trailingNewline": false,
+  "crlf": false,
+  "sha256": "f5e8f58e01e4efa53fa18cad0718201b21ea4ee734b130f93a739a3e075c5cb6",
+  "entries": 335,
+  "rows": 7591,
+  "rendered": 7244,
+  "doseLines": 6854,
+  "diseasesWithLine": 303,
+  "n_pernyataan_dosis": 7591
+ },
+ "counts": {
+  "M4": 1,
+  "M5": 4,
+  "M6": 2
+ },
+ "proposals": [
+  {
+   "id": "SP0223",
+   "nama": "Penyakit Ginjal Kronik",
+   "i": 31,
+   "field": "dosis",
+   "old": "10-20 unit",
+   "new": "10-20 unit/kg/jam",
+   "class": "mekanis",
+   "rule": "b_per_kg_hilang",
+   "rendered": true,
+   "kind": "auto",
+   "sumber": "PNPK (020_PNPK_2023_Tata_Laksana_Penyakit_Ginjal_Kronik.pdf) (ekstraksi otomatis dari naskah)",
+   "evidence": {
+    "where": "tidak_ditemukan",
+    "kutipan": "c) Mulai infus heparin dengan kecepatan 10-20 unit/kg/jam."
+   },
+   "pid": "M4-0045"
+  },
+  {
+   "id": "SP0239",
+   "nama": "Pertusis (Batuk Rejan)",
+   "i": 1,
+   "field": "dosis",
+   "old": "500 mg",
+   "new": "maks 500 mg",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "sumber": "Oracle II (ekstraksi otomatis)",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "oracle_ii",
+    "match": "persis",
+    "kutipan": "- Azitromisin: 10 mg/kgBB/hari oral dosis tunggal pada hari ke-1 (maks 500 mg), dilanjutkan 5 mg/kgBB/hari pada hari 2-5 (maks 250 mg).",
+    "baris_dosis_lain": [
+     "10 mg/kgBB/hari",
+     "5 mg/kgBB/hari",
+     "250 mg",
+     "10 mg/kgBB/hari",
+     "500 mg",
+     "5 mg/kgBB/hari",
+     "250 mg"
+    ]
+   },
+   "pid": "M5-0015"
+  },
+  {
+   "id": "SP0239",
+   "nama": "Pertusis (Batuk Rejan)",
+   "i": 3,
+   "field": "dosis",
+   "old": "250 mg",
+   "new": "maks 250 mg",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "sumber": "Oracle II (ekstraksi otomatis)",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "oracle_ii",
+    "match": "persis",
+    "kutipan": "- Azitromisin: 10 mg/kgBB/hari oral dosis tunggal pada hari ke-1 (maks 500 mg), dilanjutkan 5 mg/kgBB/hari pada hari 2-5 (maks 250 mg).",
+    "baris_dosis_lain": [
+     "10 mg/kgBB/hari",
+     "500 mg",
+     "5 mg/kgBB/hari",
+     "10 mg/kgBB/hari",
+     "500 mg",
+     "5 mg/kgBB/hari",
+     "250 mg"
+    ]
+   },
+   "pid": "M5-0016"
+  },
+  {
+   "id": "SP0239",
+   "nama": "Pertusis (Batuk Rejan)",
+   "i": 10,
+   "field": "dosis",
+   "old": "500 mg",
+   "new": "maks 500 mg",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "sumber": "dokumen index (ekstraksi otomatis)",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "index_md",
+    "match": "persis",
+    "kutipan": "- Azitromisin: 10 mg/kgBB/hari oral dosis tunggal pada hari ke-1 (maks 500 mg), dilanjutkan 5 mg/kgBB/hari pada hari 2-5 (maks 250 mg).",
+    "baris_dosis_lain": [
+     "10 mg/kgBB/hari",
+     "500 mg",
+     "5 mg/kgBB/hari",
+     "250 mg",
+     "10 mg/kgBB/hari",
+     "5 mg/kgBB/hari",
+     "250 mg"
+    ]
+   },
+   "pid": "M5-0017"
+  },
+  {
+   "id": "SP0239",
+   "nama": "Pertusis (Batuk Rejan)",
+   "i": 12,
+   "field": "dosis",
+   "old": "250 mg",
+   "new": "maks 250 mg",
+   "class": "mekanis",
+   "rule": "b_dosis_maksimum_sebagai_dosis",
+   "rendered": true,
+   "kind": "auto",
+   "sumber": "dokumen index (ekstraksi otomatis)",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "index_md",
+    "match": "persis",
+    "kutipan": "- Azitromisin: 10 mg/kgBB/hari oral dosis tunggal pada hari ke-1 (maks 500 mg), dilanjutkan 5 mg/kgBB/hari pada hari 2-5 (maks 250 mg).",
+    "baris_dosis_lain": [
+     "10 mg/kgBB/hari",
+     "500 mg",
+     "5 mg/kgBB/hari",
+     "250 mg",
+     "10 mg/kgBB/hari",
+     "500 mg",
+     "5 mg/kgBB/hari"
+    ]
+   },
+   "pid": "M5-0018"
+  },
+  {
+   "id": "SP0219",
+   "nama": "Parotitis Epidemika (Gondongan / Mumps)",
+   "i": 1,
+   "field": "frekuensi",
+   "old": "4x/hari",
+   "new": "3-4x/hari",
+   "class": "mekanis",
+   "rule": "f_frekuensi_rentang_terpotong",
+   "rendered": true,
+   "kind": "auto",
+   "sumber": "Oracle II (ekstraksi otomatis)",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "oracle_ii",
+    "match": "persis",
+    "kutipan": "- Analgesik-antipiretik: Parasetamol 10-15 mg/kgBB/kali pada anak atau 500 mg 3-4x/hari pada dewasa;"
+   },
+   "pid": "M6-0114"
+  },
+  {
+   "id": "SP0219",
+   "nama": "Parotitis Epidemika (Gondongan / Mumps)",
+   "i": 4,
+   "field": "frekuensi",
+   "old": "4x/hari",
+   "new": "3-4x/hari",
+   "class": "mekanis",
+   "rule": "f_frekuensi_rentang_terpotong",
+   "rendered": true,
+   "kind": "auto",
+   "sumber": "dokumen index (ekstraksi otomatis)",
+   "evidence": {
+    "where": "teks_sendiri",
+    "key": "index_md",
+    "match": "persis",
+    "kutipan": "- Analgesik-antipiretik: Parasetamol 10-15 mg/kgBB/kali pada anak atau 500 mg 3-4x/hari pada dewasa;"
+   },
+   "pid": "M6-0115"
+  }
+ ]
+}

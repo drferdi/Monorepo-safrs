@@ -1,0 +1,14 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "^(exec|read|edit|write|apply_patch|notebook_edit)$",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "node -e \"const p=require('path'),u=require('url');let r;try{r=require('child_process').execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim()}catch{r=process.env.DEVIN_PROJECT_DIR||process.cwd()}import(u.pathToFileURL(p.join(r,'.devin/hooks/safrs-guard.mjs')).href).catch(e=>{process.stdout.write(JSON.stringify({decision:'block',reason:'SAFRS guard: hook could not start ('+e.message+'); blocked (fail closed).'}));process.exit(0)})\"",
+          "timeout": 10
+        }
+      ]
+    }
+  ]
+}

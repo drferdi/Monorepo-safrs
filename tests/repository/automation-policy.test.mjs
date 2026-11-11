@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readdirSync,
   readFileSync,
@@ -35,11 +36,12 @@ const unrestrictedAutonomyPattern =
 const downloadCommandPattern =
   /\b(?:curl|wget|iwr|invoke-webrequest|invoke-restmethod)\b/iu;
 
-function runHook(script, payload, inputOverride, cwd = repositoryRoot) {
+function runHook(script, payload, inputOverride, cwd = repositoryRoot, env) {
   return spawnSync(process.execPath, [script], {
     cwd,
     encoding: "utf8",
     input: inputOverride ?? JSON.stringify(payload),
+    env: env ?? process.env,
   });
 }
 
@@ -266,11 +268,11 @@ test("CI proves the full safe verification path without deployment", () => {
   for (const command of [
     "pnpm governance",
     "pnpm install --frozen-lockfile",
+    "pnpm check:security",
     "pnpm lint",
-    "pnpm typecheck",
-    "pnpm test",
+    "pnpm turbo run typecheck",
+    "pnpm turbo run test",
     "pnpm build",
-    "pnpm test:e2e",
   ]) {
     assert.match(
       workflow,
@@ -290,6 +292,11 @@ test("CI proves the full safe verification path without deployment", () => {
   assert.match(
     workflow,
     /node --test tests\/repository\/automation-policy\.test\.mjs/u,
+  );
+  // The lockfile and token-scope guards need no database or .env, so CI runs them directly.
+  assert.match(
+    workflow,
+    /node --test tests\/repository\/workspace-config\.test\.mjs/u,
   );
   assert.doesNotMatch(workflow, /\bdeploy\b/iu);
 
@@ -490,9 +497,54 @@ test("Codex guard reports verification-control context without blocking", () => 
   );
 });
 
-test("Codex guard handles malformed payloads without inventing a target", () => {
+test("Codex guard lets merges reach the Codex prompt only when the merge prompt rules exist", () => {
+  const home = mkdtempSync(join(tmpdir(), "codex-home-"));
+  const env = { ...process.env, HOME: home, USERPROFILE: home };
+  const payload = {
+    tool_name: "Bash",
+    tool_input: { command: "git merge feat/x" },
+  };
+  try {
+    assert.equal(
+      runHook(codexGuard, payload, undefined, repositoryRoot, env).status,
+      2,
+    );
+    mkdirSync(join(home, ".codex", "rules"), { recursive: true });
+    writeFileSync(join(home, ".codex", "rules", "safrs-merge.rules"), "");
+    const deferred = runHook(
+      codexGuard,
+      payload,
+      undefined,
+      repositoryRoot,
+      env,
+    );
+    assert.equal(deferred.status, 0, deferred.stderr);
+    assert.match(
+      JSON.parse(deferred.stdout).hookSpecificOutput.additionalContext,
+      /Gaffer/,
+    );
+    // The rules match argv prefixes only, so other spellings stay blocked.
+    for (const command of [
+      "git.exe merge feat/x",
+      "git -C D:/DEV/monorepo merge feat/x",
+    ]) {
+      const blocked = runHook(
+        codexGuard,
+        { tool_name: "Bash", tool_input: { command } },
+        undefined,
+        repositoryRoot,
+        env,
+      );
+      assert.equal(blocked.status, 2, command);
+    }
+  } finally {
+    rmSync(home, { recursive: true, force: true });
+  }
+});
+
+test("Codex guard blocks malformed payloads (fail closed)", () => {
   const result = runHook(codexGuard, {}, "not-json");
-  assert.equal(result.status, 0);
+  assert.equal(result.status, 2);
   assert.match(result.stderr, /could not be parsed/i);
 });
 
@@ -518,37 +570,6 @@ test("Codex guard resolves the repository registry from a nested project cwd", (
   );
 });
 
-test("Codex formatter extracts unique apply_patch paths", async () => {
-  const formatterUrl = pathToFileURL(
-    join(repositoryRoot, ".codex/hooks/format-edited-files.mjs"),
-  ).href;
-  const formatter = await import(formatterUrl);
-  const paths = formatter.extractEditedPaths({
-    tool_name: "apply_patch",
-    tool_input: {
-      command: [
-        "*** Begin Patch",
-        "*** Update File: src/a.ts",
-        "*** Add File: src/b.json",
-        "*** Update File: src/a.ts",
-        "*** End Patch",
-      ].join("\n"),
-    },
-  });
-  assert.deepEqual(paths, ["src/a.ts", "src/b.json"]);
-  assert.equal(formatter.shouldFormat("src/a.ts"), true);
-  assert.equal(formatter.shouldFormat(".next/cache/a.js"), false);
-  assert.equal(
-    formatter.shouldFormat("packages/database/src/generated/a.ts"),
-    false,
-  );
-  assert.equal(formatter.shouldFormat("README.md"), false);
-  assert.equal(
-    formatter.findRepositoryRoot(join(repositoryRoot, "packages/api")),
-    repositoryRoot,
-  );
-});
-
 test("Codex project config wires only pinned Context7 and three child threads", () => {
   const config = parseToml(".codex/config.toml");
   assert.equal(config.agents.enabled, true);
@@ -569,23 +590,21 @@ test("Codex project config wires only pinned Context7 and three child threads", 
   }
 });
 
-test("Codex hooks use repository root discovery for Windows and POSIX", () => {
+test("Codex PreToolUse hook uses repository root discovery without mutation", () => {
   const config = JSON.parse(readFileSync(".codex/hooks.json", "utf8"));
   assert.equal(
     config.hooks.PreToolUse[0].matcher,
     "Bash|apply_patch|Edit|Write",
   );
-  assert.equal(config.hooks.PostToolUse[0].matcher, "apply_patch|Edit|Write");
-  for (const group of [
-    config.hooks.PreToolUse[0],
-    config.hooks.PostToolUse[0],
-  ]) {
-    assert.match(group.hooks[0].command, /git rev-parse --show-toplevel/u);
-    assert.match(
-      group.hooks[0].commandWindows,
-      /git rev-parse --show-toplevel/u,
-    );
-  }
+  assert.equal(Object.hasOwn(config.hooks, "PostToolUse"), false);
+  assert.match(
+    config.hooks.PreToolUse[0].hooks[0].command,
+    /git rev-parse --show-toplevel/u,
+  );
+  assert.match(
+    config.hooks.PreToolUse[0].hooks[0].commandWindows,
+    /git rev-parse --show-toplevel/u,
+  );
 });
 
 test("Codex custom reviewers are instruction-level read-only without model overrides", () => {

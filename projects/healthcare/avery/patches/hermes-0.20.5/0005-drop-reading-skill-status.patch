@@ -1,0 +1,27 @@
+diff --git a/gateway/platforms/whatsapp_common.py b/gateway/platforms/whatsapp_common.py
+index b6526bc..5257ed1 100644
+--- a/gateway/platforms/whatsapp_common.py
++++ b/gateway/platforms/whatsapp_common.py
+@@ -112,6 +112,22 @@ def _local_outbound_safety_drop_reason(text):
+         raw,
+     ):
+         return "RETRYING"
++    core = re.sub(r"^[\W_]+", "", raw.strip(), flags=re.UNICODE).strip()
++    if core and len(core) <= 120:
++        low = core.lower()
++        for head in (
++            "reading skill",
++            "listing skills",
++            "searching files",
++            "searching the web",
++            "updating memory",
++            "calling tool",
++            "using tool",
++            "running tool",
++            "running code",
++        ):
++            if low == head or low.startswith(head + " ") or low.startswith(head + ":"):
++                return "TOOL"
+     if re.search(
+         r"(?im)^(?:\s*(?:reading skill|searching files|updating memory|"
+         r"calling tool|using tool|running tool|tool result|tool_call|"

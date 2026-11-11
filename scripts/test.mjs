@@ -16,7 +16,10 @@ const environment = {
 };
 
 const commands = [
-  [process.execPath, ["--test", "tests/repository/*.test.mjs"]],
+  [
+    process.execPath,
+    ["--test", "tests/repository/*.test.mjs", ".claude/hooks/*.test.mjs"],
+  ],
   [packageManagerCommand, ["test:contracts"]],
   [packageManagerCommand, ["turbo", "run", "test"]],
 ];

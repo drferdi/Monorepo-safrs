@@ -1,0 +1,469 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-09-03",
+  "count": 66,
+  "templates": [
+    {
+      "id": "customer-success-chief-of-staff",
+      "path": "templates/commercial/customer-success/template.json",
+      "category": "commercial",
+      "title": "Customer Success Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "growth-marketing-chief-of-staff",
+      "path": "templates/commercial/growth-marketing/template.json",
+      "category": "commercial",
+      "title": "Growth & Marketing Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "partnerships-chief-of-staff",
+      "path": "templates/commercial/partnerships/template.json",
+      "category": "commercial",
+      "title": "Partnerships Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "pricing-revenue-management-chief-of-staff",
+      "path": "templates/commercial/pricing-revenue-management/template.json",
+      "category": "commercial",
+      "title": "Pricing & Revenue Management Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "revenue-chief-of-staff",
+      "path": "templates/commercial/revenue/template.json",
+      "category": "commercial",
+      "title": "Revenue Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "sales-operations-chief-of-staff",
+      "path": "templates/commercial/sales-operations/template.json",
+      "category": "commercial",
+      "title": "Sales Operations Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "esg-sustainability-chief-of-staff",
+      "path": "templates/corporate/esg-sustainability/template.json",
+      "category": "corporate",
+      "title": "ESG & Sustainability Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "finance-business-chief-of-staff",
+      "path": "templates/corporate/finance-business/template.json",
+      "category": "corporate",
+      "title": "Finance & Business Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "internal-audit-chief-of-staff",
+      "path": "templates/corporate/internal-audit/template.json",
+      "category": "corporate",
+      "title": "Internal Audit Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "law-practice-chief-of-staff",
+      "path": "templates/corporate/law-practice/template.json",
+      "category": "corporate",
+      "title": "Law Practice Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "legal-affairs-chief-of-staff",
+      "path": "templates/corporate/legal-affairs/template.json",
+      "category": "corporate",
+      "title": "Legal Affairs Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "people-hr-chief-of-staff",
+      "path": "templates/corporate/people-hr/template.json",
+      "category": "corporate",
+      "title": "People & HR Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "privacy-data-governance-chief-of-staff",
+      "path": "templates/corporate/privacy-data-governance/template.json",
+      "category": "corporate",
+      "title": "Privacy & Data Governance Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "procurement-vendor-chief-of-staff",
+      "path": "templates/corporate/procurement-vendor/template.json",
+      "category": "corporate",
+      "title": "Procurement & Vendor Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "risk-compliance-chief-of-staff",
+      "path": "templates/corporate/risk-compliance/template.json",
+      "category": "corporate",
+      "title": "Risk & Compliance Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "tax-accounting-practice-chief-of-staff",
+      "path": "templates/corporate/tax-accounting-practice/template.json",
+      "category": "corporate",
+      "title": "Tax & Accounting Practice Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "treasury-chief-of-staff",
+      "path": "templates/corporate/treasury/template.json",
+      "category": "corporate",
+      "title": "Treasury Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "creator-media-chief-of-staff",
+      "path": "templates/creative/creator-media/template.json",
+      "category": "creative",
+      "title": "Creator & Media Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "financial-services-chief-of-staff",
+      "path": "templates/financial-services/financial-services/template.json",
+      "category": "financial-services",
+      "title": "Financial Services Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "clinical-operations-chief-of-staff",
+      "path": "templates/healthcare/clinical-operations/template.json",
+      "category": "healthcare",
+      "title": "Clinical Operations Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "healthcare-finance-chief-of-staff",
+      "path": "templates/healthcare/healthcare-finance/template.json",
+      "category": "healthcare",
+      "title": "Healthcare Finance Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "healthcare-operations-chief-of-staff",
+      "path": "templates/healthcare/healthcare-operations/template.json",
+      "category": "healthcare",
+      "title": "Healthcare Operations Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "healthcare-workforce-chief-of-staff",
+      "path": "templates/healthcare/healthcare-workforce/template.json",
+      "category": "healthcare",
+      "title": "Healthcare Workforce Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "hospital-executive-chief-of-staff",
+      "path": "templates/healthcare/hospital-executive/template.json",
+      "category": "healthcare",
+      "title": "Hospital Executive Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "quality-patient-safety-chief-of-staff",
+      "path": "templates/healthcare/quality-patient-safety/template.json",
+      "category": "healthcare",
+      "title": "Quality & Patient Safety Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "regulatory-accreditation-chief-of-staff",
+      "path": "templates/healthcare/regulatory-accreditation/template.json",
+      "category": "healthcare",
+      "title": "Healthcare Regulatory & Accreditation Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "public-affairs-government-relations-chief-of-staff",
+      "path": "templates/indonesia-public-sector/public-affairs-government-relations/template.json",
+      "category": "indonesia-public-sector",
+      "title": "Public Affairs & Government Relations Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "public-policy-chief-of-staff",
+      "path": "templates/indonesia-public-sector/public-policy/template.json",
+      "category": "indonesia-public-sector",
+      "title": "Public Policy Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "public-sector-program-delivery-chief-of-staff",
+      "path": "templates/indonesia-public-sector/public-sector-program-delivery/template.json",
+      "category": "indonesia-public-sector",
+      "title": "Public Sector Program Delivery Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "regulatory-intelligence-chief-of-staff",
+      "path": "templates/indonesia-public-sector/regulatory-intelligence/template.json",
+      "category": "indonesia-public-sector",
+      "title": "Regulatory Intelligence Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "board-governance-chief-of-staff",
+      "path": "templates/leadership/board-governance/template.json",
+      "category": "leadership",
+      "title": "Board & Governance Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "corporate-affairs-chief-of-staff",
+      "path": "templates/leadership/corporate-affairs/template.json",
+      "category": "leadership",
+      "title": "Corporate Affairs Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "executive-chief-of-staff",
+      "path": "templates/leadership/executive/template.json",
+      "category": "leadership",
+      "title": "Executive Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "founder-chief-of-staff",
+      "path": "templates/leadership/founder/template.json",
+      "category": "leadership",
+      "title": "Founder Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "strategy-chief-of-staff",
+      "path": "templates/leadership/strategy/template.json",
+      "category": "leadership",
+      "title": "Strategy Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "transformation-pmo-chief-of-staff",
+      "path": "templates/leadership/transformation-pmo/template.json",
+      "category": "leadership",
+      "title": "Transformation & PMO Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "agriculture-plantation-chief-of-staff",
+      "path": "templates/operations/agriculture-plantation/template.json",
+      "category": "operations",
+      "title": "Agriculture & Plantation Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "business-continuity-chief-of-staff",
+      "path": "templates/operations/business-continuity/template.json",
+      "category": "operations",
+      "title": "Crisis & Business Continuity Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "construction-property-chief-of-staff",
+      "path": "templates/operations/construction-property/template.json",
+      "category": "operations",
+      "title": "Construction & Property Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "facilities-chief-of-staff",
+      "path": "templates/operations/facilities/template.json",
+      "category": "operations",
+      "title": "Facilities Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "hospitality-fnb-chief-of-staff",
+      "path": "templates/operations/hospitality-fnb/template.json",
+      "category": "operations",
+      "title": "Hospitality & F&B Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "hse-chief-of-staff",
+      "path": "templates/operations/hse/template.json",
+      "category": "operations",
+      "title": "Health, Safety & Environment Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "logistics-lastmile-chief-of-staff",
+      "path": "templates/operations/logistics-lastmile/template.json",
+      "category": "operations",
+      "title": "Logistics & Last-Mile Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "manufacturing-chief-of-staff",
+      "path": "templates/operations/manufacturing/template.json",
+      "category": "operations",
+      "title": "Manufacturing Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "operations-chief-of-staff",
+      "path": "templates/operations/operations/template.json",
+      "category": "operations",
+      "title": "Operations Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "project-delivery-chief-of-staff",
+      "path": "templates/operations/project-delivery/template.json",
+      "category": "operations",
+      "title": "Project Delivery Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "quality-chief-of-staff",
+      "path": "templates/operations/quality/template.json",
+      "category": "operations",
+      "title": "Quality Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "supply-chain-chief-of-staff",
+      "path": "templates/operations/supply-chain/template.json",
+      "category": "operations",
+      "title": "Supply Chain Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "career-chief-of-staff",
+      "path": "templates/personal/career/template.json",
+      "category": "personal",
+      "title": "Career & Job Search Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "freelancer-chief-of-staff",
+      "path": "templates/personal/freelancer/template.json",
+      "category": "personal",
+      "title": "Freelancer Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "personal-finance-chief-of-staff",
+      "path": "templates/personal/personal-finance/template.json",
+      "category": "personal",
+      "title": "Personal Finance Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "student-chief-of-staff",
+      "path": "templates/personal/student/template.json",
+      "category": "personal",
+      "title": "Student Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "academic-research-chief-of-staff",
+      "path": "templates/research-education/academic-research/template.json",
+      "category": "research-education",
+      "title": "Academic & Research Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "clinical-research-chief-of-staff",
+      "path": "templates/research-education/clinical-research/template.json",
+      "category": "research-education",
+      "title": "Clinical Research Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "education-academic-chief-of-staff",
+      "path": "templates/research-education/education-academic/template.json",
+      "category": "research-education",
+      "title": "Education & Academic Operations Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "knowledge-intelligence-chief-of-staff",
+      "path": "templates/research-education/knowledge-intelligence/template.json",
+      "category": "research-education",
+      "title": "Knowledge & Intelligence Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "umkm-owner-chief-of-staff",
+      "path": "templates/small-business/umkm-owner/template.json",
+      "category": "small-business",
+      "title": "UMKM Owner Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "ngo-program-chief-of-staff",
+      "path": "templates/social-impact/ngo-program/template.json",
+      "category": "social-impact",
+      "title": "NGO & Social Program Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "ai-data-chief-of-staff",
+      "path": "templates/technology/ai-data/template.json",
+      "category": "technology",
+      "title": "AI & Data Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "ai-governance-chief-of-staff",
+      "path": "templates/technology/ai-governance/template.json",
+      "category": "technology",
+      "title": "AI Governance Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "cybersecurity-chief-of-staff",
+      "path": "templates/technology/cybersecurity/template.json",
+      "category": "technology",
+      "title": "Cybersecurity Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "devops-sre-chief-of-staff",
+      "path": "templates/technology/devops-sre/template.json",
+      "category": "technology",
+      "title": "DevOps & SRE Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "engineering-chief-of-staff",
+      "path": "templates/technology/engineering/template.json",
+      "category": "technology",
+      "title": "Engineering Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "enterprise-it-chief-of-staff",
+      "path": "templates/technology/enterprise-it/template.json",
+      "category": "technology",
+      "title": "Enterprise IT Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "product-chief-of-staff",
+      "path": "templates/technology/product/template.json",
+      "category": "technology",
+      "title": "Product Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "technology-operations-chief-of-staff",
+      "path": "templates/technology/technology-operations/template.json",
+      "category": "technology",
+      "title": "Technology Operations Chief of Staff",
+      "featured": false
+    }
+  ]
+}

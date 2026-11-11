@@ -1,0 +1,24 @@
+# Capsule standalone: workspace pnpm milik med-assist sendiri, lockfile di folder ini.
+packages: []
+
+# Kontrak standalone menolak symlink di pohon capsule; linker hoisted membuat
+# node_modules datar tanpa symlink.
+nodeLinker: hoisted
+
+# pnpm 11 wajib keputusan eksplisit. esbuild (Vite/WXT) dan sharp (ikon) butuh
+# build script; postinstall tesseract.js (pesan donasi) dan spawn-sync (polyfill
+# lama) tidak.
+allowBuilds:
+  esbuild: true
+  sharp: true
+  spawn-sync: false
+  tesseract.js: false
+
+# Advisori keamanan (pnpm audit 2026-09-26): rantai web-ext-run milik wxt
+# (dipakai saat `wxt` membuka browser dev) dan esbuild milik wxt.
+overrides:
+  'fx-runner>shell-quote': ^1.8.5
+  'web-ext-run>tmp': ^0.2.6
+  'firefox-profile>adm-zip': ^0.6.1
+  'node-notifier>uuid': ^11.1.1
+  'wxt>esbuild': ^0.28.1

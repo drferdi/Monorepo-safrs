@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "format:SS-REC-{YYYY}-{#####}",
+ "creation": "2026-07-22 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "batch",
+  "resource_type",
+  "fhir_id",
+  "encounter_ref",
+  "subject_ref",
+  "pulled_at",
+  "raw_fhir_json",
+  "normalized_json",
+  "payload_hash",
+  "validation_status",
+  "mapping_status",
+  "target_doctype",
+  "target_name",
+  "error_message"
+ ],
+ "fields": [
+  {
+   "fieldname": "batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Batch",
+   "options": "SATUSEHAT Sync Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "resource_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Resource Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fhir_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "FHIR ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "encounter_ref",
+   "fieldtype": "Data",
+   "label": "Encounter Ref"
+  },
+  {
+   "fieldname": "subject_ref",
+   "fieldtype": "Data",
+   "label": "Subject Ref"
+  },
+  {
+   "fieldname": "pulled_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Pulled At",
+   "reqd": 1
+  },
+  {
+   "fieldname": "raw_fhir_json",
+   "fieldtype": "Code",
+   "label": "Raw FHIR JSON",
+   "options": "JSON",
+   "reqd": 1
+  },
+  {
+   "fieldname": "normalized_json",
+   "fieldtype": "Code",
+   "label": "Normalized JSON",
+   "options": "JSON"
+  },
+  {
+   "fieldname": "payload_hash",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Payload Hash",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "validation_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Validation Status",
+   "options": "Pending\nValid\nInvalid",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "mapping_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Mapping Status",
+   "options": "Pending\nMatched\nNew\nConflict\nFailed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_doctype",
+   "fieldtype": "Data",
+   "label": "Target DocType"
+  },
+  {
+   "fieldname": "target_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Target Name",
+   "options": "target_doctype"
+  },
+  {
+   "fieldname": "error_message",
+   "fieldtype": "Small Text",
+   "label": "Error Message"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-07-22 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Sentra MANTRA Integrations",
+ "name": "SATUSEHAT Resource Record",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "fhir_id"
+}

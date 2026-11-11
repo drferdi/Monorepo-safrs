@@ -1,0 +1,100 @@
+{
+  "results": [
+    {
+      "instrument": "Files",
+      "prompt_id": 1,
+      "expect": "write_file,read_file",
+      "discoverable": true,
+      "callable": true,
+      "consumed": true,
+      "tools_called": ["read_file", "write_file"],
+      "session_id": "20260823_230542_79c3e0",
+      "duration_s": 12.2,
+      "status": "PASS"
+    },
+    {
+      "instrument": "Terminal",
+      "prompt_id": 2,
+      "expect": "terminal",
+      "discoverable": true,
+      "callable": true,
+      "consumed": true,
+      "tools_called": ["terminal"],
+      "session_id": "20260823_230554_fb708b",
+      "duration_s": 7.7,
+      "status": "PASS"
+    },
+    {
+      "instrument": "Web",
+      "prompt_id": 3,
+      "expect": "web_extract,web_search",
+      "discoverable": true,
+      "callable": true,
+      "consumed": true,
+      "tools_called": ["web_extract"],
+      "session_id": "20260823_230602_7aec35",
+      "duration_s": 7.9,
+      "status": "PASS"
+    },
+    {
+      "instrument": "Knowledge",
+      "prompt_id": 4,
+      "expect": "skill_view",
+      "discoverable": true,
+      "callable": true,
+      "consumed": true,
+      "tools_called": ["skill_view"],
+      "session_id": "20260823_230610_42dd29",
+      "duration_s": 6.9,
+      "status": "PASS"
+    },
+    {
+      "instrument": "Memory",
+      "prompt_id": 5,
+      "expect": "memory",
+      "discoverable": true,
+      "callable": true,
+      "consumed": true,
+      "tools_called": ["memory"],
+      "session_id": "20260823_230617_dc10ab",
+      "duration_s": 17.3,
+      "status": "PASS"
+    },
+    {
+      "instrument": "Skills",
+      "prompt_id": 6,
+      "expect": "skills_list",
+      "discoverable": true,
+      "callable": true,
+      "consumed": true,
+      "tools_called": ["skills_list"],
+      "session_id": "20260823_230634_20baae",
+      "duration_s": 7.4,
+      "status": "PASS"
+    },
+    {
+      "instrument": "Cron",
+      "prompt_id": 7,
+      "expect": "cronjob",
+      "discoverable": false,
+      "callable": false,
+      "consumed": false,
+      "tools_called": ["terminal"],
+      "session_id": "20260823_230642_91126c",
+      "duration_s": 10.2,
+      "status": "FAIL"
+    },
+    {
+      "instrument": "Delegation",
+      "prompt_id": 8,
+      "expect": "delegate_task",
+      "status": "NOT_CONFIGURED"
+    }
+  ],
+  "summary": {
+    "pass": 6,
+    "fail": 1,
+    "not_configured": 1,
+    "ran_at": "2026-08-23T16:06:50.8464107Z"
+  }
+}

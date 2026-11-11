@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Avery Kediri Knowledge Record",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "name",
+    "scope",
+    "temporal_class",
+    "confidence",
+    "sources"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "scope": {
+      "enum": [
+        "kota_kediri",
+        "kabupaten_kediri",
+        "kediri_raya"
+      ]
+    },
+    "category": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "string"
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "local_context": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "valid_at": {
+      "type": "string"
+    },
+    "valid_from": {
+      "type": "string"
+    },
+    "valid_to": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "temporal_class": {
+      "enum": [
+        "deep_memory",
+        "living_registry",
+        "pulse"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -138,4 +138,4 @@ I. Minimal Work Packages
 
 ## Audit Anti-Patterns
 
-Do not reconstruct thousands of historical changes, use an old commit as presumed truth, treat file-count growth as a defect by itself, perform unrelated cleanup, propose framework upgrades without evidence, rewrite architecture to accommodate accidental coupling, stop unrelated analysis because one capsule is blocked, or ask Chief to resolve deterministic bookkeeping.
+Do not reconstruct thousands of historical changes, use an old commit as presumed truth, treat file-count growth as a defect by itself, perform unrelated cleanup, propose framework upgrades without evidence, rewrite architecture to accommodate accidental coupling, stop unrelated analysis because one capsule is blocked, or ask Gaffer to resolve deterministic bookkeeping.

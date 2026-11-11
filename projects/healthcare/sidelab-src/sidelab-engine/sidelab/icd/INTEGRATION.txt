@@ -1,0 +1,49 @@
+# The vision and craft of codieverse+.
+SIDELAB_ICD INTEGRATION INSTRUCTIONS
+====================================
+
+Modul sidelab_icd/ sudah lengkap dan tested. Untuk hook ke REPL SIDELAB,
+butuh 2 sisipan kecil di medgemma_chat.py:
+
+----------------------------------------------------------------------
+SISIPAN 1: Import header (taruh setelah blok try/except sidelab_notify,
+sekitar line 38, persis sebelum komentar "# Paths"):
+----------------------------------------------------------------------
+
+try:
+    from sidelab_icd import handle_icd_command
+    _ICD_AVAILABLE = True
+except ImportError:
+    _ICD_AVAILABLE = False
+    def handle_icd_command(user_input, console):
+        console.print("  [!] sidelab_icd tidak tersedia.", style="bright_red")
+
+
+----------------------------------------------------------------------
+SISIPAN 2: Command dispatcher di main() REPL loop (taruh sebagai elif
+baru SETELAH blok `/model` (sekitar line 3337) dan SEBELUM `else:`
+fallback ke _chat()):
+----------------------------------------------------------------------
+
+        elif cmd == "/icd" or cmd.startswith("/icd "):
+            handle_icd_command(user_input, console)
+
+
+----------------------------------------------------------------------
+SISIPAN 3 (opsional, dokumentasi): Tambah row di tabel _print_help()
+(sekitar line 2427), antara baris "/send" dan "/model":
+----------------------------------------------------------------------
+
+        ("/icd",     "Kamus ICD-10 Indonesia — contoh: /icd I10 atau /icd hipertensi"),
+
+
+VERIFIKASI SETELAH APPLY:
+- python -c "import medgemma_chat; print(medgemma_chat._ICD_AVAILABLE)" → True
+- run.bat → ketik /icd I10 → tampil "Hipertensi Esensial (Primer)"
+- run.bat → ketik /icd hipertensi → daftar penyakit hipertensi
+- run.bat → ketik /icd E11 → 10 sub-kode E11.0–E11.9 (DM Tipe 2)
+
+
+CATATAN:
+Footprint sengaja minimum (6 baris di medgemma_chat.py) supaya
+tidak konflik dengan pekerjaan Codex paralel di file utama.

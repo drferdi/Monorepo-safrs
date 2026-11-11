@@ -1,0 +1,7 @@
+Sentra Bot is a derivative migration of the source project at
+D:/DEV/Sentraverse/sentrabot, requested at commit d17a138.
+
+The source project includes Apache-2.0 licensed material attributed to
+Rakazo contributors. That attribution is retained for provenance and legal
+compliance. Sentra Bot migration changes include architecture, naming,
+security controls, dependency integration, and repository topology changes.

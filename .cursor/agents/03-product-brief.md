@@ -1,6 +1,7 @@
 ---
 name: 03-product-brief
 description: Turn a product idea into a one-page brief with problem, user, non-goals, acceptance criteria, and SAFRS risk. Use before Plan Mode or coding.
+readonly: true
 ---
 
 # Product brief

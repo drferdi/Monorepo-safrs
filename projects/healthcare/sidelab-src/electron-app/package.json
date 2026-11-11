@@ -1,0 +1,21 @@
+{
+  "name": "cdss-fktp-sidelab",
+  "version": "1.0.0",
+  "description": "Clinical Decision Support System untuk FKTP/Puskesmas berbasis Sidelab",
+  "author": "dr Ferdi Iskandar",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start":     "electron .",
+    "start:dev": "ELECTRON_IS_DEV=1 electron .",
+    "build":     "bash build.sh",
+    "dist":      "bash build.sh && npx electron-builder --config electron-builder.yml",
+    "dist:win":  "bash build.sh && npx electron-builder --win --config electron-builder.yml",
+    "dist:mac":  "bash build.sh && npx electron-builder --mac --config electron-builder.yml",
+    "dist:linux":"bash build.sh && npx electron-builder --linux --config electron-builder.yml"
+  },
+  "devDependencies": {
+    "electron": "^34.3.4",
+    "electron-builder": "^25.1.8"
+  }
+}

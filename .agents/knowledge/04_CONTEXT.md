@@ -16,12 +16,12 @@ This document defines how context should be gathered, interpreted, and maintaine
 
 ## Guidelines
 
-Use information in this order of priority:
+Use information in the authority order of the root `AGENTS.md`:
 
-1. Project Instructions
-2. Project Knowledge
-3. Current conversation
-4. Reasonable assumptions
+1. Explicit human input from Gaffer, including the current conversation
+2. Project instructions (SAFRS, `MONOREPO_PURPOSE.md`, root and nested `AGENTS.md`)
+3. Project knowledge (task docs and this knowledge base)
+4. Reasonable low-impact assumptions
 
 When information is missing, continue with reasonable assumptions only if the impact is low. Otherwise, explain what is missing and why it matters.
 

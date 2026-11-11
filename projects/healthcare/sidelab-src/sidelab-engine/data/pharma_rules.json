@@ -1,0 +1,93 @@
+{
+  "supportive": [
+    {
+      "role": "adjuvant",
+      "keywords": [
+        "osteoartritis",
+        "mialgia",
+        "nyeri punggung bawah",
+        "low back pain",
+        "m54.5",
+        "m79.1",
+        "m19"
+      ],
+      "lookup_key": "ibuprofen",
+      "line": "Ibuprofen 400 mg PO 3x1 5 hari PC"
+    },
+    {
+      "role": "vitamin",
+      "keywords": [
+        "osteoartritis",
+        "mialgia",
+        "nyeri punggung bawah",
+        "low back pain",
+        "m54.5",
+        "m79.1",
+        "m19"
+      ],
+      "lookup_key": "vitamin b kompleks",
+      "line": "Vitamin B kompleks 1x1 PO 5 hari PC"
+    },
+    {
+      "role": "vitamin",
+      "keywords": [
+        "nasofaringitis",
+        "ispa",
+        "infeksi saluran pernapasan atas",
+        "j00",
+        "j06"
+      ],
+      "lookup_key": "vitamin c",
+      "line": "Vitamin C 1x500 mg PO 5 hari PC"
+    }
+  ],
+  "cluster": [
+    {
+      "name": "noninfectious_msk",
+      "keywords": [
+        "osteoartritis",
+        "mialgia",
+        "nyeri punggung bawah",
+        "low back pain",
+        "m54.5",
+        "m79.1",
+        "m19"
+      ],
+      "blocked_drug_keywords": [
+        "amoxic",
+        "amoks",
+        "clavulan",
+        "metronid",
+        "cotrim",
+        "trimeth",
+        "albend"
+      ],
+      "defaults": [
+        "Ibuprofen 400 mg PO 3x1 5 hari PC",
+        "Vitamin B kompleks 1x1 PO 5 hari PC"
+      ]
+    },
+    {
+      "name": "non_bacterial_uri",
+      "keywords": [
+        "nasofaringitis",
+        "ispa",
+        "infeksi saluran pernapasan atas",
+        "j00",
+        "j06"
+      ],
+      "blocked_drug_keywords": [
+        "amoxic",
+        "amoks",
+        "clavulan",
+        "metronid",
+        "cotrim",
+        "trimeth",
+        "albend"
+      ],
+      "defaults": [
+        "Vitamin C 1x500 mg PO 5 hari PC"
+      ]
+    }
+  ]
+}

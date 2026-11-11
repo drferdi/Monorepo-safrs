@@ -127,7 +127,7 @@ Jika Git melaporkan `corrupt peeled tag` (`^...`) atau ref cabang yang hilang:
 ## 5. SOP-04: SAFRS Capsule Gate & Sovereign Filtered Publication
 
 ### 5.1. Invarian Kedaulatan Kapsul (Capsule Sovereignty)
-Berdasarkan SAFRS v1.1 dan arahan Chief (2026-08-25):
+Berdasarkan SAFRS v1.1 dan arahan Gaffer (2026-08-25):
 - Repositori `Monorepo-safrs.git` adalah **Public AI Control Plane**.
 - Direktori `projects/**` adalah proyek berdaulat (*sovereign standalone project capsules*) yang memiliki repositori mandiri (misal `sentrabot`, `avery`, `kediri-history`, `academic-smartboard`).
 - Kode aplikasi dalam `projects/**` **TIDAK BOLEH** didorong ke remote `origin` monorepo publik.
@@ -193,4 +193,6 @@ Sebelum mendeklarasikan sesi selesai (*session closing*):
 - [ ] Pemeriksaan dokumen valid (`python tools/safrs/check_docs.py` lolos `OK`).
 - [ ] Commit menyertakan *attribution trailer* resmi (`Co-Authored-By: ...`).
 - [ ] Publikasi remote selaras dengan `origin publish-no-projects` via Capsule Gate.
-- [ ] `.agents/HANDOFF.md` diperbarui dengan rekam jejak terkini dan referensi SOP ini.
+- [ ] HANDOFF setiap scope yang disentuh diperbarui dengan rekam jejak terkini dan referensi SOP ini:
+  `projects/<domain>/<capsule>/.agents/HANDOFF.md` untuk kerja capsule, `.agents/HANDOFF.md` root
+  hanya untuk kerja control plane.

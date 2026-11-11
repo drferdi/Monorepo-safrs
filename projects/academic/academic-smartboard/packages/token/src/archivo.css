@@ -1,0 +1,16 @@
+/**
+ * Typeface option: Archivo + JetBrains Mono.
+ *
+ * Import after `tokens.css` to repoint the two family tokens. Only the family
+ * names change — every colour, space, radius, and line token stays as the
+ * system defines it.
+ *
+ * Pair with `@sentra/token/fonts-archivo`, which supplies --font-sans and
+ * --font-mono as self-hosted variable fonts.
+ */
+:root {
+  --font-family-sans:
+    var(--font-sans), "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono:
+    var(--font-mono), "JetBrains Mono", ui-monospace, Menlo, monospace;
+}

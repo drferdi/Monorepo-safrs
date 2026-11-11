@@ -1,0 +1,90 @@
+{"key":"SP0014#122","field":"dosis","old":"0,2 - 0,8 µg","new":"0,2 - 0,8 µg/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0014#183","field":"dosis","old":"0,1-8 mcg","new":"0,1-8 mcg/kg/menit","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0014#184","field":"dosis","old":"50 mcg","new":"50 mcg/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0050#2","field":"dosis","old":"20 mg","new":"dosis maksimal 20 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0056#7","field":"frekuensi","old":"2x/hari","new":"1-2x/hari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0056#8","field":"frekuensi","old":"2x/hari","new":"1-2x/hari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0065#0","field":"dosis","old":"75 mL","new":"75 mL/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0065#1","field":"dosis","old":"100 mL","new":"100 mL/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0077#4","field":"frekuensi","old":"4 kali sehari","new":"3-4 kali sehari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0077#8","field":"frekuensi","old":"4 kali sehari","new":"3-4 kali sehari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0089#8","field":"dosis","old":"1500 mg","new":"tidak melebihi 1500 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0097#49","action":"hapus","alasan":"garam maksimal 2 gram/hari: diet"}
+{"key":"SP0097#52","field":"dosis","old":"600 mg","new":"dosis maksimal 600 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0103#15","field":"dosis","old":"30 mg","new":"dosis maksimal 30 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0107#46","field":"frekuensi","old":"6 x","new":"4-6 x","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0109#2","field":"dosis","old":"10-20 IU","new":"10-20 IU/kg BB","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0109#2","field":"frekuensi","old":"3 kali","new":"2-3 kali","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0109#26","field":"dosis","old":"50-100 IU","new":"50-100 IU/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0109#32","field":"dosis","old":"25 IU","new":"25 IU/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0109#40","field":"dosis","old":"100 U","new":"100 U/kg/hari","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0109#41","field":"dosis","old":"200 IU","new":"200 IU/kg/hari","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0109#43","field":"dosis","old":"25 IU","new":"25 IU/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0109#44","field":"dosis","old":"10IU","new":"10IU/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0109#45","field":"dosis","old":"10-15 IU","new":"10-15 IU/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0109#46","field":"dosis","old":"50-100 IU","new":"50-100 IU/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0111#6","field":"dosis","old":"2 g","new":"maksimal 2 g","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0111#17","field":"dosis","old":"2 g","new":"maksimal 2 g","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0116#11","field":"dosis","old":"800 mg","new":"maksimal 800 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0116#15","field":"dosis","old":"800 mg","new":"dosis maksimal 800 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0127#4","field":"dosis","old":"6 mg","new":"dosis maksimal 6 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0127#6","field":"dosis","old":"800mg","new":"maksimal 800mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0127#7","field":"dosis","old":"6 mg","new":"dosis maksimal 6 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0127#10","field":"dosis","old":"800 mg","new":"dosis maksimal 800 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0129#0","field":"dosis","old":"1.6mcg","new":"1.6mcg/kg BB ideal/hari","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0136#4","field":"dosis","old":"75mg/kgBB/hari","new":"tidak lebih dari 75mg/kgBB/hari","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0139#95","field":"dosis","old":"1 gram","new":"maksimal 1 gram","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0139#96","field":"dosis","old":"2 gram","new":"maksimal 2 gram","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0155#14","field":"dosis","old":"0,25 g","new":"0,25 g/kg/BB/hari","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0182#42","action":"hapus","alasan":"lemak g/kgBB/hari: gizi"}
+{"key":"SP0183#7","field":"dosis","old":"300 mg","new":"maksimal 300 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0183#9","field":"dosis","old":"24 mg","new":"maksimal 24 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0183#14","field":"dosis","old":"300 mg","new":"maksimal 300 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0183#16","field":"dosis","old":"24 mg","new":"maksimal 24 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0187#2","field":"dosis","old":"2-4 ml","new":"2-4 ml/KgBB/%TBSA","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0187#29","action":"hapus","alasan":"tabel persentase, bukan dosis"}
+{"key":"SP0196#27","action":"hapus","alasan":"protein CAPD: gizi"}
+{"key":"SP0196#30","action":"hapus","alasan":"protein CAPD: gizi"}
+{"key":"SP0196#85","action":"hapus","alasan":"protein CAPD: gizi"}
+{"key":"SP0198#1","field":"frekuensi","old":"6 kali sehari","new":"4-6 kali sehari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0198#3","field":"frekuensi","old":"6 kali sehari","new":"4-6 kali sehari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0200#8","field":"dosis","old":"6 tablet","new":"maks 6 tablet","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0200#14","field":"dosis","old":"200 mg","new":"dosis maksimal 200 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0200#33","field":"dosis","old":"200 mg","new":"dosis maksimal 200 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0200#56","field":"dosis","old":"6 tablet","new":"maks 6 tablet","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0223#21","action":"hapus","alasan":"protein dialisis: gizi"}
+{"key":"SP0223#22","action":"hapus","alasan":"protein dialisis: gizi"}
+{"key":"SP0223#84","field":"dosis","old":"1 g","new":"1 g/kg","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0223#89","action":"hapus","alasan":"laju infus lemak: gizi parenteral"}
+{"key":"SP0231#18","field":"dosis","old":"0,04 mg","new":"maksimal 0,04 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0238#4","field":"dosis","old":"40 tetes","new":"maksimal 40 tetes","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0245#154","field":"frekuensi","old":"3x/ hari","new":"2-3x/ hari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0248#2","field":"dosis","old":"30 mg","new":"dosis maksimal 30 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0249#3","field":"dosis","old":"300mg","new":"maks 300mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0257#20","field":"frekuensi","old":"4 x","new":"3-4 x","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0257#25","field":"frekuensi","old":"4 x","new":"3-4 x","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0258#1","field":"dosis","old":"2 mg","new":"dosis maksimal 2 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0280#69","action":"hapus","alasan":"asam lemak jenuh: diet"}
+{"key":"SP0280#74","field":"dosis","old":"0,25 g","new":"0,25 g/KgBB/hari","alasan":"re-audit b_per_kg_hilang, dibaca"}
+{"key":"SP0317#12","action":"hapus","alasan":"produksi urine: target, bukan dosis"}
+{"key":"SP0320#22","field":"dosis","old":"0,75 g","new":"maksimum 0,75 g","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0323#9","field":"frekuensi","old":"3 kali sehari","new":"2-3 kali sehari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0323#11","field":"frekuensi","old":"3 kali sehari","new":"2-3 kali sehari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0323#14","field":"frekuensi","old":"3 kali sehari","new":"2-3 kali sehari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0323#16","field":"frekuensi","old":"3 kali sehari","new":"2-3 kali sehari","alasan":"re-audit f_frekuensi_rentang_terpotong, dibaca"}
+{"key":"SP0329#7","field":"dosis","old":"800 mg","new":"maksimal 800 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0329#10","field":"dosis","old":"800 mg","new":"dosis maksimal 800 mg","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0331#23","field":"dosis","old":"6 tablet","new":"Maksimum 6 tablet","alasan":"re-audit b_dosis_maksimum_sebagai_dosis, dibaca"}
+{"key":"SP0336#5","action":"hapus","alasan":"target kenaikan berat badan"}
+{"key":"SP0314#28","field":"frekuensi","old":"2-3x/hari","new":"3x/hari","alasan":"2-3x/hari is penisilin V's, IM benzatin penisilin G's (M6 round 1 error)"}
+{"key":"SP0314#28","field":"rute","old":"IM","new":"","alasan":"2-3x/hari is penisilin V's, IM benzatin penisilin G's (M6 round 1 error)"}
+{"key":"SP0314#32","field":"dosis","old":"50 mg","new":"50 mg/kgBB","alasan":"Permenkes hal. 311: dosis tunggal and IM are penicillin G benzatin's; quote was cut"}
+{"key":"SP0314#32","field":"frekuensi","old":"dosis tunggal","new":"dosis dibagi 3 kali/ hari","alasan":"Permenkes hal. 311: dosis tunggal and IM are penicillin G benzatin's; quote was cut"}
+{"key":"SP0314#32","field":"durasi","old":"","new":"selama 10 hari","alasan":"Permenkes hal. 311: dosis tunggal and IM are penicillin G benzatin's; quote was cut"}
+{"key":"SP0314#32","field":"rute","old":"IM","new":"","alasan":"Permenkes hal. 311: dosis tunggal and IM are penicillin G benzatin's; quote was cut"}
+{"key":"SP0314#32","field":"kutipan","old":"Benzatin 50.000 U/kgBB/IM dosis tunggal atau Amoksisilin 50 mg/","new":"Amoksisilin 50 mg/ kgBB dosis dibagi 3 kali/ hari selama 10 hari","alasan":"Permenkes hal. 311: dosis tunggal and IM are penicillin G benzatin's; quote was cut"}
+{"key":"SP0314#37","field":"frekuensi","old":"dosis tunggal","new":"dosis dibagi 3 kali/hari","alasan":"KMK hal. 438: dosis tunggal is penisilin G benzatin's; quote was cut"}
+{"key":"SP0314#37","field":"durasi","old":"","new":"selama 10 hari","alasan":"KMK hal. 438: dosis tunggal is penisilin G benzatin's; quote was cut"}
+{"key":"SP0314#37","field":"kutipan","old":"dosis tunggal atau Amoksisilin 50 mg/kgBB dosis dibagi 3","new":"Amoksisilin 50 mg/kgBB dosis dibagi 3 kali/hari selama 10 hari","alasan":"KMK hal. 438: dosis tunggal is penisilin G benzatin's; quote was cut"}
+{"key":"SP0219#1","field":"populasi","old":"anak","new":"dewasa","alasan":"quote: 500 mg 3-4x/hari pada dewasa"}
+{"key":"SP0219#4","field":"populasi","old":"anak","new":"dewasa","alasan":"quote: 500 mg 3-4x/hari pada dewasa"}

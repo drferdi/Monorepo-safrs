@@ -45,9 +45,14 @@ if (!target) {
   process.exit(0);
 }
 
+// Claude runs hooks in the current directory, which follows `cd`; resolve
+// Biome and the target from the repository root so formatting still runs.
+const root =
+  spawnSync("git", ["rev-parse", "--show-toplevel"], { encoding: "utf8" }).stdout?.trim() ||
+  process.cwd();
 const absolute = path.resolve(process.cwd(), target);
 const relative = path
-  .relative(process.cwd(), absolute)
+  .relative(root, absolute)
   .split(path.sep)
   .join("/");
 
@@ -59,14 +64,14 @@ if (!FORMATTABLE_EXTENSIONS.has(path.extname(absolute).toLowerCase())) {
   process.exit(0);
 }
 
-if (!existsSync(BIOME_BIN)) {
+if (!existsSync(path.join(root, BIOME_BIN))) {
   process.exit(0);
 }
 
 const result = spawnSync(
   process.execPath,
-  [BIOME_BIN, "check", "--write", "--no-errors-on-unmatched", relative],
-  { encoding: "utf8" },
+  [path.join(root, BIOME_BIN), "check", "--write", "--no-errors-on-unmatched", relative],
+  { encoding: "utf8", cwd: root },
 );
 
 if (result.status !== 0) {

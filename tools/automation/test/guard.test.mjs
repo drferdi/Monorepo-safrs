@@ -46,6 +46,73 @@ test("command verdicts: force-push deny, lease allowed, destructive db asks, aut
   );
 });
 
+test("command verdicts: hard reset and PR merge ask, safe variants allowed", () => {
+  for (const [command, reasonCode] of [
+    ["git reset --hard HEAD~1", "GIT_RESET_HARD"],
+    ["rtk git reset --hard origin/main", "GIT_RESET_HARD"],
+    ["gh pr merge 42 --squash", "PR_MERGE"],
+    ["rtk gh pr merge --auto", "PR_MERGE"],
+    ["git.exe reset --hard HEAD", "GIT_RESET_HARD"],
+    ['git -C "D:/DEV/my repo" reset --hard', "GIT_RESET_HARD"],
+    ["gh.exe pr merge 42", "PR_MERGE"],
+  ]) {
+    const verdict = authorize({ type: "command", command });
+    assert.equal(verdict.decision, "ask", command);
+    assert.equal(verdict.reasonCode, reasonCode, command);
+  }
+  for (const command of [
+    "git reset --soft HEAD~1",
+    "git reset HEAD file.txt",
+    "gh pr view 42",
+    "git.exe -C D:/DEV/monorepo diff --stat",
+  ]) {
+    assert.equal(
+      authorize({ type: "command", command }).decision,
+      "allow",
+      command,
+    );
+  }
+});
+
+test("command verdicts: merges and main fast-forwards ask, merge plumbing allowed", () => {
+  for (const [command, reasonCode] of [
+    ["git merge feat/x", "MERGE"],
+    ["rtk git merge --no-ff main", "MERGE"],
+    ["git pull origin main", "MERGE"],
+    ["git fetch -q . feat/x:main", "MAIN_REF_UPDATE"],
+    ["git push . feat/x:refs/heads/main", "MAIN_REF_UPDATE"],
+    ["git branch -f main feat/x", "MAIN_REF_UPDATE"],
+    ["git update-ref refs/heads/main abc123", "MAIN_REF_UPDATE"],
+    ["git.exe merge feat/x", "MERGE"],
+    ["git -C D:/DEV/monorepo merge feat/x", "MERGE"],
+    ["git --no-pager -c core.editor=true pull", "MERGE"],
+    ["git.exe fetch . feat/x:main", "MAIN_REF_UPDATE"],
+    ["git checkout -B main feat/x", "MAIN_REF_UPDATE"],
+    ["git switch -C main feat/x", "MAIN_REF_UPDATE"],
+  ]) {
+    const verdict = authorize({ type: "command", command });
+    assert.equal(verdict.decision, "ask", command);
+    assert.equal(verdict.reasonCode, reasonCode, command);
+  }
+  for (const command of [
+    "git merge --abort",
+    "git merge --continue",
+    "git merge-base main HEAD",
+    "git merge-tree --write-tree main feat/x",
+    "git fetch -q . feat/x:feat/y",
+    "git.exe merge-base main HEAD",
+    "git -C D:/DEV/monorepo merge --abort",
+    "git -C D:/DEV/monorepo log --merges",
+    "git switch main",
+  ]) {
+    assert.equal(
+      authorize({ type: "command", command }).decision,
+      "allow",
+      command,
+    );
+  }
+});
+
 test("publication authority cannot be self-granted or git hooks bypassed", () => {
   const blocked = [
     "git push --no-verify origin feature",
@@ -124,6 +191,11 @@ test("Codex cannot modify its own enforcement boundary", () => {
     ".husky/pre-push",
     "tools/automation/src/guard.mjs",
     "tools/automation/src/adapters/codex.mjs",
+    ".devin/hooks.v1.json",
+    ".devin/hooks/safrs-guard.mjs",
+    ".devin/config.json",
+    ".grok/hooks/safrs-guard.mjs",
+    ".grok/hooks/safrs-guard.json",
   ];
   for (const target of protectedPaths) {
     const verdict = authorize(

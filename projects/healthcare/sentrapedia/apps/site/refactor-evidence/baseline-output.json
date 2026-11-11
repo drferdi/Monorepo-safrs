@@ -1,0 +1,354 @@
+[
+  {
+    "path": "assets/brand/favicon.png",
+    "sha256": "09370788ff1791a3e540266c1c652eacab596b58378a82f90127c0d741c88c51"
+  },
+  {
+    "path": "assets/theme/css/main1509.css",
+    "sha256": "94953e56933c033ef688ff222aa3c3c91ce6e1c6707307fe7a072c3ca88b6847"
+  },
+  {
+    "path": "assets/theme/css/responsive.css",
+    "sha256": "0472f17db7e7ae6716e89120db6f2bc3a50c1fe3e22611aeb906f3d5d7da47dd"
+  },
+  {
+    "path": "assets/theme/fonts/Inter_28pt-Bold.ttf",
+    "sha256": "ceec73bdfc78d352bcc222b9ac28e752a20b4a339daefc69bc67f49380425c0c"
+  },
+  {
+    "path": "assets/theme/fonts/Inter_28pt-Regular.ttf",
+    "sha256": "3081ede8389f3516e8616d2b2fe60cac639b341640dff0250d253d3aac5e613f"
+  },
+  {
+    "path": "assets/theme/fonts/Inter_28pt-SemiBold.ttf",
+    "sha256": "cedce7a9bfdea18077a12cda546db5683e7763b7a3a876b75a52c7eef11cecb2"
+  },
+  {
+    "path": "assets/theme/img/arrow-down.svg",
+    "sha256": "3aab7a579cd28b743d6ee92f1e9548c9a6b876994f69c18b5b55fee05895da21"
+  },
+  {
+    "path": "assets/theme/img/sentrapedia-wordmark-big.svg",
+    "sha256": "2578b295b9ca28f8087ee81cbb27a594cbae2cb32ed145416d8709b905770e20"
+  },
+  {
+    "path": "assets/theme/img/sentrapedia-wordmark-compact.svg",
+    "sha256": "e333f84fe525ee5f6b17d4cb31b886c1dde2fba2feaa301f65c2dd776cd8609f"
+  },
+  {
+    "path": "assets/theme/img/sentrapedia-wordmark-footer.svg",
+    "sha256": "30dd382c21273aa0c457662bf2b000f14fa20b0eda5ea04aa2314372d83edd79"
+  },
+  {
+    "path": "assets/theme/img/sentrapedia-wordmark-header.svg",
+    "sha256": "46fa4bb751285699fc36ab67331d86a31b412947f9e21fb53eb206b9b6258879"
+  },
+  {
+    "path": "assets/theme/js/custom55e2.js",
+    "sha256": "ec1eeb5c499f8854b961901c83a61018a9d1c1cd791029496bdac9b0f241dfb1"
+  },
+  {
+    "path": "assets/vendor/contact-form.css",
+    "sha256": "a3b9f5df6bf638a4cb583480bed6e18a84ad7141cc3d75b81094f91dd7b82f32"
+  },
+  {
+    "path": "assets/vendor/jquery-migrate.min.js",
+    "sha256": "5274f11e6fb32ae0cf2dfb9f8043272865c397a7c4223b4cfa7d50ea52fbde89"
+  },
+  {
+    "path": "assets/vendor/jquery.min.js",
+    "sha256": "cb6f2d32c49d1c2b25e9ffc9aaafa3f83075346c01bcd4ae6eb187392a4292cf"
+  },
+  {
+    "path": "assets/vendor/language-menu.css",
+    "sha256": "19fb8fd435c0bce0c7b49c24d128cce686d4a6bba0de63d34d5effa4e1f644f4"
+  },
+  {
+    "path": "faq/index.html",
+    "sha256": "c34858316a252f573bbe03df73196417fa62f75a3c59775ace706620829b8148"
+  },
+  {
+    "path": "index.html",
+    "sha256": "3841fc98cd81cb87baa52d418752f1474eb6ce32cff122ef01715f549c4f537c"
+  },
+  {
+    "path": "ketentuan/index.html",
+    "sha256": "c321351893515a91f12c4a74b659572dbd2b8411ffeca32b7e040d6051a1978a"
+  },
+  {
+    "path": "media/capability-anatomy.css",
+    "sha256": "e0ead961a9c555892a6c89d1bcf1b234881c827ddc9bd495d0c9f33ad13af467"
+  },
+  {
+    "path": "media/capability-anatomy.js",
+    "sha256": "828d8cce72f2b5149fea977a821cef6109bf708e43a25a53155ec73d9239fbc8"
+  },
+  {
+    "path": "media/capability-explorer.css",
+    "sha256": "1ee47b64aa845f63370720f929a058553f1e40b7c3f09ee71da1c1a797f4be62"
+  },
+  {
+    "path": "media/capability-explorer.js",
+    "sha256": "40556815777cd107acc9f83a11633b3a386c1b6e6ef33ec19689db59214f0143"
+  },
+  {
+    "path": "media/capability-flow-poster.jpg",
+    "sha256": "21f6af14998fce17327f223aa66fc99e5f67574772eaf8684edbf1b66a3270cf"
+  },
+  {
+    "path": "media/capability-flow.mp4",
+    "sha256": "f1e3e7b8f73638b5f3cb5ce389dd07decf91fc0b1b1c8daeaaa7acd26b4d7db3"
+  },
+  {
+    "path": "media/clinical-product/anamnesis-source.png",
+    "sha256": "0ee11bec25403915b989aa66ecd723df0928495bc98e8096ed2d7a18f57faf59"
+  },
+  {
+    "path": "media/clinical-product/audrey-chat.png",
+    "sha256": "a89cffa3132b5b22aeb206b25842942842b40cb56d986605b77c7d702aac1b70"
+  },
+  {
+    "path": "media/clinical-product/document-review.png",
+    "sha256": "8a1dede345f859f0e8efaba5751ee655088b99cd7bed95455f1a86f28e2ac4e8"
+  },
+  {
+    "path": "media/clinical-product/human-anatomy-atlas.mp4",
+    "sha256": "f051f94af17e948d7a0e1febe78cee9c69bb437553c8710c0f8caeb21e82181f"
+  },
+  {
+    "path": "media/clinical-product/human-anatomy-atlas.png",
+    "sha256": "53dd85e852666a7d7688a84c98658284612afbceebbfea0e78a0f6c439472cab"
+  },
+  {
+    "path": "media/clinical-product/human-anatomy-cutout.png",
+    "sha256": "d5e76211cfd2d51a8f1b84992a517f2a3b6338ffd82d5927fb8cdc72dfba0337"
+  },
+  {
+    "path": "media/clinical-product/workspace.png",
+    "sha256": "d6d8ac94f985cfe8624b9ee0d9ab769ec091cf0f3006da83713dcf06d6e4a93b"
+  },
+  {
+    "path": "media/clinical-video.css",
+    "sha256": "ecba60c0a6c021c69429d2a9f0f10d1284fde86d55859f664aef8d8fbcce4473"
+  },
+  {
+    "path": "media/clinical-video.js",
+    "sha256": "21c0c2fcf974fba76ac0ff563020fde9ad0de64d346c7769a5ac994040e2bdef"
+  },
+  {
+    "path": "media/design-audit.css",
+    "sha256": "9b9e97c7e861641b862530e4384c254f37f668e3ac1969f882ab60f446dced57"
+  },
+  {
+    "path": "media/design-audit.js",
+    "sha256": "4cc044a361b93ad6873b9061053d197ef0a72b4f85ad4ad6ed99c26f71d56d83"
+  },
+  {
+    "path": "media/DrawSVGPlugin.min.js",
+    "sha256": "beb19529f54c1212f1f5117d027be01afda2f363a4926d32aa979bc11140edc1"
+  },
+  {
+    "path": "media/faq.css",
+    "sha256": "9f656f74cea8bd3044e2e49453c85d1e63ca3dd1816ae4650dbe20b31cde974f"
+  },
+  {
+    "path": "media/faq.js",
+    "sha256": "5e1417c54a75f4e4a5e326ca94072a1bf1a92ec01065e55718ce6070e59e4a33"
+  },
+  {
+    "path": "media/fonts/Caveat-OFL.txt",
+    "sha256": "1f9d81d094273d82f3898a1ee8b598a717d050ecbf5ff7bede105b704880157b"
+  },
+  {
+    "path": "media/fonts/Caveat-Variable.ttf",
+    "sha256": "0bdb6b660482d31531b3945849fba5916b3ef8695da7024a9e6b9ee3c4157988"
+  },
+  {
+    "path": "media/gsap.min.js",
+    "sha256": "dd7dc87e023b3480f9707296342565ca2e361c8393cabb30f9557e06eb1bed4d"
+  },
+  {
+    "path": "media/hero-bridge.mp4",
+    "sha256": "af2a2c7527d5c96537ff83bdd922408969fdcca09eeb300e11f9bfd1203bb8ee"
+  },
+  {
+    "path": "media/hero-film.mp4",
+    "sha256": "fe4666a24593a2143ea0898bcadf8c742ce324d848cdcde680980d21d2e8bcac"
+  },
+  {
+    "path": "media/hero-workspace.css",
+    "sha256": "d3b89485d8d8a31b0e024c0d7127649287b0c06afb79c2fd4f554558ca7f89d9"
+  },
+  {
+    "path": "media/hero-workspace.js",
+    "sha256": "b5ccfa35bb78bd26c157528f0ed7cd705ffe015ceb8da711b4121c72ad9b6533"
+  },
+  {
+    "path": "media/human-anatomy.css",
+    "sha256": "cd94738940fbf806aa45bed95d175e128305ae07a5f8c47f72177fe5b5ccc565"
+  },
+  {
+    "path": "media/human-anatomy.js",
+    "sha256": "5ef2970333a15893204ff0dd916180a9d1549f7026624e2a7d610da9f0ed6e3d"
+  },
+  {
+    "path": "media/legal.css",
+    "sha256": "d1afc56c464161e3430773ea680ec0cc654ddad9116d6fb1a300110e7a448d98"
+  },
+  {
+    "path": "media/legal.js",
+    "sha256": "31093e33e5f004334a38c131b49898ba0ffc2521f86d112747854d63f1197f74"
+  },
+  {
+    "path": "media/pricing.css",
+    "sha256": "a3c4f2bf4024f00c12c1921526d14213ea2da158f223c1172622cc2f49d66ece"
+  },
+  {
+    "path": "media/pricing.js",
+    "sha256": "091b5e4f8adeae52680eb1321c909bb127883e0393303b4233e9027a0a606ffa"
+  },
+  {
+    "path": "media/product-film.css",
+    "sha256": "2639327df9a205e7b4cffb616bf952dd6cd24adfa996d7cb181a4f0e4e31b844"
+  },
+  {
+    "path": "media/product-film.js",
+    "sha256": "858fc0e844b5d42b5af0ea621ec5a63bef2a4d6cb19cb03be3485f51af3c9815"
+  },
+  {
+    "path": "media/promo-vid.mp4",
+    "sha256": "337fe0356fac555f746c00e41f9c08dbc1b37b6568ad52eed3d34b063b60cf38"
+  },
+  {
+    "path": "media/ruang-kerja.css",
+    "sha256": "896571f04152d4449ca20294fba4c19318c14d32ff0a5d61c95eb8c4155927e6"
+  },
+  {
+    "path": "media/ScrollTrigger.min.js",
+    "sha256": "ba6ffe7b85ddcc7b891b91a430f88640dff41017874bceedf071ca156ccccefa"
+  },
+  {
+    "path": "media/sejarah-sentra.css",
+    "sha256": "a923094baf3763ac8eda9f4963186bc9ed6c0c03e37e6962582c316274fdce8c"
+  },
+  {
+    "path": "media/sentrapedia-solusi.mp4",
+    "sha256": "e0f70730ce86ac18d97fa22a8372e4de327373b69a23ea5baff60075bf110a65"
+  },
+  {
+    "path": "media/SplitText.min.js",
+    "sha256": "419f7027a5f086a12cb7988736d8fdd3a6ed2200229661de25b6628ca7ced344"
+  },
+  {
+    "path": "media/system-anatomy-model.js",
+    "sha256": "bf8deaf94f852c22af0442ea0d2e6a7c9dc364237557aad6086cd03f1614ec2d"
+  },
+  {
+    "path": "media/system-anatomy.css",
+    "sha256": "3308274ede2abae2fa5e9c32009d04064f543425ccc0b4834224d4821c603e83"
+  },
+  {
+    "path": "media/system-anatomy.js",
+    "sha256": "58ad5dcee603aa4ac2dbddee130ae538487141581477bed48e28eccbbc113957"
+  },
+  {
+    "path": "media/workflow-playback.js",
+    "sha256": "1234c22dc9ffa703b50f3c22db12f0e43f75dd3156f356ef49fe96830d11f1ac"
+  },
+  {
+    "path": "media/workflows/anamnesis-poster.webp",
+    "sha256": "5a1a5df721a3674a8eed7ab3234bf381336334dee091add2596b41fa3837dd65"
+  },
+  {
+    "path": "media/workflows/anamnesis-web.mp4",
+    "sha256": "54cdd135dbf61e19674d46e4af7193ea3a10873b194379627eb8105879e29914"
+  },
+  {
+    "path": "media/workflows/education-poster.webp",
+    "sha256": "3cbff3038f47739b5db0d06ea222999c837cfdb34984d5fcf2f1f1096360c862"
+  },
+  {
+    "path": "media/workflows/education-web.mp4",
+    "sha256": "7b2a6b53418451de6738ab1bb8929ce9cbad0e7ca2f62377c0af575a50241ff4"
+  },
+  {
+    "path": "media/workflows/mira-poster.webp",
+    "sha256": "5d00d6ad6c835a6e3bbd1d328057536298f208a93412532a41239b1ba257cad0"
+  },
+  {
+    "path": "media/workflows/mira-web.mp4",
+    "sha256": "91dc82fc47e052adecd9d4524ee6fa31d2f82170978bc54e2ded6aa0ba0eba8b"
+  },
+  {
+    "path": "media/workflows/referral-poster.webp",
+    "sha256": "523e838db0184bbe66d81b07c8202b9bc55dc0eac3023a6198a5235e8d951595"
+  },
+  {
+    "path": "media/workflows/referral-web.mp4",
+    "sha256": "e7e713c1c0917c4cac7c1bd44d63a5027f5ada3bd6eadbce5049b0dd8047ea8e"
+  },
+  {
+    "path": "media/workflows/sbar-poster.webp",
+    "sha256": "8b10034343d539c06094995ae844e2afd946abed751aa10a0bd4d1a767a87d47"
+  },
+  {
+    "path": "media/workflows/sbar-web.mp4",
+    "sha256": "be1cd995b4e9492457387f0abdac09845a35d01a303fcd00e83c71f226a9c2b0"
+  },
+  {
+    "path": "media/workflows/soap-poster.webp",
+    "sha256": "9e14ef35593a82ea63f04eb7d488b7d3f1cefadfe74e5883d8f18bcfd0e38c1c"
+  },
+  {
+    "path": "media/workflows/soap-web.mp4",
+    "sha256": "84a9700acc9ebad7af49b250ee07ca69ea93a2af225ea878ac7b904d66ecb120"
+  },
+  {
+    "path": "penafian/index.html",
+    "sha256": "55ca57d9eac288bee29e7ed0ef50b5df12352f5da7a50c067d787fbc0e77fcb9"
+  },
+  {
+    "path": "privasi/index.html",
+    "sha256": "b8c9b0bd868274a35dbb6e961d55c00723ee7b93cefba895a68d9721accd2376"
+  },
+  {
+    "path": "public/child.png",
+    "sha256": "8c9ee81fdd74e783a02c5219f8368959588ce179238293beb4ddd54546a7c9d2"
+  },
+  {
+    "path": "ruang-kerja/index.html",
+    "sha256": "100040a284f4ce89806a154f11f01e0fd6e53383471f883bf0157882c9c5f9a1"
+  },
+  {
+    "path": "sejarah-sentra/index.html",
+    "sha256": "acc4d67a60c73c7254403620fa76c4a7cce3ed7e118aec07bc1a393f583db1b5"
+  },
+  {
+    "path": "vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css",
+    "sha256": "3104b7623d267eedae62cbd065d0a9437dc8a4d822c209704bbbb88c80afcc9a"
+  },
+  {
+    "path": "vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff",
+    "sha256": "bb1de989b83970f6f4e54de1cd974c5cba55b73582da5e1b225a6d0edf029483"
+  },
+  {
+    "path": "vendor/cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2",
+    "sha256": "476adf42b40325098fcfa8b36ab3e769186bb4f6ce6a249753e2e1a9c22bf99e"
+  },
+  {
+    "path": "vendor/cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css",
+    "sha256": "d85327d99c7a3ee1f9b5d0500d1370acea3ad2db39c163c2f51f232baedbdede"
+  },
+  {
+    "path": "vendor/cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js",
+    "sha256": "e4fd49181388c48ec5040bd3fe66f57c29c8e67fcd8502b3354b96ec7ab47cc7"
+  },
+  {
+    "path": "vendor/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css",
+    "sha256": "50ad448a8a5720bf8a5617db15af31ae60163de06331576f60c6244c012ffc72"
+  },
+  {
+    "path": "vendor/cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js",
+    "sha256": "0c7178cc6ca34fb18e30f070a5e7a1c287b2d7ccfcba2cfdf06e0f46eda55740"
+  }
+]

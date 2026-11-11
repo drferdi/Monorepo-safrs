@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "run_terminal_command|read_file|search_replace|write|hashline_edit|delete_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const p=require('path'),u=require('url'),fs=require('fs');let r;try{r=require('child_process').execFileSync('git',['rev-parse','--show-toplevel'],{encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim()}catch{process.exit(0)}const f=p.join(r,'.grok/hooks/safrs-guard.mjs');if(!fs.existsSync(f))process.exit(0);import(u.pathToFileURL(f).href).catch(e=>{process.stdout.write(JSON.stringify({decision:'deny',reason:'SAFRS guard: hook could not start ('+e.message+'); blocked (fail closed).'}));process.exit(0)})\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

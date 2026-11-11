@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Gaffer is the cost-aware coding orchestration layer on top of SAFRS. It turns a Chief's plain-language coding intent into a verified, SAFRS-compliant outcome while minimizing expected cost per verified accepted task.
+Gaffer is the cost-aware coding orchestration layer on top of SAFRS. It turns the user's plain-language coding intent into a verified, SAFRS-compliant outcome while minimizing expected cost per verified accepted task.
 
 SAFRS stays authoritative for governance, enforcement, evidence, and repository safety. Gaffer adds intent, SOLO/DECOMPOSE routing, task decomposition, economic worker routing, evidence-driven escalation, and final outcome coordination.
 
@@ -14,7 +14,7 @@ SAFRS stays authoritative for governance, enforcement, evidence, and repository 
 
 `/gaffer <intent>`
 
-Chief does not choose models, workers, files, tests, routes, reviewers, or providers. The user picks none of the orchestration knobs; Gaffer hides that complexity.
+The user does not choose models, workers, files, tests, routes, reviewers, or providers. The user picks none of the orchestration knobs; Gaffer hides that complexity.
 
 Provider command adapters point at the canonical skill:
 
@@ -25,7 +25,7 @@ Provider command adapters point at the canonical skill:
 
 ```mermaid
 flowchart LR
-    User["Chief /gaffer intent"]
+    User["User /gaffer intent"]
     Root["Root — intent + semantics"]
     Disc["Project discovery<br/>domain/capsule"]
     Pol["SAFRS policy + monotonic risk"]

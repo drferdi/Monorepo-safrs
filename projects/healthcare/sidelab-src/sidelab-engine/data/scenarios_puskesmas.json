@@ -1,0 +1,129 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "updated_at": "2026-06-19",
+    "description": "20 skenario Puskesmas untuk performance testing SIDELAB. Memuat konteks pasien sehingga lint DDI/KI dapat diverifikasi end-to-end (lihat scenario.pasien)."
+  },
+  "items": [
+    {
+      "nama": "Dispepsia Sindrom",
+      "tags": ["dispepsia", "gastro"],
+      "query": "Dok, ulu hati saya perih dan begah sudah seminggu. Rasanya penuh terus apalagi kalau habis makan, sering bersendawa dan mual. Memang belakangan ini saya sering telat makan karena sibuk kerja, dan suka ngopi pagi-pagi saat perut kosong. Tidak ada muntah darah atau BAB hitam.",
+      "pasien": {"umur": 38, "gender": "L", "komorbid": ["kebiasaan telat makan, ngopi pagi saat perut kosong"], "alergi": []}
+    },
+    {
+      "nama": "DM Tipe 2 Tidak Terkontrol",
+      "tags": ["diabetes", "metabolik"],
+      "query": "Saya akhir-akhir ini sering banget haus dan malam bisa bangun 4-5 kali buat kencing. Padahal makan saya banyak tapi berat badan rasanya makin turun, celana pada longgar. Saya ada riwayat gula darah tinggi setahun lalu tapi jarang kontrol dan jarang minum obat karena merasa sehat-sehat saja.",
+      "pasien": {"umur": 54, "gender": "P", "komorbid": ["riwayat DM Tipe 2 sejak 1 tahun"], "alergi": []}
+    },
+    {
+      "nama": "Tuberkulosis Paru (Suspek)",
+      "tags": ["paru", "kronik", "red_flag"],
+      "query": "Sudah mau sebulan ini saya batuk berdahak tidak sembuh-sembuh, kadang dahaknya ada bercak darah sedikit. Dada rasanya sesak dan kalau malam suka keringat dingin padahal tidak kepanasan. Berat badan saya juga turun drastis dan nafsu makan hilang.",
+      "pasien": {"umur": 47, "gender": "L", "komorbid": ["riwayat kontak TB di rumah"], "alergi": []}
+    },
+    {
+      "nama": "Osteoarthritis Genu",
+      "tags": ["muskuloskeletal", "kronis", "lansia"],
+      "query": "Lutut kanan saya sakit sekali kalau dipakai jalan jauh atau naik turun tangga, Dok. Umur saya 62 tahun. Nyerinya cekot-cekot dan kadang terdengar bunyi 'krek' kalau ditekuk. Kalau pagi terasa kaku, tapi siang sudah agak mendingan kalau dibuat gerak perlahan.",
+      "pasien": {"umur": 62, "gender": "P", "komorbid": ["hipertensi terkontrol dengan Amlodipin"], "alergi": []}
+    },
+    {
+      "nama": "Asma Bronkial Eksaserbasi Akut",
+      "tags": ["paru", "emergensi", "red_flag"],
+      "query": "Dok, saya sesak napas dari semalam, napasnya sampai bunyi 'ngik-ngik'. Dada rasanya berat sekali. Kebetulan kemarin saya habis bersih-bersih gudang yang banyak debunya. Saya memang punya riwayat asma dari kecil, tapi obat semprotnya kebetulan habis.",
+      "pasien": {"umur": 28, "gender": "P", "komorbid": ["riwayat asma bronkial"], "alergi": ["debu rumah"]}
+    },
+    {
+      "nama": "Dermatitis Kontak Iritan",
+      "tags": ["kulit"],
+      "query": "Tangan saya merah-merah, perih, dan gatal banget sudah 3 hari. Kulitnya sampai kering dan pecah-pecah. Ini gara-gara saya ganti sabun cuci piring merk baru dan nyucinya lumayan banyak karena ada acara keluarga. Sebelumnya tidak pernah begini.",
+      "pasien": {"umur": 35, "gender": "P", "komorbid": [], "alergi": ["riwayat alergi deterjen merk baru"]}
+    },
+    {
+      "nama": "Infeksi Saluran Kemih (ISK)",
+      "tags": ["urologi", "antibiotik"],
+      "query": "Saya kalau kencing rasanya perih dan panas di bagian bawah. Sering banget bolak-balik ke kamar mandi tapi keluarnya cuma sedikit-sedikit, anyang-anyangan rasanya. Perut bawah juga agak nyeri dan pegal. Kencingnya agak keruh, tapi tidak ada darah.",
+      "pasien": {"umur": 29, "gender": "P", "komorbid": [], "alergi": []}
+    },
+    {
+      "nama": "Gout Arthritis Akut",
+      "tags": ["muskuloskeletal", "metabolik"],
+      "query": "Jempol kaki kiri saya tiba-tiba bengkak, merah, dan nyeri minta ampun sejak bangun tidur tadi pagi. Kena selimut saja sakitnya luar biasa. Kemarin sore saya habis makan sate jeroan banyakan sama teman-teman. Dulu pernah cek asam urat katanya memang tinggi.",
+      "pasien": {"umur": 51, "gender": "L", "komorbid": ["hiperurisemia", "pengguna alkohol sosial"], "alergi": []}
+    },
+    {
+      "nama": "Otitis Media Akut (OMA) Anak",
+      "tags": ["pediatri", "THT", "antibiotik"],
+      "query": "Anak saya umur 3 tahun rewel terus dari semalam, demam tinggi, dan pegang-pegang telinga kanannya terus sambil menangis. Tiga hari yang lalu dia memang sempat pilek parah dan batuk. Telinganya belum keluar cairan atau nanah sama sekali.",
+      "pasien": {"umur": 3, "gender": "L", "komorbid": [], "alergi": []}
+    },
+    {
+      "nama": "Tension Type Headache (TTH)",
+      "tags": ["neurologi"],
+      "query": "Kepala saya pusing banget, rasanya kayak diikat kencang dari dahi sampai ke belakang kepala. Leher dan pundak juga kaku semua. Sudah minum paracetamol agak mendingan tapi nanti sakit lagi. Mungkin karena saya lagi banyak pikiran urusan kerjaan dan kurang tidur.",
+      "pasien": {"umur": 32, "gender": "P", "komorbid": ["kurang tidur kronis, stres kerja"], "alergi": []}
+    },
+    {
+      "nama": "Konjungtivitis Bakterial",
+      "tags": ["mata", "penyakit"],
+      "query": "Mata kiri saya merah, gatal, dan ngeres kayak ada pasirnya dari kemarin. Bangun tidur tadi pagi banyak belekan warna kekuningan sampai matanya susah melek. Mata kanan sekarang juga mulai ikutan gatal. Anak saya di rumah kebetulan juga lagi sakit mata.",
+      "pasien": {"umur": 26, "gender": "P", "komorbid": [], "alergi": []}
+    },
+    {
+      "nama": "Skabies",
+      "tags": ["kulit", "penyakit"],
+      "query": "Gatalnya ampun-ampunan Dok, apalagi kalau malam hari saya sampai tidak bisa tidur. Gatalnya di sela-sela jari tangan, pergelangan tangan, sama di sekitar pusar. Ada bintik-bintik merah kecil. Teman sekamar saya di pesantren juga pada gatal-gatal begini.",
+      "pasien": {"umur": 19, "gender": "L", "komorbid": ["kontak ramai (pesantren)"], "alergi": []}
+    },
+    {
+      "nama": "Vertigo Perifer",
+      "tags": ["neurologi", "THT"],
+      "query": "Dunia rasanya muter-muter kencang banget pas saya bangun tidur tadi pagi, apalagi kalau pas noleh ke kanan. Saya sampai mual dan muntah dua kali saking pusingnya. Telinga tidak berdenging, tapi saya takut mau berdiri, jalannya harus pegangan tembok terus.",
+      "pasien": {"umur": 45, "gender": "P", "komorbid": [], "alergi": []}
+    },
+    {
+      "nama": "Vulnus Laceratum",
+      "tags": ["trauma", "emergensi", "bedah"],
+      "query": "Sus, tolong ini anak saya jatuh dari sepeda kena aspal. Lutut kanannya robek lumayan dalam dan darahnya mengalir terus dari tadi, sudah saya tekan pakai kain. Anaknya nangis terus kesakitan. Tadi jatuhnya di jalanan dekat rumah sekitar 15 menit yang lalu.",
+      "pasien": {"umur": 11, "gender": "L", "komorbid": [], "alergi": []}
+    },
+    {
+      "nama": "Anemia dalam Kehamilan",
+      "tags": ["ibu_hamil", "obat_rutin", "cegah_iatrogenik"],
+      "query": "Saya lagi hamil 6 bulan, Dok. Belakangan ini badan rasanya lemas banget, cepat capek kalau ngerjain kerjaan rumah tangga, dan sering kunang-kunang kalau habis jongkok terus berdiri. Kata suami saya kelihatannya pucat. Saya jarang minum tablet tambah darah dari bidan karena bikin mual.",
+      "pasien": {"umur": 26, "gender": "P", "komorbid": ["kehamilan 24 minggu"], "alergi": ["mual dengan tablet besi oral"]}
+    },
+    {
+      "nama": "Tinea Corporis",
+      "tags": ["kulit", "penyakit", "antifungal"],
+      "query": "Di punggung saya ada bercak merah bentuknya bulat, pinggirnya agak bersisik dan menebal. Gatalnya bukan main, apalagi kalau lagi berkeringat habis kerja di lapangan. Sudah saya kasih salep gatal biasa beli di warung tapi malah makin lebar bercaknya.",
+      "pasien": {"umur": 40, "gender": "L", "komorbid": ["paparan lapangan/kota"], "alergi": []}
+    },
+    {
+      "nama": "Faringitis Akut",
+      "tags": ["THT", "antibiotik"],
+      "query": "Tenggorokan saya sakit sekali buat menelan ludah atau makanan. Badan juga agak demam meriang sejak kemarin lusa. Suara jadi agak serak dan mulut rasanya pahit. Tidak ada sesak napas, cuma nyeri tenggorokan saja yang sangat mengganggu.",
+      "pasien": {"umur": 22, "gender": "L", "komorbid": [], "alergi": []}
+    },
+    {
+      "nama": "Suspek Morbili (Campak)",
+      "tags": ["pediatri", "penyakit", "kontagius", "imunisasi"],
+      "query": "Dok, anak saya umur 4 tahun demam tinggi sudah 4 hari, batuk pilek parah, dan matanya merah berair. Mulai tadi pagi muncul ruam merah-merah dari belakang telinga merambat ke wajah dan leher. Anaknya lemas dan tidak mau makan. Dulu belum pernah imunisasi campak.",
+      "pasien": {"umur": 4, "gender": "P", "komorbid": [], "alergi": []}
+    },
+    {
+      "nama": "Stomatitis Aftosa",
+      "tags": ["gigi_mulut"],
+      "query": "Mulut saya banyak sariawan di pipi bagian dalam dan lidah sudah 5 hari. Perih banget buat makan dan minum yang hangat atau pedas. Badan rasanya agak kurang fit belakangan ini karena sering begadang ngerjain tugas kuliah. Tidak ada gigi berlubang.",
+      "pasien": {"umur": 21, "gender": "P", "komorbid": ["kurang tidur, stres akademik"], "alergi": []}
+    },
+    {
+      "nama": "Pulpitis Irreversibel",
+      "tags": ["gigi_mulut", "emergensi", "rujuk"],
+      "query": "Gigi geraham bawah kiri saya nyut-nyutan parah sejak tadi malam sampai saya tidak bisa tidur dan kepala ikut pusing. Giginya memang berlubang besar sudah lama, biasanya cuma ngilu kalau minum es, tapi sekarang dibuat diam saja sakitnya nembus sampai ke telinga. Gusi belum bengkak.",
+      "pasien": {"umur": 34, "gender": "L", "komorbid": [], "alergi": []}
+    }
+  ]
+}

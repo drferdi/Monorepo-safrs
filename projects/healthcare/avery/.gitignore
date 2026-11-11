@@ -1,0 +1,58 @@
+# Pagar pengaman. Berkas-berkas ini adalah keadaan runtime Hermes, bukan
+# konfigurasi. Beberapa di antaranya setara kredensial. Daftar ini mencegahnya
+# ikut ter-commit bila sewaktu-waktu tersalin ke dalam folder proyek.
+
+# --- Runtime Hermes yang tinggal di dalam folder proyek ----------------------
+# Sejak 2026-08-23 instalasi Hermes berada fisik di `runtime/`: HERMES_HOME,
+# state web UI, aplikasi Hermes Studio, cache Electron, dan berkas updater.
+# Lokasi lama di C: dipertahankan sebagai directory junction ke sini, sehingga
+# path absolut lama tetap bekerja. Ukurannya beberapa GB dan sebagian setara
+# kredensial — tidak satu byte pun boleh masuk git.
+runtime/
+
+# Rahasia
+.env
+.env.*
+!.env.example
+auth.json
+*.pem
+*.key
+
+# Sesi WhatsApp — creds.json setara kunci akses nomor
+platforms/
+**/whatsapp/session/
+
+# Basis data runtime
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Catatan tentang orang sungguhan
+memories/
+
+# Antrean persetujuan dan keadaan sesi
+pending/
+sessions/
+state/
+logs/
+
+# Konfigurasi terisi — hanya contohnya yang dilacak
+ai/profiles/*/config.yaml
+
+# Cadangan otomatis sync-profile-to-repo.ps1
+ai/profiles/*.bak-*/
+
+# Snapshot pra-update runtime: memuat memories/, platforms/ (setara kredensial
+# WhatsApp), pairing/, dan pending_messages/ — tidak boleh masuk git apa pun
+# alasannya. Backup tinggal di disk lokal saja.
+backups/
+
+# Dependensi lokal Living Console Electron dan workspace pnpm capsule
+console/node_modules/
+node_modules/
+
+# Bytecode Python hasil test dan build
+__pycache__/
+

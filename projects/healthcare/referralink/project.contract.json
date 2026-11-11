@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "healthcare/referralink",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R2",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": { "program": "node", "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"], "timeoutSeconds": 600 },
+    "lint": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "The project has no linter; its `lint` script is the TypeScript check, which runs as `typecheck`."
+    },
+    "typecheck": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "lint"], "timeoutSeconds": 300 },
+    "test": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "test"], "timeoutSeconds": 300 },
+    "build": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "build"], "timeoutSeconds": 600 },
+    "run": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "start"] },
+    "deployDryRun": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "deploy:dry-run"] }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4342,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 120
+  },
+  "artifacts": ["dist/index.html"],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "service", "name": "Canonical public origin", "locator": "APP_URL", "required": false },
+    { "kind": "service", "name": "OpenAI-compatible model gateway for diagnosis", "locator": "OPENAI_API_KEY", "required": false },
+    { "kind": "service", "name": "Model gateway base URL", "locator": "OPENAI_BASE_URL", "required": false },
+    { "kind": "service", "name": "Model name for diagnosis", "locator": "OPENAI_MODEL", "required": false },
+    { "kind": "service", "name": "Gemini fallback provider", "locator": "GEMINI_API_KEY", "required": false },
+    { "kind": "service", "name": "Sandbox session signing secret", "locator": "SANDBOX_AUTH_SECRET", "required": false },
+    { "kind": "service", "name": "Upstash Redis REST URL (sessions and quotas)", "locator": "UPSTASH_REDIS_REST_URL", "required": false },
+    { "kind": "service", "name": "Upstash Redis REST token", "locator": "UPSTASH_REDIS_REST_TOKEN", "required": false },
+    { "kind": "service", "name": "Upstash Vector REST URL (diagnosis cache)", "locator": "UPSTASH_VECTOR_REST_URL", "required": false },
+    { "kind": "service", "name": "Upstash Vector REST token", "locator": "UPSTASH_VECTOR_REST_TOKEN", "required": false },
+    { "kind": "service", "name": "Resend for sign-in codes", "locator": "RESEND_API_KEY", "required": false }
+  ],
+  "mutableStatePaths": ["node_modules", "dist", "test-results", "playwright-report", "tsconfig.tsbuildinfo"]
+}

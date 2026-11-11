@@ -1,0 +1,12 @@
+[pre_model_sync]
+# Patches added in this section will be executed before doctypes are migrated
+# Read docs to understand patches: https://frappeframework.com/docs/v14/user/en/database-migrations
+
+[post_model_sync]
+# Patches added in this section will be executed after doctypes are migrated
+sentra_mantra_indonesia.patches.v0_0.add_employee_nik_field
+sentra_mantra_indonesia.patches.v0_0.set_patient_mrn_naming_series
+sentra_mantra_indonesia.patches.v0_0.set_patient_name_by_naming_series
+sentra_mantra_indonesia.patches.v0_0.set_default_language_indonesian
+sentra_mantra_indonesia.patches.v0_0.add_practitioner_str_sip_fields
+sentra_mantra_indonesia.patches.v0_0.add_practitioner_str_sip_expiry_fields

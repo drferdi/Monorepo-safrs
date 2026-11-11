@@ -1,0 +1,36 @@
+{
+  "name": "@safrs/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./reset-guard": "./src/reset-guard.ts"
+  },
+  "scripts": {
+    "generate": "node --experimental-strip-types scripts/run-local-prisma.mjs generate",
+    "migrate": "node --experimental-strip-types scripts/run-local-prisma.mjs migrate",
+    "seed": "node --experimental-strip-types scripts/run-local-prisma.mjs seed",
+    "reset": "node --experimental-strip-types src/reset.ts",
+    "studio": "node --experimental-strip-types scripts/run-local-prisma.mjs studio",
+    "lint": "biome check src prisma.config.ts scripts/run-local-prisma.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.9.1",
+    "@prisma/client": "7.9.1",
+    "@safrs/env": "workspace:*",
+    "@safrs/schemas": "workspace:*",
+    "@safrs/telemetry": "workspace:*",
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "@safrs/config": "workspace:*",
+    "@types/node": "24.10.13",
+    "@types/pg": "8.15.6",
+    "prisma": "7.9.1",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
+  }
+}

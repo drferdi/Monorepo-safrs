@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "product/kediri-history",
+  "repository": "https://github.com/drferdi/Kediri-Kings-Century.git",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R2",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "install"]
+    },
+    "lint": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "lint"]
+    },
+    "typecheck": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "typecheck"]
+    },
+    "test": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "test"]
+    },
+    "build": {
+      "program": "node",
+      "args": ["scripts/skip-env-validation.mjs", "scripts/pnpm.mjs", "run", "build"]
+    },
+    "run": {
+      "program": "node",
+      "args": ["scripts/skip-env-validation.mjs", "scripts/serve.mjs"]
+    },
+    "deployDryRun": {
+      "program": "node",
+      "args": ["scripts/deploy-dry-run.mjs"]
+    }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4320,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 120
+  },
+  "artifacts": ["apps/web/.next"],
+  "externalDependencies": [
+    { "kind": "database", "name": "PostgreSQL for Payload CMS", "locator": "DATABASE_URL", "required": true },
+    { "kind": "service", "name": "Payload CMS secret", "locator": "PAYLOAD_SECRET", "required": true }
+  ],
+  "mutableStatePaths": [
+    "node_modules",
+    "apps/web/node_modules",
+    "apps/web/.next",
+    "apps/web/playwright-report",
+    "apps/web/test-results",
+    "apps/web/tsconfig.tsbuildinfo"
+  ]
+}

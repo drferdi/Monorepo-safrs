@@ -1,0 +1,87 @@
+# docker-compose.prod.yml — compose produksi VPS untuk Avery (Hermes agent).
+#
+# File `deploy/docker-compose.yml` yang lama (network_mode: host, image
+# `hermes-agent` polos) tetap ada sebagai referensi dev dan TIDAK dipakai
+# di produksi. Compose ini memakai citra overlay patch `avery-hermes` dan
+# layout VPS baku:
+#   /opt/avery/app     -> clone kapsul (bukan dipakai langsung oleh compose ini)
+#   /opt/avery/data    -> HERMES_HOME, dipasang ke /opt/data di dalam container
+#   /opt/avery/config/avery.env -> env_file (chmod 600)
+#   /opt/avery/backups, /opt/avery/logs, /opt/avery/state -> dikelola di luar compose
+#
+# Jalankan dari root kapsul avery:
+#   docker compose -f deploy/docker-compose.prod.yml up -d
+#   docker compose -f deploy/docker-compose.prod.yml --profile dashboard up -d dashboard
+
+name: avery
+
+services:
+  gateway:
+    image: ${HERMES_IMAGE:-avery-hermes:v2026.8.19-fix02}
+    container_name: avery-gateway
+    restart: unless-stopped
+    command: ["gateway", "run"]
+    env_file:
+      - ${AVERY_ENV_FILE:-/opt/avery/config/avery.env}
+    volumes:
+      - ${AVERY_DATA_DIR:-/opt/avery/data}:/opt/data
+    networks:
+      - avery_internal
+    # Keputusan keamanan v1: tidak ada port dipublikasikan. Bridge WhatsApp
+    # (Baileys) dan API server (bila dipakai) hanya diakses dari dalam
+    # container/jaringan internal, bukan dari host/publik.
+    healthcheck:
+      # Bridge WhatsApp (Baileys) mendengarkan di 127.0.0.1:3000 di dalam
+      # container gateway; GET /health mengembalikan JSON berisi "connected"
+      # saat sehat. Coba curl dulu, lalu wget, lalu python3 (urllib) supaya
+      # tetap jalan walau salah satu tool tidak ada di image.
+      test:
+        [
+          "CMD-SHELL",
+          "(curl -fsS http://127.0.0.1:3000/health 2>/dev/null || wget -qO- http://127.0.0.1:3000/health 2>/dev/null || python3 -c \"import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:3000/health', timeout=5).read().decode())\" 2>/dev/null) | grep -q '\"connected\"'",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    # Beri waktu bridge WhatsApp/SQLite untuk shutdown rapi sebelum SIGKILL.
+    stop_grace_period: 60s
+
+  dashboard:
+    # Opsional: nyalakan hanya saat dibutuhkan lewat --profile dashboard.
+    profiles: ["dashboard"]
+    image: ${HERMES_IMAGE:-avery-hermes:v2026.8.19-fix02}
+    container_name: avery-dashboard
+    restart: unless-stopped
+    depends_on:
+      - gateway
+    command: ["dashboard", "--host", "0.0.0.0", "--no-open"]
+    env_file:
+      - ${AVERY_ENV_FILE:-/opt/avery/config/avery.env}
+    volumes:
+      - ${AVERY_DATA_DIR:-/opt/avery/data}:/opt/data
+    networks:
+      - avery_internal
+    # Bind 0.0.0.0 DI DALAM container, tetapi hanya dipublikasikan ke
+    # loopback host. Akses via SSH tunnel saja (ssh -L 9119:localhost:9119),
+    # jangan pernah publish dashboard tanpa prefiks 127.0.0.1 di sini —
+    # dashboard menyimpan API key dan tidak punya autentikasinya sendiri.
+    ports:
+      - "127.0.0.1:9119:9119"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+networks:
+  avery_internal:
+    driver: bridge
+    # Internal untuk komunikasi service-to-service (gateway <-> dashboard).
+    # Gateway tetap butuh egress internet (WhatsApp/OpenRouter), jadi JANGAN
+    # set `internal: true` di sini.

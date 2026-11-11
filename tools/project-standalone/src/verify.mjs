@@ -17,7 +17,7 @@ import {
 } from "./process.mjs";
 
 const lifecycleOrder = ["install", "lint", "typecheck", "test", "build"];
-const commandTimeoutMs = 120_000;
+const defaultCommandTimeoutSeconds = 120;
 
 function isWithin(candidate, boundary) {
   const relative = path.relative(boundary, candidate);
@@ -157,17 +157,25 @@ async function capsuleAt(projectsRoot, domain, name) {
   return { id, capsule: canonicalCapsule, contract, contractPath };
 }
 
-export async function resolveCapsules(root, selector) {
+/**
+ * With `collectInvalid`, an invalid contract becomes `{ id, error }` for that
+ * capsule instead of aborting discovery of the others.
+ */
+export async function resolveCapsules(root, selector, { collectInvalid = false } = {}) {
   const canonicalRoot = await assertRealDirectory(root, "Repository root");
   const projectsRoot = path.join(canonicalRoot, "projects");
-  await assertRealDirectory(projectsRoot, "Projects root");
+  const projectInfo = await lstat(projectsRoot).catch((error) => {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  });
+  if (projectInfo) await assertRealDirectory(projectsRoot, "Projects root");
   if (selector) {
     const [domain, name] = parseSelector(selector);
-    return [await capsuleAt(projectsRoot, domain, name)];
+    return [await capsuleAt(domain === "tools" ? canonicalRoot : projectsRoot, domain, name)];
   }
 
   const capsules = [];
-  const domains = await readdir(projectsRoot, { withFileTypes: true });
+  const domains = projectInfo ? await readdir(projectsRoot, { withFileTypes: true }) : [];
   for (const domain of domains.sort((first, second) =>
     first.name.localeCompare(second.name),
   )) {
@@ -196,12 +204,46 @@ export async function resolveCapsules(root, selector) {
       try {
         const info = await lstat(contractPath);
         if (info.isFile() && !info.isSymbolicLink()) {
-          capsules.push(
-            await capsuleAt(projectsRoot, domain.name, candidate.name),
-          );
+          try {
+            capsules.push(
+              await capsuleAt(projectsRoot, domain.name, candidate.name),
+            );
+          } catch (error) {
+            if (!collectInvalid || !(error instanceof ContractError)) throw error;
+            capsules.push({
+              id: `${domain.name}/${candidate.name}`,
+              error: error.message,
+            });
+          }
         }
       } catch (error) {
         if (error?.code !== "ENOENT") throw error;
+      }
+    }
+  }
+  const toolsRoot = path.join(canonicalRoot, "tools");
+  const toolsInfo = await lstat(toolsRoot).catch((error) => {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  });
+  if (toolsInfo) {
+    await assertRealDirectory(toolsRoot, "Tools root");
+    const candidates = await readdir(toolsRoot, { withFileTypes: true });
+    for (const candidate of candidates.sort((first, second) => first.name.localeCompare(second.name))) {
+      if (candidate.isSymbolicLink()) {
+        throw new ContractError(`Tool capsule ${candidate.name} must not be a symbolic link.`);
+      }
+      if (!candidate.isDirectory() || candidate.name.startsWith(".")) continue;
+      const info = await lstat(path.join(toolsRoot, candidate.name, "project.contract.json")).catch((error) => {
+        if (error.code === "ENOENT") return null;
+        throw error;
+      });
+      if (!info) continue;
+      try {
+        capsules.push(await capsuleAt(canonicalRoot, "tools", candidate.name));
+      } catch (error) {
+        if (!collectInvalid || !(error instanceof ContractError)) throw error;
+        capsules.push({ id: `tools/${candidate.name}`, error: error.message });
       }
     }
   }
@@ -224,17 +266,33 @@ async function structuralReadiness(root, checkerPath) {
       `Structural independence check failed${boundedOutput(result) ? `:\n${boundedOutput(result)}` : "."}`,
     );
   }
+  if (path.basename(checkerPath) !== "check_tool_independence.py") {
+    const toolsInfo = await lstat(path.join(root, "tools")).catch((error) => {
+      if (error.code === "ENOENT") return null;
+      throw error;
+    });
+    if (toolsInfo) {
+      await structuralReadiness(root, path.join(path.dirname(checkerPath), "check_tool_independence.py"));
+    }
+  }
 }
 
 export async function statusCapsules({ root, selector, checkerPath }) {
-  const capsules = await resolveCapsules(root, selector);
+  const capsules = await resolveCapsules(root, selector, {
+    collectInvalid: !selector,
+  });
   await structuralReadiness(root, checkerPath);
-  return capsules.map(({ id, contract }) => ({
-    id,
-    risk: contract.risk,
-    runtime: `${contract.runtime.name}@${contract.runtime.version}`,
-    structural: "PASS",
-  }));
+  return capsules.map(({ id, contract, error }) =>
+    error
+      ? { id, ok: false, error }
+      : {
+          id,
+          ok: true,
+          risk: contract.risk,
+          runtime: `${contract.runtime.name}@${contract.runtime.version}`,
+          structural: "PASS",
+        },
+  );
 }
 
 export class VerificationError extends Error {
@@ -253,15 +311,16 @@ async function executeLifecycle(name, command, state) {
     record(state.stages, name, "SKIP", command.notApplicableReason);
     return;
   }
+  const timeoutSeconds = command.timeoutSeconds ?? defaultCommandTimeoutSeconds;
   const result = await runCommand(command.program, command.args, {
     cwd: state.extraction.capsule,
     env: state.environment,
-    timeoutMs: commandTimeoutMs,
+    timeoutMs: timeoutSeconds * 1000,
   });
   if (result.timedOut) {
     record(state.stages, name, "FAIL", "timeout");
     throw new VerificationError(
-      `${name} timed out after ${commandTimeoutMs / 1000} seconds.`,
+      `${name} timed out after ${timeoutSeconds} seconds.`,
     );
   }
   if (result.exitCode !== 0) {

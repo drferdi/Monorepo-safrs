@@ -1,0 +1,40 @@
+node_modules/
+.next/
+out/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.turbo/
+
+# State kerja AI dan automation bersifat lokal dan tidak ikut rilis.
+# Exception: the three agent-context files are tracked (ADR 0007 decision 7).
+.agents/*
+!.agents/HANDOFF.md
+!.agents/DECISIONS.md
+!.agents/CONTEXT.md
+.claude/
+.playwright-cli/
+.playwright-mcp/
+.sentra-gsap/
+.zed-*.log
+
+# Render sumber dan cadangan tidak dipublikasikan.
+project-video/backup/
+project-video/output/
+project-video/output_1080p/
+
+# Dihasilkan ulang oleh `next dev` setiap kali dijalankan (lihat
+# node_modules/next/dist/server/lib/generate-agent-files.js) — bukan sumber kanonik.
+apps/*/AGENTS.md
+apps/*/CLAUDE.md
+
+.vercel
+.env*
+
+# Local wiki drafts, never part of the capsule history
+droid-wiki/

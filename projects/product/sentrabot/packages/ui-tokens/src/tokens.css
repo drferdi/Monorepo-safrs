@@ -1,0 +1,37 @@
+:root {
+  --rk-page: #050506;
+  --rk-sidebar: #0b0b0c;
+  --rk-main: #0d0d0e;
+  --rk-panel: #0a0a0b;
+  --rk-hairline: #171719;
+  --rk-hairline-strong: #202023;
+  --rk-surface: #141416;
+  --rk-surface-2: #1a1a1d;
+  --rk-ink: #ececee;
+  --rk-body: #dfdfe2;
+  --rk-muted: #85858a;
+  --rk-muted-2: #6c6c70;
+  --rk-cream: #f1f1ef;
+  --rk-cream-ink: #1a1a1a;
+  --rk-accent: #3ec5a8;
+  --rk-radius: 0.75rem;
+  --background: 240 6% 4%;
+  --foreground: 240 6% 93%;
+  --card: 240 5% 8%;
+  --card-foreground: 240 6% 93%;
+  --popover: 240 5% 10%;
+  --popover-foreground: 240 6% 93%;
+  --primary: 60 8% 94%;
+  --primary-foreground: 240 6% 10%;
+  --secondary: 240 5% 12%;
+  --secondary-foreground: 240 6% 93%;
+  --muted: 240 5% 12%;
+  --muted-foreground: 240 4% 54%;
+  --accent: 240 5% 14%;
+  --accent-foreground: 240 6% 93%;
+  --destructive: 16 94% 46%;
+  --border: 240 6% 12%;
+  --input: 240 6% 14%;
+  --ring: 240 5% 64%;
+  --radius: 0.75rem;
+}

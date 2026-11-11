@@ -1,0 +1,312 @@
+{"key": "SP0002#13", "action": "benar", "ubah": {}, "alasan": "rute infus melekat langsung ke oksitosin"}
+{"key": "SP0002#14", "action": "benar", "ubah": {}, "alasan": "NaCl pelarut infus oksitosin; rute infus berlaku"}
+{"key": "SP0006#14", "action": "benar", "ubah": {}, "alasan": "rute header 'Antibiotik topikal' mencakup klindamisin"}
+{"key": "SP0006#19", "action": "benar", "ubah": {}, "alasan": "rute header 'Antibiotik topikal' mencakup klindamisin"}
+{"key": "SP0008#4", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "dosis tunggal milik cetirizine; bagian loratadin tanpa frekuensi"}
+{"key": "SP0009#0", "action": "biarkan", "ubah": {}, "alasan": "bukan obat: 90% angka sembuh, 2x/hari milik PEG; hapus baris"}
+{"key": "SP0011#1", "action": "ubah", "ubah": {"frekuensi": "1-2x/hari"}, "alasan": "rentang terpotong, bukan obat lain; rute header oral benar"}
+{"key": "SP0013#11", "action": "benar", "ubah": {}, "alasan": "dosis ditulis sebelum nama asam folat"}
+{"key": "SP0014#95", "action": "benar", "ubah": {}, "alasan": "rute header 'Cairan infus' mencakup NaCl"}
+{"key": "SP0014#200", "action": "benar", "ubah": {}, "alasan": "infus NaCl langsung"}
+{"key": "SP0014#251", "action": "benar", "ubah": {}, "alasan": "IV ditulis sekali untuk kombinasi Dextrose + insulin"}
+{"key": "SP0014#252", "action": "benar", "ubah": {}, "alasan": "IV ditulis sekali untuk kombinasi Dextrose + insulin"}
+{"key": "SP0014#261", "action": "benar", "ubah": {}, "alasan": "infus diganti NaCl 0,9%, rute benar"}
+{"key": "SP0014#262", "action": "benar", "ubah": {}, "alasan": "infus ditambah NaCl 3%, rute benar"}
+{"key": "SP0014#263", "action": "benar", "ubah": {}, "alasan": "infus ditambah NaCl 3%, rute benar"}
+{"key": "SP0016#9", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik Sulfas Ferosus; parentetis besi elemental tanpa rute"}
+{"key": "SP0016#18", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik Sulfas Ferosus; parentetis besi elemental tanpa rute"}
+{"key": "SP0020#4", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2x/hari milik obat sebelumnya; meloksikam hanya mg/hari"}
+{"key": "SP0020#6", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2x/hari milik obat sebelumnya; meloksikam hanya mg/hari"}
+{"key": "SP0022#6", "action": "benar", "ubah": {}, "alasan": "semua field di bagian Pirantel Pamoat sendiri"}
+{"key": "SP0022#16", "action": "benar", "ubah": {}, "alasan": "semua field di bagian Pirantel Pamoat sendiri"}
+{"key": "SP0023#9", "action": "benar", "ubah": {}, "alasan": "rute header Inhalasi; obat 'buli' = salbutamol"}
+{"key": "SP0023#14", "action": "benar", "ubah": {}, "alasan": "rute header Inhalasi; obat 'buli' = salbutamol"}
+{"key": "SP0023#11", "action": "biarkan", "ubah": {}, "alasan": "obat seharusnya metilprednisolon; field benar untuk metilprednisolon"}
+{"key": "SP0023#16", "action": "biarkan", "ubah": {}, "alasan": "obat seharusnya metilprednisolon; field benar untuk metilprednisolon"}
+{"key": "SP0030#6", "action": "benar", "ubah": {}, "alasan": "field milik pantokain; nama obat 'sebanyak' rusak"}
+{"key": "SP0030#7", "action": "benar", "ubah": {}, "alasan": "field milik tetrakain; nama obat 'sebanyak' rusak"}
+{"key": "SP0033#0", "action": "benar", "ubah": {}, "alasan": "rute header salep mata, durasi ditulis sekali untuk keduanya"}
+{"key": "SP0033#4", "action": "benar", "ubah": {}, "alasan": "rute header salep mata, durasi ditulis sekali untuk keduanya"}
+{"key": "SP0035#6", "action": "ubah", "ubah": {"frekuensi": "3 x", "rute": ""}, "alasan": "3 x 30 mg dan oral milik Ambroksol; baris = GG"}
+{"key": "SP0035#11", "action": "ubah", "ubah": {"frekuensi": "3 x", "rute": ""}, "alasan": "3 x 30 mg dan oral milik Ambroksol; baris = GG"}
+{"key": "SP0040#14", "action": "benar", "ubah": {}, "alasan": "satu obat (methylphenidate) di bawah header kelas"}
+{"key": "SP0040#21", "action": "benar", "ubah": {}, "alasan": "satu obat (Vit.C) di bawah header kelas"}
+{"key": "SP0040#23", "action": "benar", "ubah": {}, "alasan": "satu obat (ceftriaxon) di bawah header kelas"}
+{"key": "SP0040#24", "action": "benar", "ubah": {}, "alasan": "satu obat (ondansentron) di bawah header kelas"}
+{"key": "SP0053#22", "action": "ubah", "ubah": {"frekuensi": "3-4 x"}, "alasan": "2 x 960 mg milik kotrimoksazol"}
+{"key": "SP0053#23", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "3-4 x 1000 mg milik amoksisilin; edit audit keliru"}
+{"key": "SP0053#36", "action": "ubah", "ubah": {"frekuensi": "3-4 x"}, "alasan": "2 x 960 mg milik kotrimoksazol"}
+{"key": "SP0053#37", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "3-4 x 1000 mg milik amoksisilin; edit audit keliru"}
+{"key": "SP0054#3", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "/24jam milik rivastigmine; dosis 5-10mg = donepezil"}
+{"key": "SP0056#7", "action": "ubah", "ubah": {"frekuensi": "1-2x/hari"}, "alasan": "rentang terpotong, bukan obat lain; 'apply 1-2x/hari' berlaku bersama"}
+{"key": "SP0056#11", "action": "benar", "ubah": {}, "alasan": "rute header 'Kortikosteroid Topikal'"}
+{"key": "SP0056#22", "action": "benar", "ubah": {}, "alasan": "rute header 'Kortikosteroid Topikal'"}
+{"key": "SP0056#12", "action": "benar", "ubah": {}, "alasan": "krim dan durasi ditulis sekali untuk kedua kortikosteroid"}
+{"key": "SP0056#23", "action": "benar", "ubah": {}, "alasan": "krim dan durasi ditulis sekali untuk kedua kortikosteroid"}
+{"key": "SP0056#14", "action": "benar", "ubah": {}, "alasan": "rute header 'Calcineurin inhibitor topikal'"}
+{"key": "SP0056#25", "action": "benar", "ubah": {}, "alasan": "rute header 'Calcineurin inhibitor topikal'"}
+{"key": "SP0056#18", "action": "benar", "ubah": {}, "alasan": "rute header topikal"}
+{"key": "SP0057#38", "action": "benar", "ubah": {}, "alasan": "header topikal, frekuensi/durasi bersama; obat 'sedang' = triamcinolone"}
+{"key": "SP0057#39", "action": "benar", "ubah": {}, "alasan": "rute header 'kortikosteroid oral'"}
+{"key": "SP0057#40", "action": "benar", "ubah": {}, "alasan": "rute header 'Antihistamin oral'"}
+{"key": "SP0058#11", "action": "benar", "ubah": {}, "alasan": "rute header topikal"}
+{"key": "SP0060#19", "action": "benar", "ubah": {}, "alasan": "rute header Topikal; frekuensi milik ketoconazole sendiri"}
+{"key": "SP0060#20", "action": "ubah", "ubah": {"frekuensi": "1-2x/hari"}, "alasan": "rentang terpotong, bukan obat lain; obat 'ringan' = hydrocortisone"}
+{"key": "SP0060#25", "action": "benar", "ubah": {}, "alasan": "krim hidrokortison langsung"}
+{"key": "SP0060#30", "action": "benar", "ubah": {}, "alasan": "krim hidrokortison langsung"}
+{"key": "SP0062#37", "action": "benar", "ubah": {}, "alasan": "infus dekstrosa 5% NaCl 0,9%, rute benar"}
+{"key": "SP0064#4", "action": "biarkan", "ubah": {}, "alasan": "TTGO tes diagnostik, bukan obat; field konsisten dengan kutipan"}
+{"key": "SP0064#58", "action": "benar", "ubah": {}, "alasan": "bolus IV 3,5 unit adalah insulin"}
+{"key": "SP0064#60", "action": "benar", "ubah": {}, "alasan": "bolus IV 1,5 unit adalah insulin"}
+{"key": "SP0064#62", "action": "ubah", "ubah": {"dosis": ""}, "alasan": "110 mg/dL ambang gula darah, bukan dosis insulin"}
+{"key": "SP0064#70", "action": "benar", "ubah": {}, "alasan": "infus NaCl langsung"}
+{"key": "SP0064#71", "action": "biarkan", "ubah": {}, "alasan": "50% proporsi basal/prandial, bukan dosis; baris rusak"}
+{"key": "SP0067#1", "action": "ubah", "ubah": {"rute": ""}, "alasan": "IM milik penisilin G procaine"}
+{"key": "SP0068#0", "action": "biarkan", "ubah": {}, "alasan": "500mg cocok azitromycin maupun ciprofloxacin; obat header ambigu"}
+{"key": "SP0068#1", "action": "ubah", "ubah": {"frekuensi": "", "durasi": "hari 2-5"}, "alasan": "250mg milik azitromycin; 2x/hari 3 hari milik ciprofloxacin"}
+{"key": "SP0071#7", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "dosis tunggal milik obat 1 gram sebelumnya; sefiksim tanpa frekuensi"}
+{"key": "SP0072#2", "action": "benar", "ubah": {}, "alasan": "'semua 2x/hari 14 hari' eksplisit berlaku bersama"}
+{"key": "SP0074#0", "action": "benar", "ubah": {}, "alasan": "nebulisasi melekat ke salbutamol; obat 'buli' rusak"}
+{"key": "SP0074#2", "action": "ubah", "ubah": {"rute": ""}, "alasan": "IV milik methylprednisolone"}
+{"key": "SP0079#2", "action": "ubah", "ubah": {"frekuensi": "3 x"}, "alasan": "4 x 500 mg milik kloksasilin"}
+{"key": "SP0079#3", "action": "ubah", "ubah": {"frekuensi": "4 x"}, "alasan": "2 x 500 mg milik sefadroksil"}
+{"key": "SP0079#4", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "4 x 500 mg milik kloksasilin"}
+{"key": "SP0079#10", "action": "ubah", "ubah": {"frekuensi": "3 x"}, "alasan": "4 x 500 mg milik kloksasilin"}
+{"key": "SP0079#11", "action": "ubah", "ubah": {"frekuensi": "4 x"}, "alasan": "2 x 500 mg milik sefadroksil"}
+{"key": "SP0079#12", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "4 x 500 mg milik kloksasilin"}
+{"key": "SP0080#2", "action": "benar", "ubah": {}, "alasan": "rute header 'Pengobatan topikal'"}
+{"key": "SP0081#15", "action": "benar", "ubah": {}, "alasan": "rute header Topikal"}
+{"key": "SP0083#15", "action": "ubah", "ubah": {"frekuensi": "4 x"}, "alasan": "1 x 500 mg milik azitromisin"}
+{"key": "SP0083#32", "action": "ubah", "ubah": {"frekuensi": "4 x"}, "alasan": "1 x 500 mg milik azitromisin"}
+{"key": "SP0085#1", "action": "ubah", "ubah": {"frekuensi": "dosis tunggal tahunan"}, "alasan": "rentang terpotong, bukan obat lain; 'tahunan' hilang; obat 'ratio' = DEC"}
+{"key": "SP0086#1", "action": "benar", "ubah": {}, "alasan": "semua field milik betametason"}
+{"key": "SP0089#4", "action": "benar", "ubah": {}, "alasan": "dosis seng sendiri"}
+{"key": "SP0094#0", "action": "benar", "ubah": {}, "alasan": "2-3 kali sehari ditulis sekali untuk keduanya"}
+{"key": "SP0094#5", "action": "benar", "ubah": {}, "alasan": "2-3 kali sehari ditulis sekali untuk keduanya"}
+{"key": "SP0094#2", "action": "ubah", "ubah": {"frekuensi": "4 x"}, "alasan": "3 x 625 mg milik amoksisilin-klavulanat"}
+{"key": "SP0094#3", "action": "ubah", "ubah": {"frekuensi": "3 x"}, "alasan": "2 x 500 mg milik sefadroksil"}
+{"key": "SP0094#4", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "3 x 625 mg milik amoksisilin-klavulanat"}
+{"key": "SP0094#7", "action": "ubah", "ubah": {"frekuensi": "4 x"}, "alasan": "3 x 625 mg milik amoksisilin-klavulanat"}
+{"key": "SP0094#8", "action": "ubah", "ubah": {"frekuensi": "3 x"}, "alasan": "2 x 500 mg milik sefadroksil"}
+{"key": "SP0094#9", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "3 x 625 mg milik amoksisilin-klavulanat"}
+{"key": "SP0100#14", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "1-2x milik lorazepam; edit audit keliru"}
+{"key": "SP0101#0", "action": "ubah", "ubah": {"frekuensi": "1 x", "durasi": ""}, "alasan": "1 x 20 mg milik fluoksetin; 2-4 minggu = onset efek"}
+{"key": "SP0101#4", "action": "ubah", "ubah": {"frekuensi": "1 x", "durasi": ""}, "alasan": "1 x 20 mg milik fluoksetin; 2-4 minggu = onset efek"}
+{"key": "SP0101#3", "action": "ubah", "ubah": {"frekuensi": "prn"}, "alasan": "1-2x/hari milik diazepam; alprazolam prn"}
+{"key": "SP0101#7", "action": "ubah", "ubah": {"frekuensi": "prn"}, "alasan": "1-2x/hari milik diazepam; alprazolam prn"}
+{"key": "SP0105#8", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "2 x 20 mg milik famotidin"}
+{"key": "SP0105#9", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "2 x 150 mg milik ranitidin"}
+{"key": "SP0105#24", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "2 x 20 mg milik famotidin"}
+{"key": "SP0105#25", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "2 x 150 mg milik ranitidin"}
+{"key": "SP0105#10", "action": "ubah", "ubah": {"frekuensi": "1-2 x"}, "alasan": "1-2 x 30 mg milik lansoprazole"}
+{"key": "SP0105#11", "action": "ubah", "ubah": {"frekuensi": "1-2 x"}, "alasan": "1-2 x 20 mg milik omeprazole"}
+{"key": "SP0105#26", "action": "ubah", "ubah": {"frekuensi": "1-2 x"}, "alasan": "1-2 x 30 mg milik lansoprazole"}
+{"key": "SP0105#27", "action": "ubah", "ubah": {"frekuensi": "1-2 x"}, "alasan": "1-2 x 20 mg milik omeprazole"}
+{"key": "SP0105#16", "action": "benar", "ubah": {}, "alasan": "header 'PPI 2x/hari' mencakup omeprazole"}
+{"key": "SP0105#20", "action": "benar", "ubah": {}, "alasan": "header 'PPI 2x/hari' mencakup omeprazole"}
+{"key": "SP0106#24", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik probiotik; parasetamol tanpa rute"}
+{"key": "SP0106#50", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik probiotik; parasetamol tanpa rute"}
+{"key": "SP0106#33", "action": "biarkan", "ubah": {}, "alasan": "rumus defisit cairan, bukan obat; hapus baris"}
+{"key": "SP0106#43", "action": "biarkan", "ubah": {}, "alasan": "rumus defisit cairan, bukan obat; hapus baris"}
+{"key": "SP0107#41", "action": "ubah", "ubah": {"rute": "topical"}, "alasan": "IV milik mannitol/acetazolamide; pilocarpine di bawah 'topical'"}
+{"key": "SP0108#8", "action": "ubah", "ubah": {"rute": "PO"}, "alasan": "IM milik gentamicin; azitromisin PO"}
+{"key": "SP0108#15", "action": "biarkan", "ubah": {}, "alasan": "kutipan terpotong '(p.o) dosis'; frekuensi sendiri kemungkinan sama"}
+{"key": "SP0110#2", "action": "benar", "ubah": {}, "alasan": "regimen Daflon berlaku untuk tablet kombinasi"}
+{"key": "SP0110#3", "action": "benar", "ubah": {}, "alasan": "regimen Daflon berlaku untuk tablet kombinasi"}
+{"key": "SP0110#4", "action": "benar", "ubah": {}, "alasan": "regimen Daflon berlaku untuk tablet kombinasi"}
+{"key": "SP0110#6", "action": "benar", "ubah": {}, "alasan": "regimen MPFF berlaku untuk tablet kombinasi"}
+{"key": "SP0110#9", "action": "benar", "ubah": {}, "alasan": "regimen MPFF berlaku untuk tablet kombinasi"}
+{"key": "SP0118#2", "action": "benar", "ubah": {}, "alasan": "rute header 'OAINS tablet maupun supositori'"}
+{"key": "SP0120#25", "action": "benar", "ubah": {}, "alasan": "dimenhidrinat dalam NaCl diberikan IV"}
+{"key": "SP0120#26", "action": "ubah", "ubah": {"dosis": "50 mg"}, "alasan": "50 ml volume NaCl; hasilnya duplikat SP0120#25"}
+{"key": "SP0124#28", "action": "ubah", "ubah": {"frekuensi": "2x"}, "alasan": "1-2 x milik enalapril; edit audit keliru"}
+{"key": "SP0128#15", "action": "benar", "ubah": {}, "alasan": "infus diganti dekstrosa 5%, rute benar"}
+{"key": "SP0128#18", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "tiap 6 jam milik obat sebelumnya; frekuensi sendiri terpotong"}
+{"key": "SP0130#37", "action": "benar", "ubah": {}, "alasan": "krim permetrin langsung"}
+{"key": "SP0130#38", "action": "benar", "ubah": {}, "alasan": "krim terbinafin langsung"}
+{"key": "SP0130#48", "action": "benar", "ubah": {}, "alasan": "semua field milik asiklovir"}
+{"key": "SP0131#4", "action": "benar", "ubah": {}, "alasan": "salep dan frekuensi ditulis sekali untuk keduanya"}
+{"key": "SP0131#11", "action": "benar", "ubah": {}, "alasan": "salep dan frekuensi ditulis sekali untuk keduanya"}
+{"key": "SP0131#6", "action": "benar", "ubah": {}, "alasan": "rute header 'Analgesik oral'"}
+{"key": "SP0131#13", "action": "benar", "ubah": {}, "alasan": "rute header 'Analgesik oral'"}
+{"key": "SP0131#7", "action": "benar", "ubah": {}, "alasan": "field milik kloramfenikol; nama obat 'sebanyak' rusak"}
+{"key": "SP0131#9", "action": "benar", "ubah": {}, "alasan": "field milik kloramfenikol; nama obat 'sebanyak' rusak"}
+{"key": "SP0131#8", "action": "benar", "ubah": {}, "alasan": "terapi oral eritromisin langsung"}
+{"key": "SP0131#10", "action": "benar", "ubah": {}, "alasan": "terapi oral eritromisin langsung"}
+{"key": "SP0133#2", "action": "ubah", "ubah": {"rute": "salep"}, "alasan": "krim milik asam fusidat; mupirosin salep"}
+{"key": "SP0133#3", "action": "ubah", "ubah": {"rute": "krim"}, "alasan": "salep milik mupirosin; asam fusidat krim"}
+{"key": "SP0133#9", "action": "ubah", "ubah": {"rute": "salep"}, "alasan": "krim milik asam fusidat; mupirosin salep"}
+{"key": "SP0133#10", "action": "ubah", "ubah": {"rute": "krim"}, "alasan": "salep milik mupirosin; asam fusidat krim"}
+{"key": "SP0133#6", "action": "ubah", "ubah": {"frekuensi": "", "rute": ""}, "alasan": "4 x dan oral milik kloksasilin"}
+{"key": "SP0133#13", "action": "ubah", "ubah": {"frekuensi": "", "rute": ""}, "alasan": "4 x dan oral milik kloksasilin"}
+{"key": "SP0136#5", "action": "benar", "ubah": {}, "alasan": "terapi cairan intravena dengan NaCl"}
+{"key": "SP0136#9", "action": "benar", "ubah": {}, "alasan": "infus furosemid langsung"}
+{"key": "SP0139#65", "action": "benar", "ubah": {}, "alasan": "dosis tunggal ditulis sebelum nama metronidazole"}
+{"key": "SP0139#127", "action": "ubah", "ubah": {"rute": ""}, "alasan": "IM milik seftriakson"}
+{"key": "SP0140#19", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "dosis tunggal milik cetirizine; bagian loratadin tanpa frekuensi"}
+{"key": "SP0145#0", "action": "benar", "ubah": {}, "alasan": "frekuensi/durasi ditulis sekali untuk ketiga krim"}
+{"key": "SP0145#1", "action": "biarkan", "ubah": {}, "alasan": "1% milik klotrimazol; seluruh baris = klotrimazol, perlu ganti obat"}
+{"key": "SP0145#5", "action": "benar", "ubah": {}, "alasan": "frekuensi/durasi ditulis sekali untuk ketiga krim"}
+{"key": "SP0145#6", "action": "biarkan", "ubah": {}, "alasan": "1% milik klotrimazol; seluruh baris = klotrimazol, perlu ganti obat"}
+{"key": "SP0157#0", "action": "benar", "ubah": {}, "alasan": "rute header 'steroid topikal'"}
+{"key": "SP0157#5", "action": "benar", "ubah": {}, "alasan": "rute header 'steroid topikal'"}
+{"key": "SP0158#1", "action": "biarkan", "ubah": {}, "alasan": "bukan obat: 95% efektivitas, dosis tunggal milik albendazol"}
+{"key": "SP0160#99", "action": "benar", "ubah": {}, "alasan": "injeksi IM haloperidol langsung"}
+{"key": "SP0160#100", "action": "benar", "ubah": {}, "alasan": "injeksi IM diazepam langsung"}
+{"key": "SP0162#16", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik parasetamol"}
+{"key": "SP0162#42", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik parasetamol"}
+{"key": "SP0162#19", "action": "ubah", "ubah": {"rute": ""}, "alasan": "rektal milik diazepam"}
+{"key": "SP0170#0", "action": "benar", "ubah": {}, "alasan": "rute header 'Cairan kristaloid IV'"}
+{"key": "SP0170#1", "action": "ubah", "ubah": {"dosis": "30 mL/kg"}, "alasan": "dosis terpotong, bukan obat lain; obat 'kgbb' = Ringer Laktat"}
+{"key": "SP0170#6", "action": "benar", "ubah": {}, "alasan": "rute header 'Cairan kristaloid IV'"}
+{"key": "SP0170#7", "action": "ubah", "ubah": {"dosis": "30 mL/kg"}, "alasan": "dosis terpotong, bukan obat lain; obat 'kgbb' = Ringer Laktat"}
+{"key": "SP0171#14", "action": "benar", "ubah": {}, "alasan": "rute header 'OAINS tablet maupun supositori'"}
+{"key": "SP0174#4", "action": "benar", "ubah": {}, "alasan": "salep acyclovir langsung"}
+{"key": "SP0174#7", "action": "benar", "ubah": {}, "alasan": "semua field milik acyclovir"}
+{"key": "SP0178#51", "action": "biarkan", "ubah": {}, "alasan": "tabel terbaca acak; infus milik oksitosin, 0,2 mg obat lain"}
+{"key": "SP0179#0", "action": "benar", "ubah": {}, "alasan": "rute header 'Kortikosteroid oral'"}
+{"key": "SP0179#1", "action": "benar", "ubah": {}, "alasan": "nebulisasi adrenalin langsung"}
+{"key": "SP0179#2", "action": "benar", "ubah": {}, "alasan": "nebulisasi adrenalin langsung"}
+{"key": "SP0181#2", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2x/hari milik doksisiklin; seftriakson hanya /hari"}
+{"key": "SP0183#6", "action": "ubah", "ubah": {"frekuensi": "setiap 4-6 jam"}, "alasan": "setiap 4 jam milik hidroksisin"}
+{"key": "SP0183#11", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "1-3x/hari milik obat sebelumnya; obat = metilprednisolon aseponat"}
+{"key": "SP0183#13", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "setiap 4 jam milik hidroksisin; bagian sendiri terpotong"}
+{"key": "SP0184#6", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "tiga kali sehari milik obat sebelumnya; bagian sendiri terpotong"}
+{"key": "SP0187#19", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2-3x milik Vitamin B (RDA)"}
+{"key": "SP0193#33", "action": "benar", "ubah": {}, "alasan": "jalur intravena dengan NaCl"}
+{"key": "SP0193#85", "action": "benar", "ubah": {}, "alasan": "satu obat artemether-lumefantrine; nama obat 'paru' rusak"}
+{"key": "SP0193#86", "action": "benar", "ubah": {}, "alasan": "semua field milik Coartem"}
+{"key": "SP0193#97", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "3x/ hari milik obat sebelumnya"}
+{"key": "SP0196#74", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2-3x milik Vitamin B (RDA)"}
+{"key": "SP0198#0", "action": "ubah", "ubah": {"frekuensi": "4-6 kali sehari"}, "alasan": "rentang terpotong, bukan obat lain; ditulis sekali untuk keduanya"}
+{"key": "SP0198#2", "action": "ubah", "ubah": {"frekuensi": "4-6 kali sehari"}, "alasan": "rentang terpotong, bukan obat lain; ditulis sekali untuk keduanya"}
+{"key": "SP0200#4", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik parasetamol/ibuprofen; asam mefenamat tanpa rute"}
+{"key": "SP0200#52", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik parasetamol/ibuprofen; asam mefenamat tanpa rute"}
+{"key": "SP0200#12", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2 x milik propranolol"}
+{"key": "SP0200#60", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2 x milik propranolol"}
+{"key": "SP0201#6", "action": "benar", "ubah": {}, "alasan": "krim hidrokortison langsung"}
+{"key": "SP0201#16", "action": "benar", "ubah": {}, "alasan": "krim hidrokortison langsung"}
+{"key": "SP0201#7", "action": "ubah", "ubah": {"rute": ""}, "alasan": "topikal melekat ke lanolin; bedak salisil tanpa rute"}
+{"key": "SP0201#11", "action": "ubah", "ubah": {"rute": ""}, "alasan": "topikal melekat ke lanolin; bedak salisil tanpa rute"}
+{"key": "SP0204#1", "action": "benar", "ubah": {}, "alasan": "semua field milik hidrokortison"}
+{"key": "SP0206#0", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2x/hari milik pregabalin"}
+{"key": "SP0206#2", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2x/hari milik pregabalin"}
+{"key": "SP0206#4", "action": "benar", "ubah": {}, "alasan": "rute header Topikal"}
+{"key": "SP0209#0", "action": "ubah", "ubah": {"durasi": "diulang setelah 2 minggu"}, "alasan": "bukan obat lain; 2 minggu = jeda ulang, bukan durasi"}
+{"key": "SP0209#4", "action": "ubah", "ubah": {"durasi": "diulang setelah 2 minggu"}, "alasan": "bukan obat lain; 2 minggu = jeda ulang, bukan durasi"}
+{"key": "SP0210#2", "action": "benar", "ubah": {}, "alasan": "field milik itrakonazol pulse; nama obat 'minggu' rusak"}
+{"key": "SP0210#3", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "10% = efinaconazole; 1x/hari milik ciclopirox"}
+{"key": "SP0212#36", "action": "benar", "ubah": {}, "alasan": "infus NaCl langsung"}
+{"key": "SP0214#2", "action": "benar", "ubah": {}, "alasan": "semua field milik ofloxacin"}
+{"key": "SP0214#3", "action": "benar", "ubah": {}, "alasan": "semua field milik ofloxacin"}
+{"key": "SP0214#7", "action": "benar", "ubah": {}, "alasan": "rute header 'Analgesik oral'"}
+{"key": "SP0214#13", "action": "benar", "ubah": {}, "alasan": "rute header 'Analgesik oral'"}
+{"key": "SP0215#13", "action": "ubah", "ubah": {"rute": ""}, "alasan": "tetes telinga milik ofloksasin; H2O2 untuk cuci telinga"}
+{"key": "SP0215#36", "action": "ubah", "ubah": {"rute": ""}, "alasan": "tetes telinga milik ofloksasin; H2O2 untuk cuci telinga"}
+{"key": "SP0216#57", "action": "benar", "ubah": {}, "alasan": "tetes telinga siprofloksasin langsung"}
+{"key": "SP0216#93", "action": "benar", "ubah": {}, "alasan": "rute header 'Antibiotik topikal'"}
+{"key": "SP0221#10", "action": "biarkan", "ubah": {}, "alasan": "kutipan terpotong 'IV dosis'; frekuensi sendiri kemungkinan sama"}
+{"key": "SP0221#39", "action": "benar", "ubah": {}, "alasan": "dosis seng sendiri"}
+{"key": "SP0223#31", "action": "benar", "ubah": {}, "alasan": "infus heparin langsung"}
+{"key": "SP0223#54", "action": "biarkan", "ubah": {}, "alasan": "tabel kadar kalium, bukan dosis obat"}
+{"key": "SP0223#164", "action": "ubah", "ubah": {"rute": ""}, "alasan": "intravena milik obat 2 mg/kg sebelumnya"}
+{"key": "SP0223#165", "action": "ubah", "ubah": {"rute": ""}, "alasan": "intravena milik obat 2 mg/kg sebelumnya"}
+{"key": "SP0223#166", "action": "benar", "ubah": {}, "alasan": "infus dekstrosa langsung"}
+{"key": "SP0223#167", "action": "ubah", "ubah": {"dosis": "500 ml/m2/hari"}, "alasan": "dosis terpotong, bukan obat lain"}
+{"key": "SP0233#6", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "dua kali sehari milik obat sebelumnya"}
+{"key": "SP0233#16", "action": "biarkan", "ubah": {}, "alasan": "rute header benar; dosis terpotong ('mg /'), cek sumber"}
+{"key": "SP0238#7", "action": "ubah", "ubah": {"frekuensi": "2x"}, "alasan": "setiap 6 jam milik obat sebelumnya"}
+{"key": "SP0241#13", "action": "benar", "ubah": {}, "alasan": "2-3 kali sehari ditulis sekali untuk keduanya"}
+{"key": "SP0241#18", "action": "benar", "ubah": {}, "alasan": "krim melekat ke asam fusidat"}
+{"key": "SP0241#19", "action": "biarkan", "ubah": {}, "alasan": "'krim' mungkin hanya untuk asam fusidat; cakupan ambigu"}
+{"key": "SP0242#2", "action": "benar", "ubah": {}, "alasan": "rute header 'Antihistamin oral'"}
+{"key": "SP0242#7", "action": "benar", "ubah": {}, "alasan": "rute header 'Antihistamin oral'"}
+{"key": "SP0245#14", "action": "ubah", "ubah": {"frekuensi": "3 x"}, "alasan": "1 x milik seftriakson"}
+{"key": "SP0245#15", "action": "ubah", "ubah": {"frekuensi": "1 x"}, "alasan": "3 x milik sefotaksim"}
+{"key": "SP0245#98", "action": "ubah", "ubah": {"frekuensi": "3 x"}, "alasan": "1 x milik seftriakson"}
+{"key": "SP0245#99", "action": "ubah", "ubah": {"frekuensi": "1 x"}, "alasan": "3 x milik sefotaksim"}
+{"key": "SP0245#193", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "3x milik obat sebelumnya; bagian sendiri terpotong"}
+{"key": "SP0249#5", "action": "ubah", "ubah": {"rute": "PO"}, "alasan": "IV milik labetalol/hydralazine; nifedipine PO"}
+{"key": "SP0249#8", "action": "benar", "ubah": {}, "alasan": "IV milik MgSO4 sendiri; nama obat 'loading' rusak"}
+{"key": "SP0256#10", "action": "benar", "ubah": {}, "alasan": "krim betametason langsung"}
+{"key": "SP0256#15", "action": "benar", "ubah": {}, "alasan": "krim betametason langsung"}
+{"key": "SP0257#12", "action": "benar", "ubah": {}, "alasan": "header 'Blocker 2 x / hari' mencakup simetidin"}
+{"key": "SP0257#16", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "2 x 30 mg milik lansoprazole"}
+{"key": "SP0257#17", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "1 x 40 mg milik esomeprazole"}
+{"key": "SP0257#18", "action": "ubah", "ubah": {"frekuensi": "1 x"}, "alasan": "2 x 30 mg milik lansoprazole; obat seharusnya esomeprazole"}
+{"key": "SP0257#21", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "2 x 30 mg milik lansoprazole"}
+{"key": "SP0257#22", "action": "ubah", "ubah": {"frekuensi": "2 x"}, "alasan": "1 x 40 mg milik esomeprazole"}
+{"key": "SP0257#23", "action": "ubah", "ubah": {"frekuensi": "1 x"}, "alasan": "2 x 30 mg milik lansoprazole; obat seharusnya esomeprazole"}
+{"key": "SP0262#9", "action": "ubah", "ubah": {"durasi": "", "rute": "oral"}, "alasan": "7 hari dan topikal milik dekongestan"}
+{"key": "SP0263#5", "action": "benar", "ubah": {}, "alasan": "rute header intranasal, dosis berlaku bersama"}
+{"key": "SP0263#9", "action": "benar", "ubah": {}, "alasan": "rute header intranasal, dosis berlaku bersama"}
+{"key": "SP0269#2", "action": "biarkan", "ubah": {}, "alasan": "'tetes telinga' melekat ke natrium dokusat; 'tetesi' mungkin mencakup keduanya"}
+{"key": "SP0269#3", "action": "benar", "ubah": {}, "alasan": "tetes telinga natrium dokusat langsung"}
+{"key": "SP0269#4", "action": "benar", "ubah": {}, "alasan": "dosis/frekuensi/durasi ditulis sekali untuk keduanya"}
+{"key": "SP0269#7", "action": "biarkan", "ubah": {}, "alasan": "'tetes telinga' melekat ke natrium dokusat; 'tetesi' mungkin mencakup keduanya"}
+{"key": "SP0269#8", "action": "benar", "ubah": {}, "alasan": "tetes telinga natrium dokusat langsung"}
+{"key": "SP0269#9", "action": "benar", "ubah": {}, "alasan": "dosis/frekuensi/durasi ditulis sekali untuk keduanya"}
+{"key": "SP0281#2", "action": "ubah", "ubah": {"durasi": "3 malam berturut-turut"}, "alasan": "2 bulan = usia bayi, bukan durasi"}
+{"key": "SP0281#5", "action": "ubah", "ubah": {"durasi": "3 malam berturut-turut"}, "alasan": "2 bulan = usia bayi, bukan durasi"}
+{"key": "SP0281#3", "action": "benar", "ubah": {}, "alasan": "krim permetrin langsung"}
+{"key": "SP0283#23", "action": "biarkan", "ubah": {}, "alasan": "tabel farmakokinetik, bukan dosis obat"}
+{"key": "SP0283#29", "action": "biarkan", "ubah": {}, "alasan": "tabel farmakokinetik, bukan dosis obat"}
+{"key": "SP0283#59", "action": "biarkan", "ubah": {}, "alasan": "tabel farmakokinetik, bukan dosis obat"}
+{"key": "SP0283#83", "action": "benar", "ubah": {}, "alasan": "tetes mata atropin langsung"}
+{"key": "SP0288#61", "action": "benar", "ubah": {}, "alasan": "infus NaCl langsung"}
+{"key": "SP0288#170", "action": "benar", "ubah": {}, "alasan": "infus NaCl langsung"}
+{"key": "SP0293#4", "action": "benar", "ubah": {}, "alasan": "nebulisasi adrenalin langsung"}
+{"key": "SP0293#5", "action": "benar", "ubah": {}, "alasan": "nebulisasi adrenalin langsung"}
+{"key": "SP0293#8", "action": "benar", "ubah": {}, "alasan": "dosis dan rute intravena ditulis sebelum nama adrenalin"}
+{"key": "SP0297#4", "action": "benar", "ubah": {}, "alasan": "rute header Topikal"}
+{"key": "SP0300#23", "action": "ubah", "ubah": {"rute": "infus"}, "alasan": "IV dari regimen bolus 10 mg; 100-300 mg/hari via infus"}
+{"key": "SP0300#42", "action": "ubah", "ubah": {"rute": "infus"}, "alasan": "IV dari regimen bolus 10 mg; 100-300 mg/hari via infus"}
+{"key": "SP0302#5", "action": "benar", "ubah": {}, "alasan": "drip intravena dalam NaCl"}
+{"key": "SP0302#6", "action": "benar", "ubah": {}, "alasan": "drip intravena dalam NaCl"}
+{"key": "SP0302#12", "action": "ubah", "ubah": {"frekuensi": "2x"}, "alasan": "2x1 mg milik asam folat"}
+{"key": "SP0307#0", "action": "benar", "ubah": {}, "alasan": "header krim, frekuensi/durasi ditulis sekali untuk ketiganya"}
+{"key": "SP0307#1", "action": "biarkan", "ubah": {}, "alasan": "1% milik klotrimazol; seluruh baris = klotrimazol, perlu ganti obat"}
+{"key": "SP0308#0", "action": "benar", "ubah": {}, "alasan": "frekuensi ditulis sekali untuk keempat krim"}
+{"key": "SP0308#1", "action": "biarkan", "ubah": {}, "alasan": "1% milik klotrimazol; seluruh baris = klotrimazol, perlu ganti obat"}
+{"key": "SP0308#2", "action": "benar", "ubah": {}, "alasan": "frekuensi/durasi ditulis sekali untuk keempat krim"}
+{"key": "SP0308#8", "action": "benar", "ubah": {}, "alasan": "frekuensi ditulis sekali untuk keempat krim"}
+{"key": "SP0308#9", "action": "biarkan", "ubah": {}, "alasan": "1% milik klotrimazol; seluruh baris = klotrimazol, perlu ganti obat"}
+{"key": "SP0308#10", "action": "benar", "ubah": {}, "alasan": "frekuensi/durasi ditulis sekali untuk keempat krim"}
+{"key": "SP0308#6", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "1 x 100 mg milik itrakonazol"}
+{"key": "SP0308#14", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "1 x 100 mg milik itrakonazol"}
+{"key": "SP0309#0", "action": "benar", "ubah": {}, "alasan": "1-2x/hari milik terbinafine; edit audit benar"}
+{"key": "SP0311#0", "action": "benar", "ubah": {}, "alasan": "1-2x/hari milik terbinafine; edit audit benar"}
+{"key": "SP0313#5", "action": "benar", "ubah": {}, "alasan": "header krim, frekuensi/durasi ditulis sekali untuk keduanya"}
+{"key": "SP0313#6", "action": "benar", "ubah": {}, "alasan": "header krim, frekuensi/durasi ditulis sekali untuk keduanya"}
+{"key": "SP0313#17", "action": "benar", "ubah": {}, "alasan": "header krim, frekuensi/durasi ditulis sekali untuk keduanya"}
+{"key": "SP0313#18", "action": "benar", "ubah": {}, "alasan": "header krim, frekuensi/durasi ditulis sekali untuk keduanya"}
+{"key": "SP0313#21", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "2x milik ketoconazole; selenium sulfide tanpa frekuensi"}
+{"key": "SP0314#1", "action": "biarkan", "ubah": {}, "alasan": "obat tak disebut dalam kutipan; 'Indonesia' bukan obat"}
+{"key": "SP0314#28", "action": "ubah", "ubah": {"frekuensi": "3x/hari", "rute": ""}, "alasan": "2-3x/hari milik penisilin V; IM milik benzatin"}
+{"key": "SP0314#32", "action": "ubah", "ubah": {"frekuensi": "", "rute": ""}, "alasan": "dosis tunggal dan IM milik benzatin"}
+{"key": "SP0314#37", "action": "ubah", "ubah": {"frekuensi": "dibagi 3"}, "alasan": "dosis tunggal milik obat sebelumnya"}
+{"key": "SP0319#0", "action": "benar", "ubah": {}, "alasan": "rute header 'Salep mata antibiotik'"}
+{"key": "SP0319#1", "action": "benar", "ubah": {}, "alasan": "rute header 'Salep mata antibiotik'"}
+{"key": "SP0323#10", "action": "benar", "ubah": {}, "alasan": "rute header 'Anestesi topikal'"}
+{"key": "SP0323#15", "action": "benar", "ubah": {}, "alasan": "rute header 'Anestesi topikal'"}
+{"key": "SP0325#11", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik metilprednisolon"}
+{"key": "SP0325#29", "action": "ubah", "ubah": {"rute": ""}, "alasan": "oral milik metilprednisolon"}
+{"key": "SP0325#13", "action": "benar", "ubah": {}, "alasan": "rute header 'Antihistamin oral'"}
+{"key": "SP0325#19", "action": "benar", "ubah": {}, "alasan": "rute header 'Antihistamin oral'"}
+{"key": "SP0327#17", "action": "benar", "ubah": {}, "alasan": "semua field milik klindamisin"}
+{"key": "SP0327#5", "action": "ubah", "ubah": {"rute": "intravaginal"}, "alasan": "krim milik klindamisin; metronidazole gel intravaginal"}
+{"key": "SP0327#6", "action": "ubah", "ubah": {"rute": "intravaginal"}, "alasan": "krim milik klindamisin; metronidazole gel intravaginal"}
+{"key": "SP0327#7", "action": "ubah", "ubah": {"frekuensi": "HS"}, "alasan": "1x/hari milik metronidazole gel; klindamisin HS"}
+{"key": "SP0327#9", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "dosis tunggal milik fluconazol; baris = klotrimazol"}
+{"key": "SP0327#10", "action": "ubah", "ubah": {"frekuensi": "", "rute": "topikal"}, "alasan": "dosis tunggal dan oral milik fluconazol"}
+{"key": "SP0327#21", "action": "benar", "ubah": {}, "alasan": "semua field milik klindamisin"}
+{"key": "SP0329#4", "action": "biarkan", "ubah": {}, "alasan": "obat tak disebut; 800 mg adalah dosis maksimum"}
+{"key": "SP0329#13", "action": "biarkan", "ubah": {}, "alasan": "obat tak disebut; 800 mg adalah dosis maksimum"}
+{"key": "SP0329#17", "action": "benar", "ubah": {}, "alasan": "rute IV ditulis sebelum nama acyclovir"}
+{"key": "SP0331#0", "action": "ubah", "ubah": {"frekuensi": "3 x"}, "alasan": "2 x 24 mg milik betahistin dihidroklorida"}
+{"key": "SP0331#4", "action": "ubah", "ubah": {"frekuensi": "3 x"}, "alasan": "2 x 24 mg milik betahistin dihidroklorida"}
+{"key": "SP0331#15", "action": "ubah", "ubah": {"frekuensi": ""}, "alasan": "3x/hari milik meclizine"}
+{"key": "SP0331#17", "action": "biarkan", "ubah": {}, "alasan": "diet garam, bukan obat; 3x/hari milik betahistine"}
+{"key": "SP0335#0", "action": "benar", "ubah": {}, "alasan": "krim hidrokortison langsung"}
+{"key": "SP0335#1", "action": "benar", "ubah": {}, "alasan": "krim hidrokortison langsung"}
+{"key": "SP0335#2", "action": "benar", "ubah": {}, "alasan": "rute header topikal"}

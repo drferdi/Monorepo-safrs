@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+/*
+  Layout: a dark, full-height intelligence field (about 60%) meets a bright,
+  quiet authentication column (about 40%) along one ruled seam.
+*/
+@theme {
+  --font-sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --color-ink-950: #06080c;
+  --color-ink-900: #0a0e15;
+  --color-ink-800: #1a2230;
+  --color-ink: #0d121a;
+  --color-paper: #fafbfc;
+  --color-muted: #56606e;
+  --color-rule: #dfe3e9;
+  --color-field: #8a93a1;
+  --color-danger: #b3261e;
+
+  --ease-calm: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  --animate-rise: rise 800ms var(--ease-calm) both;
+  --animate-breathe: breathe 3.6s ease-in-out infinite;
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 1; }
+  }
+}
+
+@theme inline {
+  --color-accent: var(--accent);
+  --color-glow: var(--glow);
+}
+
+/* Accent tokens. "clinical" follows the design brief; "sentra" follows the Sentra brand accent. */
+:root {
+  color-scheme: light;
+  --accent: #1b4fd8;   /* interactive accent on the light column */
+  --glow: #6fd6ea;     /* luminous accent on the dark field */
+  --stage-a: #0d1828;  /* field highlight */
+  --stage-b: #06080c;  /* field base */
+}
+:root[data-accent="sentra"] {
+  --accent: #c2371f;
+  --glow: #ff6a45;
+  --stage-a: #14171c;
+  --stage-b: #07080a;
+}
+
+html, body, #root { height: 100%; }
+body { margin: 0; background: var(--color-ink-950); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Opening sequence: stroke-drawn lockup */
+.intro-stroke {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw 1100ms var(--ease-calm) forwards;
+}
+.intro-guide {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-guide 1900ms var(--ease-calm) forwards;
+}
+.intro-word {
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  fill-opacity: 0;
+  animation:
+    intro-draw 1400ms var(--ease-calm) forwards,
+    intro-fill 800ms ease forwards;
+}
+.intro-fade {
+  opacity: 0;
+  animation: intro-fade 800ms ease forwards;
+}
+.intro-rule {
+  transform: scaleX(0);
+  animation: intro-rule 900ms var(--ease-calm) forwards;
+}
+@keyframes intro-draw { to { stroke-dashoffset: 0; } }
+@keyframes intro-guide {
+  0% { stroke-dashoffset: 1; opacity: 0.9; }
+  55% { stroke-dashoffset: 0; opacity: 0.55; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes intro-fill { to { fill-opacity: 1; stroke-opacity: 0; } }
+@keyframes intro-fade { to { opacity: 1; } }
+@keyframes intro-rule { to { transform: scaleX(1); } }

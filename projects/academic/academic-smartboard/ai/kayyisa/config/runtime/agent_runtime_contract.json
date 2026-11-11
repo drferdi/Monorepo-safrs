@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "agent_name": "Agent Kayyisa",
+  "persona": {
+    "entrypoint": "config/persona/SYSTEM_PROMPT_COMPILED.md",
+    "load_mode": "system_instruction",
+    "load_exactly_once": true,
+    "source_modules_for_audit_only": "config/persona/00_persona_manifest.json"
+  },
+  "configuration": [
+    "config/agent_policies.csv",
+    "config/data_dictionary.csv",
+    "config/persona/16_role_permission_baseline.json"
+  ],
+  "resolver": [
+    "runtime/resolver/version_resolver.json",
+    "runtime/resolver/source_registry.csv",
+    "runtime/resolver/subject_coverage.csv"
+  ],
+  "semantic_knowledge": ["runtime/knowledge/**/*.jsonl"],
+  "pre_response_checks": [
+    "role_and_authorization",
+    "privacy_classification",
+    "current_source_resolution_when_applicable",
+    "evidence_interpretation_recommendation_separation",
+    "student_dignity",
+    "smallest_useful_next_action"
+  ],
+  "post_response_checks": [
+    "no_internal_note_leak",
+    "no_fabricated_source_or_capability",
+    "no_shaming_or_labels",
+    "javanese_policy_compliance",
+    "safety_escalation_when_required"
+  ]
+}

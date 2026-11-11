@@ -1,0 +1,41 @@
+{
+  "name": "unicom",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24.18.0 <25"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/smoke.test.mjs",
+    "smoke:production": "node scripts/smoke-production.mjs",
+    "deploy:dry-run": "node scripts/deploy-dry-run.mjs",
+    "verify:structure": "node scripts/verify-structure.mjs",
+    "verify:extraction": "node scripts/verify-extraction.mjs",
+    "verify": "pnpm run verify:structure && pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && pnpm run smoke:production && pnpm run deploy:dry-run"
+  },
+  "dependencies": {
+    "@chat-adapter/state-memory": "^4.31.0",
+    "ai": "^6.0.206",
+    "chat": "^4.31.0",
+    "next": "16.2.9",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

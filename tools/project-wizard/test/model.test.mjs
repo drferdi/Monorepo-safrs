@@ -5,6 +5,7 @@ import { normalizeProjectAnswers } from "../src/model.mjs";
 
 const baseInput = {
   name: "Atlas Demo",
+  domain: "internal",
   problem: "Membantu tim sekolah mengelola kegiatan belajar.",
   kind: "web",
 };
@@ -19,6 +20,7 @@ test("normalizes a project into a safe lowercase kebab model", () => {
   assert.deepEqual(model, {
     name: "Atlas Demo",
     slug: "atlas-demo",
+    domain: "internal",
     problem: "Membantu tim sekolah mengelola kegiatan belajar.",
     kind: "web",
     capabilities: ["ai", "file-storage"],
@@ -49,6 +51,26 @@ test("rejects unsafe names and slugs before they can become destinations", () =>
     () => normalizeProjectAnswers({ ...baseInput, slug: "apps/%2fescape" }),
     /safe project slug/i,
   );
+});
+
+test("requires a domain that names one projects/<domain> folder", () => {
+  const { domain: _omitted, ...withoutDomain } = baseInput;
+  assert.throws(() => normalizeProjectAnswers(withoutDomain), /domain/i);
+  for (const domain of [
+    "",
+    "_template",
+    "../escape",
+    "internal/nested",
+    "Internal",
+    "%2e%2e",
+    "con",
+  ]) {
+    assert.throws(
+      () => normalizeProjectAnswers({ ...baseInput, domain }),
+      /domain/i,
+      domain,
+    );
+  }
 });
 
 test("elevates sensitive project choices to R2 and never lowers supplied risk", () => {

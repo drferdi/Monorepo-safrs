@@ -1,0 +1,18 @@
+# AGENTS.md
+
+## Operator & Jev
+
+- Address the human owner as **Gaffer** (or **Doc**); chat in Bahasa Indonesia mixed with English (~70:30).
+- Inside the Sentra monorepo, the root `AGENTS.md` also applies and wins on conflict.
+- Jev: if the `jev_route` tool is available, call it before the first web search, spawning a subagent, retrying a failed approach, any approval-needing action, or choosing between materially different routes, and state `Jev: <action> (<reason>)`. If it is not available, continue normally. Jev is never a build, test, or runtime dependency.
+
+Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
+
+- This is a public repository: assume all tracked content and diffs are public. Never commit secrets, `.env` files, private URLs, personal/customer data, or real production data; use fake placeholders. Review `git status` and the staged diff before committing, and never force-add ignored files. If private data appears, stop and alert the maintainer.
+- Sentra Bot is one product across web, Electron desktop, and Expo mobile; Electron hosts the web UI. Put shared behavior, contracts, API logic, and reusable UI in packages. Keep only genuinely native navigation, storage, permissions, and interactions platform-specific. Core workflows must cover every applicable surface or degrade safely for an explicit reason.
+- No hosted vendor is required to run the core product. Keep LLMs, sandboxes, memory, voice, integrations, and future external services optional and behind provider-neutral interfaces. Vendor SDKs, configuration, and translation belong only in adapters and composition roots. New providers must reuse shared contracts and deterministic offline conformance tests.
+- Keep UI and copy minimal. Show advanced capability progressively and only when it becomes relevant; do not add explainer text that repeats the interface. Frontends express intent and render state; the backend owns orchestration, authorization, validation, retries, recovery, and provider translation. Give controls concise accessible names when needed.
+- Keep code simple: reuse existing primitives and one source of truth, remove duplication and unused flexibility, and avoid speculative abstractions. Add an interface when it protects a real external or platform boundary, not for its own sake.
+- Treat auth, secret handling, sandbox boundaries, host commands, and integrations as security-sensitive. Keep tests deterministic and offline by default.
+- After creating a pull request, stay with it until CI and automated review bots have finished. Poll checks, reviews, review threads, and PR comments at roughly 60-second intervals; passing checks alone do not mean the review is complete. Address every actionable issue, push the fixes, and repeat the review cycle until no actionable feedback remains. Do not merge while review bots are still pending or review issues remain unresolved.
+- For UI work, check Beautiful UI first (https://www.beautifului.dev/, source: github.com/TurboKach/ai-native-react-components, MIT) before building anything by hand. It names the AI-native surfaces this product needs (loading/thinking states, streaming text, approval cards, tool chips, task rows, composer, tables). Hand-port from source into `apps/web/src/components/beautiful-ui/` — read the component and adapt its tokens; never `shadcn add` from the live registry (supply-chain risk). Reuse the ported primitives (`LoadingState`, `Shimmer`, `SuccessPop`, `BuiCard`, `BuiButton`) before inventing new ones.

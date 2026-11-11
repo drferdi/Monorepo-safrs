@@ -6,6 +6,7 @@
  * back into the Codex protocol (exit 2 blocks; stdout may carry context).
  */
 import { existsSync, readFileSync } from "node:fs";
+import { homedir } from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -25,9 +26,9 @@ try {
   payload = raw ? JSON.parse(raw) : {};
 } catch (error) {
   console.error(
-    `SAFRS guard: hook payload could not be parsed (${error.message}).`,
+    `SAFRS guard: hook payload could not be parsed (${error.message}); blocked (fail closed).`,
   );
-  process.exit(0);
+  process.exit(2);
 }
 
 const root = findRepositoryRoot(String(payload.cwd ?? process.cwd()));
@@ -49,8 +50,15 @@ const [{ authorize }, codex, sensitivePaths] = await Promise.all([
   }),
 ]);
 
+const mergePromptRules = existsSync(
+  path.join(homedir(), ".codex", "rules", "safrs-merge.rules"),
+);
+
 for (const event of codex.translate(payload, root)) {
-  const rendered = codex.render(authorize(event, { sensitivePaths }));
+  const rendered = codex.render(authorize(event, { sensitivePaths }), {
+    mergePromptRules:
+      mergePromptRules && codex.promptRulesMatch(event.command ?? ""),
+  });
   if (rendered.stderr) {
     console.error(rendered.stderr);
   }

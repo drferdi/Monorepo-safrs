@@ -1,0 +1,23 @@
+{
+  "brand": "Sentra Artificial Intelligence",
+  "version": "1.0",
+  "core_colors": {
+    "black": "#000000",
+    "white": "#FFFFFF",
+    "ink": "#0A0A0A",
+    "muted": "#A3A3A3"
+  },
+  "preferred_logo": "01_logo/png/sentra_artificial_intelligence_logo_horizontal_white_transparent.png",
+  "primary_background": "black",
+  "voice": [
+    "sharp",
+    "minimal",
+    "technical",
+    "human-centered"
+  ],
+  "usage_notes": [
+    "Use the white horizontal logo on black as primary lockup.",
+    "Keep generous clear space around mark and wordmark.",
+    "Use the logomark alone for avatar, favicon, and app icon."
+  ]
+}

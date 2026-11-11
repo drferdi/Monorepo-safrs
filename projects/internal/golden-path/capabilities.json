@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "capabilities": [
+    {
+      "id": "email",
+      "risk": "R2"
+    },
+    {
+      "id": "stripe",
+      "risk": "R2"
+    }
+  ]
+}

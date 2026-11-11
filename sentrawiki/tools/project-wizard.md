@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`pnpm project:new` (implemented in `tools/project-wizard/src/cli.mjs`) scaffolds a new SAFRS project capsule under `projects/<slug>/` from the repository template `projects/_template/`. A capsule is the governance contract for a project — `AGENTS.md`, `README.md`, `docs/architecture.md`, `docs/data.md`, `docs/testing.md`, `src/README.md`, `tests/README.md` — with placeholders resolved to the wizard's answers. It creates **no application code**: implementation is a separate, authorized task.
+`pnpm project:new` (implemented in `tools/project-wizard/src/cli.mjs`) scaffolds a new SAFRS project capsule under `projects/<domain>/<slug>/` from the repository template `projects/_template/`. The domain folder must already exist; the wizard never creates one. A capsule is the governance contract for a project — `AGENTS.md`, `README.md`, `docs/architecture.md`, `docs/data.md`, `docs/testing.md`, `src/README.md`, `tests/README.md`, and `.agents/HANDOFF.md`, `.agents/DECISIONS.md`, `.agents/CONTEXT.md` — with placeholders resolved to the wizard's answers. It creates **no application code**: implementation is a separate, authorized task.
 
 ## Key source files
 
@@ -22,6 +22,7 @@ Untrusted wizard answers are normalized into a bounded model. `normalizeProjectA
 
 - validates `name` (non-empty, no control characters), `problem`, and `kind` (`web` | `desktop` | `extension`);
 - slugifies the name (NFKD → lowercase → `[a-z0-9-]`), rejects reserved Windows device names (`con`, `prn`, …) and unsafe slug sources (paths, `..`, control/URL-decoded tricks);
+- requires `domain`, the name of one existing `projects/<domain>` folder in lowercase kebab case (never `_template`, a path, or a reserved device name);
 - normalizes `capabilities` and `sensitiveDomains` choice lists (deduped, slugified, sorted);
 - validates `appBinding` as a bounded path below `apps/` (default `apps/<kind>`);
 - computes the minimum risk from declared fields — any term matching healthcare/finance/auth/payments/migrations/shared-package keywords, or a shared-package impact, forces at least **R2**; the declared risk can only raise it further.
@@ -34,16 +35,16 @@ Untrusted wizard answers are normalized into a bounded model. `normalizeProjectA
 
 `applyProjectCapsule` publishes with **one exclusive per-slug lock** and **no replacement**:
 
-1. acquires a per-slug `wx` lock with a UUID marker in `projects/`,
+1. acquires a per-slug `wx` lock with a UUID marker in the `projects/<domain>/` folder,
 2. writes the rendered files into an owned staging directory (with random-UUID ownership markers),
-3. re-validates the `projects/` root and the staging identity before publishing,
-4. moves the staged capsule into `projects/<slug>/` without clobbering an existing directory, and
+3. re-validates the `projects/<domain>/` folder and the staging identity before publishing,
+4. moves the staged capsule into `projects/<domain>/<slug>/` without clobbering an existing directory, and
 5. quarantines anything that changed identity mid-operation instead of deleting it.
 
 ## CLI usage
 
 ```bash
-pnpm project:new                     # interactive prompts (Nama proyek, masalah, jenis, kemampuan, domain sensitif)
+pnpm project:new                     # interactive prompts (Nama proyek, domain, masalah, jenis, kemampuan, domain sensitif)
 pnpm project:new --preview           # render + print preview without writing
 pnpm project:new --apply             # render, confirm, and write
 pnpm project:new --input answers.json --apply

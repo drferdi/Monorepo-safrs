@@ -19,6 +19,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from memory_files import is_memory_file
+
 ROOT = Path(__file__).resolve().parents[2]
 config = json.loads((ROOT/'.safrs/sensitive-paths.json').read_text(encoding='utf-8'))
 base = os.environ.get('SAFRS_BASE_REF')
@@ -140,50 +142,96 @@ if not base:
     # Local fallback: the reviewed branch diff plus staged, unstaged, and
     # untracked names. This keeps follow-up commits aligned with PR CI.
     cmds = [
-        ['git','diff','--name-only',f'{diff_base_sha}...HEAD'],
-        ['git','diff','--name-only','HEAD'],
-        ['git','diff','--cached','--name-only'],
+        ['git','diff','--name-only','--no-renames',f'{diff_base_sha}...HEAD'],
+        ['git','diff','--name-only','--no-renames','HEAD'],
+        ['git','diff','--cached','--name-only','--no-renames'],
         ['git','ls-files','--others','--exclude-standard']
     ]
     names=set()
     for cmd in cmds:
         names.update(git_names(cmd))
 else:
-    names=git_names(['git','diff','--name-only',f'{diff_base_sha}...{head}'])
+    names=git_names(['git','diff','--name-only','--no-renames',f'{diff_base_sha}...{head}'])
 
 # The attestation describes the other changed files. Excluding it avoids a
 # circular fingerprint while still validating its exact schema and content.
 classified_names = names - {review_evidence_path}
 
-patterns=config['patterns']
-verification=config['verification_control_patterns']
 risk_overrides=config.get('risk_overrides', [])
 
 def match(path, pattern):
     # fnmatch handles ** sufficiently for repository path classification.
     return fnmatch.fnmatch(path, pattern)
 
+
+def pattern_list(source, key):
+    value = source.get(key) if isinstance(source, dict) else None
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        return None
+    return value
+
+
+def base_config():
+    """The review base's policy; empty when the base has no config file."""
+    result = subprocess.run(
+        ['git', 'show', f'{diff_base_sha}:.safrs/sensitive-paths.json'],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        return {'patterns': [], 'verification_control_patterns': []}
+    try:
+        loaded = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        loaded = error
+    lists = {
+        key: pattern_list(loaded, key)
+        for key in ('patterns', 'verification_control_patterns')
+    }
+    if any(value is None for value in lists.values()):
+        print(
+            'SAFRS sensitive-path config at the review base is invalid: '
+            'patterns and verification_control_patterns must be lists of strings.',
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+    return lists
+
+
+# Classification uses the head config and the review base config together, so
+# a change set can neither exempt its own implementation by adding it to
+# verification_control_patterns nor hide a control by removing its pattern.
+base_policy = base_config()
+patterns=config['patterns'] + base_policy['patterns']
+head_verification=config['verification_control_patterns']
+base_verification=base_policy['verification_control_patterns']
+
 sensitive=sorted(p for p in classified_names if any(match(p, pat) for pat in patterns))
-verification_changed=sorted(p for p in classified_names if any(match(p, pat) for pat in verification))
+verification_changed=sorted(
+    p for p in classified_names
+    if any(match(p, pat) for pat in head_verification + base_verification)
+)
 # Session memory is neither implementation nor verification. The handoff gate
-# *requires* .agents/HANDOFF.md in every non-trivial change set, so counting it
-# as implementation made every pure verification-control change look coupled
-# and demanded an integrity review that nothing had actually earned.
-MEMORY_FILES = {
-    '.agents/HANDOFF.md', '.agents/PROGRESS.md', '.agents/DECISIONS.md',
-    '.agents/CONTEXT.md', '.agents/knowledge/12_LESSONS.md',
-}
+# *requires* a HANDOFF.md in every non-trivial change set, so counting it as
+# implementation made every pure verification-control change look coupled and
+# demanded an integrity review that nothing had actually earned. The memory set
+# (root files plus every capsule .agents/**) is shared with check_handoff.py.
 implementation_changed=sorted(
     p for p in classified_names
-    if p not in verification_changed
+    # Exempt only a control under both configs.
+    if not (
+        any(match(p, pat) for pat in head_verification)
+        and any(match(p, pat) for pat in base_verification)
+    )
     and not p.startswith('docs/')
-    and p not in MEMORY_FILES
+    and not is_memory_file(p)
 )
 # Integrity fingerprint ignores session memory: HANDOFF (and siblings) must
 # update every session and must not invalidate a Chief seal of the real
 # implementation + verification delta.
 integrity_fingerprint_paths = sorted(
-    p for p in classified_names if p not in MEMORY_FILES
+    p for p in classified_names if not is_memory_file(p)
 )
 override_matches = {
     rule['risk']: sorted(

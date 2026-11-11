@@ -1,0 +1,175 @@
+/* Consult Audrey (Chief 2026-10-07: "simplified namun lengkap"): one identity row, a chat column
+   with question templates, and a voice column with Audrey's portrait and the talk button.
+   MedBoard colours and type, black neumorphic buttons, no capitals. Audrey is a neural network
+   drawn as a dot-matrix orb in MedBoard's accent, straight on the card (Chief 2026-10-07).
+   Module-scoped. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  width: 100%;
+}
+
+/* Identity row */
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-lg);
+}
+.identity { display: flex; align-items: center; gap: var(--gap-md); }
+.avatarImg {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  object-position: center 20%;
+  border: 1px solid var(--border);
+}
+.title { margin: 0; font-size: var(--text-xl); font-weight: 600; line-height: 1.2; color: var(--text); }
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-xs); color: var(--text-secondary); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap-sm); }
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: var(--text-secondary);
+}
+.tone-success { background: var(--success); }
+.tone-critical { background: var(--critical); }
+.tone-warning { background: var(--warning); }
+.tone-primary { background: var(--primary); }
+
+/* About Audrey in Swiss style (Chief 2026-10-07): one black hairline, an asymmetric 4/8 grid,
+   flush-left type, one accent for the initials and indices; no box, tint or icon. */
+.intro {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap-lg);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--text);
+}
+@media (min-width: 1024px) {
+  .intro { grid-template-columns: 4fr 8fr; gap: var(--gap-xl); }
+}
+.introName { display: flex; flex-direction: column; gap: var(--gap-md); }
+.wordmark { margin: 0; font-size: 3.5rem; font-weight: 600; line-height: 0.9; letter-spacing: -0.03em; color: var(--text); }
+.acronym { display: flex; flex-wrap: wrap; gap: 0 0.35em; margin: 0; font-size: var(--text-sm); line-height: var(--lh-tight); color: var(--text-secondary); }
+.initial { font-weight: 600; color: var(--accent); }
+.introBody { display: flex; flex-direction: column; gap: var(--gap-lg); }
+.about { margin: 0; max-width: 72ch; font-size: var(--text-sm); line-height: var(--lh-base); color: var(--text); }
+.aboutLink { color: inherit; font-weight: 500; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.aboutLink:hover { color: var(--accent); }
+.pillars {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  gap: var(--gap-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .pillars { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.pillars li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: var(--gap-sm);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text);
+}
+.pillarIndex { font-size: var(--text-xs); color: var(--accent); }
+
+/* Chat 3/5, voice 2/5 */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap-lg);
+  align-items: stretch;
+}
+@media (min-width: 1024px) {
+  .layout { grid-template-columns: 3fr 2fr; }
+}
+
+.card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--gap-md);
+  padding: var(--gap-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.cardHead { display: flex; align-items: center; justify-content: space-between; gap: var(--gap-sm); }
+.cardTitle { margin: 0; font-size: var(--text-base); font-weight: 600; color: var(--text); }
+.iconBtn { width: 32px; padding: 0; }
+
+/* Conversation, shared by both columns */
+.history {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--gap-md);
+  min-height: 240px;
+  max-height: 52vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.chat .history { min-height: 320px; }
+.empty { margin: auto 0; font-size: var(--text-sm); line-height: var(--lh-base); color: var(--text-secondary); }
+.msg { display: flex; }
+.msgUser { justify-content: flex-end; }
+.userText,
+.audreyText {
+  max-width: 88%;
+  margin: 0;
+  padding: 10px var(--gap-md);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  white-space: pre-wrap;
+}
+.userText { background: var(--primary); color: var(--text-on-accent); }
+.audreyText { background: var(--surface-subtle); color: var(--text); }
+.meta { display: block; margin-top: 4px; font-size: var(--text-xs); opacity: 0.7; }
+.pending { display: inline-flex; align-items: center; gap: var(--gap-sm); font-size: var(--text-sm); color: var(--text-secondary); }
+
+/* Chat: templates and composer */
+.templates { display: flex; flex-wrap: wrap; gap: var(--gap-sm); }
+.composer { display: flex; align-items: flex-end; gap: var(--gap-sm); }
+.composer textarea { flex: 1; resize: none; }
+
+/* Voice: Audrey as a dot-matrix orb */
+.orb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-md) 0;
+}
+.orbCanvas { display: block; width: 100%; max-width: 220px; aspect-ratio: 1 / 1; color: var(--accent); }
+.orbLabel { font-size: var(--text-xs); color: var(--text-secondary); }
+
+.talk { display: flex; align-items: center; gap: var(--gap-sm); }
+.talkMain { flex: 1; height: 48px; }
+.recording { box-shadow: var(--neu-pressed); }
+.hint { margin: 0; font-size: var(--text-xs); color: var(--text-secondary); }
+
+.trust {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+.trust svg { color: var(--primary); }

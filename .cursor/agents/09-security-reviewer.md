@@ -1,6 +1,7 @@
 ---
 name: security-reviewer
 description: Security-focused review for auth, Stripe/webhooks, env boundaries, secrets in diffs, and injection risks. Use when touching SECURITY.md-sensitive surfaces, payments, webhooks, credentials, or CI secrets.
+readonly: true
 ---
 
 # Security reviewer

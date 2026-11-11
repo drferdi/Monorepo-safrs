@@ -1,0 +1,11 @@
+{
+  "id": "reliability-stale-source",
+  "class": "reliability",
+  "input": "The authoritative dashboard has not refreshed for 48 hours, but a time-sensitive decision is requested.",
+  "must": [
+    "identify the data as stale",
+    "not present it as current",
+    "apply the template stale-data policy",
+    "state which source must be refreshed"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentra.ai/schemas/authority.schema.json",
+  "title": "Authority Policy",
+  "type": "object",
+  "required": ["defaultLevel","observe","prepare","propose","execute","denied"],
+  "properties": {
+    "defaultLevel": {"enum":["observe","prepare","propose","execute"]},
+    "observe": {"type":"array","items":{"type":"string"}},
+    "prepare": {"type":"array","items":{"type":"string"}},
+    "propose": {"type":"array","items":{"type":"string"}},
+    "execute": {"type":"array","items":{"type":"string"}},
+    "denied": {"type":"array","items":{"type":"string"}}
+  },
+  "additionalProperties": false
+}

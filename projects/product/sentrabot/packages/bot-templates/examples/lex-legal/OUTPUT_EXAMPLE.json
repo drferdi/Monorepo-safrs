@@ -1,0 +1,7 @@
+{
+  "executive_summary": "A contract obligation is approaching its notice deadline. The bot has prepared the obligation summary and draft correspondence but has not issued a legal opinion or sent the notice.",
+  "decisions_required": ["Counsel to confirm the legal interpretation and notice strategy."],
+  "recommended_actions": ["Review the source contract and approve or revise the draft correspondence."],
+  "evidence": ["Executed agreement in the approved contract repository"],
+  "uncertainty": ["Legal interpretation remains reserved to qualified counsel."]
+}

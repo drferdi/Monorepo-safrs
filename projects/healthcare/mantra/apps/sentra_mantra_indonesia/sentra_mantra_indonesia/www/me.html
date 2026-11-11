@@ -1,0 +1,686 @@
+{% from "frappe/templates/includes/avatar_macro.html" import avatar %}
+{% extends "templates/web.html" %}
+{% block title %}
+{{ _("My Account") }}
+{% endblock %}
+{% block page_content %}
+<style>
+/* Satu kartu Akun Saya: referensi di kiri DALAM kartu, profil di kanan. */
+.my-account-container { max-width: 1400px; width: 100%; margin: 0 auto 40px; }
+.my-account-container .my-account-header { display: none; }
+/* Isi full lebar konten website (kurangi padding default template). */
+.page-content-wrapper .page-content,
+.web-page-content { max-width: none !important; }
+.container:has(.my-account-container),
+.page_content:has(.my-account-container) { max-width: 1440px !important; width: 100%; }
+.account-info {
+	position: relative;
+	border: 1px solid var(--gray-300, #dee2e6);
+	border-radius: 8px;
+	overflow: hidden;
+	padding: 0 !important;
+	background: #fff;
+	margin: 0 !important;
+}
+.account-info::before, .account-info::after {
+	content: ""; position: absolute; bottom: 10px; width: 14px; height: 14px;
+	border-bottom: 1px solid var(--gray-400, #ced4da); z-index: 1;
+}
+.account-info::before { left: 10px; border-left: 1px solid var(--gray-400, #ced4da); }
+.account-info::after { right: 10px; border-right: 1px solid var(--gray-400, #ced4da); }
+.rsia-me-bar {
+	display: flex; align-items: center; gap: 12px;
+	padding: 12px 16px; border-bottom: 1px solid var(--gray-300, #dee2e6);
+}
+.rsia-me-dots { display: flex; gap: 6px; padding-right: 12px; border-right: 1px solid var(--gray-300, #dee2e6); }
+.rsia-me-dots i { display: block; width: 9px; height: 9px; border-radius: 50%; }
+.rsia-me-dots i:nth-child(1) { background: #FF5F57; }
+.rsia-me-dots i:nth-child(2) { background: #FEBC2E; }
+.rsia-me-dots i:nth-child(3) { background: #28C840; }
+.rsia-me-bar-title, .rsia-me-bar-tag, .rsia-me-kicker {
+	font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+	color: #171717; font-weight: 600;
+}
+.rsia-me-bar-tag { margin-left: auto; color: var(--gray-600, #6c757d); display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.rsia-me-bar-tag i { display: block; width: 34px; height: 1px; background: var(--gray-400, #ced4da); }
+.rsia-me-body {
+	display: grid;
+	grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+	align-items: stretch;
+}
+.rsia-me-refs {
+	border-right: 1px solid var(--gray-300, #dee2e6);
+	padding: 14px 12px 20px;
+	background: #fafafa;
+}
+.rsia-me-kicker { margin: 0 0 10px; letter-spacing: .16em; color: var(--gray-600, #6c757d); }
+.rsia-me-ref-list { list-style: none; margin: 0; padding: 0; }
+.rsia-me-ref-list li { margin: 0 0 6px; }
+.rsia-me-ref-list a {
+	display: block; padding: 9px 10px;
+	border: 1px solid var(--gray-300, #dee2e6); border-radius: 8px;
+	background: #fff; color: #171717; text-decoration: none;
+}
+.rsia-me-ref-list a:hover { border-color: #FF4B26; color: #FF4B26; text-decoration: none; }
+.rsia-me-ref-list a.is-current { border-color: #171717; }
+.rsia-me-ref-list b { display: block; font-size: 12.5px; font-weight: 600; line-height: 18px; }
+.rsia-me-ref-list small { display: block; margin-top: 2px; font-size: 10.5px; line-height: 15px; color: var(--gray-600, #6c757d); font-weight: 400; }
+.rsia-me-main { padding: 16px 16px 24px; min-width: 0; }
+.rsia-me-head {
+	display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+	padding-bottom: 14px; margin-bottom: 14px;
+	border-bottom: 1px solid var(--gray-300, #dee2e6);
+}
+.rsia-me-id { display: flex; align-items: flex-start; gap: 14px; min-width: 0; flex: 1; }
+.rsia-me-id .my-account-avatar { flex: none; }
+.account-info .my-account-name {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 24px; line-height: 30px; color: #171717;
+	display: block;
+}
+.rsia-me-name-suffix {
+	display: block; margin-top: 2px;
+	font-family: InterVariable, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	font-size: 13px; line-height: 20px; font-weight: 500; color: var(--gray-600, #6c757d);
+}
+.rsia-me-sub { margin-top: 4px; color: #525252; font-size: 15px; }
+.rsia-me-job-link {
+	display: inline; padding: 0; border: 0; background: none; cursor: pointer;
+	color: #525252; font: inherit; text-align: left; text-decoration: underline;
+	text-underline-offset: 3px; text-decoration-style: dotted;
+}
+.rsia-me-job-link:hover { color: #FF4B26; }
+.rsia-jobdesk-modal {
+	position: fixed; inset: 0; z-index: 1050;
+	display: none; align-items: center; justify-content: center;
+	background: rgba(23,23,23,.45); padding: 16px;
+}
+.rsia-jobdesk-modal.is-open { display: flex; }
+.rsia-jobdesk-dialog {
+	width: min(560px, 100%); max-height: min(85vh, 720px); overflow: auto;
+	background: #fff; border-radius: 8px; border: 1px solid var(--gray-300, #dee2e6);
+}
+.rsia-jobdesk-body { padding: 16px 18px 20px; }
+.rsia-jobdesk-body h4 {
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 22px; line-height: 28px; font-weight: 400; color: #171717; margin: 0 0 8px;
+}
+.rsia-jobdesk-body .summary { color: #525252; font-size: 14px; line-height: 22px; margin-bottom: 14px; }
+.rsia-jobdesk-body .scope {
+	margin: 0 0 14px; padding: 10px 12px; border: 1px solid var(--gray-300, #dee2e6);
+	border-radius: 8px; font-size: 13px; color: #525252;
+}
+.rsia-jobdesk-body ol { margin: 0; padding-left: 1.2em; color: #525252; font-size: 14px; line-height: 22px; }
+.rsia-jobdesk-body li { margin-bottom: 6px; }
+.rsia-jobdesk-actions { display: flex; justify-content: flex-end; margin-top: 16px; }
+.rsia-me-badge {
+	display: inline-block; margin-top: 10px; padding: 5px 16px;
+	border-radius: 999px; background: #fff; color: #525252;
+	font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+	box-shadow: 4px 4px 9px rgba(23,23,23,.13), -4px -4px 9px rgba(255,255,255,.95);
+}
+.rsia-me-rank { width: 64px; height: auto; flex: none; margin-left: auto; }
+.rsia-me-tools {
+	display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: none;
+}
+.rsia-me-tools .btn { white-space: nowrap; }
+.rsia-me-tools .my-account-item-link { white-space: nowrap; }
+.rsia-me-grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 10px;
+	width: 100%;
+	padding: 0 0 8px 0;
+}
+.rsia-me-grid > div {
+	min-width: 0; padding: 10px 12px;
+	border: 1px solid var(--gray-300, #dee2e6); border-radius: 8px;
+}
+.rsia-me-grid label {
+	display: block; font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+	color: var(--gray-600, #6c757d); margin-bottom: 2px;
+}
+.rsia-me-grid span {
+	font-family: InterVariable, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	font-size: 14px; line-height: 22px; color: #525252;
+	word-break: break-word;
+}
+.rsia-me-grid small { display: block; margin-top: 2px; font-size: 12px; color: var(--gray-600, #6c757d); }
+.rsia-me-grid a { color: #525252; text-decoration: underline; text-underline-offset: 3px; }
+.rsia-me-grid a:hover { color: #FF4B26; }
+.rsia-me-aktif { color: #10b981; }
+.rsia-me-aktif::before { content: "\25CF"; font-size: 9px; margin-right: 5px; vertical-align: 1px; }
+.rsia-me-presence { margin-top: 8px; }
+.rsia-me-presence-row {
+	display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px;
+}
+.rsia-me-presence-link {
+	display: flex; flex-direction: column; align-items: center; text-align: center;
+	min-width: 0; padding: 12px 8px 10px;
+	border: 1px solid var(--gray-300, #dee2e6); border-radius: 8px;
+	color: #171717; text-decoration: none;
+}
+.rsia-me-presence-link svg {
+	width: 28px; height: 28px; margin-bottom: 8px; flex: none; color: #171717;
+}
+.rsia-me-presence-link b {
+	display: block; font-size: 13px; font-weight: 600;
+	white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+.rsia-me-presence-link small {
+	display: block; margin-top: 2px; font-size: 11px; line-height: 16px; color: var(--gray-600, #6c757d);
+	white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+.rsia-me-presence-link:hover { border-color: #FF4B26; text-decoration: none; }
+.rsia-me-presence-link:hover b { color: #FF4B26; }
+.rsia-me-empty {
+	padding: 12px; border: 1px dashed var(--gray-300, #dee2e6); border-radius: 8px;
+	color: var(--gray-600, #6c757d); font-size: 14px;
+}
+.rsia-me-empty a { color: #525252; }
+.rsia-me-empty a:hover { color: #FF4B26; }
+.rsia-me-actions {
+	margin-top: 12px; padding-top: 8px;
+	border-top: 1px solid var(--gray-300, #dee2e6);
+}
+.rsia-me-action-row {
+	display: flex; justify-content: space-between; align-items: center; gap: 12px;
+	padding: 10px 0;
+}
+@media (max-width: 1200px) {
+	.rsia-me-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.rsia-me-presence-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 800px) {
+	.rsia-me-body { grid-template-columns: 1fr; }
+	.rsia-me-refs { border-right: 0; border-bottom: 1px solid var(--gray-300, #dee2e6); }
+	.rsia-me-head { flex-direction: column; }
+	.rsia-me-tools { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+	.rsia-me-grid { grid-template-columns: 1fr; }
+	.rsia-me-presence-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* Foto menyesuaikan (lebih besar); lebar kartu tidak diubah */
+.rsia-me-ava-wrap { position: relative; flex: none; width: 150px; }
+.rsia-me-ava-btn {
+	display: block; width: 150px; height: 150px; padding: 0;
+	border: 1px solid var(--gray-300, #dee2e6); border-radius: 8px;
+	overflow: hidden; background: #f5f5f5; cursor: pointer;
+}
+.rsia-me-ava-btn img,
+.rsia-me-ava-btn .avatar,
+.rsia-me-ava-btn .avatar-frame,
+.rsia-me-ava-btn .standard-image {
+	width: 150px !important; height: 150px !important;
+	max-width: none !important; object-fit: cover; display: block;
+	border-radius: 8px !important; font-size: 48px !important; line-height: 150px !important;
+}
+.rsia-me-ava-hint {
+	display: block; margin-top: 6px; text-align: center;
+	font-size: 11px; color: var(--gray-600, #6c757d); line-height: 14px;
+}
+.rsia-me-ava-btn:hover { border-color: #FF4B26; }
+.rsia-photo-modal {
+	position: fixed; inset: 0; z-index: 1050;
+	display: none; align-items: center; justify-content: center;
+	background: rgba(23,23,23,.45); padding: 16px;
+}
+.rsia-photo-modal.is-open { display: flex; }
+.rsia-photo-dialog {
+	width: min(440px, 100%); background: #fff; border-radius: 8px;
+	border: 1px solid var(--gray-300, #dee2e6); overflow: hidden;
+}
+.rsia-photo-dialog .rsia-me-bar { margin: 0; }
+.rsia-photo-body { padding: 16px; }
+.rsia-photo-stage {
+	width: 280px; height: 280px; margin: 0 auto 14px;
+	border: 1px solid var(--gray-300, #dee2e6); border-radius: 8px;
+	overflow: hidden; background: #111; position: relative;
+}
+.rsia-photo-stage canvas { width: 100%; height: 100%; display: block; }
+.rsia-photo-pad {
+	display: grid; grid-template-columns: 48px 48px 48px; gap: 6px;
+	justify-content: center; margin-bottom: 12px;
+}
+.rsia-photo-pad button {
+	width: 48px; height: 40px; border: 1px solid var(--gray-300, #dee2e6);
+	border-radius: 8px; background: #fff; font-size: 16px; line-height: 1; cursor: pointer;
+}
+.rsia-photo-pad button:hover { border-color: #FF4B26; color: #FF4B26; }
+.rsia-photo-pad .spacer { visibility: hidden; }
+.rsia-photo-zoom {
+	display: flex; align-items: center; justify-content: center; gap: 10px;
+	margin-bottom: 14px; font-size: 13px; color: #525252;
+}
+.rsia-photo-zoom button {
+	width: 36px; height: 36px; border: 1px solid var(--gray-300, #dee2e6);
+	border-radius: 8px; background: #fff; cursor: pointer;
+}
+.rsia-photo-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
+.rsia-photo-actions .btn-file { position: relative; overflow: hidden; }
+.rsia-photo-actions .btn-file input {
+	position: absolute; inset: 0; opacity: 0; cursor: pointer;
+}
+</style>
+
+<div class="my-account-container">
+	<h3 class="my-account-header">{{ _("My Account") }}</h3>
+	<div class="account-info">
+		<div class="rsia-me-bar">
+			<div class="rsia-me-dots"><i></i><i></i><i></i></div>
+			<span class="rsia-me-bar-title">Sentra / Akun Saya</span>
+			<span class="rsia-me-bar-tag"><i></i>Portal</span>
+		</div>
+
+		<div class="rsia-me-body">
+			<aside class="rsia-me-refs" aria-label="{{ _('Referensi') }}">
+				<div class="rsia-me-kicker">{{ _("Referensi") }}</div>
+				<ul class="rsia-me-ref-list">
+					{% for link in rsia_refs %}
+					<li>
+						<a href="{{ link.href }}"
+							{% if link.external %} target="_blank" rel="noopener noreferrer"{% endif %}
+							{% if link.current %} class="is-current" aria-current="page"{% endif %}>
+							<b>{{ _(link.label) }}</b>
+							{% if link.hint %}<small>{{ _(link.hint) }}</small>{% endif %}
+						</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</aside>
+
+			<div class="rsia-me-main">
+				<div class="rsia-me-head">
+					<div class="rsia-me-id">
+						<div class="rsia-me-ava-wrap">
+							<button type="button" class="rsia-me-ava-btn" id="rsia-ava-open" title="{{ _('Atur foto profil') }}">
+								{% if rsia_profile.image %}
+								<img id="rsia-ava-img" src="{{ rsia_profile.image }}" alt="" />
+								{% else %}
+								<span id="rsia-ava-fallback">{{ avatar(current_user.name) }}</span>
+								{% endif %}
+							</button>
+							<span class="rsia-me-ava-hint">{{ _("Atur foto") }}</span>
+						</div>
+						<div>
+							<span class="my-account-name">
+								{{ (rsia_profile.name_main or current_user.full_name) | e }}
+							</span>
+							{% if rsia_profile.name_suffix %}
+							<span class="rsia-me-name-suffix">{{ rsia_profile.name_suffix | e }}</span>
+							{% endif %}
+							{% if rsia_profile.jabatan %}
+							<div class="rsia-me-sub">
+								<button type="button" class="rsia-me-job-link" data-jobdesk-open
+									title="{{ _('Lihat jobdesk') }}">{{ rsia_profile.jabatan | e }}</button>
+							</div>
+							{% endif %}
+							<span class="rsia-me-badge">RSIA Melinda</span>
+						</div>
+						{% if rsia_profile.rank_badge %}
+						<img class="rsia-me-rank" src="{{ rsia_profile.rank_badge }}" alt="{{ rsia_profile.jabatan or '' }}" />
+						{% endif %}
+					</div>
+					<div class="rsia-me-tools">
+						<a href="/app" class="btn btn-primary btn-sm">{{ _("Buka Aplikasi") }} &rarr;</a>
+						<a class="my-account-item-link" href="/update-profile/{{ user }}">
+							<svg class="edit-profile-icon icon icon-md"><use href="#icon-edit"></use></svg>
+							<span class="item-link-text pl-2">{{ _("Edit Profile") }}</span>
+						</a>
+					</div>
+				</div>
+
+				<div class="rsia-me-kicker">{{ _("Data Profil") }}</div>
+				<div class="rsia-me-grid">
+					<div>
+						<label>{{ _("Jabatan") }}</label>
+						<span>
+							{% if rsia_profile.jabatan %}
+							<button type="button" class="rsia-me-job-link" data-jobdesk-open
+								title="{{ _('Lihat jobdesk') }}">{{ rsia_profile.jabatan | e }}</button>{% if rsia_profile.department %} &middot; {{ rsia_profile.department | e }}{% endif %}
+							{% else %}—{% endif %}
+						</span>
+					</div>
+					<div>
+						<label>{{ _("ID Pegawai") }}</label>
+						<span>{{ rsia_profile.employee_id or "—" }}</span>
+						{% if rsia_profile.employment_type %}<small>{{ rsia_profile.employment_type }}</small>{% endif %}
+					</div>
+					<div>
+						<label>{{ _("Sisa Cuti Tahunan") }}</label>
+						<span>{{ rsia_profile.sisa_cuti or "—" }}</span>
+						{% if rsia_profile.cuti_total %}<small>{{ rsia_profile.cuti_total }}</small>{% endif %}
+					</div>
+					<div>
+						<label>{{ _("Status Akun") }}</label>
+						<span class="{{ 'rsia-me-aktif' if rsia_profile.status_akun == 'Aktif' else '' }}">{{ rsia_profile.status_akun }}</span>
+					</div>
+					<div>
+						<label>{{ _("Notifikasi") }}</label>
+						<span><a href="/app/notification-settings">{{ _("Atur Notifikasi") }}</a></span>
+					</div>
+					<div>
+						<label>{{ _("Fasilitas") }}</label>
+						<span>{{ rsia_profile.facility or "—" }}</span>
+					</div>
+					{% if rsia_profile.has_practitioner or rsia_profile.str_no or rsia_profile.sip_no %}
+					<div>
+						<label>STR</label>
+						<span>{{ rsia_profile.str_no or "—" }}</span>
+					</div>
+					<div>
+						<label>SIP</label>
+						<span>{{ rsia_profile.sip_no or "—" }}</span>
+					</div>
+					{% endif %}
+				</div>
+
+				<div class="rsia-me-presence">
+					<div class="rsia-me-kicker">{{ _("Profil Publik") }}</div>
+					{% set presence = rsia_profile.presence or [] %}
+					{% if presence %}
+					<nav class="rsia-me-presence-row" aria-label="{{ _('Profil publik') }}">
+					{% for p in presence %}
+					<a class="rsia-me-presence-link" href="{{ p.url }}" target="_blank" rel="noopener noreferrer">
+						<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="{{ p.icon }}"/></svg>
+						<b>{{ p.platform | e }}</b>
+						{% if p.label %}<small>{{ p.label | e }}</small>{% endif %}
+					</a>
+					{% endfor %}
+					</nav>
+					{% else %}
+					<div class="rsia-me-empty">
+						{{ _("Belum ada tautan Profil Publik.") }}
+						<a href="/app/user/{{ user }}">{{ _("Isi di My Settings") }}</a>
+					</div>
+					{% endif %}
+				</div>
+
+				<div class="rsia-me-actions">
+					<div class="rsia-me-action-row">
+						<span>
+							<div class="my-account-item">{{ _("Reset Password") }}</div>
+							<div class="my-account-item-desc">{{ _("Reset the password for your account") }}</div>
+						</span>
+						<a class="my-account-item-link" href="/update-password">
+							<svg class="right-icon icon icon-md"><use href="#icon-right"></use></svg>
+							<span class="item-link-text">{{ _("Reset Password") }}</span>
+						</a>
+					</div>
+					<div class="rsia-me-action-row">
+						<span>
+							<div class="my-account-item">{{ _("Manage third party apps") }}</div>
+							<div class="my-account-item-desc">{{ _("To manage your authorized third party apps") }}</div>
+						</span>
+						<a class="my-account-item-link" href="/third_party_apps">
+							<svg class="right-icon icon icon-md"><use href="#icon-right"></use></svg>
+							<span class="item-link-text">{{ _("Manage your apps") }}</span>
+						</a>
+					</div>
+					{% if frappe.db.get_single_value("Website Settings", "show_account_deletion_link") %}
+					<div class="rsia-me-action-row">
+						<span>
+							<div class="my-account-item">{{ _("Request Account Deletion") }}</div>
+							<div class="my-account-item-desc">{{ _("Send a request to delete your account") }}</div>
+						</span>
+						<a class="my-account-item-link" href="/request-for-account-deletion?new=1">
+							<svg class="right-icon icon icon-md"><use href="#icon-right"></use></svg>
+							<span class="item-link-text">{{ _("Delete Account") }}</span>
+						</a>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% if rsia_jobdesk %}
+<script type="application/json" id="rsia-jobdesk-data">{{ rsia_jobdesk | tojson }}</script>
+{% endif %}
+<div class="rsia-jobdesk-modal" id="rsia-jobdesk-modal" aria-hidden="true">
+	<div class="rsia-jobdesk-dialog" role="dialog" aria-labelledby="rsia-jobdesk-title">
+		<div class="rsia-me-bar">
+			<div class="rsia-me-dots"><i></i><i></i><i></i></div>
+			<span class="rsia-me-bar-title">Sentra / Jobdesk</span>
+			<span class="rsia-me-bar-tag"><i></i>RSIA</span>
+		</div>
+		<div class="rsia-jobdesk-body">
+			<h4 id="rsia-jobdesk-title"></h4>
+			<p class="summary" id="rsia-jobdesk-summary"></p>
+			<div class="scope" id="rsia-jobdesk-scope"></div>
+			<div class="rsia-me-kicker">{{ _("Uraian Tugas") }}</div>
+			<ol id="rsia-jobdesk-duties"></ol>
+			<div class="rsia-jobdesk-actions">
+				<button type="button" class="btn btn-default btn-sm" id="rsia-jobdesk-close">{{ _("Tutup") }}</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+(function () {
+	const modal = document.getElementById("rsia-jobdesk-modal");
+	const raw = document.getElementById("rsia-jobdesk-data");
+	if (!modal || !raw) return;
+	let data = null;
+	try { data = JSON.parse(raw.textContent || "{}"); } catch (e) { return; }
+	function openJobdesk() {
+		if (!data) return;
+		document.getElementById("rsia-jobdesk-title").textContent = data.title || data.designation || "";
+		document.getElementById("rsia-jobdesk-summary").textContent = data.summary || "";
+		document.getElementById("rsia-jobdesk-scope").textContent =
+			(data.scope ? ("{{ _('Lingkup') }}: " + data.scope) : "");
+		const ol = document.getElementById("rsia-jobdesk-duties");
+		ol.innerHTML = "";
+		(data.duties || []).forEach(function (d) {
+			const li = document.createElement("li");
+			li.textContent = d;
+			ol.appendChild(li);
+		});
+		modal.classList.add("is-open");
+		modal.setAttribute("aria-hidden", "false");
+	}
+	function closeJobdesk() {
+		modal.classList.remove("is-open");
+		modal.setAttribute("aria-hidden", "true");
+	}
+	document.querySelectorAll("[data-jobdesk-open]").forEach(function (btn) {
+		btn.addEventListener("click", openJobdesk);
+	});
+	document.getElementById("rsia-jobdesk-close").addEventListener("click", closeJobdesk);
+	modal.addEventListener("click", function (e) {
+		if (e.target === modal) closeJobdesk();
+	});
+})();
+</script>
+
+<div class="rsia-photo-modal" id="rsia-photo-modal" aria-hidden="true">
+	<div class="rsia-photo-dialog" role="dialog" aria-labelledby="rsia-photo-title">
+		<div class="rsia-me-bar">
+			<div class="rsia-me-dots"><i></i><i></i><i></i></div>
+			<span class="rsia-me-bar-title" id="rsia-photo-title">Sentra / Atur Foto</span>
+			<span class="rsia-me-bar-tag"><i></i>Portal</span>
+		</div>
+		<div class="rsia-photo-body">
+			<div class="rsia-photo-stage"><canvas id="rsia-photo-canvas" width="480" height="480"></canvas></div>
+			<div class="rsia-photo-pad" aria-label="{{ _('Geser posisi foto') }}">
+				<span class="spacer"></span>
+				<button type="button" data-pan="0,-24" title="{{ _('Atas') }}">↑</button>
+				<span class="spacer"></span>
+				<button type="button" data-pan="-24,0" title="{{ _('Kiri') }}">←</button>
+				<button type="button" data-pan="0,0" title="{{ _('Tengah') }}">·</button>
+				<button type="button" data-pan="24,0" title="{{ _('Kanan') }}">→</button>
+				<span class="spacer"></span>
+				<button type="button" data-pan="0,24" title="{{ _('Bawah') }}">↓</button>
+				<span class="spacer"></span>
+			</div>
+			<div class="rsia-photo-zoom">
+				<button type="button" id="rsia-photo-zoom-out" title="{{ _('Perkecil') }}">−</button>
+				<span>{{ _("Zoom") }}</span>
+				<button type="button" id="rsia-photo-zoom-in" title="{{ _('Perbesar') }}">+</button>
+			</div>
+			<div class="rsia-photo-actions">
+				<label class="btn btn-default btn-sm btn-file">
+					{{ _("Pilih Foto") }}
+					<input type="file" id="rsia-photo-file" accept="image/jpeg,image/png,image/webp" />
+				</label>
+				<button type="button" class="btn btn-default btn-sm" id="rsia-photo-cancel">{{ _("Batal") }}</button>
+				<button type="button" class="btn btn-primary btn-sm" id="rsia-photo-save" disabled>{{ _("Simpan") }}</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+(function () {
+	const S = 480;
+	const modal = document.getElementById("rsia-photo-modal");
+	const canvas = document.getElementById("rsia-photo-canvas");
+	const ctx = canvas.getContext("2d");
+	const openBtn = document.getElementById("rsia-ava-open");
+	const fileInput = document.getElementById("rsia-photo-file");
+	const saveBtn = document.getElementById("rsia-photo-save");
+	if (!modal || !canvas || !openBtn) return;
+
+	let img = null;
+	let panX = 0;
+	let panY = 0;
+	let zoom = 1;
+
+	function draw() {
+		ctx.fillStyle = "#111";
+		ctx.fillRect(0, 0, S, S);
+		if (!img) return;
+		const scale = Math.max(S / img.naturalWidth, S / img.naturalHeight) * zoom;
+		const dw = img.naturalWidth * scale;
+		const dh = img.naturalHeight * scale;
+		let dx = (S - dw) / 2 + panX;
+		let dy = (S - dh) / 2 + panY;
+		dx = Math.min(0, Math.max(S - dw, dx));
+		dy = Math.min(0, Math.max(S - dh, dy));
+		panX = dx - (S - dw) / 2;
+		panY = dy - (S - dh) / 2;
+		ctx.drawImage(img, dx, dy, dw, dh);
+	}
+
+	function openModal() {
+		modal.classList.add("is-open");
+		modal.setAttribute("aria-hidden", "false");
+		const current = document.getElementById("rsia-ava-img");
+		if (current && current.src && !img) {
+			loadUrl(current.src);
+		}
+	}
+	function closeModal() {
+		modal.classList.remove("is-open");
+		modal.setAttribute("aria-hidden", "true");
+	}
+	function loadUrl(url) {
+		const next = new Image();
+		next.crossOrigin = "anonymous";
+		next.onload = function () {
+			img = next;
+			panX = 0;
+			panY = 0;
+			zoom = 1;
+			draw();
+			saveBtn.disabled = false;
+		};
+		next.onerror = function () {
+			saveBtn.disabled = true;
+		};
+		next.src = url;
+	}
+
+	openBtn.addEventListener("click", openModal);
+	document.getElementById("rsia-photo-cancel").addEventListener("click", closeModal);
+	modal.addEventListener("click", function (e) {
+		if (e.target === modal) closeModal();
+	});
+
+	fileInput.addEventListener("change", function () {
+		const file = fileInput.files && fileInput.files[0];
+		if (!file) return;
+		const reader = new FileReader();
+		reader.onload = function () { loadUrl(reader.result); };
+		reader.readAsDataURL(file);
+	});
+
+	modal.querySelectorAll("[data-pan]").forEach(function (btn) {
+		btn.addEventListener("click", function () {
+			if (!img) return;
+			const parts = btn.getAttribute("data-pan").split(",");
+			const x = Number(parts[0]);
+			const y = Number(parts[1]);
+			if (x === 0 && y === 0) {
+				panX = 0;
+				panY = 0;
+			} else {
+				panX += x;
+				panY += y;
+			}
+			draw();
+		});
+	});
+	document.getElementById("rsia-photo-zoom-in").addEventListener("click", function () {
+		if (!img) return;
+		zoom = Math.min(3, zoom + 0.1);
+		draw();
+	});
+	document.getElementById("rsia-photo-zoom-out").addEventListener("click", function () {
+		if (!img) return;
+		zoom = Math.max(1, zoom - 0.1);
+		draw();
+	});
+
+	saveBtn.addEventListener("click", function () {
+		if (!img || saveBtn.disabled) return;
+		saveBtn.disabled = true;
+		canvas.toBlob(function (blob) {
+			if (!blob) {
+				saveBtn.disabled = false;
+				return;
+			}
+			const fd = new FormData();
+			fd.append("file", blob, "avatar.jpg");
+			fd.append("cmd", "sentra_mantra_indonesia.avatar.save_my_avatar");
+			fetch("/api/method/sentra_mantra_indonesia.avatar.save_my_avatar", {
+				method: "POST",
+				body: fd,
+				credentials: "same-origin",
+				headers: {
+					"X-Frappe-CSRF-Token": (window.frappe && frappe.csrf_token) || "",
+					"Accept": "application/json",
+				},
+			})
+				.then(function (r) { return r.json(); })
+				.then(function (data) {
+					if (data.exc || (data.message && data.message.exc)) {
+						throw new Error("upload failed");
+					}
+					const url = (data.message && data.message.image) || "";
+					if (url) {
+						let el = document.getElementById("rsia-ava-img");
+						if (!el) {
+							const wrap = openBtn;
+							wrap.innerHTML = '<img id="rsia-ava-img" src="" alt="" />';
+							el = document.getElementById("rsia-ava-img");
+						}
+						el.src = url + (url.indexOf("?") >= 0 ? "&" : "?") + "v=" + Date.now();
+					}
+					closeModal();
+					if (window.frappe && frappe.show_alert) {
+						frappe.show_alert({ message: __("Foto profil disimpan"), indicator: "green" });
+					}
+				})
+				.catch(function () {
+					if (window.frappe && frappe.msgprint) {
+						frappe.msgprint(__("Gagal menyimpan foto. Coba lagi."));
+					} else {
+						alert("Gagal menyimpan foto. Coba lagi.");
+					}
+				})
+				.finally(function () { saveBtn.disabled = false; });
+		}, "image/jpeg", 0.92);
+	});
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{
+ "doctype": "DocType",
+ "name": "Sentra Decision Card",
+ "module": "Sentra MANTRA Core",
+ "engine": "InnoDB",
+ "custom": 0,
+ "track_changes": 1,
+ "field_order": [
+  "card_id", "agent", "rule_code", "severity", "title",
+  "sec_narrative", "narrative", "narrative_source",
+  "sec_evidence", "evidence",
+  "sec_options", "options",
+  "sec_trigger", "trigger_explanation", "audience_role", "due_by",
+  "sec_status", "status", "queued_for_summary", "decided_by", "decided_at", "decision_note", "dedup_key"
+ ],
+ "fields": [
+  {"fieldname": "card_id", "fieldtype": "Data", "label": "ID Kartu", "read_only": 1},
+  {"fieldname": "agent", "fieldtype": "Link", "label": "Agen Penerbit", "options": "Sentra Agent Definition", "reqd": 1, "in_list_view": 1, "in_standard_filter": 1},
+  {"fieldname": "rule_code", "fieldtype": "Data", "label": "Kode Aturan", "reqd": 1, "in_standard_filter": 1},
+  {"fieldname": "severity", "fieldtype": "Select", "label": "Tingkat", "options": "Mendesak\nPerlu Tinjauan\nPerlu Keputusan\nInformasi", "reqd": 1, "in_list_view": 1, "in_standard_filter": 1},
+  {"fieldname": "title", "fieldtype": "Data", "label": "Judul", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "sec_narrative", "fieldtype": "Section Break", "label": "Narasi"},
+  {"fieldname": "narrative", "fieldtype": "Small Text", "label": "Narasi"},
+  {"fieldname": "narrative_source", "fieldtype": "Select", "label": "Sumber Narasi", "options": "Template\nLLM", "default": "Template", "reqd": 1},
+  {"fieldname": "sec_evidence", "fieldtype": "Section Break", "label": "Fakta Pendukung"},
+  {"fieldname": "evidence", "fieldtype": "Table", "label": "Evidence", "options": "Sentra Decision Evidence"},
+  {"fieldname": "sec_options", "fieldtype": "Section Break", "label": "Pilihan Keputusan"},
+  {"fieldname": "options", "fieldtype": "Table", "label": "Options", "options": "Sentra Decision Option"},
+  {"fieldname": "sec_trigger", "fieldtype": "Section Break", "label": "Pemicu dan Penerima"},
+  {"fieldname": "trigger_explanation", "fieldtype": "Small Text", "label": "Dipicu Karena"},
+  {"fieldname": "audience_role", "fieldtype": "Link", "label": "Peran Penerima", "options": "Role", "reqd": 1, "in_standard_filter": 1},
+  {"fieldname": "due_by", "fieldtype": "Date", "label": "Batas Waktu Keputusan"},
+  {"fieldname": "sec_status", "fieldtype": "Section Break", "label": "Status Keputusan"},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Terbuka\nDiputuskan\nDidelegasikan\nKedaluwarsa", "default": "Terbuka", "reqd": 1, "in_list_view": 1, "in_standard_filter": 1},
+  {"fieldname": "queued_for_summary", "fieldtype": "Check", "label": "Masuk Antrean Ringkasan", "default": "0", "read_only": 1, "in_standard_filter": 1, "description": "Kartu melewati batas harian Chamber; tidak tampil di Chamber, masuk ringkasan mingguan."},
+  {"fieldname": "decided_by", "fieldtype": "Link", "label": "Diputuskan Oleh", "options": "User", "read_only": 1},
+  {"fieldname": "decided_at", "fieldtype": "Datetime", "label": "Waktu Keputusan", "read_only": 1},
+  {"fieldname": "decision_note", "fieldtype": "Small Text", "label": "Catatan Keputusan"},
+  {"fieldname": "dedup_key", "fieldtype": "Data", "label": "Kunci Dedup", "reqd": 1, "read_only": 1, "search_index": 1}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "export": 1, "report": 1, "print": 1, "email": 1, "share": 1}
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "title_field": "title"
+}

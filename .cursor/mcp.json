@@ -13,13 +13,6 @@
         "http://localhost:*;http://127.0.0.1:*"
       ]
     },
-    "firecrawl": {
-      "command": "npx",
-      "args": ["-y", "firecrawl-mcp@3.24.0"],
-      "env": {
-        "FIRECRAWL_API_KEY": "${env:FIRECRAWL_API_KEY}"
-      }
-    },
     "sequential-thinking": {
       "command": "npx",
       "args": [

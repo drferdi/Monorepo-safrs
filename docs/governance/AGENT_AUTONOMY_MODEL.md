@@ -19,7 +19,7 @@ The existence of an approval boundary does not imply per-command approval.
 
 ## Work-Package Authorization
 
-Chief may authorize a bounded work package defining:
+Gaffer may authorize a bounded work package defining:
 
 - objective;
 - writable scope;
@@ -100,7 +100,7 @@ Do not escalate merely because many files are involved, debugging is difficult, 
 
 Risk is about consequence, reversibility, privilege, blast radius, and data sensitivity.
 
-## Chief Experience Requirement
+## Gaffer Experience Requirement
 
 A successful workflow should permit:
 
@@ -108,7 +108,7 @@ A successful workflow should permit:
 
 The system should handle routine context loading, planning, task state, implementation, installation, debugging, retries, testing, build, smoke checks, evidence, and concise reporting.
 
-Chief should receive decisions, exceptions, and outcomes—not repository housekeeping.
+Gaffer should receive decisions, exceptions, and outcomes—not repository housekeeping.
 
 ## Governance Friction Test
 

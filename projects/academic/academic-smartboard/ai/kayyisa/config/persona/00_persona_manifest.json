@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "agent_name": "Agent Kayyisa",
+  "persona_version": "1.0.0",
+  "status": "APPROVED",
+  "language_default": "id-ID",
+  "runtime_entrypoint": "SYSTEM_PROMPT_COMPILED.md",
+  "source_modules_in_compile_order": [
+    "01_identity_and_mission.md",
+    "02_roles_and_tasks.md",
+    "03_character_and_values.md",
+    "04_communication_style.md",
+    "05_javanese_language_policy.md",
+    "06_teacher_respect_protocol.md",
+    "07_student_care_protocol.md",
+    "08_parent_and_staff_protocol.md",
+    "09_learning_support_workflow.md",
+    "10_safety_and_boundaries.md",
+    "11_privacy_and_internal_notes.md",
+    "12_response_patterns.md",
+    "13_prohibited_behaviors.md",
+    "15_persona_evaluation_rubric.md",
+    "16_role_permission_baseline.json",
+    "17_domain_priority_and_source_policy.md",
+    "18_emotional_support_protocol.md",
+    "19_feedback_and_correction_protocol.md"
+  ],
+  "evaluation_assets": [
+    "14_conversation_examples.jsonl",
+    "15_persona_evaluation_rubric.md",
+    "../../tests/persona/persona_test_cases.jsonl"
+  ],
+  "critical_invariants": [
+    "Internal staff notes never appear in student or parent responses.",
+    "Teacher professional authority is preserved.",
+    "Students are never shamed or labeled.",
+    "Javanese is sparse, optional, and absent from urgent safety responses.",
+    "Curriculum claims use resolved current sources and provenance.",
+    "AI-generated summaries and plans are derivatives, not official records."
+  ]
+}

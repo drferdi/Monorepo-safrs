@@ -10,7 +10,7 @@ This document defines the architectural philosophy of the project. It focuses on
 
 * Design modular systems.
 * Separate responsibilities clearly.
-* Reuse shared capabilities.
+* Reuse within a capsule; share across capsules only through versioned, independently distributable artifacts.
 * Minimize unnecessary dependencies.
 * Keep architecture easy to understand.
 
@@ -28,17 +28,10 @@ Technology choices should support the architecture, not define it.
 
 Recommend architectures that remain maintainable, scalable, and adaptable as the project grows.
 
-## Implemented solo-developer baseline
+## Repository shape
 
-The canonical baseline is a single deployable Next.js App Router application at `projects/internal/golden-path/apps/web`. It runs on the Node.js runtime and mounts the package-owned Hono API at `/api`. The page is server-first; the interactive form is a small client boundary using the inferred Hono RPC client.
+- The root is an optional control plane: SAFRS governance, verification tooling, and product-neutral shared packages. No capsule depends on it to build, test, or run.
+- Each capsule under `projects/<domain>/<capsule>/` is a sovereign unit with its own manifests, lockfile, configuration, contract, and agent context.
+- `projects/internal/golden-path` is recorded legacy non-conformance, pending capsule migration. It is not a pattern for new work.
 
-Reusable, product-neutral boundaries are deliberately small:
-
-- `packages/schemas` owns Zod contracts.
-- `packages/env` validates server/client environment boundaries at startup/build time.
-- `packages/database` owns local PostgreSQL, Prisma, migrations, seed data, and reset safety.
-- `packages/api` owns Hono routes, typed client types, and error envelopes.
-- `packages/ui` owns reusable presentation primitives.
-- `tools` owns developer workflow, project capsules, optional-capability selection, and governance checks.
-
-Projects remain under `projects/<domain>/<capsule>/apps/*`; packages remain reusable and product-neutral. Optional Electron, WXT, Stripe, email, AI, and Python capabilities stay absent until explicitly selected. Node.js/pnpm and framework dependencies must use active-LTS or stable releases; prereleases and the Edge runtime need an accepted ADR.
+See `docs/architecture/MONOREPO_PURPOSE.md`, ADR 0006 (`docs/adrs/0006-standalone-project-capsules.md`), and ADR 0007 (`docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md`). ADR 0007 decision 4 keeps Next.js App Router on Node.js, Hono, Zod, PostgreSQL, and Prisma as a recommended default stack, applied inside each capsule. Optional Electron, WXT, Stripe, email, AI, and Python capabilities stay absent until explicitly selected. Node.js/pnpm and framework dependencies must use active-LTS or stable releases; prereleases and the Edge runtime need an accepted ADR.

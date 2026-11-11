@@ -8,7 +8,7 @@
 - Status: active
 - Priority: p1
 - Location: `projects/healthcare/avery/`
-- Human Owner: Chief (dr. Ferdi Iskandar)
+- Human Owner: Gaffer (dr. Ferdi Iskandar)
 
 ## Objective
 
@@ -51,11 +51,11 @@ The Hermes framework is an experimental clinical workflow engine specifically de
 
 | Date | Decision | Rationale | Owner | Impact | Status |
 |------|----------|-----------|-------|--------|--------|
-| 2024-08 | Hermes framework | Dedicated clinical workflow engine designed specifically for nursing care processes. General-purpose frameworks lack nursing-specific abstractions. | Chief | Core architecture | Active |
-| 2024-09 | SQLite runtime | Lightweight, zero-configuration database suitable for development and testing without PostgreSQL infrastructure setup. Enables rapid iteration. | Chief | Development velocity | Active |
-| 2025-01 | Separate from SentraBot | Nursing care (bedside documentation, vital signs, SOP compliance) and operational workflow (queue, BPJS, communication) are fundamentally different clinical domains with different users (nurses vs. admin staff). | Chief | Product scope | Active |
-| 2025-06 | Planned PostgreSQL migration | SQLite is insufficient for production multi-user concurrent access. PostgreSQL migration required before hospital-wide deployment. | Chief | Production readiness | Planned |
-| 2026-03 | Planned @safrs/* migration | Align with SentraBot and Golden Path standard stack. Hermes framework may be absorbed into @safrs/api or maintained as domain-specific layer. | Chief | Long-term architecture | Planned |
+| 2024-08 | Hermes framework | Dedicated clinical workflow engine designed specifically for nursing care processes. General-purpose frameworks lack nursing-specific abstractions. | Gaffer | Core architecture | Active |
+| 2024-09 | SQLite runtime | Lightweight, zero-configuration database suitable for development and testing without PostgreSQL infrastructure setup. Enables rapid iteration. | Gaffer | Development velocity | Active |
+| 2025-01 | Separate from SentraBot | Nursing care (bedside documentation, vital signs, SOP compliance) and operational workflow (queue, BPJS, communication) are fundamentally different clinical domains with different users (nurses vs. admin staff). | Gaffer | Product scope | Active |
+| 2025-06 | Planned PostgreSQL migration | SQLite is insufficient for production multi-user concurrent access. PostgreSQL migration required before hospital-wide deployment. | Gaffer | Production readiness | Planned |
+| 2026-03 | Planned @safrs/* migration | Align with SentraBot and Golden Path standard stack. Hermes framework may be absorbed into @safrs/api or maintained as domain-specific layer. | Gaffer | Long-term architecture | Planned |
 
 ## Current Focus
 
@@ -86,10 +86,10 @@ The Hermes framework is an experimental clinical workflow engine specifically de
 
 | # | Blocker | Severity | Dependency | ETA | Owner | Impact if Unresolved | Mitigation |
 |---|---------|----------|------------|-----|-------|---------------------|------------|
-| 1 | Unified patient data with SentraBot | High | Shared database schema design and @safrs/database implementation | TBD | Chief | Duplicate patient records; nurses enter demographics in Avery while admin enters in SentraBot | Prioritize patient ID standardization; implement read-only sync from SentraBot |
-| 2 | Hermes framework stability | High | Comprehensive testing with real nursing scenarios and shift patterns | TBD | Chief | Framework bugs during actual clinical use risk patient safety | Extensive testing in simulation environment before deployment |
-| 3 | SQLite to PostgreSQL migration | Medium | PostgreSQL infrastructure setup in RSIA Melinda | TBD | Chief | SQLite concurrency limits prevent multi-nurse simultaneous access | Run SQLite for pilot (single nursing station); migrate before multi-station rollout |
-| 4 | Medical device integration | Medium | Hardware vendor APIs for sphygmomanometer, pulse oximeter, thermometer | TBD | Chief | Manual vital sign entry remains error-prone and time-consuming | Phase 1: manual entry with validation; Phase 2: device auto-read |
+| 1 | Unified patient data with SentraBot | High | Shared database schema design and @safrs/database implementation | TBD | Gaffer | Duplicate patient records; nurses enter demographics in Avery while admin enters in SentraBot | Prioritize patient ID standardization; implement read-only sync from SentraBot |
+| 2 | Hermes framework stability | High | Comprehensive testing with real nursing scenarios and shift patterns | TBD | Gaffer | Framework bugs during actual clinical use risk patient safety | Extensive testing in simulation environment before deployment |
+| 3 | SQLite to PostgreSQL migration | Medium | PostgreSQL infrastructure setup in RSIA Melinda | TBD | Gaffer | SQLite concurrency limits prevent multi-nurse simultaneous access | Run SQLite for pilot (single nursing station); migrate before multi-station rollout |
+| 4 | Medical device integration | Medium | Hardware vendor APIs for sphygmomanometer, pulse oximeter, thermometer | TBD | Gaffer | Manual vital sign entry remains error-prone and time-consuming | Phase 1: manual entry with validation; Phase 2: device auto-read |
 
 ## Related Projects
 

@@ -1,0 +1,70 @@
+import { describe, expect, it } from "vitest";
+import { filterByRole, flattenNav, NAV_GROUPS, NAV_ITEMS } from "./nav";
+
+describe("filterByRole", () => {
+  it("owner melihat semua item", () => {
+    expect(filterByRole(NAV_ITEMS, "owner")).toHaveLength(NAV_ITEMS.length);
+  });
+
+  it("murid_ortu tidak melihat item tanpa role murid_ortu", () => {
+    const visible = filterByRole(NAV_ITEMS, "murid_ortu");
+    expect(visible.every((item) => item.roles.includes("murid_ortu"))).toBe(
+      true,
+    );
+  });
+});
+
+describe("NAV_GROUPS sub-fase 4–5", () => {
+  it("berisi grup Utama … Laporan + Pengaturan", () => {
+    expect(NAV_GROUPS.map((g) => g.label)).toEqual([
+      "Utama",
+      "Master Data",
+      "Operasional",
+      "Akademik",
+      "Pengajar",
+      "Keuangan",
+      "Laporan",
+      "Pengaturan",
+    ]);
+  });
+
+  it("jadwal hanya untuk owner/admin_akademik/tentor", () => {
+    const jadwal = flattenNav(NAV_GROUPS).find((i) => i.href === "/jadwal");
+    expect(jadwal?.roles).toEqual(["owner", "admin_akademik", "tentor"]);
+  });
+
+  it("filterByRole: finance melihat kurikulum dan payroll, tidak melihat jadwal", () => {
+    const finance = filterByRole(NAV_ITEMS, "finance");
+    expect(finance.some((i) => i.href === "/akademik/kurikulum")).toBe(true);
+    expect(finance.some((i) => i.href === "/keuangan/payroll")).toBe(true);
+    expect(finance.some((i) => i.href === "/jadwal")).toBe(false);
+  });
+
+  it("tentor melihat rekap honor dan lembur, tidak payroll", () => {
+    const tentor = filterByRole(NAV_ITEMS, "tentor");
+    expect(tentor.some((i) => i.href === "/keuangan/honor")).toBe(true);
+    expect(tentor.some((i) => i.href === "/lembur")).toBe(true);
+    expect(tentor.some((i) => i.href === "/keuangan/payroll")).toBe(false);
+  });
+
+  it("admin melihat master jenjang, pengumuman, dan smartboard", () => {
+    const admin = filterByRole(NAV_ITEMS, "admin_akademik");
+    expect(admin.some((i) => i.href === "/master/jenjang")).toBe(true);
+    expect(admin.some((i) => i.href === "/pengumuman")).toBe(true);
+    expect(admin.some((i) => i.href === "/dashboard")).toBe(true);
+    expect(admin.some((i) => i.href === "/pengajar")).toBe(true);
+    expect(admin.some((i) => i.href === "/tutorial")).toBe(true);
+  });
+
+  it("pengaturan: owner melihat hak akses dan persetujuan", () => {
+    const owner = filterByRole(NAV_ITEMS, "owner");
+    expect(owner.some((i) => i.href === "/pengaturan/hak-akses")).toBe(true);
+    expect(owner.some((i) => i.href === "/persetujuan")).toBe(true);
+  });
+
+  it("pengaturan: finance melihat audit, tidak hak akses", () => {
+    const finance = filterByRole(NAV_ITEMS, "finance");
+    expect(finance.some((i) => i.href === "/pengaturan/audit")).toBe(true);
+    expect(finance.some((i) => i.href === "/pengaturan/hak-akses")).toBe(false);
+  });
+});

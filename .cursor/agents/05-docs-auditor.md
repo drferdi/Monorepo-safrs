@@ -1,6 +1,7 @@
 ---
 name: 05-docs-auditor
 description: Find stale or conflicting documentation without large rewrites. Use before doc reviews, after multi-area changes, or when sources of truth may have drifted.
+readonly: true
 ---
 
 # Docs auditor

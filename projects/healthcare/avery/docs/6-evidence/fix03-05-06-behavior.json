@@ -1,0 +1,122 @@
+{
+  "results": [
+    {
+      "sid": "20260823_234001",
+      "prompt": "Baca file C:\\Users\\drfer\\.hermes\\profile",
+      "tools": ["read_file", "search_files", "read_file"],
+      "tidak_ada_attempts": 1,
+      "permission_q": false,
+      "blocked": false
+    },
+    {
+      "sid": "20260823_233946",
+      "prompt": "Di C:\\Users\\drfer\\.hermes\\profiles\\avery",
+      "tools": ["read_file", "write_file", "read_file"],
+      "tidak_ada_attempts": 0,
+      "permission_q": false,
+      "blocked": false
+    },
+    {
+      "sid": "20260823_233934",
+      "prompt": "Cari file bernama notes.txt di C:\\Users\\",
+      "tools": ["read_file"],
+      "tidak_ada_attempts": 0,
+      "permission_q": false,
+      "blocked": false
+    },
+    {
+      "sid": "20260823_233706",
+      "prompt": "Di C:\\Users\\drfer\\.hermes\\profiles\\avery",
+      "tools": [
+        "read_file",
+        "patch",
+        "execute_code",
+        "terminal",
+        "read_file",
+        "terminal",
+        "terminal",
+        "read_file",
+        "terminal",
+        "terminal",
+        "read_file",
+        "read_file",
+        "terminal",
+        "terminal",
+        "terminal",
+        "terminal"
+      ],
+      "tidak_ada_attempts": 0,
+      "permission_q": false,
+      "blocked": false
+    },
+    {
+      "sid": "20260823_233557",
+      "prompt": "Cari file calc.py di C:\\Users\\drfer\\.her",
+      "tools": [
+        "search_files",
+        "read_file",
+        "patch",
+        "terminal",
+        "terminal",
+        "terminal",
+        "terminal"
+      ],
+      "tidak_ada_attempts": 0,
+      "permission_q": false,
+      "blocked": false
+    },
+    {
+      "sid": "20260823_233356",
+      "prompt": "Cari file calc.py di D:\\DEV\\Monorepo\\pro",
+      "tools": [
+        "search_files",
+        "read_file",
+        "patch",
+        "terminal",
+        "terminal",
+        "terminal"
+      ],
+      "tidak_ada_attempts": 0,
+      "permission_q": false,
+      "blocked": true
+    },
+    {
+      "sid": "20260823_232844",
+      "prompt": "Cari file calc.py di D:\\DEV\\Monorepo\\pro",
+      "tools": [
+        "search_files",
+        "read_file",
+        "patch",
+        "terminal",
+        "terminal",
+        "terminal"
+      ],
+      "tidak_ada_attempts": 0,
+      "permission_q": false,
+      "blocked": false
+    },
+    {
+      "sid": "20260823_232816",
+      "prompt": "Cari file calc.py di D:\\DEV\\Monorepo\\pro",
+      "tools": ["search_files", "read_file", "patch", "terminal", "terminal"],
+      "tidak_ada_attempts": 0,
+      "permission_q": true,
+      "blocked": false
+    },
+    {
+      "sid": "20260823_232703",
+      "prompt": "Cari file calc.py di D:\\DEV\\Monorepo\\pro",
+      "tools": [
+        "search_files",
+        "read_file",
+        "patch",
+        "terminal",
+        "terminal",
+        "terminal"
+      ],
+      "tidak_ada_attempts": 0,
+      "permission_q": false,
+      "blocked": false
+    }
+  ]
+}

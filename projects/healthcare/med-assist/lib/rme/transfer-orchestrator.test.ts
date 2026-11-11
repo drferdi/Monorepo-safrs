@@ -1,0 +1,390 @@
+// Designed and constructed by Drferdi.
+import { describe, expect, it, vi } from 'vitest';
+import { assertNoPII } from '@/lib/api/pii-guard';
+import { RMETransferOrchestrator } from '@/lib/rme/transfer-orchestrator';
+import type { RMETransferPayload } from '@/utils/types';
+
+function samplePayload(overrides?: Partial<RMETransferPayload>): RMETransferPayload {
+  return {
+    anamnesa: {
+      keluhan_utama: 'Demam',
+      keluhan_tambahan: 'Batuk',
+      lama_sakit: { thn: 0, bln: 0, hr: 2 },
+      alergi: { obat: [], makanan: [], udara: [], lainnya: [] },
+      is_pregnant: false,
+    },
+    diagnosa: {
+      icd_x: 'J06.9',
+      nama: 'ISPA',
+      jenis: 'PRIMER',
+      kasus: 'BARU',
+      prognosa: '',
+      penyakit_kronis: [],
+    },
+    resep: {
+      static: { no_resep: 'AUTO-1', alergi: '' },
+      ajax: { ruangan: 'POLI UMUM', dokter: 'dr. Test', perawat: 'Ns. Test' },
+      medications: [
+        {
+          racikan: '0',
+          jumlah_permintaan: 6,
+          nama_obat: 'Paracetamol 500mg',
+          jumlah: 6,
+          signa: '3x1',
+          aturan_pakai: '2',
+          keterangan: '',
+        },
+      ],
+      prioritas: '0',
+    },
+    ...overrides,
+  };
+}
+
+describe('RMETransferOrchestrator', () => {
+  // The bridge reports this result to the dashboard through the outbound PII guard.
+  it('produces a result the bridge can report past the PII guard', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async () => ({
+      success: [{ field: 'Anamnesa[keluhan_utama]', value: 'Demam', method: 'direct' }],
+      failed: [],
+      skipped: [],
+    }));
+
+    const result = await orchestrator.run(samplePayload(), exec);
+
+    expect(() => assertNoPII(JSON.stringify({ action: 'complete', result }))).not.toThrow();
+  });
+
+  // A bridge entry whose patient's tab is not open must not be retried into another tab.
+  it('fails a patient-mismatch step at once, without a retry', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async () => {
+      throw new Error('PATIENT_MISMATCH: no ePuskesmas tab of pelayanan 83206');
+    });
+
+    const result = await orchestrator.run(samplePayload(), exec, {
+      retryByStep: { anamnesa: 1, diagnosa: 1, resep: 1 },
+    });
+
+    expect(result.state).toBe('failed');
+    expect(result.steps.anamnesa.reasonCode).toBe('PATIENT_MISMATCH');
+    expect(result.steps.anamnesa.attempt).toBe(1);
+    expect(result.reasonCodes).toContain('PATIENT_MISMATCH');
+  });
+
+  it('accepts wrapped tab responses (res envelope) from messaging bridge', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async () => ({
+      res: {
+        success: [{ field: 'ok', value: 'ok', method: 'direct' }],
+        failed: [],
+        skipped: [],
+      },
+    }));
+
+    const result = await orchestrator.run(samplePayload(), exec);
+
+    expect(result.state).toBe('success');
+    expect(result.steps.anamnesa.state).toBe('success');
+    expect(result.steps.diagnosa.state).toBe('success');
+    expect(result.steps.resep.state).toBe('success');
+  });
+
+  it('keeps legacy error message from handler instead of generic no-fields fallback', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async (step: string) => {
+      if (step === 'anamnesa') {
+        return { success: false, error: 'Field diagnosa tidak ditemukan' };
+      }
+      return {
+        success: [{ field: 'ok', value: 'ok', method: 'direct' }],
+        failed: [],
+        skipped: [],
+      };
+    });
+
+    const result = await orchestrator.run(samplePayload(), exec);
+
+    expect(result.steps.anamnesa.state).toBe('failed');
+    expect(result.steps.anamnesa.message).toContain('Field diagnosa tidak ditemukan');
+    expect(result.reasonCodes).toContain('FIELD_NOT_FOUND');
+  });
+
+  it('marks step-level partial failure and keeps per-step visibility', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async (step: string) => {
+      if (step === 'anamnesa') {
+        return {
+          success: [{ field: 'keluhan_utama', value: 'Demam', method: 'direct' }],
+          failed: [{ field: 'keluhan_tambahan', error: 'Element not found' }],
+          skipped: [],
+        };
+      }
+      return {
+        success: [{ field: 'ok', value: 'ok', method: 'direct' }],
+        failed: [],
+        skipped: [],
+      };
+    });
+
+    const result = await orchestrator.run(samplePayload(), exec);
+
+    expect(result.state).toBe('partial');
+    expect(result.steps.anamnesa.state).toBe('partial');
+    expect(result.steps.anamnesa.failedCount).toBeGreaterThan(0);
+    expect(result.reasonCodes).toContain('FIELD_NOT_FOUND');
+  });
+
+  it('downgrades readonly-only field errors into skipped step classification', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async (step: string) => {
+      if (step === 'diagnosa') {
+        return {
+          success: [],
+          failed: [{ field: 'diagnosa_id', error: 'Field is readonly' }],
+          skipped: [],
+        };
+      }
+      return {
+        success: [{ field: 'ok', value: 'ok', method: 'direct' }],
+        failed: [],
+        skipped: [],
+      };
+    });
+
+    const result = await orchestrator.run(samplePayload(), exec);
+
+    expect(result.state).toBe('partial');
+    expect(result.steps.diagnosa.state).toBe('skipped');
+    expect(result.steps.diagnosa.failedCount).toBe(0);
+    expect(result.steps.diagnosa.skippedCount).toBeGreaterThan(0);
+    expect(result.reasonCodes).toContain('NO_FIELDS_FILLED');
+    expect(result.reasonCodes).not.toContain('UNKNOWN_STEP_FAILURE');
+  });
+
+  it('handles readonly failures when failed items are returned as plain strings', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async (step: string) => {
+      if (step === 'diagnosa') {
+        return {
+          success: [],
+          failed: ['Field is readonly'],
+          skipped: [],
+        };
+      }
+      return {
+        success: [{ field: 'ok', value: 'ok', method: 'direct' }],
+        failed: [],
+        skipped: [],
+      };
+    });
+
+    const result = await orchestrator.run(samplePayload(), exec);
+
+    expect(result.state).toBe('partial');
+    expect(result.steps.diagnosa.state).toBe('skipped');
+    expect(result.steps.diagnosa.failedCount).toBe(0);
+    expect(result.steps.diagnosa.skippedCount).toBe(1);
+    expect(result.reasonCodes).toContain('NO_FIELDS_FILLED');
+    expect(result.reasonCodes).not.toContain('UNKNOWN_STEP_FAILURE');
+  });
+
+  it('prevents duplicate transfer in short window unless forceRun is explicit', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async () => ({
+      success: [{ field: 'ok', value: 'ok', method: 'direct' }],
+      failed: [],
+      skipped: [],
+    }));
+
+    const now = (() => {
+      let t = 1000;
+      return () => {
+        t += 10;
+        return t;
+      };
+    })();
+
+    const first = await orchestrator.run(samplePayload(), exec, { now });
+    const duplicate = await orchestrator.run(samplePayload(), exec, { now });
+    const forced = await orchestrator.run(
+      samplePayload({
+        options: { requestId: 'force-1', forceRun: true },
+      }),
+      exec,
+      { now }
+    );
+
+    expect(first.state).toBe('success');
+    expect(duplicate.state).toBe('failed');
+    expect(duplicate.reasonCodes).toContain('DUPLICATE_SUPPRESSED');
+    expect(forced.state).toBe('success');
+    expect(exec).toHaveBeenCalledTimes(6);
+  });
+
+  it('runs only requested step in strict single-step mode', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const executedSteps: string[] = [];
+    const exec = vi.fn(async (step: string) => {
+      executedSteps.push(step);
+      return {
+        success: [{ field: 'ok', value: 'ok', method: 'direct' }],
+        failed: [],
+        skipped: [],
+      };
+    });
+
+    const result = await orchestrator.run(
+      samplePayload({
+        options: {
+          requestId: 'strict-dx',
+          startFromStep: 'diagnosa',
+          onlyStep: 'diagnosa',
+        },
+      }),
+      exec
+    );
+
+    expect(result.state).toBe('success');
+    expect(executedSteps).toEqual(['diagnosa']);
+    expect(result.steps.anamnesa.state).toBe('pending');
+    expect(result.steps.diagnosa.state).toBe('success');
+    expect(result.steps.resep.state).toBe('pending');
+  });
+
+  it('does not dedupe different start steps within the same payload window', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async () => ({
+      success: [{ field: 'ok', value: 'ok', method: 'direct' }],
+      failed: [],
+      skipped: [],
+    }));
+
+    const now = (() => {
+      let t = 5000;
+      return () => {
+        t += 5;
+        return t;
+      };
+    })();
+
+    const anamnesaRun = await orchestrator.run(
+      samplePayload({
+        options: { requestId: 'strict-ax', startFromStep: 'anamnesa', onlyStep: 'anamnesa' },
+      }),
+      exec,
+      { now }
+    );
+    const diagnosaRun = await orchestrator.run(
+      samplePayload({
+        options: { requestId: 'strict-dx', startFromStep: 'diagnosa', onlyStep: 'diagnosa' },
+      }),
+      exec,
+      { now }
+    );
+
+    expect(anamnesaRun.state).toBe('success');
+    expect(diagnosaRun.state).toBe('success');
+    expect(diagnosaRun.reasonCodes).not.toContain('DUPLICATE_SUPPRESSED');
+    expect(exec).toHaveBeenCalledTimes(2);
+  });
+
+  // Chief, 2026-10-02 ("Di bagian terapi lagi lagi stuck"): the resep step fills one medication
+  // after another; a flat 30 s cut a visit with several medications off midway and the retry
+  // started a second fill over the one still running.
+  it('gives the resep step more time for each further medication', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const medication = samplePayload().resep!.medications[0]!;
+    const slowResep = vi.fn(async (step: string) => {
+      if (step === 'resep') await new Promise((resolve) => setTimeout(resolve, 60));
+      return { success: [{ field: 'ok', value: 'ok', method: 'direct' }], failed: [], skipped: [] };
+    });
+    const options = { timeoutMs: { resep: 20 }, retryByStep: { resep: 0 } };
+
+    const threeMedications = await orchestrator.run(
+      samplePayload({
+        resep: { ...samplePayload().resep!, medications: [medication, medication, medication] },
+        options: { onlyStep: 'resep', requestId: 'three-medications' },
+      }),
+      slowResep,
+      options
+    );
+    const oneMedication = await orchestrator.run(
+      samplePayload({ options: { onlyStep: 'resep', requestId: 'one-medication' } }),
+      slowResep,
+      options
+    );
+
+    expect(threeMedications.steps.resep.state).toBe('success');
+    expect(oneMedication.steps.resep.state).toBe('failed');
+    expect(oneMedication.reasonCodes).toContain('STEP_TIMEOUT');
+  });
+
+  // Chief, 2026-10-02: a medication out of stock ended as "Step gagal tanpa klasifikasi spesifik".
+  // The resep step names every medication the ePuskesmas stock lacked, and does not retry.
+  it('names every medication the ePuskesmas stock lacked and gives that its own reason', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const resep = vi.fn(async () => ({
+      success: [{ field: 'obat_nama', value: 'Ambroxol', method: 'autocomplete' }],
+      failed: [
+        { field: 'obat_nama', error: '[STOCK_INSUFFICIENT] Vitamin B6: Obat tidak ada di daftar stok ePuskesmas' },
+        { field: 'obat_nama', error: '[STOCK_INSUFFICIENT] Cetirizine: Obat tidak ada di daftar stok ePuskesmas' },
+      ],
+      skipped: [],
+    }));
+
+    const result = await orchestrator.run(
+      samplePayload({ options: { onlyStep: 'resep', requestId: 'out-of-stock' } }),
+      resep
+    );
+
+    expect(resep).toHaveBeenCalledTimes(1);
+    expect(result.state).toBe('partial');
+    expect(result.steps.resep.reasonCode).toBe('RESEP_OBAT_TIDAK_TERSEDIA');
+    expect(result.reasonCodes).not.toContain('UNKNOWN_STEP_FAILURE');
+    expect(result.steps.resep.message).toBe(
+      'Vitamin B6: Obat tidak ada di daftar stok ePuskesmas; Cetirizine: Obat tidak ada di daftar stok ePuskesmas'
+    );
+  });
+
+  // A real failure beside a stock gap must not hide under the out-of-stock note.
+  it('names a stock gap and a real failure together and keeps the real one as the reason', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const resep = vi.fn(async () => ({
+      success: [{ field: 'obat_nama', value: 'Ambroxol', method: 'autocomplete' }],
+      failed: [
+        { field: 'obat_nama', error: '[STOCK_INSUFFICIENT] Vitamin B6: Obat tidak ada di daftar stok ePuskesmas' },
+        { field: 'signa', error: '[SIGNA_INVALID] Signa 3x1 gagal dipilih' },
+      ],
+      skipped: [],
+    }));
+
+    const result = await orchestrator.run(
+      samplePayload({ options: { onlyStep: 'resep', requestId: 'mixed' } }),
+      resep
+    );
+
+    expect(result.steps.resep.reasonCode).toBe('UNKNOWN_STEP_FAILURE');
+    expect(result.steps.resep.message).toBe(
+      'Vitamin B6: Obat tidak ada di daftar stok ePuskesmas; Signa 3x1 gagal dipilih'
+    );
+  });
+
+  it('keeps the message of a failure it cannot classify, without the runtime code', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const resep = vi.fn(async () => ({
+      success: [],
+      failed: [{ field: 'signa', error: '[SIGNA_INVALID] Signa 3x1 gagal dipilih' }],
+      skipped: [],
+    }));
+
+    const result = await orchestrator.run(
+      samplePayload({ options: { onlyStep: 'resep', requestId: 'unclassified' } }),
+      resep
+    );
+
+    expect(result.steps.resep.reasonCode).toBe('UNKNOWN_STEP_FAILURE');
+    expect(result.steps.resep.message).toBe('Signa 3x1 gagal dipilih');
+  });
+});

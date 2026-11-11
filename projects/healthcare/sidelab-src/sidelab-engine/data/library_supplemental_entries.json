@@ -1,0 +1,803 @@
+{
+  "_brand": "Masterplan and masterpiece by codieverse+.",
+  "entries": {
+    "dermatitis kontak alergi": {
+      "full": {
+        "nama": "Dermatitis kontak alergi",
+        "icd10": "L23",
+        "definisi": "Peradangan kulit akibat reaksi hipersensitivitas tipe lambat setelah pajanan alergen pada individu yang telah tersensitisasi.",
+        "gejala_klinis": [
+          "gatal dominan",
+          "kemerahan pada area kontak",
+          "papul atau vesikel",
+          "kulit kering atau berskuama pada fase subakut dan kronik"
+        ],
+        "pemeriksaan_fisik": [
+          "lesi sesuai pola pajanan",
+          "eritema dan edema lokal",
+          "vesikel atau krusta bila akut",
+          "likenifikasi bila kronik"
+        ],
+        "red_flags": [
+          "keterlibatan luas atau generalisata",
+          "infeksi sekunder",
+          "edema wajah atau periorbital berat",
+          "diagnosis tidak jelas atau curiga penyakit kulit lain"
+        ],
+        "kriteria_rujukan": "Rujuk bila lesi luas, rekuren berat, tidak respons terapi dasar, atau diagnosis banding memerlukan evaluasi dermatologi."
+      },
+      "d144": {
+        "name": "Dermatitis Kontak Alergi",
+        "icd10": "L23",
+        "non_pharmacotherapy": [
+          "identifikasi dan hindari alergen pencetus",
+          "kompres basah dingin pada fase akut",
+          "gunakan sabun lembut dan emolien",
+          "edukasi proteksi kulit"
+        ],
+        "referral_criteria": [
+          "lesi luas atau berat",
+          "rekuren meski eliminasi pencetus",
+          "infeksi sekunder",
+          "diagnosis meragukan"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Krim hidrokortison",
+              "dose": "1%",
+              "route": "topikal",
+              "frequency": "2x/hari",
+              "duration": "5-7 hari",
+              "max_dose": "2x/hari"
+            },
+            {
+              "drug": "Cetirizine",
+              "dose": "10 mg",
+              "route": "oral",
+              "frequency": "1x/hari",
+              "duration": "saat gatal",
+              "max_dose": "10 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "kulit",
+          "alergi"
+        ]
+      }
+    },
+    "penyakit paru obstruktif kronis": {
+      "full": {
+        "nama": "Penyakit Paru Obstruktif Kronis",
+        "icd10": "J44",
+        "definisi": "Penyakit paru kronik dengan hambatan aliran udara persisten yang umumnya progresif dan berkaitan dengan pajanan asap rokok atau iritan lain.",
+        "gejala_klinis": [
+          "batuk kronik",
+          "dahak kronik",
+          "sesak progresif",
+          "riwayat merokok atau pajanan biomassa"
+        ],
+        "pemeriksaan_fisik": [
+          "ekspirasi memanjang",
+          "wheezing atau ronki",
+          "penggunaan otot bantu napas",
+          "barrel chest pada kasus kronik"
+        ],
+        "red_flags": [
+          "SpO2 rendah",
+          "distres napas",
+          "penurunan kesadaran",
+          "eksaserbasi akut dengan gagal napas"
+        ],
+        "kriteria_rujukan": "Rujuk bila eksaserbasi berat, gagal napas, saturasi rendah persisten, curiga pneumonia atau gagal jantung, atau tidak membaik dengan terapi awal."
+      },
+      "d144": {
+        "name": "Penyakit Paru Obstruktif Kronis",
+        "icd10": "J44",
+        "non_pharmacotherapy": [
+          "berhenti merokok",
+          "hindari iritan inhalasi",
+          "latihan napas dan rehabilitasi sederhana",
+          "monitor saturasi dan tanda bahaya"
+        ],
+        "referral_criteria": [
+          "SpO2 < 90-92%",
+          "gagal napas atau sianosis",
+          "eksaserbasi tidak membaik",
+          "komorbid kardiovaskular berat"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Salbutamol inhalasi",
+              "dose": "100 mcg/puff",
+              "route": "inhalasi",
+              "frequency": "1-2 puff bila sesak",
+              "duration": "sesuai kebutuhan",
+              "max_dose": "sesuai respons klinis"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "respirasi",
+          "kronik"
+        ]
+      }
+    },
+    "gangguan perkembangan dan perilaku pada anak dan remaja": {
+      "full": {
+        "nama": "Gangguan perkembangan dan perilaku pada anak dan remaja",
+        "icd10": "F80",
+        "definisi": "Kelompok gangguan yang mencakup keterlambatan atau deviasi perkembangan bicara, bahasa, perilaku, atensi, dan fungsi adaptif anak atau remaja.",
+        "gejala_klinis": [
+          "keterlambatan bicara atau bahasa",
+          "masalah perilaku berulang",
+          "kesulitan interaksi sosial",
+          "gangguan atensi atau hiperaktivitas"
+        ],
+        "pemeriksaan_fisik": [
+          "nilai milestone perkembangan",
+          "observasi kontak mata dan interaksi",
+          "skrining pendengaran atau penglihatan bila perlu",
+          "nilai fungsi adaptif sesuai usia"
+        ],
+        "red_flags": [
+          "regresi perkembangan",
+          "kejang atau gangguan neurologis",
+          "gangguan perilaku berat yang membahayakan",
+          "curiga kekerasan atau neglect"
+        ],
+        "kriteria_rujukan": "Rujuk bila ada regresi, red flag neurologis, kecurigaan autisme atau ADHD kompleks, atau memerlukan asesmen tumbuh kembang multidisiplin."
+      },
+      "d144": {
+        "name": "Gangguan Perkembangan dan Perilaku Pada Anak dan Remaja",
+        "icd10": "F80",
+        "non_pharmacotherapy": [
+          "skrining tumbuh kembang terstruktur",
+          "edukasi orang tua",
+          "stimulasi sesuai domain keterlambatan",
+          "koordinasi dengan sekolah atau pengasuh"
+        ],
+        "referral_criteria": [
+          "regresi perkembangan",
+          "gangguan perilaku berat",
+          "curiga autisme atau ADHD kompleks",
+          "memerlukan penilaian spesialis"
+        ],
+        "pharmacotherapy": {
+          "first_line": [],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "pediatri",
+          "psikiatri",
+          "tumbuh-kembang"
+        ]
+      }
+    },
+    "hipertrofi prostat": {
+      "full": {
+        "nama": "Hipertrofi Prostat Jinak",
+        "icd10": "N40",
+        "definisi": "Pembesaran prostat jinak yang menyebabkan gejala saluran kemih bawah pada laki-laki usia lanjut.",
+        "gejala_klinis": [
+          "aliran urin melemah",
+          "sering berkemih terutama malam",
+          "hesitansi",
+          "rasa tidak lampias"
+        ],
+        "pemeriksaan_fisik": [
+          "colok dubur: prostat membesar dan licin",
+          "nilai retensi urin",
+          "suprapubik penuh bila retensi"
+        ],
+        "red_flags": [
+          "retensi urin akut",
+          "hematuria berulang",
+          "curiga gagal ginjal obstruktif",
+          "curiga keganasan prostat"
+        ],
+        "kriteria_rujukan": "Rujuk bila retensi urin, infeksi berulang, hematuria, batu buli-buli, gangguan ginjal, atau gejala berat."
+      },
+      "d144": {
+        "name": "Hipertrofi Prostat",
+        "icd10": "N40",
+        "non_pharmacotherapy": [
+          "batasi minum malam hari",
+          "hindari menahan kencing",
+          "review obat yang memperberat retensi",
+          "monitor gejala LUTS"
+        ],
+        "referral_criteria": [
+          "retensi urin akut",
+          "hematuria atau infeksi berulang",
+          "gangguan ginjal",
+          "gejala berat progresif"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Tamsulosin",
+              "dose": "0.4 mg",
+              "route": "oral",
+              "frequency": "1x/hari",
+              "duration": "sesuai evaluasi",
+              "max_dose": "0.4 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "urologi",
+          "kronik"
+        ]
+      }
+    },
+    "low vision": {
+      "full": {
+        "nama": "Low vision",
+        "icd10": "H54",
+        "definisi": "Penurunan fungsi penglihatan yang bermakna dan tidak sepenuhnya terkoreksi dengan kacamata biasa.",
+        "gejala_klinis": [
+          "penglihatan menurun kronik",
+          "kesulitan aktivitas membaca atau mobilitas",
+          "silau atau kontras rendah"
+        ],
+        "pemeriksaan_fisik": [
+          "ukur visus jauh dan dekat",
+          "uji pinhole",
+          "periksa lapang pandang dasar",
+          "evaluasi penyebab yang mendasari"
+        ],
+        "red_flags": [
+          "penurunan visus mendadak",
+          "nyeri mata",
+          "curiga glaukoma atau retinal emergency"
+        ],
+        "kriteria_rujukan": "Rujuk ke spesialis mata untuk penegakan etiologi dan rehabilitasi low vision."
+      },
+      "d144": {
+        "name": "Low Vision",
+        "icd10": "H54",
+        "non_pharmacotherapy": [
+          "optimalkan pencahayaan dan kontras visual",
+          "gunakan alat bantu low vision bila tersedia",
+          "edukasi keselamatan mobilitas",
+          "evaluasi dan tata laksana penyebab dasar"
+        ],
+        "referral_criteria": [
+          "penurunan visus fungsional bermakna",
+          "curiga penyakit retina atau saraf optik",
+          "membutuhkan rehabilitasi low vision"
+        ],
+        "pharmacotherapy": {
+          "first_line": [],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "mata",
+          "rehabilitasi"
+        ]
+      }
+    },
+    "tirotoksikosis": {
+      "full": {
+        "nama": "Tirotoksikosis",
+        "icd10": "E05.9",
+        "definisi": "Keadaan kelebihan hormon tiroid yang menimbulkan gejala hipermetabolik dan simpatis berlebih.",
+        "gejala_klinis": [
+          "berdebar",
+          "berat badan turun",
+          "tremor",
+          "mudah panas"
+        ],
+        "pemeriksaan_fisik": [
+          "takikardia",
+          "tremor halus",
+          "goiter mungkin ada",
+          "hiperrefleksia"
+        ],
+        "red_flags": [
+          "krisis tiroid",
+          "aritmia",
+          "gagal jantung",
+          "gangguan kesadaran"
+        ],
+        "kriteria_rujukan": "Rujuk bila curiga krisis tiroid, aritmia, gagal jantung, penurunan kesadaran, atau diagnosis memerlukan evaluasi endokrin lanjutan."
+      },
+      "d144": {
+        "name": "Tirotoksikosis",
+        "icd10": "E05.9",
+        "non_pharmacotherapy": [
+          "istirahat cukup",
+          "hindari pemicu simpatis berlebih termasuk kafein berlebih",
+          "monitor nadi, tekanan darah, dan berat badan",
+          "evaluasi fungsi tiroid lanjutan"
+        ],
+        "referral_criteria": [
+          "curiga krisis tiroid",
+          "aritmia atau gagal jantung",
+          "penurunan kesadaran",
+          "hamil dengan gejala hipertiroid bermakna"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Propranolol",
+              "dose": "10-20 mg",
+              "route": "oral",
+              "frequency": "3-4x/hari",
+              "duration": "sesuai kontrol gejala",
+              "max_dose": "120 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "endokrin",
+          "kardiometabolik"
+        ]
+      }
+    },
+    "kanker serviks": {
+      "full": {
+        "nama": "Kanker serviks",
+        "icd10": "C53.9",
+        "definisi": "Keganasan serviks yang umumnya berkaitan dengan infeksi HPV persisten dan sering muncul dengan perdarahan abnormal.",
+        "gejala_klinis": [
+          "perdarahan kontak",
+          "keputihan berbau",
+          "perdarahan pascamenopause",
+          "nyeri panggul lanjut"
+        ],
+        "pemeriksaan_fisik": [
+          "lesi serviks mudah berdarah",
+          "keputihan patologis",
+          "anemia pada kasus lanjut"
+        ],
+        "red_flags": [
+          "perdarahan berat",
+          "massa serviks jelas",
+          "penurunan berat badan",
+          "gangguan ginjal obstruktif"
+        ],
+        "kriteria_rujukan": "Rujuk segera untuk evaluasi ginekologi onkologi bila ada kecurigaan kuat kanker serviks."
+      },
+      "d144": {
+        "name": "Kanker Serviks",
+        "icd10": "C53.9",
+        "non_pharmacotherapy": [
+          "edukasi bahwa kasus memerlukan evaluasi spesialis segera",
+          "kontrol perdarahan dan stabilisasi hemodinamik bila perlu",
+          "siapkan rujukan ginekologi onkologi"
+        ],
+        "referral_criteria": [
+          "semua kecurigaan kuat kanker serviks",
+          "perdarahan aktif bermakna",
+          "massa serviks mudah berdarah",
+          "anemia simptomatik"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Asam traneksamat",
+              "dose": "500 mg",
+              "route": "oral",
+              "frequency": "3x/hari",
+              "duration": "jangka pendek bila perdarahan aktif dan sesuai klinis",
+              "max_dose": "1500 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "obgyn",
+          "onkologi"
+        ]
+      }
+    },
+    "katarak pada pasien dewasa": {
+      "full": {
+        "nama": "Katarak pada pasien dewasa",
+        "icd10": "H26.9",
+        "definisi": "Kekeruhan lensa yang menyebabkan gangguan penglihatan progresif pada pasien dewasa.",
+        "gejala_klinis": [
+          "penglihatan buram perlahan",
+          "silau",
+          "warna tampak pudar",
+          "kesulitan melihat malam"
+        ],
+        "pemeriksaan_fisik": [
+          "visus menurun",
+          "refleks merah berkurang",
+          "lensa keruh pada penlight atau slit lamp"
+        ],
+        "red_flags": [
+          "penurunan visus mendadak",
+          "nyeri mata",
+          "curiga glaukoma atau uveitis"
+        ],
+        "kriteria_rujukan": "Rujuk ke spesialis mata untuk penilaian operasi bila gangguan visual bermakna."
+      },
+      "d144": {
+        "name": "Katarak pada Pasien Dewasa",
+        "icd10": "H26.9",
+        "non_pharmacotherapy": [
+          "optimalkan pencahayaan",
+          "gunakan alat bantu visual sementara",
+          "edukasi bahwa terapi definitif adalah operasi bila indikasi terpenuhi"
+        ],
+        "referral_criteria": [
+          "gangguan visual bermakna untuk aktivitas harian",
+          "diagnosis meragukan",
+          "curiga komorbid glaukoma atau uveitis"
+        ],
+        "pharmacotherapy": {
+          "first_line": [],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "mata",
+          "degeneratif"
+        ]
+      }
+    },
+    "liken simpleks kronik neurodermatitis sirkumripta": {
+      "full": {
+        "nama": "Liken simpleks kronik",
+        "icd10": "L28.0",
+        "definisi": "Penebalan kulit akibat garuk atau gosok berulang yang menimbulkan plak likenifikasi kronik.",
+        "gejala_klinis": [
+          "gatal kronik lokal",
+          "kebiasaan menggaruk",
+          "plak menebal"
+        ],
+        "pemeriksaan_fisik": [
+          "likenifikasi",
+          "hiperpigmentasi atau eritema",
+          "batas lesi cukup tegas"
+        ],
+        "red_flags": [
+          "diagnosis tidak jelas",
+          "infeksi sekunder",
+          "lesi luas atau atipikal"
+        ],
+        "kriteria_rujukan": "Rujuk bila lesi atipikal, luas, tidak respons terapi dasar, atau perlu konfirmasi dermatologi."
+      },
+      "d144": {
+        "name": "Liken Simpleks Kronik",
+        "icd10": "L28.0",
+        "non_pharmacotherapy": [
+          "hentikan garuk dan gosok berulang",
+          "gunakan emolien teratur",
+          "kompres dingin saat gatal",
+          "identifikasi stresor atau iritan lokal"
+        ],
+        "referral_criteria": [
+          "lesi luas atau atipikal",
+          "tidak respons terhadap terapi awal",
+          "infeksi sekunder"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Krim mometason",
+              "dose": "0.1%",
+              "route": "topikal",
+              "frequency": "1x/hari",
+              "duration": "5-14 hari",
+              "max_dose": "1x/hari"
+            },
+            {
+              "drug": "Cetirizine",
+              "dose": "10 mg",
+              "route": "oral",
+              "frequency": "1x/hari",
+              "duration": "saat gatal",
+              "max_dose": "10 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "kulit",
+          "pruritus"
+        ]
+      }
+    },
+    "thalasemia": {
+      "full": {
+        "nama": "Thalasemia",
+        "icd10": "D56",
+        "definisi": "Kelainan hemoglobin herediter yang menyebabkan anemia hemolitik kronik dengan derajat bervariasi.",
+        "gejala_klinis": [
+          "pucat",
+          "mudah lelah",
+          "riwayat transfusi atau anemia kronik",
+          "pertumbuhan terhambat pada kasus berat"
+        ],
+        "pemeriksaan_fisik": [
+          "konjungtiva pucat",
+          "splenomegali mungkin ada",
+          "ikterus ringan pada hemolisis"
+        ],
+        "red_flags": [
+          "anemia berat",
+          "gagal tumbuh",
+          "gagal jantung akibat anemia",
+          "kebutuhan transfusi berulang"
+        ],
+        "kriteria_rujukan": "Rujuk untuk evaluasi hematologi bila curiga thalasemia sedang-berat atau memerlukan transfusi."
+      },
+      "d144": {
+        "name": "Thalasemia",
+        "icd10": "D56",
+        "non_pharmacotherapy": [
+          "edukasi keluarga tentang sifat herediter",
+          "monitor tumbuh kembang dan status anemia",
+          "hindari suplemen besi tanpa indikasi jelas"
+        ],
+        "referral_criteria": [
+          "anemia sedang-berat",
+          "kecurigaan kebutuhan transfusi",
+          "splenomegali bermakna",
+          "gagal tumbuh"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Asam folat",
+              "dose": "1 mg",
+              "route": "oral",
+              "frequency": "1x/hari",
+              "duration": "sesuai evaluasi",
+              "max_dose": "1 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "hematologi",
+          "genetik",
+          "pediatri"
+        ]
+      }
+    },
+    "kanker paru": {
+      "full": {
+        "nama": "Kanker paru",
+        "icd10": "C34.9",
+        "definisi": "Keganasan paru yang dapat muncul dengan batuk kronik, hemoptisis, penurunan berat badan, atau sesak progresif.",
+        "gejala_klinis": [
+          "batuk kronik",
+          "hemoptisis",
+          "berat badan turun",
+          "sesak progresif"
+        ],
+        "pemeriksaan_fisik": [
+          "temuan dapat minimal pada awal",
+          "ronki atau mengi lokal",
+          "limfadenopati supraklavikula pada kasus lanjut"
+        ],
+        "red_flags": [
+          "hemoptisis",
+          "sesak berat",
+          "penurunan berat badan signifikan",
+          "efusi pleura"
+        ],
+        "kriteria_rujukan": "Rujuk segera untuk imaging dan evaluasi spesialis bila curiga kanker paru."
+      },
+      "d144": {
+        "name": "Kanker Paru",
+        "icd10": "C34.9",
+        "non_pharmacotherapy": [
+          "hentikan merokok segera",
+          "siapkan rujukan imaging dan spesialis paru atau onkologi",
+          "monitor saturasi dan gejala respirasi"
+        ],
+        "referral_criteria": [
+          "semua kecurigaan kuat kanker paru",
+          "hemoptisis",
+          "sesak progresif",
+          "penurunan berat badan signifikan"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Parasetamol",
+              "dose": "500 mg",
+              "route": "oral",
+              "frequency": "3x/hari",
+              "duration": "sesuai kebutuhan nyeri atau demam",
+              "max_dose": "3000 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "respirasi",
+          "onkologi"
+        ]
+      }
+    },
+    "hepatitis b": {
+      "full": {
+        "nama": "Hepatitis B",
+        "icd10": "B16",
+        "definisi": "Infeksi virus hepatitis B yang menyebabkan peradangan hati akut atau kronik.",
+        "gejala_klinis": [
+          "lemah",
+          "mual",
+          "nyeri perut kanan atas",
+          "ikterus"
+        ],
+        "pemeriksaan_fisik": [
+          "sklera ikterik",
+          "hepatomegali",
+          "nyeri tekan kuadran kanan atas"
+        ],
+        "red_flags": [
+          "ensefalopati hepatik",
+          "perdarahan",
+          "ikterus berat",
+          "dehidrasi atau muntah berat"
+        ],
+        "kriteria_rujukan": "Rujuk bila ada tanda gagal hati, ensefalopati, perdarahan, atau hepatitis berat."
+      },
+      "d144": {
+        "name": "Hepatitis B",
+        "icd10": "B16",
+        "non_pharmacotherapy": [
+          "istirahat cukup",
+          "hindari alkohol dan obat hepatotoksik",
+          "hidrasi dan nutrisi adekuat",
+          "edukasi pencegahan penularan darah dan seksual"
+        ],
+        "referral_criteria": [
+          "ikterus berat",
+          "ensefalopati hepatik",
+          "perdarahan",
+          "muntah berat atau dehidrasi"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Ondansetron",
+              "dose": "4 mg",
+              "route": "oral",
+              "frequency": "2-3x/hari",
+              "duration": "bila mual berat dan sesuai klinis",
+              "max_dose": "12 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "hepatologi",
+          "infeksi"
+        ]
+      }
+    },
+    "hifema": {
+      "full": {
+        "nama": "Hifema",
+        "icd10": "H21.0",
+        "definisi": "Perdarahan pada kamera anterior mata, umumnya setelah trauma okular.",
+        "gejala_klinis": [
+          "mata nyeri",
+          "penglihatan menurun",
+          "riwayat trauma mata"
+        ],
+        "pemeriksaan_fisik": [
+          "darah pada kamera anterior",
+          "visus menurun",
+          "fotofobia"
+        ],
+        "red_flags": [
+          "trauma bola mata berat",
+          "tekanan intraokular meningkat",
+          "perdarahan berulang",
+          "visus menurun nyata"
+        ],
+        "kriteria_rujukan": "Rujuk segera ke spesialis mata, terutama bila trauma signifikan atau visus menurun."
+      },
+      "d144": {
+        "name": "Hifema",
+        "icd10": "H21.0",
+        "non_pharmacotherapy": [
+          "bed rest relatif dengan head-up 30 derajat",
+          "gunakan pelindung mata",
+          "hindari aktivitas berat dan obat antiplatelet bila tidak esensial"
+        ],
+        "referral_criteria": [
+          "semua hifema traumatik signifikan",
+          "visus menurun bermakna",
+          "tekanan intraokular meningkat",
+          "perdarahan ulang"
+        ],
+        "pharmacotherapy": {
+          "first_line": [
+            {
+              "drug": "Parasetamol",
+              "dose": "500 mg",
+              "route": "oral",
+              "frequency": "3x/hari",
+              "duration": "sesuai kebutuhan nyeri",
+              "max_dose": "3000 mg/hari"
+            }
+          ],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "mata",
+          "trauma",
+          "emergensi"
+        ]
+      }
+    },
+    "retinopati diabetik": {
+      "full": {
+        "nama": "Retinopati diabetik",
+        "icd10": "H36.0",
+        "definisi": "Komplikasi mikrovaskular diabetes pada retina yang dapat menyebabkan penurunan penglihatan progresif.",
+        "gejala_klinis": [
+          "penglihatan kabur",
+          "dapat asimtomatik pada awal",
+          "riwayat diabetes lama"
+        ],
+        "pemeriksaan_fisik": [
+          "funduskopi abnormal bila tersedia",
+          "visus dapat menurun",
+          "eksudat atau perdarahan retina pada pemeriksaan spesialis"
+        ],
+        "red_flags": [
+          "penurunan visus progresif",
+          "perdarahan vitreus",
+          "edema makula"
+        ],
+        "kriteria_rujukan": "Rujuk untuk skrining dan evaluasi spesialis mata pada semua pasien dengan kecurigaan retinopati diabetik."
+      },
+      "d144": {
+        "name": "Retinopati Diabetik",
+        "icd10": "H36.0",
+        "non_pharmacotherapy": [
+          "optimalkan kontrol glukosa, tekanan darah, dan lipid",
+          "edukasi skrining mata berkala",
+          "rujuk untuk funduskopi atau retina clinic bila dicurigai"
+        ],
+        "referral_criteria": [
+          "penurunan visus",
+          "perdarahan vitreus",
+          "edema makula",
+          "diabetes lama tanpa skrining mata"
+        ],
+        "pharmacotherapy": {
+          "first_line": [],
+          "second_line": [],
+          "prophylaxis": []
+        },
+        "tags": [
+          "mata",
+          "diabetes",
+          "kronik"
+        ]
+      }
+    }
+  }
+}

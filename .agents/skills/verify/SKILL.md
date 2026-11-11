@@ -24,7 +24,11 @@ Report known pre-existing failures separately; never weaken a gate to obtain a p
 
 ## Session close
 
-Review the diff, overwrite `.agents/HANDOFF.md` under approximately 1,000 tokens,
-append durable decisions only when needed, and update `.agents/PROGRESS.md` only when
-an area status changed. Report `SAFRS_VERIFICATION_INTEGRITY_REVIEW=required` as a review
+Review the diff, then overwrite the `HANDOFF.md` of every scope the change set touches and keep
+each under about 1,000 tokens. Capsule work updates `projects/<domain>/<capsule>/.agents/HANDOFF.md`
+and appends capsule-only decisions to that `DECISIONS.md`; root `.agents/` is only for
+control-plane work (root tooling, governance, CI, `packages/`, cross-capsule orchestration).
+`tools/safrs/check_handoff.py` enforces this.
+
+Report `SAFRS_VERIFICATION_INTEGRITY_REVIEW=required` as a review
 requirement, not a formatting error.

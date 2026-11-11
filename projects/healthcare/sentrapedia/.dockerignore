@@ -1,0 +1,12 @@
+node_modules
+.next
+.runtime
+.git
+.env*
+*.tsbuildinfo
+theoracle/model
+theoracle/data
+theoracle/_versions
+theoracle/_transactions
+_to_delete
+.lfs-assets-id

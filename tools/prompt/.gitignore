@@ -1,0 +1,16 @@
+node_modules/
+.next/
+dist-electron/
+prisma/generated/
+coverage/
+dist/
+build/
+.turbo/
+.env
+.env.local
+*.tsbuildinfo
+
+# Local working material, never part of the capsule history
+docs/plans/
+droid-wiki/
+extension/

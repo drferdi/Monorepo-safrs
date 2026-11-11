@@ -1,0 +1,9 @@
+{
+  "source": "Sentra project owner's specification for the reasoning service (step S5), 2026-09-27. Med Assist's own sex/age rule (plan step I1) does not exist yet and should copy this table.",
+  "comparison": "Three-character ICD-10 category, inclusive range.",
+  "rules": [
+    { "from": "N70", "to": "N77", "requires": "female" },
+    { "from": "N40", "to": "N51", "requires": "male" },
+    { "from": "O00", "to": "O99", "requires": "pregnancy" }
+  ]
+}

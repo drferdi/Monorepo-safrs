@@ -1,0 +1,1290 @@
+{
+  "measuredAt": "2026-10-22T03:12:09.407Z",
+  "node": "v24.21.0",
+  "scope": "Actual TheOracle retrieval (local CPU query embedding + cosine search + caps); excludes AADI model inference and HTTP latency",
+  "indexSha256": "1b965faf9e204e7c98980edd7e00728ae647625f1b4c74e757f3b3eff545d81b",
+  "embeddingModel": {
+    "id": "onnx-community/embeddinggemma-300m-ONNX",
+    "revision": "5090578d9565bb06545b4552f76e6bc2c93e4a66",
+    "dtype": "fp32",
+    "dims": 768
+  },
+  "indexUnchanged": true,
+  "coldStartMs": 2893,
+  "rssGrowthMb": 853,
+  "warmLatencyMs": {
+    "median": 80,
+    "p95": 88,
+    "max": 106.9
+  },
+  "recallAt5": {
+    "lay_terms": {
+      "hits": 13,
+      "total": 16,
+      "recallAt5": 0.813
+    },
+    "abbreviations": {
+      "hits": 14,
+      "total": 15,
+      "recallAt5": 0.933
+    },
+    "mixed_id_en": {
+      "hits": 15,
+      "total": 15,
+      "recallAt5": 1
+    },
+    "typos": {
+      "hits": 15,
+      "total": 15,
+      "recallAt5": 1
+    },
+    "exact_terms": {
+      "hits": 18,
+      "total": 27,
+      "recallAt5": 0.667
+    },
+    "exact_terms.drug_dose": {
+      "hits": 5,
+      "total": 8,
+      "recallAt5": 0.625
+    },
+    "exact_terms.icd10": {
+      "hits": 3,
+      "total": 6,
+      "recallAt5": 0.5
+    },
+    "exact_terms.lab": {
+      "hits": 4,
+      "total": 5,
+      "recallAt5": 0.8
+    },
+    "exact_terms.score": {
+      "hits": 6,
+      "total": 8,
+      "recallAt5": 0.75
+    },
+    "overall": {
+      "hits": 75,
+      "total": 88,
+      "recallAt5": 0.852
+    }
+  },
+  "doseRecall": {
+    "hits": 50,
+    "total": 61,
+    "rate": 0.82,
+    "rows": [
+      {
+        "id": "lay_terms-01",
+        "hit": true,
+        "doseTitles": [
+          "Oksiuriasis (Enterobiasis / Cacing Kremi)",
+          "dermatovenereologi-perdoski-2021.pdf",
+          "Kecacingan (Soil-Transmitted Helminthiasis)",
+          "Askariasis",
+          "Oksiuriasis (Enterobiasis / Cacing Kremi)"
+        ]
+      },
+      {
+        "id": "lay_terms-02",
+        "hit": true,
+        "doseTitles": [
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-03",
+        "hit": true,
+        "doseTitles": [
+          "Tinea Versikolor (Pitiriasis Versikolor / Panu)",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-04",
+        "hit": true,
+        "doseTitles": [
+          "Hordeolum (Bintitan) & Kalazion",
+          "Hordeolum (Bintitan) & Kalazion",
+          "Blefaritis",
+          "Episkleritis",
+          "Hordeolum (Bintitan) & Kalazion"
+        ]
+      },
+      {
+        "id": "lay_terms-05",
+        "hit": true,
+        "doseTitles": [
+          "Vertigo Posisi Paroksismal Jinak (BPPV)",
+          "Vertigo Posisi Paroksismal Jinak (BPPV)"
+        ]
+      },
+      {
+        "id": "lay_terms-06",
+        "hit": true,
+        "doseTitles": [
+          "Tension-Type Headache (TTH)"
+        ]
+      },
+      {
+        "id": "lay_terms-07",
+        "hit": false,
+        "doseTitles": [
+          "Otitis Eksterna",
+          "Otitis Media Supuratif Kronik"
+        ]
+      },
+      {
+        "id": "lay_terms-08",
+        "hit": false,
+        "doseTitles": [
+          "Reaksi gigitan serangga",
+          "Reaksi gigitan serangga"
+        ]
+      },
+      {
+        "id": "lay_terms-09",
+        "hit": false,
+        "doseTitles": [
+          "Kejang Demam Sederhana",
+          "Sindrom Kawasaki",
+          "Demam Tifoid"
+        ]
+      },
+      {
+        "id": "lay_terms-10",
+        "hit": true,
+        "doseTitles": [
+          "Ulkus Mulut (Stomatitis Aftosa Rekuren)"
+        ]
+      },
+      {
+        "id": "lay_terms-11",
+        "hit": true,
+        "doseTitles": [
+          "Pertusis (Batuk Rejan)",
+          "Bronkitis Akut",
+          "Pertusis (Batuk Rejan)",
+          "ISPA pada Anak"
+        ]
+      },
+      {
+        "id": "lay_terms-12",
+        "hit": true,
+        "doseTitles": [
+          "Parotitis Epidemika (Gondongan / Mumps)",
+          "Limfadenitis",
+          "Limfadenitis",
+          "Otitis Eksterna"
+        ]
+      },
+      {
+        "id": "lay_terms-13",
+        "hit": true,
+        "doseTitles": [
+          "Ambeien (Hemoroid)",
+          "Hemoroid Eksterna dan Interna Derajat 1-2",
+          "Ambeien (Hemoroid)"
+        ]
+      },
+      {
+        "id": "lay_terms-14",
+        "hit": true,
+        "doseTitles": [
+          "Dispepsia (Gangguan Pencernaan)",
+          "Gastritis",
+          "Refluks Gastroesofageal",
+          "Refluks Gastroesofageal",
+          "Gastritis"
+        ]
+      },
+      {
+        "id": "lay_terms-15",
+        "hit": false,
+        "doseTitles": [
+          "ADHD (Attention Deficit Hyperactivity Disorder)"
+        ]
+      },
+      {
+        "id": "lay_terms-16",
+        "hit": false,
+        "doseTitles": [
+          "Dermatitis Seboroik"
+        ]
+      },
+      {
+        "id": "abbreviations-01",
+        "hit": true,
+        "doseTitles": [
+          "fktp-kmk-2022.pdf",
+          "fasyankes-primer-idi-2017.pdf",
+          "penyakit-paru-obstruktif-2019.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-02",
+        "hit": true,
+        "doseTitles": [
+          "Demam Berdarah Dengue (DBD)",
+          "fasyankes-primer-idi-2017.pdf",
+          "Demam Berdarah Dengue (DBD)"
+        ]
+      },
+      {
+        "id": "abbreviations-03",
+        "hit": true,
+        "doseTitles": [
+          "Infeksi Saluran Kemih (ISK)"
+        ]
+      },
+      {
+        "id": "abbreviations-04",
+        "hit": true,
+        "doseTitles": [
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Akut (OMA)"
+        ]
+      },
+      {
+        "id": "abbreviations-05",
+        "hit": true,
+        "doseTitles": [
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Supuratif Kronik"
+        ]
+      },
+      {
+        "id": "abbreviations-06",
+        "hit": false,
+        "doseTitles": [
+          "Sindrom Stevens-Johnson"
+        ]
+      },
+      {
+        "id": "abbreviations-07",
+        "hit": true,
+        "doseTitles": [
+          "Tuberkulosis Paru"
+        ]
+      },
+      {
+        "id": "abbreviations-08",
+        "hit": true,
+        "doseTitles": [
+          "Diabetes Melitus Tipe 2",
+          "Diabetes Melitus Tipe 2"
+        ]
+      },
+      {
+        "id": "abbreviations-09",
+        "hit": true,
+        "doseTitles": [
+          "Penyakit Ginjal Kronik",
+          "Penyakit Ginjal Tahap Akhir"
+        ]
+      },
+      {
+        "id": "abbreviations-10",
+        "hit": true,
+        "doseTitles": [
+          "Tindakan Resusitasi Stabilitasi Dan Tranpor Bayi Berat Lahir R",
+          "resusitasi-bblr-2018.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-11",
+        "hit": true,
+        "doseTitles": [
+          "Gangguan Cemas Menyeluruh (GAD)",
+          "Gangguan Cemas Menyeluruh (GAD)",
+          "Gangguan Cemas Menyeluruh (GAD)"
+        ]
+      },
+      {
+        "id": "abbreviations-12",
+        "hit": true,
+        "doseTitles": [
+          "Tension-Type Headache (TTH)"
+        ]
+      },
+      {
+        "id": "abbreviations-13",
+        "hit": true,
+        "doseTitles": [
+          "Vertigo Posisi Paroksismal Jinak (BPPV)",
+          "Vertigo Posisi Paroksismal Jinak (BPPV)",
+          "Vertigo Posisi Paroksismal Jinak (BPPV)"
+        ]
+      },
+      {
+        "id": "abbreviations-14",
+        "hit": true,
+        "doseTitles": [
+          "Leukemia Limfoblastik Akut Pada Anak",
+          "Leukemia Limfoblastik Akut Pada Anak",
+          "Sepsis Pada Anak",
+          "ISPA pada Anak",
+          "Leukemia Limfoblastik Akut Pada Anak"
+        ]
+      },
+      {
+        "id": "abbreviations-15",
+        "hit": true,
+        "doseTitles": [
+          "Refluks Gastroesofageal",
+          "fasyankes-primer-idi-2017.pdf",
+          "Refluks Gastroesofageal"
+        ]
+      },
+      {
+        "id": "mixed_id_en-01",
+        "hit": true,
+        "doseTitles": [
+          "Pneumonia Komuniti",
+          "Pneumonia Komuniti",
+          "penyakit-dalam-papdi-2024.pdf",
+          "Pneumonia Komuniti"
+        ]
+      },
+      {
+        "id": "mixed_id_en-02",
+        "hit": true,
+        "doseTitles": [
+          "Gagal Jantung",
+          "Gagal Jantung"
+        ]
+      },
+      {
+        "id": "mixed_id_en-03",
+        "hit": true,
+        "doseTitles": [
+          "Penyakit Ginjal Kronik",
+          "Malnutrisi Pada Dewasa",
+          "Anemia Defisiensi Besi",
+          "Penyakit Ginjal Kronik"
+        ]
+      },
+      {
+        "id": "mixed_id_en-04",
+        "hit": true,
+        "doseTitles": [
+          "stroke-2019.pdf",
+          "Stroke Iskemik",
+          "Stroke Iskemik",
+          "Stroke"
+        ]
+      },
+      {
+        "id": "mixed_id_en-05",
+        "hit": false,
+        "doseTitles": [
+          "Demam Berdarah Dengue (DBD)",
+          "Demam Berdarah Dengue (DBD)"
+        ]
+      },
+      {
+        "id": "mixed_id_en-06",
+        "hit": true,
+        "doseTitles": [
+          "Dermatitis Atopik (Eksim)"
+        ]
+      },
+      {
+        "id": "mixed_id_en-07",
+        "hit": true,
+        "doseTitles": [
+          "Hipertensi Pada Anak",
+          "fktp-kmk-2022.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-08",
+        "hit": true,
+        "doseTitles": [
+          "Otitis Eksterna",
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Akut (OMA)",
+          "Otitis Eksterna"
+        ]
+      },
+      {
+        "id": "mixed_id_en-09",
+        "hit": true,
+        "doseTitles": [
+          "Sepsis Pada Anak"
+        ]
+      },
+      {
+        "id": "mixed_id_en-10",
+        "hit": true,
+        "doseTitles": [
+          "Glaukoma",
+          "Glaukoma"
+        ]
+      },
+      {
+        "id": "mixed_id_en-11",
+        "hit": false,
+        "doseTitles": [
+          "Retinoblastoma"
+        ]
+      },
+      {
+        "id": "mixed_id_en-12",
+        "hit": true,
+        "doseTitles": [
+          "Hepatitis B"
+        ]
+      },
+      {
+        "id": "mixed_id_en-13",
+        "hit": true,
+        "doseTitles": [
+          "HIV/AIDS",
+          "HIV/AIDS",
+          "fktp-kmk-2022.pdf",
+          "fasyankes-primer-idi-2017.pdf",
+          "HIV/AIDS"
+        ]
+      },
+      {
+        "id": "mixed_id_en-14",
+        "hit": true,
+        "doseTitles": [
+          "Malaria",
+          "Malaria",
+          "penyakit-dalam-papdi-2024.pdf",
+          "fornas-2025.pdf",
+          "fasyankes-primer-idi-2017.pdf",
+          "Malaria"
+        ]
+      },
+      {
+        "id": "mixed_id_en-15",
+        "hit": true,
+        "doseTitles": [
+          "Kanker Payudara"
+        ]
+      },
+      {
+        "id": "typos-01",
+        "hit": true,
+        "doseTitles": [
+          "Tuberkulosis Paru"
+        ]
+      },
+      {
+        "id": "typos-02",
+        "hit": true,
+        "doseTitles": [
+          "Hipertensi Esensial",
+          "Hipertensi Esensial",
+          "gawat-darurat-medis-bedah-unair.pdf",
+          "ppk-bedah-umum.pdf",
+          "sirosis-hati-dewasa-2025.pdf",
+          "Hipertensi Esensial"
+        ]
+      },
+      {
+        "id": "typos-03",
+        "hit": true,
+        "doseTitles": [
+          "Diabetes Melitus Tipe 2"
+        ]
+      },
+      {
+        "id": "typos-04",
+        "hit": false,
+        "doseTitles": [
+          "Asfiksia"
+        ]
+      },
+      {
+        "id": "typos-05",
+        "hit": true,
+        "doseTitles": [
+          "Asma Bronkiale",
+          "Asma Bronkial",
+          "Asma Bronkiale",
+          "Asma Bronkial"
+        ]
+      },
+      {
+        "id": "typos-06",
+        "hit": true,
+        "doseTitles": [
+          "Demam Tifoid",
+          "Demam Tifoid"
+        ]
+      },
+      {
+        "id": "typos-07",
+        "hit": true,
+        "doseTitles": [
+          "Skabies (Kudis)"
+        ]
+      },
+      {
+        "id": "typos-08",
+        "hit": false,
+        "doseTitles": [
+          "Blefaritis"
+        ]
+      },
+      {
+        "id": "typos-09",
+        "hit": true,
+        "doseTitles": [
+          "Disentri (Diare Berdarah)",
+          "Gastroenteritis Akut"
+        ]
+      },
+      {
+        "id": "typos-10",
+        "hit": true,
+        "doseTitles": [
+          "Migren Tanpa Aura"
+        ]
+      },
+      {
+        "id": "typos-11",
+        "hit": true,
+        "doseTitles": [
+          "Thalasemia",
+          "Thalasemia"
+        ]
+      },
+      {
+        "id": "typos-12",
+        "hit": true,
+        "doseTitles": [
+          "Osteoartritis"
+        ]
+      },
+      {
+        "id": "typos-13",
+        "hit": true,
+        "doseTitles": [
+          "Skizofrenia",
+          "Gangguan Psikotik",
+          "skizofrenia-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-14",
+        "hit": false,
+        "doseTitles": [
+          "Rinitis Vasomotor"
+        ]
+      },
+      {
+        "id": "typos-15",
+        "hit": true,
+        "doseTitles": [
+          "Impetigo",
+          "Sinusitis Kronik"
+        ]
+      }
+    ]
+  },
+  "targetedDoseRecall": {
+    "hits": 57,
+    "total": 61,
+    "rate": 0.934,
+    "latencyMs": {
+      "median": 41.7,
+      "p95": 47.4
+    },
+    "rows": [
+      {
+        "id": "lay_terms-01",
+        "label": "Oksiuriasis (Enterobiasis / Cacing Kremi)",
+        "hit": true,
+        "doseTitles": [
+          "Oksiuriasis (Enterobiasis / Cacing Kremi)",
+          "Oksiuriasis (Enterobiasis / Cacing Kremi)",
+          "Ankilostomiasis (Infeksi Cacing Tambang)",
+          "Ankilostomiasis (Infeksi Cacing Tambang)",
+          "patologi-klinik-anatomik-unair.pdf",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-02",
+        "label": "Skabies (Kudis)",
+        "hit": true,
+        "doseTitles": [
+          "Skabies (Kudis)",
+          "dermatovenereologi-perdoski-2017.pdf",
+          "dermatovenereologi-perdoski-2021.pdf",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-03",
+        "label": "Tinea Versikolor (Pitiriasis Versikolor / Panu)",
+        "hit": true,
+        "doseTitles": [
+          "Tinea Versikolor (Pitiriasis Versikolor / Panu)",
+          "Tinea Versikolor (Pitiriasis Versikolor / Panu)",
+          "dermatovenereologi-perdoski-2017.pdf",
+          "dermatovenereologi-perdoski-2021.pdf",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-04",
+        "label": "Hordeolum (Bintitan) & Kalazion",
+        "hit": true,
+        "doseTitles": [
+          "Hordeolum (Bintitan) & Kalazion",
+          "Hordeolum (Bintitan) & Kalazion",
+          "Blefaritis",
+          "Blefaritis"
+        ]
+      },
+      {
+        "id": "lay_terms-05",
+        "label": "Vertigo Posisi Paroksismal Jinak (BPPV)",
+        "hit": true,
+        "doseTitles": [
+          "Vertigo Posisi Paroksismal Jinak (BPPV)",
+          "Vertigo Posisi Paroksismal Jinak (BPPV)",
+          "fornas-2025.pdf",
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-06",
+        "label": "Tension Type Headache (TTH)",
+        "hit": true,
+        "doseTitles": [
+          "Tension-Type Headache (TTH)",
+          "Tension-Type Headache (TTH)",
+          "patologi-klinik-anatomik-unair.pdf",
+          "Migren Tanpa Aura"
+        ]
+      },
+      {
+        "id": "lay_terms-07",
+        "label": "Serumen Prop (Impaksi Serumen)",
+        "hit": false,
+        "doseTitles": [
+          "sirosis-hati-dewasa-2025.pdf",
+          "fornas-2025.pdf",
+          "fornas-2023.pdf",
+          "penyakit-dalam-papdi-2024.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-08",
+        "label": "Urtikaria Akut",
+        "hit": true,
+        "doseTitles": [
+          "Urtikaria Akut",
+          "Urtikaria Akut",
+          "dermatovenereologi-perdoski-2017.pdf",
+          "dermatovenereologi-perdoski-2021.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-09",
+        "label": "Varisela (Cacar Air)",
+        "hit": true,
+        "doseTitles": [
+          "Varisela (Cacar Air)",
+          "Varisela (Cacar Air)",
+          "dermatovenereologi-perdoski-2017.pdf",
+          "dermatovenereologi-perdoski-2017.pdf",
+          "sirosis-hati-dewasa-2025.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-10",
+        "label": "Ulkus Mulut (Stomatitis Aftosa Rekuren)",
+        "hit": true,
+        "doseTitles": [
+          "Ulkus Mulut (Stomatitis Aftosa Rekuren)",
+          "Ulkus Mulut (Stomatitis Aftosa Rekuren)",
+          "fasyankes-primer-idi-2017.pdf",
+          "Penyakit Periodontal"
+        ]
+      },
+      {
+        "id": "lay_terms-11",
+        "label": "Pertusis (Batuk Rejan)",
+        "hit": true,
+        "doseTitles": [
+          "Pertusis (Batuk Rejan)",
+          "Pertusis (Batuk Rejan)",
+          "Kusta",
+          "Kusta",
+          "tuberkulosis-2019.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-12",
+        "label": "Parotitis Epidemika (Gondongan / Mumps)",
+        "hit": true,
+        "doseTitles": [
+          "Parotitis Epidemika (Gondongan / Mumps)",
+          "Parotitis Epidemika (Gondongan / Mumps)",
+          "fasyankes-primer-idi-2017.pdf",
+          "Bell's Palsy",
+          "tonsilitis-2018.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-13",
+        "label": "Hemoroid Eksterna dan Interna Derajat 1 2",
+        "hit": true,
+        "doseTitles": [
+          "Hemoroid Eksterna dan Interna Derajat 1-2",
+          "Hemoroid Eksterna dan Interna Derajat 1-2",
+          "Ambeien (Hemoroid)",
+          "Ambeien (Hemoroid)"
+        ]
+      },
+      {
+        "id": "lay_terms-14",
+        "label": "Gastritis",
+        "hit": true,
+        "doseTitles": [
+          "Gastritis",
+          "Gastritis",
+          "Refluks Gastroesofageal",
+          "Perdarahan Saluran Cerna"
+        ]
+      },
+      {
+        "id": "lay_terms-15",
+        "label": "Stunting (Pendek)",
+        "hit": true,
+        "doseTitles": [
+          "Wasting (Kurus / Gizi Buruk Akut)",
+          "Kusta",
+          "Malnutrisi energi-protein",
+          "stunting-2022.pdf"
+        ]
+      },
+      {
+        "id": "lay_terms-16",
+        "label": "Miliaria (Biang Keringat)",
+        "hit": true,
+        "doseTitles": [
+          "Miliaria (Biang Keringat)",
+          "Miliaria (Biang Keringat)",
+          "dermatovenereologi-perdoski-2017.pdf",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-01",
+        "label": "COPD (Penyakit Paru Obstruktif Kronik)",
+        "hit": true,
+        "doseTitles": [
+          "COPD (Penyakit Paru Obstruktif Kronik)",
+          "COPD (Penyakit Paru Obstruktif Kronik)",
+          "penyakit-paru-obstruktif-2019.pdf",
+          "fktp-kmk-2022.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-02",
+        "label": "Demam Berdarah Dengue (DBD)",
+        "hit": true,
+        "doseTitles": [
+          "Demam Berdarah Dengue (DBD)",
+          "Demam Berdarah Dengue (DBD)",
+          "fasyankes-primer-idi-2017.pdf",
+          "Infeksi Dengue Anak Dan Remaja"
+        ]
+      },
+      {
+        "id": "abbreviations-03",
+        "label": "Infeksi Saluran Kemih (ISK)",
+        "hit": true,
+        "doseTitles": [
+          "Infeksi Saluran Kemih (ISK)",
+          "Infeksi Saluran Kemih (ISK)",
+          "Pielonefritis tanpa komplikasi",
+          "Pielonefritis tanpa komplikasi"
+        ]
+      },
+      {
+        "id": "abbreviations-04",
+        "label": "Otitis Media Akut (OMA)",
+        "hit": true,
+        "doseTitles": [
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Supuratif Kronik",
+          "Otitis Media Supuratif Kronik"
+        ]
+      },
+      {
+        "id": "abbreviations-05",
+        "label": "Otitis Media Supuratif Kronik",
+        "hit": true,
+        "doseTitles": [
+          "Otitis Media Supuratif Kronik",
+          "Otitis Media Supuratif Kronik",
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Akut (OMA)"
+        ]
+      },
+      {
+        "id": "abbreviations-06",
+        "label": "Sindroma Koroner Akut",
+        "hit": true,
+        "doseTitles": [
+          "Sindroma Koroner Akut",
+          "Sindroma Koroner Akut",
+          "Sindrom Stevens-Johnson",
+          "Tumor Otak",
+          "penyakit-paru-obstruktif-2019.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-07",
+        "label": "Tuberkulosis Paru",
+        "hit": true,
+        "doseTitles": [
+          "Tuberkulosis Paru",
+          "Tuberkulosis Paru",
+          "tuberkulosis-2019.pdf",
+          "tuberkulosis-2019.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-08",
+        "label": "Diabetes Melitus Tipe 2",
+        "hit": true,
+        "doseTitles": [
+          "Diabetes Melitus Tipe 2",
+          "Diabetes Melitus Tipe 2",
+          "fornas-2025.pdf",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-09",
+        "label": "Penyakit Ginjal Kronik",
+        "hit": true,
+        "doseTitles": [
+          "Penyakit Ginjal Kronik",
+          "Penyakit Ginjal Kronik",
+          "Penyakit Ginjal Tahap Akhir",
+          "Penyakit Ginjal Tahap Akhir"
+        ]
+      },
+      {
+        "id": "abbreviations-10",
+        "label": "Tindakan Resusitasi Stabilitasi Dan Tranpor Bayi Berat Lahir R",
+        "hit": true,
+        "doseTitles": [
+          "Tindakan Resusitasi Stabilitasi Dan Tranpor Bayi Berat Lahir R",
+          "Tindakan Resusitasi Stabilitasi Dan Tranpor Bayi Berat Lahir R",
+          "resusitasi-bblr-2018.pdf",
+          "resusitasi-bblr-2018.pdf",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-11",
+        "label": "Gangguan Cemas Menyeluruh (GAD)",
+        "hit": true,
+        "doseTitles": [
+          "Gangguan Cemas Menyeluruh (GAD)",
+          "Gangguan Cemas Menyeluruh (GAD)",
+          "Gangguan Campuran Anxietas Dan Depresi",
+          "Kedokteran Jiwa"
+        ]
+      },
+      {
+        "id": "abbreviations-12",
+        "label": "Tension Type Headache (TTH)",
+        "hit": true,
+        "doseTitles": [
+          "Tension-Type Headache (TTH)",
+          "Tension-Type Headache (TTH)",
+          "patologi-klinik-anatomik-unair.pdf",
+          "Migren Tanpa Aura"
+        ]
+      },
+      {
+        "id": "abbreviations-13",
+        "label": "Vertigo Posisi Paroksismal Jinak (BPPV)",
+        "hit": true,
+        "doseTitles": [
+          "Vertigo Posisi Paroksismal Jinak (BPPV)",
+          "Vertigo Posisi Paroksismal Jinak (BPPV)",
+          "fornas-2025.pdf",
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-14",
+        "label": "Leukemia Limfoblastik Akut Pada Anak",
+        "hit": true,
+        "doseTitles": [
+          "Leukemia Limfoblastik Akut Pada Anak",
+          "Leukemia Limfoblastik Akut Pada Anak",
+          "fornas-2023.pdf",
+          "tumor-otak-2020.pdf"
+        ]
+      },
+      {
+        "id": "abbreviations-15",
+        "label": "Refluks Gastroesofageal",
+        "hit": true,
+        "doseTitles": [
+          "Refluks Gastroesofageal",
+          "Refluks Gastroesofageal",
+          "Gastritis",
+          "Gastritis"
+        ]
+      },
+      {
+        "id": "mixed_id_en-01",
+        "label": "Pneumonia Komuniti",
+        "hit": true,
+        "doseTitles": [
+          "Pneumonia Komuniti",
+          "Pneumonia Komuniti",
+          "penyakit-dalam-papdi-2024.pdf",
+          "pneumonia-dewasa-2023.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-02",
+        "label": "Gagal Jantung",
+        "hit": true,
+        "doseTitles": [
+          "Gagal Jantung",
+          "Gagal Jantung",
+          "fktp-kmk-2022.pdf",
+          "penyakit-dalam-papdi-2024.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-03",
+        "label": "Penyakit Ginjal Kronik",
+        "hit": true,
+        "doseTitles": [
+          "Penyakit Ginjal Kronik",
+          "Penyakit Ginjal Kronik",
+          "Penyakit Ginjal Tahap Akhir",
+          "Penyakit Ginjal Tahap Akhir"
+        ]
+      },
+      {
+        "id": "mixed_id_en-04",
+        "label": "Stroke",
+        "hit": true,
+        "doseTitles": [
+          "Stroke",
+          "Stroke",
+          "stroke-2019.pdf",
+          "Stroke Iskemik"
+        ]
+      },
+      {
+        "id": "mixed_id_en-05",
+        "label": "Infeksi Dengue Anak Dan Remaja",
+        "hit": true,
+        "doseTitles": [
+          "Demam Berdarah Dengue (DBD)",
+          "Infeksi Dengue Anak Dan Remaja",
+          "Demam Berdarah Dengue (DBD)",
+          "Infeksi Dengue Anak Dan Remaja"
+        ]
+      },
+      {
+        "id": "mixed_id_en-06",
+        "label": "Dermatitis Atopik (Eksim)",
+        "hit": true,
+        "doseTitles": [
+          "Dermatitis Atopik (Eksim)",
+          "Dermatitis Atopik (Eksim)",
+          "dermatovenereologi-perdoski-2017.pdf",
+          "dermatovenereologi-perdoski-2021.pdf",
+          "dermatovenereologi-perdoski-2021.pdf",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-07",
+        "label": "Hipertensi Pada Anak",
+        "hit": true,
+        "doseTitles": [
+          "Hipertensi Pada Anak",
+          "Hipertensi Pada Anak",
+          "fktp-kmk-2022.pdf",
+          "Hipertensi Esensial"
+        ]
+      },
+      {
+        "id": "mixed_id_en-08",
+        "label": "Otitis Eksterna",
+        "hit": true,
+        "doseTitles": [
+          "Otitis Eksterna",
+          "Otitis Eksterna",
+          "Otitis Media Akut (OMA)",
+          "Otitis Media Akut (OMA)"
+        ]
+      },
+      {
+        "id": "mixed_id_en-09",
+        "label": "Sepsis Pada Anak",
+        "hit": true,
+        "doseTitles": [
+          "Sepsis Pada Anak",
+          "Sepsis Pada Anak",
+          "Sepsis",
+          "Sepsis",
+          "sepsis-anak-2021.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-10",
+        "label": "Glaukoma",
+        "hit": true,
+        "doseTitles": [
+          "Glaukoma",
+          "Glaukoma",
+          "fornas-2025.pdf",
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-11",
+        "label": "Katarak Pada Anak",
+        "hit": false,
+        "doseTitles": [
+          "Retinoblastoma",
+          "Retinoblastoma",
+          "fornas-2025.pdf",
+          "Buta senja"
+        ]
+      },
+      {
+        "id": "mixed_id_en-12",
+        "label": "Hepatitis B",
+        "hit": true,
+        "doseTitles": [
+          "Hepatitis B",
+          "Hepatitis B",
+          "fornas-2025.pdf",
+          "fornas-2023.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-13",
+        "label": "HIV/AIDS",
+        "hit": true,
+        "doseTitles": [
+          "HIV/AIDS",
+          "HIV/AIDS",
+          "fasyankes-primer-idi-2017.pdf",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-14",
+        "label": "Malaria",
+        "hit": true,
+        "doseTitles": [
+          "Malaria",
+          "Malaria",
+          "penyakit-dalam-papdi-2024.pdf",
+          "fasyankes-primer-idi-2017.pdf",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "mixed_id_en-15",
+        "label": "Kanker Payudara",
+        "hit": true,
+        "doseTitles": [
+          "Kanker Payudara",
+          "Kanker Payudara",
+          "fornas-2023.pdf",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-01",
+        "label": "Tuberkulosis Paru",
+        "hit": true,
+        "doseTitles": [
+          "Tuberkulosis Paru",
+          "Tuberkulosis Paru",
+          "tuberkulosis-2019.pdf",
+          "tuberkulosis-2019.pdf"
+        ]
+      },
+      {
+        "id": "typos-02",
+        "label": "Hipertensi Esensial",
+        "hit": true,
+        "doseTitles": [
+          "Hipertensi Esensial",
+          "Hipertensi Esensial",
+          "sirosis-hati-dewasa-2025.pdf",
+          "fornas-2025.pdf",
+          "sirosis-hati-dewasa-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-03",
+        "label": "Diabetes Melitus Tipe 2",
+        "hit": true,
+        "doseTitles": [
+          "Diabetes Melitus Tipe 2",
+          "Diabetes Melitus Tipe 2",
+          "fornas-2025.pdf",
+          "fornas-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-04",
+        "label": "Pneumonia Komuniti",
+        "hit": true,
+        "doseTitles": [
+          "Pneumonia Komuniti",
+          "Pneumonia Komuniti",
+          "penyakit-dalam-papdi-2024.pdf",
+          "pneumonia-dewasa-2023.pdf"
+        ]
+      },
+      {
+        "id": "typos-05",
+        "label": "Asma Bronkiale",
+        "hit": true,
+        "doseTitles": [
+          "Asma Bronkial",
+          "Asma Bronkial",
+          "Asma Bronkiale",
+          "Asma Bronkiale"
+        ]
+      },
+      {
+        "id": "typos-06",
+        "label": "Demam Tifoid",
+        "hit": true,
+        "doseTitles": [
+          "Demam Tifoid",
+          "Demam Tifoid",
+          "fasyankes-primer-idi-2017.pdf",
+          "Hifema"
+        ]
+      },
+      {
+        "id": "typos-07",
+        "label": "Skabies (Kudis)",
+        "hit": true,
+        "doseTitles": [
+          "Skabies (Kudis)",
+          "dermatovenereologi-perdoski-2017.pdf",
+          "dermatovenereologi-perdoski-2021.pdf",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-08",
+        "label": "Konjungtivitis Bakteri dan Viral",
+        "hit": false,
+        "doseTitles": [
+          "Blefaritis",
+          "Hordeolum (Bintitan) & Kalazion",
+          "Benda Asing Konjungtiva",
+          "Sinusitis Kronik"
+        ]
+      },
+      {
+        "id": "typos-09",
+        "label": "Gastroenteritis Akut",
+        "hit": true,
+        "doseTitles": [
+          "Gastroenteritis Akut",
+          "Gastroenteritis Akut",
+          "Keracunan makanan",
+          "Keracunan makanan"
+        ]
+      },
+      {
+        "id": "typos-10",
+        "label": "Migren Tanpa Aura",
+        "hit": true,
+        "doseTitles": [
+          "Migren Tanpa Aura",
+          "Migren Tanpa Aura",
+          "patologi-klinik-anatomik-unair.pdf",
+          "patologi-klinik-anatomik-unair.pdf",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-11",
+        "label": "Thalasemia",
+        "hit": true,
+        "doseTitles": [
+          "Thalasemia",
+          "Thalasemia",
+          "thalasemia-2018.pdf",
+          "thalasemia-2018.pdf",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-12",
+        "label": "Osteoartritis",
+        "hit": true,
+        "doseTitles": [
+          "Osteoartritis",
+          "Osteoartritis",
+          "Artritis Reumatoid",
+          "Rheumatoid Arthritis (RA)"
+        ]
+      },
+      {
+        "id": "typos-13",
+        "label": "Skizofrenia",
+        "hit": true,
+        "doseTitles": [
+          "skizofrenia-2025.pdf",
+          "Skizofrenia",
+          "skizofrenia-2025.pdf",
+          "Skizofrenia",
+          "fasyankes-primer-idi-2017.pdf"
+        ]
+      },
+      {
+        "id": "typos-14",
+        "label": "Epistaksis",
+        "hit": false,
+        "doseTitles": [
+          "fornas-2025.pdf",
+          "skizofrenia-2025.pdf",
+          "sirosis-hati-dewasa-2025.pdf",
+          "skizofrenia-2025.pdf"
+        ]
+      },
+      {
+        "id": "typos-15",
+        "label": "Impetigo",
+        "hit": true,
+        "doseTitles": [
+          "Impetigo",
+          "Pioderma",
+          "Impetigo",
+          "dermatovenereologi-perdoski-2017.pdf"
+        ]
+      }
+    ]
+  }
+}

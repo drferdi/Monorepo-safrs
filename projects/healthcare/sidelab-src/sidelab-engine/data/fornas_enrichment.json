@@ -1,0 +1,629 @@
+{
+  "_brand": "Masterplan and masterpiece by codieverse+.",
+  "_metadata": {
+    "version": "1.0.0",
+    "description": "Sidecar typed enrichment untuk data/fornas_2026.json — menambah bidang ATC/KFA/dosis per populasi/interaksi terstruktur/kontraindikasi yang tidak tersedia di endpoint publik e-fornas.",
+    "schema_reference": "sidelab/fornas_records.py:For nasDrugRecord (Alt-2)",
+    "last_updated_global": "2026-06-18"
+  },
+  "enrichment": [
+    {
+      "id": "fornas:parasetamol",
+      "atc_code": "N02BE01",
+      "kfa_code": "KFA-OBT-01001",
+      "sinonim": ["Acetaminophen", "PCT", "Tylenol (branded)"],
+      "indikasi": [
+        "Nyeri ringan sampai sedang",
+        "Demam",
+        "Post-vaksinasi (anak & dewasa)",
+        "Analgesik antipiretik lini pertama untuk ibu hamil"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "analgesik-antipiretik", "rentang_dosis_per_dosis_mg": [500, 1000], "frekuensi_per_hari": "3-4", "interval_jam": 6, "dosis_maks_harian_mg": 4000}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [6, 144], "hitung_per_bb": true, "dosis_mg_per_kg_per_dosis": [10, 15], "frekuensi_per_hari": "4-6", "dosis_maks_per_hari_mg_per_kg": 60, "catatan": "Dosis pertama tidak melebihi 15 mg/kg BB; untuk bayi <6 bulan konsultasi dokter."}
+        ],
+        "geriatri": {"dosis_redup_persen": 0, "monitor": ["faal hati pada pengguna kronis"]},
+        "gagal_ginjal": {"egfr_ml_per_minutes": {"10-30": {"interval_jam_target": 6, "catatan": "dosis sama, monitor akumulasi"}, "<10": {"interval_jam_target": 8}}, "catatan": "Tetap gunakan dosis standar bila tidak ada akumulasi metabolit toksik."},
+        "gagal_hati": {"kontraindikasi_threshold": "Child-Pugh C", "dosis_redup_persen": 50}
+      },
+      "interaksi": [
+        {"dengan": "Warfarin", "atc_dengan": "B01AA03", "level": "mayor", "efek": "Penggunaan rutin dapat meningkatkan INR dan risiko perdarahan", "mekanisme": "Potensiasi efek antikoagulan pada penggunaan berulang", "sumber": "FORNAS enrichment local safety note", "manajemen": "Pantau INR; batasi dosis dan durasi bila memungkinkan"}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi parasetamol atau asetaminofen", "catatan": "Termasuk riwayat hipersensitivitas luas."}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "population", "syarat": "pengguna alkohol aktif atau penyakit hati berat", "catatan": "Risiko hepatotoksisitas meningkat"},
+        {"tipe": "relative", "syarat": "defisiensi G6PD"}
+      ],
+      "efek_samping_umum": ["Hepatotoksisitas (overdosis)", "Reaksi alergi kulit (jarang)"],
+      "fornas": {
+        "level": 1,
+        "addendum": "KMK HK.01.07/MENKES/1818/2024",
+        "fasilitas": ["FKTP", "FPKTL", "PP", "PRB", "OEN", "APOTEK"],
+        "restriksi_resep": "Bebas terbatas untuk tablet 500 mg; resep dokter untuk sediaan infus 1 g.",
+        "program_khusus": []
+      },
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:ibuprofen",
+      "atc_code": "M01AE01",
+      "kfa_code": "KFA-OBT-02001",
+      "sinonim": ["Proris (branded)", "Bufect (branded)"],
+      "indikasi": [
+        "Nyeri ringan-sedang (muskuloskeletal, pasca-operasi, dismenore)",
+        "Demam pada anak yang tidak respon paracetamol",
+        "Anti-inflamasi pada artritis"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "analgesik-antipiretik", "rentang_dosis_per_dosis_mg": [200, 400], "frekuensi_per_hari": "3-4", "interval_jam": 6, "dosis_maks_harian_mg": 2400},
+          {"indikasi": "artritis (anti-inflamasi)", "rentang_dosis_per_dosis_mg": [400, 800], "frekuensi_per_hari": "3-4", "dosis_maks_harian_mg": 2400}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [6, 144], "hitung_per_bb": true, "dosis_mg_per_kg_per_dosis": [5, 10], "frekuensi_per_hari": "3-4", "dosis_maks_per_hari_mg_per_kg": 40, "catatan": "Jangan pada bayi <6 bulan atau dengan dehidrasi."}
+        ],
+        "geriatri": {"dosis_redup_persen": 25, "monitor": ["fungsi ginjal", "tanda perdarahan GI"]},
+        "gagal_ginjal": {"egfr_ml_per_minutes": {"30-60": {"interval_jam_target": 8}, "10-30": {"interval_jam_target": 12, "catatan": "hindari"}, "<10": {"interval_jam_target": 24, "catatan": "kontraindikasi relatif"}}},
+        "gagal_hati": {"dosis_redup_persen": 25}
+      },
+      "interaksi": [
+        {"dengan": "Aspirin", "atc_dengan": "B01AC06", "level": "moderate", "efek": "Menurunkan efek antiplatelet aspirin", "mekanisme": "Bersaing pada ikatan COX-1.", "sumber": "DrugBank", "manajemen": "Pilih analgesik non-NSAID atau jadwalkan pemakaian dosis terpisah."},
+        {"dengan": "Warfarin", "atc_dengan": "B01AA03", "level": "mayor", "efek": "Risiko perdarahan gastrointestinal meningkat", "mekanisme": "Efek antiplatelet dan iritasi mukosa gastrointestinal", "sumber": "FORNAS enrichment local safety note", "manajemen": "Hindari kombinasi bila memungkinkan; pilih analgesik alternatif"},
+        {"dengan": "Antikoagulan oral", "atc_dengan": "B01AA", "level": "mayor", "efek": "Risiko perdarahan GI meningkat", "mekanisme": "Efek antiplatelet sinergis + iritasi mukosa GI.", "sumber": "ONC", "manajemen": "Hindari; tambahkan PPI jika terpaksa."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "asma NSAID-sensitif atau rinitis polip hidung"},
+        {"tipe": "absolute", "syarat": "ulkus peptikum aktif", "catatan": "Risiko perdarahan/perforasi gastrointestinal"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "gagal ginjal sedang-berat"},
+        {"tipe": "relative", "syarat": "gagal jantung kongestif"},
+        {"tipe": "population", "syarat": "kehamilan trimester akhir", "catatan": "Hindari NSAID pada trimester akhir"}
+      ],
+      "efek_samping_umum": ["Nyeri epigastrium", "Perdarahan GI", "Edem perifer", "Gangguan ginjal"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB", "OEN", "APOTEK"], "restriksi_resep": "Bebas terbatas untuk tablet 200 mg; resep dokter untuk dosis lebih tinggi.", "program_khusus": []},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:amoksisilin",
+      "atc_code": "J01CA04",
+      "kfa_code": "KFA-OBT-03001",
+      "sinonim": ["Amoxicillin", "Amoxsan (branded)", "Amoxil (branded)"],
+      "indikasi": [
+        "ISPA ringan (otitis media akut, sinusitis, pneumonia komunitas)",
+        "ISK tanpa komplikasi",
+        "Profilaksis endokarditis (prosedur berisiko)"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "ISPA non-komplikata", "rentang_dosis_per_dosis_mg": [500, 1000], "frekuensi_per_hari": "3", "interval_jam": 8, "dosis_maks_harian_mg": 3000},
+          {"indikasi": "ISK non-komplikata", "rentang_dosis_per_dosis_mg": [500, 1000], "frekuensi_per_hari": "2-3", "dosis_maks_harian_mg": 3000}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [3, 144], "hitung_per_bb": true, "dosis_mg_per_kg_per_dosis": [25, 50], "frekuensi_per_hari": "2-3", "dosis_maks_per_hari_mg_per_kg": 90, "catatan": "Untuk OMA dosis tinggi 80-90 mg/kg/hari."}
+        ],
+        "gagal_ginjal": {"egfr_ml_per_minutes": {"10-30": {"interval_jam_target": 12}, "<10": {"interval_jam_target": 24}}}
+      },
+      "interaksi": [
+        {"dengan": "Allopurinol", "atc_dengan": "M04AA01", "level": "moderate", "efek": "Risiko ruam kulit meningkat", "mekanisme": "Belum sepenuhnya dipahami.", "sumber": "DrugBank", "manajemen": "Pertimbangkan antibiotik alternatif pada pasien gout."},
+        {"dengan": "Warfarin", "atc_dengan": "B01AA03", "level": "mayor", "efek": "INR meningkat", "mekanisme": "Antibiotik mengubah flora GI → ↓ sintesis vitamin K.", "sumber": "ONC", "manajemen": "Monitor INR ketat."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi penisilin atau beta-laktam"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "population", "syarat": "mononukleosis infeksiosa", "catatan": "Risiko ruam 80-90%"},
+        {"tipe": "relative", "syarat": "gangguan ginjal berat"}
+      ],
+      "efek_samping_umum": ["Ruam makulopapular", "Mual/muntah", "Diare"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB", "OEN", "APOTEK"], "restriksi_resep": "Resep dokter untuk semua sediaan; tidak diperkenankan penjualan bebas.", "program_khusus": []},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:kotrimoksazol",
+      "atc_code": "J01EE01",
+      "kfa_code": "KFA-OBT-04001",
+      "sinonim": ["Trimethoprim-Sulfamethoxazole", "TMP-SMX", "Bactrim (branded)"],
+      "indikasi": [
+        "ISK non-komplikata",
+        "Pneumocystis jirovecii pneumonia (profilaksis & terapi)",
+        "Otitis media akut (alternatif)",
+        "Diare infeksi sensitif"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "ISK non-komplikata", "rentang_dosis_per_dosis_mg": [480, 960], "frekuensi_per_hari": "2", "interval_jam": 12, "dosis_maks_harian_mg": 1920},
+          {"indikasi": "PJP profilaksis", "rentang_dosis_per_dosis_mg": [480, 960], "frekuensi_per_hari": "1", "catatan": "Dosis tunggal harian."}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [2, 144], "hitung_per_bb": true, "dosis_mg_per_kg_per_dosis": [10, 12], "frekuensi_per_hari": "2", "dosis_maks_per_hari_mg_per_kg": 24}
+        ],
+        "gagal_ginjal": {"egfr_ml_per_minutes": {"15-30": {"interval_jam_target": 24, "catatan": "dosis dikurangi 50%"}, "<15": {"kontraindikasi_threshold": "hindari"}}}
+      },
+      "interaksi": [
+        {"dengan": "Warfarin", "atc_dengan": "B01AA03", "level": "mayor", "efek": "INR meningkat signifikan", "manajemen": "Hindari atau kurangi dosis warfarin 30-50%; monitor INR."},
+        {"dengan": "ACE-I/ARB", "atc_dengan": "C09", "level": "mayor", "efek": "Hiperkalemia", "manajemen": "Monitor K+ serum."},
+        {"dengan": "Metotreksat", "atc_dengan": "L01BA01", "level": "mayor", "efek": "Toksisitas metotreksat", "manajemen": "Hindari kombinasi."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi sulfa"},
+        {"tipe": "absolute", "syarat": "kehamilan trimester 3"},
+        {"tipe": "absolute", "syarat": "anemia megaloblastik"},
+        {"tipe": "absolute", "syarat": "defisiensi G6PD"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "lansia >65 tahun"},
+        {"tipe": "relative", "syarat": "penyakit hati kronis"}
+      ],
+      "efek_samping_umum": ["Ruam kulit", "Hipersensitivitas (SJS sindrom)", "Hiperkalemia", "Mual muntah"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB", "OEN", "APOTEK"], "restriksi_resep": "Resep dokter.", "program_khusus": []},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:omeprazol",
+      "atc_code": "A02BC01",
+      "kfa_code": "KFA-OBT-05001",
+      "sinonim": ["Omeprazole", "Omez (branded)", "Prilosec (branded)"],
+      "indikasi": [
+        "Penyakit refluks gastroesofageal (GERD)",
+        "Ulkus peptikum aktif (H. pylori stadium lanjut)",
+        "Profilaksis ulkus stres pada pasien ICU/post-operasi"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "GERD", "rentang_dosis_per_dosis_mg": [20, 40], "frekuensi_per_hari": "1", "interval_jam": 24, "dosis_maks_harian_mg": 40},
+          {"indikasi": "ulkus peptikum aktif", "rentang_dosis_per_dosis_mg": [20, 40], "frekuensi_per_hari": "1", "dosis_maks_harian_mg": 40}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [12, 144], "hitung_per_bb": true, "dosis_mg_per_kg_per_dosis": [0.5, 1.0], "frekuensi_per_hari": "1", "dosis_maks_per_hari_mg_per_kg": 40}
+        ],
+        "geriatri": {"dosis_redup_persen": 0}
+      },
+      "interaksi": [
+        {"dengan": "Clopidogrel", "atc_dengan": "B01AC04", "level": "mayor", "efek": "Efek antiplatelet clopidogrel menurun", "mekanisme": "Omeprazol menghambat CYP2C19.", "manajemen": "Pertimbangkan pantoprazol atau H2-blocker sebagai alternatif."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi PPI"},
+        {"tipe": "absolute", "syarat": "penggunaan simultan dengan rilpivirine"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "kehamilan trimester 1"},
+        {"tipe": "relative", "syarat": "gangguan hati berat"}
+      ],
+      "efek_samping_umum": ["Sakit kepala", "Diare", "Mual", "Peningkatan risiko fraktur (pemakaian jangka panjang)"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB", "OEN"], "restriksi_resep": "Resep dokter umum atau spesialis penyakit dalam.", "program_khusus": []},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:asam-mefenamat",
+      "atc_code": "M01AG01",
+      "kfa_code": "KFA-OBT-06001",
+      "sinonim": ["Mefenamic acid", "Ponstan (branded)"],
+      "indikasi": [
+        "Dismenore primer",
+        "Nyeri ringan-sedang (muskuloskeletal)",
+        "Menorrhagia (off-label)"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "dismenore", "rentang_dosis_per_dosis_mg": [500, 500], "frekuensi_per_hari": "3", "interval_jam": 8, "dosis_maks_harian_mg": 1500}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [24, 144], "hitung_per_bb": true, "dosis_mg_per_kg_per_dosis": [10, 15], "frekuensi_per_hari": "3", "dosis_maks_per_hari_mg_per_kg": 45}
+        ]
+      },
+      "interaksi": [
+        {"dengan": "Antikoagulan oral", "atc_dengan": "B01AA03", "level": "mayor", "efek": "Risiko perdarahan GI meningkat", "manajemen": "Hindari atau tambahkan PPI."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "asma NSAID-sensitif"},
+        {"tipe": "absolute", "syarat": "ulkus peptikum aktif"},
+        {"tipe": "absolute", "syarat": "kehamilan trimester 3"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "penyakit ginjal"},
+        {"tipe": "relative", "syarat": "asma tanpa riwayat alergi NSAID"}
+      ],
+      "efek_samping_umum": ["Nyeri epigastrium", "Diare", "Ruam kulit"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "APOTEK"], "restriksi_resep": "Bebas terbatas untuk tablet 500 mg; resep untuk penggunaan >7 hari.", "program_khusus": []},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:domperidon",
+      "atc_code": "A03FA03",
+      "kfa_code": "KFA-OBT-07001",
+      "sinonim": ["Domperidone", "Motilium (branded)"],
+      "indikasi": [
+        "Mual dan muntah (post-kemoterapi, gastroparesis)",
+        "Mual muntah pada dispepsia fungsional"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "antiemetik", "rentang_dosis_per_dosis_mg": [10, 20], "frekuensi_per_hari": "3-4", "interval_jam": 8, "dosis_maks_harian_mg": 80}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [12, 144], "hitung_per_bb": true, "dosis_mg_per_kg_per_dosis": [0.25, 0.5], "frekuensi_per_hari": "3-4", "dosis_maks_per_hari_mg_per_kg": 2.0}
+        ]
+      },
+      "interaksi": [
+        {"dengan": "Ketoconazole/Erythromycin", "atc_dengan": "J02AC01/J01FA01", "level": "kontraindikasi", "efek": "Perpanjangan QT → torsades de pointes", "manajemen": "Hindari kombinasi"}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "gangguan konduksi jantung (memanjang QT)"},
+        {"tipe": "absolute", "syarat": "perforasi GI atau obstruksi mekanis"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "prolaktinoma"}
+      ],
+      "efek_samping_umum": ["Mulut kering", "Peningkatan prolaktin", "QT memanjang"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FPKTL", "PP", "APOTEK"], "restriksi_resep": "Resep dokter.", "program_khusus": []},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:setirizin",
+      "atc_code": "R06AE07",
+      "kfa_code": "KFA-OBT-08001",
+      "sinonim": ["Cetirizine HCl", "Zyrtec (branded)"],
+      "indikasi": [
+        "Rinitis alergi musiman & perennial",
+        "Urtikaria kronis",
+        "Pruritus alergi ringan"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "antihistamin", "rentang_dosis_per_dosis_mg": [10, 10], "frekuensi_per_hari": "1", "interval_jam": 24, "dosis_maks_harian_mg": 20}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [24, 72], "hitung_per_bb": false, "rentang_dosis_per_dosis_mg": [5, 5], "frekuensi_per_hari": "1", "catatan": "Anak 2-6 tahun."},
+          {"usia_bulan_range": [72, 144], "hitung_per_bb": false, "rentang_dosis_per_dosis_mg": [10, 10], "frekuensi_per_hari": "1", "catatan": "Anak >6 tahun."}
+        ],
+        "geriatri": {"dosis_redup_persen": 50, "monitor": ["efek sedatif"]}
+      },
+      "interaksi": [
+        {"dengan": "Alkohol/CNS depressants", "atc_dengan": "N05", "level": "moderate", "efek": "Potensiasi sedasi", "manajemen": "Monitor drowsiness."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi cetirizine atau hidroksizin"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "gagal ginjal berat"}
+      ],
+      "efek_samping_umum": ["Somnolen ringan", "Mulut kering", "Sakit kepala"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "APOTEK"], "restriksi_resep": "Bebas terbatas untuk tablet 10 mg.", "program_khusus": []},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:salbutamol",
+      "atc_code": "R03AC02",
+      "kfa_code": "KFA-OBT-09001",
+      "sinonim": ["Albuterol (USAN)", "Ventolin (branded)"],
+      "indikasi": [
+        "Asma bronkial (eksaserbasi ringan-sedang & kronik)",
+        "Bronkospasme reaktif saluran napas",
+        "Hiperkalemia (off-label)"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "asma eksaserbasi ringan", "rentang_dosis_per_dosis_mg": [2, 4], "frekuensi_per_hari": "3-4", "interval_jam": 6, "catatan": "Inhalasi MDI 100 mcg dengan spacer, 2-4 puff per dosis."}
+        ],
+        "pediatri": [
+          {"usia_bulan_range": [24, 144], "rentang_dosis_per_dosis_mg": [2, 4], "frekuensi_per_hari": "3-4", "catatan": "Puff MDI 100 mcg; pada balita menggunakan spacer + masker."}
+        ]
+      },
+      "interaksi": [
+        {"dengan": "β-blocker non-selektif", "atc_dengan": "C07AA", "level": "mayor", "efek": "Efek bronkodilatasi menurun", "manajemen": "Gunakan β-blocker kardioselektif jika perlu."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi salbutamol"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "aritmia berat"},
+        {"tipe": "relative", "syarat": "hipokalemia"}
+      ],
+      "efek_samping_umum": ["Takikardia", "Tremor halus", "Hipokalemia (dosis tinggi)"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "APOTEK"], "restriksi_resep": "Bebas terbatas untuk inhaler MDI.", "program_khusus": ["Program pengendalian asma"]},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:metformin",
+      "atc_code": "A10BA02",
+      "kfa_code": "KFA-OBT-10001",
+      "sinonim": ["Metformin HCl", "Glucophage (branded)"],
+      "indikasi": [
+        "Diabetes mellitus tipe 2 (lini pertama)",
+        "Polycystic ovary syndrome (off-label)",
+        "Prediabetes (pencegahan progresi)"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "DM tipe 2 lini pertama", "rentang_dosis_per_dosis_mg": [500, 1000], "frekuensi_per_hari": "2-3", "interval_jam": 12, "dosis_maks_harian_mg": 2000, "catatan": "Titrasi gradual untuk toleransi GI."}
+        ],
+        "geriatri": {"dosis_redup_persen": 0, "monitor": ["fungsi ginjal 6-12 bulan sekali"]},
+        "gagal_ginjal": {"egfr_ml_per_minutes": {"30-45": {"interval_jam_target": 12, "catatan": "dosis dikurangi 50%"}, "<30": {"kontraindikasi_threshold": "hindari"}}}
+      },
+      "interaksi": [
+        {"dengan": "Kontras radio-iodin", "atc_dengan": "V08", "level": "mayor", "efek": "Risiko asidosis laktat", "mekanisme": "Kontras + gangguan ginjal → akumulasi metformin.", "manajemen": "Hentikan metformin 48 jam sebelum & sesudah kontras pada eGFR <60."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "eGFR <30 mL/min"},
+        {"tipe": "absolute", "syarat": "asidosis metabolik akut"},
+        {"tipe": "absolute", "syarat": "gangguan hati berat"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "konsumsi alkohol berlebihan"},
+        {"tipe": "relative", "syarat": "kondisi hipoksia jaringan (gagal jantung)"}
+      ],
+      "efek_samping_umum": ["Diare", "Mual", "Nyeri perut", "Defisiensi B12 (pemakaian jangka panjang)", "Langka: asidosis laktat"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB", "OEN", "APOTEK"], "restriksi_resep": "Resep dokter umum atau spesialis penyakit dalam.", "program_khusus": ["Prolanis", "Program DM"]},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:glimepirid",
+      "atc_code": "A10BB12",
+      "kfa_code": "KFA-OBT-11001",
+      "sinonim": ["Glimepiride", "Amaryl (branded)"],
+      "indikasi": [
+        "DM tipe 2 (setelah atau kombinasi metformin bila HbA1c belum target)"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "DM tipe 2 lini kedua", "rentang_dosis_per_dosis_mg": [1, 4], "frekuensi_per_hari": "1", "interval_jam": 24, "dosis_maks_harian_mg": 8, "catatan": "Dosis diberikan sebelum makan pertama."}
+        ],
+        "geriatri": {"dosis_redup_persen": 50, "monitor": ["hipoglikemia"]},
+        "gagal_ginjal": {"egfr_ml_per_minutes": {"10-30": {"interval_jam_target": 24, "catatan": "monitor ketat"}}}
+      },
+      "interaksi": [
+        {"dengan": "Sulfonamid lain (kotrimoksazol)", "atc_dengan": "J01EE01", "level": "mayor", "efek": "Hipoglikemia berat", "manajemen": "Monitor glukosa; kurangi dosis atau ganti terapi."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi sulfonamida"},
+        {"tipe": "absolute", "syarat": "DM tipe 1"},
+        {"tipe": "absolute", "syarat": "kehamilan dan menyusui"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "gagal hati berat"}
+      ],
+      "efek_samping_umum": ["Hipoglikemia", "Berat badan naik", "Reaksi alergi ringan"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB", "OEN"], "restriksi_resep": "Resep dokter.", "program_khusus": ["Prolanis"]},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:natrium-diklofenak",
+      "atc_code": "M01AB05",
+      "kfa_code": "KFA-OBT-12001",
+      "sinonim": ["Diclofenac sodium/potassium", "Voltaren (branded)", "Cataflam (branded)"],
+      "indikasi": [
+        "Nyeri inflamasi (artritis reumatoid, osteoartritis, spondilitis)",
+        "Dismenore",
+        "Migrain akut",
+        "Nyeri pasca-operasi"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "artritis kronis", "rentang_dosis_per_dosis_mg": [25, 50], "frekuensi_per_hari": "2-3", "interval_jam": 8, "dosis_maks_harian_mg": 150}
+        ],
+        "geriatri": {"dosis_redup_persen": 25, "monitor": ["fungsi ginjal", "tekanan darah"]}
+      },
+      "interaksi": [
+        {"dengan": "Warfarin/Antikoagulan", "atc_dengan": "B01AA03", "level": "mayor", "efek": "Risiko perdarahan GI dan INR naik", "manajemen": "Hindari atau tambahkan PPI."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "asma NSAID-sensitif"},
+        {"tipe": "absolute", "syarat": "ulkus peptikum aktif"},
+        {"tipe": "absolute", "syarat": "kehamilan trimester 3"},
+        {"tipe": "absolute", "syarat": "gagal jantung NYHA kelas III-IV"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "penyakit kardiovaskular"},
+        {"tipe": "relative", "syarat": "penyakit ginjal"}
+      ],
+      "efek_samping_umum": ["Dispepsia", "Perdarahan GI", "Mual", "Peningkatan enzim hati", "Edema"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB"], "restriksi_resep": "Resep dokter.", "program_khusus": []},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:warfarin",
+      "atc_code": "B01AA03",
+      "kfa_code": "KFA-OBT-13001",
+      "sinonim": ["Warfarin sodium", "Warfarin potassium"],
+      "indikasi": [
+        "Profilaksis & terapi trombosis vena dalam",
+        "Profilaksis stroke pada fibrilasi atrial non-valvular",
+        "Profilaksis tromboemboli pada prostetik katup jantung"
+      ],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "antikoagulasi kronis", "rentang_dosis_per_dosis_mg": [2, 5], "frekuensi_per_hari": "1", "interval_jam": 24, "catatan": "Titrated to INR target (umum 2.0-3.0)."}
+        ],
+        "geriatri": {"dosis_redup_persen": 25, "monitor": ["INR 1-2 minggu setelah penyesuaian"]}
+      },
+      "interaksi": [
+        {"dengan": "Ibuprofen", "atc_dengan": "M01AE01", "level": "mayor", "efek": "Risiko perdarahan GI meningkat", "manajemen": "Hindari NSAID bersamaan; tambahkan PPI atau pilih analgesik non-NSAID."},
+        {"dengan": "Asam Mefenamat", "atc_dengan": "M01AG01", "level": "mayor", "efek": "Risiko perdarahan GI meningkat", "manajemen": "Pilih analgesik alternatif (parasetamol)."},
+        {"dengan": "Natrium Diklofenak", "atc_dengan": "M01AB05", "level": "mayor", "efek": "Risiko perdarahan GI dan INR meningkat", "manajemen": "Hindari kombinasi; tambahkan PPI jika terpaksa."},
+        {"dengan": "Kotrimoksazol", "atc_dengan": "J01EE01", "level": "mayor", "efek": "INR meningkat signifikan dalam 3-5 hari", "manajemen": "Kurangi dosis warfarin 30-50% atau ganti antibiotik."},
+        {"dengan": "Amoksisilin", "atc_dengan": "J01CA04", "level": "mayor", "efek": "INR dapat meningkat (flora GI)", "manajemen": "Monitor INR."},
+        {"dengan": "Parasetamol dosis tinggi", "atc_dengan": "N02BE01", "level": "moderate", "efek": "INR berpotensi meningkat pada dosis >2 g/hari", "manajemen": "Batasi dosis parasetamol."}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "kehamilan trimester 1"},
+        {"tipe": "absolute", "syarat": "perdarahan aktif"},
+        {"tipe": "absolute", "syarat": "gagal hati berat"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "operasi mayor dalam 72 jam"},
+        {"tipe": "relative", "syarat": "ulkus peptikum"}
+      ],
+      "efek_samping_umum": ["Perdarahan (INR tinggi)", "Necrosis kulit (jarang)", "Purple toe syndrome"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB"], "restriksi_resep": "Resep dokter; monitoring INR berkala.", "program_khusus": ["Prolanis"]},
+      "last_reviewed": "2026-06-18"
+    },
+    {
+      "id": "fornas:amlodipin",
+      "atc_code": "C08CA01",
+      "kfa_code": "KFA-OBT-14001",
+      "sinonim": ["Amlodipine", "calcium channel blocker", "CCB dihidropiridin"],
+      "indikasi": ["Hipertensi", "Angina stabil kronik"],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "hipertensi", "rentang_dosis_per_dosis_mg": [5, 10], "frekuensi_per_hari": "1", "interval_jam": 24, "dosis_maks_harian_mg": 10}
+        ],
+        "geriatri": {"dosis_redup_persen": 0, "monitor": ["edema perifer", "hipotensi ortostatik"]}
+      },
+      "interaksi": [
+        {"dengan": "Simvastatin", "atc_dengan": "C10AA01", "level": "moderate", "efek": "Paparan simvastatin meningkat sehingga risiko miopati/rabdomiolisis bertambah", "mekanisme": "Amlodipin meningkatkan konsentrasi simvastatin melalui interaksi CYP3A4", "sumber": "FORNAS enrichment local safety note", "manajemen": "Batasi simvastatin dosis rendah atau pilih statin alternatif bila perlu"}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "syok kardiogenik atau hipotensi berat"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "gagal jantung dekompensata"},
+        {"tipe": "relative", "syarat": "stenosis aorta berat"}
+      ],
+      "efek_samping_umum": ["Edema perifer", "Flushing", "Sakit kepala", "Pusing"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB"], "restriksi_resep": "Resep dokter; terapi hipertensi kronis memerlukan monitoring tekanan darah.", "program_khusus": ["Prolanis"]},
+      "last_reviewed": "2026-06-20"
+    },
+    {
+      "id": "fornas:kaptopril",
+      "atc_code": "C09AA01",
+      "kfa_code": "KFA-OBT-15001",
+      "sinonim": ["Captopril", "ACE inhibitor"],
+      "indikasi": ["Hipertensi", "Gagal jantung", "Nefropati diabetik"],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "hipertensi", "rentang_dosis_per_dosis_mg": [12.5, 50], "frekuensi_per_hari": "2-3", "interval_jam": 8, "dosis_maks_harian_mg": 150}
+        ],
+        "gagal_ginjal": {"egfr_ml_per_minutes": {"30-60": {"interval_jam_target": 12}, "<30": {"interval_jam_target": 24, "catatan": "mulai dosis rendah dan monitor kreatinin/kalium"}}}
+      },
+      "interaksi": [
+        {"dengan": "Spironolakton", "atc_dengan": "C03DA01", "level": "mayor", "efek": "Risiko hiperkalemia berat meningkat", "mekanisme": "ACE inhibitor menurunkan aldosteron; spironolakton mempertahankan kalium", "sumber": "FORNAS enrichment local safety note", "manajemen": "Monitor K+ dan fungsi ginjal; hindari pada gagal ginjal atau hiperkalemia"},
+        {"dengan": "Kalium", "atc_dengan": "A12BA", "level": "mayor", "efek": "Hiperkalemia", "manajemen": "Hindari suplemen kalium kecuali dengan monitoring ketat"}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "kehamilan trimester 2 atau trimester 3"},
+        {"tipe": "absolute", "syarat": "riwayat angioedema akibat ACE inhibitor"},
+        {"tipe": "absolute", "syarat": "hiperkalemia berat"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "gagal ginjal berat"},
+        {"tipe": "relative", "syarat": "stenosis arteri renalis bilateral"}
+      ],
+      "efek_samping_umum": ["Batuk kering", "Hiperkalemia", "Hipotensi dosis pertama", "Peningkatan kreatinin"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "PRB"], "restriksi_resep": "Resep dokter; monitor tekanan darah, kreatinin, dan kalium.", "program_khusus": ["Prolanis"]},
+      "last_reviewed": "2026-06-20"
+    },
+    {
+      "id": "fornas:garam-oralit",
+      "atc_code": "A07CA",
+      "kfa_code": "KFA-OBT-16001",
+      "sinonim": ["Oralit", "ORS", "oral rehydration salt", "garam rehidrasi oral"],
+      "indikasi": ["Dehidrasi ringan-sedang akibat diare akut", "Pencegahan dehidrasi pada gastroenteritis"],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "rehidrasi oral", "catatan": "Berikan sedikit-sedikit sering sesuai derajat dehidrasi; evaluasi ulang tanda dehidrasi."}
+        ],
+        "pediatri": [
+          {"hitung_per_bb": true, "catatan": "Dosis rehidrasi mengikuti berat badan dan derajat dehidrasi; rujuk bila dehidrasi berat atau gagal minum."}
+        ]
+      },
+      "interaksi": [],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "ileus paralitik atau obstruksi usus"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "gagal ginjal berat atau anuria", "catatan": "Risiko gangguan elektrolit; perlu monitoring klinis/lab"},
+        {"tipe": "relative", "syarat": "hiperkalemia"}
+      ],
+      "efek_samping_umum": ["Mual bila diminum terlalu cepat", "Muntah", "Gangguan elektrolit bila penggunaan tidak sesuai"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "APOTEK"], "restriksi_resep": "Tatalaksana rehidrasi dasar; tetap evaluasi tanda dehidrasi berat.", "program_khusus": ["Program diare"]},
+      "last_reviewed": "2026-06-20"
+    },
+    {
+      "id": "fornas:zinc",
+      "atc_code": "A12CB01",
+      "kfa_code": "KFA-OBT-17001",
+      "sinonim": ["Seng", "Zinc sulfate", "Zinc sulphate"],
+      "indikasi": ["Terapi tambahan diare akut pada anak", "Defisiensi zinc"],
+      "dosis": {
+        "pediatri": [
+          {"usia_bulan_range": [6, 60], "rentang_dosis_per_dosis_mg": [20, 20], "frekuensi_per_hari": "1", "catatan": "Diare akut: 10-14 hari; bayi <6 bulan umumnya 10 mg/hari."}
+        ],
+        "dewasa": [
+          {"indikasi": "defisiensi zinc", "catatan": "Sesuaikan sediaan dan kebutuhan klinis; hindari dosis tinggi jangka panjang tanpa indikasi."}
+        ]
+      },
+      "interaksi": [
+        {"dengan": "Siprofloksasin", "atc_dengan": "J01MA02", "level": "moderate", "efek": "Absorpsi siprofloksasin menurun", "mekanisme": "Kelasi dengan kation divalen", "sumber": "FORNAS enrichment local safety note", "manajemen": "Pisahkan pemberian minimal 2 jam sebelum atau 4-6 jam sesudah kuinolon"}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi zinc atau komponen sediaan"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "mual muntah berat"}
+      ],
+      "efek_samping_umum": ["Mual", "Rasa logam", "Nyeri perut"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "APOTEK"], "restriksi_resep": "Program diare anak; edukasi durasi 10-14 hari.", "program_khusus": ["Program diare"]},
+      "last_reviewed": "2026-06-20"
+    },
+    {
+      "id": "fornas:antasida-kombinasi-aluminium-hidroksida-dan-magnesium-hidroksida",
+      "canonical_name": "antasida",
+      "canonical_name_en": "aluminium hydroxide and magnesium hydroxide antacid",
+      "atc_code": "A02AD01",
+      "kfa_code": "KFA-OBT-18001",
+      "sinonim": ["Antasida", "Aluminium hidroksida", "Magnesium hidroksida", "Antacid"],
+      "indikasi": ["Dispepsia", "Nyeri ulu hati", "Refluks ringan sebagai terapi simptomatik"],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "dispepsia", "catatan": "Gunakan sesuai sediaan setelah makan/menjelang tidur; hindari pemakaian berkepanjangan tanpa evaluasi."}
+        ]
+      },
+      "interaksi": [
+        {"dengan": "Siprofloksasin", "atc_dengan": "J01MA02", "level": "moderate", "efek": "Absorpsi siprofloksasin menurun bermakna", "mekanisme": "Kelasi kuinolon oleh kation aluminium/magnesium", "sumber": "FORNAS enrichment local safety note", "manajemen": "Pisahkan antasida minimal 2 jam sebelum atau 4-6 jam sesudah siprofloksasin"}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "alergi aluminium hidroksida atau magnesium hidroksida"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "gagal ginjal berat", "catatan": "Risiko akumulasi magnesium/aluminium"},
+        {"tipe": "relative", "syarat": "hipofosfatemia"}
+      ],
+      "efek_samping_umum": ["Konstipasi", "Diare", "Kembung"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP", "APOTEK"], "restriksi_resep": "Terapi simptomatik; evaluasi alarm symptoms dispepsia.", "program_khusus": []},
+      "last_reviewed": "2026-06-20"
+    },
+    {
+      "id": "fornas:prednison",
+      "atc_code": "H02AB07",
+      "kfa_code": "KFA-OBT-19001",
+      "sinonim": ["Prednisone", "kortikosteroid sistemik"],
+      "indikasi": ["Eksaserbasi asma/PPOK sesuai indikasi", "Reaksi alergi berat tertentu", "Inflamasi autoimun sesuai evaluasi dokter"],
+      "dosis": {
+        "dewasa": [
+          {"indikasi": "antiinflamasi sistemik jangka pendek", "rentang_dosis_per_dosis_mg": [5, 40], "frekuensi_per_hari": "1", "catatan": "Gunakan durasi sesingkat mungkin; taper bila penggunaan lebih lama sesuai penilaian klinis."}
+        ],
+        "geriatri": {"dosis_redup_persen": 0, "monitor": ["glukosa darah", "tekanan darah", "risiko infeksi"]}
+      },
+      "interaksi": [
+        {"dengan": "Ibuprofen", "atc_dengan": "M01AE01", "level": "mayor", "efek": "Risiko gastritis, ulkus, dan perdarahan gastrointestinal meningkat", "mekanisme": "Efek iritasi mukosa GI dan gangguan proteksi mukosa bersifat aditif", "sumber": "FORNAS enrichment local safety note", "manajemen": "Hindari kombinasi bila memungkinkan; pertimbangkan gastroproteksi dan durasi singkat"}
+      ],
+      "kontraindikasi_absolut": [
+        {"tipe": "absolute", "syarat": "infeksi jamur sistemik yang tidak diobati"}
+      ],
+      "kontraindikasi_relatif": [
+        {"tipe": "relative", "syarat": "diabetes mellitus tidak terkontrol"},
+        {"tipe": "relative", "syarat": "ulkus peptikum aktif"},
+        {"tipe": "relative", "syarat": "hipertensi tidak terkontrol"}
+      ],
+      "efek_samping_umum": ["Hiperglikemia", "Dispepsia", "Retensi cairan", "Insomnia", "Peningkatan risiko infeksi"],
+      "fornas": {"level": 1, "addendum": "KMK HK.01.07/MENKES/1818/2024", "fasilitas": ["FKTP", "FPKTL", "PP"], "restriksi_resep": "Resep dokter; gunakan indikasi jelas dan durasi sesingkat mungkin.", "program_khusus": []},
+      "last_reviewed": "2026-06-20"
+    }
+  ]
+}

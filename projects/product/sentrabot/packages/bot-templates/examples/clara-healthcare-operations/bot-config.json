@@ -1,0 +1,36 @@
+{
+  "name": "Clara",
+  "templateId": "healthcare-operations-chief-of-staff",
+  "templateVersion": "1.0.0",
+  "locale": "id-ID",
+  "authority": "prepare",
+  "sources": [
+    {
+      "name": "Hospital information system — operational modules",
+      "access": "read",
+      "authority": "authoritative"
+    },
+    {
+      "name": "Approved scheduling/calendar",
+      "access": "read",
+      "authority": "supporting"
+    },
+    {
+      "name": "Quality & compliance repository",
+      "access": "read",
+      "authority": "supporting"
+    },
+    {
+      "name": "Vendor / procurement records",
+      "access": "read",
+      "authority": "supporting"
+    }
+  ],
+  "outputs": [
+    "Daily operations brief",
+    "Exception register",
+    "Draft escalation note"
+  ],
+  "approvalMode": "explicit-for-consequential-actions",
+  "routineState": "disabled-until-skill-tested"
+}

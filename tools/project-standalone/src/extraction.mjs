@@ -63,9 +63,16 @@ export async function assertSafeTree(root) {
       const candidate = path.join(directory, entry.name);
       const info = await lstat(candidate);
       if (info.isSymbolicLink()) {
-        throw new Error(
-          `Capsule tree contains a symbolic link or reparse point: ${path.relative(root, candidate)}`,
-        );
+        // pnpm links packages with symlinks and, on Windows, junctions. A link is
+        // accepted only when its fully resolved target stays inside this tree; the
+        // link is not traversed, because its target is visited on its own path.
+        const target = await realpath(candidate).catch(() => null);
+        if (target === null || !isWithin(target, canonicalRoot)) {
+          throw new Error(
+            `Capsule tree contains a symbolic link or reparse point that ${target === null ? "does not resolve" : "resolves outside the capsule"}: ${path.relative(root, candidate)}`,
+          );
+        }
+        continue;
       }
       const canonical = await realpath(candidate);
       if (!isWithin(canonical, canonicalRoot)) {
@@ -167,6 +174,8 @@ export async function createExtraction() {
   await mkdir(capsule);
   await mkdir(home);
   await mkdir(path.join(home, "tmp"));
+  await mkdir(path.join(home, "AppData", "Roaming"), { recursive: true });
+  await mkdir(path.join(home, "AppData", "Local"));
   return {
     root: temporaryRoot,
     rootIdentity,

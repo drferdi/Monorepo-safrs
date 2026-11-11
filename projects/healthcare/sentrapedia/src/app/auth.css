@@ -1,0 +1,118 @@
+.auth-page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 5vh, 56px);
+  padding: clamp(22px, 3.4vw, 40px) clamp(1.25rem, 4.4vw, 3rem) clamp(20px, 3vw, 32px);
+  background: var(--color-background-canvas);
+  color: var(--color-text-primary);
+  /* Set here as well as in the tokens below: text that only inherits would otherwise keep body's Geist. */
+  font-family: var(--font-body);
+  /* The doctor arrives here from apps/site, so these pages speak that page's brand rather than the
+     workspace's: Inter throughout, and its ink, muted and action colours, read from the live site.
+     Scoped to .auth-page, so the workspace behind the login keeps Chief's type pair untouched.
+     --workspace-control-border is deliberately NOT taken from the site: the site's #a8bfba sits at
+     about 2:1 on white, under the 3:1 WCAG 2.2 asks of a field edge, so the accessible edge stays. */
+  --font-title: var(--font-inter), "Inter", sans-serif;
+  --font-body: var(--font-inter), "Inter", sans-serif;
+  --color-background-canvas: #fff;
+  --color-text-primary: #191c1c;
+  --color-text-secondary: #4a5956;
+  --workspace-accent-ink: #13786e;
+  /* globals.css gives every h1/h2 an explicit --title-color, so inheriting .auth-page's colour is not enough. */
+  --title-color: #191c1c;
+}
+.auth-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+/* The website header sets the wordmark at Inter 700, 20px, #202020, six pixels after a 22x17 mark. */
+.auth-brand { display: inline-flex; align-items: center; gap: 6px; color: #202020; text-decoration: none; font: 700 20px/1 var(--font-title); letter-spacing: -.01em; }
+.auth-brand > img { width: 22px; height: 17px; object-fit: contain; }
+.auth-back { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-text-secondary); text-decoration: none; font-size: 12px; }
+.auth-back:hover, .auth-back:focus-visible { color: var(--workspace-accent-ink); }
+
+/* The stage holds the form card and the cabinet. A phone gets the card and then the cabinet; a wide screen sets the
+   cabinet to the card's left from 640px up. The markup keeps the card first, so the form is first for a keyboard as well. */
+.auth-stage { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: clamp(28px, 5vh, 48px); }
+.auth-figure { justify-self: center; width: min(100%, 340px); }
+.auth-figure figcaption { display: grid; gap: 4px; margin-top: 2px; text-align: center; }
+.auth-figure-readout { color: var(--color-text-secondary); font-size: 10px; font-weight: 500; letter-spacing: 1.1px; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.auth-figure-note { color: var(--color-text-secondary); font-size: 11px; line-height: 1.6; }
+@media (min-width: 640px) {
+  .auth-stage { width: 100%; max-width: 1120px; margin: 0 auto; grid-template-columns: minmax(0, 1fr) minmax(300px, 420px); column-gap: clamp(24px, 6vw, 112px); }
+  .auth-stage > .auth-card { grid-column: 2; grid-row: 1; }
+  .auth-figure { grid-column: 1; grid-row: 1; width: min(100%, 480px); }
+}
+
+/* The card is the page. It sits where the eye already is, and carries only the form. */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  /* auto on all four sides centres the card in the space the header and footer leave. */
+  margin: auto;
+  padding: clamp(28px, 3.4vw, 40px) clamp(22px, 2.8vw, 34px) clamp(26px, 3vw, 34px);
+  border: 0;
+  border-radius: 12px;
+  background: var(--workspace-white);
+  box-shadow: 0 0 0 1px rgba(25, 28, 28, .06), 0 5px 15px rgba(25, 28, 28, .08), 0 15px 35px -5px rgba(25, 28, 28, .2);
+  animation: auth-rise 420ms cubic-bezier(.2,.7,.2,1) both;
+}
+.auth-kicker { display: flex; align-items: baseline; gap: 8px; margin: 0 0 14px; color: var(--color-text-secondary); font-size: 10px; font-weight: 500; letter-spacing: 1.1px; text-transform: uppercase; }
+.auth-kicker > span { color: var(--workspace-accent-ink); }
+.auth-card h1 { margin: 0 0 20px; font: 600 clamp(25px, 2.1vw, 30px)/1.2 var(--font-title); letter-spacing: -.025em; text-wrap: balance; }
+.auth-card-body { min-width: 0; font-size: 13px; line-height: 1.7; }
+.auth-card-body > p { margin: 0 0 20px; color: var(--color-text-secondary); }
+.auth-card-body a { color: var(--workspace-accent-ink); text-underline-offset: .2em; }
+.auth-card-body > :last-child { margin-bottom: 0; }
+.auth-notice { margin: 0; color: var(--color-text-secondary); font-size: 13px; line-height: 1.75; }
+.auth-alternative { margin: 24px 0 0; padding-top: 18px; border-top: 1px solid var(--color-border-subtle); color: var(--color-text-secondary); font-size: 12px; }
+.auth-alternative a { color: var(--workspace-accent-ink); font-weight: 500; text-underline-offset: .2em; }
+
+.auth-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; color: var(--color-text-secondary); font-size: 10px; }
+.auth-footer p { margin: 0; }
+.auth-footer a { color: inherit; text-underline-offset: .2em; }
+.auth-footer a:hover, .auth-footer a:focus-visible { color: var(--workspace-accent-ink); }
+
+.auth-consent { display: flex; align-items: flex-start; gap: .7rem; margin: 1.4rem 0; color: var(--color-text-secondary); font-size: 12px; line-height: 1.7; }
+.auth-consent input { width: 15px; height: 15px; margin-top: .22rem; flex-shrink: 0; accent-color: var(--workspace-accent-ink); }
+.auth-primary { width: 100%; min-height: 46px; padding: 12px 15px; border: 1px solid var(--rule-strong); background: var(--color-text-primary); color: var(--workspace-white); cursor: pointer; font: 500 12px/1 var(--font-body); transition: background 180ms ease, border-color 180ms ease; }
+.auth-primary:hover:not(:disabled), .auth-primary:focus-visible { border-color: var(--workspace-accent-ink); background: var(--workspace-accent-ink); }
+.auth-primary:disabled { opacity: .55; cursor: default; }
+.auth-page :focus-visible, .passkey-nudge :focus-visible { outline: 2px solid var(--workspace-focus); outline-offset: 3px; }
+.auth-card [role="alert"] { margin: 0 0 18px; padding: 11px 12px; border-left: 2px solid var(--workspace-error-text); background: var(--workspace-error-bg); color: var(--workspace-error-text); font-size: 12px; }
+.auth-card-body form > [role="status"] { padding: 10px 12px; background: var(--workspace-accent-soft); color: var(--workspace-accent-ink); }
+
+.auth-card-body .cl-rootBox, .auth-card-body .cl-cardBox { width: 100%; max-width: 100%; }
+/* The widget keeps Clerk's own look for its fields, buttons and links. Only its floating card is flattened, because
+   .auth-card is already the card, and the pieces the card says in its own words: the heading and the switch link. */
+.auth-card-body .cl-cardBox { border: 0; border-radius: 0; background: none; box-shadow: none; }
+.auth-card-body .cl-card { gap: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.auth-card-body .cl-header { display: none; }
+.auth-card-body .cl-footerAction { display: none; }
+
+.authenticated-workspace { display: flex; flex-direction: column; height: 100dvh; }
+/* The passkey bar sits above the workspace and wraps on a phone. */
+.authenticated-workspace > .passkey-nudge { padding: .5rem 1rem; border-bottom: 1px solid var(--color-border-subtle); }
+.passkey-nudge { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 0; color: var(--color-text-secondary); font-size: .78rem; }
+.passkey-nudge button { padding: .3rem .6rem; border: 1px solid var(--workspace-control-border); border-radius: var(--radius); background: var(--workspace-white); color: var(--color-text-primary); cursor: pointer; font: inherit; }
+.passkey-nudge button:disabled { opacity: .55; cursor: default; }
+.passkey-nudge .passkey-later { border-color: transparent; }
+.passkey-nudge [role="alert"] { color: var(--workspace-error-text); }
+.session-content { min-height: 0; flex: 1; }
+/* The account page is the auth page without the card: Clerk's profile widget takes the width the card never needed. */
+.account-page .account-stage { flex: 1; display: grid; justify-items: center; align-content: start; }
+.account-page .cl-rootBox, .account-page .cl-cardBox { width: 100%; max-width: 880px; }
+.authenticated-workspace .app-shell { height: 100%; }
+
+@keyframes auth-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 520px) {
+  .auth-page { gap: 26px; padding-left: 20px; padding-right: 20px; }
+  .auth-brand { font-size: 19px; }
+  .auth-back { font-size: 11px; }
+  /* Top-aligned on a phone: centring it leaves the card floating under a band of empty page. */
+  .auth-card { max-width: none; margin: 0 0 auto; padding: 26px 20px 24px; }
+  .auth-figure { width: min(100%, 270px); }
+  .auth-footer { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-page .auth-card { animation: none; }
+  .auth-page .auth-primary { transition: none; }
+}

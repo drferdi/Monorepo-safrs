@@ -1,0 +1,61 @@
+lay_terms-01 7515 ms B80
+lay_terms-02 4327 ms B86
+lay_terms-03 4576 ms B36.0
+lay_terms-04 4668 ms H00.0
+lay_terms-05 5502 ms H81.1
+lay_terms-06 4758 ms G44.2
+lay_terms-07 4426 ms H61.2
+lay_terms-08 5053 ms L50
+lay_terms-09 5002 ms B01.9
+lay_terms-10 4827 ms K12.0
+lay_terms-11 4671 ms A37.9
+lay_terms-12 3849 ms B26.9
+lay_terms-13 116 ms FAIL 503 API_ERRORS
+lay_terms-14 92 ms FAIL 503 API_ERRORS
+lay_terms-15 91 ms FAIL 503 API_ERRORS
+lay_terms-16 100 ms FAIL 503 API_ERRORS
+abbreviations-01 93 ms FAIL 503 API_ERRORS
+abbreviations-02 91 ms FAIL 503 API_ERRORS
+abbreviations-03 94 ms FAIL 502 SERVICE
+abbreviations-04 99 ms FAIL 502 SERVICE
+abbreviations-05 89 ms FAIL 502 SERVICE
+abbreviations-06 92 ms FAIL 502 SERVICE
+abbreviations-07 89 ms FAIL 502 SERVICE
+abbreviations-08 88 ms FAIL 502 SERVICE
+abbreviations-09 89 ms FAIL 502 SERVICE
+abbreviations-10 93 ms FAIL 502 SERVICE
+abbreviations-11 116 ms FAIL 502 SERVICE
+abbreviations-12 86 ms FAIL 502 SERVICE
+abbreviations-13 88 ms FAIL 502 SERVICE
+abbreviations-14 90 ms FAIL 502 SERVICE
+abbreviations-15 86 ms FAIL 502 SERVICE
+mixed_id_en-01 85 ms FAIL 502 SERVICE
+mixed_id_en-02 86 ms FAIL 502 SERVICE
+mixed_id_en-03 80 ms FAIL 502 SERVICE
+mixed_id_en-04 87 ms FAIL 502 SERVICE
+mixed_id_en-05 81 ms FAIL 502 SERVICE
+mixed_id_en-06 85 ms FAIL 502 SERVICE
+mixed_id_en-07 82 ms FAIL 502 SERVICE
+mixed_id_en-08 86 ms FAIL 502 SERVICE
+mixed_id_en-09 87 ms FAIL 502 SERVICE
+mixed_id_en-10 94 ms FAIL 502 SERVICE
+mixed_id_en-11 86 ms FAIL 502 SERVICE
+mixed_id_en-12 90 ms FAIL 502 SERVICE
+mixed_id_en-13 88 ms FAIL 502 SERVICE
+mixed_id_en-14 96 ms FAIL 502 SERVICE
+mixed_id_en-15 92 ms FAIL 502 SERVICE
+typos-01 109 ms FAIL 502 SERVICE
+typos-02 106 ms FAIL 502 SERVICE
+typos-03 113 ms FAIL 502 SERVICE
+typos-04 110 ms FAIL 502 SERVICE
+typos-05 103 ms FAIL 502 SERVICE
+typos-06 94 ms FAIL 502 SERVICE
+typos-07 85 ms FAIL 502 SERVICE
+typos-08 89 ms FAIL 503 API_ERRORS
+typos-09 86 ms FAIL 502 SERVICE
+typos-10 89 ms FAIL 502 SERVICE
+typos-11 84 ms FAIL 502 SERVICE
+typos-12 93 ms FAIL 502 SERVICE
+typos-13 92 ms FAIL 502 SERVICE
+typos-14 85 ms FAIL 502 SERVICE
+typos-15 92 ms FAIL 502 SERVICE

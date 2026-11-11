@@ -2,6 +2,15 @@
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+credentials.json
+secrets.json
+service-account*.json
 
 # Python
 __pycache__/
@@ -77,6 +86,8 @@ projects/**/.cursor/
 !.claude/skills/**
 !.claude/commands/
 !.claude/commands/**
+!.claude/rules/
+!.claude/rules/**
 .claude/settings.local.json
 
 # Local Codex state; shared project config, hooks, agents, and skills are tracked

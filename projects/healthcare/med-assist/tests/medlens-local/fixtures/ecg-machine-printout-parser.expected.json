@@ -1,0 +1,31 @@
+{
+  "ocr_extracted_values": {
+    "heart_rate_or_ventricular_rate": "82 bpm",
+    "pr_interval": "164 ms",
+    "qrs_duration": "96 ms",
+    "qt": "376 ms",
+    "qtc": "428 ms",
+    "p_axis": "55 deg",
+    "r_axis": "69 deg",
+    "t_axis": "31 deg",
+    "rhythm_statement": "Normal sinus rhythm",
+    "machine_interpretation_text": "Borderline ECG | Nonspecific ST abnormality"
+  },
+  "raw_ecg_relevant_text": [
+    "Ventricular rate 82 bpm",
+    "PR interval 164 ms",
+    "QRS duration 96 ms",
+    "QT/QTc 376/428 ms",
+    "P/QRS/T axes 55 69 31",
+    "Normal sinus rhythm",
+    "Machine interpretation",
+    "Borderline ECG",
+    "Nonspecific ST abnormality"
+  ],
+  "ignored_or_redacted_identifiers_detected": false,
+  "limitations": [
+    "Only source-grounded printed ECG text is surfaced.",
+    "Every surfaced ECG finding must be reviewed by a clinician."
+  ],
+  "physician_verification_required": true
+}

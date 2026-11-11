@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "name": "Sentrapedia sample catalogue",
+    "version": "sample",
+    "sample": true,
+    "total_diseases": 2,
+    "total_categories": 1,
+    "description": "Fictional sample entries. The Sentrapedia clinical catalogue is private and is not included in the public repository.",
+    "stats": [],
+    "nationalSources": [],
+    "professionalSources": [],
+    "internationalSources": [],
+    "exported_at": ""
+  },
+  "categories": [
+    { "id": "Contoh", "name": "Contoh (fiktif)", "kode": "Z00", "desc": "Entri contoh tanpa isi klinis." }
+  ],
+  "diseases": [
+    { "id": 1, "nama": "Contoh penyakit A (fiktif)", "kategori": "Contoh", "kode": "Z00", "definisi": "Entri contoh. Katalog klinis Sentrapedia tidak disertakan di repositori publik.", "gejala": ["Contoh gejala"], "diagnosis": "Tidak ada isi klinis.", "terapi": "Tidak ada isi klinis.", "rujukan": "Tidak ada isi klinis." },
+    { "id": 2, "nama": "Contoh penyakit B (fiktif)", "kategori": "Contoh", "kode": "Z00", "definisi": "Entri contoh. Katalog klinis Sentrapedia tidak disertakan di repositori publik.", "gejala": ["Contoh gejala"], "diagnosis": "Tidak ada isi klinis.", "terapi": "Tidak ada isi klinis.", "rujukan": "Tidak ada isi klinis." }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@safrs/telemetry",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "biome check src",
+    "test": "vitest run",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/exporter-trace-otlp-http": "0.221.0",
+    "@opentelemetry/instrumentation-http": "0.221.0",
+    "@opentelemetry/sdk-node": "0.221.0",
+    "@opentelemetry/semantic-conventions": "1.30.0",
+    "@prisma/instrumentation": "7.9.1",
+    "hono": "4.13.1"
+  },
+  "devDependencies": {
+    "@safrs/config": "workspace:*",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
+  }
+}

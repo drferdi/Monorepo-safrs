@@ -1,0 +1,13 @@
+{
+  "name": "mantra-e2e",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Bench-level Playwright harness for Sentra MANTRA Beranda personas",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.53.0"
+  }
+}

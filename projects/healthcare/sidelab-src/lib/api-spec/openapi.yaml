@@ -1,0 +1,243 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: SideLab CDSS API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: cdss
+    description: Clinical Decision Support operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /cdss/health:
+    get:
+      operationId: cdssHealth
+      tags: [cdss]
+      summary: CDSS engine health
+      responses:
+        "200":
+          description: Engine status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /cdss/backends:
+    get:
+      operationId: cdssListBackends
+      tags: [cdss]
+      summary: List available LLM backends
+      responses:
+        "200":
+          description: List of backends
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackendList"
+  /cdss/consult:
+    post:
+      operationId: cdssConsult
+      tags: [cdss]
+      summary: Run a clinical consultation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsultInput"
+      responses:
+        "200":
+          description: Clinical output
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsultResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "503":
+          description: CDSS engine unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    ConversationMessage:
+      type: object
+      required: [role, content]
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+    PatientData:
+      type: object
+      properties:
+        nama:
+          type: string
+        umur:
+          type: string
+        jk:
+          type: string
+        bb:
+          type: string
+        tb:
+          type: string
+        alergi:
+          type: string
+        komorbid:
+          type: string
+        obat:
+          type: string
+    ConsultInput:
+      type: object
+      required: [complaint]
+      properties:
+        complaint:
+          type: string
+          minLength: 1
+        patient:
+          $ref: "#/components/schemas/PatientData"
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationMessage"
+        backend:
+          type: string
+          default: openrouter
+        model:
+          type: ["string", "null"]
+    DiagnosisItem:
+      type: object
+      required: [icd10, name, reason]
+      properties:
+        icd10:
+          type: string
+        name:
+          type: string
+        reason:
+          type: string
+    DrugItem:
+      type: object
+      required: [drug, ddi, ki]
+      properties:
+        drug:
+          type: string
+        ddi:
+          type: string
+        ki:
+          type: string
+    WorkingDiagnosis:
+      type: object
+      required: [icd10, name, reason]
+      properties:
+        icd10:
+          type: string
+        name:
+          type: string
+        reason:
+          type: string
+    ClinicalSections:
+      type: object
+      properties:
+        ringkasan:
+          type: string
+        diagnosis_banding:
+          type: array
+          items:
+            $ref: "#/components/schemas/DiagnosisItem"
+        diagnosis_kerja:
+          $ref: "#/components/schemas/WorkingDiagnosis"
+        pemeriksaan:
+          type: array
+          items:
+            type: string
+        tatalaksana:
+          type: array
+          items:
+            type: string
+        farmakologi:
+          type: array
+          items:
+            $ref: "#/components/schemas/DrugItem"
+        edukasi:
+          type: array
+          items:
+            type: string
+        kriteria_rujuk:
+          type: array
+          items:
+            type: string
+        prognosis:
+          type: string
+    ConsultResult:
+      type: object
+      required: [raw, sections, red_flags, history]
+      properties:
+        raw:
+          type: string
+        sections:
+          $ref: "#/components/schemas/ClinicalSections"
+        red_flags:
+          type: array
+          items:
+            type: string
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConversationMessage"
+    LlmBackend:
+      type: object
+      required: [id, label, models, default_model]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        models:
+          type: array
+          items:
+            type: string
+        default_model:
+          type: string
+    BackendList:
+      type: object
+      required: [backends]
+      properties:
+        backends:
+          type: array
+          items:
+            $ref: "#/components/schemas/LlmBackend"

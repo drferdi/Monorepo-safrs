@@ -7,7 +7,7 @@ disable-model-invocation: true
 # Create / apply Prisma migration (user-only)
 
 Migrations and database schema changes are **R2**. Destructive reset is local-only and
-may require explicit Chief authorization. Never bypass the reset guard. Never print
+may require explicit Gaffer authorization. Never bypass the reset guard. Never print
 or commit `DATABASE_URL`.
 
 ## Before changing schema
@@ -33,7 +33,7 @@ pnpm --filter @safrs/database test
 pnpm db:reset
 ```
 
-Only after Chief explicitly authorizes. Reset remains local-only; the repository reset
+Only after Gaffer explicitly authorizes. Reset remains local-only; the repository reset
 guard must reject remote URLs.
 
 ## Prohibited

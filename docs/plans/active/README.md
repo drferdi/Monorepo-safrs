@@ -4,16 +4,8 @@ Active plans are the current operational/implementation state. When a plan's
 acceptance criteria are met, move it to `docs/plans/completed/` following the
 SAFRS document lifecycle (ACTIVE → COMPLETED → ARCHIVED).
 
-Open plans in this directory, with the status each one declares in its own header:
-
-| Plan | Status | Owner |
-| --- | --- | --- |
-| `MASTER REMEDIATION PLAN — SENTRA MONOREPO.md` | Approved — execution gated by claimed work packages | dr. Ferdi Iskandar |
-| `MASTER REMEDIATION AGENT ASSIGNMENTS.md` | Assignment map; execution gated by claimed work packages | Chief |
-| `SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md` | ACTIVE — Phases 1–5 merged; 6–8 need Activation Decisions | — |
-| `2026-08-12-wiki-setup-plan.md` | PROPOSED — not approved for execution | Chief |
-| `2026-08-21-smartboard-web-roadmap.md` | ACTIVE — index sub-fase `apps/web`; baris 1 COMPLETED, baris 2 PROPOSED, baris 3-5 belum dimulai | Chief |
-| `2026-08-22-smartboard-web-subphase2-akademik.md` | PROPOSED — sub-fase 2 `apps/web` (penjadwalan + akademik), menunggu persetujuan Chief | Chief |
-
-Phase-level progress for these plans is tracked in `.agents/PROGRESS.md`, not here.
-Completed plans: `docs/plans/completed/`.
+Plan files themselves are internal working documents and are kept out of the
+repository (`.gitignore`); only this README and the ones in `completed/` and
+`archived/` are tracked, so the directory contract that `check_topology.py`
+and `AGENTS.md` rely on exists in every checkout. Phase-level progress is
+tracked in `.agents/PROGRESS.md`.

@@ -1,0 +1,139 @@
+/* Sentrapedia contribution form: kit page header, one form card, the contributor's own list. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-2xl);
+  width: 100%;
+  max-width: 880px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  color: var(--text);
+}
+
+.back {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+  padding: var(--gap-xl);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap-xl);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.current {
+  display: grid;
+  gap: 6px;
+  padding: var(--gap-lg);
+  border-radius: var(--radius-md);
+  background: var(--surface-subtle);
+}
+
+.currentText {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+}
+
+.textarea {
+  min-height: 180px;
+  resize: vertical;
+  line-height: var(--lh-base);
+}
+
+.textareaSmall {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.muted {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.rowText {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rowName {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text);
+}

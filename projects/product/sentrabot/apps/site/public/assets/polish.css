@@ -1,0 +1,1361 @@
+/*
+ * Sentra Bot landing — visual polish layer.
+ *
+ * Loaded after the compiled stylesheet in public/assets, so every rule here is
+ * a deliberate override. Each block names the VISUAL_AUDIT.md finding it
+ * resolves. Nothing in this file changes layout structure, section order, or
+ * copy; it adjusts tokens, type, spacing, states, and motion.
+ */
+
+/* ---------------------------------------------------------------- tokens */
+:root {
+  --next-font-signifier: "IBM Plex Sans", Arial, sans-serif;
+  --next-font-switzer: "IBM Plex Sans", Arial, sans-serif;
+  /* Brand accent: Sentra Intelligence Blue replaces the cloned theme blue. */
+  --color-primary: #5b8cff;
+  --color-contrast: #5b8cff;
+  --color-blue: #5b8cff;
+  --sb-ink: #0d1117;
+  --sb-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --sb-fast: 160ms;
+  --sb-base: 240ms;
+  /* L5: light-only design; keep native controls and scrollbars light. */
+  color-scheme: light;
+}
+/* Override captured Signifier/Switzer module classes so the variables
+   that the compiled stack emits on <html> point at IBM Plex Sans too.
+   polish.css loads last so this cascade beats the captured definitions. */
+.switzer_998928fd-module__HMAM_a__variable,
+.signifier_6dd7a78e-module__Qm36qW__variable {
+  --next-font-switzer: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --next-font-signifier: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: "IBM Plex Sans", Arial, sans-serif !important;
+}
+
+/* Page ground: the accent is for controls; the ground behind the painting
+   (and before React paints) stays the sampled sky blue. */
+body,
+#root > div > .bg-primary {
+  background-color: #228dcd;
+}
+
+/* M7: the page wrapper React injects fades in instead of popping. */
+#root > div > .bg-primary {
+  animation: sb-reveal var(--sb-base) var(--sb-ease) both;
+}
+@keyframes sb-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------- C2: focus */
+/* Two-tone ring: white line + dark halo reads on sky, grass, white cards
+   and the navy footer alike. */
+:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(13, 17, 23, 0.6);
+}
+
+/* -------------------------------------------------------- H3: contrast */
+.faq-module__O8tnPq__faq__item .opacity-\[0\.56\] {
+  opacity: 0.84;
+}
+.privacy-module__DjJjcq__privacy .opacity-70 {
+  opacity: 0.88;
+}
+
+/* ------------------------------------------------- M6 / H4: typography */
+.h1 {
+  letter-spacing: -0.012em;
+}
+.h2 {
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.h3 {
+  line-height: 1.14;
+}
+.h4,
+.h4-l {
+  line-height: 1.12;
+}
+@media (width < 800px) {
+  .p,
+  .p-xxl {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .p-s,
+  .cta-md-s,
+  .username {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .quote {
+    line-height: 1.32;
+  }
+}
+
+/* ---------------------------------------------------- H5: touch targets */
+@media (width < 800px) {
+  header nav a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+  }
+  header nav a.uline {
+    --bottom: calc(50% - 0.8em);
+  }
+  main a[href="/workspace"],
+  footer a[href="/workspace"] {
+    min-height: 44px;
+    align-items: center;
+  }
+  .pricing-module__NXQy5G__tabs button {
+    min-height: 44px;
+  }
+}
+
+/* ------------------------------------------------ M1: one hover recipe */
+/* White pill (hero, footer) and brand pill (header). Lift + soft shadow,
+   no off-axis shadow, no blur on a solid surface. */
+.sb-pill {
+  transition:
+    transform var(--sb-base) var(--sb-ease),
+    box-shadow var(--sb-base) var(--sb-ease),
+    background-color var(--sb-base) var(--sb-ease),
+    color var(--sb-base) var(--sb-ease);
+}
+.sb-pill--brand {
+  color: var(--sb-ink);
+}
+.button-module__h0EWEW__btn,
+.pricing-module__NXQy5G__card__wrapper a {
+  transition:
+    transform var(--sb-base) var(--sb-ease),
+    box-shadow var(--sb-base) var(--sb-ease),
+    background-color var(--sb-base) var(--sb-ease);
+}
+@media (hover: hover) {
+  .sb-pill:hover {
+    background-color: #f3f5f9;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -10px rgba(13, 17, 23, 0.5);
+  }
+  .sb-pill--brand:hover {
+    background-color: #4d7ef5;
+    color: var(--sb-ink);
+  }
+  .button-module__h0EWEW__btn:hover,
+  .pricing-module__NXQy5G__card__wrapper a:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -10px rgba(13, 17, 23, 0.45);
+  }
+  .sb-pill:active,
+  .button-module__h0EWEW__btn:active,
+  .pricing-module__NXQy5G__card__wrapper a:active {
+    transform: translateY(0);
+    transition-duration: var(--sb-fast);
+  }
+}
+
+/* -------------------------------------------------- H1: background fill */
+/* The painting fills the whole page instead of stopping at its own aspect
+   ratio; top-anchored so the hero sky never moves. */
+.sb-bg {
+  top: 0;
+  bottom: 0;
+  aspect-ratio: auto;
+  /* Placeholder while the painting decodes: sky at the top, grass below,
+     sampled from the image itself. */
+  background: linear-gradient(180deg, #228dcd 0%, #228dcd 30%, #4f8438 100%);
+}
+.sb-bg > img {
+  object-position: top center;
+}
+
+/* --------------------------------------------------- brand lockup */
+/* Official white logomark (docs/brand/00-MASTER-LOGO) + wordmark set in
+   Switzer; a faint drop shadow keeps it legible when white content scrolls
+   under the fixed header. */
+.sb-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+}
+.sb-brand__mark {
+  width: 40px;
+  height: 40px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(13, 17, 23, 0.35));
+}
+.sb-brand__name {
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 2px rgba(13, 17, 23, 0.3);
+}
+.sb-brand__mark--footer {
+  width: 48px;
+  height: 48px;
+  filter: none;
+}
+.sb-site-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 30px rgba(13, 17, 23, 0.12);
+  backdrop-filter: blur(24px);
+}
+.sb-site-nav__link {
+  padding: 9px 12px;
+  border-radius: 999px;
+  color: var(--sb-ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color var(--sb-fast), color var(--sb-fast);
+}
+.sb-site-nav__link:hover {
+  background: rgba(91, 140, 255, 0.12);
+}
+.sb-site-nav__link--primary,
+.sb-site-nav__link--primary:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+.sb-page-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 29px 30px;
+}
+.sb-nav-mobile {
+  display: none !important;
+}
+@media (width < 800px) {
+  .sb-page-header {
+    padding: 20px;
+  }
+  .sb-nav {
+    display: none !important;
+  }
+  .sb-nav-mobile {
+    display: block !important;
+    position: relative;
+  }
+  .sb-nav-mobile summary {
+    cursor: pointer;
+    list-style: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--sb-ink);
+    padding: 10px 14px;
+  }
+  .sb-nav-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+  .sb-nav-mobile nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    display: grid;
+    min-width: 150px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 12px 30px rgba(13, 17, 23, 0.2);
+  }
+  .sb-nav-mobile nav a {
+    padding: 11px 14px;
+    color: var(--sb-ink);
+  }
+  .sb-brand__mark {
+    width: 36px;
+    height: 36px;
+  }
+  .sb-brand__name {
+    font-size: 15px;
+  }
+}
+
+/* --------------------------------------------- hero mascot walk */
+/* The clay mascot crosses the hero left to right in the empty band between
+   the CTA and the screenshot card, so it never overlaps copy or controls.
+   Track: one linear pass, 60 px/s at every breakpoint. Body: a short
+   alternate bob with a counter-scaling ground shadow sells the steps.
+   Hover pauses it; reduced-motion parks it at the right end. */
+.sb-walk {
+  position: relative;
+  /* Extra room so the bigger figure clears the CTA above it. */
+  height: calc(var(--sb-walk-size) - 46px);
+  --sb-walk-size: 104px;
+  --sb-walk-time: 29s;
+  /* How far the figure shows while peeking in from the left edge. */
+  --sb-peek-x: calc(var(--sb-walk-size) * 0.62 + 40px);
+}
+.sb-walk__clip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--sb-walk-size) + 14px);
+  overflow: hidden;
+  pointer-events: none;
+}
+.sb-walk__runner {
+  position: absolute;
+  left: calc(-1 * var(--sb-walk-size) - 40px);
+  bottom: 4px;
+  width: var(--sb-walk-size);
+  height: var(--sb-walk-size);
+  pointer-events: auto;
+  will-change: transform;
+  animation: sb-walk var(--sb-walk-time) linear infinite;
+}
+.sb-walk__mascot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: 50% 100%;
+  animation: sb-bob 0.46s ease-in-out infinite alternate;
+}
+.sb-walk__shadow {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -5px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(13, 17, 23, 0.32), rgba(13, 17, 23, 0));
+  transform-origin: 50% 50%;
+  animation: sb-shadow 0.46s ease-in-out infinite alternate;
+}
+/* One cycle: peek in from the left (0–2%), hold and look around (2–8%),
+   then walk across at a constant pace (8–100%). */
+@keyframes sb-walk {
+  0% {
+    transform: translate3d(0, 0, 0);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  2% {
+    transform: translate3d(var(--sb-peek-x), 0, 0);
+    animation-timing-function: ease-in-out;
+  }
+  8% {
+    transform: translate3d(var(--sb-peek-x), 0, 0);
+    animation-timing-function: linear;
+  }
+  100% {
+    transform: translate3d(calc(100vw + var(--sb-walk-size) + 80px), 0, 0);
+  }
+}
+/* While peeking the figure leans in from the edge. The lean lives on its
+   own wrapper so the data-state transforms on the figure (CTA lean) still
+   compose with it; it rides the same clock as the walk. */
+.sb-walk__lean {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation: sb-walk-lean var(--sb-walk-time) linear infinite;
+}
+@keyframes sb-walk-lean {
+  0%,
+  6% {
+    transform: rotate(-9deg) translateX(-4%);
+  }
+  9%,
+  100% {
+    transform: rotate(0) translateX(0);
+  }
+}
+@keyframes sb-bob {
+  from {
+    transform: translateY(0) rotate(-2.5deg) scale(1.03, 0.97);
+  }
+  to {
+    transform: translateY(-8%) rotate(2.5deg) scale(0.98, 1.02);
+  }
+}
+@keyframes sb-shadow {
+  from {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  to {
+    transform: scaleX(0.78);
+    opacity: 0.55;
+  }
+}
+@media (hover: hover) {
+  .sb-walk__runner:hover,
+  .sb-walk__runner:hover .sb-walk__mascot,
+  .sb-walk__runner:hover .sb-walk__shadow {
+    animation-play-state: paused;
+  }
+}
+@media (width >= 600px) and (width < 800px) {
+  .sb-walk {
+    --sb-walk-size: 88px;
+    --sb-walk-time: 18s;
+  }
+}
+@media (width < 600px) {
+  .sb-walk {
+    --sb-walk-size: 68px;
+    --sb-walk-time: 12s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-walk__runner {
+    animation: none;
+    left: auto;
+    right: 6%;
+  }
+  .sb-walk__mascot,
+  .sb-walk__shadow,
+  .sb-walk__lean {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------ M4: header scrolled */
+header > div > button,
+header nav {
+  transition:
+    transform var(--sb-base) var(--sb-ease),
+    box-shadow var(--sb-base) var(--sb-ease);
+}
+header[data-scrolled] > div > button {
+  transform: scale(0.9);
+  transform-origin: left center;
+}
+header[data-scrolled] nav {
+  box-shadow: 0 12px 32px -14px rgba(13, 17, 23, 0.5);
+}
+
+/* ---------------------------------------------------- H2: tablet tier */
+/* 600–799px: the phone layout is kept but the column widens so the page
+   stops looking like a phone centred on a tablet. */
+@media (width >= 600px) and (width < 800px) {
+  header > div,
+  .dr-w-393 {
+    width: 100%;
+  }
+  .dr-w-357 {
+    width: min(92vw, 640px);
+  }
+  .floating-container.dr-w-357 {
+    width: min(76vw, 520px);
+  }
+  .aspect-\[2918\/4346\].dr-w-357 {
+    width: min(58vw, 400px);
+  }
+  .dr-w-329 {
+    width: min(54vw, 372px);
+  }
+}
+
+/* ------------------------------------------------------- M2: marquee */
+.marquee-module__irIMSq__inner {
+  animation: sb-marquee 56s linear infinite;
+  will-change: transform;
+}
+@keyframes sb-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@media (hover: hover) {
+  .marquee-module__irIMSq__marquee:hover .marquee-module__irIMSq__inner {
+    animation-play-state: paused;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-module__irIMSq__inner {
+    animation: none;
+  }
+  .marquee-module__irIMSq__marquee {
+    overflow-x: auto;
+  }
+  .marquee-module__irIMSq__inner > [aria-hidden="true"] {
+    display: none;
+  }
+  #root > div > .bg-primary {
+    animation: none;
+  }
+  .sb-pill,
+  .button-module__h0EWEW__btn,
+  .pricing-module__NXQy5G__card__wrapper a,
+  header > div > button,
+  header nav {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------ C1: Brief stage */
+/* Layer order for the scroll choreography (see useBriefSequence.js). */
+[data-brief="phone"],
+[data-brief="shell"] {
+  position: relative;
+  z-index: 1;
+}
+[data-brief="panel"] {
+  z-index: 2;
+}
+[data-brief="cards"] {
+  z-index: 3;
+}
+[data-brief="cards"] > div {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+[data-brief="panel"] {
+  opacity: 0;
+  will-change: clip-path, opacity;
+  /* The digest lives on a real screen surface, not on the landscape. */
+  background: linear-gradient(180deg, #eef2f7 0%, #e6ebf2 100%);
+  color: var(--sb-ink);
+}
+[data-brief="panel"] .h4-l {
+  color: var(--sb-ink);
+}
+[data-brief="panel"] .dr-border-\[\#FFFFFF\] {
+  border-color: rgba(13, 17, 23, 0.18);
+  color: var(--sb-ink);
+}
+[data-brief="panel"] .dr-border-\[\#FFFFFF\] path {
+  fill: var(--sb-ink);
+}
+[data-brief="panel"] > div:not(.sb-statusbar) {
+  will-change: transform;
+}
+/* iOS-style status bar pinned under the top bezel, beside the island.
+   Geometry comes from the hook as --sb-screen-* custom properties. */
+.sb-statusbar {
+  position: absolute;
+  z-index: 2;
+  top: var(--sb-screen-top, 0px);
+  left: var(--sb-screen-left, 0px);
+  width: var(--sb-screen-w, 100%);
+  height: var(--sb-safe-top, 44px);
+  padding: 4px var(--sb-screen-pad, 0px) 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Frosted strip so content scrolling underneath stays readable, like iOS. */
+  background: rgba(238, 242, 247, 0.84);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  color: var(--sb-ink);
+  pointer-events: none;
+}
+.sb-statusbar__icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+@media (width < 800px) {
+  .sb-statusbar {
+    font-size: 11px;
+    padding-top: 2px;
+  }
+  .sb-statusbar__icons svg {
+    transform: scale(0.8);
+    transform-origin: right center;
+  }
+}
+[data-brief="shell"] {
+  opacity: 0;
+}
+[data-brief] img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ================================================================ */
+/* Mascot system - see MOTION_PLAN.md section 1. One node, one state. */
+/* ================================================================ */
+.sb-mascot {
+  position: relative;
+  width: var(--sb-size, 64px);
+  height: var(--sb-size, 64px);
+  flex: none;
+  transform-origin: 50% 100%;
+  transition: transform 200ms var(--sb-ease);
+  will-change: transform;
+  pointer-events: none;
+}
+.sb-mascot__body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* Eyelids: face-coloured slabs over the eye slots (the slots are cut-outs
+   in the PNG: left 31-39.5% x, right 60.5-69% x, both 30-47.5% y). */
+.sb-mascot__lid {
+  position: absolute;
+  top: 29.5%;
+  width: 9%;
+  height: 18.5%;
+  border-radius: 45%;
+  background: #f6e7d0;
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  transition: transform 110ms ease-in;
+}
+.sb-mascot__lid--l {
+  left: 31%;
+}
+.sb-mascot__lid--r {
+  left: 60.4%;
+  background: #fbecd7;
+}
+/* Pupils follow the pointer via --gx/--gy set by useMascot. */
+.sb-mascot__pupil {
+  position: absolute;
+  top: 36%;
+  width: 8%;
+  height: 8%;
+  border-radius: 50%;
+  background: var(--sb-ink);
+  transform: translate(calc(var(--gx, 0) * 22%), calc(var(--gy, 0) * 28%));
+  transition: transform 140ms ease-out;
+}
+.sb-mascot__pupil--l {
+  left: 31.5%;
+}
+.sb-mascot__pupil--r {
+  left: 60.9%;
+}
+.sb-mascot__bubble {
+  position: absolute;
+  left: 80%;
+  top: -18%;
+  padding: 0.05em 0.5em;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--sb-ink);
+  font: 600 calc(var(--sb-size, 64px) * 0.19) / 1.25 var(--next-font-switzer);
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(13, 17, 23, 0.18);
+  animation: sb-bubble-in 220ms var(--sb-ease) both;
+}
+.sb-mascot__bubble[hidden] {
+  display: none;
+}
+
+/* states */
+.sb-mascot[data-blink] .sb-mascot__lid {
+  transform: scaleY(1);
+}
+.sb-mascot[data-state="idle"] .sb-mascot__body {
+  animation: sb-breathe 3.2s ease-in-out infinite alternate;
+}
+.sb-mascot[data-state="greet"] {
+  animation: sb-greet 640ms var(--sb-ease) 1;
+}
+.sb-mascot[data-state="celebrate"] {
+  animation: sb-celebrate 520ms var(--sb-ease) 1;
+}
+.sb-mascot[data-state="listen"] {
+  transform: rotate(-5deg) translateY(-4%);
+}
+.sb-mascot[data-state="listen"] .sb-mascot__pupil {
+  transform: translate(calc(var(--gx, 0) * 10%), -30%);
+}
+.sb-mascot[data-state="think"] .sb-mascot__body {
+  animation: sb-think 0.9s ease-in-out infinite alternate;
+}
+.sb-mascot[data-state="think"] .sb-mascot__pupil {
+  transform: translate(-22%, -30%);
+}
+.sb-mascot[data-state="sleep"] .sb-mascot__body {
+  animation: sb-breathe 4s ease-in-out infinite alternate;
+}
+.sb-mascot[data-state="sleep"] .sb-mascot__lid {
+  transform: scaleY(0.88);
+}
+.sb-mascot[data-state="sleep"] {
+  transform: rotate(3deg);
+}
+.sb-mascot[data-state="error"] {
+  animation: sb-shake 280ms ease-in-out 1;
+  transform: rotate(-4deg);
+}
+.sb-mascot[data-state="error"] .sb-mascot__lid {
+  transform: scaleY(0.45);
+}
+.sb-mascot[data-offscreen] .sb-mascot__body,
+.sb-mascot[data-offscreen] .sb-mascot__bubble {
+  animation-play-state: paused;
+}
+
+@keyframes sb-breathe {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(1.015);
+  }
+}
+@keyframes sb-think {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-3%);
+  }
+}
+@keyframes sb-greet {
+  0% {
+    transform: rotate(0);
+  }
+  35% {
+    transform: rotate(-8deg);
+  }
+  70% {
+    transform: rotate(6deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+@keyframes sb-celebrate {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1.08, 0.92);
+  }
+  55% {
+    transform: translateY(-14%) scale(0.96, 1.06);
+  }
+  80% {
+    transform: translateY(0) scale(1.06, 0.94);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+@keyframes sb-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(-4deg);
+  }
+  25% {
+    transform: translateX(-3px) rotate(-4deg);
+  }
+  75% {
+    transform: translateX(3px) rotate(-4deg);
+  }
+}
+@keyframes sb-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.9);
+  }
+}
+
+/* Hero walker hosts a mascot inside the runner: runner = travel,
+   figure = state, body = bob. */
+.sb-walk__figure {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.sb-walk__figure .sb-walk__mascot {
+  position: absolute;
+  inset: 0;
+}
+
+/* Hero entrance: headline, subhead, CTA, 80 ms apart. backwards fill so
+   hover transforms stay free once the entrance is over. */
+.sb-enter {
+  animation: sb-enter 420ms cubic-bezier(0.22, 0.9, 0.28, 1) backwards;
+}
+p.sb-enter {
+  animation-delay: 80ms;
+}
+a.sb-enter {
+  animation-delay: 160ms;
+}
+@keyframes sb-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@media (width < 800px) {
+  .sb-enter {
+    animation-duration: 340ms;
+  }
+}
+
+/* Footer: the mascot rests beside the CTA. */
+.sb-footer-cta {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+@media (width < 800px) {
+  .sb-footer-mascot {
+    --sb-size: 52px;
+  }
+}
+
+/* FAQ: 320 ms open, answer text rises 8 px behind it. */
+.accordion-module__tWMLDa__body {
+  transition-duration: 320ms;
+}
+.accordion-module__tWMLDa__body p {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 240ms 60ms cubic-bezier(0, 0, 0.2, 1),
+    transform 240ms 60ms cubic-bezier(0, 0, 0.2, 1);
+}
+.faq-module__O8tnPq__faq__item[data-open] .accordion-module__tWMLDa__body p {
+  opacity: 1;
+  transform: none;
+}
+
+/* Privacy: bullets rise in with a 60 ms stagger once the card is seen. */
+[data-privacy] li {
+  opacity: 0;
+  transform: translateY(10px);
+}
+[data-privacy][data-in] li {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 300ms cubic-bezier(0, 0, 0.2, 1),
+    transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+[data-privacy][data-in] li:nth-child(2) {
+  transition-delay: 60ms;
+}
+[data-privacy][data-in] li:nth-child(3) {
+  transition-delay: 120ms;
+}
+[data-privacy][data-in] li:nth-child(4) {
+  transition-delay: 180ms;
+}
+
+/* Demo iPads: the mascot is the agent avatar in the chat header. */
+.sb-mascot--avatar {
+  --sb-size: 2.6cqw;
+  margin-right: 0.2cqw;
+}
+.sb-mascot--avatar-m {
+  --sb-size: 5.6cqw;
+}
+
+/* Brief scene: peeks from behind the device once the digest settles. */
+.sb-brief-peek {
+  position: absolute;
+  left: calc(50% + var(--sb-shell-half, 275px) - 34px);
+  bottom: 7%;
+  --sb-size: 72px;
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(70%);
+  transition:
+    transform 360ms var(--sb-ease),
+    opacity 240ms var(--sb-ease);
+}
+.sb-brief-peek[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+@media (width < 800px) {
+  .sb-brief-peek {
+    --sb-size: 52px;
+    left: calc(50% + var(--sb-shell-half, 178px) - 30px);
+  }
+}
+
+/* Pricing: cheers when the yearly plan is chosen. */
+.sb-price-mascot {
+  position: absolute;
+  right: -46px;
+  bottom: 2px;
+  --sb-size: 38px;
+}
+@media (width < 800px) {
+  .sb-price-mascot {
+    right: -42px;
+    --sb-size: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-mascot,
+  .sb-mascot__body,
+  .sb-mascot__lid,
+  .sb-mascot__pupil,
+  .sb-mascot__bubble,
+  .sb-enter,
+  .sb-brief-peek,
+  [data-privacy] li,
+  .accordion-module__tWMLDa__body p {
+    animation: none !important;
+    transition: none !important;
+  }
+  .sb-mascot[data-state="listen"],
+  .sb-mascot[data-state="sleep"],
+  .sb-mascot[data-state="error"] {
+    transform: none;
+  }
+  [data-privacy] li,
+  .accordion-module__tWMLDa__body p {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ================================================================ */
+/* Static pages (tentang / privasi / ketentuan): reading layout.    */
+/* One column, one spacing scale, one focal point per section.      */
+/* ================================================================ */
+.about-page {
+  /* The accent is for controls; the page ground stays the sky blue
+     the landing page samples from its painting. */
+  background-color: #228dcd;
+}
+.about {
+  /* 8px scale. Section gaps are ~4x the gap inside a group, so the eye
+     reads groups before it reads the page. */
+  --about-col: min(90vw, 660px);
+  --about-wide: min(92vw, 940px);
+  --about-section: clamp(64px, 8vw, 104px);
+  --about-block: 20px;
+  --about-tight: 8px;
+}
+.about__col {
+  width: var(--about-col);
+  margin-inline: auto;
+}
+.about__col--wide {
+  width: var(--about-wide);
+  margin-inline: auto;
+}
+.about__section {
+  margin-top: var(--about-section);
+}
+/* Heading sits closer to its own content than to the section above it. */
+.about__head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.about__rule {
+  width: 34px;
+  height: 3px;
+  border-radius: 2px;
+  background: #fff;
+  opacity: 0.5;
+}
+.about .h3 {
+  letter-spacing: -0.01em;
+}
+/* Long-form body: larger and looser than the landing page's marketing
+   copy, capped at a comfortable measure. */
+.about__prose {
+  font-size: clamp(15px, 0.6rem + 0.55vw, 17px);
+  line-height: 1.62;
+  opacity: 0.88;
+  max-width: 62ch;
+}
+.about__lede {
+  font-size: clamp(17px, 0.75rem + 0.62vw, 20px);
+  line-height: 1.5;
+  opacity: 0.92;
+  max-width: 54ch;
+  margin-inline: auto;
+}
+.about__eyebrow {
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  font-size: 12px;
+}
+
+/* Grouped prose: a common region so a list of ideas reads as a set. */
+.about__panels {
+  display: grid;
+  gap: 14px;
+}
+@media (width >= 800px) {
+  .about__panels--two {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.about__panel {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  padding: 20px 22px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--about-tight);
+}
+.about__panel h3,
+.about__panel .about__panel-title {
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: clamp(16px, 0.7rem + 0.55vw, 18px);
+  line-height: 1.3;
+}
+.about__panel p:not(.about__panel-title) {
+  font-size: clamp(14px, 0.55rem + 0.5vw, 16px);
+  line-height: 1.58;
+  opacity: 0.82;
+}
+
+/* Audience cards: the one place on the page with a white surface, so
+   they carry the strongest visual weight after the title. */
+.about__cards {
+  display: grid;
+  gap: 14px;
+}
+@media (width >= 800px) {
+  .about__cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.about__card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 22px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.about__card-title {
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: clamp(16px, 0.7rem + 0.55vw, 18px);
+  line-height: 1.25;
+  color: #0d1117;
+}
+.about__card p:not(.about__card-title) {
+  font-size: clamp(14px, 0.6rem + 0.4vw, 15px);
+  line-height: 1.55;
+  /* #4a5566 on white is 7.4:1 — the old #A1A1A1 was 2.5:1. */
+  color: #4a5566;
+}
+
+/* Steps, with the mascot keeping the longest text stretch company. */
+.about__how {
+  display: grid;
+  gap: 32px;
+}
+@media (width >= 900px) {
+  .about__how {
+    /* Every section shares one left rail, so the mascot column sits
+       inside the reading column rather than widening the section. */
+    grid-template-columns: minmax(0, 1fr) 164px;
+    gap: 40px;
+    align-items: center;
+  }
+}
+.about__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.about__step {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.about__num {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: #0d1117;
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1;
+}
+.about__step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 5px;
+}
+.about__step-title {
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: clamp(16px, 0.65rem + 0.5vw, 17px);
+  line-height: 1.3;
+}
+.about__step-body p {
+  font-size: clamp(14px, 0.55rem + 0.5vw, 16px);
+  line-height: 1.55;
+  opacity: 0.82;
+}
+.about__figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.about__figure .sb-mascot {
+  --sb-size: 148px;
+}
+@media (width >= 900px) {
+  .about__figure .sb-mascot {
+    --sb-size: 164px;
+  }
+}
+.about__figure-ground {
+  width: 62%;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(13, 17, 23, 0.3), rgba(13, 17, 23, 0));
+  margin-top: -6px;
+}
+.about__figure-caption {
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  opacity: 0.74;
+  max-width: 22ch;
+}
+
+/* Legal note: findable, deliberately quieter than the audience cards. */
+.about__note {
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-left: 3px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--about-tight);
+}
+.about__note-title {
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: clamp(15px, 0.65rem + 0.45vw, 16px);
+  line-height: 1.3;
+}
+.about__note p:not(.about__note-title) {
+  font-size: clamp(13px, 0.5rem + 0.45vw, 15px);
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+/* Closing: one primary action, then a quiet legal row behind a rule. */
+.about__close {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding-bottom: clamp(56px, 7vw, 88px);
+}
+.about__legal {
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  padding-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  opacity: 0.82;
+}
+.about__legal li {
+  list-style: none;
+}
+
+/* Legal pages reuse the About page's blue ground, translucent surfaces and
+   reading rhythm while preserving their long-form legal copy. */
+.legal-page {
+  min-height: 100vh;
+  background-color: #228dcd;
+  background-image: linear-gradient(rgba(34, 141, 205, 0.76), rgba(34, 141, 205, 0.94)),
+    url("/assets/3b088bdb031e.webp");
+  background-position: top center;
+  background-size: cover;
+  background-attachment: fixed;
+  color: #fff;
+}
+.legal-document {
+  position: relative;
+  width: min(90vw, 760px);
+  margin: 0 auto;
+  padding: clamp(48px, 7vw, 88px) 0 clamp(64px, 9vw, 112px);
+}
+.legal-document h1 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: clamp(42px, 6vw, 68px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-align: center;
+}
+.legal-document .meta {
+  margin: 0 0 clamp(40px, 6vw, 64px);
+  color: rgba(255, 255, 255, 0.72);
+  text-align: center;
+}
+.legal-document h2,
+.legal-document h3,
+.legal-document strong {
+  color: #fff;
+}
+.legal-document h2 {
+  margin-top: clamp(48px, 7vw, 72px);
+  padding-top: 18px;
+  border-top: 3px solid rgba(255, 255, 255, 0.42);
+}
+.legal-document p,
+.legal-document li,
+.legal-document td {
+  color: rgba(255, 255, 255, 0.88);
+}
+.legal-document a {
+  color: #fff;
+  text-underline-offset: 3px;
+}
+.legal-document .lead,
+.legal-document table {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+.legal-document .lead {
+  padding: 22px 24px;
+}
+.legal-document .lead p {
+  color: #fff;
+}
+.legal-document table {
+  width: 100%;
+  padding: 8px 12px;
+}
+.legal-document th,
+.legal-document td {
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+}
+.legal-document th {
+  color: rgba(255, 255, 255, 0.72);
+}
+.legal-document footer {
+  border-top-color: rgba(255, 255, 255, 0.22);
+}
+.legal-document footer a,
+.legal-document footer span {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+.legal-document footer a:hover {
+  color: #fff;
+}
+@media (width < 800px) {
+  .legal-page {
+    background-attachment: scroll;
+  }
+  .legal-document {
+    width: min(92vw, 760px);
+    padding-top: 36px;
+  }
+}
+
+/* Mascot without JavaScript: the static pages have no useMascot hook, so
+   the idle blink runs on its own long-cycle keyframe. */
+@keyframes sb-autoblink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(0);
+  }
+  95%,
+  97% {
+    transform: scaleY(1);
+  }
+}
+.sb-mascot--auto .sb-mascot__lid {
+  animation: sb-autoblink 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-mascot--auto .sb-mascot__lid {
+    animation: none;
+  }
+}
+
+/* Mascot scene on static pages: walks in from the left when seen, then
+   idles. The travel is on the figure wrapper so the mascot's own
+   data-state transforms (greet, celebrate) stay free. */
+.sb-mascot[data-state="walk"] .sb-mascot__body {
+  animation: sb-bob 0.46s ease-in-out infinite alternate;
+}
+[data-mascot-scene] {
+  opacity: 0;
+  transform: translateX(-72px);
+  transition:
+    transform 950ms var(--sb-ease),
+    opacity 320ms var(--sb-ease);
+}
+[data-mascot-scene][data-in] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-mascot-scene] {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}

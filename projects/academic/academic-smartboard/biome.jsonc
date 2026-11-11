@@ -1,0 +1,45 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+  // Salinan capsule-local dari biome.jsonc root Monorepo (2.5.7), dipangkas ke
+  // cakupan capsule. Tanpa integrasi VCS: capsule harus tetap lint-able saat
+  // diekstraksi ke direktori tanpa repo git (bukti standalone).
+  "files": {
+    "includes": [
+      "**",
+      "!!**/node_modules",
+      "!!**/.turbo",
+      "!!**/.next",
+      "!!**/next-env.d.ts",
+      "!!**/out",
+      // Profil agen: sumbernya runtime Hermes, bukan repositori.
+      "!!ai/profiles",
+      // Knowledge package impor (integritas sha256, ADR 0003): reformat = hash pecah.
+      "!!ai/kayyisa"
+    ],
+    "ignoreUnknown": true
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
+}

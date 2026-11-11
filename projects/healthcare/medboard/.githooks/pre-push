@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ "$ALLOW_DASHBOARD_PUSH" = "1" ]; then
+  echo "Bypass guardrail aktif: push dilanjutkan karena ALLOW_DASHBOARD_PUSH=1."
+  exit 0
+fi
+
+echo "Push diblokir: repo dashboard ini masih dalam mode containment."
+echo "Verifikasi dulu remote resmi dan boundary repo sebelum menghapus atau memperbarui guardrail ini."
+echo "Untuk publish sadar, gunakan override ALLOW_DASHBOARD_PUSH=1."
+echo "Jika ini clone baru, jalankan npm run setup:git-guardrails setelah install dependencies."
+exit 1

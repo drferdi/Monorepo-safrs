@@ -1,0 +1,33 @@
+{
+  "name": "@sentra/token",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sentraverse design tokens (vendored capsule-local copy). The only place a raw colour value may appear. Provenance: Monorepo packages/token v1.0.0 @ commit 2fa329a (2026-08-24); upstream asal abyss-monorepo Foundation Tokens v1.0.",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./tokens.css": "./src/tokens.css",
+    "./tokens.json": "./src/tokens.json",
+    "./tailwind.css": "./src/tailwind.css",
+    "./fonts": "./src/fonts.ts",
+    "./fonts-archivo": "./src/fonts-archivo.ts",
+    "./archivo.css": "./src/archivo.css"
+  },
+  "files": [
+    "src",
+    "assets"
+  ],
+  "peerDependencies": {
+    "next": ">=15"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "lint": "biome check src",
+    "test": "node ../../scripts/check-tokens.mjs"
+  }
+}

@@ -1,0 +1,23 @@
+diff --git a/gateway/platforms/whatsapp_common.py b/gateway/platforms/whatsapp_common.py
+index 5eed5f7..b6526bc 100644
+--- a/gateway/platforms/whatsapp_common.py
++++ b/gateway/platforms/whatsapp_common.py
+@@ -124,16 +124,12 @@ def _local_outbound_safety_drop_reason(text):
+         r"(?is)("
+         r"<\|im_start\|>|<\|im_end\|>|"
+         r"\[INST\]|<<SYS>>|"
+-        r"you are \*?\*?avery|"
++        r"you are \*?\*?avery[,\s].{0,80}(home agent|persistent)|"
+         r"identification workflow|"
+         r"do not participate|"
+-        r"require_mention|"
+         r"always execute this|"
+         r"system prompt|"
+-        r"### (?:system|instruction)|"
+-        r"soul\.md|"
+-        r"skills_list|"
+-        r"skill_view\("
++        r"### (?:system|instruction)"
+         r")",
+         raw,
+     ):

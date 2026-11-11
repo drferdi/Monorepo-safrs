@@ -1,0 +1,203 @@
+/* AdminInstitutionsTab — tokens from sentra-design-tokens.ts */
+
+.statusMessage {
+  padding: var(--gap-4xl) 0;
+}
+
+.loadingMessage {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  letter-spacing: var(--ls-wider);
+}
+
+.errorMessage {
+  color: var(--c-critical);
+  font-size: var(--text-xs);
+}
+
+.summaryRow {
+  display: flex;
+  gap: var(--gap-2xl);
+  margin-bottom: var(--gap-xl);
+}
+
+.summaryCard {
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-xl);
+  padding: var(--gap-md) var(--gap-xl);
+  background: var(--bg-nav);
+}
+
+.summaryLabel {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  letter-spacing: var(--ls-widest);
+}
+
+.summaryValue {
+  margin: var(--gap-xs) 0 0;
+  color: var(--text-main);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.summaryValueAccent {
+  color: var(--c-asesmen);
+}
+
+.formPanel {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-xl);
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-xl);
+  padding: var(--gap-md) var(--gap-lg);
+  background: var(--bg-nav);
+}
+
+.input {
+  flex: 1;
+  padding: var(--gap-sm) var(--gap-md);
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-lg);
+  outline: none;
+  background: var(--bg-canvas);
+  color: var(--text-main);
+  font-size: var(--text-xs);
+}
+
+.editInput {
+  width: 100%;
+  flex: none;
+  padding: var(--gap-xs) var(--gap-sm);
+  border-color: var(--c-asesmen-border);
+  border-radius: var(--radius-md);
+}
+
+.primaryButton {
+  padding: var(--gap-sm) var(--gap-md);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--c-asesmen);
+  color: var(--text-on-accent);
+  cursor: pointer;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-wider);
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  background: var(--c-asesmen-muted);
+}
+
+.formMessage {
+  font-size: var(--text-xs);
+}
+
+.formMessageSuccess {
+  color: var(--c-status-ok);
+}
+
+.formMessageError {
+  color: var(--c-critical);
+}
+
+.tablePanel {
+  overflow: hidden;
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-xl);
+  background: var(--bg-nav);
+}
+
+.emptyState {
+  padding: var(--gap-2xl);
+  color: var(--text-muted);
+  opacity: 0.5;
+  text-align: center;
+  font-size: var(--text-xs);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeaderRow {
+  border-bottom: 1px solid var(--line-base);
+}
+
+.tableHeaderCell {
+  padding: var(--gap-sm) var(--gap-md);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-2xl);
+  text-align: left;
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--line-base);
+}
+
+.tableCell {
+  padding: var(--gap-sm) var(--gap-md);
+}
+
+.institutionName {
+  color: var(--text-main);
+  font-size: var(--text-xs);
+}
+
+.crewCount {
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.crewCountActive {
+  color: var(--text-main);
+}
+
+.crewCountMuted {
+  color: var(--text-muted);
+}
+
+.crewSuffix {
+  margin-left: var(--gap-xs);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.actionRow {
+  display: flex;
+  gap: var(--gap-xs);
+}
+
+.tableButton {
+  padding: var(--gap-xs) var(--gap-sm);
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-main);
+  cursor: pointer;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+}
+
+.tableButtonMuted {
+  color: var(--text-muted);
+}
+
+.tableButtonDanger {
+  color: var(--c-critical);
+}
+
+.tableButtonDisabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  color: var(--text-muted);
+}
