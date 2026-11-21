@@ -11,10 +11,10 @@
     "test": "vitest run --root ../.. infra/updater/src"
   },
   "dependencies": {
-    "@hono/node-server": "^1.19.1",
+    "@hono/node-server": "^2.1.6",
     "@sentrabot/contracts": "workspace:*",
     "@sentrabot/core": "workspace:*",
-    "hono": "^4.9.6",
+    "hono": "^4.13.16",
     "tsx": "^4.20.5"
   },
   "devDependencies": {
