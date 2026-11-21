@@ -14,11 +14,11 @@
   "dependencies": {
     "@opentelemetry/api": "1.9.1",
     "@opentelemetry/exporter-trace-otlp-http": "0.221.0",
-    "@opentelemetry/instrumentation-http": "0.221.0",
+    "@opentelemetry/instrumentation-http": "0.222.0",
     "@opentelemetry/sdk-node": "0.221.0",
     "@opentelemetry/semantic-conventions": "1.30.0",
     "@prisma/instrumentation": "7.9.1",
-    "hono": "4.13.1"
+    "hono": "4.13.16"
   },
   "devDependencies": {
     "@safrs/config": "workspace:*",
