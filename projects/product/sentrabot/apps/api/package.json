@@ -19,7 +19,7 @@
     "@sentrabot/core": "workspace:*",
     "@sentrabot/db": "workspace:*",
     "@sentrabot/memory": "workspace:*",
-    "hono": "^4.9.6"
+    "hono": "^4.13.16"
   },
   "devDependencies": {
     "typescript": "^5.9.2",
